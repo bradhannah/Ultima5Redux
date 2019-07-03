@@ -66,6 +66,22 @@ namespace Ultima5Redux
                 }
             }
 
+            public static string GetNPCFilenameFromMasterFile (MapMasterFiles mapMaster)
+            {
+                switch (mapMaster)
+                {
+                    case MapMasterFiles.Castle:
+                        return FileConstants.CASTLE_NPC;
+                    case MapMasterFiles.Dwelling:
+                        return FileConstants.DWELLING_NPC;
+                    case MapMasterFiles.Keep:
+                        return FileConstants.KEEP_NPC;
+                    case MapMasterFiles.Towne:
+                        return FileConstants.TOWNE_NPC;
+                }
+                throw (new Exception("Couldn't map NPC filename"));
+            }
+
             public static string GetFilenameFromLocation (Location location)
             {
                 switch (location)

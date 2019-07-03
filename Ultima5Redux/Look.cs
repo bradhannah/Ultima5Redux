@@ -12,10 +12,19 @@ namespace Ultima5Redux
     /// </summary>
     class Look
     {
+        /// <summary>
+        /// Total number of titles that can be looked at
+        /// </summary>
         private const short TOTAL_LOOKS = 0x200;
         private const byte END_OF_STRING_BYTE = 0x00;
 
+        /// <summary>
+        /// Raw file
+        /// </summary>
         static private List<byte> lookByteArray = new List<byte>();
+        /// <summary>
+        /// List of all offsets into the lookByteArray
+        /// </summary>
         static private List<int> lookOffsets = new List<int>(TOTAL_LOOKS);
 
         /// <summary>

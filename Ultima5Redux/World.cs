@@ -57,6 +57,17 @@ namespace Ultima5Redux
 
             // build the NPC tables
             npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef);
+
+            foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
+            {
+                if (npc.NPCType != 0)
+                {
+                    Console.WriteLine(npc.NPCType.ToString());
+                }
+            }
+            //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype = npcRef.NPCs[100].NPCType;
+            //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype1 = npcRef.NPCs[80].NPCType;
+            //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype2 = npcRef.NPCs[202].NPCType;
         }
 
 
