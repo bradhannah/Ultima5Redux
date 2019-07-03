@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NonPlayerCharacters.cs" />
     <Compile Include="Signs.cs" />
     <Compile Include="Look.cs" />
     <Compile Include="CombatMap.cs" />

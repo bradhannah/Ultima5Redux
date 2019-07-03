@@ -13,10 +13,25 @@ namespace Ultima5Redux
         {
             private const int CHARS_PER_LINE= 16;
 
+            /// <summary>
+            /// General location of sign
+            /// </summary>
             public SmallMapReference.SingleMapReference.Location Location { get; }
+            /// <summary>
+            /// Floor of location
+            /// </summary>
             public int Floor { get; }
+            /// <summary>
+            /// X coordinate of sign
+            /// </summary>
             public byte X { get; } 
+            /// <summary>
+            /// Y coordinate of sign
+            /// </summary>
             public byte Y { get;  }
+            /// <summary>
+            /// Actual text of sign
+            /// </summary>
             public string SignText { get; }
 
             /// <summary>
@@ -52,11 +67,26 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Total number of expected signs in file
+        /// </summary>
         private const short TOTAL_SIGNS = 0x21;
+        /// <summary>
+        /// character used to denote end of string
+        /// </summary>
         private const byte END_OF_STRING_BYTE = 0x00;
 
+        /// <summary>
+        /// Raw sign file
+        /// </summary>
         private List<byte> signsByteArray = new List<byte>();
+        /// <summary>
+        /// List of all sign offsets in file
+        /// </summary>
         private List<int> signsOffsets = new List<int>(TOTAL_SIGNS);
+        /// <summary>
+        /// List of all assembled signs
+        /// </summary>
         private List<Sign> signList = new List<Sign>(TOTAL_SIGNS);
 
 
@@ -72,7 +102,6 @@ namespace Ultima5Redux
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < (TOTAL_SIGNS * 2); i += 2)
             {
-//                signsOffsets.Add((int)(signsByteArray[i] | (((uint)signsByteArray[i + 1]) << 8)));
                 signsOffsets.Add((int)(signsByteArray[i] | (((uint)signsByteArray[i + 1]) << 8)));
             }
 

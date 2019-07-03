@@ -14,7 +14,13 @@ namespace Ultima5Redux
         public const string LOOK2_DAT = "look2.dat";
         public const string SIGNS_DAT = "signs.dat";
 
-        private static readonly string[] SMALL_MAP_FILES = { "castle.dat", "towne.dat", "dwelling.dat", "keep.dat" };
+        public const string CASTLE_DAT = "castle.dat";
+        public const string TOWNE_DAT = "towne.dat";
+        public const string DWELLING_DAT = "dwelling.dat";
+        public const string KEEP_DAT = "keep.dat";
+
+        public static readonly string[] NPC_FILES = { "castle.npc", "towne.npc", "dwelling.dat", "keep.dat" };
+        public static readonly string[] SMALL_MAP_FILES = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };
 
     }
 }

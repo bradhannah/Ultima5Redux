@@ -168,6 +168,23 @@ namespace Ultima5Redux
             handle.Free();
             return temp;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Hacked from FileStream to List_byte https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>
+        /// <param name="byteArray"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        static public object ReadStruct(List<byte> byteArray, int fileOffset, Type t)
+        {
+            byte[] buffer = new byte[Marshal.SizeOf(t)];
+            byteArray.CopyTo(fileOffset, buffer, 0, Marshal.SizeOf(t));
 
+            GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            Object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
+            handle.Free();
+            return temp;
+        }
     }
 }

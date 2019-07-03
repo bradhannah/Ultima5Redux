@@ -19,6 +19,7 @@ namespace Ultima5Redux
         private CombatMapReference combatMapRef = new CombatMapReference();
         private Look lookRef;
         private Signs signRef;
+        private NonPlayerCharacters npcRef;
 
         public World (string ultima5Directory) : base ()
         {
@@ -51,7 +52,11 @@ namespace Ultima5Redux
             // build a "look" table for all tiles
             lookRef = new Look(ultima5Directory);
 
+            // build the sign tables
             signRef = new Signs(ultima5Directory);
+
+            // build the NPC tables
+            npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef);
         }
 
 

@@ -25,6 +25,8 @@ namespace Ultima5Redux
                 Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny, Paws, Cove, Buccaneers_Den, Ararat, Bordermarch,
                 Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold }
 
+            public enum MapMasterFiles { Castle, Towne, Dwelling, Keep };
+
             public byte Id
             {
                 get
@@ -44,6 +46,26 @@ namespace Ultima5Redux
             public int FileOffset { get; set; }
             public Location MapLocation { get; set; }
 
+            public MapMasterFiles MasterFile
+            {
+                get
+                {
+                    switch (MapFilename)
+                    {
+
+                        case FileConstants.CASTLE_DAT:
+                            return MapMasterFiles.Castle;
+                        case FileConstants.TOWNE_DAT:
+                            return MapMasterFiles.Towne;
+                        case FileConstants.DWELLING_DAT:
+                            return MapMasterFiles.Dwelling;
+                        case FileConstants.KEEP_DAT:
+                            return MapMasterFiles.Keep;
+                    }
+                    throw (new Exception("Bad MasterFile"));
+                }
+            }
+
             public static string GetFilenameFromLocation (Location location)
             {
                 switch (location)
@@ -56,7 +78,7 @@ namespace Ultima5Redux
                     case Location.Paws:
                     case Location.Cove:
                     case Location.Buccaneers_Den:
-                        return "castle.dat";
+                        return FileConstants.CASTLE_DAT;
                     case Location.Moonglow:
                     case Location.Britain:
                     case Location.Jhelom:
@@ -65,7 +87,7 @@ namespace Ultima5Redux
                     case Location.Trinsic:
                     case Location.Skara_Brae:
                     case Location.New_Magincia:
-                        return "towne.dat";
+                        return FileConstants.TOWNE_DAT;
                     case Location.Fogsbane:
                     case Location.Stormcrow:
                     case Location.Waveguide:
@@ -75,7 +97,7 @@ namespace Ultima5Redux
                     case Location.Suteks_Hut:
                     case Location.SinVraals_Hut:
                     case Location.Grendels_Hut:
-                        return "dwelling.dat";
+                        return FileConstants.DWELLING_DAT;
                     case Location.Ararat:
                     case Location.Bordermarch:
                     case Location.Farthing:
@@ -84,9 +106,9 @@ namespace Ultima5Redux
                     case Location.Lycaeum:
                     case Location.Empath_Abbey:
                     case Location.Serpents_Hold:
-                        return "keep.dat";
+                        return FileConstants.KEEP_DAT;
                 }
-                return "";
+                throw (new Exception("Bad Location"));
             }
         }
 
@@ -148,6 +170,24 @@ namespace Ultima5Redux
 
             // add the number of floors you have just added so that it can increment the file offset for subequent calls
             roomOffsetCountDictionary[dataFilename] += nFloors;
+        }
+
+        public SingleMapReference GetSingleMapByFileAndIndex(SingleMapReference.MapMasterFiles smallMap, int index)
+        {
+            int locationArrayLength = mapReferences.Count;
+            int nOccurances = 0;
+            for (int i = 0; i < locationArrayLength; i++)
+            {
+                if (mapReferences[i].MasterFile == smallMap)
+                {
+                    if (index == nOccurances)
+                    {
+                        return mapReferences[i];
+                    }
+                    nOccurances++;
+                }
+            }
+            throw (new Exception("Couldn't find map reference"));
         }
 
         public SmallMapReference()
