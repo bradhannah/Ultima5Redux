@@ -189,7 +189,8 @@ namespace Ultima5Redux
                 }
                 // bajh: just shoot me if I ever have to write this again - why on earth did LB write all of his data in different formats! 
                 // these are single byte, so we can capture them just by jumping to their offsets
-                for (int offset = townOffset ; count < NPCS_PER_TOWN; offset++)
+                count = 0;
+                for (int offset = townOffset ; count < NPCS_PER_TOWN; offset++, count++)
                 {
                     // add NPC type
                     npcTypes.Add(npcData[offset + STARTING_NPC_TYPE_TOWN_OFFSET]);

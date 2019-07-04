@@ -110,12 +110,12 @@ namespace Ultima5Redux
             for (int i = 0; i < TOTAL_SIGNS; i++)
             {
                 int offset = signsOffsets[i];
-                string signtxt = Utils.BytesToStringNullTerm(signsByteArray, offset + 4);
+                string signtxt = Utils.BytesToStringNullTerm(signsByteArray, offset + 4, 0xFF);
                 signList.Add(new Sign((SmallMapReference.SingleMapReference.Location)signsByteArray[offset],
                     signsByteArray[offset + 1],
                     signsByteArray[offset + 2],
                     signsByteArray[offset + 3],
-                    Utils.BytesToStringNullTerm(signsByteArray, offset+4) ) );
+                    Utils.BytesToStringNullTerm(signsByteArray, offset+4, 0xFF) ) );
                 signList[i].PrintSign();
             }
         }

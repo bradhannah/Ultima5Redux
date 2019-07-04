@@ -107,19 +107,50 @@ namespace Ultima5Redux
     
         }
 
-        static public string BytesToStringNullTerm(List<byte> biteArray, int offset)
+        /// <summary>
+        /// Converts a byte[] to a readable string, assumes it ends with a NULL (0x00) byte
+        /// </summary>
+        /// <param name="biteArray">the array to read from</param>
+        /// <param name="offset">the offset to start at</param>
+        /// <returns></returns>
+        static public string BytesToStringNullTerm(List<byte> byteArray, int offset, int length)
         {
             byte curCharByte;
             string str = "";
             int curOffset = offset;
+            int count = 0; 
             // loop until a zero byte is found indicating end of string
-            while ((curCharByte = biteArray[curOffset]) != 0x00)
+            while (count < length && (curCharByte = byteArray[curOffset]) != 0x00)
             {
                 // cast to (char) to ensure the string understands it not a number
                 str += (char)(curCharByte);
                 curOffset++;
+                count++;
             }
             return str;
+        }
+
+        static public string BytesToStringFixedWidth(List<byte> byteArray, int offset, int length)
+        {
+            string str = string.Empty;
+            for (int i=0; i < length; i++)
+            {
+                str += (char)byteArray[i];
+            }
+            return str;
+        }
+
+        static public List<UInt16> CreateOffsetList(byte[] byteArray, int offset, int length)
+        {
+            List<UInt16> offsetArray = new List<UInt16>();
+
+            // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
+            for (int i = 0; i < length; i += 2)
+            {
+                offsetArray.Add((UInt16)(byteArray[i] | (((UInt16)byteArray[i + 1]) << 8)));
+            }
+
+            return offsetArray;
         }
 
         /// <summary>

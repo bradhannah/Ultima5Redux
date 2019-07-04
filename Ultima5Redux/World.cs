@@ -20,6 +20,7 @@ namespace Ultima5Redux
         private Look lookRef;
         private Signs signRef;
         private NonPlayerCharacters npcRef;
+        private DataOvlReference dataOvlRef;
 
         public World (string ultima5Directory) : base ()
         {
@@ -65,7 +66,10 @@ namespace Ultima5Redux
                     Console.WriteLine(npc.NPCType.ToString());
                 }
             }
-            //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype = npcRef.NPCs[100].NPCType;
+
+            dataOvlRef = new DataOvlReference(u5Directory);
+
+                      //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype = npcRef.NPCs[100].NPCType;
             //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype1 = npcRef.NPCs[80].NPCType;
             //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype2 = npcRef.NPCs[202].NPCType;
         }
