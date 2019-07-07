@@ -24,6 +24,12 @@ namespace Ultima5Redux
         public const string DWELLING_NPC = "dwelling.npc";
         public const string KEEP_NPC = "keep.npc";
 
+        public const string CASTLE_TLK = "castle.tlk";
+        public const string TOWNE_TLK = "dwelling.tlk";
+        public const string DWELLING_TLK = "dwelling.tlk";
+        public const string KEEP_TLK = "keep.tlk";
+
+        public static readonly string[] TALK_FILES = { CASTLE_TLK, TOWNE_TLK, DWELLING_TLK, KEEP_TLK };
         public static readonly string[] NPC_FILES = { CASTLE_NPC, TOWNE_NPC, DWELLING_NPC, KEEP_NPC };
         public static readonly string[] SMALL_MAP_FILES = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };
 

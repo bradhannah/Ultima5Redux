@@ -25,7 +25,7 @@ namespace Ultima5Redux
                 Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny, Paws, Cove, Buccaneers_Den, Ararat, Bordermarch,
                 Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold }
 
-            public enum MapMasterFiles { Castle, Towne, Dwelling, Keep };
+            public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep };
 
             public byte Id
             {
@@ -46,7 +46,7 @@ namespace Ultima5Redux
             public int FileOffset { get; set; }
             public Location MapLocation { get; set; }
 
-            public MapMasterFiles MasterFile
+            public SmallMapMasterFiles MasterFile
             {
                 get
                 {
@@ -54,29 +54,44 @@ namespace Ultima5Redux
                     {
 
                         case FileConstants.CASTLE_DAT:
-                            return MapMasterFiles.Castle;
+                            return SmallMapMasterFiles.Castle;
                         case FileConstants.TOWNE_DAT:
-                            return MapMasterFiles.Towne;
+                            return SmallMapMasterFiles.Towne;
                         case FileConstants.DWELLING_DAT:
-                            return MapMasterFiles.Dwelling;
+                            return SmallMapMasterFiles.Dwelling;
                         case FileConstants.KEEP_DAT:
-                            return MapMasterFiles.Keep;
+                            return SmallMapMasterFiles.Keep;
                     }
                     throw (new Exception("Bad MasterFile"));
                 }
             }
 
-            public static string GetNPCFilenameFromMasterFile (MapMasterFiles mapMaster)
+            public static string GetTLKFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
                 switch (mapMaster)
                 {
-                    case MapMasterFiles.Castle:
+                    case SmallMapMasterFiles.Castle:
+                        return FileConstants.CASTLE_TLK;
+                    case SmallMapMasterFiles.Dwelling:
+                        return FileConstants.DWELLING_TLK;
+                    case SmallMapMasterFiles.Keep:
+                        return FileConstants.KEEP_TLK;
+                    case SmallMapMasterFiles.Towne:
+                        return FileConstants.TOWNE_TLK;
+                }
+                throw (new Exception("Couldn't map NPC filename"));
+            }
+            public static string GetNPCFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
+            {
+                switch (mapMaster)
+                {
+                    case SmallMapMasterFiles.Castle:
                         return FileConstants.CASTLE_NPC;
-                    case MapMasterFiles.Dwelling:
+                    case SmallMapMasterFiles.Dwelling:
                         return FileConstants.DWELLING_NPC;
-                    case MapMasterFiles.Keep:
+                    case SmallMapMasterFiles.Keep:
                         return FileConstants.KEEP_NPC;
-                    case MapMasterFiles.Towne:
+                    case SmallMapMasterFiles.Towne:
                         return FileConstants.TOWNE_NPC;
                 }
                 throw (new Exception("Couldn't map NPC filename"));
@@ -188,7 +203,7 @@ namespace Ultima5Redux
             roomOffsetCountDictionary[dataFilename] += nFloors;
         }
 
-        public SingleMapReference GetSingleMapByFileAndIndex(SingleMapReference.MapMasterFiles smallMap, int index)
+        public SingleMapReference GetSingleMapByFileAndIndex(SingleMapReference.SmallMapMasterFiles smallMap, int index)
         {
             int locationArrayLength = mapReferences.Count;
             int nOccurances = 0;

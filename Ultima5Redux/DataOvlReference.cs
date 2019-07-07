@@ -51,6 +51,11 @@ namespace Ultima5Redux
         private List<byte> dataOvlByteArray;
         private DataChunks dataChunks;
 
+        private void PrintGaps()
+        {
+
+        }
+
         public DataOvlReference(string u5Directory)
         {
             string dataOvlFileAndPath = Path.Combine(u5Directory, FileConstants.DATA_OVL);
@@ -287,7 +292,7 @@ namespace Ultima5Redux
 
 
 
-            dataChunks.PrintEverything();
+            //dataChunks.PrintEverything();
 
 
 

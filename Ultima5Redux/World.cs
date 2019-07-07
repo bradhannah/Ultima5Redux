@@ -21,6 +21,7 @@ namespace Ultima5Redux
         private Signs signRef;
         private NonPlayerCharacters npcRef;
         private DataOvlReference dataOvlRef;
+        private TalkScripts talkScriptsRef;
 
         public World (string ultima5Directory) : base ()
         {
@@ -66,6 +67,10 @@ namespace Ultima5Redux
                     Console.WriteLine(npc.NPCType.ToString());
                 }
             }
+
+            talkScriptsRef = new TalkScripts(u5Directory);
+
+
 
             dataOvlRef = new DataOvlReference(u5Directory);
 

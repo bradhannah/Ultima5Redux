@@ -217,5 +217,10 @@ namespace Ultima5Redux
             handle.Free();
             return temp;
         }
+
+        static public int LittleEndianConversion (byte a, byte b)
+        {
+             return ((int)(a| (((int)b) << 8)));
+        }
     }
 }

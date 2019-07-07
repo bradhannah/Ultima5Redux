@@ -97,12 +97,27 @@ namespace Ultima5Redux
              }
 
 
-            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNunber)
+            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNumber)
             {
                 Schedule = new NPCSchedule(sched);
                 MapReference = mapRef;
                 CharacterType = npcType;
-                DialogNumber = dialogNunber;
+                DialogNumber = dialogNumber;
+                // no schedule? I guess you're not real
+                if (!IsEmptySched(sched))
+                {
+                    System.Console.WriteLine("NPC Number: " + this.DialogNumber + " in " + mapRef.MapLocation.ToString());
+                }
+            }
+
+            private bool IsEmptySched(NPC_Schedule sched)
+            {
+                unsafe
+                {
+                    if (sched.times[0] == 0 && sched.times[1] == 0 && sched.times[2] == 0 && sched.times[3] == 0 && sched.times[4] == 0)
+                        return true;
+                }
+                return false;
             }
         }
 
@@ -160,7 +175,7 @@ namespace Ultima5Redux
         /// <param name="u5Directory">Directory with Ultima 5</param>
         /// <param name="mapMaster">The master map from which to load</param>
         /// <param name="smallMapRef">Small map reference to help link NPCs to a map</param>
-        private void InitializeNPCs(string u5Directory, SmallMapReference.SingleMapReference.MapMasterFiles mapMaster, SmallMapReference smallMapRef)
+        private void InitializeNPCs(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReference smallMapRef)
         {
             // open the appropriate NPC data file
             string dataFilenameAndPath = Path.Combine(u5Directory, SmallMapReference.SingleMapReference.GetNPCFilenameFromMasterFile(mapMaster));
@@ -210,10 +225,10 @@ namespace Ultima5Redux
 
         public NonPlayerCharacters(string u5Directory, SmallMapReference smallMapRef)
         {
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.MapMasterFiles.Towne, smallMapRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.MapMasterFiles.Castle, smallMapRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.MapMasterFiles.Keep, smallMapRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.MapMasterFiles.Dwelling, smallMapRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef);
         }
 
 
