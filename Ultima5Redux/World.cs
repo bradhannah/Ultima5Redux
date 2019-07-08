@@ -22,6 +22,7 @@ namespace Ultima5Redux
         private NonPlayerCharacters npcRef;
         private DataOvlReference dataOvlRef;
         private TalkScripts talkScriptsRef;
+        private TalkingReferences talkRef;
 
         public World (string ultima5Directory) : base ()
         {
@@ -68,12 +69,14 @@ namespace Ultima5Redux
                 }
             }
 
-            talkScriptsRef = new TalkScripts(u5Directory);
-
-
-
             dataOvlRef = new DataOvlReference(u5Directory);
 
+            talkRef = new TalkingReferences(dataOvlRef);
+            talkScriptsRef = new TalkScripts(u5Directory, talkRef);
+
+
+
+            talkScriptsRef.PrintSomeTalking();
                       //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype = npcRef.NPCs[100].NPCType;
             //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype1 = npcRef.NPCs[80].NPCType;
             //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype2 = npcRef.NPCs[202].NPCType;

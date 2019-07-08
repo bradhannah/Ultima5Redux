@@ -56,6 +56,35 @@ namespace Ultima5Redux
 
         }
 
+        public enum DataChunkName { Unused, TALK_COMPRESSED_WORDS };
+
+        private Dictionary<DataChunkName, DataChunk> chunkMap=new Dictionary<DataChunkName, DataChunk>();
+
+        public DataChunk GetDataChunk(DataChunkName dataChunkName)
+        {
+            return chunkMap[dataChunkName];
+        }
+
+        private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue, DataChunkName dataChunkName)
+        {
+            // create the data chunk 
+            DataChunk chunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
+
+            // all data chunks get added to the chunk list
+            dataChunks.AddDataChunk(chunk);
+
+            // if the datachunk is not classified as unused then add it to the chunk map for quick reference
+            if (dataChunkName != DataChunkName.Unused)
+            {
+                chunkMap.Add(dataChunkName, chunk);
+            }
+        }
+
+        private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue)
+        {
+            AddDataChunk(dataFormat, description, rawData, offset, dataLength, addToValue, DataChunkName.Unused);
+        }
+
         public DataOvlReference(string u5Directory)
         {
             string dataOvlFileAndPath = Path.Combine(u5Directory, FileConstants.DATA_OVL);
@@ -90,7 +119,9 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Virtue mantras (8 of them)", dataOvlByteArray, 0xbe0, 0x1e));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Store names", dataOvlByteArray, 0xbfe, 0x2fc));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Character names", dataOvlByteArray, 0xefa, 0x152));
-            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", dataOvlByteArray, 0x104c, 0x24e));
+            AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", dataOvlByteArray, 0x104c, 0x24e, 0, DataChunkName.TALK_COMPRESSED_WORDS);
+            //dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", dataOvlByteArray, 0x104c, 0x24e));
+
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Filenames", dataOvlByteArray, 0x129a, 0x11c));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.Unknown, "Unknown", dataOvlByteArray, 0x13b6, 0x3a6));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Weapon strings (add + 0x10)", dataOvlByteArray, 0x175c, 0xa9, 0x10));

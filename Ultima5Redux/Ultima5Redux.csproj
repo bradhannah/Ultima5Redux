@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TalkingReferences.cs" />
     <Compile Include="TalkScripts.cs" />
     <Compile Include="DataChunk.cs" />
     <Compile Include="DataOvlReference.cs" />
