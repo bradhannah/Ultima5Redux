@@ -10,10 +10,15 @@ namespace Ultima5Redux
 {
     class TalkScript
     {
+        public enum TalkCommand {AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
+            KarmaMinusOne = 0x8A, CallGuards = 0x8B, SetFlag = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_Code = 0xA2, Unknown_Enter = 0x9F, Label = 0xFE,
+            Unknown_FF = 0xFF };
 
-    }
+        public const byte MIN_LABEL = 0x91;
+        public const byte MAX_LABEL = 0x91 + 0x0A;
+}
 
-    class TalkScripts
+class TalkScripts
     {
         List<TalkScript> talkScripts = new List<TalkScript>();
 
@@ -25,10 +30,10 @@ namespace Ultima5Redux
         }
 
         // map reference is key because NPC numbers can overlap
-        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>> talkRefs = 
+        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>> talkRefs =
             new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
 
-        private enum TalkConstants { Name = 0 , Description, Greeting, Job, Bye }
+        private enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
 
         private TalkingReferences talkRef;
 
@@ -71,7 +76,7 @@ namespace Ultima5Redux
                     // get the length by figuring the difference between 
                     if (i + 1 < nEntries)
                     {
-                        chunkLength = npcOffsets[i+1].fileOffset - npcOffsets[i].fileOffset;
+                        chunkLength = npcOffsets[i + 1].fileOffset - npcOffsets[i].fileOffset;
                     }
                     else
                     {
@@ -99,7 +104,6 @@ namespace Ultima5Redux
             InitalizeTalkScripts(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne);
             InitalizeTalkScripts(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep);
             InitalizeTalkScripts(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling);
-
         }
 
         public void PrintSomeTalking()
@@ -107,11 +111,13 @@ namespace Ultima5Redux
             Console.WriteLine("Printsometalking.....");
 
             bool writingSingleCharacters = false;
+            List<bool> labelsSeenList = new List<bool>(10);
+            labelsSeenList.AddRange(Enumerable.Repeat(false, 10));
 
-            foreach (byte byteWord in talkRefs[SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle][3])
+            foreach (byte byteWord in talkRefs[SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle][5])
             {
                 // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
-                if (byteWord == 0x00) { Console.WriteLine(""); writingSingleCharacters = false;  continue; }
+                if (byteWord == 0x00) { Console.WriteLine(""); writingSingleCharacters = false; continue; }
 
                 byte tempByte = (byte)((int)byteWord); // this is the byte that we will manipulate, leaving the byteWord in tact
                 bool usePhraseLookup = false;   // did we do a phrase lookup (else we are typing single letters)
@@ -157,63 +163,23 @@ namespace Ultima5Redux
                     // this is a bit lazy, but if I ask for a string that is not captured in the lookup map, then we know it's a special case
                     catch (TalkingReferences.NoTalkingWordException)
                     {
-                        switch (tempByte)
+                        if (tempByte >= TalkScript.MIN_LABEL && tempByte <= TalkScript.MAX_LABEL)
                         {
-                            case 129:
-                                Console.Write("<Avatar's Name>");
-                                break;
-                            case 130:
-                                Console.Write("<End Conversation>");
-                                break;
-                            case 131:
-                                Console.Write("<Pause>");
-                                break;
-                            case 132:
-                                Console.Write("<Join Party>");
-                                break;
-                            case 133:
-                                Console.Write("<Gold - ");
-                                break;
-                            case 134:
-                                Console.Write("<Change>");
-                                break;
-                            case 135:
-                                Console.Write("<Or>");
-                                break;
-                            case 136:
-                                Console.Write("<Ask name>");
-                                break;
-                            case 137:
-                                Console.Write("<Karma + 1>");
-                                break;
-                            case 138:
-                                Console.Write("<Karma - 1>");
-                                break;
-                            case 139:
-                                Console.Write("<Call Guards>");
-                                break;
-                            case 140:
-                                Console.Write("<Set Flag>");
-                                break;
-                            case 141:
-                                Console.Write("<New Line>");
-                                break;
-                            case 142:
-                                Console.Write("<Rune>");
-                                break;
-                            case 143:
-                                Console.Write("<Key Wait>");
-                                break;
-                            case 144:
-                                Console.Write("<DEFAULT ANSWER>");
-                                break;
+                            int offset = tempByte - TalkScript.MIN_LABEL;
+                            if (labelsSeenList[offset] == true)
+                            {
+                                Console.Write("<LABEL " + (offset + 1).ToString() + ">");
+                            }
+                            else
+                            {
+                                Console.Write("<GOTO LABEL " + (offset + 1).ToString() + ">");
+                                labelsSeenList[offset] = true;
+                            }
                         }
-
-                        if (tempByte >= 145 && tempByte <= 155)
+                        else
                         {
-                            Console.Write("<LABEL " + (tempByte - 145).ToString() + ">");
+                            System.Console.Write("<" + ((TalkScript.TalkCommand)tempByte).ToString() + ">");
                         }
-
                     }
                     if (useCompressedWord) { Console.Write(" "); }
                 }
