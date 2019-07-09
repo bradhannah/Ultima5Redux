@@ -36,7 +36,7 @@ namespace Ultima5Redux
                 AddByteLookupMapping(1, 255, 0);
             }
             else if (false)
-            { 
+            {
                 AddByteLookupMapping(1, 7, 0);
                 AddByteLookupMapping(9, 27, 1);
                 AddByteLookupMapping(29, 49, 2);
@@ -75,13 +75,29 @@ namespace Ultima5Redux
 
         public string GetTalkingWord(int index)
         {
-            if (!compressWordLookupMap.Keys.Contains(index))
+            //    if (!compressWordLookupMap.Keys.Contains(index))
+            //  {
+            //    return "MISSING";
+            //}
+            try
             {
-                return "MISSING";
+                return (CompressedWords.Strs[compressWordLookupMap[index]]);
+            } catch (System.Collections.Generic.KeyNotFoundException)
+            {
+                throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " + index);
             }
-            return (CompressedWords.Strs[compressWordLookupMap[index]]);
+            catch (System.ArgumentOutOfRangeException)
+            {
+                throw new NoTalkingWordException("Couldn't find TalkWord at index " + index);
+            }
         }
 
+        public class NoTalkingWordException: Exception
+        {
+            public NoTalkingWordException(string message) :base(message)
+            {
+            }
+        }
 
     }
 }

@@ -84,11 +84,6 @@ namespace Ultima5Redux
                     talkByteList.CopyTo(npcOffsets[i].fileOffset, chunk, 0, (int)chunkLength);
                     // Add the raw bytes to the specific Map+NPC#
                     talkRefs[mapMaster].Add(chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
-
-                    
-
-                    //talkRefs[mapMaster][i] = talkByteList.ToArray()
-
                 }
             }
         }
@@ -110,91 +105,117 @@ namespace Ultima5Redux
         public void PrintSomeTalking()
         {
             Console.WriteLine("Printsometalking.....");
-            bool letterAtATime = false;
-            foreach (byte byteWord in talkRefs[SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle][0])
+
+            bool writingSingleCharacters = false;
+
+            foreach (byte byteWord in talkRefs[SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle][3])
             {
-                if (byteWord == 0x00) { Console.WriteLine("");  letterAtATime = false;  continue;  }
-                byte tempByte = (byte)((int)byteWord);
-                bool phrase = false;
-                if (byteWord >= 165 && byteWord <= 218) { tempByte -= 128;  }
-                else if (byteWord >= 225 && byteWord <= 250) { tempByte -= 128;  }
-                else if (byteWord >= 160 && byteWord <= 161) { tempByte -= 128;  }
+                // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
+                if (byteWord == 0x00) { Console.WriteLine(""); writingSingleCharacters = false;  continue; }
+
+                byte tempByte = (byte)((int)byteWord); // this is the byte that we will manipulate, leaving the byteWord in tact
+                bool usePhraseLookup = false;   // did we do a phrase lookup (else we are typing single letters)
+                bool useCompressedWord = false; // did we succesfully use a compressed word?
+
+                // if it's one of the bytes that requires a subraction of 0x80 (128)
+                if (byteWord >= 165 && byteWord <= 218) { tempByte -= 128; }
+                else if (byteWord >= 225 && byteWord <= 250) { tempByte -= 128; }
+                else if (byteWord >= 160 && byteWord <= 161) { tempByte -= 128; }
                 else
                 {
-                    phrase = true;
+                    // it didn't match which means that it's one the special phrases and we will perform a lookup
+                    usePhraseLookup = true;
                 }
-                if (!phrase)
+
+                // it wasn't a special phrase which means that the words are being typed one word at a time
+                if (!usePhraseLookup)
                 {
-                    letterAtATime = true;
-                    if ((char)tempByte=='@')
+                    // I'm writing single characters, we will keep track so that when we hit the end we can insert a space
+                    writingSingleCharacters = true;
+                    // this signifies the end of the printing (sample code enters a newline)
+                    if ((char)tempByte == '@')
                     {
-                        letterAtATime = false;
-                        Console.Write(" ");
-                        continue; 
+                        Console.WriteLine("");
+                        continue;
                     }
                     Console.Write((char)tempByte);
                 }
-                else if (phrase)
+                else // usePhraseLookup = true      
                 {
+                    // We were instructed to perform a lookup, either a compressed word lookup, or a special character
+
+                    // if we were previously writing single characters, but have moved onto lookups, then we add a space, and reset it
+                    if (writingSingleCharacters) { System.Console.Write(" "); writingSingleCharacters = false; }
+
+                    // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
+                    try
+                    {
                         string talkingWord = talkRef.GetTalkingWord((int)tempByte);
-                        Console.Write(talkingWord+" ");
-                }
-                else
-                {
-                    switch (tempByte)
-                    {
-                        case 130:
-                            Console.Write("<End Conversation>");
-                            break;
-                        case 131:
-                            Console.Write("<Pause>");
-                            break;
-                        case 132:
-                            Console.Write("<Join Party>");
-                            break;
-                        case 133:
-                            Console.Write("<Gold - ");
-                            break;
-                        case 134:
-                            Console.Write("<Change>");
-                            break;
-                        case 135:
-                            Console.Write("");
-                            break;
-                        case 136:
-                            Console.Write("<Or>");
-                            break;
-                        case 137:
-                            Console.Write("<Karma + 1>");
-                            break;
-                        case 138:
-                            Console.Write("<Karma - 1>");
-                            break;
-                        case 139:
-                            Console.Write("<Call Guards>");
-                            break;
-                        case 140:
-                            Console.Write("<Set Flag>");
-                            break;
-                        case 141:
-                            Console.Write("<New Line>");
-                            break;
-                        case 142:
-                            Console.Write("<Rune>");
-                            break;
-                        case 143:
-                            Console.Write("<Key Wait>");
-                            break;
-                        case 144:
-                            Console.Write("<DEFAULT ANSWER>");
-                            break;
+                        Console.Write(talkingWord);
+                        useCompressedWord = true;
                     }
-
-                    if (tempByte >= 145 && tempByte <= 155)
+                    // this is a bit lazy, but if I ask for a string that is not captured in the lookup map, then we know it's a special case
+                    catch (TalkingReferences.NoTalkingWordException)
                     {
-                        Console.Write("<LABEL " + (tempByte - 145).ToString() + ">");
-                    }
+                        switch (tempByte)
+                        {
+                            case 129:
+                                Console.Write("<Avatar's Name>");
+                                break;
+                            case 130:
+                                Console.Write("<End Conversation>");
+                                break;
+                            case 131:
+                                Console.Write("<Pause>");
+                                break;
+                            case 132:
+                                Console.Write("<Join Party>");
+                                break;
+                            case 133:
+                                Console.Write("<Gold - ");
+                                break;
+                            case 134:
+                                Console.Write("<Change>");
+                                break;
+                            case 135:
+                                Console.Write("<Or>");
+                                break;
+                            case 136:
+                                Console.Write("<Ask name>");
+                                break;
+                            case 137:
+                                Console.Write("<Karma + 1>");
+                                break;
+                            case 138:
+                                Console.Write("<Karma - 1>");
+                                break;
+                            case 139:
+                                Console.Write("<Call Guards>");
+                                break;
+                            case 140:
+                                Console.Write("<Set Flag>");
+                                break;
+                            case 141:
+                                Console.Write("<New Line>");
+                                break;
+                            case 142:
+                                Console.Write("<Rune>");
+                                break;
+                            case 143:
+                                Console.Write("<Key Wait>");
+                                break;
+                            case 144:
+                                Console.Write("<DEFAULT ANSWER>");
+                                break;
+                        }
 
+                        if (tempByte >= 145 && tempByte <= 155)
+                        {
+                            Console.Write("<LABEL " + (tempByte - 145).ToString() + ">");
+                        }
+
+                    }
+                    if (useCompressedWord) { Console.Write(" "); }
                 }
             }
         }
