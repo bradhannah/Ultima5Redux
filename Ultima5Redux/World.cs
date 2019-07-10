@@ -75,11 +75,6 @@ namespace Ultima5Redux
             talkScriptsRef = new TalkScripts(u5Directory, talkRef);
 
 
-
-            talkScriptsRef.PrintSomeTalking();
-                      //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype = npcRef.NPCs[100].NPCType;
-            //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype1 = npcRef.NPCs[80].NPCType;
-            //NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum npctype2 = npcRef.NPCs[202].NPCType;
         }
 
 
