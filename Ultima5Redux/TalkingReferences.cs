@@ -30,55 +30,22 @@ namespace Ultima5Redux
             // we are creating a lookup map because the indexes are not concurrent
             compressWordLookupMap = new Dictionary<int, byte>(CompressedWords.Strs.Count);
 
-
-            if (false)
-            {
-                AddByteLookupMapping(1, 255, 0);
-            }
-            else if (false)
-            {
-                AddByteLookupMapping(1, 7, 0);
-                AddByteLookupMapping(9, 27, 1);
-                AddByteLookupMapping(29, 49, 2);
-                AddByteLookupMapping(51, 64, 3);
-                AddByteLookupMapping(66, 66, 4);
-                AddByteLookupMapping(68, 69, 5);
-                AddByteLookupMapping(71, 71, 6);
-                AddByteLookupMapping(76, 129, 11);
-            }
-            else if (true)
-            {
-                int i = 0;
-                AddByteLookupMapping(1, 7, --i);
-                AddByteLookupMapping(9, 27, --i);
-                AddByteLookupMapping(29, 49, --i);
-                AddByteLookupMapping(51, 64, --i);
-                AddByteLookupMapping(66, 66, --i);
-                AddByteLookupMapping(68, 69, --i);
-                AddByteLookupMapping(71, 71, --i);
-                i -= 4;
-                AddByteLookupMapping(76, 129, i);
-            }
-            else
-            {
-                AddByteLookupMapping(1, 7, 0);
-                AddByteLookupMapping(9, 27, -1);
-                AddByteLookupMapping(29, 49, -2);
-                AddByteLookupMapping(51, 64, -3);
-                AddByteLookupMapping(66, 66, -4);
-                AddByteLookupMapping(68, 69, -5);
-                AddByteLookupMapping(71, 71, -6);
-                AddByteLookupMapping(76, 129, -11);
-
-            }
+            // this is kind of gross, but these define the index gaps in the lookup table
+            // I have no idea why there are gaps, but alas, this works around them
+            int i = 0;
+            AddByteLookupMapping(1, 7, --i);
+            AddByteLookupMapping(9, 27, --i);
+            AddByteLookupMapping(29, 49, --i);
+            AddByteLookupMapping(51, 64, --i);
+            AddByteLookupMapping(66, 66, --i);
+            AddByteLookupMapping(68, 69, --i);
+            AddByteLookupMapping(71, 71, --i);
+            i -= 4;
+            AddByteLookupMapping(76, 129, i);
         }
 
         public string GetTalkingWord(int index)
         {
-            //    if (!compressWordLookupMap.Keys.Contains(index))
-            //  {
-            //    return "MISSING";
-            //}
             try
             {
                 return (CompressedWords.Strs[compressWordLookupMap[index]]);

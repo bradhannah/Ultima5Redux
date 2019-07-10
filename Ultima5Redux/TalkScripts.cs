@@ -10,12 +10,17 @@ namespace Ultima5Redux
 {
     class TalkScript
     {
-        public enum TalkCommand {AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
+        public enum TalkCommand {PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
             KarmaMinusOne = 0x8A, CallGuards = 0x8B, SetFlag = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_Code = 0xA2, Unknown_Enter = 0x9F, Label = 0xFE,
             Unknown_FF = 0xFF };
 
         public const byte MIN_LABEL = 0x91;
         public const byte MAX_LABEL = 0x91 + 0x0A;
+
+        public void AddTalkCommand(TalkCommand talkCommand, string talkStr)
+        {
+            System.Console.Write(talkStr);
+        }
 }
 
 class TalkScripts
@@ -114,6 +119,9 @@ class TalkScripts
             List<bool> labelsSeenList = new List<bool>(10);
             labelsSeenList.AddRange(Enumerable.Repeat(false, 10));
 
+            TalkScript talkScript = new TalkScript();
+            string buildAWord = "";
+
             foreach (byte byteWord in talkRefs[SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle][5])
             {
                 // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
@@ -144,25 +152,32 @@ class TalkScripts
                         Console.WriteLine("");
                         continue;
                     }
-                    Console.Write((char)tempByte);
+                    //Console.Write((char)tempByte);
+                    buildAWord += (char)tempByte;
                 }
                 else // usePhraseLookup = true      
                 {
                     // We were instructed to perform a lookup, either a compressed word lookup, or a special character
 
                     // if we were previously writing single characters, but have moved onto lookups, then we add a space, and reset it
-                    if (writingSingleCharacters) { System.Console.Write(" "); writingSingleCharacters = false; }
+                    if (writingSingleCharacters) {
+                        //System.Console.Write(" ");
+                        writingSingleCharacters = false;
+                        buildAWord += " "; }
 
                     // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
                     try
                     {
                         string talkingWord = talkRef.GetTalkingWord((int)tempByte);
-                        Console.Write(talkingWord);
+                      //  Console.Write(talkingWord);
                         useCompressedWord = true;
+                        buildAWord += talkingWord;
                     }
                     // this is a bit lazy, but if I ask for a string that is not captured in the lookup map, then we know it's a special case
                     catch (TalkingReferences.NoTalkingWordException)
                     {
+                        talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, buildAWord);
+                        buildAWord = "";
                         if (tempByte >= TalkScript.MIN_LABEL && tempByte <= TalkScript.MAX_LABEL)
                         {
                             int offset = tempByte - TalkScript.MIN_LABEL;
@@ -181,7 +196,11 @@ class TalkScripts
                             System.Console.Write("<" + ((TalkScript.TalkCommand)tempByte).ToString() + ">");
                         }
                     }
-                    if (useCompressedWord) { Console.Write(" "); }
+
+                    if (useCompressedWord) {
+                    //    Console.Write(" ");
+                        buildAWord += " ";
+                    }
                 }
             }
         }
