@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    class TalkingReferences
+    class CompressedWordReference
     {
         private SomeStrings CompressedWords;
 
@@ -22,7 +22,7 @@ namespace Ultima5Redux
             }
         }
 
-        public TalkingReferences(DataOvlReference dataRef)
+        public CompressedWordReference(DataOvlReference dataRef)
         {
             CompressedWords = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TALK_COMPRESSED_WORDS).GetChunkAsStringList();
             CompressedWords.PrintSomeStrings();

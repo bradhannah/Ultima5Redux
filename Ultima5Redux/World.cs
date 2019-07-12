@@ -22,7 +22,7 @@ namespace Ultima5Redux
         private NonPlayerCharacters npcRef;
         private DataOvlReference dataOvlRef;
         private TalkScripts talkScriptsRef;
-        private TalkingReferences talkRef;
+        private CompressedWordReference talkRef;
 
         public World (string ultima5Directory) : base ()
         {
@@ -71,7 +71,7 @@ namespace Ultima5Redux
 
             dataOvlRef = new DataOvlReference(u5Directory);
 
-            talkRef = new TalkingReferences(dataOvlRef);
+            talkRef = new CompressedWordReference(dataOvlRef);
             talkScriptsRef = new TalkScripts(u5Directory, talkRef);
 
 

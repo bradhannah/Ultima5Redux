@@ -10,18 +10,34 @@ namespace Ultima5Redux
 {
     class TalkScript
     {
+        /// <summary>
+        /// Represents a single script component
+        /// </summary>
         protected internal class ScriptItem
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public TalkCommand Command { get; }
             public string Str { get; }
             public int LabelNum { get; }
 
+            /// <summary>
+            /// Creates a label 
+            /// </summary>
+            /// <param name="command">a GotoLabel or DefineLabel</param>
+            /// <param name="nLabelNum">number of the label</param>
             public ScriptItem(TalkCommand command, int nLabelNum)
             {
                 Command = command;
                 LabelNum = nLabelNum;
             }
 
+            /// <summary>
+            /// A talk command with an associated string
+            /// </summary>
+            /// <param name="command"></param>
+            /// <param name="str"></param>
             public ScriptItem(TalkCommand command, string str)
             {
                 Command = command;
@@ -29,6 +45,9 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Represents a single line of a script
+        /// </summary>
         private class ScriptLine
         {
             private List<ScriptItem> scriptItems = new List<ScriptItem>();
@@ -39,19 +58,42 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// The default script line offsets for the static responses
+        /// </summary>
+        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
+
+        /// <summary>
+        /// Specific talk command
+        /// </summary>
         public enum TalkCommand {PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
             KarmaMinusOne = 0x8A, CallGuards = 0x8B, SetFlag = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_Code = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
             Unknown_FF = 0xFF };
 
+        /// <summary>
+        ///  the minimum talk code for labels (in .tlk files)
+        /// </summary>
         public const byte MIN_LABEL = 0x91;
+
+        /// <summary>
+        /// the maximum talk code for labels (in .tlk files)
+        /// </summary>
         public const byte MAX_LABEL = 0x91 + 0x0A;
+
+        /// <summary>
+        /// total number of labels that are allowed to be defined
+        /// </summary>
         public const int TOTAL_LABELS = 0x0A;
 
-        //private TalkScript talkScript = new TalkScript();
+        // All of the ScriptLines
         private List<ScriptLine> scriptLines = new List<ScriptLine>();
 
+        // tracking the current script line
         private ScriptLine currentScriptLine = new ScriptLine();
 
+        /// <summary>
+        /// Build the initial TalkScrit
+        /// </summary>
         public TalkScript()
         {
             // let's add it immediately instead of waiting for someone to commit it
@@ -68,8 +110,17 @@ namespace Ultima5Redux
             scriptLines.Add(currentScriptLine);
         }
 
+        /// <summary>
+        /// Add a talk label. 
+        /// </summary>
+        /// <param name="talkCommand">Either GotoLabel or DefineLabel</param>
+        /// <param name="nLabel">label # (0-9)</param>
         public void AddTalkLabel(TalkCommand talkCommand, int nLabel)
         {
+            if (nLabel < 0 || nLabel > TOTAL_LABELS)
+            {
+                throw new Exception("Label Number: " + nLabel.ToString() + " is out of range");
+            }
             if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
             {
                 currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
@@ -79,6 +130,18 @@ namespace Ultima5Redux
             {
                 throw new Exception("You passed a talk command that isn't a label! ");
             }
+        }
+
+        /// <summary>
+        /// Add to the current script line, but no string associated
+        /// For example: STRING <NEWLINE><AVATARNAME>
+        /// </summary>
+        /// <param name="talkCommand"></param>
+        public void AddTalkCommand(TalkCommand talkCommand)
+        {
+            System.Console.Write("<" + (talkCommand.ToString() + ">"));
+
+            currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
         }
 
         /// <summary>
@@ -103,8 +166,9 @@ namespace Ultima5Redux
 
 class TalkScripts
     {
-        //List<TalkScript> talkScripts = new List<TalkScript>();
-
+        /// <summary>
+        /// the mapping of NPC # to file .tlk file offset
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
         protected internal unsafe struct NPC_TalkOffset
         {
@@ -116,17 +180,60 @@ class TalkScripts
         private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>> talkRefs =
             new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
 
-        private enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
+        /// <summary>
+        /// when you must adjust the offset into the compressed word lookup, subtract this
+        /// </summary>
         private const int TALK_OFFSET_ADJUST = 0x80;
+        /// <summary>
+        /// a null byte signifies the end of the script line
+        /// </summary>
         private const byte END_OF_SCRIPTLINE_BYTE = 0x00;
 
-        private TalkingReferences talkRef;
+        // all of the compressed words that are referenced in the .tlk files
+        private CompressedWordReference compressedWordRef;
 
+        /// <summary>
+        /// Build the talk scripts
+        /// </summary>
+        /// <param name="u5Directory">Directory with Ultima 5 data files</param>
+        /// <param name="dataRef">DataOVL Reference provides compressed word details</param>
+        public TalkScripts(string u5Directory, DataOvlReference dataRef)
+        {
+            this.compressedWordRef = new CompressedWordReference(dataRef);
+
+            SmallMapReference.SingleMapReference.SmallMapMasterFiles[] smallMapRefs =
+            {
+                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle,
+                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne,
+                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep,
+                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling
+            };
+
+            foreach (SmallMapReference.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
+            {
+                InitalizeTalkScripts(u5Directory, mapRef);
+                for (int i = 0; i < talkRefs[mapRef].Count; i++)
+                {
+                    InitializeTalkScriptsFromRaw(mapRef, i);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initlializes the talk scripts into a fairly raw byte[] format
+        /// </summary>
+        /// <param name="u5Directory">directory of Ultima 5 data files</param>
+        /// <param name="mapMaster">the small map reference (helps pick *.tlk file)</param>
         private void InitalizeTalkScripts(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster)
         {
-            string talkFilename = Path.Combine(u5Directory, SmallMapReference.SingleMapReference.GetTLKFilenameFromMasterFile(mapMaster));
-            List<byte> talkByteList = Utils.GetFileAsByteList(talkFilename);
+            // example NPC 1 at Castle in Lord British's castle
+            // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
+            // 65 108  69 
 
+            string talkFilename = Path.Combine(u5Directory, SmallMapReference.SingleMapReference.GetTLKFilenameFromMasterFile(mapMaster));
+
+            // the raw bytes of the talk file
+            List<byte> talkByteList = Utils.GetFileAsByteList(talkFilename);
 
             // need this to make sure we don't fall of the end of the file when we read it
             FileInfo fi = new FileInfo(talkFilename);
@@ -154,17 +261,21 @@ class TalkScripts
 
                 }
                 // you are in a single file right now
+                // repeat for every single NPC in the file
                 for (int i = 0; i < nEntries; i++)
                 {
                     long chunkLength; // didn't want a long, but the file size is long...
 
-                    // get the length by figuring the difference between 
+                    // calculate the offset size
                     if (i + 1 < nEntries)
                     {
+                        // if it is not the last entry, then calculate the length from the current to the next offset
                         chunkLength = npcOffsets[i + 1].fileOffset - npcOffsets[i].fileOffset;
                     }
                     else
                     {
+                        // else if you are on the last entry, then we use the file size 
+                        // note: probably could have used the talkByteList.length
                         chunkLength = talkFileSize - npcOffsets[i].fileOffset;
                     }
 
@@ -178,48 +289,34 @@ class TalkScripts
             }
         }
 
-        // example NPC 1 at Castle in Lord British's castle
-        // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
-        // 65 108  69 
-        public TalkScripts(string u5Directory, TalkingReferences talkRef)
-        {
-            this.talkRef = talkRef;
-            SmallMapReference.SingleMapReference.SmallMapMasterFiles[] smallMapRefs =
-            {
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle,
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne,
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep,
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling
-            };
 
-            foreach (SmallMapReference.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
-            {
-                InitalizeTalkScripts(u5Directory, mapRef);
-                for (int i = 0; i < talkRefs[mapRef].Count; i++)
-                {
-                    InitializeTalkScriptsFromRaw(mapRef, i);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Intializes an individual TalkingScript using the raw data created from InitalizeTalkScripts
+        /// </summary>
+        /// <param name="smallMapRef">the small map reference</param>
+        /// <param name="index">NPC Index</param>
         public void InitializeTalkScriptsFromRaw (SmallMapReference.SingleMapReference.SmallMapMasterFiles smallMapRef, int index)
         {
-            bool writingSingleCharacters = false;
-            List<bool> labelsSeenList = new List<bool>(TalkScript.TOTAL_LABELS);
-            labelsSeenList.AddRange(Enumerable.Repeat(false, TalkScript.TOTAL_LABELS));
+            TalkScript talkScript = new TalkScript(); // the script we are building and will return
 
-            TalkScript talkScript = new TalkScript();
-            string buildAWord = string.Empty;
+            List<bool> labelsSeenList = new List<bool>(TalkScript.TOTAL_LABELS);    // keeps track of the labels we have already seen
+            labelsSeenList.AddRange(Enumerable.Repeat(false, TalkScript.TOTAL_LABELS)); // creates a list of "false" bools to set the default labelsSeenList
+
+            bool writingSingleCharacters = false;   // are we currently writing a single character at a time?
+            string buildAWord = string.Empty;       // the word we are currently building if we are writingSingleCharacters=true
 
             foreach (byte byteWord in talkRefs[smallMapRef][index])
             {
                 // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
                 if (byteWord == END_OF_SCRIPTLINE_BYTE) {
                     buildAWord += "\n";
+                    // we are done with the entire line, so lets add it the script
                     talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, buildAWord);
-                    buildAWord = string.Empty;
+                    // tells the script to move onto the next command
                     talkScript.NextLine();
-                    writingSingleCharacters = false; 
+                    // reset some vars
+                    buildAWord = string.Empty;
+                    writingSingleCharacters = false;
                     continue;
                 }
 
@@ -263,13 +360,13 @@ class TalkScripts
                     // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
                     try
                     {
-                        string talkingWord = talkRef.GetTalkingWord((int)tempByte);
+                        string talkingWord = compressedWordRef.GetTalkingWord((int)tempByte);
                       //  Console.Write(talkingWord);
                         useCompressedWord = true;
                         buildAWord += talkingWord;
                     }
                     // this is a bit lazy, but if I ask for a string that is not captured in the lookup map, then we know it's a special case
-                    catch (TalkingReferences.NoTalkingWordException)
+                    catch (CompressedWordReference.NoTalkingWordException)
                     {
                         // oddly enough - we add an existing plain string that we have been building
                         // at the very last second
@@ -299,6 +396,7 @@ class TalkScripts
                         }
                         else
                         {
+                            // this is just a standard special command, so let's add it
                             talkScript.AddTalkCommand((TalkScript.TalkCommand)tempByte, string.Empty);
                         }
                     }
