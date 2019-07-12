@@ -184,10 +184,15 @@ class TalkScripts
         }
 
         // map reference is key because NPC numbers can overlap
-        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>> talkRefs =
-            new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
+//        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>> talkRefs =
+//            new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
 
-        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>> talkScriptRefs = new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>>();
+        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> talkRefs =
+            new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
+
+//        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>> talkScriptRefs = new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>>();
+        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> talkScriptRefs = 
+            new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>();
         /// <summary>
         /// when you must adjust the offset into the compressed word lookup, subtract this
         /// </summary>
@@ -226,13 +231,16 @@ class TalkScripts
                 InitalizeTalkScripts(u5Directory, mapRef);
                 
                 // initialize and allocate the appropriately sized list of TalkScript(s)
-                talkScriptRefs.Add(mapRef, new List<TalkScript>(talkRefs[mapRef].Count));
-                
+                talkScriptRefs.Add(mapRef, new Dictionary<int, TalkScript>(talkRefs[mapRef].Count));
+
                 // for each of the NPCs in the particular map, initialize the individual NPC talk script
-                for (int i = 0; i < talkRefs[mapRef].Count; i++)
+//                for (int i = 0; i < talkRefs[mapRef].Count; i++)
+                foreach (int key in talkRefs[mapRef].Keys)
                 {
-                    talkScriptRefs[mapRef].Add(InitializeTalkScriptFromRaw(mapRef, i));
-                    System.Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + i.ToString());
+                    //                    talkScriptRefs[mapRef].Add(InitializeTalkScriptFromRaw(mapRef, i));
+                    //talkScriptRefs[mapRef].Add(InitializeTalkScriptFromRaw(mapRef, key));
+                    talkScriptRefs[mapRef][key] = InitializeTalkScriptFromRaw(mapRef, key);
+                    System.Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + key.ToString());
                 }
             }
         }
@@ -272,7 +280,8 @@ class TalkScripts
             // the first word in the talk file tells you how many characters are referenced in script
             int nEntries = Utils.LittleEndianConversion(talkByteList[0], talkByteList[1]);
 
-            talkRefs.Add(mapMaster, new List<byte[]>(nEntries));
+            //talkRefs.Add(mapMaster, new List<byte[]>(nEntries));
+            talkRefs.Add(mapMaster, new Dictionary<int, byte[]>(nEntries));
 
             // a list of all the offsets
             //npcOffsets = new List<NPC_TalkOffset>(nEntries);
@@ -287,9 +296,10 @@ class TalkScripts
                     unsafe {
                         NPC_TalkOffset talkOffset = (NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset));
                         npcOffsets[talkOffset.npcIndex] = talkOffset;
-                    
-                    //                  npcOffsets.Add((NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset)));
-//                    Console.WriteLine("NPC #" + npcOffsets.Last().npcIndex + " at offset " + npcOffsets.Last().fileOffset + " in file " + talkFilename);
+
+                        //                  npcOffsets.Add((NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset)));
+                        //                    Console.WriteLine("NPC #" + npcOffsets.Last().npcIndex + " at offset " + npcOffsets.Last().fileOffset + " in file " + talkFilename);
+                        // OMG I'm tired.. figure out why this isn't printing properly....
                         Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex] + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
                     }
                 }
@@ -332,7 +342,9 @@ class TalkScripts
                     // copy only the bytes from the offset
                     talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int)chunkLength);
                     // Add the raw bytes to the specific Map+NPC#
-                    talkRefs[mapMaster].Add(chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
+//                    talkRefs[mapMaster].Add(chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
+                    talkRefs[mapMaster].Add(key, chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
+
                 }
             }
         }
