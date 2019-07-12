@@ -22,6 +22,11 @@ namespace Ultima5Redux
             public string Str { get; }
             public int LabelNum { get; }
 
+            public ScriptItem(TalkCommand command) : this(command, string.Empty)
+            {
+
+            }
+
             /// <summary>
             /// Creates a label 
             /// </summary>
@@ -124,7 +129,7 @@ namespace Ultima5Redux
             if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
             {
                 currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
-                System.Console.Write("<" + (talkCommand.ToString() + " " + nLabel + ">"));
+                //System.Console.Write("<" + (talkCommand.ToString() + " " + nLabel + ">"));
             }
             else 
             {
@@ -139,7 +144,7 @@ namespace Ultima5Redux
         /// <param name="talkCommand"></param>
         public void AddTalkCommand(TalkCommand talkCommand)
         {
-            System.Console.Write("<" + (talkCommand.ToString() + ">"));
+            //System.Console.Write("<" + (talkCommand.ToString() + ">"));
 
             currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
         }
@@ -154,11 +159,13 @@ namespace Ultima5Redux
         {
             if (talkCommand == TalkCommand.PlainString)
             {
-                System.Console.Write(talkStr);
+                currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, talkStr));
+                //System.Console.Write(talkStr);
             }
             else
             {
-                System.Console.Write("<" + (talkCommand.ToString() + ">"));
+                currentScriptLine.AddScriptItem(new ScriptItem(talkCommand));
+                //System.Console.Write("<" + (talkCommand.ToString() + ">"));
             }
             currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, talkStr));
         }
@@ -180,6 +187,7 @@ class TalkScripts
         private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>> talkRefs =
             new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
 
+        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>> talkScriptRefs = new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>>();
         /// <summary>
         /// when you must adjust the offset into the compressed word lookup, subtract this
         /// </summary>
@@ -199,8 +207,10 @@ class TalkScripts
         /// <param name="dataRef">DataOVL Reference provides compressed word details</param>
         public TalkScripts(string u5Directory, DataOvlReference dataRef)
         {
+            // save the compressed words, we're gonna need them
             this.compressedWordRef = new CompressedWordReference(dataRef);
 
+            // just a lazy array that is easier to enumerate than the enum
             SmallMapReference.SingleMapReference.SmallMapMasterFiles[] smallMapRefs =
             {
                 SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle,
@@ -209,14 +219,30 @@ class TalkScripts
                 SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling
             };
 
+            // for each of the maps we are going to initialize
             foreach (SmallMapReference.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
             {
+                // initialize the raw component of the talk scripts
                 InitalizeTalkScripts(u5Directory, mapRef);
+                
+                // initialize and allocate the appropriately sized list of TalkScript(s)
+                talkScriptRefs.Add(mapRef, new List<TalkScript>(talkRefs[mapRef].Count));
+                
+                // for each of the NPCs in the particular map, initialize the individual NPC talk script
                 for (int i = 0; i < talkRefs[mapRef].Count; i++)
                 {
-                    InitializeTalkScriptsFromRaw(mapRef, i);
+                    talkScriptRefs[mapRef].Add(InitializeTalkScriptFromRaw(mapRef, i));
+                    System.Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + i.ToString());
                 }
             }
+        }
+
+        public TalkScript GetTalkScript(SmallMapReference.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
+        {
+            //if (talkScriptRefs[smallMapRef][nNPC].IsSpecialDialogType())
+            if (NonPlayerCharacters.NonPlayerCharacter.IsSpecialDialogType((NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum)nNPC))
+            { return null; }
+            return (talkScriptRefs[smallMapRef][nNPC]);
         }
 
         /// <summary>
@@ -240,7 +266,8 @@ class TalkScripts
             long talkFileSize = fi.Length;
 
             // keep track of the NPC to file offset mappings
-            List<NPC_TalkOffset> npcOffsets;
+            //List<NPC_TalkOffset> npcOffsets;
+            Dictionary<int, NPC_TalkOffset> npcOffsets;
 
             // the first word in the talk file tells you how many characters are referenced in script
             int nEntries = Utils.LittleEndianConversion(talkByteList[0], talkByteList[1]);
@@ -248,7 +275,8 @@ class TalkScripts
             talkRefs.Add(mapMaster, new List<byte[]>(nEntries));
 
             // a list of all the offsets
-            npcOffsets = new List<NPC_TalkOffset>(nEntries);
+            //npcOffsets = new List<NPC_TalkOffset>(nEntries);
+            npcOffsets = new Dictionary<int, NPC_TalkOffset>(nEntries);
 
             unsafe
             {
@@ -256,33 +284,53 @@ class TalkScripts
                 for (int i = 0; i < (nEntries * sizeof(NPC_TalkOffset)); i += sizeof(NPC_TalkOffset))
                 {
                     // add 2 because we know we are starting at an offset
-                    npcOffsets.Add((NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset)));
-                    Console.WriteLine("NPC #" + npcOffsets.Last().npcIndex + " at offset " + npcOffsets.Last().fileOffset + " in file " + talkFilename);
-
+                    unsafe {
+                        NPC_TalkOffset talkOffset = (NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset));
+                        npcOffsets[talkOffset.npcIndex] = talkOffset;
+                    
+                    //                  npcOffsets.Add((NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset)));
+//                    Console.WriteLine("NPC #" + npcOffsets.Last().npcIndex + " at offset " + npcOffsets.Last().fileOffset + " in file " + talkFilename);
+                        Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex] + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
+                    }
                 }
                 // you are in a single file right now
                 // repeat for every single NPC in the file
-                for (int i = 0; i < nEntries; i++)
+                int count = 1;
+                foreach (int key in npcOffsets.Keys)
+//                    for (int i = 0; i < nEntries; i++)
                 {
-                    long chunkLength; // didn't want a long, but the file size is long...
+                    long chunkLength = 0; // didn't want a long, but the file size is long...
 
                     // calculate the offset size
-                    if (i + 1 < nEntries)
+//                    foreach (int key in npcOffsets.Keys)
                     {
-                        // if it is not the last entry, then calculate the length from the current to the next offset
-                        chunkLength = npcOffsets[i + 1].fileOffset - npcOffsets[i].fileOffset;
+                        if (count < npcOffsets.Keys.Count)
+                        {
+                            chunkLength = npcOffsets[key + 1].fileOffset - npcOffsets[key].fileOffset;
+                        }
+                        else
+                        {
+                            chunkLength = talkFileSize - npcOffsets[key].fileOffset;
+                        }
+
+                        count++;
                     }
-                    else
-                    {
-                        // else if you are on the last entry, then we use the file size 
-                        // note: probably could have used the talkByteList.length
-                        chunkLength = talkFileSize - npcOffsets[i].fileOffset;
-                    }
+                    //if (i  < nEntries)
+                    //{
+                    //    // if it is not the last entry, then calculate the length from the current to the next offset
+                    //    chunkLength = npcOffsets[i + 1].fileOffset - npcOffsets[i].fileOffset;
+                    //}
+                    //else
+                    //{
+                    //    // else if you are on the last entry, then we use the file size 
+                    //    // note: probably could have used the talkByteList.length
+                    //    chunkLength = talkFileSize - npcOffsets[i].fileOffset;
+                    //}
 
                     byte[] chunk = new byte[chunkLength];
 
                     // copy only the bytes from the offset
-                    talkByteList.CopyTo(npcOffsets[i].fileOffset, chunk, 0, (int)chunkLength);
+                    talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int)chunkLength);
                     // Add the raw bytes to the specific Map+NPC#
                     talkRefs[mapMaster].Add(chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
                 }
@@ -295,7 +343,7 @@ class TalkScripts
         /// </summary>
         /// <param name="smallMapRef">the small map reference</param>
         /// <param name="index">NPC Index</param>
-        public void InitializeTalkScriptsFromRaw (SmallMapReference.SingleMapReference.SmallMapMasterFiles smallMapRef, int index)
+        private TalkScript InitializeTalkScriptFromRaw (SmallMapReference.SingleMapReference.SmallMapMasterFiles smallMapRef, int index)
         {
             TalkScript talkScript = new TalkScript(); // the script we are building and will return
 
@@ -358,7 +406,8 @@ class TalkScripts
                         buildAWord += " "; }
 
                     // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
-                    try
+//                    try
+                    if (compressedWordRef.IsTalkingWord((int)tempByte))
                     {
                         string talkingWord = compressedWordRef.GetTalkingWord((int)tempByte);
                       //  Console.Write(talkingWord);
@@ -366,7 +415,8 @@ class TalkScripts
                         buildAWord += talkingWord;
                     }
                     // this is a bit lazy, but if I ask for a string that is not captured in the lookup map, then we know it's a special case
-                    catch (CompressedWordReference.NoTalkingWordException)
+                    //catch (CompressedWordReference.NoTalkingWordException)
+                    else
                     {
                         // oddly enough - we add an existing plain string that we have been building
                         // at the very last second
@@ -406,6 +456,7 @@ class TalkScripts
                     }
                 }
             }
+            return talkScript;
         }
     }
 }

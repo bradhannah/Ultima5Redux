@@ -58,7 +58,6 @@ namespace Ultima5Redux
                 }
             }
 
-
             /// <summary>
             /// Original structure
             /// </summary>
@@ -75,11 +74,24 @@ namespace Ultima5Redux
             /// <summary>
             /// NPC Type, any other value is a specific character
             /// </summary>
-            public enum NPCDialogTypeEnum { Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87, InnKeeper = 0x88 };
+            public enum NPCDialogTypeEnum { Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
+                InnKeeper = 0x88, UnknownX85 = 0x85, UnknownX86 = 0x86, Unknown = 0xFF };
+
+            static public bool IsSpecialDialogType(NPCDialogTypeEnum dialogType)
+            {
+                foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[])Enum.GetValues(typeof(NPCDialogTypeEnum)))
+                {
+                    if (dialogType == tempDialogType)
+                        return true;
+                }
+                return false;
+            }
 
             public NPCSchedule Schedule { get; }
             public byte DialogNumber { get; }
             public byte CharacterType { get; }
+
+            private TalkScript talkScript;
             SmallMapReference.SingleMapReference MapReference;
 
             public NPCDialogTypeEnum NPCType {
@@ -94,15 +106,16 @@ namespace Ultima5Redux
                     }
                     return NPCDialogTypeEnum.Custom;
                 }
-             }
+            }
 
-
-            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNumber)
+            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNumber, TalkScript talkScript)
             {
                 Schedule = new NPCSchedule(sched);
                 MapReference = mapRef;
                 CharacterType = npcType;
                 DialogNumber = dialogNumber;
+                this.talkScript = talkScript;
+
                 // no schedule? I guess you're not real
                 if (!IsEmptySched(sched))
                 {
@@ -134,7 +147,6 @@ namespace Ultima5Redux
         /// </summary>
         private List<NonPlayerCharacter> npcs = new List<NonPlayerCharacter>();
 
-
         /// <summary>
         /// How many bytes does each NPC record take
         /// </summary>
@@ -149,6 +161,7 @@ namespace Ultima5Redux
         /// How many bytes does the schedule structure use?
         /// </summary>
         private static readonly int SCHEDULE_OFFSET_SIZE = Marshal.SizeOf(typeof(NonPlayerCharacter.NPC_Schedule));
+
         /// <summary>
         /// How many NPC records per town?
         /// </summary>
@@ -175,7 +188,7 @@ namespace Ultima5Redux
         /// <param name="u5Directory">Directory with Ultima 5</param>
         /// <param name="mapMaster">The master map from which to load</param>
         /// <param name="smallMapRef">Small map reference to help link NPCs to a map</param>
-        private void InitializeNPCs(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReference smallMapRef)
+        private void InitializeNPCs(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReference smallMapRef, TalkScripts talkScriptsRef)
         {
             // open the appropriate NPC data file
             string dataFilenameAndPath = Path.Combine(u5Directory, SmallMapReference.SingleMapReference.GetNPCFilenameFromMasterFile(mapMaster));
@@ -218,17 +231,23 @@ namespace Ultima5Redux
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
                     SmallMapReference.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByFileAndIndex(mapMaster, nTown);
-                    npcs.Add(new NonPlayerCharacter(singleMapRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc]));
+                    npcs.Add(new NonPlayerCharacter(singleMapRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc], talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc])));
                 }
             }
         }
 
-        public NonPlayerCharacters(string u5Directory, SmallMapReference smallMapRef)
+        /// <summary>
+        /// Construct all of the non player characters across all of the SmallMaps
+        /// </summary>
+        /// <param name="u5Directory">the directory with Ultima 5 data files</param>
+        /// <param name="smallMapRef">The small map reference</param>
+        /// <param name="talkScriptsRe">Talk script references</param>
+        public NonPlayerCharacters(string u5Directory, SmallMapReference smallMapRef, TalkScripts talkScriptsRef)
         {
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef, talkScriptsRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef, talkScriptsRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef, talkScriptsRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef, talkScriptsRef);
         }
 
 

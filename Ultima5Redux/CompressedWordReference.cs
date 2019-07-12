@@ -13,6 +13,13 @@ namespace Ultima5Redux
 
         private Dictionary<int, byte> compressWordLookupMap;
 
+        /// <summary>
+        /// Adds a byte offset lookup.
+        /// This is hard to follow - but basically it describes what should be added or subtracted from an index based on the range it lies in.
+        /// </summary>
+        /// <param name="indexStart">the first index to apply the offset</param>
+        /// <param name="indexStop">the last index to apply the offset to</param>
+        /// <param name="offset">the offset to add or subtract (positive or negative)</param>
         private void AddByteLookupMapping(byte indexStart, byte indexStop, int offset)
         {
             Debug.Assert(indexStop <= 255);
@@ -22,6 +29,10 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Construct a compressed word reference using the Data.OVL reference
+        /// </summary>
+        /// <param name="dataRef"></param>
         public CompressedWordReference(DataOvlReference dataRef)
         {
             CompressedWords = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TALK_COMPRESSED_WORDS).GetChunkAsStringList();
@@ -44,6 +55,29 @@ namespace Ultima5Redux
             AddByteLookupMapping(76, 129, i);
         }
 
+        public bool IsTalkingWord(int index)
+        {
+            if (index > CompressedWords.Strs.Count)
+            {
+                return false;
+            }
+            if (!compressWordLookupMap.ContainsKey(index))
+            {
+                return false;
+            }
+
+            //if (compressWordLookupMap[index] == null) return false;
+
+            return true;
+
+        }
+
+        /// <summary>
+        /// Get a compressed word with an index
+        /// The index will be automatically adjusted
+        /// </summary>
+        /// <param name="index">the index as it appears in the .tlk file</param>
+        /// <returns></returns>
         public string GetTalkingWord(int index)
         {
             try
@@ -59,6 +93,9 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Couldn't find a talking word at the indicated index
+        /// </summary>
         public class NoTalkingWordException: Exception
         {
             public NoTalkingWordException(string message) :base(message)

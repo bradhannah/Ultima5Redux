@@ -58,8 +58,12 @@ namespace Ultima5Redux
             // build the sign tables
             signRef = new Signs(ultima5Directory);
 
+            dataOvlRef = new DataOvlReference(u5Directory);
+
+            talkScriptsRef = new TalkScripts(u5Directory, dataOvlRef);
+
             // build the NPC tables
-            npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef);
+            npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef, talkScriptsRef);
 
             foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
             {
@@ -68,12 +72,6 @@ namespace Ultima5Redux
                     Console.WriteLine(npc.NPCType.ToString());
                 }
             }
-
-            dataOvlRef = new DataOvlReference(u5Directory);
-
-            talkRef = new CompressedWordReference(dataOvlRef);
-            talkScriptsRef = new TalkScripts(u5Directory, talkRef);
-
 
         }
 
