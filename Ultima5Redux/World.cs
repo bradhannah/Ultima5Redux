@@ -15,7 +15,7 @@ namespace Ultima5Redux
         public LargeMap underworldMap;
 
         private string u5Directory;
-        private SmallMapReference smallMapRef = new SmallMapReference();
+        private SmallMapReference smallMapRef;
         private CombatMapReference combatMapRef = new CombatMapReference();
         private Look lookRef;
         private Signs signRef;
@@ -28,11 +28,15 @@ namespace Ultima5Redux
         {
             u5Directory = ultima5Directory;
 
+            dataOvlRef = new DataOvlReference(u5Directory);
+
             // build the overworld map
             overworldMap = new LargeMap(u5Directory, LargeMap.Maps.Overworld);
             
             // build the underworld map
             underworldMap = new LargeMap(u5Directory, LargeMap.Maps.Underworld);
+
+            smallMapRef = new SmallMapReference(dataOvlRef);
 
             // build all the small maps from the Small Map reference
             foreach (SmallMapReference.SingleMapReference mapRef in smallMapRef.MapReferenceList)
@@ -58,7 +62,6 @@ namespace Ultima5Redux
             // build the sign tables
             signRef = new Signs(ultima5Directory);
 
-            dataOvlRef = new DataOvlReference(u5Directory);
 
             talkScriptsRef = new TalkScripts(u5Directory, dataOvlRef);
 

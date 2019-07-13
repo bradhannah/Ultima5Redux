@@ -26,9 +26,9 @@ namespace Ultima5Redux
                 FileOffset = fileOffset;
             }
 
-            public enum Location { Britainnia_Underworld = 0x00, Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, Fogsbane, Stormcrow, Greyhaven, Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut,
-                Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny, Paws, Cove, Buccaneers_Den, Ararat, Bordermarch,
-                Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold }
+            public enum Location { Britainnia_Underworld = 0x00, Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, Fogsbane, Stormcrow, Greyhaven,
+                Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut, Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny,
+                Paws, Cove, Buccaneers_Den, Ararat, Bordermarch, Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold }
 
             /// <summary>
             /// Map master files. These represent .DAT, .NPC and .TLK files
@@ -71,6 +71,11 @@ namespace Ultima5Redux
             /// the location (ie. single town like Moonglow)
             /// </summary>
             public Location MapLocation { get; set; }
+
+            /// <summary>
+            /// The official name of the location
+            /// </summary>
+            public string Name { get;  }
 
             /// <summary>
             /// The master file
@@ -234,13 +239,23 @@ namespace Ultima5Redux
             new Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>(MASTER_FILES);
 
         /// <summary>
+        /// Data OVL reference used for grabbing a lot of different data 
+        /// </summary>
+        private DataOvlReference dataRef;
+
+        /// <summary>
+        /// a list of all the location names
+        /// </summary>
+        private List<string> locationNames;
+
+        /// <summary>
         /// Cheater function to automatically create floors in a building
         /// </summary>
         /// <param name="location"></param>
         /// <param name="startFloor"></param>
         /// <param name="nFloors"></param>
         /// <returns></returns>
-        private static List<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location, int startFloor, short nFloors, short roomOffset)
+        private static List<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location, int startFloor, short nFloors, short roomOffset, string name)
         {
             List<SingleMapReference> mapRefs = new List<SingleMapReference>();
 
@@ -273,7 +288,9 @@ namespace Ultima5Redux
             }
             masterFileLocationDictionary[masterMap].Add(location);
 
+            // get the filename of the location - we use it as key into a map
             string dataFilename = SingleMapReference.GetFilenameFromLocation(location);
+            
             // create an offset counter if it doesn't already exist
             if (!roomOffsetCountDictionary.ContainsKey(dataFilename))
             {
@@ -284,7 +301,7 @@ namespace Ultima5Redux
             short roomOffset = roomOffsetCountDictionary[dataFilename];
 
             // add one or more map references 
-            mapReferences.AddRange(GenerateSingleMapReferences(location, hasBasement?-1:0, nFloors, roomOffset));
+            mapReferences.AddRange(GenerateSingleMapReferences(location, hasBasement?-1:0, nFloors, roomOffset, locationNames[(int)location]));
 
             // add the number of floors you have just added so that it can increment the file offset for subequent calls
             roomOffsetCountDictionary[dataFilename] += nFloors;
@@ -320,12 +337,37 @@ namespace Ultima5Redux
             throw new Exception("Location was not found!");
         }
 
+        public void InitializeLocationNames ()
+        {
+            // get the data chunks that have the offsets to the strings in the data.ovl file, representing each location (most)
+            DataChunk locationNameOffsetChunk = dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAME_INDEXES);
+
+            // get the offsets 
+            List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUINT16();
+            locationNames = new List<string>(locationOffsets.Count+1);
+
+            // I happen to know that the underworld and overworld is [0], so let's add a placeholder
+            locationNames.Add("Overworld/Underworld");
+
+            // grab each location string
+            // it isn't the most efficient way, but it gets the job done
+            foreach (ushort offset in locationOffsets)
+            {
+                    locationNames.Add(dataRef.GetDataChunk(DataChunk.DataFormatType.SimpleString, string.Empty, offset, 20).GetChunkAsString());
+            }
+            System.Console.Write("");
+        }
+
         /// <summary>
         /// Construct all small map references
         /// </summary>
-        public SmallMapReference()
+        public SmallMapReference(DataOvlReference dataRef)
         {
             // I wish I could do this a smarter way, but as of now I have no idea where this data is stored in any of the data files
+
+            this.dataRef = dataRef;
+
+            InitializeLocationNames();
 
             // Castle.dat
             AddLocation(SingleMapReference.Location.Lord_Britishs_Castle, true, 5);

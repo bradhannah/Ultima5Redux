@@ -56,19 +56,31 @@ namespace Ultima5Redux
 
         }
 
-        public enum DataChunkName { Unused, TALK_COMPRESSED_WORDS };
+        public enum DataChunkName {
+            Unused,
+            TALK_COMPRESSED_WORDS,
+            //LOCATION_NAME_INDEXES_1,
+            //LOCATION_NAME_INDEXES_2,
+            LOCATION_NAME_INDEXES,
+            LOCATION_NAMES };
 
         private Dictionary<DataChunkName, DataChunk> chunkMap=new Dictionary<DataChunkName, DataChunk>();
+
+        public DataChunk GetDataChunk(DataChunk.DataFormatType dataType, string description, int offset, int length)
+        {
+            return new DataChunk(dataType, description, dataOvlByteArray, offset, length);
+        }
 
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return chunkMap[dataChunkName];
         }
 
+
         private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue, DataChunkName dataChunkName)
         {
             // create the data chunk 
-            DataChunk chunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
+            DataChunk chunk = new DataChunk(dataFormat, description, rawData, offset, dataLength, addToValue);
 
             // all data chunks get added to the chunk list
             dataChunks.AddDataChunk(chunk);
@@ -113,8 +125,10 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Health text (5 of them)", dataOvlByteArray, 0x918, 0x29));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Spell runes (26 of them)", dataOvlByteArray, 0x941, 0x64));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Unknown", dataOvlByteArray, 0x9a5, 0xa8));
-            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", dataOvlByteArray, 0xa4d, 0x111));
-            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Dungeon names (8 of them)", dataOvlByteArray, 0xb5e, 0x3a));
+            AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", dataOvlByteArray, 0xa4d, 0x111, 0, DataChunkName.LOCATION_NAMES);
+            //dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", dataOvlByteArray, 0xa4d, 0x111));
+            //dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Dungeon names (8 of them)", dataOvlByteArray, 0xb5e, 0x3a));
+
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Virtue names (8 of them)", dataOvlByteArray, 0xb98, 0x48));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Virtue mantras (8 of them)", dataOvlByteArray, 0xbe0, 0x1e));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.StringList, "Store names", dataOvlByteArray, 0xbfe, 0x2fc));
@@ -131,8 +145,13 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.ByteList, "Which Map index do we start in (for DWELLING.DAT)", dataOvlByteArray, 0x1e32, 0x8));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.ByteList, "Which Map index do we start in (for CASTLE.DAT)", dataOvlByteArray, 0x1e3a, 0x8));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.ByteList, "Which Map index do we start in (for KEEP.DAT)", dataOvlByteArray, 0x1e42, 0x8));
-            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13 shorts, add 0x10)", dataOvlByteArray, 0x1e4a, 0x1a, 0x10));
-            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.UINT16List, "Name of dwellings/castle/keeps/dungeons index (22 shorts, add 0x10))", dataOvlByteArray, 0x1e6e, 0x2c, 0x10));
+
+            //            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13 shorts, add 0x10)", dataOvlByteArray, 0x1e4a, 0x1a, 0x10));
+            //            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.UINT16List, "Name of dwellings/castle/keeps/dungeons index (22 shorts, add 0x10))", dataOvlByteArray, 0x1e6e, 0x2c, 0x10));
+            AddDataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13+22 shorts, add 0x10)", dataOvlByteArray, 0x1e4a, 0x50, 0x10, DataChunkName.LOCATION_NAME_INDEXES);
+            //AddDataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13+22 shorts, add 0x10)", dataOvlByteArray, 0x1e4a, 0x1a, 0x10, DataChunkName.LOCATION_NAME_INDEXES_1);
+            //AddDataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13+22 shorts, add 0x10)", dataOvlByteArray, 0x1e6e, 0x2c, 0x10, DataChunkName.LOCATION_NAME_INDEXES_2);
+
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.ByteList, "X-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", dataOvlByteArray, 0x1e9a, 0x28));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", dataOvlByteArray, 0x1ec2, 0x28));
             dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", dataOvlByteArray, 0x1ec2, 0x28));
