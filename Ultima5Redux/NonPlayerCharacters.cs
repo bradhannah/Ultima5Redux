@@ -77,6 +77,11 @@ namespace Ultima5Redux
             public enum NPCDialogTypeEnum { Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
                 InnKeeper = 0x88, UnknownX85 = 0x85, UnknownX86 = 0x86, Unknown = 0xFF };
 
+            /// <summary>
+            /// Return true if the dialog is not part of a standard dialog tree like a guard or shopkeeper
+            /// </summary>
+            /// <param name="dialogType">The dialog type that yu want to compare</param>
+            /// <returns></returns>
             static public bool IsSpecialDialogType(NPCDialogTypeEnum dialogType)
             {
                 foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[])Enum.GetValues(typeof(NPCDialogTypeEnum)))
@@ -87,13 +92,33 @@ namespace Ultima5Redux
                 return false;
             }
 
+            /// <summary>
+            /// The daily schedule of the NPC
+            /// </summary>
             public NPCSchedule Schedule { get; }
+            /// <summary>
+            /// The Dialog identifier
+            /// </summary>
             public byte DialogNumber { get; }
-            public byte CharacterType { get; }
+            
+            /// <summary>
+            /// The byte representing the type of character
+            /// </summary>
+            private byte CharacterType { get; }
 
+            /// <summary>
+            /// The talk script the NPC will follow
+            /// </summary>
             private TalkScript talkScript;
-            SmallMapReference.SingleMapReference MapReference;
 
+            /// <summary>
+            /// Which map is the NPC on?
+            /// </summary>
+            public SmallMapReference.SingleMapReference MapReference { get; }
+
+            /// <summary>
+            /// What type of NPC are they? 
+            /// </summary>
             public NPCDialogTypeEnum NPCType {
                 get
                 {
@@ -108,6 +133,14 @@ namespace Ultima5Redux
                 }
             }
 
+            /// <summary>
+            /// Construct an NPC
+            /// </summary>
+            /// <param name="mapRef">Which map are they on?</param>
+            /// <param name="sched">daily schedule</param>
+            /// <param name="npcType">type of NPC they are</param>
+            /// <param name="dialogNumber">dialog number referencing data OVL</param>
+            /// <param name="talkScript">their conversation script</param>
             public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNumber, TalkScript talkScript)
             {
                 Schedule = new NPCSchedule(sched);
@@ -123,7 +156,12 @@ namespace Ultima5Redux
                 }
             }
 
-            private bool IsEmptySched(NPC_Schedule sched)
+            /// <summary>
+            /// Does the NPC have an empty schedule? If so, then they aren't actually an NPC
+            /// </summary>
+            /// <param name="sched">daily schedule</param>
+            /// <returns></returns>
+            static private bool IsEmptySched(NPC_Schedule sched)
             {
                 unsafe
                 {
@@ -134,7 +172,10 @@ namespace Ultima5Redux
             }
         }
 
-        public List<NonPlayerCharacter> NPCs
+        /// <summary>
+        /// All of the NPCs
+        /// </summary>
+        private List<NonPlayerCharacter> NPCs
         {
             get
             {
@@ -166,6 +207,7 @@ namespace Ultima5Redux
         /// How many NPC records per town?
         /// </summary>
         private const int NPCS_PER_TOWN = 32;
+
         private static readonly int STARTING_NPC_TYPE_TOWN_OFFSET = SCHEDULE_OFFSET_SIZE * NPCS_PER_TOWN; // starting position (within town) of NPC type
         private static readonly int STARTING_NPC_DIALOG_TOWN_OFFSET = STARTING_NPC_TYPE_TOWN_OFFSET + (SIZEOF_NPC_TYPE_BLOCK * NPCS_PER_TOWN); // starting position (within town) of NPC dialog
         private const int SIZEOF_NPC_TYPE_BLOCK = 1;

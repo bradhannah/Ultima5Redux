@@ -247,7 +247,6 @@ class TalkScripts
 
         public TalkScript GetTalkScript(SmallMapReference.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
         {
-            //if (talkScriptRefs[smallMapRef][nNPC].IsSpecialDialogType())
             if (NonPlayerCharacters.NonPlayerCharacter.IsSpecialDialogType((NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum)nNPC))
             { return null; }
             return (talkScriptRefs[smallMapRef][nNPC]);
