@@ -13,6 +13,12 @@ namespace Ultima5Redux
         /// </summary>
         public class SingleMapReference
         {
+            /// <summary>
+            /// Construct a single map reference
+            /// </summary>
+            /// <param name="mapLocation">overall location (ie. Moonglow)</param>
+            /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
+            /// <param name="fileOffset">location of data offset in map file</param>
             public SingleMapReference(Location mapLocation, int floor, int fileOffset)
             {
                 MapLocation = mapLocation;
@@ -20,13 +26,18 @@ namespace Ultima5Redux
                 FileOffset = fileOffset;
             }
 
-            //public enum MapFile {CASTLE_DAT="castle.dat", KEEP_DAT="keep.dat" };
             public enum Location { Britainnia_Underworld = 0x00, Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, Fogsbane, Stormcrow, Greyhaven, Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut,
                 Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny, Paws, Cove, Buccaneers_Den, Ararat, Bordermarch,
                 Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold }
 
+            /// <summary>
+            /// Map master files. These represent .DAT, .NPC and .TLK files
+            /// </summary>
             public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep };
 
+            /// <summary>
+            /// ID of the map location
+            /// </summary>
             public byte Id
             {
                 get
@@ -34,6 +45,10 @@ namespace Ultima5Redux
                     return (byte)MapLocation;
                 }
             }
+
+            /// <summary>
+            /// name of the map file
+            /// </summary>
             public string MapFilename
             {
                 get
@@ -42,10 +57,24 @@ namespace Ultima5Redux
                 }
             }
 
+            /// <summary>
+            /// the floor that the single map represents
+            /// </summary>
             public int Floor { get; set; }
+            
+            /// <summary>
+            /// the offset of the map data in the data file
+            /// </summary>
             public int FileOffset { get; set; }
+
+            /// <summary>
+            /// the location (ie. single town like Moonglow)
+            /// </summary>
             public Location MapLocation { get; set; }
 
+            /// <summary>
+            /// The master file
+            /// </summary>
             public SmallMapMasterFiles MasterFile
             {
                 get
@@ -66,6 +95,11 @@ namespace Ultima5Redux
                 }
             }
 
+            /// <summary>
+            /// Get the name of the .TLK file based on the master map file
+            /// </summary>
+            /// <param name="mapMaster"></param>
+            /// <returns>name of the .TLK file</returns>
             public static string GetTLKFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
                 switch (mapMaster)
@@ -81,6 +115,12 @@ namespace Ultima5Redux
                 }
                 throw (new Exception("Couldn't map NPC filename"));
             }
+
+            /// <summary>
+            /// Gets the NPC file based on the master map file
+            /// </summary>
+            /// <param name="mapMaster"></param>
+            /// <returns>name of the .NPC file</returns>
             public static string GetNPCFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
                 switch (mapMaster)
@@ -97,7 +137,12 @@ namespace Ultima5Redux
                 throw (new Exception("Couldn't map NPC filename"));
             }
 
-            public static string GetFilenameFromLocation (Location location)
+            /// <summary>
+            /// Gets the master file type based on the location
+            /// </summary>
+            /// <param name="location"></param>
+            /// <returns></returns>
+            public static SmallMapMasterFiles GetMapMasterFromLocation(Location location)
             {
                 switch (location)
                 {
@@ -109,7 +154,7 @@ namespace Ultima5Redux
                     case Location.Paws:
                     case Location.Cove:
                     case Location.Buccaneers_Den:
-                        return FileConstants.CASTLE_DAT;
+                        return SmallMapMasterFiles.Castle;
                     case Location.Moonglow:
                     case Location.Britain:
                     case Location.Jhelom:
@@ -118,7 +163,7 @@ namespace Ultima5Redux
                     case Location.Trinsic:
                     case Location.Skara_Brae:
                     case Location.New_Magincia:
-                        return FileConstants.TOWNE_DAT;
+                        return SmallMapMasterFiles.Towne;
                     case Location.Fogsbane:
                     case Location.Stormcrow:
                     case Location.Waveguide:
@@ -128,7 +173,7 @@ namespace Ultima5Redux
                     case Location.Suteks_Hut:
                     case Location.SinVraals_Hut:
                     case Location.Grendels_Hut:
-                        return FileConstants.DWELLING_DAT;
+                        return SmallMapMasterFiles.Dwelling;
                     case Location.Ararat:
                     case Location.Bordermarch:
                     case Location.Farthing:
@@ -137,12 +182,36 @@ namespace Ultima5Redux
                     case Location.Lycaeum:
                     case Location.Empath_Abbey:
                     case Location.Serpents_Hold:
+                        return SmallMapMasterFiles.Keep;
+                }
+                throw new Exception("EH?");
+            }
+
+            /// <summary>
+            /// Get the filename of the map data based on the location
+            /// </summary>
+            /// <param name="location">the location you are looking for</param>
+            /// <returns>the filename string</returns>
+            public static string GetFilenameFromLocation (Location location)
+            {
+                switch (GetMapMasterFromLocation(location))
+                {
+                    case SmallMapMasterFiles.Castle:
+                        return FileConstants.CASTLE_DAT;
+                    case SmallMapMasterFiles.Towne:
+                        return FileConstants.TOWNE_DAT;
+                    case SmallMapMasterFiles.Dwelling:
+                        return FileConstants.DWELLING_DAT;
+                    case SmallMapMasterFiles.Keep:
                         return FileConstants.KEEP_DAT;
                 }
                 throw (new Exception("Bad Location"));
             }
         }
 
+        /// <summary>
+        /// A list of all map references
+        /// </summary>
         public List<SingleMapReference> MapReferenceList
         {
             get
@@ -153,8 +222,16 @@ namespace Ultima5Redux
 
         // the master copy of the map references
         private List<SingleMapReference> mapReferences = new List<SingleMapReference>();
+        
+        // total number of master files (towne, keep, castle and dwelling)
+        private const int MASTER_FILES = 4;
+        
         // a tally of current file offsets used for auto-incrementing
         private Dictionary<string, short> roomOffsetCountDictionary = new Dictionary<string, short>();
+        
+        // a mapping of the master file -> a list of locations, which also provides an index value for the town (implied within list)
+        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>> masterFileLocationDictionary = 
+            new Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>(MASTER_FILES);
 
         /// <summary>
         /// Cheater function to automatically create floors in a building
@@ -186,6 +263,16 @@ namespace Ultima5Redux
         /// <param name="nFloors">How many floors?</param>
         private void AddLocation(SingleMapReference.Location location, bool hasBasement, short nFloors)
         {
+            // get the master map file from the location info
+            SingleMapReference.SmallMapMasterFiles masterMap = SingleMapReference.GetMapMasterFromLocation(location);
+            // we are going to track the order that the maps were added 
+            // if the master map hasn't been seen yet, then we need to create a new index array of locations
+            if (!masterFileLocationDictionary.ContainsKey(masterMap))
+            {
+                masterFileLocationDictionary.Add(masterMap, new List<SingleMapReference.Location>());
+            }
+            masterFileLocationDictionary[masterMap].Add(location);
+
             string dataFilename = SingleMapReference.GetFilenameFromLocation(location);
             // create an offset counter if it doesn't already exist
             if (!roomOffsetCountDictionary.ContainsKey(dataFilename))
@@ -203,26 +290,43 @@ namespace Ultima5Redux
             roomOffsetCountDictionary[dataFilename] += nFloors;
         }
 
-        public SingleMapReference GetSingleMapByFileAndIndex(SingleMapReference.SmallMapMasterFiles smallMap, int index)
-        {
-            int locationArrayLength = mapReferences.Count;
-            int nOccurances = 0;
-            for (int i = 0; i < locationArrayLength; i++)
-            {
-                if (mapReferences[i].MasterFile == smallMap)
-                {
-                    if (index == nOccurances)
-                    {
-                        return mapReferences[i];
-                    }
-                    nOccurances++;
-                }
-            }
-            throw (new Exception("Couldn't find map reference"));
+        /// <summary>
+        /// Get the location based on the index within the small map file
+        /// </summary>
+        /// <param name="smallMap">the small map file reference</param>
+        /// <param name="index">the 0-7 index within the small map file</param>
+        /// <returns>the location reference</returns>
+        public SingleMapReference.Location GetLocationByIndex(SingleMapReference.SmallMapMasterFiles smallMap, int index)
+        {            
+            SingleMapReference.Location location = masterFileLocationDictionary[smallMap][index];
+            return location;
         }
 
+        /// <summary>
+        /// Get a map reference based on a location
+        /// </summary>
+        /// <param name="location">The location you are looking for</param>
+        /// <returns>a single map reference providing details on the map itself</returns>
+        public SingleMapReference GetSingleMapByLocation (SingleMapReference.Location location)
+        {
+            SingleMapReference.SmallMapMasterFiles masterMap = SingleMapReference.GetMapMasterFromLocation(location);
+            foreach (SingleMapReference mapRef in mapReferences)
+            {
+                if (mapRef.MapLocation == location)
+                {
+                    return mapRef; 
+                }
+            }
+            throw new Exception("Location was not found!");
+        }
+
+        /// <summary>
+        /// Construct all small map references
+        /// </summary>
         public SmallMapReference()
         {
+            // I wish I could do this a smarter way, but as of now I have no idea where this data is stored in any of the data files
+
             // Castle.dat
             AddLocation(SingleMapReference.Location.Lord_Britishs_Castle, true, 5);
             AddLocation(SingleMapReference.Location.Palace_of_Blackthorn, true, 5);
@@ -258,10 +362,10 @@ namespace Ultima5Redux
             AddLocation(SingleMapReference.Location.Bordermarch, false, 2);
             AddLocation(SingleMapReference.Location.Farthing, false, 1);
             AddLocation(SingleMapReference.Location.Windemere, false, 1);
-            AddLocation(SingleMapReference.Location.Windemere, false, 1);
             AddLocation(SingleMapReference.Location.Stonegate, false, 1);
+            AddLocation(SingleMapReference.Location.Lycaeum, false, 3);
             AddLocation(SingleMapReference.Location.Empath_Abbey, false, 3);
-            AddLocation(SingleMapReference.Location.Greyhaven, true, 3);
+            AddLocation(SingleMapReference.Location.Serpents_Hold, true, 3);
         }
 
     }

@@ -300,7 +300,7 @@ class TalkScripts
                         //                  npcOffsets.Add((NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset)));
                         //                    Console.WriteLine("NPC #" + npcOffsets.Last().npcIndex + " at offset " + npcOffsets.Last().fileOffset + " in file " + talkFilename);
                         // OMG I'm tired.. figure out why this isn't printing properly....
-                        Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex] + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
+                        Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
                     }
                 }
                 // you are in a single file right now

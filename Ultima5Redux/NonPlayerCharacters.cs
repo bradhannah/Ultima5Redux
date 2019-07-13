@@ -203,6 +203,11 @@ namespace Ultima5Redux
                 List<byte> npcTypes = new List<byte>(NPCS_PER_TOWN);
                 List<byte> npcDialogNumber = new List<byte>(NPCS_PER_TOWN);
 
+                SmallMapReference.SingleMapReference.Location location = smallMapRef.GetLocationByIndex(mapMaster, nTown);
+                SmallMapReference.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByLocation(location);
+
+                //sing = smallMapRef.GetSingleMapByLocation(smallMapRef.GetLocationByIndex(mapMaster, nTown);
+
                 int townOffset = (TOWN_OFFSET_SIZE * nTown);
 
                 // bajh: I know this could be done in a single loop, but it would be so damn ugly that I honestly don't even want to both
@@ -227,10 +232,10 @@ namespace Ultima5Redux
                     npcDialogNumber.Add(npcData[offset + STARTING_NPC_DIALOG_TOWN_OFFSET]);
                 }
 
+
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
-                    SmallMapReference.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByFileAndIndex(mapMaster, nTown);
                     npcs.Add(new NonPlayerCharacter(singleMapRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc], talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc])));
                 }
             }

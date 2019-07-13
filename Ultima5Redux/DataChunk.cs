@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ultima5Redux
 {
+    /// <summary>
+    /// A collection of Datachunks
+    /// </summary>
     public class DataChunks
     {
         public DataChunks()
@@ -15,16 +18,28 @@ namespace Ultima5Redux
 
         private List<DataChunk> dataChunks;
 
+        /// <summary>
+        /// Add a chunk to the list
+        /// </summary>
+        /// <param name="chunk">datachunk</param>
         public void AddDataChunk (DataChunk chunk) 
         {
             dataChunks.Add(chunk);
         }
 
+        /// <summary>
+        /// Get a data chunk
+        /// </summary>
+        /// <param name="index">index into chunk list</param>
+        /// <returns></returns>
         public DataChunk GetChunk(int index)
         {
             return dataChunks[index];
         }
 
+        /// <summary>
+        /// Debug function to print it all (slow)
+        /// </summary>
         public void PrintEverything()
         {
             foreach (DataChunk chunk in dataChunks)
@@ -37,10 +52,25 @@ namespace Ultima5Redux
     }
 
 
+    /// <summary>
+    /// A data chunk represents a stream of bytes that can be represented in variety of ways depending on the data type
+    /// </summary>
     public class DataChunk
     {
+        /// <summary>
+        /// The encoding of the data
+        /// </summary>
         public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, ByteList };
 
+        /// <summary>
+        /// Construct a data chunk
+        /// </summary>
+        /// <param name="dataFormat">what kind of encoding represents the data?</param>
+        /// <param name="description">a brief description of what the data represents</param>
+        /// <param name="rawData">the raw byte data</param>
+        /// <param name="offset">the offset to start in the rawData that represents the chunk</param>
+        /// <param name="dataLength">the length of the data from the offset that represents the chunk</param>
+        /// <param name="addToValue">the value to add to each of each byte value (used occasionaly for bytes that represent offsets)</param>
         public DataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue)
         {
             DataFormat = dataFormat;
@@ -52,11 +82,23 @@ namespace Ultima5Redux
             ValueModifier = addToValue;
         }
 
+        /// <summary>
+        /// Construct a data chunk
+        /// Note: Assumes nothing to add to the byte values
+        /// </summary>
+        /// <param name="dataFormat">what kind of encoding represents the data?</param>
+        /// <param name="description">a brief description of what the data represents</param>
+        /// <param name="rawData">the raw byte data</param>
+        /// <param name="offset">the offset to start in the rawData that represents the chunk</param>
+        /// <param name="dataLength">the length of the data from the offset that represents the chunk</param>
         public DataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength) : 
             this(dataFormat, description, rawData, offset, dataLength, 0)
         {            
         }
 
+        /// <summary>
+        /// Debugging function that prints out the chunk
+        /// </summary>
         public void PrintChunk()
         {
             switch (DataFormat)
@@ -86,6 +128,11 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Return the data as a byte list 
+        /// Note: this will add/subtract using the addToValue
+        /// </summary>
+        /// <returns>a list of bytes</returns>
         public List<byte> GetAsByteList()
         {
             List<byte> data = new List<byte>(DataLength);
@@ -99,6 +146,11 @@ namespace Ultima5Redux
             return data;
         }
 
+        /// <summary>
+        /// Returns the data as a UINT16 list. It uses little endian convention.
+        /// Note: this will add/subtract using the addToValue
+        /// </summary>
+        /// <returns>list of UINT16s</returns>
         public List<UInt16> GetChunkAsUINT16 ()
         {
             List<UInt16> data = Utils.CreateOffsetList(RawData, FileOffset, DataLength);
@@ -109,6 +161,10 @@ namespace Ultima5Redux
             return data;
         }
 
+        /// <summary>
+        /// Returns a string representation of the datachunk
+        /// </summary>
+        /// <returns>a single string</returns>
         public string GetChunkAsString()
         {
             if (DataFormat == DataFormatType.FixedString)
@@ -122,16 +178,39 @@ namespace Ultima5Redux
             throw new Exception("String datatype doesn't match predefined list.");
         }
 
+        /// <summary>
+        /// Returns a collection of strings
+        /// </summary>
+        /// <returns></returns>
         public SomeStrings GetChunkAsStringList()
         {
             return (new SomeStrings(RawData.ToList(), 0, DataLength));
         }
 
+        /// <summary>
+        /// A brief description of the data chunk
+        /// </summary>
         public string Description { get; }
+        /// <summary>
+        /// The raw data of the data chunk
+        /// </summary>
         public byte[] RawData { get; }
+        /// <summary>
+        /// The length of the RawData 
+        /// This begins at zero in the array
+        /// </summary>
         public int DataLength { get; }
+        /// <summary>
+        /// The offset used when getting the RawData
+        /// </summary>
         public int FileOffset { get; }
+        /// <summary>
+        /// The adjustment value for bytes and UINT16
+        /// </summary>
         public byte ValueModifier { get;  }
+        /// <summary>
+        /// The expected data format of the chunk
+        /// </summary>
         public DataFormatType DataFormat { get; }
 
     }
