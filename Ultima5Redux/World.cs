@@ -22,13 +22,15 @@ namespace Ultima5Redux
         private NonPlayerCharacters npcRef;
         private DataOvlReference dataOvlRef;
         private TalkScripts talkScriptsRef;
-        private CompressedWordReference talkRef;
+        private GameState state;
 
         public World (string ultima5Directory) : base ()
         {
             u5Directory = ultima5Directory;
 
             dataOvlRef = new DataOvlReference(u5Directory);
+
+            state = new GameState();
 
             // build the overworld map
             overworldMap = new LargeMap(u5Directory, LargeMap.Maps.Overworld);
@@ -68,13 +70,28 @@ namespace Ultima5Redux
             // build the NPC tables
             npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef, talkScriptsRef);
 
+            //Conversation convo = new Conversation(npcRef.NPCs[21]); // dunkworth
+            // 19 = Margarett
+
+            Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
+            convo.SimulateConversation();
+            //0x48 or 0x28
+
+            int count = 0;
             foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
             {
                 if (npc.NPCType != 0)
                 {
-                    Console.WriteLine(npc.NPCType.ToString());
+                   if (npc.Name.Trim() == "Geoffrey")
+                    {
+                        Console.WriteLine(npc.NPCType.ToString());
+
+                    }
                 }
+                count++;
             }
+
+
 
         }
 

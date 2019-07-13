@@ -16,10 +16,16 @@ namespace Ultima5Redux
         protected internal class ScriptItem
         {
             /// <summary>
-            /// 
+            /// command issued
             /// </summary>
             public TalkCommand Command { get; }
+            /// <summary>
+            /// Associated string (can be empty)
+            /// </summary>
             public string Str { get; }
+            /// <summary>
+            /// If there is a label, then this is a zero based index
+            /// </summary>
             public int LabelNum { get; }
 
             public ScriptItem(TalkCommand command) : this(command, string.Empty)
@@ -53,7 +59,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Represents a single line of a script
         /// </summary>
-        private class ScriptLine
+        protected internal class ScriptLine
         {
             private List<ScriptItem> scriptItems = new List<ScriptItem>();
 
@@ -61,18 +67,53 @@ namespace Ultima5Redux
             {
                 scriptItems.Add(scriptItem);
             }
+
+            public int GetNumberOfScriptItems()
+            {
+                return scriptItems.Count;
+            }
+
+            public ScriptItem GetScriptItem(int index)
+            {
+                return scriptItems[index];
+            }
+
+            /// <summary>
+            /// Determines if a particular talk command is present in a script line
+            /// <remarks>This particularly helpful when looking for looking for <AvatarName></remarks>
+            /// </summary>
+            /// <param name="command">the command to search for</param>
+            /// <returns>true if it's present, false if it isn't</returns>
+            public bool ContainsCommand(TalkCommand command)
+            {
+                for (int nItem = 0; nItem < scriptItems.Count; nItem++)
+                {
+                    if (scriptItems[nItem].Command == command)
+                        return true;
+                }
+                return false;
+            }
+
         }
 
         /// <summary>
-        /// The default script line offsets for the static responses
+        /// Is the command only a simple or dynamic string?
         /// </summary>
-        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
+        /// <param name="command">the command to evaluate</param>
+        /// <returns>true if it is a string command only</returns>
+        static public bool IsStringOnlyCommand (TalkCommand command)
+        {
+            if (command == TalkCommand.PlainString || command == TalkCommand.AvatarsName || command == TalkCommand.NewLine || command == TalkCommand.Rune)
+                return true;
+
+            return false;
+        }
 
         /// <summary>
         /// Specific talk command
         /// </summary>
         public enum TalkCommand {PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
-            KarmaMinusOne = 0x8A, CallGuards = 0x8B, SetFlag = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_Code = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
+            KarmaMinusOne = 0x8A, CallGuards = 0x8B, SetFlag = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_CodeA2 = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
             Unknown_FF = 0xFF };
 
         /// <summary>
@@ -97,6 +138,11 @@ namespace Ultima5Redux
         private ScriptLine currentScriptLine = new ScriptLine();
 
         /// <summary>
+        /// The default script line offsets for the static responses
+        /// </summary>
+        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
+
+        /// <summary>
         /// Build the initial TalkScrit
         /// </summary>
         public TalkScript()
@@ -107,12 +153,22 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Move to the next line in the script
+        /// Move to the next line in the script (for adding new content)
         /// </summary>
         public void NextLine()
         {
             currentScriptLine = new ScriptLine();
             scriptLines.Add(currentScriptLine);
+        }
+
+        public ScriptLine GetScriptLine(int index)
+        {
+            return scriptLines[index];
+        }
+
+        public ScriptLine GetScriptLine(TalkConstants talkConst)
+        {
+            return (scriptLines[(int)talkConst]);
         }
 
         /// <summary>
@@ -167,11 +223,34 @@ namespace Ultima5Redux
                 currentScriptLine.AddScriptItem(new ScriptItem(talkCommand));
                 //System.Console.Write("<" + (talkCommand.ToString() + ">"));
             }
-            currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, talkStr));
+        }
+
+        /// <summary>
+        /// Print the script out to the console
+        /// </summary>
+        public void PrintScript()
+        {
+            foreach (ScriptLine line in scriptLines)
+            {
+                for (int nItem = 0; nItem < line.GetNumberOfScriptItems(); nItem++)
+                {
+                    ScriptItem item = line.GetScriptItem(nItem);
+
+                    if (item.Command == TalkCommand.PlainString)
+                    {
+                        System.Console.Write(item.Str);
+                    }
+                    else
+                    {
+                        System.Console.Write("<" + item.Command.ToString() + ">");
+                    }
+                }
+                //System.Console.WriteLine(); // a new line after the whole script line is read
+            }
         }
 }
 
-class TalkScripts
+    class TalkScripts
     {
         /// <summary>
         /// the mapping of NPC # to file .tlk file offset

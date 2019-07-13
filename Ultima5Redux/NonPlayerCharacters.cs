@@ -92,6 +92,21 @@ namespace Ultima5Redux
                 return false;
             }
 
+            public string Name
+            {
+                get
+                {
+                    if (talkScript != null)
+                    {
+                        return talkScript.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str;
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                } 
+            }
+
             /// <summary>
             /// The daily schedule of the NPC
             /// </summary>
@@ -110,6 +125,7 @@ namespace Ultima5Redux
             /// The talk script the NPC will follow
             /// </summary>
             private TalkScript talkScript;
+            public TalkScript Script { get { return talkScript; } }
 
             /// <summary>
             /// Which map is the NPC on?
@@ -175,7 +191,7 @@ namespace Ultima5Redux
         /// <summary>
         /// All of the NPCs
         /// </summary>
-        private List<NonPlayerCharacter> NPCs
+        protected internal List<NonPlayerCharacter> NPCs
         {
             get
             {

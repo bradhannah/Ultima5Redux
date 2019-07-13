@@ -60,6 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameState.cs" />
+    <Compile Include="Conversation.cs" />
     <Compile Include="CompressedWordReference.cs" />
     <Compile Include="TalkScripts.cs" />
     <Compile Include="DataChunk.cs" />
