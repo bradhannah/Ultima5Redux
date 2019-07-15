@@ -73,16 +73,17 @@ namespace Ultima5Redux
             //Conversation convo = new Conversation(npcRef.NPCs[21]); // dunkworth
             // 19 = Margarett
 
-            Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
-            convo.SimulateConversation();
-            //0x48 or 0x28
 
             int count = 0;
             foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
             {
-                if (npc.NPCType != 0)
+                if (npc.NPCType != 0 && npc.Script != null)
                 {
-                   if (npc.Name.Trim() == "Geoffrey")
+                    Console.WriteLine("");
+                    Console.WriteLine("---- SCRIPT for " + npc.Name);
+                    npc.Script.PrintScript();
+
+                    if (npc.Name.Trim() == "Geoffrey")
                     {
                         Console.WriteLine(npc.NPCType.ToString());
 
@@ -91,7 +92,10 @@ namespace Ultima5Redux
                 count++;
             }
 
-
+            Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
+            //   convo.SimulateConversation();
+            //0x48 or 0x28
+            Console.ReadKey();
 
         }
 

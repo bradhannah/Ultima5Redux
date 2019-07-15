@@ -72,11 +72,17 @@ namespace Ultima5Redux
             TalkScript.ScriptItem startItem = Start();
 
             List<int> conversationOrder = new List<int>();
+            List<TalkScript.ScriptLine> conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
 
             // just an idea for now - when a label comes up, we can add it and then proceed to the next line by adding it
             // this is perpetual as long as there is more to see
             conversationOrder.Add((int)TalkScript.TalkConstants.Description);
             conversationOrder.Add((int)TalkScript.TalkConstants.Greeting);
+
+            conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Description));
+            conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Greeting));
+
+
             //conversationOrder.Add((int)TalkScript.TalkConstants.Name);
 
             // the index into conversationOrder
@@ -89,14 +95,17 @@ namespace Ultima5Redux
                 int nTalkLineIndex = conversationOrder[nConversationIndex];
 
                 // the current ScriptLine
-                currentLine = script.GetScriptLine(conversationOrder[nConversationIndex]);
+                //currentLine = script.GetScriptLineByIndex(conversationOrder[nConversationIndex]);
+                currentLine = conversationOrderScriptLines[nConversationIndex];
 
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
                 if (conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting && currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName)
-                    && !state.NpcHasMetAvatar(npc))
+                //if (cur == (int)TalkScript.TalkConstants.Greeting && currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName)
+                && !state.NpcHasMetAvatar(npc))
                 {
                     // randomly add an introduction of the Avatar since they haven't met him
                     if (state.OneInXOdds(4)) conversationOrder.Add((int)TalkScript.TalkConstants.Name);
+                    if (state.OneInXOdds(4)) conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
                 }
 
                 // we process all ScriptLines before proceeding the next conversation item
@@ -144,7 +153,14 @@ namespace Ultima5Redux
                     }
                     else // we have a special code to process
                     {
-                        System.Console.Write("<" + item.Command.ToString() + ">");
+                        if (item.Command == TalkScript.TalkCommand.DefineLabel)
+                        {
+                            System.Console.Write("<" + item.Command.ToString() + item.LabelNum.ToString() + ">");
+                        }
+                        else
+                        {
+                            System.Console.Write("<" + item.Command.ToString() + ">");
+                        }
                     }
                 }
 

@@ -5,11 +5,51 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
     class TalkScript
     {
+        /// <summary>
+        /// Collection of questions and answers, makes accessing them much easier
+        /// </summary>
+        protected internal class ScriptQuestionAnswers
+        {
+            public Dictionary<string, ScriptQuestionAnswer> QuestionAnswers { get; }
+
+            public ScriptQuestionAnswers()
+            {
+                QuestionAnswers = new Dictionary<string, ScriptQuestionAnswer>();
+            }
+
+            public void Add (ScriptQuestionAnswer sqa)
+            {
+                foreach (string question in sqa.questions)
+                {
+                    QuestionAnswers.Add(question, sqa);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// A single instance of a question and answer for dialog
+        /// </summary>
+        protected internal class ScriptQuestionAnswer
+        {
+            public ScriptLine Answer { get; }
+            public List<string> questions { get; }
+
+            public ScriptQuestionAnswer(List<string> questions, ScriptLine answer)
+            {
+                this.questions = questions;
+                Answer = answer;
+            }
+        }
+
+
+
         /// <summary>
         /// Represents a single script component
         /// </summary>
@@ -137,6 +177,9 @@ namespace Ultima5Redux
         // tracking the current script line
         private ScriptLine currentScriptLine = new ScriptLine();
 
+        private const int endBaseIndexes = 4; // the end index for the base (TalkConstants)
+        private int endTextIndexes;
+
         /// <summary>
         /// The default script line offsets for the static responses
         /// </summary>
@@ -161,7 +204,75 @@ namespace Ultima5Redux
             scriptLines.Add(currentScriptLine);
         }
 
-        public ScriptLine GetScriptLine(int index)
+
+        /// <summary>
+        /// After adding all elements, this will process the script into a more readable format
+        /// </summary>
+        public void InitScript()
+        {
+            int nIndex = endBaseIndexes + 1;
+            bool labelEncountered = false;
+
+            // repeat through the question/answer components until we hit a label - then we know to move onto the label section
+            ScriptQuestionAnswers scriptQuestionAnswers = new ScriptQuestionAnswers();
+            string question;
+
+            do
+            {
+                List<string> currQuestions = new List<string>();
+                ScriptLine line = scriptLines[nIndex];
+
+                if (line.GetScriptItem(0).Command != TalkCommand.PlainString)
+                {
+                    labelEncountered = true;
+                    break;
+                }
+
+                Debug.Assert(line.GetNumberOfScriptItems() == 1);
+
+                // first time around we KNOW there is a first question
+                question = line.GetScriptItem(0).Str;
+                // dumb little thing - there are some scripts that have the same keyword multiple times
+                // the game favours the one it sees first (see "Camile" in West Brittany as an example)
+                if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                    currQuestions.Add(question);
+
+                // if we peek ahead and the next command is an <or> then we will just skip it and continue to add to the questions list
+                //if (scriptLines[nIndex+1].ContainsCommand(TalkCommand.Or))
+                while (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
+                {
+                    nIndex += 2;
+                    line = scriptLines[nIndex];
+                    question = line.GetScriptItem(0).Str;
+                    if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                    {
+                        currQuestions.Add(question);
+                    }
+                }
+
+                ScriptLine nextLine = scriptLines[nIndex + 1];
+                scriptQuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
+                nIndex+=2;
+            } while (labelEncountered == false);
+
+            // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
+
+            do
+            {
+                ScriptLine line = scriptLines[nIndex];
+                if (line.GetNumberOfScriptItems() == 2 && line.GetScriptItem(0).Command == TalkCommand.DefaultMessage && line.GetScriptItem(1).Command == TalkCommand.Unknown_Enter)
+                {
+                    // all done. we either had no labels or reached the end of them
+                }
+
+                // still to do... read the labels and organize them carefully
+                // still to do... save the ScriptQuestionAnswers object for future use.. THIS IS SO MUCH BETTER!
+                nIndex++;
+            } while (nIndex < scriptLines.Count);
+
+        }
+
+        public ScriptLine GetScriptLineByIndex(int index)
         {
             return scriptLines[index];
         }
@@ -170,6 +281,20 @@ namespace Ultima5Redux
         {
             return (scriptLines[(int)talkConst]);
         }
+
+        public ScriptLine GetScriptLineLabel(int nLabel)
+        {
+            foreach (ScriptLine line in scriptLines)
+            {
+                ScriptItem item = line.GetScriptItem(0);
+                if (item.Command == TalkCommand.DefineLabel && item.LabelNum == nLabel)
+                {
+                    return line;
+                }
+            }
+            throw new Exception("You requested a script label that doesn't exist");
+        }
+
 
         /// <summary>
         /// Add a talk label. 
@@ -182,6 +307,7 @@ namespace Ultima5Redux
             {
                 throw new Exception("Label Number: " + nLabel.ToString() + " is out of range");
             }
+
             if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
             {
                 currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
@@ -242,7 +368,14 @@ namespace Ultima5Redux
                     }
                     else
                     {
-                        System.Console.Write("<" + item.Command.ToString() + ">");
+                        if (item.Command == TalkCommand.DefineLabel || item.Command == TalkCommand.GotoLabel)
+                        {
+                            System.Console.Write("<" + item.Command.ToString() + item.LabelNum.ToString() + ">");
+                        }
+                        else
+                        {
+                            System.Console.Write("<" + item.Command.ToString() + ">");
+                        }
                     }
                 }
                 //System.Console.WriteLine(); // a new line after the whole script line is read
@@ -385,7 +518,6 @@ namespace Ultima5Redux
                 // repeat for every single NPC in the file
                 int count = 1;
                 foreach (int key in npcOffsets.Keys)
-//                    for (int i = 0; i < nEntries; i++)
                 {
                     long chunkLength = 0; // didn't want a long, but the file size is long...
 
@@ -403,26 +535,13 @@ namespace Ultima5Redux
 
                         count++;
                     }
-                    //if (i  < nEntries)
-                    //{
-                    //    // if it is not the last entry, then calculate the length from the current to the next offset
-                    //    chunkLength = npcOffsets[i + 1].fileOffset - npcOffsets[i].fileOffset;
-                    //}
-                    //else
-                    //{
-                    //    // else if you are on the last entry, then we use the file size 
-                    //    // note: probably could have used the talkByteList.length
-                    //    chunkLength = talkFileSize - npcOffsets[i].fileOffset;
-                    //}
 
                     byte[] chunk = new byte[chunkLength];
 
                     // copy only the bytes from the offset
                     talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int)chunkLength);
                     // Add the raw bytes to the specific Map+NPC#
-//                    talkRefs[mapMaster].Add(chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
                     talkRefs[mapMaster].Add(key, chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
-
                 }
             }
         }
@@ -530,7 +649,8 @@ namespace Ultima5Redux
                             else
                             {
                                 // the first time you see the label is a goto statement
-                                talkScript.AddTalkLabel(TalkScript.TalkCommand.GotoLabel, offset);
+                                talkScript.AddTalkLabel(TalkScript.TalkCommand.DefineLabel, offset);
+                                //talkScript.AddTalkLabel(TalkScript.TalkCommand.GotoLabel, offset);
                                 labelsSeenList[offset] = true;
                             }
                         }
@@ -546,6 +666,7 @@ namespace Ultima5Redux
                     }
                 }
             }
+            talkScript.InitScript();
             return talkScript;
         }
     }
