@@ -11,6 +11,24 @@ namespace Ultima5Redux
 {
     class TalkScript
     {
+        protected internal class ScriptTalkLabels
+        {
+            public ScriptQuestionAnswers SQA { get;  }
+            public ScriptLine DefaultLine { get;  }
+
+            public ScriptTalkLabels (ScriptLine defaultLine, ScriptQuestionAnswers sqa)
+            {
+                SQA = sqa;
+                DefaultLine = defaultLine;
+            }
+
+            public ScriptTalkLabels(ScriptLine defaultLine) : this(defaultLine, null)
+            {
+            }
+        }
+
+
+
         /// <summary>
         /// Collection of questions and answers, makes accessing them much easier
         /// </summary>
@@ -217,18 +235,24 @@ namespace Ultima5Redux
             ScriptQuestionAnswers scriptQuestionAnswers = new ScriptQuestionAnswers();
             string question;
 
+            if (currentScriptLine.GetScriptItem(0).Str.Trim()=="Flain")
+            {
+                Console.Write("");
+            }
+
             do
             {
                 List<string> currQuestions = new List<string>();
                 ScriptLine line = scriptLines[nIndex];
 
-                if (line.GetScriptItem(0).Command != TalkCommand.PlainString)
+ //               if (line.GetScriptItem(0).Command != TalkCommand.PlainString)
+                if (line.GetScriptItem(0).Command == TalkCommand.DefaultMessage)
                 {
                     labelEncountered = true;
                     break;
                 }
 
-                Debug.Assert(line.GetNumberOfScriptItems() == 1);
+                //Debug.Assert(line.GetNumberOfScriptItems() == 1);
 
                 // first time around we KNOW there is a first question
                 question = line.GetScriptItem(0).Str;
@@ -244,6 +268,7 @@ namespace Ultima5Redux
                     nIndex += 2;
                     line = scriptLines[nIndex];
                     question = line.GetScriptItem(0).Str;
+                    // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
                     if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
                     {
                         currQuestions.Add(question);
@@ -256,20 +281,125 @@ namespace Ultima5Redux
             } while (labelEncountered == false);
 
             // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
-
-            do
+            
+            do // begin the label processing loop
             {
+                if (scriptLines[0].GetScriptItem(0).Str == "Drudgeworth\n")
+                {
+                    Console.WriteLine("");
+                }
                 ScriptLine line = scriptLines[nIndex];
                 if (line.GetNumberOfScriptItems() == 2 && line.GetScriptItem(0).Command == TalkCommand.DefaultMessage && line.GetScriptItem(1).Command == TalkCommand.Unknown_Enter)
                 {
                     // all done. we either had no labels or reached the end of them
+                    // assert that we are on the last line of the script
+                    Debug.Assert(nIndex == scriptLines.Count - 1);
+                    break;
                 }
+
+                ScriptLine nextLine = scriptLines[nIndex + 1];
+
+                Debug.Assert(line.GetScriptItem(0).Command == TalkCommand.DefaultMessage);
+
+                // if the next line starts with a DefaultMessage then we know this will only be a single line message
+                if (nextLine.GetScriptItem(0).Command == TalkCommand.DefaultMessage)
+                {
+                    // this is only a single line
+                    break;
+                }
+
+                // I don't like this, it's inelegant, but it works...
+                // at this point we know:
+                // This is a multi line message 
+                bool nextCommandDefaultMessage = false;
+                do // called for each label #
+                {
+                    //if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "leof")
+                    //{
+                        //Console.WriteLine("AH");
+                    //}
+                    ScriptQuestionAnswers sqa = new ScriptQuestionAnswers();
+                    line = scriptLines[nIndex];
+                    // SAVE: the label 
+
+                    if (line.GetScriptItem(0).Command == TalkCommand.DefaultMessage && line.GetScriptItem(1).Command == TalkCommand.Unknown_Enter)
+                    {
+                        nextCommandDefaultMessage = true;
+                        break;
+                    }
+
+                    // it's a single line only, so we skip this tom foolery below
+                    if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.DefaultMessage)
+                    {
+
+                        nIndex++;
+                        continue;
+                    }
+
+                    // it's a default only answer, so we skip this tom foolery below
+                    if (scriptLines[nIndex + 2].GetScriptItem(0).Command == TalkCommand.DefaultMessage)
+                    {
+                        nIndex+=2;
+                        continue;
+                    }
+
+                    // this nextLine is the default answer for the question that was asked in the label
+                    // we know there was a question because it is a multiline label
+                    ScriptLine defaultAnswerLine = scriptLines[++nIndex];
+                    // SAVE: the default answer for the label
+
+                    do // go through the question/answer and <or>
+                    {
+                        List<string> currQuestions = new List<string>();
+                        // if the next line is an <or> then process the <or> 
+                        if (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
+                        {
+                            while (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
+                            {
+                                nIndex += 2;
+                                line = scriptLines[nIndex];
+                                question = line.GetScriptItem(0).Str;
+                                // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
+                                if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                                {
+                                    currQuestions.Add(question);
+                                }
+                            }
+                        }
+                        else // just capture the single response
+                        {
+                            // get the question line
+                            line = scriptLines[++nIndex];
+                        }
+
+                        // get your answer and store it
+                        nextLine = scriptLines[++nIndex];
+                        scriptQuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
+                       
+                        if (nextLine.GetScriptItem(0).Command == TalkCommand.DefaultMessage && nextLine.GetScriptItem(1).Command == TalkCommand.Unknown_Enter)
+                        {
+                            nextCommandDefaultMessage = true;
+                            break;
+                        }
+
+
+                        nextLine = scriptLines[++nIndex];
+                    } while (nextLine.GetScriptItem(0).Command != TalkCommand.DefaultMessage);
+
+                    //ScriptQuestionAnswer qa = new ScriptQuestionAnswer()
+
+                    // is the the nextline a DefaultMessage, if so, we are done with this label
+                    //nextCommandDefaultMessage = scriptLines[nIndex].GetScriptItem(0).Command == TalkCommand.DefaultMessage && scriptLines[nIndex].GetScriptItem(1).Command == TalkCommand.Unknown_Enter;
+
+                    //if (!nextCommandDefaultMessage) nIndex++;
+                } while (!nextCommandDefaultMessage);
+
 
                 // still to do... read the labels and organize them carefully
                 // still to do... save the ScriptQuestionAnswers object for future use.. THIS IS SO MUCH BETTER!
                 nIndex++;
             } while (nIndex < scriptLines.Count);
-
+            System.Console.WriteLine("DERP");
         }
 
         public ScriptLine GetScriptLineByIndex(int index)
