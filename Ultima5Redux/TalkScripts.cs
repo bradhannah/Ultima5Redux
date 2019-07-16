@@ -72,6 +72,9 @@ namespace Ultima5Redux
 
             public void Add (ScriptQuestionAnswer sqa)
             {
+                if (sqa.questions == null)
+                    return;
+
                 foreach (string question in sqa.questions)
                 {
                     QuestionAnswers.Add(question, sqa);
@@ -171,6 +174,7 @@ namespace Ultima5Redux
 
             public ScriptItem GetScriptItem(int index)
             {
+                Debug.Assert(scriptItems[index] != null);
                 return scriptItems[index];
             }
 
@@ -325,7 +329,7 @@ namespace Ultima5Redux
 
             // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
             int count = 0;
-            do // begin the label processing loop
+            do // begin the label processing loop - pretty sure this is dumb and doesn't do anything...
             {
                 Debug.Assert(count++ == 0);
                 //if (scriptLines[0].GetScriptItem(0).Str == "Drudgeworth\n")
@@ -333,6 +337,8 @@ namespace Ultima5Redux
                 //    Console.WriteLine("");
                 //}
                 ScriptLine line = scriptLines[nIndex];
+                ScriptLine nextLine;
+
                 if (line.GetNumberOfScriptItems() == 2 && line.IsEndOfLabelSection())
                 {
                     // all done. we either had no labels or reached the end of them
@@ -341,17 +347,9 @@ namespace Ultima5Redux
                     break;
                 }
 
-                ScriptLine nextLine = scriptLines[nIndex + 1];
 
                 // i expect that this line will always indicate a new label is being defined
                 Debug.Assert(line.GetScriptItem(0).Command == TalkCommand.DefaultMessage);
-
-                // if the next line starts with a DefaultMessage then we know this will only be a single line message
-                if (nextLine.GetScriptItem(0).Command == TalkCommand.DefaultMessage)
-                {
-                    // this is only a single line. Since we stored the 
-                    break;
-                }
 
                 // I don't like this, it's inelegant, but it works...
                 // at this point we know:
@@ -361,14 +359,14 @@ namespace Ultima5Redux
                 do // called for each label #
                 {
                     
-                    //if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "leof")
-                    //{
-                    //Console.WriteLine("AH");
-                    //}
+                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "tierra")
+                    {
+                        Console.WriteLine("AH");
+                    }
                     line = scriptLines[nIndex];
 
                     // let's make sure there are actually labels to look at
-                    if (line.GetScriptItem(0).Command == TalkCommand.DefaultMessage && line.GetScriptItem(1).Command == TalkCommand.Unknown_Enter)
+                    if (line.IsEndOfLabelSection())
                     {
                         nextCommandDefaultMessage = true;
                         break;
@@ -393,7 +391,7 @@ namespace Ultima5Redux
                     ScriptLine defaultAnswer = scriptLines[++nIndex];
                     scriptTalkLabel.DefaultAnswer = defaultAnswer;
 
-                    // it's a default only answer, so we skip this tom foolery below
+                    // it's a default only answer, but uses the second line, so we skip this tom foolery below 
                     if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.DefaultMessage)
                     {
                         nIndex++;
@@ -420,8 +418,11 @@ namespace Ultima5Redux
                         }
                         else // just capture the single response
                         {
-                            // get the question line
+                            // get the Avater's response line
                             line = scriptLines[++nIndex];
+
+                            question = line.GetScriptItem(0).Str;
+                            currQuestions.Add(question);
                         }
 
                         // get your answer and store it
@@ -436,7 +437,7 @@ namespace Ultima5Redux
                             break;
                         }
 
-                        nextLine = scriptLines[++nIndex];
+                        nextLine = scriptLines[nIndex];
                     } while (nextLine.GetScriptItem(0).Command != TalkCommand.DefaultMessage);
 
                 } while (!nextCommandDefaultMessage);
