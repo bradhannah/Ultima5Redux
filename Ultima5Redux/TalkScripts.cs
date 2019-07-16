@@ -329,7 +329,7 @@ namespace Ultima5Redux
 
             // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
             int count = 0;
-            do // begin the label processing loop - pretty sure this is dumb and doesn't do anything...
+            do // begin the label processing loop - pretty sure this is dumb and doesn't do anything - but everything messes up when I remove it
             {
                 Debug.Assert(count++ == 0);
                 //if (scriptLines[0].GetScriptItem(0).Str == "Drudgeworth\n")
@@ -359,7 +359,7 @@ namespace Ultima5Redux
                 do // called for each label #
                 {
                     
-                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "tierra")
+                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "treanna")
                     {
                         Console.WriteLine("AH");
                     }
@@ -400,13 +400,13 @@ namespace Ultima5Redux
 
                     do // go through the question/answer and <or>
                     {
+                        if (nIndex == 22) { Console.WriteLine(""); }
                         List<string> currQuestions = new List<string>();
                         // if the next line is an <or> then process the <or> 
                         if (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
                         {
                             while (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
                             {
-                                nIndex += 2;
                                 line = scriptLines[nIndex];
                                 question = line.GetScriptItem(0).Str;
                                 // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
@@ -414,6 +414,14 @@ namespace Ultima5Redux
                                 {
                                     currQuestions.Add(question);
                                 }
+                                nIndex += 2;
+                            }
+                            line = scriptLines[nIndex];
+                            question = line.GetScriptItem(0).Str;
+                            // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
+                            if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                            {
+                                currQuestions.Add(question);
                             }
                         }
                         else // just capture the single response
@@ -426,18 +434,19 @@ namespace Ultima5Redux
                         }
 
                         // get your answer and store it
-                        nextLine = scriptLines[++nIndex];
+                        line = scriptLines[++nIndex];
                         // we are ready to create a Q&A object and add it the label specific Q&A script
-                        scriptTalkLabel.AddScriptQuestionAnswer(new ScriptQuestionAnswer(currQuestions, nextLine));
+                        scriptTalkLabel.AddScriptQuestionAnswer(new ScriptQuestionAnswer(currQuestions, line));
 
                         // we are at the end of the label section of the file, so we are done.
+                        nextLine = scriptLines[++nIndex];
                         if (nextLine.IsEndOfLabelSection())
                         {
+                            nIndex--;
                             nextCommandDefaultMessage = true;
                             break;
                         }
 
-                        nextLine = scriptLines[nIndex];
                     } while (nextLine.GetScriptItem(0).Command != TalkCommand.DefaultMessage);
 
                 } while (!nextCommandDefaultMessage);
