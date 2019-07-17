@@ -162,6 +162,16 @@ namespace Ultima5Redux
                 return false;
             }
 
+            public bool IsLabelDefinition()
+            {
+                if (GetScriptItem(0).Command == TalkCommand.DefaultMessage && GetScriptItem(1).Command == TalkCommand.DefineLabel)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+
             public void AddScriptItem(ScriptItem scriptItem)
             {
                 scriptItems.Add(scriptItem);
@@ -359,7 +369,7 @@ namespace Ultima5Redux
                 do // called for each label #
                 {
                     
-                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "treanna")
+                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sir arbuthnot")
                     {
                         Console.WriteLine("AH");
                     }
@@ -445,6 +455,11 @@ namespace Ultima5Redux
                             nIndex--;
                             nextCommandDefaultMessage = true;
                             break;
+                        }
+                        if (!nextLine.IsLabelDefinition())
+                        {
+                            nIndex--;
+                            continue;
                         }
 
                     } while (nextLine.GetScriptItem(0).Command != TalkCommand.DefaultMessage);
