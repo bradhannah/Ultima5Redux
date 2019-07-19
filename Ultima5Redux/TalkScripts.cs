@@ -125,16 +125,25 @@ namespace Ultima5Redux
             /// </summary>
             public int LabelNum { get; }
 
-            public bool IsQuestion()
+            static public bool IsQuestion(string str)
             {
                 // if the string is:
                 // 1 to 6 characters
                 // AND doesn't contain spaces
 
-                return (Str.Trim().Length <= 6 && Str.Trim().Length >= 1 && !Str.Contains(" "));
-                    
+                return (str.Trim().Length <= 6 && str.Trim().Length >= 1 && !str.Contains(" "));
+
                 // there are some answers that are capitalized...
                 //&& (Str.ToLower() == Str));
+            }
+
+            /// <summary>
+            /// is this script item a question that the player asks an NPC?
+            /// </summary>
+            /// <returns></returns>
+            public bool IsQuestion()
+            {
+                return ScriptItem.IsQuestion(Str);
             }
 
             public ScriptItem(TalkCommand command) : this(command, string.Empty)
@@ -171,6 +180,11 @@ namespace Ultima5Redux
         protected internal class ScriptLine
         {
             private List<ScriptItem> scriptItems = new List<ScriptItem>();
+
+            public bool IsQuestion()
+            {
+                return this.GetScriptItem(0).IsQuestion();
+            }
 
             public bool IsEndOfLabelSection()
             {
@@ -433,11 +447,12 @@ namespace Ultima5Redux
                         if (nIndex == 22) { Console.WriteLine(""); }
                         List<string> currQuestions = new List<string>();
                         // if the next line is an <or> then process the <or> 
-                        if (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
+                        if (scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
                         {
-                            while (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
+                            while (scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
                             {
-                                line = scriptLines[nIndex];
+                                line = scriptLines[nIndex + 1];
+                                Debug.Assert(line.IsQuestion());
                                 question = line.GetScriptItem(0).Str;
                                 // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
                                 if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
@@ -446,7 +461,8 @@ namespace Ultima5Redux
                                 }
                                 nIndex += 2;
                             }
-                            line = scriptLines[nIndex];
+                            line = scriptLines[++nIndex];
+                            Debug.Assert(line.IsQuestion());
                             question = line.GetScriptItem(0).Str;
                             // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
                             if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
@@ -454,29 +470,29 @@ namespace Ultima5Redux
                                 currQuestions.Add(question);
                             }
                         }
-                        else if (scriptLines[nIndex + 1].GetScriptItem(0).IsQuestion())// just capture the single response
-//                        else if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length <= 4 && scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length >= 1)// just capture the single response
+                        // is this a question that the player would ask an NPC?
+                        else if (scriptLines[nIndex + 1].GetScriptItem(0).IsQuestion())
                         {
                             // get the Avater's response line
                             line = scriptLines[++nIndex];
 
                             question = line.GetScriptItem(0).Str;
+                            Debug.Assert(ScriptItem.IsQuestion(question));
                             currQuestions.Add(question);
                         }
-                        // if the next line is longer than 4 characters, then that dasterdly LB has put an extra response line in....
-                        else if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length > 4)
+                        // the NPC has tricked me - this is a second line of dialog for the given 
+                        /// that dasterdly LB has put an extra response line in....
+                        else //if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length > 4)
                         {
                             line = scriptLines[++nIndex];
+                            Debug.Assert(!line.IsQuestion());
                             scriptTalkLabel.DefaultAnswers.Add(line);
                             nIndex++;
                             // let's make double sure that we only have a single additional line of text 
                             Debug.Assert(scriptLines[nIndex].GetScriptItem(0).Command == TalkCommand.DefaultMessage);
+
                             nextLine = scriptLines[nIndex];
                             continue;
-                        }
-                        else
-                        {
-                            throw new Exception("ARGH... the stupid talk script broke the rules again");
                         }
 
                         // get your answer and store it
