@@ -77,6 +77,20 @@ namespace Ultima5Redux
                 QuestionAnswers = new Dictionary<string, ScriptQuestionAnswer>();
             }
 
+            public List<ScriptLine> GetAnswers()
+            {
+                
+                List<ScriptLine> answers = new List<ScriptLine>();
+                foreach (ScriptQuestionAnswer sqa in QuestionAnswers.Values)
+                {
+                    if (!answers.Contains(sqa.Answer))
+                    {
+                        answers.Add(sqa.Answer);
+                    }
+                }
+                return answers;
+            }
+
             public void Add (ScriptQuestionAnswer sqa)
             {
                 if (sqa.questions == null)
@@ -84,7 +98,10 @@ namespace Ultima5Redux
 
                 foreach (string question in sqa.questions)
                 {
-                    QuestionAnswers.Add(question, sqa);
+                    if (!QuestionAnswers.Keys.Contains(question.Trim()))
+                    {
+                        QuestionAnswers.Add(question.Trim(), sqa);
+                    }
                 }
             }
         }
@@ -119,11 +136,13 @@ namespace Ultima5Redux
             /// <summary>
             /// Associated string (can be empty)
             /// </summary>
-            public string Str { get; }
+            public string Str { get { return str.Trim(); } }
             /// <summary>
             /// If there is a label, then this is a zero based index
             /// </summary>
             public int LabelNum { get; }
+
+            private string str = string.Empty;
 
             static public bool IsQuestion(string str)
             {
@@ -170,7 +189,7 @@ namespace Ultima5Redux
             public ScriptItem(TalkCommand command, string str)
             {
                 Command = command;
-                Str = str;
+                this.str = str;
             }
         }
 
@@ -180,6 +199,31 @@ namespace Ultima5Redux
         protected internal class ScriptLine
         {
             private List<ScriptItem> scriptItems = new List<ScriptItem>();
+
+            public override string ToString()
+            {
+                string scriptLine = string.Empty;
+
+                foreach (ScriptItem item in this.scriptItems)
+                {
+                    if (item.Command == TalkCommand.PlainString)
+                    {
+                        scriptLine += item.Str.Trim();
+                    }
+                    else
+                    {
+                        if (item.Command == TalkCommand.DefineLabel || item.Command == TalkCommand.GotoLabel)
+                        {
+                            scriptLine += ("<" + item.Command.ToString() + item.LabelNum.ToString() + ">");
+                        }
+                        else
+                        {
+                            scriptLine += ("<" + item.Command.ToString() + ">");
+                        }
+                    }
+                }
+                return scriptLine;
+            }
 
             public bool IsQuestion()
             {
@@ -326,13 +370,15 @@ namespace Ultima5Redux
             int nIndex = endBaseIndexes + 1;
             bool labelEncountered = false;
 
-            // repeat through the question/answer components until we hit a label - then we know to move onto the label section
-            ScriptQuestionAnswers scriptQuestionAnswers = new ScriptQuestionAnswers();
-
             string question;
 
+            
+            // repeat through the question/answer components until we hit a label - then we know to move onto the label section
             do
             {
+                //ScriptQuestionAnswers sqas = new ScriptQuestionAnswers();
+                
+
                 List<string> currQuestions = new List<string>();
                 ScriptLine line = scriptLines[nIndex];
 
@@ -608,6 +654,36 @@ namespace Ultima5Redux
             }
         }
 
+        public void PrintComprehensiveScript()
+        {
+            Console.WriteLine("---- BEGIN NEW SCRIPT -----");
+            Console.WriteLine("Name: " + this.GetScriptLine(TalkConstants.Name).ToString());
+            Console.WriteLine("Description: " + this.GetScriptLine(TalkConstants.Description).ToString());
+            Console.WriteLine("Greeting: " + this.GetScriptLine(TalkConstants.Greeting).ToString());
+            Console.WriteLine("Job: " + this.GetScriptLine(TalkConstants.Job).ToString());
+            Console.WriteLine("Bye: " + this.GetScriptLine(TalkConstants.Bye).ToString());
+            Console.WriteLine("");
+
+            // print the standard question and answers
+            foreach (string question in this.scriptQuestionAnswers.QuestionAnswers.Keys)
+            {
+                {
+                    Console.WriteLine("Question: " + question + "\n" + "Response: " + scriptQuestionAnswers.QuestionAnswers[question].Answer.ToString());
+                }
+            }
+
+            Console.WriteLine("");
+
+            // enumerate the labels and print their scripts
+            foreach (ScriptTalkLabel label in this.scriptTalkLabels.Labels)
+            {
+                Console.WriteLine("Label #: " + label.LabelNum.ToString());
+                Console.WriteLine("Initial Line: " + label.InitialLine);
+                if (label.DefaultAnswers.Count > 0) { Console.WriteLine("Default Line: " + label.DefaultAnswers[0]); }
+
+            }
+        }
+
         /// <summary>
         /// Print the script out to the console
         /// </summary>
@@ -872,16 +948,13 @@ namespace Ultima5Redux
                         buildAWord += " "; }
 
                     // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
-//                    try
                     if (compressedWordRef.IsTalkingWord((int)tempByte))
                     {
                         string talkingWord = compressedWordRef.GetTalkingWord((int)tempByte);
-                      //  Console.Write(talkingWord);
                         useCompressedWord = true;
                         buildAWord += talkingWord;
                     }
                     // this is a bit lazy, but if I ask for a string that is not captured in the lookup map, then we know it's a special case
-                    //catch (CompressedWordReference.NoTalkingWordException)
                     else
                     {
                         // oddly enough - we add an existing plain string that we have been building
