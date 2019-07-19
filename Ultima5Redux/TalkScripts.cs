@@ -31,7 +31,7 @@ namespace Ultima5Redux
         {
             public ScriptQuestionAnswers QuestionAnswers { get;  }
             public ScriptLine InitialLine { get; set; }
-            public ScriptLine DefaultAnswer { get; set; }
+            public List<ScriptLine> DefaultAnswers { get; set; }
             public int LabelNum { get;  }
 
             public void AddScriptQuestionAnswer(ScriptQuestionAnswer sqa)
@@ -39,11 +39,18 @@ namespace Ultima5Redux
                 QuestionAnswers.Add(sqa);
             }
 
-            public ScriptTalkLabel (int labelNum, ScriptLine initialLine, ScriptLine defaultAnswer, ScriptQuestionAnswers sqa)
+            public ScriptTalkLabel (int labelNum, ScriptLine initialLine, List<ScriptLine> defaultAnswers, ScriptQuestionAnswers sqa)
             {
                 QuestionAnswers = sqa;
                 InitialLine = initialLine;
-                DefaultAnswer = DefaultAnswer;
+                if (defaultAnswers == null)
+                {
+                    DefaultAnswers = new List<ScriptLine>();
+                }
+                else
+                {
+                    DefaultAnswers = DefaultAnswers;
+                }
                 LabelNum = labelNum;
             }
 
@@ -117,6 +124,18 @@ namespace Ultima5Redux
             /// If there is a label, then this is a zero based index
             /// </summary>
             public int LabelNum { get; }
+
+            public bool IsQuestion()
+            {
+                // if the string is:
+                // 1 to 6 characters
+                // AND doesn't contain spaces
+
+                return (Str.Trim().Length <= 6 && Str.Trim().Length >= 1 && !Str.Contains(" "));
+                    
+                // there are some answers that are capitalized...
+                //&& (Str.ToLower() == Str));
+            }
 
             public ScriptItem(TalkCommand command) : this(command, string.Empty)
             {
@@ -368,10 +387,11 @@ namespace Ultima5Redux
                
                 do // called for each label #
                 {
-                    
-                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sir arbuthnot")
-                    {
-                        Console.WriteLine("AH");
+
+                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "Margaret".ToLower())
+//                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sir arbuthnot")
+                        {
+                            Console.WriteLine("AH");
                     }
                     line = scriptLines[nIndex];
 
@@ -399,7 +419,7 @@ namespace Ultima5Redux
 
                     // with a single answer below the label, we will always use the default answer
                     ScriptLine defaultAnswer = scriptLines[++nIndex];
-                    scriptTalkLabel.DefaultAnswer = defaultAnswer;
+                    scriptTalkLabel.DefaultAnswers.Add(defaultAnswer);
 
                     // it's a default only answer, but uses the second line, so we skip this tom foolery below 
                     if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.DefaultMessage)
@@ -434,7 +454,8 @@ namespace Ultima5Redux
                                 currQuestions.Add(question);
                             }
                         }
-                        else // just capture the single response
+                        else if (scriptLines[nIndex + 1].GetScriptItem(0).IsQuestion())// just capture the single response
+//                        else if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length <= 4 && scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length >= 1)// just capture the single response
                         {
                             // get the Avater's response line
                             line = scriptLines[++nIndex];
@@ -442,25 +463,44 @@ namespace Ultima5Redux
                             question = line.GetScriptItem(0).Str;
                             currQuestions.Add(question);
                         }
+                        // if the next line is longer than 4 characters, then that dasterdly LB has put an extra response line in....
+                        else if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length > 4)
+                        {
+                            line = scriptLines[++nIndex];
+                            scriptTalkLabel.DefaultAnswers.Add(line);
+                            nIndex++;
+                            // let's make double sure that we only have a single additional line of text 
+                            Debug.Assert(scriptLines[nIndex].GetScriptItem(0).Command == TalkCommand.DefaultMessage);
+                            nextLine = scriptLines[nIndex];
+                            continue;
+                        }
+                        else
+                        {
+                            throw new Exception("ARGH... the stupid talk script broke the rules again");
+                        }
 
                         // get your answer and store it
-                        line = scriptLines[++nIndex];
+                        ScriptLine npcResponse = scriptLines[++nIndex];
                         // we are ready to create a Q&A object and add it the label specific Q&A script
-                        scriptTalkLabel.AddScriptQuestionAnswer(new ScriptQuestionAnswer(currQuestions, line));
+                        scriptTalkLabel.AddScriptQuestionAnswer(new ScriptQuestionAnswer(currQuestions, npcResponse));
 
                         // we are at the end of the label section of the file, so we are done.
                         nextLine = scriptLines[++nIndex];
+
+                        // does the next line indicate end of all of the label sections, then let's get out of this loop
                         if (nextLine.IsEndOfLabelSection())
                         {
                             nIndex--;
                             nextCommandDefaultMessage = true;
                             break;
                         }
+                        // is the next line a label definition? is so, let's exit this label and move on
                         if (!nextLine.IsLabelDefinition())
                         {
                             nIndex--;
                             continue;
                         }
+       
 
                     } while (nextLine.GetScriptItem(0).Command != TalkCommand.DefaultMessage);
 
@@ -470,7 +510,7 @@ namespace Ultima5Redux
                 // still to do... read the labels and organize them carefully
                 // still to do... save the ScriptQuestionAnswers object for future use.. THIS IS SO MUCH BETTER!
                 nIndex++;
-            } while (nIndex < scriptLines.Count);
+            } while (nIndex < (scriptLines.Count - 1));
         }
 
         public ScriptLine GetScriptLineByIndex(int index)
