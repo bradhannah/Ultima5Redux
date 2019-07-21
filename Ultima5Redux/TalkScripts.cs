@@ -72,6 +72,17 @@ namespace Ultima5Redux
         {
             public Dictionary<string, ScriptQuestionAnswer> QuestionAnswers { get; }
 
+            public ScriptQuestionAnswer GetQuestionAnswer(string question)
+            {
+                return QuestionAnswers[question];
+            }
+
+            public string[] GetScriptQuestions()
+            {
+
+                return QuestionAnswers.Keys.ToArray();
+            }
+
             public ScriptQuestionAnswers()
             {
                 QuestionAnswers = new Dictionary<string, ScriptQuestionAnswer>();
@@ -79,7 +90,6 @@ namespace Ultima5Redux
 
             public List<ScriptLine> GetAnswers()
             {
-                
                 List<ScriptLine> answers = new List<ScriptLine>();
                 foreach (ScriptQuestionAnswer sqa in QuestionAnswers.Values)
                 {
@@ -102,6 +112,27 @@ namespace Ultima5Redux
                     {
                         QuestionAnswers.Add(question.Trim(), sqa);
                     }
+                }
+            }
+
+            public void Print()
+            {
+                Dictionary<ScriptQuestionAnswer, bool> seenAnswers = new Dictionary<ScriptQuestionAnswer, bool>();
+
+                foreach (ScriptQuestionAnswer sqa in QuestionAnswers.Values)
+                {
+                    if (seenAnswers.ContainsKey(sqa)) continue;
+                    seenAnswers.Add(sqa, true);
+
+                    bool first = true;
+                    foreach (string question in sqa.questions.ToArray())
+                    {
+                        if (first) { first = false; Console.Write("Questions: " + question); }
+                        else { Console.Write(" <OR> " + question); }
+                    }
+                    Console.WriteLine("");
+                    Console.WriteLine("Answer: " + sqa.Answer.ToString());
+
                 }
             }
         }
@@ -448,7 +479,7 @@ namespace Ultima5Redux
                 do // called for each label #
                 {
 
-                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "Margaret".ToLower())
+                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sutek".ToLower())
 //                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sir arbuthnot")
                         {
                             Console.WriteLine("AH");
@@ -463,7 +494,7 @@ namespace Ultima5Redux
                     }
 
                     // create the shell for the label
-                    ScriptTalkLabel scriptTalkLabel = new ScriptTalkLabel(line.GetScriptItem(0).LabelNum, line);
+                    ScriptTalkLabel scriptTalkLabel = new ScriptTalkLabel(line.GetScriptItem(1).LabelNum, line);
 
                     // save the new label to the label collection
                     scriptTalkLabels.AddLabel(scriptTalkLabel);
@@ -664,14 +695,7 @@ namespace Ultima5Redux
             Console.WriteLine("Bye: " + this.GetScriptLine(TalkConstants.Bye).ToString());
             Console.WriteLine("");
 
-            // print the standard question and answers
-            foreach (string question in this.scriptQuestionAnswers.QuestionAnswers.Keys)
-            {
-                {
-                    Console.WriteLine("Question: " + question + "\n" + "Response: " + scriptQuestionAnswers.QuestionAnswers[question].Answer.ToString());
-                }
-            }
-
+            scriptQuestionAnswers.Print();
             Console.WriteLine("");
 
             // enumerate the labels and print their scripts
@@ -679,7 +703,15 @@ namespace Ultima5Redux
             {
                 Console.WriteLine("Label #: " + label.LabelNum.ToString());
                 Console.WriteLine("Initial Line: " + label.InitialLine);
-                if (label.DefaultAnswers.Count > 0) { Console.WriteLine("Default Line: " + label.DefaultAnswers[0]); }
+                if (label.DefaultAnswers.Count > 0)
+                {
+                    foreach (ScriptLine line in label.DefaultAnswers)
+                    {
+                        Console.WriteLine("Default Line(s): " + line);
+                    }
+                    label.QuestionAnswers.Print();
+                }
+
 
             }
         }
