@@ -451,14 +451,14 @@ namespace Ultima5Redux
             int count = 0;
             do // begin the label processing loop - pretty sure this is dumb and doesn't do anything - but everything messes up when I remove it
             {
+                // this is technically a loop, but it should never actually loop. Kind of dumb, but fragile 
                 Debug.Assert(count++ == 0);
-                //if (scriptLines[0].GetScriptItem(0).Str == "Drudgeworth\n")
-                //{
-                //    Console.WriteLine("");
-                //}
+
                 ScriptLine line = scriptLines[nIndex];
                 ScriptLine nextLine;
 
+                // if there are two script items, and those two script items identify an end of label section then let's break out
+                // this should only actually occur if there are no labels at all
                 if (line.GetNumberOfScriptItems() == 2 && line.IsEndOfLabelSection())
                 {
                     // all done. we either had no labels or reached the end of them
@@ -478,12 +478,13 @@ namespace Ultima5Redux
                
                 do // called for each label #
                 {
+                    // Debug code for narrowing down to a single NPC
+                    //if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sutek".ToLower())
+                    //if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sir arbuthnot")
+                    //{
+                    //        Console.WriteLine("AH");
+                    //}
 
-                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sutek".ToLower())
-//                    if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sir arbuthnot")
-                        {
-                            Console.WriteLine("AH");
-                    }
                     line = scriptLines[nIndex];
 
                     // let's make sure there are actually labels to look at
@@ -512,7 +513,7 @@ namespace Ultima5Redux
                     ScriptLine defaultAnswer = scriptLines[++nIndex];
                     scriptTalkLabel.DefaultAnswers.Add(defaultAnswer);
 
-                    // it's a default only answer, but uses the second line, so we skip this tom foolery below 
+                    // it's a default only answer, and no additional line of dialog, then we skip this tom foolery below 
                     if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.DefaultMessage)
                     {
                         nIndex++;
@@ -521,7 +522,9 @@ namespace Ultima5Redux
 
                     do // go through the question/answer and <or>
                     {
-                        if (nIndex == 22) { Console.WriteLine(""); }
+                        // Debug code to stop at given index
+                        //if (nIndex == 22) { Console.WriteLine(""); }
+
                         List<string> currQuestions = new List<string>();
                         // if the next line is an <or> then process the <or> 
                         if (scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
@@ -606,17 +609,23 @@ namespace Ultima5Redux
             } while (nIndex < (scriptLines.Count - 1));
         }
 
-        public ScriptLine GetScriptLineByIndex(int index)
-        {
-            return scriptLines[index];
-        }
-
+        /// <summary>
+        /// Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
+        /// This is not compatible with Labels
+        /// </summary>
+        /// <param name="talkConst">name, job etc.</param>
+        /// <returns>The corresponding single ScriptLine</returns>
         public ScriptLine GetScriptLine(TalkConstants talkConst)
         {
             return (scriptLines[(int)talkConst]);
         }
 
-        public ScriptLine GetScriptLineLabel(int nLabel)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nLabel"></param>
+        /// <returns></returns>
+        /*public ScriptLine GetScriptLineLabel(int nLabel)
         {
             foreach (ScriptLine line in scriptLines)
             {
@@ -627,7 +636,7 @@ namespace Ultima5Redux
                 }
             }
             throw new Exception("You requested a script label that doesn't exist");
-        }
+        }*/
 
 
         /// <summary>
@@ -676,15 +685,16 @@ namespace Ultima5Redux
             if (talkCommand == TalkCommand.PlainString)
             {
                 currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, talkStr));
-                //System.Console.Write(talkStr);
             }
             else
             {
                 currentScriptLine.AddScriptItem(new ScriptItem(talkCommand));
-                //System.Console.Write("<" + (talkCommand.ToString() + ">"));
             }
         }
 
+        /// <summary>
+        /// Prints the script out using all of the advanced ScriptLine, ScriptLabel and ScriptQuestionAnswer(s) objects, instead of just text
+        /// </summary>
         public void PrintComprehensiveScript()
         {
             Console.WriteLine("---- BEGIN NEW SCRIPT -----");
@@ -711,13 +721,12 @@ namespace Ultima5Redux
                     }
                     label.QuestionAnswers.Print();
                 }
-
-
             }
         }
 
         /// <summary>
         /// Print the script out to the console
+        /// This is the raw print routine that uses the relatively raw script data
         /// </summary>
         public void PrintScript()
         {
@@ -743,13 +752,21 @@ namespace Ultima5Redux
                         }
                     }
                 }
-                //System.Console.WriteLine(); // a new line after the whole script line is read
             }
         }
 }
 
+    /// <summary>
+    /// TalkScripts represents all of the in game talking scripts for all NPCs
+    /// </summary>
     class TalkScripts
     {
+        /// <summary>
+        /// do I print Debug output to the Console
+        /// </summary>
+        private bool isDebug = false;
+
+
         /// <summary>
         /// the mapping of NPC # to file .tlk file offset
         /// </summary>
@@ -760,16 +777,18 @@ namespace Ultima5Redux
             public ushort fileOffset;
         }
 
-        // map reference is key because NPC numbers can overlap
-//        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>> talkRefs =
-//            new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
-
+        /// <summary>
+        /// Dictionary that refers to the raw bytes for each NPC based on Map master file and NPC index
+        /// </summary>
         private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> talkRefs =
             new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
 
-//        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>> talkScriptRefs = new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<TalkScript>>();
+        /// <summary>
+        /// Dictionary that refers to the fully interpreted TalkScripts for each NPC based on Master map file and NPC index
+        /// </summary>
         private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> talkScriptRefs = 
             new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>();
+
         /// <summary>
         /// when you must adjust the offset into the compressed word lookup, subtract this
         /// </summary>
@@ -805,19 +824,16 @@ namespace Ultima5Redux
             foreach (SmallMapReference.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
             {
                 // initialize the raw component of the talk scripts
-                InitalizeTalkScripts(u5Directory, mapRef);
+                InitalizeTalkScriptsRaw(u5Directory, mapRef);
                 
                 // initialize and allocate the appropriately sized list of TalkScript(s)
                 talkScriptRefs.Add(mapRef, new Dictionary<int, TalkScript>(talkRefs[mapRef].Count));
 
                 // for each of the NPCs in the particular map, initialize the individual NPC talk script
-//                for (int i = 0; i < talkRefs[mapRef].Count; i++)
                 foreach (int key in talkRefs[mapRef].Keys)
                 {
-                    //                    talkScriptRefs[mapRef].Add(InitializeTalkScriptFromRaw(mapRef, i));
-                    //talkScriptRefs[mapRef].Add(InitializeTalkScriptFromRaw(mapRef, key));
                     talkScriptRefs[mapRef][key] = InitializeTalkScriptFromRaw(mapRef, key);
-                    System.Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + key.ToString());
+                    if (isDebug) Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + key.ToString());
                 }
             }
         }
@@ -834,7 +850,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="u5Directory">directory of Ultima 5 data files</param>
         /// <param name="mapMaster">the small map reference (helps pick *.tlk file)</param>
-        private void InitalizeTalkScripts(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster)
+        private void InitalizeTalkScriptsRaw(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster)
         {
             // example NPC 1 at Castle in Lord British's castle
             // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
@@ -873,10 +889,8 @@ namespace Ultima5Redux
                         NPC_TalkOffset talkOffset = (NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset));
                         npcOffsets[talkOffset.npcIndex] = talkOffset;
 
-                        //                  npcOffsets.Add((NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset)));
-                        //                    Console.WriteLine("NPC #" + npcOffsets.Last().npcIndex + " at offset " + npcOffsets.Last().fileOffset + " in file " + talkFilename);
                         // OMG I'm tired.. figure out why this isn't printing properly....
-                        Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
+                        if (isDebug) Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
                     }
                 }
                 // you are in a single file right now
@@ -913,7 +927,8 @@ namespace Ultima5Redux
 
 
         /// <summary>
-        /// Intializes an individual TalkingScript using the raw data created from InitalizeTalkScripts
+        /// Intializes an individual TalkingScript using the raw data created from InitalizeTalkScriptsRaw
+        /// <remark>May God have mercy on my soul if I ever need to debug or troubleshoot this again.</remark>
         /// </summary>
         /// <param name="smallMapRef">the small map reference</param>
         /// <param name="index">NPC Index</param>
