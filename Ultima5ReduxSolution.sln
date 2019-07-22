@@ -5,6 +5,14 @@ VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultima5Redux", "Ultima5Redux\Ultima5Redux.csproj", "{A5A9C3B1-C948-4DCE-886F-A6331A68B4BC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E9ECA40-BC78-4D60-A369-FAD9B835271F}"
+	ProjectSection(SolutionItems) = preProject
+		Ultima5Redux\ScriptWork\BucDen-Geoffery.txt = Ultima5Redux\ScriptWork\BucDen-Geoffery.txt
+		Ultima5Redux\ScriptWork\BucDen-Tierra.txt = Ultima5Redux\ScriptWork\BucDen-Tierra.txt
+		Ultima5Redux\ScriptWork\CleanedUpScripts.txt = Ultima5Redux\ScriptWork\CleanedUpScripts.txt
+		Ultima5Redux\ScriptWork\RawScripts.txt = Ultima5Redux\ScriptWork\RawScripts.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

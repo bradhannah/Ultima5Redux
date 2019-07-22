@@ -9,14 +9,22 @@ namespace Ultima5Redux
     /// <summary>
     /// A collection of Datachunks
     /// </summary>
-    public class DataChunks
+    public class DataChunks<T>
     {
-        public DataChunks()
+        private Dictionary<T, DataChunk> chunkMap = new Dictionary<T, DataChunk>();
+        private T unusedValue;
+        private List<DataChunk> dataChunks;
+        private List<byte> fileByteList;
+
+        public List<byte> FileByteList { get { return fileByteList; } }
+
+        public DataChunks(string chunkFile, T unusedValue)
         {
             dataChunks = new List<DataChunk>();
+            this.unusedValue = unusedValue;
+            fileByteList = Utils.GetFileAsByteList(chunkFile);
         }
 
-        private List<DataChunk> dataChunks;
 
         /// <summary>
         /// Add a chunk to the list
@@ -24,15 +32,64 @@ namespace Ultima5Redux
         /// <param name="chunk">datachunk</param>
         public void AddDataChunk (DataChunk chunk) 
         {
-            dataChunks.Add(chunk);
+            //dataChunks.Add(chunk);
+            AddDataChunk(chunk, unusedValue);
         }
 
         /// <summary>
-        /// Get a data chunk
+        /// Add a DataChunk with a particular chunk name for easy retrieval
         /// </summary>
-        /// <param name="index">index into chunk list</param>
-        /// <returns></returns>
-        public DataChunk GetChunk(int index)
+        /// <param name="chunk">Chunk to add</param>
+        /// <param name="dataChunkName">Name/Description of the chunk for retrieval</param>
+        public void AddDataChunk (DataChunk chunk, T dataChunkName)
+        {
+            // all data chunks get added to the chunk list
+            //AddDataChunk(chunk);
+            dataChunks.Add(chunk);
+
+            // if the datachunk is not classified as unused then add it to the chunk map for quick reference
+            if (!dataChunkName.Equals(unusedValue))
+            {
+                chunkMap.Add(dataChunkName, chunk);
+            }
+        }
+
+        public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue, T dataChunkName)
+        {
+            // create the data chunk 
+            DataChunk chunk = new DataChunk(dataFormat, description, FileByteList, offset, dataLength, addToValue);
+
+            // all data chunks get added to the chunk list
+            AddDataChunk(chunk);
+
+            // if the datachunk is not classified as unused then add it to the chunk map for quick reference
+            if (!dataChunkName.Equals(unusedValue))
+            {
+                chunkMap.Add(dataChunkName, chunk);
+            }
+        }
+
+        public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue)
+        {
+            AddDataChunk(dataFormat, description, offset, dataLength, addToValue, unusedValue);
+        }
+
+        public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength)
+        {
+            AddDataChunk(dataFormat, description, offset, dataLength, 0x00, unusedValue);
+        }
+
+        public DataChunk GetDataChunk(T dataChunkName)
+        {
+            return chunkMap[dataChunkName];
+        }
+
+            /// <summary>
+            /// Get a data chunk
+            /// </summary>
+            /// <param name="index">index into chunk list</param>
+            /// <returns></returns>
+        public DataChunk GetDataChunk(int index)
         {
             return dataChunks[index];
         }
@@ -48,9 +105,7 @@ namespace Ultima5Redux
                 chunk.PrintChunk();
             }
         }
-
     }
-
 
     /// <summary>
     /// A data chunk represents a stream of bytes that can be represented in variety of ways depending on the data type

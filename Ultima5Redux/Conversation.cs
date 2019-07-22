@@ -100,6 +100,7 @@ namespace Ultima5Redux
 
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
                 if (conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting && currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName)
+                
                 //if (cur == (int)TalkScript.TalkConstants.Greeting && currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName)
                 && !state.NpcHasMetAvatar(npc))
                 {

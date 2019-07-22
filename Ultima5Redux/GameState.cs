@@ -11,28 +11,51 @@ namespace Ultima5Redux
     {
         private Random ran = new Random();
 
-        private DataChunks dataChunks;
+        private DataChunks<DataChunkName> dataChunks;
         private List<byte> gameStateByteArray;
+
+        private bool[][] npcIsMetArray;
+        private bool[][] npcIsDeadArray;
 
         public string AvatarsName { get { return "Fred"; } }
 
+        public enum DataChunkName
+        {
+            Unused,
+            NPC_ISALIVE_TABLE,
+            NPC_ISMET_TABLE
+        };
+
+        
+
+        /// <summary>
+        /// Construct the GameState
+        /// </summary>
+        /// <param name="u5Directory">Directory of the game state files</param>
         public GameState(string u5Directory)
         {
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
-            dataChunks = new DataChunks();
+            dataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
 
             gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
-            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", gameStateByteArray, 0x5B4, 0x80));
-            dataChunks.AddDataChunk(new DataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", gameStateByteArray, 0x634, 0x80));
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
 
-            List<bool> npcMet = dataChunks.GetChunk(1).GetAsBitmapBoolList();
-            bool[][] npcMetArray = Utils.ListTo2DArray<bool>(npcMet, 0x20*8, 0x00, 0x80*8);
+            List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();
+            npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
-            //bool[][] npcMetArray = Utils.ListTo2DArray<bool>()
+            List<bool> npcMet = dataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
+            // these will map directly to the towns and the NPC dialog #
+            npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
         }
 
+        /// <summary>
+        /// Using the random number generator, provides 1 in howMany odds of returning true
+        /// </summary>
+        /// <param name="howMany">1 in howMany odds of returning true</param>
+        /// <returns>true if odds are beat</returns>
         public bool OneInXOdds(int howMany)
         {
             // if ran%howMany is zero then we beat the odds
@@ -40,9 +63,21 @@ namespace Ultima5Redux
             return ((nextRan % howMany) == 0);
         }
 
+        public bool NpcIsAlive(NonPlayerCharacters.NonPlayerCharacter npc)
+        {
+            // the array isDead becasue LB stores 0=alive, 1=dead
+            // I think it's easier to evaluate if they are alive
+            return npcIsDeadArray[npc.MapReference.Id][npc.DialogIndex]==false;
+        }
+
+        /// <summary>
+        /// Has the NPC met the avatar yet?
+        /// </summary>
+        /// <param name="npc"></param>
+        /// <returns></returns>
         public bool NpcHasMetAvatar(NonPlayerCharacters.NonPlayerCharacter npc)
         {
-            return false;
+            return npcIsMetArray[npc.MapReference.Id][npc.DialogIndex];
         }
 
     }

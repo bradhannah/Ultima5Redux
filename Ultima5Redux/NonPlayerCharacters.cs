@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.IO;
-
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
@@ -96,9 +96,9 @@ namespace Ultima5Redux
             {
                 get
                 {
-                    if (talkScript != null)
+                    if (Script != null)
                     {
-                        return talkScript.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str;
+                        return Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str;
                     }
                     else
                     {
@@ -115,7 +115,12 @@ namespace Ultima5Redux
             /// The Dialog identifier
             /// </summary>
             public byte DialogNumber { get; }
-            
+
+            /// <summary>
+            /// 0-31 index of it's position in the NPC arrays (used for saved.gam references)
+            /// </summary>
+            public int DialogIndex { get; }
+
             /// <summary>
             /// The byte representing the type of character
             /// </summary>
@@ -124,8 +129,7 @@ namespace Ultima5Redux
             /// <summary>
             /// The talk script the NPC will follow
             /// </summary>
-            private TalkScript talkScript;
-            public TalkScript Script { get { return talkScript; } }
+            public TalkScript Script { get; }
 
             /// <summary>
             /// Which map is the NPC on?
@@ -156,19 +160,21 @@ namespace Ultima5Redux
             /// <param name="sched">daily schedule</param>
             /// <param name="npcType">type of NPC they are</param>
             /// <param name="dialogNumber">dialog number referencing data OVL</param>
+            /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
             /// <param name="talkScript">their conversation script</param>
-            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNumber, TalkScript talkScript)
+            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
             {
                 Schedule = new NPCSchedule(sched);
                 MapReference = mapRef;
                 CharacterType = npcType;
                 DialogNumber = dialogNumber;
-                this.talkScript = talkScript;
+                Script = talkScript;
+                DialogIndex = dialogIndex;
 
                 // no schedule? I guess you're not real
                 if (!IsEmptySched(sched))
                 {
-                    System.Console.WriteLine("NPC Number: " + this.DialogNumber + " in " + mapRef.MapLocation.ToString());
+                    System.Console.WriteLine(mapRef.MasterFile.ToString() + "     NPC Number: " + this.DialogNumber + " in " + mapRef.MapLocation.ToString());
                 }
             }
 
@@ -222,7 +228,7 @@ namespace Ultima5Redux
         /// <summary>
         /// How many NPC records per town?
         /// </summary>
-        private const int NPCS_PER_TOWN = 32;
+        public const int NPCS_PER_TOWN = 32;
 
         private static readonly int STARTING_NPC_TYPE_TOWN_OFFSET = SCHEDULE_OFFSET_SIZE * NPCS_PER_TOWN; // starting position (within town) of NPC type
         private static readonly int STARTING_NPC_DIALOG_TOWN_OFFSET = STARTING_NPC_TYPE_TOWN_OFFSET + (SIZEOF_NPC_TYPE_BLOCK * NPCS_PER_TOWN); // starting position (within town) of NPC dialog
@@ -294,7 +300,7 @@ namespace Ultima5Redux
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
-                    npcs.Add(new NonPlayerCharacter(singleMapRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc], talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc])));
+                    npcs.Add(new NonPlayerCharacter(singleMapRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc])));
                 }
             }
         }

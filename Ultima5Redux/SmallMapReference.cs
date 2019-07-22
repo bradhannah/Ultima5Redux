@@ -26,6 +26,8 @@ namespace Ultima5Redux
                 FileOffset = fileOffset;
             }
 
+            public const int TOTAL_SMALL_MAP_LOCATIONS = 32;
+
             public enum Location { Britainnia_Underworld = 0x00, Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, Fogsbane, Stormcrow, Greyhaven,
                 Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut, Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny,
                 Paws, Cove, Buccaneers_Den, Ararat, Bordermarch, Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold }
@@ -36,13 +38,14 @@ namespace Ultima5Redux
             public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep };
 
             /// <summary>
-            /// ID of the map location
+            /// ID of the map location (used in saved.gam references)
+            /// Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
             /// </summary>
             public byte Id
             {
                 get
                 {
-                    return (byte)MapLocation;
+                    return (byte)(MapLocation-1);
                 }
             }
 
