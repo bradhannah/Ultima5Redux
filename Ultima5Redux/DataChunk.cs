@@ -224,7 +224,8 @@ namespace Ultima5Redux
             for (int i = 0; i < DataLength; i++)
             {
                 byte rawData = RawData[i];
-                data[i] =  (byte)(rawData + ValueModifier);
+                //data[i] =  (byte)(rawData + ValueModifier);
+                data.Add((byte)(rawData + ValueModifier));
             }
 
             return data;

@@ -358,7 +358,6 @@ namespace Ultima5Redux
             {
                     locationNames.Add(dataRef.GetDataChunk(DataChunk.DataFormatType.SimpleString, string.Empty, offset, 20).GetChunkAsString());
             }
-            System.Console.Write("");
         }
 
         /// <summary>

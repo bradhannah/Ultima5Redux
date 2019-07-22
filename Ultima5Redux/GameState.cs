@@ -16,12 +16,20 @@ namespace Ultima5Redux
 
         private bool[][] npcIsMetArray;
         private bool[][] npcIsDeadArray;
+        private CharacterRecords characterRecords;
 
+        /// <summary>
+        /// The name of the Avatar
+        /// </summary>
         public string AvatarsName { get { return "Fred"; } }
 
+        /// <summary>
+        /// Data chunks for each of the save game sections
+        /// </summary>
         public enum DataChunkName
         {
             Unused,
+            CHARACTER_RECORDS,
             NPC_ISALIVE_TABLE,
             NPC_ISMET_TABLE
         };
@@ -40,12 +48,19 @@ namespace Ultima5Redux
 
             gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20*16, 0x00, DataChunkName.CHARACTER_RECORDS);
+            DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
+            characterRecords = new CharacterRecords(rawCharacterRecords.GetAsByteList());
+
+            //dataChunks.AddDataChunk()
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
 
+            // Initialize the table to determine if an NPC is dead
             List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();
             npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
+            // Initialize a table to determine if an NPC has been met
             List<bool> npcMet = dataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
             // these will map directly to the towns and the NPC dialog #
             npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
