@@ -1,0 +1,77 @@
+You see a large and impressive fighter."<wait>
+
+"Avatar!"
+
+"Greetings and well met!"<wait>
+
+"'Tis I, Geoffrey, thy old friend of battles past!"<wait>
+
+"Have the years treated thee well?"
+
+<you respond->
+<enter>
+"What didst thou say?"
+<await response>
+DERP
+"Have the years treated thee well?"
+<await response>
+YESTERDAY
+"Ah, that is good."
+
+I presume thou hast heard of our troubles.
+<your interest?>
+TYRA
+"Is it time we set off against them?"
+<your interest?>
+DERP
+"Is it time we set off against them?"
+<your interest?>
+NOSIR
+"Soon, I hope."
+
+
+Name: Geoffrey
+Description: a large and impressive fighter.<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2><AvatarsName>!<Unknown_CodeA2><NewLine><NewLine><Unknown_CodeA2>Greetings, and well met!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>'Tis I, Geoffrey, thy old friend of battles past!<Unknown_CodeA2><NewLine><NewLine><KeyWait><DefineLabel0>
+Greeting:
+Job: I await thy request to join with thee in battle!
+Bye: Come for me soon!
+
+Question: trou
+Response: With Blackthorn and the Shadowlords!
+Question: blac
+Response: Indeed, what a tyrant!
+Question: shad
+Response: Such foul spectres of Evil!
+Question: tyra
+Response: <DefineLabel2>
+Question: spec
+Response: <DefineLabel2>
+Question: evil
+Response: <DefineLabel2>
+Question: join
+Response: <DefineLabel3>
+
+Label #: 0
+Initial Line: <DefaultMessage><DefineLabel0>Have the years treated thee well?
+Default Line(s): <DefineLabel0>
+Questions: n
+Answer: That is unfortunate.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Questions: y
+Answer: Ah, that is good.<Unknown_CodeA2><NewLine><NewLine><DefineLabel1>
+Label #: 1
+Initial Line: <DefaultMessage><DefineLabel1>I presume thou hast heard of our troubles.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
+Label #: 2
+Initial Line: <DefaultMessage><DefineLabel2>Is it time we set off against them?
+Default Line(s): <DefineLabel2>
+Questions: n
+Answer: Soon, I hope.
+Questions: y
+Answer: <DefineLabel3>
+Label #: 3
+Initial Line: <DefaultMessage><DefineLabel3>Shall I join thy party now?
+Default Line(s): <DefineLabel3>
+Questions: n
+Answer: Soon, I hope.
+Questions: y
+Answer: I am eager for battle!<Unknown_CodeA2><NewLine><NewLine><JoinParty>
+Custom

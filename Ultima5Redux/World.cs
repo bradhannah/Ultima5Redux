@@ -75,26 +75,29 @@ namespace Ultima5Redux
 
 
             int count = 0;
-            foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
+            if (true)
             {
-                if (npc.NPCType != 0 && npc.Script != null)
+                foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
                 {
-                    Console.WriteLine("");
-                    Console.WriteLine("---- SCRIPT for " + npc.Name.Trim() + " -----");
-                    //npc.Script.PrintScript();
-                    npc.Script.PrintComprehensiveScript();
-
-                    if (npc.Name.Trim() == "Geoffrey")
+                    if (npc.NPCType != 0 && npc.Script != null)
                     {
-                        Console.WriteLine(npc.NPCType.ToString());
+                        Console.WriteLine("");
+                        Console.WriteLine("---- SCRIPT for " + npc.Name.Trim() + " -----");
+                        //npc.Script.PrintScript();
+                        npc.Script.PrintComprehensiveScript();
 
+                        if (npc.Name.Trim() == "Geoffrey")
+                        {
+                            Console.WriteLine(npc.NPCType.ToString());
+
+                        }
                     }
+                    count++;
                 }
-                count++;
             }
 
             Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
-            //convo.SimulateConversation();
+           // convo.SimulateConversation();
             //0x48 or 0x28
             Console.ReadKey();
 

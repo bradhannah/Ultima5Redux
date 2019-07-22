@@ -65,7 +65,7 @@ namespace Ultima5Redux
         public void SimulateConversation()
         {
             System.Console.WriteLine("---- PRE-CONVERSATION SCRIPT -----");
-            script.PrintScript();
+            script.PrintComprehensiveScript();
 
             System.Console.WriteLine("---- STARTING CONVERSATION -----");
 

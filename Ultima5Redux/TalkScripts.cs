@@ -215,15 +215,17 @@ namespace Ultima5Redux
                 bool useCompressedWord = false; // did we succesfully use a compressed word?
 
                 // if it's one of the bytes that requires a subraction of 0x80 (128)
+//                if (byteWord >= 165 && byteWord <= 218) { tempByte -= TALK_OFFSET_ADJUST; }
                 if (byteWord >= 165 && byteWord <= 218) { tempByte -= TALK_OFFSET_ADJUST; }
                 else if (byteWord >= 225 && byteWord <= 250) { tempByte -= TALK_OFFSET_ADJUST; }
+//                else if (byteWord >= 225 && byteWord <= 250) { tempByte -= TALK_OFFSET_ADJUST; }
                 else if (byteWord >= 160 && byteWord <= 161) { tempByte -= TALK_OFFSET_ADJUST; }
                 else
                 {
                     // it didn't match which means that it's one the special phrases and we will perform a lookup
                     usePhraseLookup = true;
                 }
-
+                if (tempByte == 119) { Console.Write("");  }
                 // it wasn't a special phrase which means that the words are being typed one word at a time
                 if (!usePhraseLookup)
                 {

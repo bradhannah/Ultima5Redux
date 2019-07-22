@@ -57,19 +57,19 @@ namespace Ultima5Redux
 
         public bool IsTalkingWord(int index)
         {
-            if (index > CompressedWords.Strs.Count)
+            // Note: I originally wrote this just to catch the exceptions, but it was SUPER SLOW, so I hopefully smartened it up
+            // is the index in the range that we can even lookup?
+            if (index > (compressWordLookupMap.Keys.Max() - compressWordLookupMap.Keys.Min()))
             {
                 return false;
             }
+            // if the index is in range, then does the key exist?
             if (!compressWordLookupMap.ContainsKey(index))
             {
                 return false;
             }
 
-            //if (compressWordLookupMap[index] == null) return false;
-
             return true;
-
         }
 
         /// <summary>
