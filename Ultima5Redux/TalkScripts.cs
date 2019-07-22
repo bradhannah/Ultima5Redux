@@ -215,10 +215,8 @@ namespace Ultima5Redux
                 bool useCompressedWord = false; // did we succesfully use a compressed word?
 
                 // if it's one of the bytes that requires a subraction of 0x80 (128)
-//                if (byteWord >= 165 && byteWord <= 218) { tempByte -= TALK_OFFSET_ADJUST; }
                 if (byteWord >= 165 && byteWord <= 218) { tempByte -= TALK_OFFSET_ADJUST; }
                 else if (byteWord >= 225 && byteWord <= 250) { tempByte -= TALK_OFFSET_ADJUST; }
-//                else if (byteWord >= 225 && byteWord <= 250) { tempByte -= TALK_OFFSET_ADJUST; }
                 else if (byteWord >= 160 && byteWord <= 161) { tempByte -= TALK_OFFSET_ADJUST; }
                 else
                 {

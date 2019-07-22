@@ -37,7 +37,8 @@ namespace Ultima5Redux
         {
             List<byte> mapBytes = Utils.GetFileAsByteList(mapFilename);
 
-            byte[][] smallMap = Utils.ByteListTo2DArray(mapBytes, XTILES, fileOffset, XTILES * YTILES);
+//            byte[][] smallMap = Utils.ByteListTo2DArray(mapBytes, XTILES, fileOffset, XTILES * YTILES);
+            byte[][] smallMap = Utils.ListTo2DArray<byte>(mapBytes, XTILES, fileOffset, XTILES * YTILES);
 
             return smallMap;
         }

@@ -9,6 +9,10 @@ namespace Ultima5Redux
     class FileConstants
     {
         public const string DATA_OVL = "data.ovl";
+
+        public const string SAVED_GAM = "saved.gam";
+        public const string INIT_GAM = "init.gam";
+
         public const string BRIT_DAT = "brit.dat";
         public const string UNDER_DAT = "under.dat";
         public const string LOOK2_DAT = "look2.dat";

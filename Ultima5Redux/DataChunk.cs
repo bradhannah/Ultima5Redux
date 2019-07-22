@@ -57,10 +57,13 @@ namespace Ultima5Redux
     /// </summary>
     public class DataChunk
     {
+        private const int BITS_PER_BYTE = 8;
+        private const bool isDebug = false;
+
         /// <summary>
         /// The encoding of the data
         /// </summary>
-        public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, ByteList };
+        public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, ByteList, Bitmap };
 
         /// <summary>
         /// Construct a data chunk
@@ -103,6 +106,9 @@ namespace Ultima5Redux
         {
             switch (DataFormat)
             {
+                case DataFormatType.Bitmap:
+                    System.Console.WriteLine("BITMAP");
+                    break;
                 case DataFormatType.FixedString:
                 case DataFormatType.SimpleString:
                     System.Console.WriteLine(GetChunkAsString());
@@ -126,6 +132,29 @@ namespace Ultima5Redux
                     System.Console.WriteLine("Unknown");
                     break;
             }
+        }
+
+        public List<bool> GetAsBitmapBoolList()
+        {
+            // this is essetially the number 1, but we use this to show that we are ANDing on the final bit
+            byte shiftBit = 0b000_0001;
+
+            List<bool> boolList = new List<bool>(this.DataLength * BITS_PER_BYTE);
+
+            // loop through all bytes, then each of their bits, creating a list of Booleans
+            for (int nByte = 0; nByte < this.DataLength; nByte++)
+            {
+                byte curByte = (byte)(RawData[nByte] + ValueModifier);
+
+                for (int nBit = 0; nBit < BITS_PER_BYTE; nBit++)
+                {
+                    bool curBit = (((curByte >> nBit)) & shiftBit) == shiftBit;
+                    boolList.Add(curBit);
+                    if (isDebug) Console.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
+                }
+            }
+
+            return boolList;
         }
 
         /// <summary>

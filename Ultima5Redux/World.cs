@@ -30,7 +30,7 @@ namespace Ultima5Redux
 
             dataOvlRef = new DataOvlReference(u5Directory);
 
-            state = new GameState();
+            state = new GameState(u5Directory);
 
             // build the overworld map
             overworldMap = new LargeMap(u5Directory, LargeMap.Maps.Overworld);
@@ -75,7 +75,7 @@ namespace Ultima5Redux
 
 
             int count = 0;
-            if (true)
+            if (false)
             {
                 foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
                 {

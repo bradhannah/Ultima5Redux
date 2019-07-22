@@ -24,6 +24,44 @@ namespace Ultima5Redux
             return byteArray;
         }
 
+        static public T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
+        {
+            T[][] theArray = new T[numberOfRows][];
+            for (int i = 0; i < numberOfRows; i++) { theArray[i] = new T[numberOfCols]; }
+
+            return theArray;
+
+        }
+
+        static public bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols)
+        {
+            bool[][] byteArray = new bool[numberOfRows][];
+            for (int i = 0; i < numberOfRows; i++) { byteArray[i] = new bool[numberOfCols]; }
+
+            return byteArray;
+        }
+
+
+        static public T[][] ListTo2DArray<T>(List<T> theList, short splitEveryN, int offset, int length)
+        {
+            int listCount = theList.Count;
+
+            // TODO: add safety code to make sure there is no remainer when dividing listCount/splitEveryN
+            int remainder = 0;
+            Math.DivRem(listCount, splitEveryN, out remainder);
+
+            if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
+
+            // if a problem pops up for the maps in the future, then it's because of this call... am I creating the array correctly???
+            T[][] theArray = Init2DArray<T>(length / splitEveryN, splitEveryN);
+
+            for (int listPos = offset, arrayPos = 0; listPos < offset + length; listPos++, arrayPos++)
+            {
+                theArray[arrayPos / splitEveryN][arrayPos % splitEveryN] = theList[listPos];
+            }
+            return theArray;
+        }
+
         /// <summary>
         /// Divides a list of bytes into a two dimension byte array
         /// Ideal for searialized byte arrays from map files, into a more readable x,y
@@ -43,7 +81,8 @@ namespace Ultima5Redux
 
             if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
 
-            byte[][] byteArray = Init2DByteArray(length / splitEveryN, length / splitEveryN);
+//            byte[][] byteArray = Init2DByteArray(length / splitEveryN, length / splitEveryN);
+            byte[][] byteArray = Init2DArray<byte>(length / splitEveryN, length / splitEveryN);
 
             for (int listPos = offset, arrayPos = 0; listPos < offset + length; listPos++, arrayPos++)
             {
