@@ -117,14 +117,14 @@ namespace Ultima5Redux
 
                     // script just begun
                     // - % chance that they will say "I am called XX" (perhaps when no description is present?)
-
+                    
                     // is this a simple string command? if so, we can just print it
                     if (TalkScript.IsStringOnlyCommand(item.Command))
                     {
                         // if this is the very first position of conversation
                         if (i == 0 && nTalkLineIndex == (int)TalkScript.TalkConstants.Description)
                         {
-                            System.Console.Write("You see " + ProcessItem(item));
+                            System.Console.WriteLine("You see " + ProcessItem(item));
                         }
                         else
                         {
@@ -147,7 +147,7 @@ namespace Ultima5Redux
                                         break;
                                     }
                                 default:
-                                    System.Console.Write(ProcessItem(item));
+                                    System.Console.Write(ProcessItem(item)+" ");
                                     break;
                             }
                         }

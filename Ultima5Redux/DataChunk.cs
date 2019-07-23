@@ -154,6 +154,12 @@ namespace Ultima5Redux
         {            
         }
 
+        static public DataChunk CreateDataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength)
+        {
+            DataChunk dataChunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
+            return dataChunk;
+        }
+
         /// <summary>
         /// Debugging function that prints out the chunk
         /// </summary>

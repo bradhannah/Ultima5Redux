@@ -21,7 +21,7 @@ namespace Ultima5Redux
         /// <summary>
         /// The name of the Avatar
         /// </summary>
-        public string AvatarsName { get { return "Fred"; } }
+        public string AvatarsName { get { return characterRecords.Records[CharacterRecords.AVATAR_RECORD].Name; } }
 
         /// <summary>
         /// Data chunks for each of the save game sections
