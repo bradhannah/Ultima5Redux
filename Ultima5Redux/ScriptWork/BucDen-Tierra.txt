@@ -80,19 +80,19 @@ BYE
 Name: Tierra
 Description: a feisty wench.
 Greeting: A goodly day unto thee<AvatarsName>.
-Job: <SetFlag><DefineLabel0>What makes ye think it's any o'thee business?
-Bye: <SetFlag><DefineLabel1>Beat it!
+Job: <IfElseKnowsName><DefineLabel0>What makes ye think it's any o'thee business?
+Bye: <IfElseKnowsName><DefineLabel1>Beat it!
 
 Questions: busi
 Answer: None of yours.
 Questions: drin
-Answer: Sure, I'll drinks with ye...<Unknown_CodeA2><NewLine><NewLine><Pause>If'n I<123>only find my glass.
+Answer: Sure, I'll drinks with ye...<Unknown_CodeA2><NewLine><NewLine><Pause>If'n I canst only find my glass.
 Questions: glas
 Answer: I left it round 'ere somewhere.
 Questions: roun <OR> ere <OR> some
-Answer: I<123>not seem to remember.
+Answer: I canst not seem to remember.
 Questions: reme
-Answer: Speak'n of which...<Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel2><Pause><Unknown_CodeA2>I<123>not remember yer name...<Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><SetFlag><DefineLabel2><Unknown_FF>
+Answer: Speak'n of which...<Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Pause><Unknown_CodeA2>I canst not remember yer name...<Unknown_CodeA2><NewLine><NewLine><Pause><AskName><Unknown_CodeA2><NewLine><NewLine><IfElseKnowsName><DefineLabel2><Unknown_FF>
 
 Label #: 0
 Initial Line: <DefaultMessage><DefineLabel0><AvatarsName>, thou ought to know by now.<Unknown_CodeA2><NewLine><NewLine><Unknown_FF>
@@ -106,5 +106,5 @@ Answer: Thou hast the beauty of an orc thyself!<Unknown_CodeA2><NewLine><EndCove
 Questions: y
 Answer: <DefineLabel3>
 Label #: 3
-Initial Line: <DefaultMessage><DefineLabel3>I likes thee, perhaps I<123>help thee!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost ye wish ye couldst climb mountains?
+Initial Line: <DefaultMessage><DefineLabel3>I likes thee, perhaps I canst help thee!<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Dost ye wish ye couldst climb mountains?
 Default Line(s): Well, Bidney here used to...<Unknown_CodeA2><NewLine><NewLine><KeyWait><Unknown_CodeA2>Talk to him 'bout mountain climb'n.

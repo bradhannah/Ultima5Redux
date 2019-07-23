@@ -96,8 +96,9 @@ namespace Ultima5Redux
                 }
             }
 
+            Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
 //            Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
-            Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
+            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
             convo.SimulateConversation();
             //0x48 or 0x28
             Console.ReadKey();

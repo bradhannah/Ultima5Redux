@@ -386,6 +386,49 @@ namespace Ultima5Redux
                 return scriptItems[index];
             }
 
+            public List<ScriptLine> SplitIntoSections()
+            {
+                List<ScriptLine> lines = new List<ScriptLine>();
+                lines.Add(new ScriptLine());
+
+                int nSection = 0;
+                bool wasIfElseKnowsName = false;
+                for (int i = 0; i < GetNumberOfScriptItems(); i++)
+                {
+                    ScriptItem item = GetScriptItem(i);
+                    // Code A2 appears to denote the beginning of a new section, so we split it
+                    if (item.Command == TalkCommand.Unknown_CodeA2)
+                    {
+                        nSection++;
+                        lines.Add(new ScriptLine());
+                    }
+                    // if there is a IfElse branch for the Avatar's name then we add a new section, save the ScriptItem
+                    else if (item.Command == TalkCommand.IfElseKnowsName)
+                    {
+                        //wasIfElseKnowsName = true;
+                        nSection++;
+                        lines.Add(new ScriptLine());
+                        lines[nSection].AddScriptItem(item);
+                    }
+                    //////// THIS IS WAY MORE COMPLICATED
+                    //// how do we detect that there is section split for an IfElse. If it's a gotolabel, then it's easy
+                    //// if we see an A2, does that mean we need to wait for another before splitting it?
+                    //else if (wasIfElseKnowsName && )
+                    else if (item.Command == TalkCommand.DefineLabel)
+                    {
+                        //wasIfElseKnowsName = false;
+                        nSection++;
+                        lines.Add(new ScriptLine());
+                        lines[nSection].AddScriptItem(item);
+                    }
+                    else
+                    {
+                        lines[nSection].AddScriptItem(item);
+                    }
+                }
+                return (lines);
+            }
+
             /// <summary>
             /// Determines if a particular talk command is present in a script line
             /// <remarks>This particularly helpful when looking for looking for <AvatarName></remarks>
@@ -714,6 +757,7 @@ namespace Ultima5Redux
         {
             return (scriptLines[(int)talkConst]);
         }
+
 
         /// <summary>
         /// 

@@ -109,6 +109,9 @@ namespace Ultima5Redux
                     if (state.OneInXOdds(4)) conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
                 }
 
+                // Split the line into sections
+                List<TalkScript.ScriptLine> lines = currentLine.SplitIntoSections();
+
                 // we process all ScriptLines before proceeding the next conversation item
                 // todo: an emumerator would be kinda cool - i like foreach loops
                 for (int i = 0; i < currentLine.GetNumberOfScriptItems(); i++)
