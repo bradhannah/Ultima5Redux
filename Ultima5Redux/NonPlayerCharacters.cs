@@ -58,6 +58,8 @@ namespace Ultima5Redux
                 }
             }
 
+            private GameState gameStateRef;
+
             /// <summary>
             /// Original structure
             /// </summary>
@@ -153,6 +155,24 @@ namespace Ultima5Redux
                 }
             }
 
+            public bool KnowTheAvatar()
+            {
+                int nScriptLines = Script.GetNumberOfScriptLines();
+
+                for (int i = 0; i < nScriptLines; i++)
+                {
+                    if (gameStateRef.NpcHasMetAvatar(this))
+                    {
+                        return true;
+                    }
+                    if (!Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             /// <summary>
             /// Construct an NPC
             /// </summary>
@@ -162,7 +182,7 @@ namespace Ultima5Redux
             /// <param name="dialogNumber">dialog number referencing data OVL</param>
             /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
             /// <param name="talkScript">their conversation script</param>
-            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
+            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, GameState gameStateRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
             {
                 Schedule = new NPCSchedule(sched);
                 MapReference = mapRef;
@@ -170,6 +190,7 @@ namespace Ultima5Redux
                 DialogNumber = dialogNumber;
                 Script = talkScript;
                 DialogIndex = dialogIndex;
+                this.gameStateRef = gameStateRef;
 
                 // no schedule? I guess you're not real
                 if (!IsEmptySched(sched))
@@ -252,7 +273,7 @@ namespace Ultima5Redux
         /// <param name="u5Directory">Directory with Ultima 5</param>
         /// <param name="mapMaster">The master map from which to load</param>
         /// <param name="smallMapRef">Small map reference to help link NPCs to a map</param>
-        private void InitializeNPCs(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReference smallMapRef, TalkScripts talkScriptsRef)
+        private void InitializeNPCs(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReference smallMapRef, TalkScripts talkScriptsRef, GameState gameStateRef)
         {
             // open the appropriate NPC data file
             string dataFilenameAndPath = Path.Combine(u5Directory, SmallMapReference.SingleMapReference.GetNPCFilenameFromMasterFile(mapMaster));
@@ -282,7 +303,6 @@ namespace Ultima5Redux
                 {
                     NonPlayerCharacter.NPC_Schedule sched = (NonPlayerCharacter.NPC_Schedule)Utils.ReadStruct(npcData, offset, typeof(NonPlayerCharacter.NPC_Schedule));
                     schedules.Add(sched);
-
                 }
                 // bajh: just shoot me if I ever have to write this again - why on earth did LB write all of his data in different formats! 
                 // these are single byte, so we can capture them just by jumping to their offsets
@@ -300,7 +320,7 @@ namespace Ultima5Redux
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
-                    npcs.Add(new NonPlayerCharacter(singleMapRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc])));
+                    npcs.Add(new NonPlayerCharacter(singleMapRef, gameStateRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc])));
                 }
             }
         }
@@ -311,12 +331,12 @@ namespace Ultima5Redux
         /// <param name="u5Directory">the directory with Ultima 5 data files</param>
         /// <param name="smallMapRef">The small map reference</param>
         /// <param name="talkScriptsRe">Talk script references</param>
-        public NonPlayerCharacters(string u5Directory, SmallMapReference smallMapRef, TalkScripts talkScriptsRef)
+        public NonPlayerCharacters(string u5Directory, SmallMapReference smallMapRef, TalkScripts talkScriptsRef, GameState gameStateRef)
         {
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef, talkScriptsRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef, talkScriptsRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef, talkScriptsRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef, talkScriptsRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef, talkScriptsRef, gameStateRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef, talkScriptsRef, gameStateRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef, talkScriptsRef, gameStateRef);
+            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef, talkScriptsRef, gameStateRef);
         }
 
 

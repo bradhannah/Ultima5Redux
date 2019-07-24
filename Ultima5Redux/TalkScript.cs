@@ -758,13 +758,23 @@ namespace Ultima5Redux
             return (scriptLines[(int)talkConst]);
         }
 
+        public ScriptLine GetScriptLine(int index)
+        {
+            return (scriptLines[index]);
+        }
+
+        public int GetNumberOfScriptLines()
+        {
+            return scriptLines.Count;
+        }
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="nLabel"></param>
         /// <returns></returns>
-        /*public ScriptLine GetScriptLineLabel(int nLabel)
+        public ScriptLine GetScriptLineLabel(int nLabel)
         {
             foreach (ScriptLine line in scriptLines)
             {
@@ -775,7 +785,7 @@ namespace Ultima5Redux
                 }
             }
             throw new Exception("You requested a script label that doesn't exist");
-        }*/
+        }
 
 
         /// <summary>

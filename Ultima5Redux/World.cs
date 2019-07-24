@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 
 namespace Ultima5Redux
@@ -68,7 +69,7 @@ namespace Ultima5Redux
             talkScriptsRef = new TalkScripts(u5Directory, dataOvlRef);
 
             // build the NPC tables
-            npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef, talkScriptsRef);
+            npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef, talkScriptsRef, state);
 
             //Conversation convo = new Conversation(npcRef.NPCs[21]); // dunkworth
             // 19 = Margarett
@@ -96,15 +97,43 @@ namespace Ultima5Redux
                 }
             }
 
-            Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
+//            Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
 //            Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
-            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
-            convo.SimulateConversation();
+            Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
+            convo.BeginConversation();
+            currentlyConversating = true;
+
+            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
+            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
+
+
+            while (currentlyConversating)
+            {
+                if (wantUserInput)
+                {
+                    Console.Write("You respond: ");
+                    string response = Console.ReadLine();
+                    convo.AddUserResponse(response);
+                }
+                else
+                {
+                    // nothing for me to do...
+                    Thread.Sleep(50);
+                }
+            }
+
             //0x48 or 0x28
             Console.ReadKey();
 
         }
 
+        private bool currentlyConversating = false;
+        private bool wantUserInput = false;
+
+        private void EnqueuedScriptItem(Conversation conversation)
+        {
+
+        }
 
     }
 }
