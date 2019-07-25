@@ -97,10 +97,14 @@ namespace Ultima5Redux
                 }
             }
 
-                        //Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
-                        //Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
+            Conversation convo = new Conversation(npcRef.NPCs[0xe8], state);
+            
+            // Tierra 
+            //Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
+            
+            //Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
 
-            Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
+            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
 
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
@@ -165,15 +169,22 @@ namespace Ultima5Redux
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //
+                    state.Karma-=1;
                     break;
                 case TalkScript.TalkCommand.KarmaPlusOne:
-                    //
+                    state.Karma+=1;
                     break;
                 case TalkScript.TalkCommand.KeyWait:
-                    //
+                    Console.Write("...");
+                    Console.ReadKey();
                     break;
                 case TalkScript.TalkCommand.Pause:
-                    //
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Console.Write(".");
+                        Thread.Sleep(500);
+                    }
+                    Console.WriteLine("");
                     break;
                 case TalkScript.TalkCommand.Rune:
                 case TalkScript.TalkCommand.NewLine:

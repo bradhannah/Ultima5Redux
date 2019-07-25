@@ -231,7 +231,6 @@ namespace Ultima5Redux
                         conversationOrder.Add((int)script.GetScriptLineLabelIndex(item.LabelNum));
                         conversationOrderScriptLines.Add(script.GetScriptLine(script.GetScriptLineLabelIndex(item.LabelNum)));
                         return SkipInstruction.SkipToLabel;
-                        break;
                     case TalkScript.TalkCommand.EndCoversation:
                         EnqueToOutputBuffer(item);
                         break;

@@ -17,6 +17,7 @@ namespace Ultima5Redux
         private bool[][] npcIsMetArray;
         private bool[][] npcIsDeadArray;
         private CharacterRecords characterRecords;
+        public uint Karma { get; set; }
 
         /// <summary>
         /// The name of the Avatar
@@ -33,8 +34,6 @@ namespace Ultima5Redux
             NPC_ISALIVE_TABLE,
             NPC_ISMET_TABLE
         };
-
-        
 
         /// <summary>
         /// Construct the GameState
