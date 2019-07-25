@@ -116,14 +116,13 @@ namespace Ultima5Redux
             {
                 if (skipCounter != -1 && --skipCounter == 0)
                 {
-                    i++;
                     continue;
                 }
                 SkipInstruction skipInstruction = ProcessLine(scriptLines[i]);
                 switch (skipInstruction)
                 {
                     case SkipInstruction.SkipAfterNext:
-                        skipCounter = 1;
+                        skipCounter = 2;
                         break;
                     case SkipInstruction.SkipNext:
                         // skips next instruction
@@ -177,8 +176,6 @@ namespace Ultima5Redux
                             // we skip the next block because it is the line used when we actually know the Avatar
                             return SkipInstruction.SkipNext;
                         }
-
-                        break;
                     case TalkScript.TalkCommand.AvatarsName:
                         // we should already know if they know the avatars name....
                         Debug.Assert(npc.KnowTheAvatar());
@@ -301,6 +298,7 @@ namespace Ultima5Redux
             while (true)
             {
                 // if we do not have any conversation left, then we will prompt for questions
+                ///// NO DIALOG LEFT - USER RESPONDS
                 while (nConversationIndex >= conversationOrder.Count)
                 {
                     EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput));
@@ -353,7 +351,7 @@ namespace Ultima5Redux
                 }
 
                 int nSplitLine = 0;
-                
+                int skipCounter = -1;
                 // we will go over each of the split lines indivdually
                 do
                 {
@@ -393,8 +391,7 @@ namespace Ultima5Redux
                             break;
                         }
 
-
-
+                        // There is an answer available from the NPC
                         if (scriptLabel.QuestionAnswers.AnswerIsAvailable(userResponse))
                         {
                             // let's get the answer details including the ScriptLine that will follow
@@ -403,7 +400,7 @@ namespace Ultima5Redux
 
                             ProcessMultipleLines(qa.Answer.SplitIntoSections());
                         }
-                        else
+                        else // you have entered an answer that isn't in their dialog - so default answer
                         {
                             // Process default response
                             foreach (TalkScript.ScriptLine defaultLine in scriptLabel.DefaultAnswers)
@@ -415,19 +412,40 @@ namespace Ultima5Redux
                         // we break to get into the outer loop again... we have handled all script work for the label within this block
                         break;
                     }
-                    else // it's not a label 
+                    else // it's not a label NOR is a question and answer section
                     {
                         TalkScript.ScriptLine currentSplitLine = splitLines[nSplitLine];
 
                         // if they are going to referece the Avatar by name, but don't know it, then we just skip the line altogether
-                        if (currentSplitLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npc.KnowTheAvatar())
+                        if (currentSplitLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npcKnowsAvatar)
                         {
                             Debug.Assert(nItem == 0);
                             nSplitLine++;
                             continue;
                         }
 
-                        ProcessLine(currentSplitLine, nTalkLineIndex, nSplitLine);
+                        if (skipCounter != -1 && skipCounter == 0)
+                        {
+                            // we skip this block
+                            --skipCounter;
+                        }
+                        else
+                        {
+                            if (skipCounter != -1) --skipCounter; 
+                            SkipInstruction skipInstruction = ProcessLine(currentSplitLine, nTalkLineIndex, nSplitLine);
+                            switch (skipInstruction)
+                            {
+                                case SkipInstruction.DontSkip:
+                                    break;
+                                case SkipInstruction.SkipAfterNext:
+                                    skipCounter = 2;
+                                    break;
+                                case SkipInstruction.SkipNext:
+                                    nSplitLine++;
+                                    break;
+                            }
+                        }
+
                     }
 
                     // we process all ScriptItem in each split ScriptLine before proceeding the next conversation item (ie. name, job, label3)
