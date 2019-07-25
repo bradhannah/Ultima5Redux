@@ -432,7 +432,7 @@ namespace Ultima5Redux
                         lines.Add(new ScriptLine());
                     }
                     // if there is a IfElse branch for the Avatar's name then we add a new section, save the ScriptItem
-                    else if (item.Command == TalkCommand.IfElseKnowsName || item.Command == TalkCommand.Unknown_FF)
+                    else if (item.Command == TalkCommand.IfElseKnowsName || item.Command == TalkCommand.Unknown_FF || item.Command == TalkCommand.DefineLabel)
                     {
                         //wasIfElseKnowsName = true;
                         nSection++;

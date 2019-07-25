@@ -97,10 +97,10 @@ namespace Ultima5Redux
                 }
             }
 
-                        Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
+                        //Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
                         //Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
 
-            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
+            Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
 
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;

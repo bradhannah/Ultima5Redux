@@ -13,7 +13,7 @@ namespace Ultima5Redux
     {
         private NonPlayerCharacters.NonPlayerCharacter npc;
         private TalkScript script;
-        private TalkScript.ScriptLine currentLine;
+        //private TalkScript.ScriptLine currentLine;
         private GameState gameStateRef;
         private Queue<TalkScript.ScriptItem> outputBufferQueue = new Queue<TalkScript.ScriptItem>();
         private Queue<string> responseQueue = new Queue<string>();
@@ -28,13 +28,13 @@ namespace Ultima5Redux
             this.gameStateRef = state;
         }
 
-        public TalkScript.ScriptItem Start()
-        {
-            currentLine = script.GetScriptLine(TalkScript.TalkConstants.Description);
-            TalkScript.ScriptItem item = currentLine.GetScriptItem(0);
+        //public TalkScript.ScriptItem Start()
+        //{
+        //    currentLine = script.GetScriptLine(TalkScript.TalkConstants.Description);
+        //    TalkScript.ScriptItem item = currentLine.GetScriptItem(0);
 
-            return item;
-        }
+        //    return item;
+        //}
 
         //public TalkScript.ScriptItem Next()
         //{
@@ -68,7 +68,7 @@ namespace Ultima5Redux
             return string.Empty;
         }
 
-        public string AwaitResponse()
+        private string AwaitResponse()
         {
             while (responseQueue.Count == 0)
             {
@@ -107,22 +107,36 @@ namespace Ultima5Redux
             }
         }
 
-        public void ProcessMultipleLines(List<TalkScript.ScriptLine> scriptLines)
+        private void ProcessMultipleLines(List<TalkScript.ScriptLine> scriptLines, int nTalkLineIndex)
         {
-            //List<TalkScript.ScriptLine> scriptLines = scriptLine.SplitIntoSections();
             int skipCounter = -1;
             for (int i = 0; i < scriptLines.Count; i++)
-            //foreach (TalkScript.ScriptLine line in scriptLines)
             {
-                if (skipCounter != -1 && --skipCounter == 0)
+                if (skipCounter != -1 && skipCounter == 0)
+                {
+                    --skipCounter;
+                    continue;
+                }
+
+                if (scriptLines[i].ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npc.KnowTheAvatar())
                 {
                     continue;
                 }
-                SkipInstruction skipInstruction = ProcessLine(scriptLines[i]);
+
+                if (scriptLines[i].GetNumberOfScriptItems()==0)
+                {
+                    continue;
+                }
+
+                SkipInstruction skipInstruction = ProcessLine(scriptLines[i], nTalkLineIndex, i);
+                if (skipCounter != -1) --skipCounter;
                 switch (skipInstruction)
                 {
+                    case SkipInstruction.SkipToLabel:
+                        // if I get a hop to a label instruction then we don't process the rest
+                        return;
                     case SkipInstruction.SkipAfterNext:
-                        skipCounter = 2;
+                        skipCounter = 1;
                         break;
                     case SkipInstruction.SkipNext:
                         // skips next instruction
@@ -136,15 +150,21 @@ namespace Ultima5Redux
             }
         }
 
-        public SkipInstruction ProcessLine(TalkScript.ScriptLine scriptLine)
+        private SkipInstruction ProcessLine(TalkScript.ScriptLine scriptLine)
         {
            return ProcessLine(scriptLine, -1, -1);
         }
 
-        public enum SkipInstruction { DontSkip = 0, SkipNext, SkipAfterNext };
+        private enum SkipInstruction { DontSkip = 0, SkipNext, SkipAfterNext, SkipToLabel };
 
         private SkipInstruction ProcessLine(TalkScript.ScriptLine scriptLine, int nTalkLineIndex, int nSplitLine)
         {
+            // if they already know the avatar then they aren't going to ask again
+            if (scriptLine.ContainsCommand(TalkScript.TalkCommand.AskName) && npc.KnowTheAvatar())
+            {
+                return SkipInstruction.DontSkip;
+            }
+
             int nItem = 0;
             int nItems = scriptLine.GetNumberOfScriptItems();
             do
@@ -161,6 +181,7 @@ namespace Ultima5Redux
                     //System.Console.WriteLine("You see " + ProcessItem(item));
                     EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "You see "));
                 }
+
 
                 switch (item.Command)
                 {
@@ -209,6 +230,7 @@ namespace Ultima5Redux
                         // we are going to add the GotoLabel to the script
                         conversationOrder.Add((int)script.GetScriptLineLabelIndex(item.LabelNum));
                         conversationOrderScriptLines.Add(script.GetScriptLine(script.GetScriptLineLabelIndex(item.LabelNum)));
+                        return SkipInstruction.SkipToLabel;
                         break;
                     case TalkScript.TalkCommand.EndCoversation:
                         EnqueToOutputBuffer(item);
@@ -249,6 +271,7 @@ namespace Ultima5Redux
                     case TalkScript.TalkCommand.Unknown_Enter:
                         break;
                     case TalkScript.TalkCommand.Unknown_FF:
+                        // appears to signify an empty section
                         break;
                     case TalkScript.TalkCommand.DefaultMessage:
                         // dirty - advance past the label that it will sink in...
@@ -277,14 +300,10 @@ namespace Ultima5Redux
 
             System.Console.WriteLine("---- STARTING CONVERSATION -----");
 
-            TalkScript.ScriptItem startItem = Start();
-
-
-            // just an idea for now - when a label comes up, we can add it and then proceed to the next line by adding it
+            // when a new section comes up, we can add it and then proceed to the next line by adding it
             // this is perpetual as long as there is more to see
             conversationOrder.Add((int)TalkScript.TalkConstants.Description);
             conversationOrder.Add((int)TalkScript.TalkConstants.Greeting);
-
             conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Description));
             conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Greeting));
 
@@ -299,6 +318,7 @@ namespace Ultima5Redux
             {
                 // if we do not have any conversation left, then we will prompt for questions
                 ///// NO DIALOG LEFT - USER RESPONDS
+                ///// This will result in processable conversation, so it will just fall through
                 while (nConversationIndex >= conversationOrder.Count)
                 {
                     EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput));
@@ -308,36 +328,31 @@ namespace Ultima5Redux
                     if (npc.Script.QuestionAnswers.AnswerIsAvailable(userResponse))
                     {
                         // the user asked a question that we recognize, so let's process the answer
-                        ProcessMultipleLines(npc.Script.QuestionAnswers.GetQuestionAnswer(userResponse).Answer.SplitIntoSections());
+                        ProcessMultipleLines(npc.Script.QuestionAnswers.GetQuestionAnswer(userResponse).Answer.SplitIntoSections(), -1);
                     }
                     else
                     {
                         // we didn't recognize the user input - we will tell them so
                         EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.UserInputNotRecognized));
                     }
+                    //nConversationIndex++;
                 }
-
-                TalkScript.ScriptLine currentLine;
 
                 // the current talk line
                 int nTalkLineIndex = conversationOrder[nConversationIndex];
 
                 // the current ScriptLine
+                TalkScript.ScriptLine currentLine;
                 currentLine = script.GetScriptLine(conversationOrder[nConversationIndex]);
-                //currentLine = conversationOrderScriptLines[nConversationIndex];
-
-
                 // Split the line into sections. This greatly simplifies the proceeding loops.
                 List<TalkScript.ScriptLine> splitLines = currentLine.SplitIntoSections();
-               // int nLine = 0;
 
                 // currentLine = unsplit line with all content
                 // splitLines = a list of all the split up lines
                 // curentSplitLine = current section of the currentLine
                 Debug.Assert(splitLines.Count > 0);
 
-                /// This is a logic block does needs to peek into the entire line for certain patterns
-                /// For example, if an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
+                /// If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
                 if (conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting && currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName)
                 && !npcKnowsAvatar)
@@ -350,111 +365,63 @@ namespace Ultima5Redux
                     }
                 }
 
-                int nSplitLine = 0;
-                int skipCounter = -1;
-                // we will go over each of the split lines indivdually
-                do
+                const int STARTING_INDEX_FOR_LABEL = 0;
+
+                ///// IT'S A LABEL
+                // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
+                if (splitLines[STARTING_INDEX_FOR_LABEL].IsLabelDefinition())
                 {
-                    int nItem = 0;
+                    Debug.Assert(splitLines[STARTING_INDEX_FOR_LABEL].GetNumberOfScriptItems() == 2, "If it is a label definition, then it must have only 2 items defined in it");
+                    int nLabel = splitLines[STARTING_INDEX_FOR_LABEL].GetScriptItem(1).LabelNum;
+                    Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS-1, "Label number must be between 0 and 9");
+                    
+                    // get the label object
+                    TalkScript.ScriptTalkLabel scriptLabel = script.TalkLabels.Labels[nLabel];
 
-                    // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
-                    if (splitLines[nSplitLine].IsLabelDefinition())
+                    // we ar going through each of the line sections, but are skipping the first one since we know it is just a label
+                    // definition
+                    ProcessMultipleLines(scriptLabel.InitialLine.SplitIntoSections(), nTalkLineIndex);
+
+                    string userResponse = string.Empty;
+                    if (scriptLabel.ContainsQuestions())
                     {
-                        Debug.Assert(splitLines[nSplitLine].GetNumberOfScriptItems() == 2, "If it is a label definition, then it must have only 2 items defined in it");
-                        int nLabel = splitLines[nSplitLine].GetScriptItem(1).LabelNum;
-                        Debug.Assert(nLabel >= 0 && nLabel <= 9, "Label number must be between 0 and 9");
-
-                        // get the label object
-                        TalkScript.ScriptTalkLabel scriptLabel = script.TalkLabels.Labels[nLabel];
-
-                        //List<TalkScript.ScriptLine> labelScriptSplitLines = scriptLabel.InitialLine.SplitIntoSections();
-                        // we ar going through each of the line sections, but are skipping the first one since we know it is just a label
-                        // definition
-                        //for (int i = 1; i < labelScriptSplitLines.Count; i++)
-                        //{
-                        //    ProcessLine(labelScriptSplitLines[i]);
-                        //}
-                        ProcessMultipleLines(scriptLabel.InitialLine.SplitIntoSections());
-
-                        string userResponse = string.Empty;
-                        if (scriptLabel.ContainsQuestions())
-                        {
-                            // need to figure out if we are going to ask a question...
-                            EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput));
-                            // we wait patiently for the user to respond
-                            userResponse = AwaitResponse();
-                        }
-                        else
-                        {
-                            // is there an actual answer to the question?
-                            // if not, then we have already processed our dialog line, let's move onto the next dialog item
-                            break;
-                        }
-
-                        // There is an answer available from the NPC
-                        if (scriptLabel.QuestionAnswers.AnswerIsAvailable(userResponse))
-                        {
-                            // let's get the answer details including the ScriptLine that will follow
-                            TalkScript.ScriptQuestionAnswer qa = scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
-                            TalkScript.ScriptLine npcResponseLine = qa.Answer;
-
-                            ProcessMultipleLines(qa.Answer.SplitIntoSections());
-                        }
-                        else // you have entered an answer that isn't in their dialog - so default answer
-                        {
-                            // Process default response
-                            foreach (TalkScript.ScriptLine defaultLine in scriptLabel.DefaultAnswers)
-                            {
-                                ProcessMultipleLines(defaultLine.SplitIntoSections());
-                            }
-                        }
-                        
-                        // we break to get into the outer loop again... we have handled all script work for the label within this block
-                        break;
+                        // need to figure out if we are going to ask a question...
+                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput));
+                        // we wait patiently for the user to respond
+                        userResponse = AwaitResponse();
                     }
-                    else // it's not a label NOR is a question and answer section
+                    else
                     {
-                        TalkScript.ScriptLine currentSplitLine = splitLines[nSplitLine];
-
-                        // if they are going to referece the Avatar by name, but don't know it, then we just skip the line altogether
-                        if (currentSplitLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npcKnowsAvatar)
-                        {
-                            Debug.Assert(nItem == 0);
-                            nSplitLine++;
-                            continue;
-                        }
-
-                        if (skipCounter != -1 && skipCounter == 0)
-                        {
-                            // we skip this block
-                            --skipCounter;
-                        }
-                        else
-                        {
-                            if (skipCounter != -1) --skipCounter; 
-                            SkipInstruction skipInstruction = ProcessLine(currentSplitLine, nTalkLineIndex, nSplitLine);
-                            switch (skipInstruction)
-                            {
-                                case SkipInstruction.DontSkip:
-                                    break;
-                                case SkipInstruction.SkipAfterNext:
-                                    skipCounter = 2;
-                                    break;
-                                case SkipInstruction.SkipNext:
-                                    nSplitLine++;
-                                    break;
-                            }
-                        }
-
+                        // is there an actual answer to the question?
+                        // if not, then we have already processed our dialog line, let's move onto the next dialog item
+                        nConversationIndex++;
+                        continue ;
                     }
 
-                    // we process all ScriptItem in each split ScriptLine before proceeding the next conversation item (ie. name, job, label3)
-                    // todo: an emumerator would be kinda cool - i like foreach loops
-                    nSplitLine++;
-                // while there are more split lines to go through
-                } while (nSplitLine < splitLines.Count);
+                    // There is an answer available from the NPC
+                    if (scriptLabel.QuestionAnswers.AnswerIsAvailable(userResponse))
+                    {
+                        // let's get the answer details including the ScriptLine that will follow
+                        TalkScript.ScriptQuestionAnswer qa = scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
+                        TalkScript.ScriptLine npcResponseLine = qa.Answer;
 
-               // EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\n"));
+                        ProcessMultipleLines(qa.Answer.SplitIntoSections(), nTalkLineIndex);
+                    }
+                    else // you have entered an answer that isn't in their dialog - so default answer
+                    {
+                        // Process default response
+                        foreach (TalkScript.ScriptLine defaultLine in scriptLabel.DefaultAnswers)
+                        {
+                            ProcessMultipleLines(defaultLine.SplitIntoSections(), nTalkLineIndex);
+                        }
+                    }
+                }
+                else // it's not a label NOR is a question and answer section
+                // it's just a simple text section (probably from the description or greeting)
+                {
+                    ProcessMultipleLines(splitLines, nTalkLineIndex);
+                }
+
                 // we have gone through all instructions, so lets move onto the next conversation line
                 nConversationIndex++;
             }
