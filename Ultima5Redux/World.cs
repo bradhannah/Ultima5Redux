@@ -97,8 +97,8 @@ namespace Ultima5Redux
                 }
             }
 
-            //            Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
-                        Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
+                        Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
+                        //Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
 
             //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
 
@@ -142,6 +142,7 @@ namespace Ultima5Redux
                 case TalkScript.TalkCommand.PlainString:
                     Console.Write(item.Str);
                     break;
+                case TalkScript.TalkCommand.PromptUserForInput:
                 case TalkScript.TalkCommand.AskName:
                     Console.Write("You respond: ");
                     string userResponse = Console.ReadLine();

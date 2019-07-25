@@ -85,6 +85,11 @@ namespace Ultima5Redux
             return npcIsDeadArray[npc.MapReference.Id][npc.DialogIndex]==false;
         }
 
+        public void SetMetNPC(NonPlayerCharacters.NonPlayerCharacter npc)
+        {
+            npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = true;
+        }
+
         /// <summary>
         /// Has the NPC met the avatar yet?
         /// </summary>

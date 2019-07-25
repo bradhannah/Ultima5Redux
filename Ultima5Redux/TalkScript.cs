@@ -67,6 +67,11 @@ namespace Ultima5Redux
                 QuestionAnswers.Add(sqa);
             }
 
+            public bool ContainsQuestions()
+            {
+                return DefaultAnswers.Count > 0;
+            }
+
             /// <summary>
             /// Construct the ScriptTalkLabel
             /// </summary>
@@ -112,6 +117,23 @@ namespace Ultima5Redux
             /// </summary>
             public Dictionary<string, ScriptQuestionAnswer> QuestionAnswers { get; }
 
+            private string GetQuestionKey(string userSuppliedQuestion)
+            {
+                foreach (string question in QuestionAnswers.Keys)
+                {
+                    if (userSuppliedQuestion.ToLower().StartsWith(question.ToLower()))
+                    {
+                        return question;
+                    }
+                }
+                return string.Empty;
+            }
+
+            public bool AnswerIsAvailable(string question)
+            {
+                return (GetQuestionKey(question) != string.Empty);
+            }
+
             /// <summary>
             /// Based on a user response, return the ScriptQuestionAnswer object
             /// </summary>
@@ -119,7 +141,11 @@ namespace Ultima5Redux
             /// <returns>associated QuestionAnswer if one exists</returns>
             public ScriptQuestionAnswer GetQuestionAnswer(string question)
             {
-                return QuestionAnswers[question];
+                if (!AnswerIsAvailable(question))
+                {
+                    throw new Exception("You have requested an answer for a question that doesn't exist. Use AnswerIsAvailable to check for existence first.");
+                }
+                return QuestionAnswers[GetQuestionKey(question)];
             }
 
             /// <summary>
@@ -406,12 +432,13 @@ namespace Ultima5Redux
                         lines.Add(new ScriptLine());
                     }
                     // if there is a IfElse branch for the Avatar's name then we add a new section, save the ScriptItem
-                    else if (item.Command == TalkCommand.IfElseKnowsName)
+                    else if (item.Command == TalkCommand.IfElseKnowsName || item.Command == TalkCommand.Unknown_FF)
                     {
                         //wasIfElseKnowsName = true;
                         nSection++;
                         lines.Add(new ScriptLine());
                         lines[nSection].AddScriptItem(item);
+                        forceSplitNext = true;
                     }
                     //////// THIS IS WAY MORE COMPLICATED
                     //// how do we detect that there is section split for an IfElse. If it's a gotolabel, then it's easy
@@ -481,7 +508,7 @@ namespace Ultima5Redux
         {
             PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
             KarmaMinusOne = 0x8A, CallGuards = 0x8B, IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_CodeA2 = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
-            Unknown_FF = 0xFF, PromptUserForInput = 0x80
+            Unknown_FF = 0xFF, PromptUserForInput = 0x80, UserInputNotRecognized = 0x7F
         };
 //        public enum TalkCommand
 //        {
@@ -519,6 +546,7 @@ namespace Ultima5Redux
         /// Non label specific q&a 
         /// </summary>
         private ScriptQuestionAnswers scriptQuestionAnswers = new ScriptQuestionAnswers();
+        public ScriptQuestionAnswers QuestionAnswers { get { return scriptQuestionAnswers; } }
 
         // tracking the current script line
         private ScriptLine currentScriptLine = new ScriptLine();
@@ -564,7 +592,15 @@ namespace Ultima5Redux
             bool labelEncountered = false;
 
             string question;
-            
+
+            // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
+            List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name");
+            scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, scriptLines[(int)TalkConstants.Name]));
+            List<string> jobQuestion = new List<string>(1); jobQuestion.Add("job");
+            scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, scriptLines[(int)TalkConstants.Job]));
+            List<string> byeQuestion = new List<string>(1); byeQuestion.Add("bye");
+            scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, scriptLines[(int)TalkConstants.Bye]));
+
             // repeat through the question/answer components until we hit a label - then we know to move onto the label section
             do
             {
