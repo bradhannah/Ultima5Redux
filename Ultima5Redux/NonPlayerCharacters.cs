@@ -159,18 +159,22 @@ namespace Ultima5Redux
             {
                 int nScriptLines = Script.GetNumberOfScriptLines();
 
+                // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
+                // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)
+
+                if (gameStateRef.NpcHasMetAvatar(this))
+                {
+                    return true;
+                }
+
                 for (int i = 0; i < nScriptLines; i++)
                 {
-                    if (gameStateRef.NpcHasMetAvatar(this))
+                    if (Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName))
                     {
-                        return true;
-                    }
-                    if (!Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName))
-                    {
-                        return true;
+                        return false;
                     }
                 }
-                return false;
+                return true;
             }
 
             /// <summary>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 
 namespace Ultima5Redux
-{
+{ 
     class Conversation
     {
         private NonPlayerCharacters.NonPlayerCharacter npc;
@@ -16,7 +16,6 @@ namespace Ultima5Redux
         private GameState state;
         private Queue<TalkScript.ScriptItem> outputBufferQueue = new Queue<TalkScript.ScriptItem>();
         private Queue<string> responseQueue = new Queue<string>();
-        
 
         public delegate void EnqueuedScriptItem(Conversation conversation);
         public EnqueuedScriptItem EnqueuedScriptItemCallback;
@@ -27,8 +26,6 @@ namespace Ultima5Redux
             script = npc.Script;
             this.state = state;
         }
-
-        
 
         public TalkScript.ScriptItem Start()
         {
@@ -78,6 +75,7 @@ namespace Ultima5Redux
             lock (((ICollection)outputBufferQueue).SyncRoot)
             {
                 outputBufferQueue.Enqueue(output);
+                EnqueuedScriptItemCallback(this);
             }
         }
 
@@ -147,8 +145,11 @@ namespace Ultima5Redux
                 && !npcKnowsAvatar)
                 {
                     // randomly add an introduction of the Avatar since they haven't met him
-                    if (state.OneInXOdds(4)) conversationOrder.Add((int)TalkScript.TalkConstants.Name);
-                    if (state.OneInXOdds(4)) conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
+                    if (state.OneInXOdds(4))
+                    {
+                        conversationOrder.Add((int)TalkScript.TalkConstants.Name);
+                        conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
+                    }
                 }
 
                 int nSplitLine = 0;
@@ -157,6 +158,21 @@ namespace Ultima5Redux
                 do
                 {
                     int nItem = 0;
+
+                    // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
+                    if (splitLines[nSplitLine].GetScriptItem(0).Command == TalkScript.TalkCommand.DefaultMessage)
+                    {
+                        Debug.Assert(splitLines[nSplitLine].GetNumberOfScriptItems() == 2, "If it is a label definition, then it must have only 2 items defined in it");
+                        int nLabel = splitLines[nSplitLine].GetScriptItem(1).LabelNum;
+                        Debug.Assert(nLabel >= 0 && nLabel <= 9, "Label number must be between 0 and 9");
+
+                        // get the label object
+                        TalkScript.ScriptTalkLabel scriptLabel = script.TalkLabels.Labels[nLabel];
+                        scriptLabel.InitialLine
+                        // print the initial conversation starter...
+
+                    }
+
                     TalkScript.ScriptLine currentSplitLine = splitLines[nSplitLine];
 
                     // if they are going to referece the Avatar by name, but don't know it, then we just skip the line altogether
@@ -181,7 +197,7 @@ namespace Ultima5Redux
                         if (nTalkLineIndex == (int)TalkScript.TalkConstants.Description && nSplitLine == 0 && nItem == 0)
                         {
                             //System.Console.WriteLine("You see " + ProcessItem(item));
-                            EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "You see " + ProcessItem(item)));
+                            EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "You see "));
                         }
 
                         switch (item.Command)
@@ -191,8 +207,6 @@ namespace Ultima5Redux
                             case TalkScript.TalkCommand.AvatarsName:
                                 // we should already know if they know the avatars name....
                                 Debug.Assert(npc.KnowTheAvatar());
-
-                                //Console.WriteLine(ProcessItem(item));
                                 EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, ProcessItem(item)));
                                 break;
                             case TalkScript.TalkCommand.AskName:
@@ -206,9 +220,10 @@ namespace Ultima5Redux
                                 break;
                             case TalkScript.TalkCommand.DefineLabel:
                                 // if I find a goto label, then i expect I have no further conversation lines left
-                                Debug.Assert(nConversationIndex == conversationOrderScriptLines.Count - 1);
+                                //Debug.Assert(nConversationIndex == conversationOrderScriptLines.Count - 1);
                                 // we are going to add the GotoLabel to the script
-                                conversationOrderScriptLines.Add(script.GetScriptLineLabel(item.LabelNum));
+                                conversationOrder.Add((int)script.GetScriptLineLabelIndex(item.LabelNum));
+                                conversationOrderScriptLines.Add(script.GetScriptLine(script.GetScriptLineLabelIndex(item.LabelNum)));
                                 break;
                             case TalkScript.TalkCommand.EndCoversation:
                                 EnqueToOutputBuffer(item);
@@ -261,7 +276,9 @@ namespace Ultima5Redux
                     nSplitLine++;
                 // while there are more split lines to go through
                 } while (nSplitLine < splitLines.Count);
-                    
+
+                EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\n"));
+                //EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\n"));
                 // we have gone through all instructions, so lets move onto the next conversation line
                 nConversationIndex++;
             }

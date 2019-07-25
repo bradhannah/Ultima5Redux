@@ -97,14 +97,17 @@ namespace Ultima5Redux
                 }
             }
 
-//            Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
-//            Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
-            Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
-            convo.BeginConversation();
-            currentlyConversating = true;
+            //            Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
+                        Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
+
+            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
 
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
+
+            convo.BeginConversation();
+            currentlyConversating = true;
+
 
 
             while (currentlyConversating)
@@ -132,7 +135,55 @@ namespace Ultima5Redux
 
         private void EnqueuedScriptItem(Conversation conversation)
         {
+            TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
 
+            switch (item.Command)
+            {
+                case TalkScript.TalkCommand.PlainString:
+                    Console.Write(item.Str);
+                    break;
+                case TalkScript.TalkCommand.AskName:
+                    Console.Write("You respond: ");
+                    string userResponse = Console.ReadLine();
+                    conversation.AddUserResponse(userResponse);
+                    break;
+                case TalkScript.TalkCommand.CallGuards:
+                    //
+                    break;
+                case TalkScript.TalkCommand.Change:
+                    //
+                    break;
+                case TalkScript.TalkCommand.EndCoversation:
+                    //
+                    break;
+                case TalkScript.TalkCommand.Gold:
+                    //
+                    break;
+                case TalkScript.TalkCommand.JoinParty:
+                    //
+                    break;
+                case TalkScript.TalkCommand.KarmaMinusOne:
+                    //
+                    break;
+                case TalkScript.TalkCommand.KarmaPlusOne:
+                    //
+                    break;
+                case TalkScript.TalkCommand.KeyWait:
+                    //
+                    break;
+                case TalkScript.TalkCommand.Pause:
+                    //
+                    break;
+                case TalkScript.TalkCommand.Rune:
+                case TalkScript.TalkCommand.NewLine:
+                case TalkScript.TalkCommand.DefineLabel:
+                case TalkScript.TalkCommand.IfElseKnowsName:
+                case TalkScript.TalkCommand.AvatarsName:
+                    throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
+                default:
+                    Console.Write("<" + item.Command.ToString() + ">");
+                    break;
+            }
         }
 
     }

@@ -226,7 +226,8 @@ namespace Ultima5Redux
             /// <summary>
             /// Associated string (can be empty)
             /// </summary>
-            public string Str { get { return str.Trim(); } }
+            public string Str { get { return str; } }
+//            public string Str { get { return str.Trim(); } }
             /// <summary>
             /// If there is a label, then this is a zero based index
             /// </summary>
@@ -391,8 +392,10 @@ namespace Ultima5Redux
                 List<ScriptLine> lines = new List<ScriptLine>();
                 lines.Add(new ScriptLine());
 
-                int nSection = 0;
-                bool wasIfElseKnowsName = false;
+                int nSection = -1;
+                bool first = true;
+                bool forceSplitNext = false;
+                //bool wasIfElseKnowsName = false;
                 for (int i = 0; i < GetNumberOfScriptItems(); i++)
                 {
                     ScriptItem item = GetScriptItem(i);
@@ -414,17 +417,29 @@ namespace Ultima5Redux
                     //// how do we detect that there is section split for an IfElse. If it's a gotolabel, then it's easy
                     //// if we see an A2, does that mean we need to wait for another before splitting it?
                     //else if (wasIfElseKnowsName && )
-                    else if (item.Command == TalkCommand.DefineLabel)
+                    else if (item.Command == TalkCommand.DefaultMessage)
                     {
-                        //wasIfElseKnowsName = false;
                         nSection++;
-                        lines.Add(new ScriptLine());
+                        Debug.Assert(GetScriptItem(i + 1).Command == TalkCommand.DefineLabel);
+                        //lines.Add(new ScriptLine());
                         lines[nSection].AddScriptItem(item);
+                        lines[nSection].AddScriptItem(GetScriptItem(i + 1));
+                        i++;
+                        forceSplitNext = true;
                     }
                     else
                     {
+                        if (first) nSection = 0;
+                        // if we are forcing a new section from a previous run, then we increment the section number
+                        if (forceSplitNext)
+                        {
+                            forceSplitNext = false;
+                            nSection++;
+                            lines.Add(new ScriptLine());
+                        }
                         lines[nSection].AddScriptItem(item);
                     }
+                    first = false;
                 }
                 return (lines);
             }
@@ -466,7 +481,7 @@ namespace Ultima5Redux
         {
             PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
             KarmaMinusOne = 0x8A, CallGuards = 0x8B, IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_CodeA2 = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
-            Unknown_FF = 0xFF
+            Unknown_FF = 0xFF, PromptUserForInput = 0x80
         };
 //        public enum TalkCommand
 //        {
@@ -498,6 +513,8 @@ namespace Ultima5Redux
         /// </summary>
         private ScriptTalkLabels scriptTalkLabels = new ScriptTalkLabels();
         
+        public ScriptTalkLabels TalkLabels { get { return scriptTalkLabels; } }
+
         /// <summary>
         /// Non label specific q&a 
         /// </summary>
@@ -776,15 +793,36 @@ namespace Ultima5Redux
         /// <returns></returns>
         public ScriptLine GetScriptLineLabel(int nLabel)
         {
+            return scriptLines[GetScriptLineLabelIndex(nLabel)];
+
+            //foreach (ScriptLine line in scriptLines)
+            //{
+            //    ScriptItem item = line.GetScriptItem(0);
+            //    if (item.Command == TalkCommand.DefineLabel && item.LabelNum == nLabel)
+            //    {
+            //        return line;
+            //    }
+            //}
+            //throw new Exception("You requested a script label that doesn't exist");
+        }
+
+        public int GetScriptLineLabelIndex(int nLabel)
+        {
+            int nCount = 0;
             foreach (ScriptLine line in scriptLines)
             {
-                ScriptItem item = line.GetScriptItem(0);
-                if (item.Command == TalkCommand.DefineLabel && item.LabelNum == nLabel)
+                if (line.GetNumberOfScriptItems() <= 1) { nCount++; continue; };
+
+                ScriptItem item = line.GetScriptItem(1);
+                if (line.IsLabelDefinition() && item.LabelNum == nLabel)
+//                if (item.Command == TalkCommand.DefineLabel && item.LabelNum == nLabel)
                 {
-                    return line;
+                    return nCount;
                 }
+                nCount++;
             }
             throw new Exception("You requested a script label that doesn't exist");
+
         }
 
 
