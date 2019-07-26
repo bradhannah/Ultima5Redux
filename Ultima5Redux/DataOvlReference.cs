@@ -34,9 +34,18 @@ namespace Ultima5Redux
             //LOCATION_NAME_INDEXES_1,
             //LOCATION_NAME_INDEXES_2,
             LOCATION_NAME_INDEXES,
-            LOCATION_NAMES };
+            LOCATION_NAMES,
+            PHRASES_CONVERSATION
+        };
 
+        public enum CHUNK__PHRASES_CONVERSATION { CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
+        YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F, YOU_SEE = 0x11, I_AM_CALLED = 0x12 };
         //private Dictionary<DataChunkName, DataChunk> chunkMap=new Dictionary<DataChunkName, DataChunk>();
+
+        public string GetStringFromDataChunkList(DataChunkName chunkName, int strIndex)
+        {
+            return GetDataChunk(chunkName).GetChunkAsStringList().Strs[(int)strIndex];
+        }
 
         public DataChunk GetDataChunk(DataChunk.DataFormatType dataType, string description, int offset, int length)
         {
@@ -292,7 +301,7 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".tlk file list", 0x9216, 0x2e);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Talking strings for ALL npcs", 0x9244, 0x1a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Dirty words", 0x925e, 0xda);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Common talking responses", 0x9338, 0x1cc);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Common talking responses", 0x9338, 0x1cc, 0, DataChunkName.PHRASES_CONVERSATION);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Directions", 0x9504, 0x3e);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "random texts", 0x9542, 0x2c);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "random texts", 0x9542, 0x2c);

@@ -508,7 +508,7 @@ namespace Ultima5Redux
         {
             PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
             KarmaMinusOne = 0x8A, CallGuards = 0x8B, IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_CodeA2 = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
-            Unknown_FF = 0xFF, PromptUserForInput = 0x80, UserInputNotRecognized = 0x7F
+            Unknown_FF = 0xFF, PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F, UserInputNotRecognized = 0x7E
         };
 //        public enum TalkCommand
 //        {
@@ -594,9 +594,9 @@ namespace Ultima5Redux
             string question;
 
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
-            List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name");
+            List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name"); 
             scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, scriptLines[(int)TalkConstants.Name]));
-            List<string> jobQuestion = new List<string>(1); jobQuestion.Add("job");
+            List<string> jobQuestion = new List<string>(1); jobQuestion.Add("job"); jobQuestion.Add("work");
             scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, scriptLines[(int)TalkConstants.Job]));
             List<string> byeQuestion = new List<string>(1); byeQuestion.Add("bye");
             scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, scriptLines[(int)TalkConstants.Bye]));
@@ -639,6 +639,9 @@ namespace Ultima5Redux
                 scriptQuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
                 nIndex+=2;
             } while (labelEncountered == false);
+
+            // a little hack - it's easy to end the conversation if it always ends with the end conversation tag
+            scriptLines[(int)TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndCoversation));
 
             // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
             int count = 0;

@@ -84,7 +84,7 @@ namespace Ultima5Redux
                     {
                         Console.WriteLine("");
                         Console.WriteLine("---- SCRIPT for " + npc.Name.Trim() + " -----");
-                        //npc.Script.PrintScript();
+                        //Npc.Script.PrintScript();
                         npc.Script.PrintComprehensiveScript();
 
                         if (npc.Name.Trim() == "Geoffrey")
@@ -97,59 +97,51 @@ namespace Ultima5Redux
                 }
             }
 
-            Conversation convo = new Conversation(npcRef.NPCs[0xe8], state);
-            
-            // Tierra 
-            //Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
-            
-            //Conversation convo = new Conversation(npcRef.NPCs[0xec], state);
+            //Conversation convo = new Conversation(npcRef.NPCs[0xe8], state);
 
-            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state);
+
+            // Lord Dalgrin
+            //Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
+
+            // Geoffery
+            //Conversation convo = new Conversation(npcRef.NPCs[0xec], state, dataOvlRef);
+
+            // Tierra 
+            Conversation convo = new Conversation(npcRef.NPCs[0xeb], state, dataOvlRef);
 
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
 
             convo.BeginConversation();
-            currentlyConversating = true;
-
-
-
-            while (currentlyConversating)
-            {
-                if (wantUserInput)
-                {
-                    Console.Write("You respond: ");
-                    string response = Console.ReadLine();
-                    convo.AddUserResponse(response);
-                }
-                else
-                {
-                    // nothing for me to do...
-                    Thread.Sleep(50);
-                }
-            }
 
             //0x48 or 0x28
-            Console.ReadKey();
+            Console.WriteLine("Shutting down... Hit any key...");
+            Console.ReadKey(false);
 
         }
 
-        private bool currentlyConversating = false;
-        private bool wantUserInput = false;
 
         private void EnqueuedScriptItem(Conversation conversation)
         {
             TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
-
+            string userResponse;
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.PlainString:
                     Console.Write(item.Str);
                     break;
-                case TalkScript.TalkCommand.PromptUserForInput:
+                case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
+                    Console.Write(conversation.GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOUR_INTEREST));
+                    userResponse = Console.ReadLine();
+                    conversation.AddUserResponse(userResponse);
+                    break;
+                case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
+                    Console.Write(conversation.GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOU_RESPOND));
+                    userResponse = Console.ReadLine();
+                    conversation.AddUserResponse(userResponse);
+                    break;
                 case TalkScript.TalkCommand.AskName:
-                    Console.Write("You respond: ");
-                    string userResponse = Console.ReadLine();
+                    userResponse = Console.ReadLine();
                     conversation.AddUserResponse(userResponse);
                     break;
                 case TalkScript.TalkCommand.CallGuards:
@@ -159,13 +151,13 @@ namespace Ultima5Redux
                     //
                     break;
                 case TalkScript.TalkCommand.EndCoversation:
-                    //
+                    // 
                     break;
                 case TalkScript.TalkCommand.Gold:
                     //
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    //
+                    state.AddMemberToParty(conversation.Npc);
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //

@@ -16,6 +16,7 @@ namespace Ultima5Redux
             //World world = new World("C:\\games\\ultima_5_late\\gold");
             //World world = new World("C:\\games\\ultima_5_late\\bucden3");
             World world = new World("C:\\games\\ultima_5_late\\bucden1");
+            //World world = new World("C:\\games\\ultima_5_late\\bucden4");
 
             //world.overworldMap.PrintMap();
             //world.underworldMap.PrintMap();

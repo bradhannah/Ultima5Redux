@@ -14,6 +14,13 @@ namespace Ultima5Redux
 
             while (curOffset < length)
             {
+                // we will not store null byte entries. Often string have two null bytes proceeding them, 
+                // this often indicates the end of a list
+                if (byteArray[curOffset] == 0x00)
+                {
+                    curOffset++;
+                    continue;
+                }
                 str = Utils.BytesToStringNullTerm(byteArray, curOffset, length-curOffset);
 
                 Strs.Add(str);

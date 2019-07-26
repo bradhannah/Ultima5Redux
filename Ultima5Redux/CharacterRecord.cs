@@ -15,6 +15,7 @@ namespace Ultima5Redux
 
         private const int TOTAL_CHARACTER_RECORDS = 16;
         private const byte CHARACTER_OFFSET = 0x20;
+        public const int MAX_PARTY_MEMBERS = 6;
 
         public CharacterRecords(List<byte> rawByteList)
         {
@@ -25,6 +26,30 @@ namespace Ultima5Redux
                 Records[nRecord] = new CharacterRecord(characterArray);
             }
         }
+
+        public CharacterRecord GetCharacterRecordByNPC(NonPlayerCharacters.NonPlayerCharacter npc)
+        {
+            foreach (CharacterRecord record in Records)
+            {
+                if (record.Name == npc.Name)
+                {
+                    return record;
+                }
+            }
+            throw new Exception("Was unable to match CharacterRecord with NPC: " + npc.Name);
+        }
+
+        public int TotalPartyMembers()
+        {
+            int nPartyMembers = 0;
+            foreach (CharacterRecord characterRecord in Records)
+            {
+                if (characterRecord.InnOrParty == (int)CharacterRecord.CharacterInnOrParty.InParty)
+                    nPartyMembers++;
+            }
+            Debug.Assert(nPartyMembers > 0 && nPartyMembers <= 6);
+            return nPartyMembers;
+        }
     }
 
 
@@ -33,11 +58,15 @@ namespace Ultima5Redux
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
 
+
+        public enum CharacterInnOrParty { InParty = 0x00, HasntJoined = 0xFF, PermanentlyKilled = 0x7F };
         public enum CharacterGender { Male = 0x0B, Female = 0x0C };
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'};
         public enum CharacterStatus { Good = 'G', Poisioned = 'P'};
         // if your InnorParty value is included in the list, then it's clear - if not then they are at the location referenced by the number
-        public enum CharacterPartyStatus { InParty = 0x00, HasntJoinedYet = 0xFF, KilledPermanently = 0x7F};
+        
+        public enum CharacterPartyStatus { InParty = 0x00, HasntJoinedYet = 0xFF, KilledPermanently = 0x7F}; // otherwise it is at an inn at Settlement # in byte value
+
 
         private byte Unknown1 { get; set; }
         private byte Unknown2 { get; set; }

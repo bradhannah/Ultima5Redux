@@ -100,7 +100,7 @@ namespace Ultima5Redux
                 {
                     if (Script != null)
                     {
-                        return Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str;
+                        return Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
                     }
                     else
                     {

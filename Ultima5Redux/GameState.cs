@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
@@ -87,6 +88,18 @@ namespace Ultima5Redux
         public void SetMetNPC(NonPlayerCharacters.NonPlayerCharacter npc)
         {
             npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = true;
+        }
+
+        public void AddMemberToParty(NonPlayerCharacters.NonPlayerCharacter npc)
+        {
+            CharacterRecord record = characterRecords.GetCharacterRecordByNPC(npc);
+            record.InnOrParty = (int)CharacterRecord.CharacterInnOrParty.InParty;
+        }
+
+        public bool IsFullParty()
+        {
+            Debug.Assert(!(characterRecords.TotalPartyMembers() > CharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
+            return (characterRecords.TotalPartyMembers() == CharacterRecords.MAX_PARTY_MEMBERS);
         }
 
         /// <summary>
