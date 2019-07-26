@@ -10,21 +10,46 @@ namespace Ultima5Redux
 {
     class GameState
     {
+        #region Private Variables
+        /// <summary>
+        /// A random number generator - capable of seeding in future
+        /// </summary>
         private Random ran = new Random();
 
+        /// <summary>
+        /// Game state raw data
+        /// </summary>
         private DataChunks<DataChunkName> dataChunks;
-        private List<byte> gameStateByteArray;
 
+        /// <summary>
+        /// 2D array of flag indicating if an NPC is met [mastermap][npc#]
+        /// </summary>
         private bool[][] npcIsMetArray;
+
+        /// <summary>
+        /// 2D array of flag indicating if an NPC is dead [mastermap][npc#]
+        /// </summary>
         private bool[][] npcIsDeadArray;
+
+        /// <summary>
+        /// All player character records
+        /// </summary>
         private CharacterRecords characterRecords;
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// Users Karma
+        /// </summary>
         public uint Karma { get; set; }
 
         /// <summary>
         /// The name of the Avatar
         /// </summary>
         public string AvatarsName { get { return characterRecords.Records[CharacterRecords.AVATAR_RECORD].Name; } }
+        #endregion
 
+        #region Enumerations
         /// <summary>
         /// Data chunks for each of the save game sections
         /// </summary>
@@ -35,7 +60,9 @@ namespace Ultima5Redux
             NPC_ISALIVE_TABLE,
             NPC_ISMET_TABLE
         };
+        #endregion
 
+        #region Constructors
         /// <summary>
         /// Construct the GameState
         /// </summary>
@@ -46,6 +73,7 @@ namespace Ultima5Redux
 
             dataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
 
+            List<byte> gameStateByteArray;
             gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20*16, 0x00, DataChunkName.CHARACTER_RECORDS);
@@ -65,7 +93,9 @@ namespace Ultima5Redux
             // these will map directly to the towns and the NPC dialog #
             npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
         }
+        #endregion
 
+        #region Public Methods
         /// <summary>
         /// Using the random number generator, provides 1 in howMany odds of returning true
         /// </summary>
@@ -78,6 +108,11 @@ namespace Ultima5Redux
             return ((nextRan % howMany) == 0);
         }
 
+        /// <summary>
+        /// Is NPC alive?
+        /// </summary>
+        /// <param name="npc">NPC object</param>
+        /// <returns>true if NPC is alive</returns>
         public bool NpcIsAlive(NonPlayerCharacters.NonPlayerCharacter npc)
         {
             // the array isDead becasue LB stores 0=alive, 1=dead
@@ -85,17 +120,29 @@ namespace Ultima5Redux
             return npcIsDeadArray[npc.MapReference.Id][npc.DialogIndex]==false;
         }
 
+        /// <summary>
+        /// Sets the flag to indicate the NPC is met
+        /// </summary>
+        /// <param name="npc"></param>
         public void SetMetNPC(NonPlayerCharacters.NonPlayerCharacter npc)
         {
             npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = true;
         }
 
+        /// <summary>
+        /// Adds an NPC character to the party, and maps their CharacterRecord
+        /// </summary>
+        /// <param name="npc">the NPC to add</param>
         public void AddMemberToParty(NonPlayerCharacters.NonPlayerCharacter npc)
         {
             CharacterRecord record = characterRecords.GetCharacterRecordByNPC(npc);
             record.InnOrParty = (int)CharacterRecord.CharacterInnOrParty.InParty;
         }
 
+        /// <summary>
+        /// Is my party full (at capacity)
+        /// </summary>
+        /// <returns>true if party is full</returns>
         public bool IsFullParty()
         {
             Debug.Assert(!(characterRecords.TotalPartyMembers() > CharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
@@ -111,6 +158,6 @@ namespace Ultima5Redux
         {
             return npcIsMetArray[npc.MapReference.Id][npc.DialogIndex];
         }
-
+        #endregion
     }
 }

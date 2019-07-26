@@ -9,19 +9,85 @@ using System.Threading;
 
 namespace Ultima5Redux
 { 
+    /// <summary>
+    /// A conversation with an NPC.
+    /// An instantiated object of class Conversation holds and controls all aspects of a conversation.
+    /// </summary>
     class Conversation
     {
+        #region Public Properties
+        /// <summary>
+        /// The NPC with whom you are having a conversation
+        /// </summary>
         public NonPlayerCharacters.NonPlayerCharacter Npc { get; }
+
+        /// <summary>
+        /// Has the conversation ended?
+        /// </summary>
+        public bool ConversationEnded { get; set; } = false;
+        #endregion
+
+        #region Private Variables
+        /// <summary>
+        /// The script of the conversation
+        /// </summary>
         private TalkScript script;
+        /// <summary>
+        /// Data.OVL reference used for grabbing predefined conversation strings
+        /// </summary>
         private DataOvlReference dataOvlRef;
-        //private TalkScript.ScriptLine currentLine;
+        /// <summary>
+        /// Game state used for determining if Avatar has met the NPC
+        /// </summary>
         private GameState gameStateRef;
+        /// <summary>
+        /// The output buffer storing all outputs that will be read by outer program
+        /// </summary>
         private Queue<TalkScript.ScriptItem> outputBufferQueue = new Queue<TalkScript.ScriptItem>();
+        /// <summary>
+        /// The users responses to promptings from the outputBufferQueue
+        /// </summary>
         private Queue<string> responseQueue = new Queue<string>();
+        /// <summary>
+        /// Are we currently in rune mode? if so, I expect that TextProcessItem will be translating text to runic
+        /// </summary>
+        private bool runeMode = false;
+        /// <summary>
+        /// a list of conversation indexes that refer to the particular conversationOrderScriptLines[] we are on
+        /// </summary>
+        private List<int> conversationOrder = new List<int>();
+        /// <summary>
+        /// All of the scriptlines that we are capable of processing for the NPC
+        /// </summary>
+        private List<TalkScript.ScriptLine> conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
+        #endregion
 
+        #region Delegates/Callbacks
+        /// <summary>
+        /// The delegate for the notification that tells the user something was added to the queue
+        /// </summary>
+        /// <param name="conversation"></param>
         public delegate void EnqueuedScriptItem(Conversation conversation);
+        /// <summary>
+        /// The callback for the notification that tells the user something was added to the queue
+        /// </summary>
         public EnqueuedScriptItem EnqueuedScriptItemCallback;
+        #endregion
 
+        #region Constants and Enums
+        /// <summary>
+        /// Instructs the calling method how to handle proceeding talkscript lookups
+        /// </summary>
+        private enum SkipInstruction { DontSkip = 0, SkipNext, SkipAfterNext, SkipToLabel };
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Construction a conversation
+        /// </summary>
+        /// <param name="npc">NPC you will have a conversation with</param>
+        /// <param name="state">The games current state</param>
+        /// <param name="dataOvlRef">Data.OVL for reference</param>
         public Conversation(NonPlayerCharacters.NonPlayerCharacter npc, GameState state, DataOvlReference dataOvlRef)
         {
             this.Npc = npc;
@@ -29,31 +95,15 @@ namespace Ultima5Redux
             this.gameStateRef = state;
             this.dataOvlRef = dataOvlRef;
         }
+        #endregion
 
-        //public TalkScript.ScriptItem Start()
-        //{
-        //    currentLine = script.GetScriptLine(TalkScript.TalkConstants.Description);
-        //    TalkScript.ScriptItem item = currentLine.GetScriptItem(0);
-
-        //    return item;
-        //}
-
-        //public TalkScript.ScriptItem Next()
-        //{
-        //    return (Start());
-        //}
-
-        //public TalkScript.ScriptItem Next(string userResponse)
-        //{
-        //    return (Start());
-        //}
-
-        public bool ConversationEnded { get; set; } = false;
-        private bool runeMode = false;
-        List<int> conversationOrder = new List<int>();
-        List<TalkScript.ScriptLine> conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
-
-        private string ProcessItem(TalkScript.ScriptItem item)
+        #region Private Methods
+        /// <summary>
+        /// Simple converter that takes in a ScriptItem and returns a string
+        /// </summary>
+        /// <param name="item">item to process</param>
+        /// <returns>string equivelant of the scriptitem</returns>
+        private string TextProcessItem(TalkScript.ScriptItem item)
         {
             switch (item.Command)
             {
@@ -66,11 +116,15 @@ namespace Ultima5Redux
                 case TalkScript.TalkCommand.Rune:
                     runeMode = !runeMode;
                     return string.Empty;
+                default:
+                    throw new Exception("Passed in an unsupported TalkCommand: " + item.Command.ToString() + " to the TextProcessItem method");
             }
-
-            return string.Empty;
         }
 
+        /// <summary>
+        /// Loops and waits for a response (response added to responseQueue)
+        /// </summary>
+        /// <returns>Users resonse</returns>
         private string AwaitResponse()
         {
             while (responseQueue.Count == 0)
@@ -84,15 +138,10 @@ namespace Ultima5Redux
             }
 
         }
-
-        public void AddUserResponse(string response)
-        {
-            lock (((ICollection)responseQueue).SyncRoot)
-            {
-                responseQueue.Enqueue(response);
-            }
-        }
-
+        /// <summary>
+        /// Add a ScriptItem to the output buffer that will be consumed by the outside process (ie. World)
+        /// </summary>
+        /// <param name="output">ScripItem to add to queue</param>
         private void EnqueToOutputBuffer(TalkScript.ScriptItem output)
         {
             lock (((ICollection)outputBufferQueue).SyncRoot)
@@ -102,42 +151,46 @@ namespace Ultima5Redux
             }
         }
 
-        public TalkScript.ScriptItem DequeueFromOutputBuffer()
-        {
-            lock (((ICollection)outputBufferQueue).SyncRoot)
-            {
-                return outputBufferQueue.Dequeue();
-            }
-        }
-
-        public string GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION index)
-        {
-            return (dataOvlRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index));
-        }
-
+        /// <summary>
+        /// Super function - Processes a list of ScriptLines. It evaluates each line and makes logical determinations to skip
+        /// some lines if required
+        /// </summary>
+        /// <param name="scriptLines">the script line to process</param>
+        /// <param name="nTalkLineIndex">where we are in the conversation - it really only cares if you are on the first line of conversation</param>
         private void ProcessMultipleLines(List<TalkScript.ScriptLine> scriptLines, int nTalkLineIndex)
         {
+            // how many items shall we skip? if == -1, then don't skip
             int skipCounter = -1;
+
             for (int i = 0; i < scriptLines.Count; i++)
             {
+                // if we still have some counts on the skipCounter, then decrement and skip 
                 if (skipCounter != -1 && skipCounter == 0)
                 {
                     --skipCounter;
                     continue;
                 }
 
-                if (scriptLines[i].ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !Npc.KnowTheAvatar())
+                // if the line refers to the Avatar, but the NPC doesn't know the Avatar then just skip the line
+                if (scriptLines[i].ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !Npc.KnowTheAvatar)
                 {
                     continue;
                 }
 
-                if (scriptLines[i].GetNumberOfScriptItems()==0)
+                // If there are no script items, then just skip
+                // todo: this shouldn't really happen, but it does, so maybe one day find out why they are being added
+                if (scriptLines[i].GetNumberOfScriptItems() == 0)
                 {
                     continue;
                 }
 
+                // process the individual line
+                // it will return a skip instruction, telling us how to to handle subsequent calls
                 SkipInstruction skipInstruction = ProcessLine(scriptLines[i], nTalkLineIndex, i);
+
                 if (skipCounter != -1) --skipCounter;
+                
+                // process our new skip instruction
                 switch (skipInstruction)
                 {
                     case SkipInstruction.SkipToLabel:
@@ -158,17 +211,30 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Process an individual line with defaults
+        /// </summary>
+        /// <param name="scriptLine">the script line</param>
+        /// <returns>a skip instruction for the proceeding lines</returns>
         private SkipInstruction ProcessLine(TalkScript.ScriptLine scriptLine)
         {
-           return ProcessLine(scriptLine, -1, -1);
+            return ProcessLine(scriptLine, -1, -1);
         }
 
-        private enum SkipInstruction { DontSkip = 0, SkipNext, SkipAfterNext, SkipToLabel };
-
+        /// <summary>
+        /// Process an individual line. 
+        /// The method evaluates each scriptitem within the line, adding items and text to the output buffer as required.
+        /// Mega function
+        /// </summary>
+        /// <remarks>If you do not SPLIT the line ahead of time then it is going to act wonky...</remarks>
+        /// <param name="scriptLine"></param>
+        /// <param name="nTalkLineIndex"></param>
+        /// <param name="nSplitLine"></param>
+        /// <returns></returns>
         private SkipInstruction ProcessLine(TalkScript.ScriptLine scriptLine, int nTalkLineIndex, int nSplitLine)
         {
             // if they already know the avatar then they aren't going to ask again
-            if (scriptLine.ContainsCommand(TalkScript.TalkCommand.AskName) && Npc.KnowTheAvatar())
+            if (scriptLine.ContainsCommand(TalkScript.TalkCommand.AskName) && Npc.KnowTheAvatar)
             {
                 return SkipInstruction.DontSkip;
             }
@@ -179,24 +245,18 @@ namespace Ultima5Redux
             {
                 TalkScript.ScriptItem item = scriptLine.GetScriptItem(nItem);
 
-                // script just begun
-                // - % chance that they will say "I am called XX" (perhaps when no description is present?)
-
                 // if this is the very first position of conversation
                 // we must describe what we "see"
                 if (nTalkLineIndex == (int)TalkScript.TalkConstants.Description && nSplitLine == 0 && nItem == 0)
                 {
-                    //System.Console.WriteLine("You see " + ProcessItem(item));
                     EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOU_SEE)));
-                        //"You see "));
                 }
-
 
                 switch (item.Command)
                 {
                     case TalkScript.TalkCommand.IfElseKnowsName:
                         Debug.Assert(nItems == 1);
-                        if (Npc.KnowTheAvatar())
+                        if (Npc.KnowTheAvatar)
                         {
                             // we continue to the next block, but skip the one after
                             return SkipInstruction.SkipAfterNext;
@@ -208,13 +268,15 @@ namespace Ultima5Redux
                         }
                     case TalkScript.TalkCommand.AvatarsName:
                         // we should already know if they know the avatars name....
-                        Debug.Assert(Npc.KnowTheAvatar());
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, ProcessItem(item)));
+                        Debug.Assert(Npc.KnowTheAvatar);
+                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.AskName:
                         EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.WHATS_YOUR_NAME)));
                         EnqueToOutputBuffer(item);
+                        // we actually wait in the function for the user to respond
                         string avatarNameResponse = AwaitResponse();
+                        // did they actually provide the Avatars name?
                         if (avatarNameResponse.ToLower() == gameStateRef.AvatarsName.ToLower())
                         {
                             // i met them
@@ -253,7 +315,7 @@ namespace Ultima5Redux
                             string noJoinResponse = GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.CANT_JOIN_1) +
                                 GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.CANT_JOIN_2);
                             EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, noJoinResponse));
-                                //"Thou hast no room for me in thy party! Seek me again if one of thy members doth leave thee.\n"));
+                            //"Thou hast no room for me in thy party! Seek me again if one of thy members doth leave thee.\n"));
                         }
                         else
                         {
@@ -271,22 +333,20 @@ namespace Ultima5Redux
                         EnqueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.NewLine:
-                        //Console.WriteLine(ProcessItem(item));
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, ProcessItem(item)));
+                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.Pause:
                         EnqueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.PlainString:
                         // we put it through the processor to change the text around if we are wrapped in a rune tag
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, ProcessItem(item)));
+                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.Rune:
-                        //Console.WriteLine(ProcessItem(item));
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, ProcessItem(item)));
+                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.UserInputNotRecognized:
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.CANNOT_HELP)+"\n"));
+                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.CANNOT_HELP) + "\n"));
                         break;
                     case TalkScript.TalkCommand.Unknown_Enter:
                         break;
@@ -309,12 +369,58 @@ namespace Ultima5Redux
             } while (nItem < nItems);
             return SkipInstruction.DontSkip;
         }
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
-        /// Simulate a conversation through a console
+        /// Add a user response to the queue
+        /// </summary>
+        /// <param name="response">the string response to add</param>
+        public void AddUserResponse(string response)
+        {
+            lock (((ICollection)responseQueue).SyncRoot)
+            {
+                responseQueue.Enqueue(response);
+            }
+        }
+
+        /// <summary>
+        /// Remove a ScriptItem from the output buffer (typically called by outside process ie. World)
+        /// </summary>
+        /// <returns>The next ScripItem</returns>
+        public TalkScript.ScriptItem DequeueFromOutputBuffer()
+        {
+            lock (((ICollection)outputBufferQueue).SyncRoot)
+            {
+                return outputBufferQueue.Dequeue();
+            }
+        }
+
+        /// <summary>
+        /// Quick method to return a pre-defined conversation string from Data.ovl
+        /// </summary>
+        /// <param name="index">index into string array (use DataOvlReference.CHUNK__PHRASES_CONVERSATION)</param>
+        /// <returns>associated string</returns>
+        public string GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION index)
+        {
+            return (dataOvlRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index));
+        }
+        #endregion
+
+        #region Asynchronous operations 
+
+        /// <summary>
+        /// Begins the conversation with the NPC. 
+        /// Method will block for input if required.
         /// </summary>
         public void BeginConversation()
         {
+            if (this.EnqueuedScriptItemCallback == null)
+            {
+                throw new Exception("Called BeginConversation without declaring a EnqueuedScriptItemCallback.");
+            }
+
             System.Console.WriteLine("---- PRE-CONVERSATION SCRIPT -----");
             script.PrintComprehensiveScript();
 
@@ -328,7 +434,7 @@ namespace Ultima5Redux
             conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Greeting));
 
             // some of these operatoins can be expensive, so let's call them once and store instead
-            bool npcKnowsAvatar = Npc.KnowTheAvatar();
+            bool npcKnowsAvatar = Npc.KnowTheAvatar;
 
             // the index into conversationOrder
             int nConversationIndex = 0;
@@ -345,14 +451,9 @@ namespace Ultima5Redux
                     // we wait patiently for the user to respond
                     string userResponse = AwaitResponse();
 
-                    //if (userResponse == string.Empty)
-                    //{
-                    //    ConversationEnded = true;
-                    //    return;
-                    //}
                     if (userResponse == string.Empty)
                     {
-                        userResponse = "bye";
+                        userResponse = TalkScript.TalkConstants.Bye.ToString().ToLower();
                     }
 
                     if (Npc.Script.QuestionAnswers.AnswerIsAvailable(userResponse))
@@ -463,5 +564,6 @@ namespace Ultima5Redux
                 nConversationIndex++;
             }
         }
+        #endregion
     }
 }

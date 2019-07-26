@@ -8,76 +8,83 @@ using System.IO;
 namespace Ultima5Redux
 {
 
-    public class RingAndAmults : SomeStrings
-    {
-        public RingAndAmults() : base(null, 0, 0)
-        {
-
-        }
-    }
-
-    
-
+    /// <summary>
+    /// Class for quick access to the static contents of the Data.ovl file
+    /// </summary>
     class DataOvlReference
     {
-        //private List<byte> dataOvlByteArray;
+        #region Private Variables
+        /// <summary>
+        /// All the data chunks
+        /// </summary>
         private DataChunks<DataChunkName> dataChunks;
+        #endregion
 
-        private void PrintGaps()
-        {
-
-        }
-
+        #region Enumerations
+        /// <summary>
+        /// Chunk names specific to the Data.ovl file
+        /// </summary>
         public enum DataChunkName {
             Unused = -1,
             TALK_COMPRESSED_WORDS,
-            //LOCATION_NAME_INDEXES_1,
-            //LOCATION_NAME_INDEXES_2,
             LOCATION_NAME_INDEXES,
             LOCATION_NAMES,
             PHRASES_CONVERSATION
         };
 
+        /// <summary>
+        /// Conversational phrase indexes
+        /// </summary>
         public enum CHUNK__PHRASES_CONVERSATION { CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
         YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F, YOU_SEE = 0x11, I_AM_CALLED = 0x12 };
         //private Dictionary<DataChunkName, DataChunk> chunkMap=new Dictionary<DataChunkName, DataChunk>();
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Quicker method to get a specific string from a string list stored in a data chunk
+        /// </summary>
+        /// <param name="chunkName">String list chunk name</param>
+        /// <param name="strIndex">index of string</param>
+        /// <returns>string at the index specified</returns>
         public string GetStringFromDataChunkList(DataChunkName chunkName, int strIndex)
         {
             return GetDataChunk(chunkName).GetChunkAsStringList().Strs[(int)strIndex];
         }
 
+        /// <summary>
+        /// Extracts a data chunk from the raw bytes
+        /// </summary>
+        /// <param name="dataType">format is the data in</param>
+        /// <param name="description">a brief description of the data</param>
+        /// <param name="offset">which offset to begin reading at</param>
+        /// <param name="length">the number of bytes to read</param>
+        /// <returns></returns>
         public DataChunk GetDataChunk(DataChunk.DataFormatType dataType, string description, int offset, int length)
         {
             return new DataChunk(dataType, description, dataChunks.FileByteList, offset, length);
         }
 
+        /// <summary>
+        /// Retrieve a data chunk by the name alone
+        /// </summary>
+        /// <param name="dataChunkName">chunk name</param>
+        /// <returns>the associated datachunk</returns>
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return dataChunks.GetDataChunk(dataChunkName);
         }
 
+        #endregion
 
-        /*  private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue, DataChunkName dataChunkName)
-          {
-              // create the data chunk 
-              DataChunk chunk = new DataChunk(dataFormat, description, rawData, offset, dataLength, addToValue);
+        #region Constructors
 
-              // all data chunks get added to the chunk list
-              dataChunks.AddDataChunk(chunk);
-
-              // if the datachunk is not classified as unused then add it to the chunk map for quick reference
-              if (dataChunkName != DataChunkName.Unused)
-              {
-                  chunkMap.Add(dataChunkName, chunk);
-              }
-          }
-
-          private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue)
-          {
-              AddDataChunk(dataFormat, description, rawData, offset, dataLength, addToValue, DataChunkName.Unused);
-          }
-          */
+        /// <summary>
+        /// Construct the DataOvlReference
+        /// </summary>
+        /// <param name="u5Directory">directory of data.ovl file</param>
         public DataOvlReference(string u5Directory)
         {
             string dataOvlFileAndPath = Path.Combine(u5Directory, FileConstants.DATA_OVL);
@@ -325,7 +332,29 @@ namespace Ultima5Redux
             //dataChunks.PrintEverything();
         }
 
+        #endregion
 
- 
+
+        /*  private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue, DataChunkName dataChunkName)
+          {
+              // create the data chunk 
+              DataChunk chunk = new DataChunk(dataFormat, description, rawData, offset, dataLength, addToValue);
+
+              // all data chunks get added to the chunk list
+              dataChunks.AddDataChunk(chunk);
+
+              // if the datachunk is not classified as unused then add it to the chunk map for quick reference
+              if (dataChunkName != DataChunkName.Unused)
+              {
+                  chunkMap.Add(dataChunkName, chunk);
+              }
+          }
+
+          private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue)
+          {
+              AddDataChunk(dataFormat, description, rawData, offset, dataLength, addToValue, DataChunkName.Unused);
+          }
+          */
+
     }
 }

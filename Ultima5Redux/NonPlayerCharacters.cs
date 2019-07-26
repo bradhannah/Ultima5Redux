@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,237 +8,29 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    class NonPlayerCharacters
+    partial class NonPlayerCharacters
     {
-        /// <summary>
-        /// A single non player character (NPC)
-        /// </summary>
-        public class NonPlayerCharacter
-        {
-            public class NPCSchedule
-            {
-                /// <summary>
-                /// TODO: Need to figure out what these AI types actually mean
-                /// </summary>
-                protected internal List<byte> AIType = new List<byte>();
-                /// <summary>
-                /// 3D Coordinates including floor number
-                /// </summary>
-                protected internal List<Point3D> Coords  { get;  }
-                /// <summary>
-                /// Times of day to move to the next scheduled item
-                /// TODO: figure out why there are 4 times, but only three xyz's to go to?!
-                /// </summary>
-                protected internal List<byte> Times { get; }
-
-                /// <summary>
-                /// Creates an NPC Schedule object 
-                /// This is easier to consume than the structure
-                /// </summary>
-                /// <param name="sched"></param>
-                public NPCSchedule(NPC_Schedule sched)
-                {
-                    Coords = new List<Point3D>();
-                    Times = new List<byte>();
-
-                    unsafe
-                    {
-                        for (int i = 0; i < 3; i++)
-                        {
-                            AIType.Add(sched.AI_types[i]);
-                            Coords.Add(new Point3D(sched.x_coordinates[i], sched.y_coordinates[i], sched.z_coordinates[i]));
-                        }
-                        // argh, I can't get the size dynamically of the arrays
-                        for (int i = 0; i < 4; i++)
-                        {
-                            Times.Add(sched.times[i]);
-                        }
-                    }
-                }
-            }
-
-            private GameState gameStateRef;
-
-            /// <summary>
-            /// Original structure
-            /// </summary>
-            [StructLayout(LayoutKind.Sequential, Pack = 1)]
-            protected internal unsafe struct NPC_Schedule
-            {
-                public fixed byte AI_types[3];
-                public fixed byte x_coordinates[3];
-                public fixed byte y_coordinates[3];
-                public fixed byte z_coordinates[3];
-                public fixed byte times[4];
-            };
-
-            /// <summary>
-            /// NPC Type, any other value is a specific character
-            /// </summary>
-            public enum NPCDialogTypeEnum { Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
-                InnKeeper = 0x88, UnknownX85 = 0x85, UnknownX86 = 0x86, Unknown = 0xFF };
-
-            /// <summary>
-            /// Return true if the dialog is not part of a standard dialog tree like a guard or shopkeeper
-            /// </summary>
-            /// <param name="dialogType">The dialog type that yu want to compare</param>
-            /// <returns></returns>
-            static public bool IsSpecialDialogType(NPCDialogTypeEnum dialogType)
-            {
-                foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[])Enum.GetValues(typeof(NPCDialogTypeEnum)))
-                {
-                    if (dialogType == tempDialogType)
-                        return true;
-                }
-                return false;
-            }
-
-            public string Name
-            {
-                get
-                {
-                    if (Script != null)
-                    {
-                        return Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
-                    }
-                    else
-                    {
-                        return string.Empty;
-                    }
-                } 
-            }
-
-            /// <summary>
-            /// The daily schedule of the NPC
-            /// </summary>
-            public NPCSchedule Schedule { get; }
-            /// <summary>
-            /// The Dialog identifier
-            /// </summary>
-            public byte DialogNumber { get; }
-
-            /// <summary>
-            /// 0-31 index of it's position in the NPC arrays (used for saved.gam references)
-            /// </summary>
-            public int DialogIndex { get; }
-
-            /// <summary>
-            /// The byte representing the type of character
-            /// </summary>
-            private byte CharacterType { get; }
-
-            /// <summary>
-            /// The talk script the NPC will follow
-            /// </summary>
-            public TalkScript Script { get; }
-
-            /// <summary>
-            /// Which map is the NPC on?
-            /// </summary>
-            public SmallMapReference.SingleMapReference MapReference { get; }
-
-            /// <summary>
-            /// What type of NPC are they? 
-            /// </summary>
-            public NPCDialogTypeEnum NPCType {
-                get
-                {
-                    foreach (int npctype in Enum.GetValues(typeof(NPCDialogTypeEnum)))
-                    {
-                        if (npctype == DialogNumber && npctype != (int)NPCDialogTypeEnum.Custom)
-                        {
-                            return (NPCDialogTypeEnum)npctype;
-                        }
-                    }
-                    return NPCDialogTypeEnum.Custom;
-                }
-            }
-
-            public bool KnowTheAvatar()
-            {
-                int nScriptLines = Script.GetNumberOfScriptLines();
-
-                // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
-                // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)
-
-                if (gameStateRef.NpcHasMetAvatar(this))
-                {
-                    return true;
-                }
-
-                for (int i = 0; i < nScriptLines; i++)
-                {
-                    if (Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            /// <summary>
-            /// Construct an NPC
-            /// </summary>
-            /// <param name="mapRef">Which map are they on?</param>
-            /// <param name="sched">daily schedule</param>
-            /// <param name="npcType">type of NPC they are</param>
-            /// <param name="dialogNumber">dialog number referencing data OVL</param>
-            /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
-            /// <param name="talkScript">their conversation script</param>
-            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, GameState gameStateRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
-            {
-                Schedule = new NPCSchedule(sched);
-                MapReference = mapRef;
-                CharacterType = npcType;
-                DialogNumber = dialogNumber;
-                Script = talkScript;
-                DialogIndex = dialogIndex;
-                this.gameStateRef = gameStateRef;
-
-                // no schedule? I guess you're not real
-                if (!IsEmptySched(sched))
-                {
-                    System.Console.WriteLine(mapRef.MasterFile.ToString() + "     NPC Number: " + this.DialogNumber + " in " + mapRef.MapLocation.ToString());
-                }
-            }
-
-            /// <summary>
-            /// Does the NPC have an empty schedule? If so, then they aren't actually an NPC
-            /// </summary>
-            /// <param name="sched">daily schedule</param>
-            /// <returns></returns>
-            static private bool IsEmptySched(NPC_Schedule sched)
-            {
-                unsafe
-                {
-                    if (sched.times[0] == 0 && sched.times[1] == 0 && sched.times[2] == 0 && sched.times[3] == 0 && sched.times[4] == 0)
-                        return true;
-                }
-                return false;
-            }
-        }
-
+        #region Public Properties
         /// <summary>
         /// All of the NPCs
         /// </summary>
-        protected internal List<NonPlayerCharacter> NPCs
+        public List<NonPlayerCharacter> NPCs
         {
             get
             {
                 return (npcs);
             }
         }
-        
+        #endregion
+
+        #region Private Variables
         /// <summary>
         /// All of the NPCs
         /// </summary>
         private List<NonPlayerCharacter> npcs = new List<NonPlayerCharacter>();
+        #endregion
 
-        /// <summary>
-        /// How many bytes does each NPC record take
-        /// </summary>
-        //private static readonly int NPC_CHARACTER_OFFSET_SIZE = Marshal.SizeOf(typeof(NonPlayerCharacter.NPC_Schedule)) + SIZEOF_NPC_TYPE_BLOCK + SIZEOF_NPC_DIALOG_BLOCK;
-
+        #region Constants, Enums
         /// <summary>
         /// How many bytes is each town offset inside the NPC file
         /// </summary>
@@ -255,13 +46,27 @@ namespace Ultima5Redux
         /// </summary>
         public const int NPCS_PER_TOWN = 32;
 
-        private static readonly int STARTING_NPC_TYPE_TOWN_OFFSET = SCHEDULE_OFFSET_SIZE * NPCS_PER_TOWN; // starting position (within town) of NPC type
-        private static readonly int STARTING_NPC_DIALOG_TOWN_OFFSET = STARTING_NPC_TYPE_TOWN_OFFSET + (SIZEOF_NPC_TYPE_BLOCK * NPCS_PER_TOWN); // starting position (within town) of NPC dialog
+        /// <summary>
+        /// starting position (within town) of NPC type
+        /// </summary>
+        private static readonly int STARTING_NPC_TYPE_TOWN_OFFSET = SCHEDULE_OFFSET_SIZE * NPCS_PER_TOWN;
+        /// <summary>
+        ///  starting position (within town) of NPC dialog
+        /// </summary>
+        private static readonly int STARTING_NPC_DIALOG_TOWN_OFFSET = STARTING_NPC_TYPE_TOWN_OFFSET + (SIZEOF_NPC_TYPE_BLOCK * NPCS_PER_TOWN);
+        /// <summary>
+        /// Sizeof(bytes) a single NPC type number in file
+        /// </summary>
         private const int SIZEOF_NPC_TYPE_BLOCK = 1;
+        /// <summary>
+        /// Sizeof(bytes) a single NPC dialog number in file
+        /// </summary>
         private const int SIZEOF_NPC_DIALOG_BLOCK = 1;
+        /// <summary>
+        /// Number of townes stores in each .NPC file
+        /// </summary>
         private const int TOWNS_PER_NPCFILE = 8;
-
-
+        // left over structure
         /* [StructLayout(LayoutKind.Sequential, Pack = 1)]
                 private unsafe struct NPC_Info
                 {
@@ -269,8 +74,9 @@ namespace Ultima5Redux
                     fixed byte type[32]; // merchant, guard, etc.
                     fixed byte dialog_number[32];
                 };*/
+        #endregion
 
-
+        #region Initialization and Constructor routines
         /// <summary>
         /// Initialize NPCs from a particular small map master file set
         /// </summary>
@@ -320,7 +126,6 @@ namespace Ultima5Redux
                     npcDialogNumber.Add(npcData[offset + STARTING_NPC_DIALOG_TOWN_OFFSET]);
                 }
 
-
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
@@ -342,8 +147,6 @@ namespace Ultima5Redux
             InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef, talkScriptsRef, gameStateRef);
             InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef, talkScriptsRef, gameStateRef);
         }
-
-
-
+        #endregion    
     }
 }

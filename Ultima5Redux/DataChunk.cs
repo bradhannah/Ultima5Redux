@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ultima5Redux
 {
@@ -11,13 +9,32 @@ namespace Ultima5Redux
     /// </summary>
     public class DataChunks<T>
     {
+        /// <summary>
+        /// A Dictionary that maps the DataChunkName to the specific location
+        /// </summary>
         private Dictionary<T, DataChunk> chunkMap = new Dictionary<T, DataChunk>();
+
+        /// <summary>
+        /// The default name to give unlabelled data chunks
+        /// </summary>
         private T unusedValue;
+
+        /// <summary>
+        /// Full list of data chunks
+        /// </summary>
         private List<DataChunk> dataChunks;
+
+        /// <summary>
+        /// Byte list of file contets
+        /// </summary>
+        public List<byte> FileByteList { get { return fileByteList; } }
         private List<byte> fileByteList;
 
-        public List<byte> FileByteList { get { return fileByteList; } }
-
+        /// <summary>
+        /// Construct a collection of DataChunks 
+        /// </summary>
+        /// <param name="chunkFile">The file that all chunks will be read from</param>
+        /// <param name="unusedValue">The value to automatically assign all un-named data objects</param>
         public DataChunks(string chunkFile, T unusedValue)
         {
             dataChunks = new List<DataChunk>();
@@ -25,12 +42,12 @@ namespace Ultima5Redux
             fileByteList = Utils.GetFileAsByteList(chunkFile);
         }
 
-
+        #region Public Methods
         /// <summary>
         /// Add a chunk to the list
         /// </summary>
         /// <param name="chunk">datachunk</param>
-        public void AddDataChunk (DataChunk chunk) 
+        public void AddDataChunk(DataChunk chunk)
         {
             //dataChunks.Add(chunk);
             AddDataChunk(chunk, unusedValue);
@@ -41,7 +58,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="chunk">Chunk to add</param>
         /// <param name="dataChunkName">Name/Description of the chunk for retrieval</param>
-        public void AddDataChunk (DataChunk chunk, T dataChunkName)
+        public void AddDataChunk(DataChunk chunk, T dataChunkName)
         {
             // all data chunks get added to the chunk list
             //AddDataChunk(chunk);
@@ -54,6 +71,16 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Add a generic data chunk, providing a name for easier access
+        /// Additional functonality for adding/subtracting value 
+        /// </summary>
+        /// <param name="dataFormat">the expected format of the data</param>
+        /// <param name="description">a brief written description of what the data is</param>
+        /// <param name="offset">the offset to begin processing at</param>
+        /// <param name="dataLength">the length of the data in bytes</param>
+        /// <param name="addToValue">the byte value to add (or subtract) from each byte read</param>
+        /// <param name="dataChunkName">name of the data chunk for easy access</param>
         public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue, T dataChunkName)
         {
             // create the data chunk 
@@ -69,26 +96,48 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Add a new generic data chunk (un-named)
+        /// Additional functonality for adding/subtracting value 
+        /// </summary>
+        /// <param name="dataFormat">the expected format of the data</param>
+        /// <param name="description">a brief written description of what the data is</param>
+        /// <param name="offset">the offset to begin processing at</param>
+        /// <param name="dataLength">the length of the data in bytes</param>
+        /// <param name="addToValue">the byte value to add (or subtract) from each byte read</param>
         public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue)
         {
             AddDataChunk(dataFormat, description, offset, dataLength, addToValue, unusedValue);
         }
 
+        /// <summary>
+        /// Add a new generic data chunk (un-named)
+        /// </summary>
+        /// <param name="dataFormat">the expected format of the data</param>
+        /// <param name="description">a brief written description of what the data is</param>
+        /// <param name="offset">the offset to begin processing at</param>
+        /// <param name="dataLength">the length of the data in bytes</param>
         public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength)
         {
             AddDataChunk(dataFormat, description, offset, dataLength, 0x00, unusedValue);
         }
 
+        /// <summary>
+        /// Retrieve a DataChunk based on chunk name that has been assigned to it
+        /// This is a handy way to label your data chunks for easier access
+        /// </summary>
+        /// <param name="dataChunkName">the enumeration that you will use to describe the data chunk</param>
+        /// <returns>the datachunk</returns>
         public DataChunk GetDataChunk(T dataChunkName)
         {
             return chunkMap[dataChunkName];
         }
 
-            /// <summary>
-            /// Get a data chunk
-            /// </summary>
-            /// <param name="index">index into chunk list</param>
-            /// <returns></returns>
+        /// <summary>
+        /// Get a data chunk
+        /// </summary>
+        /// <param name="index">index into chunk list</param>
+        /// <returns></returns>
         public DataChunk GetDataChunk(int index)
         {
             return dataChunks[index];
@@ -105,6 +154,7 @@ namespace Ultima5Redux
                 chunk.PrintChunk();
             }
         }
+        #endregion
     }
 
     /// <summary>
@@ -112,14 +162,24 @@ namespace Ultima5Redux
     /// </summary>
     public class DataChunk
     {
+        #region Private Variables
+        /// <summary>
+        /// How many BITS per byte
+        /// </summary>
         private const int BITS_PER_BYTE = 8;
+
+        /// <summary>
+        /// Are we running in debug mode?
+        /// </summary>
         private const bool isDebug = false;
+        #endregion
 
         /// <summary>
         /// The encoding of the data
         /// </summary>
         public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, ByteList, Bitmap };
 
+        #region Constructors
         /// <summary>
         /// Construct a data chunk
         /// </summary>
@@ -149,17 +209,29 @@ namespace Ultima5Redux
         /// <param name="rawData">the raw byte data</param>
         /// <param name="offset">the offset to start in the rawData that represents the chunk</param>
         /// <param name="dataLength">the length of the data from the offset that represents the chunk</param>
-        public DataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength) : 
+        public DataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength) :
             this(dataFormat, description, rawData, offset, dataLength, 0)
-        {            
+        {
         }
 
+        /// <summary>
+        /// Statically create a DataChunk
+        /// Handy for quick and dirty variable extraction
+        /// </summary>
+        /// <param name="dataFormat">what kind of encoding represents the data?</param>
+        /// <param name="description">a brief description of what the data represents</param>
+        /// <param name="rawData">the raw byte data</param>
+        /// <param name="offset">the offset to start in the rawData that represents the chunk</param>
+        /// <param name="dataLength">the length of the data from the offset that represents the chunk</param>
+        /// <returns>a new DataChunk object</returns>
         static public DataChunk CreateDataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength)
         {
             DataChunk dataChunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
             return dataChunk;
         }
+        #endregion
 
+        #region Public Methods
         /// <summary>
         /// Debugging function that prints out the chunk
         /// </summary>
@@ -195,6 +267,10 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Returns the data in the form of each bit represented as a boolean value
+        /// </summary>
+        /// <returns>A list of the extracted boolean values</returns>
         public List<bool> GetAsBitmapBoolList()
         {
             // this is essetially the number 1, but we use this to show that we are ANDing on the final bit
@@ -242,7 +318,7 @@ namespace Ultima5Redux
         /// Note: this will add/subtract using the addToValue
         /// </summary>
         /// <returns>list of UINT16s</returns>
-        public List<UInt16> GetChunkAsUINT16 ()
+        public List<UInt16> GetChunkAsUINT16()
         {
             List<UInt16> data = Utils.CreateOffsetList(RawData, FileOffset, DataLength);
             for (int i = 0; i < data.Count; i++)
@@ -278,6 +354,9 @@ namespace Ultima5Redux
             return (new SomeStrings(RawData.ToList(), 0, DataLength));
         }
 
+        #endregion
+
+        #region Public Properties
         /// <summary>
         /// A brief description of the data chunk
         /// </summary>
@@ -298,11 +377,11 @@ namespace Ultima5Redux
         /// <summary>
         /// The adjustment value for bytes and UINT16
         /// </summary>
-        public byte ValueModifier { get;  }
+        public byte ValueModifier { get; }
         /// <summary>
         /// The expected data format of the chunk
         /// </summary>
         public DataFormatType DataFormat { get; }
-
+        #endregion
     }
 }

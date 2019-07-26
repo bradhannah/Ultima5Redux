@@ -2,10 +2,22 @@
 
 namespace Ultima5Redux
 {
+    /// <summary>
+    /// A class that simplifies importing of byte arrays into a list of strings
+    /// </summary>
     public class SomeStrings
     {
+        /// <summary>
+        /// List of all strings
+        /// </summary>
         public List<string> Strs { get;  }
 
+        /// <summary>
+        /// Constructs a simple SomeStrings object
+        /// </summary>
+        /// <param name="byteArray">the array of bytes to sample from</param>
+        /// <param name="offset">which byte offset to begin at</param>
+        /// <param name="length">the number of bytes to consume</param>
         public SomeStrings(List<byte> byteArray, int offset, int length)
         {
             string str=string.Empty;

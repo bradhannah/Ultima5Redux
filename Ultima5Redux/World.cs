@@ -11,9 +11,11 @@ namespace Ultima5Redux
 {
     class World
     {
+        #region Private Variables
+
         private List<SmallMap> smallMaps = new List<SmallMap>();
-        public LargeMap overworldMap;
-        public LargeMap underworldMap;
+        private LargeMap overworldMap;
+        private LargeMap underworldMap;
 
         private string u5Directory;
         private SmallMapReference smallMapRef;
@@ -24,6 +26,7 @@ namespace Ultima5Redux
         private DataOvlReference dataOvlRef;
         private TalkScripts talkScriptsRef;
         private GameState state;
+        #endregion
 
         public World (string ultima5Directory) : base ()
         {
@@ -97,8 +100,11 @@ namespace Ultima5Redux
                 }
             }
 
-            //Conversation convo = new Conversation(npcRef.NPCs[0xe8], state);
+            // Scally
+            Conversation convo = new Conversation(npcRef.NPCs[0xe6], state, dataOvlRef);
 
+            // Bidney
+            //Conversation convo = new Conversation(npcRef.NPCs[0xe8], state);
 
             // Lord Dalgrin
             //Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
@@ -107,7 +113,7 @@ namespace Ultima5Redux
             //Conversation convo = new Conversation(npcRef.NPCs[0xec], state, dataOvlRef);
 
             // Tierra 
-            Conversation convo = new Conversation(npcRef.NPCs[0xeb], state, dataOvlRef);
+            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state, dataOvlRef);
 
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
@@ -185,7 +191,8 @@ namespace Ultima5Redux
                 case TalkScript.TalkCommand.AvatarsName:
                     throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
                 default:
-                    Console.Write("<" + item.Command.ToString() + ">");
+                    throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
+                    //Console.Write("<" + item.Command.ToString() + ">");
                     break;
             }
         }
