@@ -125,7 +125,7 @@ namespace Ultima5Redux
             {
                 get
                 {
-                    int nScriptLines = Script.GetNumberOfScriptLines();
+                    int nScriptLines = Script.NumberOfScriptLines;
 
                     // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
                     // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)

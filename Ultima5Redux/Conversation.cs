@@ -157,7 +157,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="scriptLines">the script line to process</param>
         /// <param name="nTalkLineIndex">where we are in the conversation - it really only cares if you are on the first line of conversation</param>
-        private void ProcessMultipleLines(List<TalkScript.ScriptLine> scriptLines, int nTalkLineIndex)
+        private void ProcessMultipleLines(List<TalkScript.SplitScriptLine> scriptLines, int nTalkLineIndex)
         {
             // how many items shall we skip? if == -1, then don't skip
             int skipCounter = -1;
@@ -179,7 +179,7 @@ namespace Ultima5Redux
 
                 // If there are no script items, then just skip
                 // todo: this shouldn't really happen, but it does, so maybe one day find out why they are being added
-                if (scriptLines[i].GetNumberOfScriptItems() == 0)
+                if (scriptLines[i].NumberOfScriptItems== 0)
                 {
                     continue;
                 }
@@ -240,7 +240,7 @@ namespace Ultima5Redux
             }
 
             int nItem = 0;
-            int nItems = scriptLine.GetNumberOfScriptItems();
+            int nItems = scriptLine.NumberOfScriptItems;
             do
             {
                 TalkScript.ScriptItem item = scriptLine.GetScriptItem(nItem);
@@ -350,15 +350,15 @@ namespace Ultima5Redux
                         break;
                     case TalkScript.TalkCommand.Unknown_Enter:
                         break;
-                    case TalkScript.TalkCommand.Unknown_FF:
+                    case TalkScript.TalkCommand.DoNothingSection:
                         // appears to signify an empty section
                         break;
-                    case TalkScript.TalkCommand.DefaultMessage:
+                    case TalkScript.TalkCommand.StartLabelDefinition:
                         // dirty - advance past the label that it will sink in...
                         nItem++;
                         break;
                     case TalkScript.TalkCommand.Or:
-                    case TalkScript.TalkCommand.Unknown_CodeA2:
+                    case TalkScript.TalkCommand.StartNewSection:
                         throw new Exception("We should never see the <OR> or <A2> code in conversation");
                     default:
                         throw new Exception("Recieved TalkCommand I wasn't expecting during conversation");
@@ -483,7 +483,7 @@ namespace Ultima5Redux
                 TalkScript.ScriptLine currentLine;
                 currentLine = script.GetScriptLine(conversationOrder[nConversationIndex]);
                 // Split the line into sections. This greatly simplifies the proceeding loops.
-                List<TalkScript.ScriptLine> splitLines = currentLine.SplitIntoSections();
+                List<TalkScript.SplitScriptLine> splitLines = currentLine.SplitIntoSections();
 
                 // currentLine = unsplit line with all content
                 // splitLines = a list of all the split up lines
@@ -509,7 +509,7 @@ namespace Ultima5Redux
                 // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
                 if (splitLines[STARTING_INDEX_FOR_LABEL].IsLabelDefinition())
                 {
-                    Debug.Assert(splitLines[STARTING_INDEX_FOR_LABEL].GetNumberOfScriptItems() == 2, "If it is a label definition, then it must have only 2 items defined in it");
+                    Debug.Assert(splitLines[STARTING_INDEX_FOR_LABEL].NumberOfScriptItems== 2, "If it is a label definition, then it must have only 2 items defined in it");
                     int nLabel = splitLines[STARTING_INDEX_FOR_LABEL].GetScriptItem(1).LabelNum;
                     Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS-1, "Label number must be between 0 and 9");
                     

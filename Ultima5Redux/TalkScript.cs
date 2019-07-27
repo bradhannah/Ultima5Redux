@@ -105,8 +105,6 @@ namespace Ultima5Redux
             }
         }
 
-
-
         /// <summary>
         /// Collection of questions and answers, makes accessing them much easier
         /// </summary>
@@ -166,23 +164,9 @@ namespace Ultima5Redux
             }
 
             /// <summary>
-            /// Get a list of all answer script lines
+            /// Add a ScriptQuestionAnswer to the collection
             /// </summary>
-            /// <returns></returns>
-            //public List<ScriptLine> GetAnswers()
-            //{
-            //    List<ScriptLine> answers = new List<ScriptLine>();
-            //    foreach (ScriptQuestionAnswer sqa in QuestionAnswers.Values)
-            //    {
-            //        if (!answers.Contains(sqa.Answer))
-            //        {
-            //            answers.Add(sqa.Answer);
-            //        }
-            //    }
-            //    return answers;
-            //} 
-
-                
+            /// <param name="sqa">ScriptQuestionAnswer object to add</param>
             public void Add (ScriptQuestionAnswer sqa)
             {
                 if (sqa.questions == null)
@@ -222,7 +206,6 @@ namespace Ultima5Redux
             }
         }
 
-
         /// <summary>
         /// A single instance of a question and answer for dialog
         /// </summary>
@@ -238,8 +221,6 @@ namespace Ultima5Redux
             }
         }
 
-
-
         /// <summary>
         /// Represents a single script component
         /// </summary>
@@ -252,8 +233,8 @@ namespace Ultima5Redux
             /// <summary>
             /// Associated string (can be empty)
             /// </summary>
-            public string Str { get { return str; } }
-//            public string Str { get { return str.Trim(); } }
+            public string Str => str;
+
             /// <summary>
             /// If there is a label, then this is a zero based index
             /// </summary>
@@ -282,9 +263,12 @@ namespace Ultima5Redux
                 return ScriptItem.IsQuestion(Str);
             }
 
+            /// <summary>
+            /// Simple constructor for basic commands
+            /// </summary>
+            /// <param name="command"></param>
             public ScriptItem(TalkCommand command) : this(command, string.Empty)
             {
-
             }
 
             /// <summary>
@@ -311,15 +295,56 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        /// Special scriptline that identifies that it has been split in sections
+        /// </summary>
+        protected internal class SplitScriptLine : ScriptLine
+        {
+        }
+
+        /// <summary>
         /// Represents a single line of a script
+        /// This script line can be in a "split mode" or non-splitmode
         /// </summary>
         protected internal class ScriptLine
         {
+            #region Private Variables
             /// <summary>
             /// a list of all associated ScriptItems, in a particular order
             /// </summary>
-            private List<ScriptItem> scriptItems = new List<ScriptItem>();
+            protected List<ScriptItem> scriptItems = new List<ScriptItem>();
+            #endregion
 
+            #region Public Properties
+            /// <summary>
+            /// Is this script line a user input based question
+            /// </summary>
+            /// <returns>true if it's a question</returns>
+            public bool IsQuestion => this.GetScriptItem(0).IsQuestion();
+
+            /// <summary>
+            /// Does this line represent the end of all Labels in the NPC talk script (end of script)
+            /// </summary>
+            /// <returns></returns>
+            public bool IsEndOfLabelSection
+            {
+                get
+                {
+                    if (GetScriptItem(0).Command == TalkCommand.StartLabelDefinition && GetScriptItem(1).Command == TalkCommand.Unknown_Enter)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            /// <summary>
+            /// Return the number of current script items
+            /// </summary>
+            /// <returns>the number of script items</returns>
+            public int NumberOfScriptItems => scriptItems.Count;
+            #endregion
+
+            #region Public Methods
             /// <summary>
             /// Creates a human readable string for the ScriptLine
             /// </summary>
@@ -349,27 +374,7 @@ namespace Ultima5Redux
                 return scriptLine;
             }
 
-            /// <summary>
-            /// Is this script line a user input based question
-            /// </summary>
-            /// <returns>true if it's a question</returns>
-            public bool IsQuestion()
-            {
-                return this.GetScriptItem(0).IsQuestion();
-            }
-
-            /// <summary>
-            /// Does this line represent the end of all Labels in the NPC talk script (end of script)
-            /// </summary>
-            /// <returns></returns>
-            public bool IsEndOfLabelSection()
-            {
-                if (GetScriptItem(0).Command == TalkCommand.DefaultMessage && GetScriptItem(1).Command == TalkCommand.Unknown_Enter)
-                {
-                    return true;
-                }
-                return false;
-            }
+   
 
             /// <summary>
             /// Does this line represent a new label definition
@@ -377,7 +382,7 @@ namespace Ultima5Redux
             /// <returns></returns>
             public bool IsLabelDefinition()
             {
-                if (GetScriptItem(0).Command == TalkCommand.DefaultMessage && GetScriptItem(1).Command == TalkCommand.DefineLabel)
+                if (GetScriptItem(0).Command == TalkCommand.StartLabelDefinition && GetScriptItem(1).Command == TalkCommand.DefineLabel)
                 {
                     return true;
                 }
@@ -393,14 +398,7 @@ namespace Ultima5Redux
                 scriptItems.Add(scriptItem);
             }
 
-            /// <summary>
-            /// Return the number of current script items
-            /// </summary>
-            /// <returns>the number of script items</returns>
-            public int GetNumberOfScriptItems()
-            {
-                return scriptItems.Count;
-            }
+
 
             /// <summary>
             /// Get a script item based on an index into the list
@@ -413,56 +411,68 @@ namespace Ultima5Redux
                 return scriptItems[index];
             }
 
-            public List<ScriptLine> SplitIntoSections()
+            /// <summary>
+            /// Splits the ScriptLine into sections and returns a special class that signifies it has been split
+            /// </summary>
+            /// <returns>A list of SplitScriptLines</returns>
+            public List<SplitScriptLine> SplitIntoSections()
             {
-                List<ScriptLine> lines = new List<ScriptLine>();
-                lines.Add(new ScriptLine());
+                List<SplitScriptLine> lines = new List<SplitScriptLine>();
+                lines.Add(new SplitScriptLine());
 
                 int nSection = -1;
                 bool first = true;
                 bool forceSplitNext = false;
-                //bool wasIfElseKnowsName = false;
-                for (int i = 0; i < GetNumberOfScriptItems(); i++)
+
+                for (int i = 0; i < NumberOfScriptItems; i++)
                 {
                     ScriptItem item = GetScriptItem(i);
                     // Code A2 appears to denote the beginning of a new section, so we split it
-                    if (item.Command == TalkCommand.Unknown_CodeA2)
+                    if (item.Command == TalkCommand.StartNewSection)
                     {
+                        // It's a new section, so we simplu advance the section counter and add an empty SplitScriptLine
                         nSection++;
-                        lines.Add(new ScriptLine());
+                        lines.Add(new SplitScriptLine());
                     }
-                    // if there is a IfElse branch for the Avatar's name then we add a new section, save the ScriptItem
-                    else if (item.Command == TalkCommand.IfElseKnowsName || item.Command == TalkCommand.Unknown_FF || item.Command == TalkCommand.DefineLabel)
+                    // if there is a IfElse branch for the Avatar's name the, a DoNothingSection or a goto label, then we add a new section, save the SplitScriptLine
+                    else if (item.Command == TalkCommand.IfElseKnowsName || item.Command == TalkCommand.DoNothingSection || item.Command == TalkCommand.DefineLabel)
                     {
-                        //wasIfElseKnowsName = true;
+                        // advance to next section
                         nSection++;
-                        lines.Add(new ScriptLine());
+                        // add a stump section
+                        lines.Add(new SplitScriptLine());
+                        // add the item as-is to the new section
                         lines[nSection].AddScriptItem(item);
+                        // we need to tell the loop to force yet another split next time around
+                        // basically - these items need to part of a single item SplitScriptLine
                         forceSplitNext = true;
                     }
-                    //////// THIS IS WAY MORE COMPLICATED
-                    //// how do we detect that there is section split for an IfElse. If it's a gotolabel, then it's easy
-                    //// if we see an A2, does that mean we need to wait for another before splitting it?
-                    //else if (wasIfElseKnowsName && )
-                    else if (item.Command == TalkCommand.DefaultMessage)
+                    // if there is a default message then it is the defintion of a new label
+                    else if (item.Command == TalkCommand.StartLabelDefinition)
                     {
+                        // advance to next section
                         nSection++;
-                        Debug.Assert(GetScriptItem(i + 1).Command == TalkCommand.DefineLabel);
-                        //lines.Add(new ScriptLine());
+                        Debug.Assert(GetScriptItem(i + 1).Command == TalkCommand.DefineLabel); // StartLabelDefinition must ALWYAYS be followed with a DefineLabel
+                        // add the StartLabelDefintion to the new section
                         lines[nSection].AddScriptItem(item);
+                        // add the next item - which is a DefineLabel to the section 
                         lines[nSection].AddScriptItem(GetScriptItem(i + 1));
+                        // skip by the DefineLabel section since we just added
                         i++;
+                        // we need to tell the loop to force yet another split next time around
+                        // basically - these items need to part of a single item SplitScriptLine
                         forceSplitNext = true;
                     }
-                    else
+                    else  // it is any other kind of TalkCommand
                     {
+                        // welp - I really can't recall why I did this, but I need it.
                         if (first) nSection = 0;
                         // if we are forcing a new section from a previous run, then we increment the section number
                         if (forceSplitNext)
                         {
                             forceSplitNext = false;
                             nSection++;
-                            lines.Add(new ScriptLine());
+                            lines.Add(new SplitScriptLine());
                         }
                         lines[nSection].AddScriptItem(item);
                     }
@@ -486,8 +496,10 @@ namespace Ultima5Redux
                 }
                 return false;
             }
+            #endregion
         }
 
+        #region Static Public Methods
         /// <summary>
         /// Is the command only a simple or dynamic string?
         /// </summary>
@@ -500,22 +512,24 @@ namespace Ultima5Redux
 
             return false;
         }
+        #endregion
 
+        #region Constants and Enumerations
         /// <summary>
         /// Specific talk command
         /// </summary>
         public enum TalkCommand
         {
             PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
-            KarmaMinusOne = 0x8A, CallGuards = 0x8B, IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_CodeA2 = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
-            Unknown_FF = 0xFF, PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F, UserInputNotRecognized = 0x7E
+            KarmaMinusOne = 0x8A, CallGuards = 0x8B, IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, StartLabelDefinition = 0x90, StartNewSection = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
+            DoNothingSection = 0xFF, PromptUserForInput_NPCQuestion = 0x80, PromptUserForInput_UserInterest = 0x7F, UserInputNotRecognized = 0x7E
         };
-//        public enum TalkCommand
-//        {
-//            PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85, Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89,
-//            KarmaMinusOne = 0x8A, CallGuards = 0x8B, SetFlag = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, DefaultMessage = 0x90, Unknown_CodeA2 = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE,
-//            Unknown_FF = 0xFF
-//        };
+
+        /// <summary>
+        /// The default script line offsets for the static responses
+        /// </summary>
+        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
+
 
         /// <summary>
         ///  the minimum talk code for labels (in .tlk files)
@@ -532,33 +546,62 @@ namespace Ultima5Redux
         /// </summary>
         public const int TOTAL_LABELS = 0x0A;
 
-        // All of the ScriptLines
+        /// <summary>
+        /// the end Index for the default script lines (ie. name, job etc.)
+        /// </summary>
+        private const int endBaseIndexes = (int)TalkConstants.Bye; 
+
+        #endregion
+
+        #region Private Variables
+        /// <summary>
+        ///  All of the ScriptLines
+        /// </summary>
         private List<ScriptLine> scriptLines = new List<ScriptLine>();
 
         /// <summary>
         /// Script talk labels contain all the labels, their q&a and default responses
         /// </summary>
         private ScriptTalkLabels scriptTalkLabels = new ScriptTalkLabels();
-        
-        public ScriptTalkLabels TalkLabels { get { return scriptTalkLabels; } }
 
         /// <summary>
         /// Non label specific q&a 
         /// </summary>
         private ScriptQuestionAnswers scriptQuestionAnswers = new ScriptQuestionAnswers();
-        public ScriptQuestionAnswers QuestionAnswers { get { return scriptQuestionAnswers; } }
 
         // tracking the current script line
         private ScriptLine currentScriptLine = new ScriptLine();
+        #endregion
 
-        private const int endBaseIndexes = 4; // the end index for the base (TalkConstants)
-        //private int endTextIndexes;
+        #region Public Properties
+        /// <summary>
+        /// All associated labels with the Script
+        /// </summary>
+        public ScriptTalkLabels TalkLabels => scriptTalkLabels;
 
         /// <summary>
-        /// The default script line offsets for the static responses
+        /// All associated questions and answers for the Script
         /// </summary>
-        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
+        public ScriptQuestionAnswers QuestionAnswers => scriptQuestionAnswers;
 
+        /// <summary>
+        /// The number of scriptlines in the Script
+        /// </summary>
+        public int NumberOfScriptLines => scriptLines.Count;
+        #endregion
+
+        #region Protected Internal Methods
+        /// <summary>
+        /// Move to the next line in the script (for adding new content)
+        /// </summary>
+        protected internal void NextLine()
+        {
+            currentScriptLine = new ScriptLine();
+            scriptLines.Add(currentScriptLine);
+        }
+        #endregion
+
+        #region Constructors and Initializers
         /// <summary>
         /// Build the initial TalkScrit
         /// </summary>
@@ -568,17 +611,7 @@ namespace Ultima5Redux
             // note; this will fail if the currentScriptLine is not a reference - but I'm pretty sure it is
             scriptLines.Add(currentScriptLine);
         }
-
-        /// <summary>
-        /// Move to the next line in the script (for adding new content)
-        /// </summary>
-        public void NextLine()
-        {
-            currentScriptLine = new ScriptLine();
-            scriptLines.Add(currentScriptLine);
-        }
-
-
+  
         /// <summary>
         /// After adding all elements, this will process the script into a more readable format
         /// </summary>
@@ -608,7 +641,7 @@ namespace Ultima5Redux
                 ScriptLine line = scriptLines[nIndex];
 
                 // if we just hit a label, then it's time to jump out of this loop and move onto the label reading loop
-                if (line.GetScriptItem(0).Command == TalkCommand.DefaultMessage)
+                if (line.GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
                 {
                     labelEncountered = true;
                     break;
@@ -655,7 +688,7 @@ namespace Ultima5Redux
 
                 // if there are two script items, and those two script items identify an end of label section then let's break out
                 // this should only actually occur if there are no labels at all
-                if (line.GetNumberOfScriptItems() == 2 && line.IsEndOfLabelSection())
+                if (line.NumberOfScriptItems== 2 && line.IsEndOfLabelSection)
                 {
                     // all done. we either had no labels or reached the end of them
                     // assert that we are on the last line of the script
@@ -665,7 +698,7 @@ namespace Ultima5Redux
 
 
                 // i expect that this line will always indicate a new label is being defined
-                Debug.Assert(line.GetScriptItem(0).Command == TalkCommand.DefaultMessage);
+                Debug.Assert(line.GetScriptItem(0).Command == TalkCommand.StartLabelDefinition);
 
                 // I don't like this, it's inelegant, but it works...
                 // at this point we know:
@@ -684,7 +717,7 @@ namespace Ultima5Redux
                     line = scriptLines[nIndex];
 
                     // let's make sure there are actually labels to look at
-                    if (line.IsEndOfLabelSection())
+                    if (line.IsEndOfLabelSection)
                     {
                         nextCommandDefaultMessage = true;
                         break;
@@ -697,7 +730,7 @@ namespace Ultima5Redux
                     scriptTalkLabels.AddLabel(scriptTalkLabel);
 
                     // it's a single line only, so we skip this tom foolery below
-                    if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.DefaultMessage)
+                    if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
                     {
                         // do nothing, the ScriptTalkLabel will simply have no DefaultAnswer indicating that only the primary label line is read
 
@@ -710,7 +743,7 @@ namespace Ultima5Redux
                     scriptTalkLabel.DefaultAnswers.Add(defaultAnswer);
 
                     // it's a default only answer, and no additional line of dialog, then we skip this tom foolery below 
-                    if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.DefaultMessage)
+                    if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
                     {
                         nIndex++;
                         continue;
@@ -728,7 +761,7 @@ namespace Ultima5Redux
                             while (scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
                             {
                                 line = scriptLines[nIndex + 1];
-                                Debug.Assert(line.IsQuestion());
+                                Debug.Assert(line.IsQuestion);
                                 question = line.GetScriptItem(0).Str;
                                 // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
                                 if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
@@ -738,7 +771,7 @@ namespace Ultima5Redux
                                 nIndex += 2;
                             }
                             line = scriptLines[++nIndex];
-                            Debug.Assert(line.IsQuestion());
+                            Debug.Assert(line.IsQuestion);
                             question = line.GetScriptItem(0).Str;
                             // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
                             if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
@@ -761,11 +794,11 @@ namespace Ultima5Redux
                         else //if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length > 4)
                         {
                             line = scriptLines[++nIndex];
-                            Debug.Assert(!line.IsQuestion());
+                            Debug.Assert(!line.IsQuestion);
                             scriptTalkLabel.DefaultAnswers.Add(line);
                             nIndex++;
                             // let's make double sure that we only have a single additional line of text 
-                            Debug.Assert(scriptLines[nIndex].GetScriptItem(0).Command == TalkCommand.DefaultMessage);
+                            Debug.Assert(scriptLines[nIndex].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition);
 
                             nextLine = scriptLines[nIndex];
                             continue;
@@ -780,7 +813,7 @@ namespace Ultima5Redux
                         nextLine = scriptLines[++nIndex];
 
                         // does the next line indicate end of all of the label sections, then let's get out of this loop
-                        if (nextLine.IsEndOfLabelSection())
+                        if (nextLine.IsEndOfLabelSection)
                         {
                             nIndex--;
                             nextCommandDefaultMessage = true;
@@ -794,7 +827,7 @@ namespace Ultima5Redux
                         }
        
                     // while we know the next line is not a new label or end of label, then let's keep reading by moving to our next loop
-                    } while (nextLine.GetScriptItem(0).Command != TalkCommand.DefaultMessage);
+                    } while (nextLine.GetScriptItem(0).Command != TalkCommand.StartLabelDefinition);
                     // while we haven't encountered an end of label section 
                 } while (!nextCommandDefaultMessage);
 
@@ -802,7 +835,9 @@ namespace Ultima5Redux
             // while we haven't read every last line, then let's keep reading
             } while (nIndex < (scriptLines.Count - 1));
         }
+        #endregion
 
+        #region Public Methods
         /// <summary>
         /// Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
         /// This is not compatible with Labels
@@ -814,43 +849,38 @@ namespace Ultima5Redux
             return (scriptLines[(int)talkConst]);
         }
 
+        /// <summary>
+        /// Gets a script line based on its index in the overall Script
+        /// </summary>
+        /// <param name="index">index into Script</param>
+        /// <returns>The requested ScriptLine</returns>
         public ScriptLine GetScriptLine(int index)
         {
             return (scriptLines[index]);
         }
 
-        public int GetNumberOfScriptLines()
-        {
-            return scriptLines.Count;
-        }
-
 
         /// <summary>
-        /// 
+        /// Gets a scriptline based on the label index
         /// </summary>
-        /// <param name="nLabel"></param>
-        /// <returns></returns>
+        /// <param name="nLabel">0 based index of label</param>
+        /// <returns>The corresponding script line</returns>
         public ScriptLine GetScriptLineLabel(int nLabel)
         {
             return scriptLines[GetScriptLineLabelIndex(nLabel)];
-
-            //foreach (ScriptLine line in scriptLines)
-            //{
-            //    ScriptItem item = line.GetScriptItem(0);
-            //    if (item.Command == TalkCommand.DefineLabel && item.LabelNum == nLabel)
-            //    {
-            //        return line;
-            //    }
-            //}
-            //throw new Exception("You requested a script label that doesn't exist");
         }
 
+        /// <summary>
+        /// Gets the index of the line that contains the given label definition
+        /// </summary>
+        /// <param name="nLabel">0 based label nunber</param>
+        /// <returns>index into Script</returns>
         public int GetScriptLineLabelIndex(int nLabel)
         {
             int nCount = 0;
             foreach (ScriptLine line in scriptLines)
             {
-                if (line.GetNumberOfScriptItems() <= 1) { nCount++; continue; };
+                if (line.NumberOfScriptItems<= 1) { nCount++; continue; };
 
                 ScriptItem item = line.GetScriptItem(1);
                 if (line.IsLabelDefinition() && item.LabelNum == nLabel)
@@ -863,7 +893,6 @@ namespace Ultima5Redux
             throw new Exception("You requested a script label that doesn't exist");
 
         }
-
 
         /// <summary>
         /// Add a talk label. 
@@ -958,7 +987,7 @@ namespace Ultima5Redux
         {
             foreach (ScriptLine line in scriptLines)
             {
-                for (int nItem = 0; nItem < line.GetNumberOfScriptItems(); nItem++)
+                for (int nItem = 0; nItem < line.NumberOfScriptItems; nItem++)
                 {
                     ScriptItem item = line.GetScriptItem(nItem);
 
@@ -980,5 +1009,6 @@ namespace Ultima5Redux
                 }
             }
         }
-}
+        #endregion
+    }
 }

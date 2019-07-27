@@ -193,7 +193,6 @@ namespace Ultima5Redux
                 default:
                     throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
                     //Console.Write("<" + item.Command.ToString() + ">");
-                    break;
             }
         }
 
