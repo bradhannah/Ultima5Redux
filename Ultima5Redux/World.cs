@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Ultima5Redux
 {
-    class World
+    public class World
     {
         #region Private Variables
 
