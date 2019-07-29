@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\u6decode\u6decode\dict.cc">
+    <ClCompile Include="dict.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Downloads\u6decode\u6decode\stack.cc">
+    <ClCompile Include="stack.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Downloads\u6decode\u6decode\u6decode.cc">
+    <ClCompile Include="u6decode.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

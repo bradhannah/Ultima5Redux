@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\u6decode\u6decode\dict.cc" />
-    <ClCompile Include="..\..\..\..\..\Downloads\u6decode\u6decode\stack.cc" />
-    <ClCompile Include="..\..\..\..\..\Downloads\u6decode\u6decode\u6decode.cc" />
+    <ClCompile Include="dict.cc" />
+    <ClCompile Include="stack.cc" />
+    <ClCompile Include="u6decode.cc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
