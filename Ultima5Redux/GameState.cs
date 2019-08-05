@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    class GameState
+    public class GameState
     {
         #region Private Variables
         /// <summary>

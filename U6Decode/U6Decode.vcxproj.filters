@@ -25,4 +25,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="U6Decode.bat">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    partial class NonPlayerCharacters
+    public partial class NonPlayerCharacters
     {
         #region Public Properties
         /// <summary>
@@ -101,7 +101,7 @@ namespace Ultima5Redux
                 SmallMapReference.SingleMapReference.Location location = smallMapRef.GetLocationByIndex(mapMaster, nTown);
                 SmallMapReference.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByLocation(location);
 
-                //sing = smallMapRef.GetSingleMapByLocation(smallMapRef.GetLocationByIndex(mapMaster, nTown);
+                //sing = SmallMapRef.GetSingleMapByLocation(SmallMapRef.GetLocationByIndex(mapMaster, nTown);
 
                 int townOffset = (TOWN_OFFSET_SIZE * nTown);
 

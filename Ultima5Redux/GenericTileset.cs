@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace Ultima5Redux
 {
-    class GenericTileset
+    public class GenericTileset
     {
         
         byte[] tilesetByteArray;

@@ -11,7 +11,7 @@ namespace Ultima5Redux
     /// <summary>
     /// Class for quick access to the static contents of the Data.ovl file
     /// </summary>
-    class DataOvlReference
+    public class DataOvlReference
     {
         #region Private Variables
         /// <summary>

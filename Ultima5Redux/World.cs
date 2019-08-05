@@ -14,11 +14,11 @@ namespace Ultima5Redux
         #region Private Variables
 
         private List<SmallMap> smallMaps = new List<SmallMap>();
-        private LargeMap overworldMap;
-        private LargeMap underworldMap;
+        public LargeMap OverworldMap { get; }
+        public LargeMap UnderworldMap { get; }
 
         private string u5Directory;
-        private SmallMapReference smallMapRef;
+        public SmallMapReference SmallMapRef;
         private CombatMapReference combatMapRef = new CombatMapReference();
         private Look lookRef;
         private Signs signRef;
@@ -32,20 +32,21 @@ namespace Ultima5Redux
         {
             u5Directory = ultima5Directory;
 
-            dataOvlRef = new DataOvlReference(u5Directory);
+            // build the overworld map
+            OverworldMap = new LargeMap(u5Directory, LargeMap.Maps.Overworld);
+
+            // build the underworld map
+            UnderworldMap = new LargeMap(u5Directory, LargeMap.Maps.Underworld);
 
             state = new GameState(u5Directory);
 
-            // build the overworld map
-            overworldMap = new LargeMap(u5Directory, LargeMap.Maps.Overworld);
-            
-            // build the underworld map
-            underworldMap = new LargeMap(u5Directory, LargeMap.Maps.Underworld);
+            dataOvlRef = new DataOvlReference(u5Directory);
 
-            smallMapRef = new SmallMapReference(dataOvlRef);
+
+            SmallMapRef = new SmallMapReference(dataOvlRef);
 
             // build all the small maps from the Small Map reference
-            foreach (SmallMapReference.SingleMapReference mapRef in smallMapRef.MapReferenceList)
+            foreach (SmallMapReference.SingleMapReference mapRef in SmallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
                 SmallMap smallMap = new SmallMap(u5Directory, mapRef);
@@ -72,7 +73,7 @@ namespace Ultima5Redux
             talkScriptsRef = new TalkScripts(u5Directory, dataOvlRef);
 
             // build the NPC tables
-            npcRef = new NonPlayerCharacters(ultima5Directory, smallMapRef, talkScriptsRef, state);
+            npcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, talkScriptsRef, state);
 
             //Conversation convo = new Conversation(npcRef.NPCs[21]); // dunkworth
             // 19 = Margarett
@@ -118,11 +119,11 @@ namespace Ultima5Redux
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
 
-            convo.BeginConversation();
+            //convo.BeginConversation();
 
             //0x48 or 0x28
-            Console.WriteLine("Shutting down... Hit any key...");
-            Console.ReadKey(false);
+            //Console.WriteLine("Shutting down... Hit any key...");
+            //Console.ReadKey(false);
 
         }
 

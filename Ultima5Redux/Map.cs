@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Ultima5Redux
 {
-    class Map
+    public class Map
     {
         protected byte[][] theMap;
         protected string u5Directory;
@@ -17,7 +17,7 @@ namespace Ultima5Redux
             this.u5Directory = u5Directory;
         }
 
-        protected byte[][] TheMap
+        public byte[][] TheMap
         {
             get
             {

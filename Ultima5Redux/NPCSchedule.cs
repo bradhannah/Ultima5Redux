@@ -2,7 +2,7 @@
 
 namespace Ultima5Redux
 {
-    partial class NonPlayerCharacters
+    public partial class NonPlayerCharacters
     {
         public partial class NonPlayerCharacter
         {

@@ -7,19 +7,24 @@ using System.IO;
 
 namespace Ultima5Redux 
 {
-    class LargeMap : Map
+    public class LargeMap : Map
     {
+        #region Private Constants
         private const int TilesPerChunkX = 16; // number of tiles horizontal in each chunk
         private const int TilesPerChunkY = 16; // number of tiles vertically in each chunk
         private const int TotalChunksPerX = 16; // total number of chunks horizontally
         private const int TotalChunksPerY = 16; // total number of chunks vertically
         private const int TotalChunks = 0x100; // total number of expected chunks in large maps
-        private const int TilesPerMapRow = TilesPerChunkY * TotalChunksPerX; // total number of tiles per row in the large map 
-        private const int TilesPerMapCol = TilesPerChunkX * TotalChunksPerX; // total number of tiles per column in the large map
         private const long DatOverlayBritMap = 0x3886; // address in data.ovl file for the Britannia map
+        #endregion
+
+        #region Public Constants and Enumerations
+        public const int TILES_PER_MAP_ROW = TilesPerChunkY * TotalChunksPerX; // total number of tiles per row in the large map 
+        public const int TILES_PER_MAP_COL = TilesPerChunkX * TotalChunksPerX; // total number of tiles per column in the large map
 
         public enum Maps { Overworld, Underworld};
 
+        #endregion
         /// <summary>
         /// Build a large map. There are essentially two choices - Overworld and Underworld
         /// </summary>
@@ -66,7 +71,7 @@ namespace Ultima5Redux
             }
 
             // declare the actual full map 4096*4096 tiles, with 255 (16*16) total chunks
-            byte[][] theMap = Utils.Init2DByteArray(TilesPerMapRow, TilesPerMapCol);
+            byte[][] theMap = Utils.Init2DByteArray(TILES_PER_MAP_ROW, TILES_PER_MAP_COL);
 
             // counter for the serial chunks from brit.dat
             int britDatChunkCount = 0;
@@ -95,12 +100,14 @@ namespace Ultima5Redux
                         if (dataOvlChunks[chunkCount] == 0xFF)
                         {
                             // welp, it's a water tile
-                            theMap[curRow][curCol] = 0x01;
+//                            theMap[curRow][curCol] = 0x01;
+                            theMap[curCol][curRow] = 0x01;
                         }
                         else
                         {
                             // it contains land tiles (look in brit.dat)
-                            theMap[curRow][curCol] = theChunksSerial[britDatChunkCount++];
+                            //theMap[curRow][curCol] = theChunksSerial[britDatChunkCount++];
+                            theMap[curCol][curRow] = theChunksSerial[britDatChunkCount++];
                         }
                     }
                 }

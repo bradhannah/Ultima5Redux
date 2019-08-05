@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Ultima5Redux
 {
-    class Utils
+    public class Utils
     {
         /// <summary>
         /// Simple 2D byte array initlialization to zeros
@@ -104,34 +104,45 @@ namespace Ultima5Redux
         {
             FileStream readFile = File.OpenRead(filename);
 
-            // find the offset in the file
-            readFile.Seek(offset, SeekOrigin.Begin);
+            byte[] fileContents = File.ReadAllBytes(filename);
+            if (length == -1) return fileContents.ToList();
 
-            BinaryReader mapFileReader = new BinaryReader(readFile);
+            List<byte> specificContents=new List<byte>(length);
 
-            List<byte> theChunksSerial = new List<byte>();
-
-            byte tile = (byte)0x00;
-
-            int lengthCounter = 0;
-            // read the entire file and save in serial bytes
-            try
+            for (int i = offset ; i < offset + length; i++)
             {
-                while (!(tile = mapFileReader.ReadByte()).Equals(-1))
-                {
-                    // if you set a length, and it has been reached, then you're done and pass it back
-                    if (length != -1) { if (lengthCounter == length) { return theChunksSerial; } }
-                    theChunksSerial.Add(tile);
-                    lengthCounter++;
-                }
+                specificContents.Add(fileContents[i]);
             }
-            catch (EndOfStreamException)
-            {
-                // all good, I can't get the damn peek to work properly
-            }
-            mapFileReader.Close();
+            return specificContents;
 
-            return theChunksSerial;
+            //// find the offset in the file
+            //readFile.Seek(offset, SeekOrigin.Begin);
+
+            //BinaryReader mapFileReader = new BinaryReader(readFile);
+
+            //List<byte> theChunksSerial = new List<byte>();
+
+            //byte tile = (byte)0x00;
+
+            //int lengthCounter = 0;
+            //// read the entire file and save in serial bytes
+            //try
+            //{
+            //    while (!(tile = mapFileReader.ReadByte()).Equals(-1))
+            //    {
+            //        // if you set a length, and it has been reached, then you're done and pass it back
+            //        if (length != -1) { if (lengthCounter == length) { return theChunksSerial; } }
+            //        theChunksSerial.Add(tile);
+            //        lengthCounter++;
+            //    }
+            //}
+            //catch (EndOfStreamException)
+            //{
+            //    // all good, I can't get the damn peek to work properly
+            //}
+            //mapFileReader.Close();
+
+            //return theChunksSerial;
         }
 
 

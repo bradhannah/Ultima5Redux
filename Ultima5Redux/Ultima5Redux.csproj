@@ -90,7 +90,6 @@
     <Compile Include="LargeMap.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="World.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -109,4 +108,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+copy $(TargetDir)\*.pdb "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

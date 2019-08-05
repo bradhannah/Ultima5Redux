@@ -23,6 +23,9 @@
     <ClCompile Include="stack.cc" />
     <ClCompile Include="u6decode.cc" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="U6Decode.bat" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{C252031D-506D-410B-B719-A57D8C3785F2}</ProjectGuid>

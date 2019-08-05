@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ultima5Redux
 {
-    class CombatMapReference
+    public class CombatMapReference
     {
         public class SingleCombatMapReference
         {

@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Ultima5Redux
 {
-    class SmallMap : Map
+    public class SmallMap : Map
     {
         public const int XTILES = 32;
         public const int YTILES = 32;

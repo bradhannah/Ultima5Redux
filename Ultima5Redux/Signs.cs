@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Ultima5Redux
 {
-    class Signs
+    public class Signs
     {
         public class Sign
         {

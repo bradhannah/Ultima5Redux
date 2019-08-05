@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    class TalkScript
+    public class TalkScript
     {
         /// <summary>
         /// This is a collection of all an NPCs ScriptTalkLabel(s)
@@ -224,7 +224,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Represents a single script component
         /// </summary>
-        protected internal class ScriptItem
+        public class ScriptItem
         {
             /// <summary>
             /// command issued
@@ -577,12 +577,12 @@ namespace Ultima5Redux
         /// <summary>
         /// All associated labels with the Script
         /// </summary>
-        public ScriptTalkLabels TalkLabels => scriptTalkLabels;
+        protected internal ScriptTalkLabels TalkLabels => scriptTalkLabels;
 
         /// <summary>
         /// All associated questions and answers for the Script
         /// </summary>
-        public ScriptQuestionAnswers QuestionAnswers => scriptQuestionAnswers;
+        protected internal ScriptQuestionAnswers QuestionAnswers => scriptQuestionAnswers;
 
         /// <summary>
         /// The number of scriptlines in the Script
@@ -844,7 +844,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="talkConst">name, job etc.</param>
         /// <returns>The corresponding single ScriptLine</returns>
-        public ScriptLine GetScriptLine(TalkConstants talkConst)
+        protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
         {
             return (scriptLines[(int)talkConst]);
         }
@@ -854,7 +854,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="index">index into Script</param>
         /// <returns>The requested ScriptLine</returns>
-        public ScriptLine GetScriptLine(int index)
+        protected internal ScriptLine GetScriptLine(int index)
         {
             return (scriptLines[index]);
         }
@@ -865,7 +865,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="nLabel">0 based index of label</param>
         /// <returns>The corresponding script line</returns>
-        public ScriptLine GetScriptLineLabel(int nLabel)
+        protected internal ScriptLine GetScriptLineLabel(int nLabel)
         {
             return scriptLines[GetScriptLineLabelIndex(nLabel)];
         }

@@ -13,7 +13,7 @@ namespace Ultima5Redux
     /// A conversation with an NPC.
     /// An instantiated object of class Conversation holds and controls all aspects of a conversation.
     /// </summary>
-    class Conversation
+    public class Conversation
     {
         #region Public Properties
         /// <summary>

@@ -10,7 +10,7 @@ namespace Ultima5Redux
     /// <summary>
     /// Provides look descriptions for tiles
     /// </summary>
-    class Look
+    public class Look
     {
         /// <summary>
         /// Total number of titles that can be looked at

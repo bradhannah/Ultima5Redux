@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ultima5Redux
 {
-    partial class SmallMapReference
+    public partial class SmallMapReference
     {
 
         #region Private Variables

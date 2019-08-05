@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    class CharacterRecords
+    public class CharacterRecords
     {
         public const int AVATAR_RECORD = 0x00;
 
@@ -53,7 +53,7 @@ namespace Ultima5Redux
     }
 
 
-    class CharacterRecord
+    public class CharacterRecord
     {
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;

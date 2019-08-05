@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Ultima5Redux
 {
-    class CombatMap : Map
+    public class CombatMap : Map
     {
         // https://github.com/andrewschultz/rpg-mapping-tools/wiki/Ultima-V-Dungeon-File-Format
 

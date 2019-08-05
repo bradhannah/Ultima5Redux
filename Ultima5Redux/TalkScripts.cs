@@ -12,7 +12,7 @@ namespace Ultima5Redux
     /// <summary>
     /// TalkScripts represents all of the in game talking scripts for all NPCs
     /// </summary>
-    class TalkScripts
+    public class TalkScripts
     {
         /// <summary>
         /// do I print Debug output to the Console

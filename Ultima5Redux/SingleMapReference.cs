@@ -2,7 +2,7 @@
 
 namespace Ultima5Redux
 {
-    partial class SmallMapReference
+    public partial class SmallMapReference
     {
         /// <summary>
         /// Provides static details on each and every small map location

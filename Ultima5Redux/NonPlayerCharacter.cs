@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Ultima5Redux
 {
-    partial class NonPlayerCharacters
+    public partial class NonPlayerCharacters
     {
         /// <summary>
         /// A single non player character (NPC)
@@ -19,7 +19,7 @@ namespace Ultima5Redux
             /// Original structure
             /// </summary>
             [StructLayout(LayoutKind.Sequential, Pack = 1)]
-            protected internal unsafe struct NPC_Schedule
+            public unsafe struct NPC_Schedule
             {
                 public fixed byte AI_types[3];
                 public fixed byte x_coordinates[3];
