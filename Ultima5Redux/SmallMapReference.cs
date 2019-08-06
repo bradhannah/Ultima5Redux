@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Ultima5Redux
 {
@@ -23,6 +24,9 @@ namespace Ultima5Redux
         // a mapping of the master file -> a list of locations, which also provides an index value for the town (implied within list)
         private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>> masterFileLocationDictionary = 
             new Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>(MASTER_FILES);
+
+        private Dictionary<SingleMapReference.Location, bool> smallMapBasementDictionary = new Dictionary<SingleMapReference.Location, bool>();
+        private Dictionary<SingleMapReference.Location, int> nFloorsDictionary = new Dictionary<SingleMapReference.Location, int>();
 
         /// <summary>
         /// Data OVL reference used for grabbing a lot of different data 
@@ -95,6 +99,9 @@ namespace Ultima5Redux
 
             // add the number of floors you have just added so that it can increment the file offset for subequent calls
             roomOffsetCountDictionary[dataFilename] += nFloors;
+
+            smallMapBasementDictionary.Add(location, hasBasement);
+            nFloorsDictionary.Add(location, nFloors);
         }
         #endregion
 
@@ -112,6 +119,35 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
+        public int GetNumberOfFloors(SingleMapReference.Location location)
+        {
+            return nFloorsDictionary[location];
+        }
+
+        public bool HasBasement(SingleMapReference.Location location)
+        {
+            return smallMapBasementDictionary[location];
+        }
+
+        static public Point GetStartingXYByLocation(SmallMapReference.SingleMapReference.Location location)
+        {
+            return new Point(32 / 2 - 1, 30);
+            //SingleMapReference mapRef = GetSingleMapByLocation(location, 0);
+            //switch (mapRef.MasterFile)
+            //{
+            //    case SingleMapReference.SmallMapMasterFiles.Castle:
+            //        //return dataRef.GetDataChunk(DataOvlReference.DataChunkName.STARTING_XY_CASTLE).GetAsByteList()[mapRef.Id];
+            //        break;
+            //    case SingleMapReference.SmallMapMasterFiles.Towne:
+            //        break;
+            //    case SingleMapReference.SmallMapMasterFiles.Dwelling:
+            //        break;
+            //    case SingleMapReference.SmallMapMasterFiles.Keep:
+            //        break;
+            //}
+
+           
+        }
 
         /// <summary>
         /// Get the location based on the index within the small map file
@@ -130,12 +166,12 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="location">The location you are looking for</param>
         /// <returns>a single map reference providing details on the map itself</returns>
-        public SingleMapReference GetSingleMapByLocation (SingleMapReference.Location location)
+        public SingleMapReference GetSingleMapByLocation (SingleMapReference.Location location, int floor)
         {
             SingleMapReference.SmallMapMasterFiles masterMap = SingleMapReference.GetMapMasterFromLocation(location);
             foreach (SingleMapReference mapRef in mapReferences)
             {
-                if (mapRef.MapLocation == location)
+                if (mapRef.MapLocation == location && mapRef.Floor == floor)
                 {
                     return mapRef; 
                 }
@@ -197,10 +233,10 @@ namespace Ultima5Redux
             AddLocation(SingleMapReference.Location.New_Magincia, false, 2);
 
             // Dwelling.dat
-            AddLocation(SingleMapReference.Location.Fogsbane, false, 2);
-            AddLocation(SingleMapReference.Location.Stormcrow, false, 2);
-            AddLocation(SingleMapReference.Location.Greyhaven, false, 2);
-            AddLocation(SingleMapReference.Location.Waveguide, false, 2);
+            AddLocation(SingleMapReference.Location.Fogsbane, false, 3);
+            AddLocation(SingleMapReference.Location.Stormcrow, false, 3);
+            AddLocation(SingleMapReference.Location.Greyhaven, false, 3);
+            AddLocation(SingleMapReference.Location.Waveguide, false, 3);
             AddLocation(SingleMapReference.Location.Iolos_Hut, false, 1);
             AddLocation(SingleMapReference.Location.Suteks_Hut, false, 1);
             AddLocation(SingleMapReference.Location.SinVraals_Hut, false, 1);

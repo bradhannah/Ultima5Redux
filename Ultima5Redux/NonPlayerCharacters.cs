@@ -99,7 +99,7 @@ namespace Ultima5Redux
                 List<byte> npcDialogNumber = new List<byte>(NPCS_PER_TOWN);
 
                 SmallMapReference.SingleMapReference.Location location = smallMapRef.GetLocationByIndex(mapMaster, nTown);
-                SmallMapReference.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByLocation(location);
+                SmallMapReference.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByLocation(location, 0);
 
                 //sing = SmallMapRef.GetSingleMapByLocation(SmallMapRef.GetLocationByIndex(mapMaster, nTown);
 

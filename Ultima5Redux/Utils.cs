@@ -41,7 +41,17 @@ namespace Ultima5Redux
             return byteArray;
         }
 
+        static public T[][] TransposeArray<T>(T[][] ts)
+        {
+            // makes some assumptions, like each row has an equal number of elements
+            T[][] transArray = Utils.Init2DArray<T>(ts[0].Length, ts.Length);
 
+            for (int i = 0; i < ts[0].Length; i++)
+                for (int j = 0; j < ts.Length; j++)
+                    transArray[i][j] = ts[j][i];
+
+            return transArray;            
+        }
         static public T[][] ListTo2DArray<T>(List<T> theList, short splitEveryN, int offset, int length)
         {
             int listCount = theList.Count;
