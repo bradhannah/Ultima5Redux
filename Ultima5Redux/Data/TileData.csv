@@ -1,0 +1,5 @@
+Index,Name,Description,IsWalking_Passable,IsBoat_Passable,IsSkiff_Passable,IsCarpet_Passable,IsPartOfAnimation,AnimationIndex,IsUpright,FlatTileSubstitionIndex,FlatTileSubstitionName,IsEnemy,IsNPC,IsBuilding
+0,Explosion,,TRUE,TRUE,TRUE,TRUE,FALSE,0,TRUE,5,Grass,FALSE,FALSE,FALSE
+1,Water1,,FALSE,TRUE,FALSE,TRUE,TRUE,0,FALSE,-1,None,FALSE,FALSE,FALSE
+2,Water2,,FALSE,TRUE,FALSE,TRUE,TRUE,1,FALSE,-1,None,FALSE,FALSE,FALSE
+3,WaterCoast,,FALSE,FALSE,TRUE,TRUE,FALSE,0,FALSE,-1,None,FALSE,FALSE,FALSE
