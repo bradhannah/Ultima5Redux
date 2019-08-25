@@ -17,6 +17,8 @@ namespace Ultima5Redux
         public LargeMap OverworldMap { get; }
         public LargeMap UnderworldMap { get; }
 
+        public TileReferences SpriteTileReferences { get; }
+
         private string u5Directory;
         public SmallMapReference SmallMapRef;
         private CombatMapReference combatMapRef = new CombatMapReference();
@@ -40,8 +42,9 @@ namespace Ultima5Redux
 
             state = new GameState(u5Directory);
 
-            dataOvlRef = new DataOvlReference(u5Directory);
+            SpriteTileReferences = new TileReferences();
 
+            dataOvlRef = new DataOvlReference(u5Directory);
 
             SmallMapRef = new SmallMapReference(dataOvlRef);
 

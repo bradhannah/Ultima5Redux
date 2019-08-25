@@ -45,17 +45,6 @@ namespace Ultima5Redux
         public bool IsBuilding;
 
 
-        static public List<TileReference> Load()
-        {
-            //DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(TileReference));
-
-            //MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(Properties.Resources.TileData));
-            //            FileStream fs = new FileStream("Data\\TileData.json",FileMode.Open);
-            List<TileReference> result = JsonConvert.DeserializeObject<List<TileReference>>(Properties.Resources.TileData);
-
-            //TileReference tr = js.ReadObject(ms) as TileReference;
-            //return tr;
-            return result;
-        }
+     
     }
 }
