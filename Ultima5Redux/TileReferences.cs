@@ -5,6 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+// produces light
+// light radius
+// is pushable
+// is useable
+// is searchable
+// 
+
 namespace Ultima5Redux
 {
     public class TileReferences
