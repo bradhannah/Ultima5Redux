@@ -17,7 +17,7 @@ namespace Ultima5Redux
         private Random ran = new Random();
 
         /// <summary>
-        /// Game state raw data
+        /// Game State raw data
         /// </summary>
         private DataChunks<DataChunkName> dataChunks;
 
@@ -66,7 +66,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Construct the GameState
         /// </summary>
-        /// <param name="u5Directory">Directory of the game state files</param>
+        /// <param name="u5Directory">Directory of the game State files</param>
         public GameState(string u5Directory)
         {
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);

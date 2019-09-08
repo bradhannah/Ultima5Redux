@@ -37,7 +37,7 @@ namespace Ultima5Redux
         /// </summary>
         private DataOvlReference dataOvlRef;
         /// <summary>
-        /// Game state used for determining if Avatar has met the NPC
+        /// Game State used for determining if Avatar has met the NPC
         /// </summary>
         private GameState gameStateRef;
         /// <summary>
@@ -86,7 +86,7 @@ namespace Ultima5Redux
         /// Construction a conversation
         /// </summary>
         /// <param name="npc">NPC you will have a conversation with</param>
-        /// <param name="state">The games current state</param>
+        /// <param name="state">The games current State</param>
         /// <param name="dataOvlRef">Data.OVL for reference</param>
         public Conversation(NonPlayerCharacters.NonPlayerCharacter npc, GameState state, DataOvlReference dataOvlRef)
         {

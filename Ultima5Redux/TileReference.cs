@@ -28,6 +28,8 @@ namespace Ultima5Redux
         [DataMember]
         public bool IsCarpet_Passable;
         [DataMember]
+        public bool IsOpenable;
+        [DataMember]
         public bool IsPartOfAnimation;
         [DataMember]
         public int AnimationIndex;

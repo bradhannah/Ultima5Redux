@@ -22,13 +22,14 @@ namespace Ultima5Redux
         private string u5Directory;
         public SmallMapReference SmallMapRef;
         private CombatMapReference combatMapRef = new CombatMapReference();
-        private Look lookRef;
-        private Signs signRef;
-        private NonPlayerCharacters npcRef;
-        private DataOvlReference dataOvlRef;
-        private TalkScripts talkScriptsRef;
-        private GameState state;
+        public Look LookRef { get; }
+        public Signs SignRef { get; }
+        private NonPlayerCharacters NpcRef { get; }
+        public DataOvlReference DataOvlRef { get; }
+        public TalkScripts TalkScriptsRef { get; }
+        public GameState State { get; }
         #endregion
+        public LargeMapReference LargeMapRef { get; }
 
         public World (string ultima5Directory) : base ()
         {
@@ -40,13 +41,15 @@ namespace Ultima5Redux
             // build the underworld map
             UnderworldMap = new LargeMap(u5Directory, LargeMap.Maps.Underworld);
 
-            state = new GameState(u5Directory);
+            State = new GameState(u5Directory);
 
             SpriteTileReferences = new TileReferences();
 
-            dataOvlRef = new DataOvlReference(u5Directory);
+            DataOvlRef = new DataOvlReference(u5Directory);
 
-            SmallMapRef = new SmallMapReference(dataOvlRef);
+            SmallMapRef = new SmallMapReference(DataOvlRef);
+
+            LargeMapRef = new LargeMapReference(DataOvlRef, SmallMapRef);
 
             // build all the small maps from the Small Map reference
             foreach (SmallMapReference.SingleMapReference mapRef in SmallMapRef.MapReferenceList)
@@ -67,25 +70,25 @@ namespace Ultima5Redux
             }
 
             // build a "look" table for all tiles
-            lookRef = new Look(ultima5Directory);
+            LookRef = new Look(ultima5Directory);
 
             // build the sign tables
-            signRef = new Signs(ultima5Directory);
+            SignRef = new Signs(ultima5Directory);
 
 
-            talkScriptsRef = new TalkScripts(u5Directory, dataOvlRef);
+            TalkScriptsRef = new TalkScripts(u5Directory, DataOvlRef);
 
             // build the NPC tables
-            npcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, talkScriptsRef, state);
+            NpcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
 
-            //Conversation convo = new Conversation(npcRef.NPCs[21]); // dunkworth
+            //Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
             // 19 = Margarett
 
 
             int count = 0;
             if (false)
             {
-                foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcRef.NPCs)
+                foreach (NonPlayerCharacters.NonPlayerCharacter npc in NpcRef.NPCs)
                 {
                     if (npc.NPCType != 0 && npc.Script != null)
                     {
@@ -105,19 +108,19 @@ namespace Ultima5Redux
             }
 
             // Scally
-            Conversation convo = new Conversation(npcRef.NPCs[0xe6], state, dataOvlRef);
+            Conversation convo = new Conversation(NpcRef.NPCs[0xe6], State, DataOvlRef);
 
             // Bidney
-            //Conversation convo = new Conversation(npcRef.NPCs[0xe8], state);
+            //Conversation convo = new Conversation(NpcRef.NPCs[0xe8], State);
 
             // Lord Dalgrin
-            //Conversation convo = new Conversation(npcRef.NPCs[0xea], state);
+            //Conversation convo = new Conversation(NpcRef.NPCs[0xea], State);
 
             // Geoffery
-            //Conversation convo = new Conversation(npcRef.NPCs[0xec], state, dataOvlRef);
+            //Conversation convo = new Conversation(NpcRef.NPCs[0xec], State, DataOvlRef);
 
             // Tierra 
-            //Conversation convo = new Conversation(npcRef.NPCs[0xeb], state, dataOvlRef);
+            //Conversation convo = new Conversation(NpcRef.NPCs[0xeb], State, DataOvlRef);
 
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
@@ -167,14 +170,14 @@ namespace Ultima5Redux
                     //
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    state.AddMemberToParty(conversation.Npc);
+                    State.AddMemberToParty(conversation.Npc);
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //
-                    state.Karma-=1;
+                    State.Karma-=1;
                     break;
                 case TalkScript.TalkCommand.KarmaPlusOne:
-                    state.Karma+=1;
+                    State.Karma+=1;
                     break;
                 case TalkScript.TalkCommand.KeyWait:
                     Console.Write("...");

@@ -32,12 +32,14 @@ namespace Ultima5Redux
 
             public enum Location { Britainnia_Underworld = 0x00, Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, Fogsbane, Stormcrow, Greyhaven,
                 Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut, Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny,
-                Paws, Cove, Buccaneers_Den, Ararat, Bordermarch, Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold }
+                Paws, Cove, Buccaneers_Den, Ararat, Bordermarch, Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold, Deceit, Despise, Destard, Wrong,
+                Covetous, Shame, Hythloth, Doom, Combat_resting_shrine 
+            }
 
             /// <summary>
             /// Map master files. These represent .DAT, .NPC and .TLK files
             /// </summary>
-            public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep };
+            public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon };
             #endregion
 
             #region Public Properties
@@ -201,6 +203,15 @@ namespace Ultima5Redux
                     case Location.Empath_Abbey:
                     case Location.Serpents_Hold:
                         return SmallMapMasterFiles.Keep;
+                    case Location.Deceit:
+                    case Location.Despise:
+                    case Location.Destard:
+                    case Location.Wrong:
+                    case Location.Covetous:
+                    case Location.Shame:
+                    case Location.Hythloth:
+                    case Location.Doom:
+                        return SmallMapMasterFiles.Dungeon;
                 }
                 throw new Exception("EH?");
             }
@@ -222,6 +233,8 @@ namespace Ultima5Redux
                         return FileConstants.DWELLING_DAT;
                     case SmallMapMasterFiles.Keep:
                         return FileConstants.KEEP_DAT;
+                    case SmallMapMasterFiles.Dungeon:
+                        return "NOFILE";
                 }
                 throw (new Exception("Bad Location"));
             }

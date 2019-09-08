@@ -129,9 +129,9 @@ namespace Ultima5Redux
             return smallMapBasementDictionary[location];
         }
 
-        static public Point GetStartingXYByLocation(SmallMapReference.SingleMapReference.Location location)
+        static public Point2D GetStartingXYByLocation(SmallMapReference.SingleMapReference.Location location)
         {
-            return new Point(32 / 2 - 1, 30);
+            return new Point2D(32 / 2 - 1, 30);
             //SingleMapReference mapRef = GetSingleMapByLocation(location, 0);
             //switch (mapRef.MasterFile)
             //{
@@ -251,6 +251,15 @@ namespace Ultima5Redux
             AddLocation(SingleMapReference.Location.Lycaeum, false, 3);
             AddLocation(SingleMapReference.Location.Empath_Abbey, false, 3);
             AddLocation(SingleMapReference.Location.Serpents_Hold, true, 3);
+
+            AddLocation(SingleMapReference.Location.Deceit, false, 0);
+            AddLocation(SingleMapReference.Location.Despise, false, 0);
+            AddLocation(SingleMapReference.Location.Destard, false, 0);
+            AddLocation(SingleMapReference.Location.Wrong, false, 0);
+            AddLocation(SingleMapReference.Location.Covetous, false, 0);
+            AddLocation(SingleMapReference.Location.Shame, false, 0);
+            AddLocation(SingleMapReference.Location.Hythloth, false, 0);
+            AddLocation(SingleMapReference.Location.Doom, false, 0);
         }
         #endregion
     }

@@ -119,7 +119,7 @@ namespace Ultima5Redux
                 for (int curCol = xOffset; curCol < xTilesToPrint + xOffset; curCol++)
                 {
                     if (curCol % (xTilesToPrint) == 0) { System.Console.WriteLine(""); }
-                    byte mapTile = map[curRow][curCol];
+                    byte mapTile = map[curCol][curRow];
                     System.Console.Write(Map.GetMapLetter(mapTile));
                 }
             }

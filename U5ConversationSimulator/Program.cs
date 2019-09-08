@@ -11,7 +11,7 @@ namespace U5ConversationSimulator
         {
             World world = new World("C:\\games\\ultima_5_late\\bucden4");
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
-
+            world.OverworldMap.PrintMap();
         }
     }
 }
