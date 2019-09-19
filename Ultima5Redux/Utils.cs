@@ -16,30 +16,55 @@ namespace Ultima5Redux
         /// <param name="numberOfRows"></param>
         /// <param name="numberOfCols"></param>
         /// <returns></returns>
+        //static public byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
+        //{
+        //    byte[][] byteArray = new byte[numberOfRows][];
+        //    for (int i = 0; i < numberOfRows; i++) { byteArray[i] = new byte[numberOfCols]; }
+
+        //    return byteArray;
+        //}
+
         static public byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
         {
-            byte[][] byteArray = new byte[numberOfRows][];
-            for (int i = 0; i < numberOfRows; i++) { byteArray[i] = new byte[numberOfCols]; }
-
-            return byteArray;
+            return Init2DArray<byte>(numberOfRows, numberOfCols);
         }
 
         static public T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
         {
             T[][] theArray = new T[numberOfRows][];
-            for (int i = 0; i < numberOfRows; i++) { theArray[i] = new T[numberOfCols]; }
-
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                theArray[i] = new T[numberOfCols];
+            }
             return theArray;
+        }
 
+        static public T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
+        {
+            T[][] theArray = new T[numberOfRows][];
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                theArray[i] = new T[numberOfCols];
+                for (int j = 0; j < numberOfCols; j++)
+                {
+                    theArray[i][j] = defaultValue;
+                }
+            }
+            return theArray;
         }
 
         static public bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols)
         {
-            bool[][] byteArray = new bool[numberOfRows][];
-            for (int i = 0; i < numberOfRows; i++) { byteArray[i] = new bool[numberOfCols]; }
-
-            return byteArray;
+            return Init2DArray<bool>(numberOfRows, numberOfCols);
         }
+
+        //static public bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols)
+        //{
+        //    bool[][] byteArray = new bool[numberOfRows][];
+        //    for (int i = 0; i < numberOfRows; i++) { byteArray[i] = new bool[numberOfCols]; }
+
+        //    return byteArray;
+        //}
 
         static public T[][] TransposeArray<T>(T[][] ts)
         {
@@ -124,35 +149,6 @@ namespace Ultima5Redux
                 specificContents.Add(fileContents[i]);
             }
             return specificContents;
-
-            //// find the offset in the file
-            //readFile.Seek(offset, SeekOrigin.Begin);
-
-            //BinaryReader mapFileReader = new BinaryReader(readFile);
-
-            //List<byte> theChunksSerial = new List<byte>();
-
-            //byte tile = (byte)0x00;
-
-            //int lengthCounter = 0;
-            //// read the entire file and save in serial bytes
-            //try
-            //{
-            //    while (!(tile = mapFileReader.ReadByte()).Equals(-1))
-            //    {
-            //        // if you set a length, and it has been reached, then you're done and pass it back
-            //        if (length != -1) { if (lengthCounter == length) { return theChunksSerial; } }
-            //        theChunksSerial.Add(tile);
-            //        lengthCounter++;
-            //    }
-            //}
-            //catch (EndOfStreamException)
-            //{
-            //    // all good, I can't get the damn peek to work properly
-            //}
-            //mapFileReader.Close();
-
-            //return theChunksSerial;
         }
 
 

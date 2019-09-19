@@ -113,6 +113,7 @@
     <Compile Include="SmallMapReference.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="TileReferences.cs" />
+    <Compile Include="U5StringRef.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="SmallMap.cs" />
     <Compile Include="LargeMap.cs" />

@@ -48,7 +48,7 @@ namespace Ultima5Redux
         /// <param name="startFloor"></param>
         /// <param name="nFloors"></param>
         /// <returns></returns>
-        private static List<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location, int startFloor, short nFloors, short roomOffset, string name)
+        private List<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location, int startFloor, short nFloors, short roomOffset, string name)
         {
             List<SingleMapReference> mapRefs = new List<SingleMapReference>();
 
@@ -56,7 +56,7 @@ namespace Ultima5Redux
 
             for (int i = 0; i < nFloors; i++)
             {
-                mapRefs.Add(new SingleMapReference(location, startFloor + i, fileOffset + (i * SmallMap.XTILES * SmallMap.YTILES)));
+                mapRefs.Add(new SingleMapReference(location, startFloor + i, fileOffset + (i * SmallMap.XTILES * SmallMap.YTILES), dataRef));
             }
 
             return mapRefs;
@@ -119,6 +119,11 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
+        //public string GetLocationTypeStr(SingleMapReference.Location location)
+        //{
+
+        //}
+
         public int GetNumberOfFloors(SingleMapReference.Location location)
         {
             return nFloorsDictionary[location];
@@ -132,21 +137,107 @@ namespace Ultima5Redux
         static public Point2D GetStartingXYByLocation(SmallMapReference.SingleMapReference.Location location)
         {
             return new Point2D(32 / 2 - 1, 30);
-            //SingleMapReference mapRef = GetSingleMapByLocation(location, 0);
-            //switch (mapRef.MasterFile)
-            //{
-            //    case SingleMapReference.SmallMapMasterFiles.Castle:
-            //        //return dataRef.GetDataChunk(DataOvlReference.DataChunkName.STARTING_XY_CASTLE).GetAsByteList()[mapRef.Id];
-            //        break;
-            //    case SingleMapReference.SmallMapMasterFiles.Towne:
-            //        break;
-            //    case SingleMapReference.SmallMapMasterFiles.Dwelling:
-            //        break;
-            //    case SingleMapReference.SmallMapMasterFiles.Keep:
-            //        break;
-            //}
+        }
 
-           
+        public string GetLocationName(SmallMapReference.SingleMapReference.Location location)
+        {
+            Func<DataOvlReference.LOCATION_STRINGS, string> getLocationNameStr = delegate (DataOvlReference.LOCATION_STRINGS index)
+            {
+                return dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.LOCATION_NAMES, (int)index);
+            };
+
+            // filthy way to convert our more commonly used Location enum to the less used LOCATION_STRINGS
+            // they didn't even bother having them all match, and then decided to leave some out
+            DataOvlReference.LOCATION_STRINGS newLocStrEnum = (DataOvlReference.LOCATION_STRINGS) Enum.Parse(typeof(DataOvlReference.LOCATION_STRINGS), location.ToString());
+
+            // if the DataOVL didn't provide a name, then we are forced to set our own... :(
+            if ((int)newLocStrEnum < 0)
+            {
+                switch (newLocStrEnum)
+                {
+                    case DataOvlReference.LOCATION_STRINGS.Suteks_Hut:
+                        return "SUTEK'S HUT";
+                    case DataOvlReference.LOCATION_STRINGS.SinVraals_Hut:
+                        return "SIN VRAAL'S HUT";
+                    case DataOvlReference.LOCATION_STRINGS.Grendels_Hut:
+                        return "GRENDAL'S HUT";
+                    case DataOvlReference.LOCATION_STRINGS.Lord_Britishs_Castle:
+                        return "LORD BRITISH'S CASTLE";
+                    case DataOvlReference.LOCATION_STRINGS.Palace_of_Blackthorn:
+                        return "PALACE OF BLACKTHORN";
+                    default:
+                        throw new Exception("Ummm asked for a location name and wasn't on the guest list.");
+                }
+            }
+            else
+            {
+                return getLocationNameStr(newLocStrEnum);
+            }
+    }
+
+        public string GetLocationTypeStr(SmallMapReference.SingleMapReference.Location location)
+        {
+            // anon function for quick lookup of strings
+            Func<DataOvlReference.WORLD_STRINGS, string> getTypePlaceStr = delegate (DataOvlReference.WORLD_STRINGS index)
+            {
+                return dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.WORLD, (int)index);
+            };
+
+            switch (location)
+            {
+                case SmallMapReference.SingleMapReference.Location.Lord_Britishs_Castle:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_CASTLE_LB);
+                case SmallMapReference.SingleMapReference.Location.Palace_of_Blackthorn:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_PALACE_B);
+                case SmallMapReference.SingleMapReference.Location.East_Britanny:
+                case SmallMapReference.SingleMapReference.Location.West_Britanny:
+                case SmallMapReference.SingleMapReference.Location.North_Britanny:
+                case SmallMapReference.SingleMapReference.Location.Paws:
+                case SmallMapReference.SingleMapReference.Location.Cove:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_VILLAGE);
+                case SmallMapReference.SingleMapReference.Location.Buccaneers_Den:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_KEEP);
+                case SmallMapReference.SingleMapReference.Location.Moonglow:
+                case SmallMapReference.SingleMapReference.Location.Britain:
+                case SmallMapReference.SingleMapReference.Location.Jhelom:
+                case SmallMapReference.SingleMapReference.Location.Yew:
+                case SmallMapReference.SingleMapReference.Location.Minoc:
+                case SmallMapReference.SingleMapReference.Location.Trinsic:
+                case SmallMapReference.SingleMapReference.Location.Skara_Brae:
+                case SmallMapReference.SingleMapReference.Location.New_Magincia:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_TOWNE);
+                case SmallMapReference.SingleMapReference.Location.Fogsbane:
+                case SmallMapReference.SingleMapReference.Location.Stormcrow:
+                case SmallMapReference.SingleMapReference.Location.Waveguide:
+                case SmallMapReference.SingleMapReference.Location.Greyhaven:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_LIGHTHOUSE);
+                case SmallMapReference.SingleMapReference.Location.Iolos_Hut:
+                //case Location.spektran
+                case SmallMapReference.SingleMapReference.Location.Suteks_Hut:
+                case SmallMapReference.SingleMapReference.Location.SinVraals_Hut:
+                case SmallMapReference.SingleMapReference.Location.Grendels_Hut:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_HUT);
+                case SmallMapReference.SingleMapReference.Location.Ararat:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_RUINS);
+                case SmallMapReference.SingleMapReference.Location.Bordermarch:
+                case SmallMapReference.SingleMapReference.Location.Farthing:
+                case SmallMapReference.SingleMapReference.Location.Windemere:
+                case SmallMapReference.SingleMapReference.Location.Stonegate:
+                case SmallMapReference.SingleMapReference.Location.Lycaeum:
+                case SmallMapReference.SingleMapReference.Location.Empath_Abbey:
+                case SmallMapReference.SingleMapReference.Location.Serpents_Hold:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_KEEP);
+                case SmallMapReference.SingleMapReference.Location.Deceit:
+                case SmallMapReference.SingleMapReference.Location.Despise:
+                case SmallMapReference.SingleMapReference.Location.Destard:
+                case SmallMapReference.SingleMapReference.Location.Wrong:
+                case SmallMapReference.SingleMapReference.Location.Covetous:
+                case SmallMapReference.SingleMapReference.Location.Shame:
+                case SmallMapReference.SingleMapReference.Location.Hythloth:
+                case SmallMapReference.SingleMapReference.Location.Doom:
+                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_DUNGEON);
+            }
+            return "";
         }
 
         /// <summary>

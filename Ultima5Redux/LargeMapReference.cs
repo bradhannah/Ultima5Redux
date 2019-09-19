@@ -27,12 +27,6 @@ namespace Ultima5Redux
         public bool IsMapXYEnterable(Point2D mapXY)
         {
             return LocationXYLocations.ContainsKey(mapXY);
-            //foreach (SmallMapReference.SingleMapReference.Location location in )
-            //    Point2D point in LocationXY.Values)
-            //{
-            //    if (mapXY == point)
-            //        return 
-            //}
         }
 
         public LargeMapReference(DataOvlReference dataRef, SmallMapReference smallMapRef)

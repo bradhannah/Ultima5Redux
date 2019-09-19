@@ -16,11 +16,12 @@ namespace Ultima5Redux
             /// <param name="mapLocation">overall location (ie. Moonglow)</param>
             /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
             /// <param name="fileOffset">location of data offset in map file</param>
-            public SingleMapReference(Location mapLocation, int floor, int fileOffset)
+            public SingleMapReference(Location mapLocation, int floor, int fileOffset, DataOvlReference dataRef)
             {
                 MapLocation = mapLocation;
                 Floor = floor;
                 FileOffset = fileOffset;
+                DataRef = dataRef;
             }
             #endregion
 
@@ -43,6 +44,10 @@ namespace Ultima5Redux
             #endregion
 
             #region Public Properties
+ 
+
+            public DataOvlReference DataRef { get; }
+
             /// <summary>
             /// ID of the map location (used in saved.gam references)
             /// Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced

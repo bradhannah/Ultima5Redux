@@ -21,6 +21,10 @@ namespace Ultima5Redux
         private DataChunks<DataChunkName> dataChunks;
         #endregion
 
+        #region Public Properties
+        public U5StringRef StringReferences { get;  }
+        #endregion
+
         #region Enumerations
         /// <summary>
         /// Chunk names specific to the Data.ovl file
@@ -32,12 +36,28 @@ namespace Ultima5Redux
             LOCATION_NAMES,
             PHRASES_CONVERSATION,
             LOCATIONS_X,
-            LOCATIONS_Y 
-            //STARTING_XY_CASTLE,
-            //STARTING_XY_KEEP,
-            //STARTING_XY_DWELLING,
-            //STARTING_XY_TOWNE,
+            LOCATIONS_Y,
+            TRAVEL,
+            WORLD
         };
+
+        public enum LOCATION_STRINGS
+        {
+            Moonglow=0, Britain=1, Jhelom=2, Yew=3, Minoc=4, Trinsic=5, Skara_Brae=6, New_Magincia=7, Fogsbane=8, Stormcrow=9, Greyhaven=10,
+            Waveguide=11, Iolos_Hut=12, Suteks_Hut=-1, SinVraals_Hut=-2, Grendels_Hut=-3, Lord_Britishs_Castle=-4, Palace_of_Blackthorn=-5, West_Britanny=13,
+            North_Britanny=14, East_Britanny=15,
+            Paws=16, Cove=17, Buccaneers_Den=18, Ararat=19, Bordermarch=20, Farthing=21, Windemere=22, Stonegate=23, Lycaeum=24, Empath_Abbey=25, Serpents_Hold=26,
+            Deceit=27, Despise=28, Destard=29, Wrong=30,
+            Covetous=31, Shame=32, Hythloth=33, Doom=34
+        }
+
+        public enum TRAVEL_STRINGS { UP = 0, DOWN , RIDE, FLY, ROW, NORTH, SOUTH, EAST, WEST, WISH_TO_LEAVE, EXIT_TO, UNDERWORLD, BRITANNIA, NO, BLOCKED, ATTACK, ON_FOOT, BROKEN, NOTHING_TO_ATTACK,
+        MISSED, MURDERED, KLIMB, DASH_ON_FOOT, WHAT }
+
+        public enum WORLD_STRINGS { RIDE = 0, FLY, ROW, HEAD, NORTH, SOUTH, EAST, WEST, HULL_WEAK, ROWING, BREAKING_UP, COLISSION, DOCKED, BLOCKED, OUCH, SLOW_PROG, VERY_SLOW, NORTH_2, SOUTH_2, EAST_2, WEST_2,
+        JUNK_1, ATTACK_DASH, ON_FOOT, NOTHING_TO_ATTACK, NEW_ON_FOOT_NEW, ATTACKED_ENTRANCE, TWO_NEWLINES, BRIT_DAT, DUNGEON_DAT, NEW_WHAT_DUNGEON_NEW, ENTER_SPACE, to_enter_THE_SHRINE_OF, to_enter_HUT, to_enter_SHRINE_CODEX,
+        to_enter_KEEP, to_enter_VILLAGE, to_enter_TOWNE, to_enter_CASTLE, to_enter_CAVE, to_enter_MINE, to_enter_DUNGEON, to_enter_RUINS, to_enter_LIGHTHOUSE, to_enter_PALACE_B, to_enter_CASTLE_LB,
+        WHAT, EARTHQUAKE, ZZZ, BRIT_DAT_2, EXIT_TO_DOS, N, V1_16, SOUND, OFF, ON, WHAT_2, NEW_DQUOTE, PASS_SEEKER, NOT_SACRED_QUEST, PASSAGE_DENIED, ROUGH_SEAS }
 
         /// <summary>
         /// Conversational phrase indexes
@@ -124,7 +144,9 @@ namespace Ultima5Redux
 
 
 
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", 0xa4d, 0x111, 0, DataChunkName.LOCATION_NAMES);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", 0xa4d, 0x111+0x3a, 0, DataChunkName.LOCATION_NAMES);
+            SomeStrings str = dataChunks.GetDataChunk(DataChunkName.LOCATION_NAMES).GetChunkAsStringList();
+
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", 0xa4d, 0x111);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Dungeon names (8 of them)", 0xb5e, 0x3a);
 
@@ -169,7 +191,8 @@ namespace Ultima5Redux
 
             /// the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings (some unknown in the middle)", 0x266a, 0x269);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings (some unknown in the middle)", 0x266a, 0xE1); // tweaked
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Travel Related Strings", 0x266a, 0xE1, 0x00, DataChunkName.TRAVEL); // tweaked
+            SomeStrings someStrings = GetDataChunk(DataChunkName.TRAVEL).GetChunkAsStringList();
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2750, 0x28); // tweaked
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings(some unknown in the middle)", 0x2778, 0x6F); // tweaked
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x27E7, 0x0C); // tweaked
@@ -177,7 +200,8 @@ namespace Ultima5Redux
 
             /// the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x28d3, 0x83);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings (some unknown in the middle)", 0x2956, 0x278);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Sailing, Interface and World related strings", 0x2956, 0x278, 0x00, DataChunkName.WORLD);
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2bce, 0x9a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings (some unknown in the middle)", 0x2c68, 0x3c);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2ca4, 0x9);
@@ -340,31 +364,11 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Anti piracy messages", 0xa3c0, 0x170);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Nil", 0xA530, 0x1820);
             //dataChunks.PrintEverything();
+
+            // load the super simple string lookup 
+            StringReferences = new U5StringRef(this);
         }
 
         #endregion
-
-
-        /*  private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue, DataChunkName dataChunkName)
-          {
-              // create the data chunk 
-              DataChunk chunk = new DataChunk(dataFormat, description, rawData, offset, dataLength, addToValue);
-
-              // all data chunks get added to the chunk list
-              dataChunks.AddDataChunk(chunk);
-
-              // if the datachunk is not classified as unused then add it to the chunk map for quick reference
-              if (dataChunkName != DataChunkName.Unused)
-              {
-                  chunkMap.Add(dataChunkName, chunk);
-              }
-          }
-
-          private void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength, byte addToValue)
-          {
-              AddDataChunk(dataFormat, description, rawData, offset, dataLength, addToValue, DataChunkName.Unused);
-          }
-          */
-
     }
 }
