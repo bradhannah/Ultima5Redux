@@ -8,6 +8,11 @@ namespace Ultima5Redux
         {
             public class NPCSchedule
             {
+                public Point2D GetHardCoord(int index)
+                {
+                    return (new Point2D(Coords[index].X, Coords[index].Y));
+                }
+
                 /// <summary>
                 /// TODO: Need to figure out what these AI types actually mean
                 /// </summary>

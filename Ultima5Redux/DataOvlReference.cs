@@ -38,12 +38,28 @@ namespace Ultima5Redux
             LOCATIONS_X,
             LOCATIONS_Y,
             TRAVEL,
-            WORLD
+            WORLD,
+            CHIT_CHAT,
+            KEYPRESS_COMMANDS
         };
+
+        public enum KEYPRESS_COMMANDS_STRINGS { BUFFER_O = 0, BUFFER_FF, BUFFER_N, SHEETS_IN_IRONS, PASS, BOARD, CAST_DOT, D_WHAT, ENTER_WHAT, FIRE, GET, HOLE_UP, ONLY_IN_BED,
+            IGNITE_TORCH, JIMMY, KLIMB, LOOK, DOT_DOT_DOT, MIX_REAGENTS, NEW_ORDER, OPEN, PUSH_NOT_HER, PUSH, QUIT, READY, SEARCH, SEARCH_DOR, TALK, FUNNY_NO_RESPONSE,
+            TALK_FUNNY_NO_RESPONSE, TALK2, USE_ITEM, VIEW_GEM, YOU_HAVE_NONE, WWHAT, XIT, YELL, ZSTATS_DOT, WHAT_Q, PASS_N, NORTH_N, SOUTH_N, WEST_N, EAST_N, HOLE_UP_AND,
+            N_REPAIR_DOT, SAILS_MUST_BE, LOWERED, HULL_NOW, BANG_N_N, CAMP_N_N, ON_LAND_OR_SHIP, ON_FOOT, HOW_MANY_HOURS, WILT_THOU_WATCH, NO_N_N, YES_N_N, WHO_WILL_GUARD,
+            NONE_POSTED, SET_ACTIVE_PLR, NONE_BANG }
+
+        public enum CHIT_CHAT_STRINGS
+        {
+            DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE, GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q,
+            PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME, MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
+        }
+
 
         public enum LOCATION_STRINGS
         {
-            Moonglow=0, Britain=1, Jhelom=2, Yew=3, Minoc=4, Trinsic=5, Skara_Brae=6, New_Magincia=7, Fogsbane=8, Stormcrow=9, Greyhaven=10,
+            Moonglow=0, Britain=1, Jhelom=2, Yew=3, Minoc=4, Trinsic=5, Skara_Brae=6, New_Magincia=7,
+            Fogsbane =8, Stormcrow=9, Greyhaven=10,
             Waveguide=11, Iolos_Hut=12, Suteks_Hut=-1, SinVraals_Hut=-2, Grendels_Hut=-3, Lord_Britishs_Castle=-4, Palace_of_Blackthorn=-5, West_Britanny=13,
             North_Britanny=14, East_Britanny=15,
             Paws=16, Cove=17, Buccaneers_Den=18, Ararat=19, Bordermarch=20, Farthing=21, Windemere=22, Stonegate=23, Lycaeum=24, Empath_Abbey=25, Serpents_Hold=26,
@@ -192,7 +208,6 @@ namespace Ultima5Redux
             /// the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings (some unknown in the middle)", 0x266a, 0x269);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Travel Related Strings", 0x266a, 0xE1, 0x00, DataChunkName.TRAVEL); // tweaked
-            SomeStrings someStrings = GetDataChunk(DataChunkName.TRAVEL).GetChunkAsStringList();
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2750, 0x28); // tweaked
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings(some unknown in the middle)", 0x2778, 0x6F); // tweaked
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x27E7, 0x0C); // tweaked
@@ -338,7 +353,9 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "movement strings", 0x8e86, 0xed);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Mixing spells", 0x8f74, 0xbe);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "movement strings", 0x9032, 0x30);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "pay fine/bribe, merchant chat", 0x9062, 0x1b2);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "pay fine/bribe, merchant chat", 0x9062, 0x1b2, 0x00, DataChunkName.CHIT_CHAT);
+            SomeStrings someStrings = GetDataChunk(DataChunkName.CHIT_CHAT).GetChunkAsStringList();
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".tlk file list", 0x9216, 0x2e);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Talking strings for ALL npcs", 0x9244, 0x1a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Dirty words", 0x925e, 0xda);
@@ -360,7 +377,9 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character names, perhaps resitance people (hints?)", 0x9d80, 0x220);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Strings related to intro", 0xa020, 0x5a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character creation related strings", 0xa07a, 0xa6);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Responses to key presses", 0xa120, 0x2a0);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Responses to key presses", 0xa120, 0x2a0, 0x00, DataChunkName.KEYPRESS_COMMANDS);
+             someStrings = GetDataChunk(DataChunkName.KEYPRESS_COMMANDS).GetChunkAsStringList();
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Anti piracy messages", 0xa3c0, 0x170);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Nil", 0xA530, 0x1820);
             //dataChunks.PrintEverything();

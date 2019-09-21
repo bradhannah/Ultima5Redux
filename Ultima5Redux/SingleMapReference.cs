@@ -31,10 +31,14 @@ namespace Ultima5Redux
             /// </summary>
             public const int TOTAL_SMALL_MAP_LOCATIONS = 32;
 
-            public enum Location { Britainnia_Underworld = 0x00, Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, Fogsbane, Stormcrow, Greyhaven,
-                Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut, Grendels_Hut, Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny,
-                Paws, Cove, Buccaneers_Den, Ararat, Bordermarch, Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold, Deceit, Despise, Destard, Wrong,
-                Covetous, Shame, Hythloth, Doom, Combat_resting_shrine 
+            public enum Location {
+                Britainnia_Underworld = 0x00,
+                Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, // Town
+                Fogsbane, Stormcrow, Greyhaven, Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut, Grendels_Hut, // Dwelling
+                Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny, Paws, Cove, // Castle
+                Buccaneers_Den, Ararat, Bordermarch, Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold, // Keep
+                Deceit, Despise, Destard, Wrong, Covetous, Shame, Hythloth, Doom, // Dungeons
+                Combat_resting_shrine 
             }
 
             /// <summary>

@@ -427,6 +427,7 @@ namespace Ultima5Redux
                 for (int i = 0; i < NumberOfScriptItems; i++)
                 {
                     ScriptItem item = GetScriptItem(i);
+                    
                     // Code A2 appears to denote the beginning of a new section, so we split it
                     if (item.Command == TalkCommand.StartNewSection)
                     {

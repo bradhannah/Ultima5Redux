@@ -198,7 +198,10 @@ namespace Ultima5Redux
             foreach (byte byteWord in talkRefs[smallMapRef][index])
             {
                 // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
-                if (byteWord == END_OF_SCRIPTLINE_BYTE) {
+                // bh: Sept 21, 2019 - had to add a disgusting hack to account for what appears to be broken
+                //   data or a misunderstood algorithm - they seem to have an end of script line in the middle of a response
+                //   there could be a rule I simply don't undertstand, but for now - i hack 
+                if (byteWord == END_OF_SCRIPTLINE_BYTE && !buildAWord.EndsWith("to give unto charity!" )) {
                     buildAWord += "\n";
                     // we are done with the entire line, so lets add it the script
                     talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, buildAWord);
@@ -223,7 +226,9 @@ namespace Ultima5Redux
                     // it didn't match which means that it's one the special phrases and we will perform a lookup
                     usePhraseLookup = true;
                 }
-                if (tempByte == 119) { Console.Write("");  }
+
+                // Debug code to help track down particular codes being written
+                // if (tempByte == 119) { Console.Write("");  }
                 // it wasn't a special phrase which means that the words are being typed one word at a time
                 if (!usePhraseLookup)
                 {
@@ -237,6 +242,8 @@ namespace Ultima5Redux
                     }
                     //Console.Write((char)tempByte);
                     buildAWord += (char)tempByte;
+                    // Debug code to help track down an NPCs question or response
+                    //if (buildAWord.Contains("to give unto charity")) { Console.Write(""); }
                 }
                 else // usePhraseLookup = true      
                 {

@@ -24,12 +24,12 @@ namespace Ultima5Redux
         public const string KEEP_DAT = "keep.dat";
 
         public const string CASTLE_NPC = "castle.Npc";
-        public const string TOWNE_NPC = "dwelling.Npc";
+        public const string TOWNE_NPC = "towne.Npc";
         public const string DWELLING_NPC = "dwelling.Npc";
         public const string KEEP_NPC = "keep.Npc";
 
         public const string CASTLE_TLK = "castle.tlk";
-        public const string TOWNE_TLK = "dwelling.tlk";
+        public const string TOWNE_TLK = "towne.tlk";
         public const string DWELLING_TLK = "dwelling.tlk";
         public const string KEEP_TLK = "keep.tlk";
 

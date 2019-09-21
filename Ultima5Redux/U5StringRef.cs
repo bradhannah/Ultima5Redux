@@ -19,6 +19,8 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.TRAVEL_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.TRAVEL).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.LOCATION_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAMES).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.WORLD_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORLD).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.CHIT_CHAT_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.CHIT_CHAT).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.KEYPRESS_COMMANDS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.KEYPRESS_COMMANDS).GetChunkAsStringList());
         }
 
         private Dictionary<Type, SomeStrings> strMap;

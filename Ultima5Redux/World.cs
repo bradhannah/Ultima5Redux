@@ -24,7 +24,7 @@ namespace Ultima5Redux
         private CombatMapReference combatMapRef = new CombatMapReference();
         public Look LookRef { get; }
         public Signs SignRef { get; }
-        private NonPlayerCharacters NpcRef { get; }
+        public NonPlayerCharacters NpcRef { get; }
         public DataOvlReference DataOvlRef { get; }
         public TalkScripts TalkScriptsRef { get; }
         public GameState State { get; }

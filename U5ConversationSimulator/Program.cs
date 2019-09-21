@@ -13,6 +13,7 @@ namespace U5ConversationSimulator
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             world.OverworldMap.PrintMap();
             world.SmallMapRef.GetLocationName(SmallMapReference.SingleMapReference.Location.Lord_Britishs_Castle);
+            world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReference.SingleMapReference.Location.Britain);
         }
     }
 }

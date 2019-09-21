@@ -23,6 +23,21 @@ namespace Ultima5Redux
         }
         #endregion
 
+        #region Public Methods
+        public List<NonPlayerCharacter> GetNonPlayerCharactersByLocation(SmallMapReference.SingleMapReference.Location location)
+        {
+            List<NonPlayerCharacter> npcs = new List<NonPlayerCharacter>();
+            foreach (NonPlayerCharacter npc in NPCs)
+            {
+                if (npc.MapReference.MapLocation == location)
+                {
+                    npcs.Add(npc);
+                }
+            }
+            return (npcs);
+        }
+        #endregion
+
         #region Private Variables
         /// <summary>
         /// All of the NPCs
