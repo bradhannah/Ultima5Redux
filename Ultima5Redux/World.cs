@@ -31,6 +31,8 @@ namespace Ultima5Redux
         #endregion
         public LargeMapReference LargeMapRef { get; }
 
+        public Conversation CurrentConversation { get; set; }
+
         public World (string ultima5Directory) : base ()
         {
             u5Directory = ultima5Directory;
@@ -133,6 +135,15 @@ namespace Ultima5Redux
 
         }
 
+        public Conversation CreateConverationAndBegin(NonPlayerCharacters.NonPlayerCharacter npc, Conversation.EnqueuedScriptItem enqueuedScriptItem)
+        {
+            CurrentConversation = new Conversation(npc, State, DataOvlRef);
+
+            //Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
+            CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
+
+            return CurrentConversation;
+        }
 
         private void EnqueuedScriptItem(Conversation conversation)
         {

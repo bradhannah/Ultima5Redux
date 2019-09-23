@@ -62,7 +62,7 @@ namespace Ultima5Redux
         {
             X = x;
             Y = y;
-            Z = Z;
+            Z = z;
         }
     }
 }

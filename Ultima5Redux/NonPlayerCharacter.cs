@@ -31,8 +31,19 @@ namespace Ultima5Redux
             /// <summary>
             /// NPC Type, any other value is a specific character
             /// </summary>
-            public enum NPCDialogTypeEnum { Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
-                InnKeeper = 0x88, UnknownX85 = 0x85, UnknownX86 = 0x86, Unknown = 0xFF };
+            public enum NPCDialogTypeEnum
+            {
+                Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
+                InnKeeper = 0x88, UnknownX85 = 0x85, UnknownX86 = 0x86, Unknown = 0xFF
+                    // unknowns may be crown and sandlewood box
+            };
+            public enum NPCKeySpriteEnum
+            {
+                Custom = -1, Guard = 368, Merchant = 340, Healer = 320,
+                UnknownX85 = 368, UnknownX86 = 368, Unknown = 0xFF
+            };
+
+            // based on Xu4 AI = (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
 
             #endregion
 
@@ -115,6 +126,34 @@ namespace Ultima5Redux
                         }
                     }
                     return NPCDialogTypeEnum.Custom;
+                }
+            }
+
+            public int NPCKeySprite
+            {
+                get
+                {
+                    switch (this.NPCType)
+                    {
+                        case NPCDialogTypeEnum.Custom:
+                            return (int)NPCKeySpriteEnum.Guard;
+                        case NPCDialogTypeEnum.Guard:
+                            return (int)NPCKeySpriteEnum.Guard;
+                        case NPCDialogTypeEnum.WeaponsDealer:
+                        case NPCDialogTypeEnum.Barkeeper:
+                        case NPCDialogTypeEnum.HorseSeller:
+                        case NPCDialogTypeEnum.ShipSeller:
+                        case NPCDialogTypeEnum.InnKeeper:
+                            return (int)NPCKeySpriteEnum.Merchant;
+                        case NPCDialogTypeEnum.Healer:
+                            return (int)NPCKeySpriteEnum.Healer;
+                        case NPCDialogTypeEnum.UnknownX85:
+                        case NPCDialogTypeEnum.UnknownX86:
+                        case NPCDialogTypeEnum.Unknown:
+                            return (int)NPCKeySpriteEnum.Guard;
+                        default:
+                            throw new Exception("Unrecognized NPC type");
+                    }
                 }
             }
 
