@@ -410,7 +410,22 @@ namespace Ultima5Redux
                 scriptItems.Add(scriptItem);
             }
 
+            public void InsertScriptItemAtFront(ScriptItem scriptItem)
+            {
+                scriptItems.Insert(0, scriptItem);
+            }
 
+            public void EncloseInQuotes()
+            {
+                if (GetScriptItem(0).Command == TalkCommand.PlainString && GetScriptItem(0).Str != "\"")
+                {
+                    InsertScriptItemAtFront(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
+                }
+                if (GetScriptItem(NumberOfScriptItems - 1).Command == TalkCommand.PlainString && GetScriptItem(NumberOfScriptItems - 1).Str != "\"")
+                {
+                    AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
+                }
+            }
 
             /// <summary>
             /// Get a script item based on an index into the list

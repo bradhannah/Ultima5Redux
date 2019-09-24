@@ -183,6 +183,10 @@ namespace Ultima5Redux
                     }
                     return true;
                 }
+                set
+                {
+                    gameStateRef.SetNpcHasMetAvatar(this, value);
+                }
             }
             #endregion
 

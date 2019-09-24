@@ -158,6 +158,16 @@ namespace Ultima5Redux
         {
             return npcIsMetArray[npc.MapReference.Id][npc.DialogIndex];
         }
+
+        /// <summary>
+        /// DEBUG FUNCTION
+        /// </summary>
+        /// <param name="npc"></param>
+        public void SetNpcHasMetAvatar(NonPlayerCharacters.NonPlayerCharacter npc, bool hasMet)
+        {
+            npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = hasMet;
+        }
+
         #endregion
     }
 }

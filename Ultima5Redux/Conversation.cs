@@ -489,7 +489,7 @@ namespace Ultima5Redux
                         unrecognizedLine.AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.UserInputNotRecognized));
                         await ProcessLine(unrecognizedLine);
                     }
-                    
+
                     // one of the ProcessLine method calls told us that we are done talking
                     // this is okay to quit anytime because we have already populated the queues with the final commands
                     if (ConversationEnded)
@@ -513,16 +513,23 @@ namespace Ultima5Redux
 
                 /// If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
-                if (conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting && currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName)
-                && !npcKnowsAvatar)
+                // OR if the Name line contains an IfElseKnowsName (#Eb)
+                if ((!npcKnowsAvatar && conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting) && 
+                    (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) || 
+                    script.GetScriptLine(TalkScript.TalkConstants.Name).ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
                 {
                     // randomly add an introduction of the Avatar since they haven't met him
-                    if (gameStateRef.OneInXOdds(4))
+                    if (gameStateRef.OneInXOdds(2) || true)
                     {
                         conversationOrder.Add((int)TalkScript.TalkConstants.Name);
+
+                        script.GetScriptLine(TalkScript.TalkConstants.Name).InsertScriptItemAtFront(
+                            new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "I am called "));
+                        script.GetScriptLine(TalkScript.TalkConstants.Name).EncloseInQuotes();
                         conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
                     }
                 }
+                // if in label && next line include <AvatarName>, then skip label
 
                 const int STARTING_INDEX_FOR_LABEL = 0;
 
@@ -536,6 +543,15 @@ namespace Ultima5Redux
                     
                     // get the label object
                     TalkScript.ScriptTalkLabel scriptLabel = script.TalkLabels.GetScriptLabel(nLabel);
+
+                    // Sept 23, 2019 - if we are in a label, but don't know the Avatar's name, then we just move on
+                    // if we don't then (#Eb) can expect an answer to a question that we never show the user because
+                    // they don't know the Avatar
+                    if (scriptLabel.InitialLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npcKnowsAvatar)
+                    {
+                        nConversationIndex++;
+                        continue;
+                    }
 
                     // we ar going through each of the line sections, but are skipping the first one since we know it is just a label
                     // definition
