@@ -535,7 +535,7 @@ namespace Ultima5Redux
                     Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS-1, "Label number must be between 0 and 9");
                     
                     // get the label object
-                    TalkScript.ScriptTalkLabel scriptLabel = script.TalkLabels.Labels[nLabel];
+                    TalkScript.ScriptTalkLabel scriptLabel = script.TalkLabels.GetScriptLabel(nLabel);
 
                     // we ar going through each of the line sections, but are skipping the first one since we know it is just a label
                     // definition

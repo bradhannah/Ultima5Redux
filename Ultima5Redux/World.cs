@@ -84,8 +84,9 @@ namespace Ultima5Redux
             NpcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
 
             //Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
+//            Conversation convo = new Conversation(NpcRef.NPCs[296], State, DataOvlRef); // Gwenno
             // 19 = Margarett
-
+ //           NpcRef.NPCs[296].Script.PrintComprehensiveScript();
 
             int count = 0;
             if (false)
@@ -110,7 +111,7 @@ namespace Ultima5Redux
             }
 
             // Scally
-            Conversation convo = new Conversation(NpcRef.NPCs[0xe6], State, DataOvlRef);
+            //Conversation convo = new Conversation(NpcRef.NPCs[0xe6], State, DataOvlRef);
 
             // Bidney
             //Conversation convo = new Conversation(NpcRef.NPCs[0xe8], State);
@@ -124,10 +125,10 @@ namespace Ultima5Redux
             // Tierra 
             //Conversation convo = new Conversation(NpcRef.NPCs[0xeb], State, DataOvlRef);
 
-            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
-            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
+//            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
+//            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
 
-            //convo.BeginConversation();
+           // convo.BeginConversation();
 
             //0x48 or 0x28
             //Console.WriteLine("Shutting down... Hit any key...");
@@ -145,74 +146,7 @@ namespace Ultima5Redux
             return CurrentConversation;
         }
 
-        private void EnqueuedScriptItem(Conversation conversation)
-        {
-            TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
-            string userResponse;
-            switch (item.Command)
-            {
-                case TalkScript.TalkCommand.PlainString:
-                    Console.Write(item.Str);
-                    break;
-                case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
-                    Console.Write(conversation.GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOUR_INTEREST));
-                    userResponse = Console.ReadLine();
-                    conversation.AddUserResponse(userResponse);
-                    break;
-                case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
-                    Console.Write(conversation.GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOU_RESPOND));
-                    userResponse = Console.ReadLine();
-                    conversation.AddUserResponse(userResponse);
-                    break;
-                case TalkScript.TalkCommand.AskName:
-                    userResponse = Console.ReadLine();
-                    conversation.AddUserResponse(userResponse);
-                    break;
-                case TalkScript.TalkCommand.CallGuards:
-                    //
-                    break;
-                case TalkScript.TalkCommand.Change:
-                    //
-                    break;
-                case TalkScript.TalkCommand.EndCoversation:
-                    // 
-                    break;
-                case TalkScript.TalkCommand.Gold:
-                    //
-                    break;
-                case TalkScript.TalkCommand.JoinParty:
-                    State.AddMemberToParty(conversation.Npc);
-                    break;
-                case TalkScript.TalkCommand.KarmaMinusOne:
-                    //
-                    State.Karma-=1;
-                    break;
-                case TalkScript.TalkCommand.KarmaPlusOne:
-                    State.Karma+=1;
-                    break;
-                case TalkScript.TalkCommand.KeyWait:
-                    Console.Write("...");
-                    Console.ReadKey();
-                    break;
-                case TalkScript.TalkCommand.Pause:
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Console.Write(".");
-                        Thread.Sleep(500);
-                    }
-                    Console.WriteLine("");
-                    break;
-                case TalkScript.TalkCommand.Rune:
-                case TalkScript.TalkCommand.NewLine:
-                case TalkScript.TalkCommand.DefineLabel:
-                case TalkScript.TalkCommand.IfElseKnowsName:
-                case TalkScript.TalkCommand.AvatarsName:
-                    throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
-                default:
-                    throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
-                    //Console.Write("<" + item.Command.ToString() + ">");
-            }
-        }
+    
 
     }
 }

@@ -17,6 +17,18 @@ namespace Ultima5Redux
             /// </summary>
             public List<ScriptTalkLabel> Labels { get; }
 
+            public ScriptTalkLabel GetScriptLabel(int nLabel)
+            {
+                foreach (ScriptTalkLabel scriptLabel in Labels)
+                {
+                    if (scriptLabel.LabelNum == nLabel)
+                    {
+                        return scriptLabel;
+                    }
+                }
+                throw new Exception("Asked for a label " + nLabel.ToString() + " that doesn't exist...");
+            }
+
             /// <summary>
             /// Add a single ScriptTalkLabel
             /// </summary>
