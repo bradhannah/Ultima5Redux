@@ -61,29 +61,25 @@ namespace Ultima5Redux.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [
-        /// {
-        ///   &quot;Index&quot;: 0,
-        ///   &quot;Name&quot;: &quot;Explosion&quot;,
-        ///   &quot;Description&quot;: &quot;&quot;,
-        ///   &quot;IsWalking_Passable&quot;: true,
-        ///   &quot;IsBoat_Passable&quot;: true,
-        ///   &quot;IsSkiff_Passable&quot;: true,
-        ///   &quot;IsCarpet_Passable&quot;: true,
-        ///   &quot;IsPartOfAnimation&quot;: false,
-        ///   &quot;AnimationIndex&quot;: 0,
-        ///   &quot;IsUpright&quot;: true,
-        ///   &quot;FlatTileSubstitionIndex&quot;: 5,
-        ///   &quot;FlatTileSubstitionName&quot;: &quot;Grass&quot;,
-        ///   &quot;IsEnemy&quot;: false,
-        ///   &quot;IsNPC&quot;: false,
-        ///   &quot;IsBuilding&quot;: false
-        /// },
-        /// {
-        ///   &quot;Index&quot;: 1,
-        ///   &quot;Name&quot;: &quot;Water1&quot;,
-        ///   &quot;Description&quot;: &quot;&quot;,
-        ///   &quot;IsWalking_Passable&quot;: false [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///   &quot;0&quot;: {
+        ///      &quot;Name&quot;: &quot;Explosion&quot;,
+        ///      &quot;Description&quot;: &quot;&quot;,
+        ///      &quot;IsWalking_Passable&quot;: true,
+        ///      &quot;IsBoat_Passable&quot;: true,
+        ///      &quot;IsSkiff_Passable&quot;: true,
+        ///      &quot;IsCarpet_Passable&quot;: true,
+        ///      &quot;IsKlimable&quot;: false,
+        ///      &quot;IsOpenable&quot;: false,
+        ///      &quot;SpeedFactor&quot;: 1,
+        ///      &quot;IsPartOfAnimation&quot;: false,
+        ///      &quot;AnimationIndex&quot;: 0,
+        ///      &quot;IsUpright&quot;: true,
+        ///      &quot;FlatTileSubstitionIndex&quot;: 5,
+        ///      &quot;FlatTileSubstitionName&quot;: &quot;Grass&quot;,
+        ///      &quot;IsEnemy&quot;: false,
+        ///      &quot;IsNPC&quot;: false,
+        ///      &quot;IsBuil [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TileData {
             get {

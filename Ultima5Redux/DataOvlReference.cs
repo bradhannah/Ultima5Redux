@@ -40,8 +40,13 @@ namespace Ultima5Redux
             TRAVEL,
             WORLD,
             CHIT_CHAT,
-            KEYPRESS_COMMANDS
+            KEYPRESS_COMMANDS,
+            VISION1,
+            VISION2
         };
+
+        public enum VISION1_STRINGS { DEATH_VISION = 0, STRANGE_VISION }
+        public enum VISION2_STRINGS {THOU_DOST_SEE, YOU_SEE_DARKNESS, YOU_SEE }
 
         public enum KEYPRESS_COMMANDS_STRINGS { BUFFER_O = 0, BUFFER_FF, BUFFER_N, SHEETS_IN_IRONS, PASS, BOARD, CAST_DOT, D_WHAT, ENTER_WHAT, FIRE, GET, HOLE_UP, ONLY_IN_BED,
             IGNITE_TORCH, JIMMY, KLIMB, LOOK, DOT_DOT_DOT, MIX_REAGENTS, NEW_ORDER, OPEN, PUSH_NOT_HER, PUSH, QUIT, READY, SEARCH, SEARCH_DOR, TALK, FUNNY_NO_RESPONSE,
@@ -323,8 +328,8 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Look2.dat (x2)", 0x7384, 0x14);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs?", 0x7398, 0x15e);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs.dat (x2)", 0x74f6, 0x14);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x752c, 0x1e4);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22, 0x00, DataChunkName.VISION1);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x752c, 0x1e4, 0x00, DataChunkName.VISION2);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Drinking Strings", 0x76ef, 0x71);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Level up apparition strings", 0x7760, 0x94);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Karma.dat (x2)", 0x77f4, 0x14);

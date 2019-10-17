@@ -20,7 +20,7 @@ namespace Ultima5Redux
         [DataMember]
         public string Description;
         [DataMember]
-        public bool IsWalking_Passable;
+        public bool IsWalking_Passable; 
         [DataMember]
         public bool IsBoat_Passable;
         [DataMember]
@@ -45,8 +45,19 @@ namespace Ultima5Redux
         public bool IsNPC;
         [DataMember]
         public bool IsBuilding;
+        [DataMember]
+        public bool DontDraw;
+
+        public bool IsStaircase()
+        {
+            return (IsStaircase(Index));
+        }
+
+        static public bool IsStaircase(int nSprite)
+        {
+            return (nSprite >= 196 && nSprite <= 199);
+        }
 
 
-     
     }
 }

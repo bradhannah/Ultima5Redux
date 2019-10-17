@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
@@ -27,6 +28,8 @@ namespace Ultima5Redux
 
         private Dictionary<SingleMapReference.Location, bool> smallMapBasementDictionary = new Dictionary<SingleMapReference.Location, bool>();
         private Dictionary<SingleMapReference.Location, int> nFloorsDictionary = new Dictionary<SingleMapReference.Location, int>();
+
+
 
         /// <summary>
         /// Data OVL reference used for grabbing a lot of different data 
@@ -119,10 +122,7 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
-        //public string GetLocationTypeStr(SingleMapReference.Location location)
-        //{
-
-        //}
+     
 
         public int GetNumberOfFloors(SingleMapReference.Location location)
         {

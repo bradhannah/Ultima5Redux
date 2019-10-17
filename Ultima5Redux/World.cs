@@ -13,7 +13,9 @@ namespace Ultima5Redux
     {
         #region Private Variables
 
-        private List<SmallMap> smallMaps = new List<SmallMap>();
+        //private List<SmallMap> smallMaps = new List<SmallMap>();
+        public SmallMaps AllSmallMaps { get; }
+
         public LargeMap OverworldMap { get; }
         public LargeMap UnderworldMap { get; }
 
@@ -53,14 +55,16 @@ namespace Ultima5Redux
 
             LargeMapRef = new LargeMapReference(DataOvlRef, SmallMapRef);
 
+            AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory);
+
             // build all the small maps from the Small Map reference
-            foreach (SmallMapReference.SingleMapReference mapRef in SmallMapRef.MapReferenceList)
-            {
-                // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(u5Directory, mapRef);
-                smallMaps.Add(smallMap);
-                //U5Map.PrintMapSection(smallMap.RawMap, 0, 0, 32, 32);
-            }
+            //foreach (SmallMapReference.SingleMapReference mapRef in SmallMapRef.MapReferenceList)
+            //{
+            //    // now I can go through each and every reference
+            //    SmallMap smallMap = new SmallMap(u5Directory, mapRef);
+            //    smallMaps.Add(smallMap);
+            //    //U5Map.PrintMapSection(smallMap.RawMap, 0, 0, 32, 32);
+            //}
 
             // build all combat maps from the Combat Map References
             foreach (CombatMapReference.SingleCombatMapReference combatMapRef in combatMapRef.MapReferenceList)

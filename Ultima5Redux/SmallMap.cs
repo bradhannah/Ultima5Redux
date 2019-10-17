@@ -13,6 +13,9 @@ namespace Ultima5Redux
         public const int XTILES = 32;
         public const int YTILES = 32;
 
+        public SmallMapReference.SingleMapReference.Location MapLocation { get { return MapRef.MapLocation; } }
+        public int MapFloor { get { return MapRef.Floor; } }
+
         private SmallMapReference.SingleMapReference MapRef;
 
         /// <summary>

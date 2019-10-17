@@ -17,10 +17,20 @@ namespace Ultima5Redux
     public class TileReferences
     {
         public Dictionary<int, TileReference> TileReferenceDictionary { get; }
+        public Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } = new Dictionary<string, TileReference>(512);
 
         public TileReferences()
         {
             TileReferenceDictionary = TileReferences.Load();
+
+            //foreach (TileReference tileRef in TileReferenceDictionary)
+            for (int i = 0; i < TileReferenceDictionary.Count; i++)
+            {
+                TileReference tileRef = TileReferenceDictionary[i];
+                // this is gross, but I can't seem to get the index number in any other way...
+                tileRef.Index = i;
+                TileReferenceByStringDictionary.Add(tileRef.Name, tileRef);
+            }
         }
 
         static public Dictionary<int, TileReference> Load()

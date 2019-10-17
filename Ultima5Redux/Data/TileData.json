@@ -16,7 +16,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "1": {
       "Name": "Water1",
@@ -35,7 +36,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "2": {
       "Name": "Water2",
@@ -54,7 +56,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "3": {
       "Name": "WaterCoast",
@@ -73,7 +76,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "4": {
       "Name": "Swamp",
@@ -92,7 +96,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "5": {
       "Name": "Grass",
@@ -111,7 +116,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "6": {
       "Name": "Forest1",
@@ -130,7 +136,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "7": {
       "Name": "Desert1",
@@ -149,7 +156,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "8": {
       "Name": "Forest2",
@@ -168,7 +176,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "9": {
       "Name": "Forest3",
@@ -187,7 +196,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "10": {
       "Name": "Forest4",
@@ -206,7 +216,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "11": {
       "Name": "Hills1",
@@ -225,7 +236,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "12": {
       "Name": "SmallMountains",
@@ -244,7 +256,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "13": {
       "Name": "TallMountains",
@@ -263,7 +276,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "14": {
       "Name": "LeftHills2",
@@ -282,7 +296,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "15": {
       "Name": "RightHills2",
@@ -301,7 +316,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "16": {
       "Name": "Hut",
@@ -320,7 +336,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "17": {
       "Name": "Codex",
@@ -339,7 +356,8 @@
       "FlatTileSubstitionName": "Path7",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "18": {
       "Name": "Keep",
@@ -358,7 +376,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "19": {
       "Name": "Village",
@@ -377,7 +396,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "20": {
       "Name": "SmallCastle",
@@ -396,7 +416,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "21": {
       "Name": "LargeCastle",
@@ -411,11 +432,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 5,
-      "FlatTileSubstitionName": "Grass",
+      "FlatTileSubstitionIndex": -1,
+      "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "22": {
       "Name": "CaveEntrance",
@@ -430,11 +452,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 11,
+      "FlatTileSubstitionName": "Hills1",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "23": {
       "Name": "MineEntrance",
@@ -449,11 +472,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 11,
+      "FlatTileSubstitionName": "Hills1",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "24": {
       "Name": "DoomEntrance",
@@ -468,11 +492,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 11,
+      "FlatTileSubstitionName": "Hills1",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "25": {
       "Name": "Shrine",
@@ -491,7 +516,8 @@
       "FlatTileSubstitionName": "Path7",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "26": {
       "Name": "BrokenShrine",
@@ -510,7 +536,8 @@
       "FlatTileSubstitionName": "Path7",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "27": {
       "Name": "Lighthouse",
@@ -529,7 +556,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "28": {
       "Name": "Oasis",
@@ -548,7 +576,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "29": {
       "Name": "Bridge",
@@ -567,7 +596,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "30": {
       "Name": "LeftDesert2",
@@ -586,7 +616,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "31": {
       "Name": "RightDesert2",
@@ -605,7 +636,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "32": {
       "Name": "Path1",
@@ -624,7 +656,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "33": {
       "Name": "Path2",
@@ -643,7 +676,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "34": {
       "Name": "Path3",
@@ -662,7 +696,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "35": {
       "Name": "Path4",
@@ -681,7 +716,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "36": {
       "Name": "Path5",
@@ -700,7 +736,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "37": {
       "Name": "Path6",
@@ -719,7 +756,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "38": {
       "Name": "Path7",
@@ -738,7 +776,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "39": {
       "Name": "Roof1",
@@ -757,7 +796,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "40": {
       "Name": "Roof2",
@@ -776,7 +816,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "41": {
       "Name": "CrystalBall",
@@ -795,7 +836,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "42": {
       "Name": "LighthouseLight",
@@ -814,7 +856,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "43": {
       "Name": "DeadTree",
@@ -829,11 +872,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 68,
-      "FlatTileSubstitionName": "BrickFloor",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "44": {
       "Name": "PlowedField",
@@ -852,7 +896,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "45": {
       "Name": "WheatInField",
@@ -871,7 +916,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "46": {
       "Name": "Tree",
@@ -890,7 +936,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "47": {
       "Name": "Cactus",
@@ -909,7 +956,8 @@
       "FlatTileSubstitionName": "Desert1",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "48": {
       "Name": "OutsidePath1",
@@ -928,7 +976,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "49": {
       "Name": "OutsidePath2",
@@ -947,7 +996,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "50": {
       "Name": "OutsidePath3",
@@ -966,7 +1016,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "51": {
       "Name": "OutsidePath4",
@@ -985,7 +1036,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "52": {
       "Name": "OutsideWaterCoast1",
@@ -1004,7 +1056,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "53": {
       "Name": "OutsideWaterCoast2",
@@ -1023,7 +1076,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "54": {
       "Name": "OutsideWaterCoast3",
@@ -1042,7 +1096,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "55": {
       "Name": "OutsideWaterCoast4",
@@ -1061,7 +1116,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "56": {
       "Name": "CastleGargoyle",
@@ -1080,7 +1136,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "57": {
       "Name": "EvilCastleEntrance",
@@ -1099,7 +1156,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "58": {
       "Name": "CastleBritian1",
@@ -1114,11 +1172,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": true
    },
    "59": {
       "Name": "CastleBritian2",
@@ -1133,11 +1192,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": true
    },
    "60": {
       "Name": "CastleBritian3",
@@ -1152,11 +1212,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": true
    },
    "61": {
       "Name": "CastleBritian4",
@@ -1171,11 +1232,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": true
    },
    "62": {
       "Name": "CastleBritianEntrace",
@@ -1189,12 +1251,13 @@
       "SpeedFactor": 1,
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
-      "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "IsUpright": true,
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": true
+      "IsBuilding": true,
+      "DontDraw": false
    },
    "63": {
       "Name": "CastleBritian5",
@@ -1209,11 +1272,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": true
    },
    "64": {
       "Name": "WoodFloor1",
@@ -1232,7 +1296,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "65": {
       "Name": "Lecturn",
@@ -1251,7 +1316,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "66": {
       "Name": "WoodFloorShipTie",
@@ -1270,7 +1336,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "67": {
       "Name": "WoodFloorShipEdge",
@@ -1289,7 +1356,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "68": {
       "Name": "BrickFloor",
@@ -1308,7 +1376,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "69": {
       "Name": "MetalFloor",
@@ -1327,7 +1396,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "70": {
       "Name": "DryStone",
@@ -1342,11 +1412,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "71": {
       "Name": "Dock",
@@ -1361,11 +1432,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 1,
-      "FlatTileSubstitionName": "Water",
+      "FlatTileSubstitionIndex": -1,
+      "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "72": {
       "Name": "LeftWoodFloor2",
@@ -1384,7 +1456,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "73": {
       "Name": "RightWoodFloor2",
@@ -1403,7 +1476,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "74": {
       "Name": "StoneCrossWindow",
@@ -1422,7 +1496,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "75": {
       "Name": "StoneGlassWindow",
@@ -1441,7 +1516,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "76": {
       "Name": "SmallRockWall",
@@ -1455,12 +1531,13 @@
       "SpeedFactor": 1,
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
-      "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "IsUpright": true,
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "77": {
       "Name": "LargeRockWall",
@@ -1479,7 +1556,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "78": {
       "Name": "StoneBrickWallSecret",
@@ -1498,7 +1576,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "79": {
       "Name": "StoneBrickWall",
@@ -1517,7 +1596,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "80": {
       "Name": "CastleParapet1",
@@ -1536,7 +1616,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "81": {
       "Name": "CastleParapet2",
@@ -1555,7 +1636,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "82": {
       "Name": "CastleParapet3",
@@ -1574,7 +1656,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "83": {
       "Name": "CastleParapet4",
@@ -1593,7 +1676,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "84": {
       "Name": "CastleParapet5",
@@ -1612,7 +1696,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "85": {
       "Name": "CastleParapet6",
@@ -1631,7 +1716,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "86": {
       "Name": "CastleParapet7",
@@ -1650,7 +1736,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "87": {
       "Name": "CastleParapet8",
@@ -1669,7 +1756,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "88": {
       "Name": "Anvil",
@@ -1688,7 +1776,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "89": {
       "Name": "Telescope",
@@ -1707,7 +1796,8 @@
       "FlatTileSubstitionName": "MetalFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "90": {
       "Name": "Bookcase",
@@ -1726,7 +1816,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "91": {
       "Name": "Plant",
@@ -1745,7 +1836,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "92": {
       "Name": "BookcaseLeft",
@@ -1764,7 +1856,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "93": {
       "Name": "BookcaseRight",
@@ -1783,7 +1876,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "94": {
       "Name": "CodexAngelLeft",
@@ -1798,11 +1892,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 1,
+      "FlatTileSubstitionIndex": 5,
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "95": {
       "Name": "CodexAngelRight",
@@ -1817,11 +1912,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 1,
+      "FlatTileSubstitionIndex": 5,
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "96": {
       "Name": "WaterStream1",
@@ -1840,7 +1936,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "97": {
       "Name": "WaterStream2",
@@ -1859,7 +1956,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "98": {
       "Name": "WaterStream3",
@@ -1878,7 +1976,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "99": {
       "Name": "WaterStream4",
@@ -1897,7 +1996,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "100": {
       "Name": "WaterStream5",
@@ -1916,7 +2016,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "101": {
       "Name": "WaterStream6",
@@ -1935,7 +2036,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "102": {
       "Name": "WaterStream7",
@@ -1954,7 +2056,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "103": {
       "Name": "WaterStream8",
@@ -1973,7 +2076,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "104": {
       "Name": "WaterStream9",
@@ -1992,7 +2096,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "105": {
       "Name": "WaterStream10",
@@ -2011,7 +2116,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "106": {
       "Name": "TrollBridgeHoriz",
@@ -2030,7 +2136,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "107": {
       "Name": "TrollBridgeVert",
@@ -2049,7 +2156,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "108": {
       "Name": "WaterStream11",
@@ -2068,7 +2176,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "109": {
       "Name": "WaterStream12",
@@ -2087,7 +2196,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "110": {
       "Name": "WaterStream13",
@@ -2106,7 +2216,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "111": {
       "Name": "WaterStream14",
@@ -2125,7 +2236,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "112": {
       "Name": "ShadowlordBoundary1",
@@ -2144,7 +2256,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "113": {
       "Name": "ShadowlordBoundary2",
@@ -2163,7 +2276,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "114": {
       "Name": "ShadowlordBoundary3",
@@ -2182,7 +2296,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "115": {
       "Name": "ShadowlordBoundary4",
@@ -2201,7 +2316,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "116": {
       "Name": "ShadowlordBoundary5",
@@ -2220,7 +2336,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "117": {
       "Name": "ShadowlordBoundary6",
@@ -2239,7 +2356,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "118": {
       "Name": "ShadowlordBoundary7",
@@ -2258,7 +2376,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "119": {
       "Name": "ShadowlordBoundary8",
@@ -2277,7 +2396,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "120": {
       "Name": "ShadowlordBoundary9",
@@ -2296,7 +2416,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "121": {
       "Name": "ShadowlordBoundary10",
@@ -2315,7 +2436,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "122": {
       "Name": "ShadowlordBoundary11",
@@ -2334,7 +2456,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "123": {
       "Name": "ShadowlordBoundary12",
@@ -2353,7 +2476,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "124": {
       "Name": "ShadowlordBoundary13",
@@ -2372,7 +2496,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "125": {
       "Name": "ShadowlordBoundary14",
@@ -2391,7 +2516,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "126": {
       "Name": "ShadowlordBoundary15",
@@ -2410,7 +2536,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "127": {
       "Name": "ShadowlordBoundary16",
@@ -2429,10 +2556,11 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "128": {
-      "Name": "TortureTable1",
+      "Name": "TortureChair1",
       "Description": "",
       "IsWalking_Passable": false,
       "IsBoat_Passable": false,
@@ -2448,7 +2576,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "129": {
       "Name": "TortureTable2",
@@ -2467,7 +2596,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "130": {
       "Name": "TortureTableWithBody1",
@@ -2486,7 +2616,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "131": {
       "Name": "TortureTableWithBody2",
@@ -2505,7 +2636,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "132": {
       "Name": "Stocks",
@@ -2524,7 +2656,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "133": {
       "Name": "Manacles",
@@ -2543,7 +2676,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "134": {
       "Name": "Grate",
@@ -2562,10 +2696,11 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "135": {
-      "Name": "BrickWallWithRedBrick",
+      "Name": "BrickWallArchway",
       "Description": "",
       "IsWalking_Passable": true,
       "IsBoat_Passable": false,
@@ -2577,14 +2712,15 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "136": {
-      "Name": "Statue",
+      "Name": "CannonBalls",
       "Description": "",
       "IsWalking_Passable": false,
       "IsBoat_Passable": false,
@@ -2596,11 +2732,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 64,
+      "FlatTileSubstitionName": "WoodFloor1",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "137": {
       "Name": "SimpleCross",
@@ -2619,7 +2756,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "138": {
       "Name": "StoneHeadstone",
@@ -2638,7 +2776,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "139": {
       "Name": "TortureChair",
@@ -2657,7 +2796,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "140": {
       "Name": "BrickFloorHole",
@@ -2676,7 +2816,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "141": {
       "Name": "Harpsichord",
@@ -2695,7 +2836,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "142": {
       "Name": "Guillotine",
@@ -2714,7 +2856,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "143": {
       "Name": "Lava",
@@ -2733,7 +2876,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "144": {
       "Name": "ChairBackForward",
@@ -2752,7 +2896,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "145": {
       "Name": "ChairBackLeft",
@@ -2771,7 +2916,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "146": {
       "Name": "ChairBackBack",
@@ -2790,7 +2936,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "147": {
       "Name": "ChairBackRight",
@@ -2809,7 +2956,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "148": {
       "Name": "TableLeft",
@@ -2828,7 +2976,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "149": {
       "Name": "TableMiddle",
@@ -2847,7 +2996,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "150": {
       "Name": "TableRight",
@@ -2866,7 +3016,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "151": {
       "Name": "MagicLockDoor",
@@ -2885,7 +3036,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "152": {
       "Name": "MagicLockDoorWithView",
@@ -2904,7 +3056,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "153": {
       "Name": "Portcullis",
@@ -2923,7 +3076,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "154": {
       "Name": "TableFoodTop",
@@ -2942,7 +3096,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "155": {
       "Name": "TableFoodBottom",
@@ -2961,7 +3116,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "156": {
       "Name": "TableFoodBoth",
@@ -2980,7 +3136,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "157": {
       "Name": "Mirror",
@@ -2999,7 +3156,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "158": {
       "Name": "MirrorAvatar",
@@ -3018,7 +3176,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "159": {
       "Name": "MirrorBroken",
@@ -3037,7 +3196,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "160": {
       "Name": "Sign",
@@ -3056,7 +3216,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "161": {
       "Name": "Well",
@@ -3075,7 +3236,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "162": {
       "Name": "Fence1",
@@ -3094,7 +3256,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "163": {
       "Name": "FireLogs",
@@ -3113,7 +3276,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "164": {
       "Name": "SmallSign",
@@ -3132,7 +3296,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "165": {
       "Name": "EndTable",
@@ -3151,7 +3316,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "166": {
       "Name": "Barrel",
@@ -3170,7 +3336,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "167": {
       "Name": "Cask",
@@ -3189,7 +3356,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "168": {
       "Name": "Vanity",
@@ -3208,7 +3376,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "169": {
       "Name": "WaterJugTable",
@@ -3227,7 +3396,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "170": {
       "Name": "Carpet",
@@ -3241,12 +3411,13 @@
       "SpeedFactor": 1,
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
-      "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "IsUpright": true,
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "171": {
       "Name": "LeftBed",
@@ -3265,7 +3436,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "172": {
       "Name": "RightBed",
@@ -3284,7 +3456,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "173": {
       "Name": "Dresser",
@@ -3303,7 +3476,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "174": {
       "Name": "CoffeeTable",
@@ -3322,7 +3496,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "175": {
       "Name": "Box",
@@ -3341,7 +3516,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "176": {
       "Name": "RightSconce",
@@ -3360,7 +3536,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "177": {
       "Name": "LeftSconce",
@@ -3379,7 +3556,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "178": {
       "Name": "Brazier",
@@ -3398,7 +3576,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "179": {
       "Name": "CampFire",
@@ -3417,7 +3596,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "180": {
       "Name": "CannonUp",
@@ -3436,7 +3616,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "181": {
       "Name": "CannonDown",
@@ -3455,7 +3636,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "182": {
       "Name": "CannonRight",
@@ -3474,7 +3656,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "183": {
       "Name": "CannonLeft",
@@ -3493,7 +3676,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "184": {
       "Name": "RegularDoor",
@@ -3512,7 +3696,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "185": {
       "Name": "LockedDoor",
@@ -3531,7 +3716,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "186": {
       "Name": "RegularDoorView",
@@ -3550,7 +3736,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "187": {
       "Name": "LockedDoorView",
@@ -3569,7 +3756,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "188": {
       "Name": "Fireplace",
@@ -3588,7 +3776,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "189": {
       "Name": "LampPost",
@@ -3607,7 +3796,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "190": {
       "Name": "CandleOnTable",
@@ -3626,7 +3816,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "191": {
       "Name": "CookStove",
@@ -3645,10 +3836,11 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "192": {
-      "Name": "Bat1",
+      "Name": "ScaryBlackThing1",
       "Description": "",
       "IsWalking_Passable": false,
       "IsBoat_Passable": false,
@@ -3664,10 +3856,11 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "193": {
-      "Name": "Bat2",
+      "Name": "ScaryBlackThing2",
       "Description": "",
       "IsWalking_Passable": false,
       "IsBoat_Passable": false,
@@ -3683,10 +3876,11 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "194": {
-      "Name": "Bat3",
+      "Name": "ScaryBlackThing3",
       "Description": "",
       "IsWalking_Passable": false,
       "IsBoat_Passable": false,
@@ -3702,10 +3896,11 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "195": {
-      "Name": "BatDead",
+      "Name": "ScaryBlackThingDead",
       "Description": "",
       "IsWalking_Passable": true,
       "IsBoat_Passable": false,
@@ -3721,7 +3916,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "196": {
       "Name": "StairsNorth",
@@ -3740,7 +3936,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "197": {
       "Name": "StairsEast",
@@ -3759,7 +3956,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "198": {
       "Name": "StairsSouth",
@@ -3778,7 +3976,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "199": {
       "Name": "StairsWest",
@@ -3797,7 +3996,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "200": {
       "Name": "LadderUp",
@@ -3816,7 +4016,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "201": {
       "Name": "LadderDown",
@@ -3835,7 +4036,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "202": {
       "Name": "FenceHoriz",
@@ -3854,7 +4056,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "203": {
       "Name": "FenceVert",
@@ -3873,7 +4076,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "204": {
       "Name": "Wtf1",
@@ -3892,7 +4096,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "205": {
       "Name": "Wtf2",
@@ -3911,7 +4116,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "206": {
       "Name": "Wtf3",
@@ -3930,7 +4136,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "207": {
       "Name": "Wtf4",
@@ -3949,7 +4156,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "208": {
       "Name": "CornerStructure1",
@@ -3968,7 +4176,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "209": {
       "Name": "CornerStructure2",
@@ -3987,7 +4196,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "210": {
       "Name": "CornerStructure3",
@@ -4006,7 +4216,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "211": {
       "Name": "CornerStructure4",
@@ -4025,7 +4236,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "212": {
       "Name": "Waterfall1",
@@ -4040,11 +4252,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 1,
-      "FlatTileSubstitionName": "Water",
+      "FlatTileSubstitionIndex": -1,
+      "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "213": {
       "Name": "Waterfall2",
@@ -4059,11 +4272,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 1,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 1,
-      "FlatTileSubstitionName": "Water",
+      "FlatTileSubstitionIndex": -1,
+      "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "214": {
       "Name": "Waterfall3",
@@ -4078,11 +4292,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 2,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 1,
-      "FlatTileSubstitionName": "Water",
+      "FlatTileSubstitionIndex": -1,
+      "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "215": {
       "Name": "Waterfall4",
@@ -4097,11 +4312,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 3,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 1,
-      "FlatTileSubstitionName": "Water",
+      "FlatTileSubstitionIndex": -1,
+      "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "216": {
       "Name": "Fountain1",
@@ -4120,7 +4336,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "217": {
       "Name": "Fountain2",
@@ -4139,7 +4356,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "218": {
       "Name": "Fountain3",
@@ -4158,7 +4376,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "219": {
       "Name": "Fountain4",
@@ -4177,7 +4396,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "220": {
       "Name": "Moongate",
@@ -4196,7 +4416,8 @@
       "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "221": {
       "Name": "Desert3",
@@ -4215,7 +4436,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "222": {
       "Name": "BlueFlame",
@@ -4230,11 +4452,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": 68,
-      "FlatTileSubstitionName": "BrickFloor",
+      "FlatTileSubstitionIndex": 69,
+      "FlatTileSubstitionName": "MetalFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "223": {
       "Name": "BlockEntrance",
@@ -4249,11 +4472,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "224": {
       "Name": "LargeSignBottom",
@@ -4268,11 +4492,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "225": {
       "Name": "LargeSignLeft",
@@ -4286,12 +4511,13 @@
       "SpeedFactor": 1,
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
-      "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "IsUpright": true,
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "226": {
       "Name": "LargeSignRight",
@@ -4305,12 +4531,13 @@
       "SpeedFactor": 1,
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
-      "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "IsUpright": true,
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "227": {
       "Name": "SignGrass",
@@ -4324,12 +4551,13 @@
       "SpeedFactor": 1,
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
-      "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "IsUpright": true,
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "228": {
       "Name": "CornerWithWater1",
@@ -4348,7 +4576,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "229": {
       "Name": "CornerWithWater2",
@@ -4367,7 +4596,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "230": {
       "Name": "CornerWithWater3",
@@ -4386,7 +4616,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "231": {
       "Name": "CornerWithWater4",
@@ -4405,7 +4636,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "232": {
       "Name": "Hourglass1",
@@ -4424,7 +4656,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "233": {
       "Name": "Hourglass2",
@@ -4443,7 +4676,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "234": {
       "Name": "Hourglass3",
@@ -4462,7 +4696,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "235": {
       "Name": "Hourglass4",
@@ -4481,7 +4716,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "236": {
       "Name": "SnakeSign1",
@@ -4500,7 +4736,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "237": {
       "Name": "SnakeSign2",
@@ -4519,7 +4756,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "238": {
       "Name": "SnakeSign3",
@@ -4538,7 +4776,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "239": {
       "Name": "SnakeSign4",
@@ -4557,7 +4796,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "240": {
       "Name": "SignFood",
@@ -4572,11 +4812,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "241": {
       "Name": "SignCourt",
@@ -4591,11 +4832,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "242": {
       "Name": "SignArmourer",
@@ -4610,11 +4852,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "243": {
       "Name": "SignHealer",
@@ -4629,11 +4872,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "244": {
       "Name": "SignSmith",
@@ -4648,11 +4892,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "245": {
       "Name": "SignGuild",
@@ -4667,11 +4912,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "246": {
       "Name": "SignInn",
@@ -4686,11 +4932,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "247": {
       "Name": "SignMagic",
@@ -4705,11 +4952,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "248": {
       "Name": "SignWarning",
@@ -4728,7 +4976,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "249": {
       "Name": "SignShipwright",
@@ -4743,11 +4992,12 @@
       "IsPartOfAnimation": false,
       "AnimationIndex": 0,
       "IsUpright": false,
-      "FlatTileSubstitionIndex": -1,
-      "FlatTileSubstitionName": "None",
+      "FlatTileSubstitionIndex": 5,
+      "FlatTileSubstitionName": "Grass",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "250": {
       "Name": "Clock1",
@@ -4762,11 +5012,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": -2,
-      "FlatTileSubstitionName": "Guess",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "251": {
       "Name": "Clock2",
@@ -4781,11 +5032,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 1,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": -2,
-      "FlatTileSubstitionName": "Guess",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "252": {
       "Name": "Bellows1",
@@ -4804,7 +5056,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "253": {
       "Name": "Bellows2",
@@ -4823,7 +5076,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "254": {
       "Name": "WhiteSquare",
@@ -4842,7 +5096,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "255": {
       "Name": "BlackSquare",
@@ -4861,7 +5116,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "256": {
       "Name": "StarPattern",
@@ -4880,7 +5136,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "257": {
       "Name": "Chest",
@@ -4899,7 +5156,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "258": {
       "Name": "ItemMoney",
@@ -4918,7 +5176,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "259": {
       "Name": "ItemPotion",
@@ -4937,7 +5196,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "260": {
       "Name": "ItemScroll",
@@ -4956,7 +5216,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "261": {
       "Name": "ItemWeapon",
@@ -4975,7 +5236,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "262": {
       "Name": "ItemShield",
@@ -4994,7 +5256,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "263": {
       "Name": "ItemKey",
@@ -5013,7 +5276,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "264": {
       "Name": "ItemGem",
@@ -5032,7 +5296,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "265": {
       "Name": "ItemHelm",
@@ -5051,7 +5316,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "266": {
       "Name": "ItemRing",
@@ -5070,7 +5336,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "267": {
       "Name": "ItemArmour",
@@ -5089,7 +5356,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "268": {
       "Name": "ItemAnkh",
@@ -5108,7 +5376,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "269": {
       "Name": "ItemClub",
@@ -5127,7 +5396,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "270": {
       "Name": "ItemSandalwoodBox",
@@ -5146,7 +5416,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "271": {
       "Name": "ItemFood",
@@ -5165,7 +5436,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "272": {
       "Name": "HorseRight",
@@ -5184,7 +5456,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "273": {
       "Name": "HorseLeft",
@@ -5203,7 +5476,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "274": {
       "Name": "RidingHorseRight",
@@ -5222,7 +5496,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "275": {
       "Name": "RidingHorseLeft",
@@ -5241,7 +5516,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "276": {
       "Name": "RidingMagicCarpetRight",
@@ -5260,7 +5536,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "277": {
       "Name": "RidingMagicCarpetLeft",
@@ -5279,7 +5556,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "278": {
       "Name": "HolyFloorSymbol",
@@ -5298,7 +5576,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "279": {
       "Name": "KlimbLadderUp",
@@ -5317,7 +5596,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "280": {
       "Name": "KlimbLadderDown",
@@ -5336,7 +5616,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "281": {
       "Name": "Moon",
@@ -5355,7 +5636,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "282": {
       "Name": "SleepingInBed",
@@ -5374,7 +5656,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "283": {
       "Name": "Carpet2",
@@ -5393,7 +5676,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "284": {
       "Name": "BasicAvatar",
@@ -5412,7 +5696,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "285": {
       "Name": "Apparition",
@@ -5431,7 +5716,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "286": {
       "Name": "DeadBody",
@@ -5450,7 +5736,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "287": {
       "Name": "Splat",
@@ -5469,7 +5756,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "288": {
       "Name": "ShipSailsUp",
@@ -5488,7 +5776,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "289": {
       "Name": "ShipSailsRight",
@@ -5507,7 +5796,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "290": {
       "Name": "ShipSailsDown",
@@ -5526,7 +5816,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "291": {
       "Name": "ShipSailsLeft",
@@ -5545,7 +5836,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "292": {
       "Name": "ShipNoSailsUp",
@@ -5564,7 +5856,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "293": {
       "Name": "ShipNoSailsRight",
@@ -5583,7 +5876,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "294": {
       "Name": "ShipNoSailsDown",
@@ -5602,7 +5896,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "295": {
       "Name": "ShipNoSailsLeft",
@@ -5621,7 +5916,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "296": {
       "Name": "SkiffUp",
@@ -5640,7 +5936,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "297": {
       "Name": "SkiffRight",
@@ -5659,7 +5956,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "298": {
       "Name": "SkiffDown",
@@ -5678,7 +5976,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "299": {
       "Name": "SkiffLeft",
@@ -5697,7 +5996,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "300": {
       "Name": "PirateShipUp",
@@ -5716,7 +6016,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "301": {
       "Name": "PirateShipRight",
@@ -5735,7 +6036,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "302": {
       "Name": "PirateShipLeft",
@@ -5754,7 +6056,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "303": {
       "Name": "PirateShipDown",
@@ -5773,7 +6076,8 @@
       "FlatTileSubstitionName": "Water",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "304": {
       "Name": "SitChairUp",
@@ -5792,10 +6096,11 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "305": {
-      "Name": "SitChariRight",
+      "Name": "SitChairRight",
       "Description": "",
       "IsWalking_Passable": true,
       "IsBoat_Passable": false,
@@ -5811,7 +6116,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "306": {
       "Name": "SitChairDown",
@@ -5830,7 +6136,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "307": {
       "Name": "SitChairLeft",
@@ -5849,7 +6156,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "308": {
       "Name": "SitChairDown1",
@@ -5868,7 +6176,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "309": {
       "Name": "SitChairDown2",
@@ -5887,7 +6196,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "310": {
       "Name": "SitChairDown3",
@@ -5906,7 +6216,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "311": {
       "Name": "SitChairDown4",
@@ -5925,7 +6236,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "312": {
       "Name": "SitChairUp1",
@@ -5944,7 +6256,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "313": {
       "Name": "SitChairUp2",
@@ -5963,7 +6276,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "314": {
       "Name": "SitChairUp3",
@@ -5982,7 +6296,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "315": {
       "Name": "SitChairUp4",
@@ -6001,7 +6316,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "316": {
       "Name": "LordBritishMirror1",
@@ -6020,7 +6336,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "317": {
       "Name": "LordBritishMirror2",
@@ -6039,7 +6356,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "318": {
       "Name": "LordBritishMirror3",
@@ -6058,7 +6376,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "319": {
       "Name": "LordBritishMirror4",
@@ -6077,7 +6396,8 @@
       "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "320": {
       "Name": "Wizard1",
@@ -6096,7 +6416,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "321": {
       "Name": "Wizard2",
@@ -6115,7 +6436,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "322": {
       "Name": "Wizard3",
@@ -6134,7 +6456,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "323": {
       "Name": "Wizard4",
@@ -6153,7 +6476,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "324": {
       "Name": "Bard1",
@@ -6172,7 +6496,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "325": {
       "Name": "Bard2",
@@ -6191,7 +6516,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "326": {
       "Name": "Bard3",
@@ -6210,7 +6536,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "327": {
       "Name": "Bard4",
@@ -6229,7 +6556,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "328": {
       "Name": "Fighter1",
@@ -6248,7 +6576,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "329": {
       "Name": "Fighter2",
@@ -6267,7 +6596,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "330": {
       "Name": "Fighter3",
@@ -6286,7 +6616,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "331": {
       "Name": "Fighter4",
@@ -6305,7 +6636,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "332": {
       "Name": "Avatar1",
@@ -6324,7 +6656,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "333": {
       "Name": "Avatar2",
@@ -6343,7 +6676,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "334": {
       "Name": "Avatar3",
@@ -6362,7 +6696,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "335": {
       "Name": "Avatar4",
@@ -6381,7 +6716,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "336": {
       "Name": "TownsPerson1",
@@ -6400,7 +6736,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "337": {
       "Name": "TownsPerson2",
@@ -6419,7 +6756,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "338": {
       "Name": "TownsPerson3",
@@ -6438,7 +6776,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "339": {
       "Name": "TownsPerson4",
@@ -6457,7 +6796,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "340": {
       "Name": "Merchant1",
@@ -6476,7 +6816,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "341": {
       "Name": "Merchant2",
@@ -6495,7 +6836,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "342": {
       "Name": "Merchant3",
@@ -6514,7 +6856,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "343": {
       "Name": "Merchant4",
@@ -6533,7 +6876,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "344": {
       "Name": "Jester1",
@@ -6552,7 +6896,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "345": {
       "Name": "Jester2",
@@ -6571,7 +6916,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "346": {
       "Name": "Jester3",
@@ -6590,7 +6936,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "347": {
       "Name": "Jester4",
@@ -6609,7 +6956,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "348": {
       "Name": "BardPlaying1",
@@ -6628,7 +6976,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "349": {
       "Name": "BardPlaying2",
@@ -6647,7 +6996,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "350": {
       "Name": "BardPlaying3",
@@ -6666,7 +7016,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "351": {
       "Name": "BardPlaying4",
@@ -6685,7 +7036,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "352": {
       "Name": "PersonStocks1",
@@ -6704,7 +7056,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "353": {
       "Name": "PersonStocks2",
@@ -6723,7 +7076,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "354": {
       "Name": "PersonStocks3",
@@ -6742,7 +7096,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "355": {
       "Name": "PersonStocks4",
@@ -6761,7 +7116,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "356": {
       "Name": "WallPrisoner1",
@@ -6776,11 +7132,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 0,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": -2,
-      "FlatTileSubstitionName": "Guess",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "357": {
       "Name": "WallPrisoner2",
@@ -6795,11 +7152,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 1,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": -2,
-      "FlatTileSubstitionName": "Guess",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "358": {
       "Name": "WallPrisoner3",
@@ -6814,11 +7172,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 2,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": -2,
-      "FlatTileSubstitionName": "Guess",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "359": {
       "Name": "WallPrisoner4",
@@ -6833,11 +7192,12 @@
       "IsPartOfAnimation": true,
       "AnimationIndex": 3,
       "IsUpright": true,
-      "FlatTileSubstitionIndex": -2,
-      "FlatTileSubstitionName": "Guess",
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "360": {
       "Name": "Child1",
@@ -6856,7 +7216,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "361": {
       "Name": "Child2",
@@ -6875,7 +7236,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "362": {
       "Name": "Child3",
@@ -6894,7 +7256,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "363": {
       "Name": "Child4",
@@ -6913,7 +7276,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "364": {
       "Name": "Begger1",
@@ -6932,7 +7296,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "365": {
       "Name": "Begger2",
@@ -6951,7 +7316,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "366": {
       "Name": "Begger3",
@@ -6970,7 +7336,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "367": {
       "Name": "Begger4",
@@ -6989,7 +7356,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "368": {
       "Name": "Guard1",
@@ -7008,7 +7376,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "369": {
       "Name": "Guard2",
@@ -7027,7 +7396,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "370": {
       "Name": "Guard3",
@@ -7046,7 +7416,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "371": {
       "Name": "Guard4",
@@ -7065,7 +7436,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "372": {
       "Name": "Apparation1",
@@ -7084,7 +7456,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "373": {
       "Name": "Apparation2",
@@ -7103,7 +7476,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "374": {
       "Name": "Apparation3",
@@ -7122,7 +7496,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "375": {
       "Name": "Apparation4",
@@ -7141,7 +7516,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "376": {
       "Name": "Blackthorn1",
@@ -7160,7 +7536,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "377": {
       "Name": "Blackthorn2",
@@ -7179,7 +7556,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "378": {
       "Name": "Blackthorn3",
@@ -7198,7 +7576,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "379": {
       "Name": "Blackthorn4",
@@ -7217,7 +7596,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "380": {
       "Name": "LordBritish1",
@@ -7236,7 +7616,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "381": {
       "Name": "LordBritish2",
@@ -7255,7 +7636,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "382": {
       "Name": "LordBritish3",
@@ -7274,7 +7656,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "383": {
       "Name": "LordBritish4",
@@ -7293,7 +7676,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": true,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "384": {
       "Name": "Seahorse1",
@@ -7312,7 +7696,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "385": {
       "Name": "Seahorse2",
@@ -7331,7 +7716,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "386": {
       "Name": "Seahorse3",
@@ -7350,7 +7736,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "387": {
       "Name": "Seahorse4",
@@ -7369,7 +7756,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "388": {
       "Name": "Squid1",
@@ -7388,7 +7776,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "389": {
       "Name": "Squid2",
@@ -7407,7 +7796,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "390": {
       "Name": "Squid3",
@@ -7426,7 +7816,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "391": {
       "Name": "Squid4",
@@ -7445,7 +7836,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "392": {
       "Name": "SeaSerpent1",
@@ -7464,7 +7856,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "393": {
       "Name": "SeaSerpent2",
@@ -7483,7 +7876,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "394": {
       "Name": "SeaSerpent3",
@@ -7502,7 +7896,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "395": {
       "Name": "SeaSerpent4",
@@ -7521,7 +7916,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "396": {
       "Name": "Shark1",
@@ -7540,7 +7936,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "397": {
       "Name": "Shark2",
@@ -7559,7 +7956,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "398": {
       "Name": "Shark3",
@@ -7578,7 +7976,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "399": {
       "Name": "Shark4",
@@ -7597,7 +7996,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "400": {
       "Name": "Rat1",
@@ -7616,7 +8016,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "401": {
       "Name": "Rat2",
@@ -7635,7 +8036,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "402": {
       "Name": "Rat3",
@@ -7654,7 +8056,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "403": {
       "Name": "Rat4",
@@ -7673,7 +8076,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "404": {
       "Name": "Bat1",
@@ -7692,7 +8096,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "405": {
       "Name": "Bat2",
@@ -7711,7 +8116,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "406": {
       "Name": "Bat3",
@@ -7730,7 +8136,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "407": {
       "Name": "Bat4",
@@ -7749,7 +8156,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "408": {
       "Name": "Spider1",
@@ -7768,7 +8176,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "409": {
       "Name": "Spider2",
@@ -7787,7 +8196,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "410": {
       "Name": "Spider3",
@@ -7806,7 +8216,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "411": {
       "Name": "Spider4",
@@ -7825,7 +8236,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "412": {
       "Name": "Ghost1",
@@ -7844,7 +8256,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "413": {
       "Name": "Ghost2",
@@ -7863,7 +8276,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "414": {
       "Name": "Ghost3",
@@ -7882,7 +8296,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "415": {
       "Name": "Ghost4",
@@ -7901,7 +8316,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "416": {
       "Name": "Slime1",
@@ -7920,7 +8336,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "417": {
       "Name": "Slime2",
@@ -7939,7 +8356,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "418": {
       "Name": "Slime3",
@@ -7958,7 +8376,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "419": {
       "Name": "Slime4",
@@ -7977,7 +8396,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "420": {
       "Name": "Gremlin1",
@@ -7996,7 +8416,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "421": {
       "Name": "Gremlin2",
@@ -8015,7 +8436,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "422": {
       "Name": "Gremlin3",
@@ -8034,7 +8456,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "423": {
       "Name": "Gremlin4",
@@ -8053,7 +8476,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "424": {
       "Name": "Mimic1",
@@ -8072,7 +8496,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "425": {
       "Name": "Mimic2",
@@ -8091,7 +8516,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "426": {
       "Name": "Mimic3",
@@ -8110,7 +8536,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "427": {
       "Name": "Mimic4",
@@ -8129,7 +8556,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "428": {
       "Name": "Reaper1",
@@ -8148,7 +8576,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "429": {
       "Name": "Reaper2",
@@ -8167,7 +8596,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "430": {
       "Name": "Reaper3",
@@ -8186,7 +8616,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "431": {
       "Name": "Reaper4",
@@ -8205,7 +8636,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "432": {
       "Name": "Gazer1",
@@ -8224,7 +8656,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "433": {
       "Name": "Gazer2",
@@ -8243,7 +8676,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "434": {
       "Name": "Gazer3",
@@ -8262,7 +8696,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "435": {
       "Name": "Gazer4",
@@ -8281,7 +8716,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "436": {
       "Name": "Shard",
@@ -8300,7 +8736,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "437": {
       "Name": "Crown",
@@ -8319,7 +8756,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "438": {
       "Name": "Sceptre",
@@ -8338,7 +8776,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "439": {
       "Name": "Amulet",
@@ -8357,7 +8796,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "440": {
       "Name": "StoneGargoyle1",
@@ -8376,7 +8816,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "441": {
       "Name": "StoneGargoyle2",
@@ -8395,7 +8836,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "442": {
       "Name": "StoneGargoyle3",
@@ -8414,7 +8856,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "443": {
       "Name": "StoneGargoyle4",
@@ -8433,7 +8876,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "444": {
       "Name": "InsectSwarm1",
@@ -8452,7 +8896,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "445": {
       "Name": "InsectSwarm2",
@@ -8471,7 +8916,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "446": {
       "Name": "InsectSwarm3",
@@ -8490,7 +8936,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "447": {
       "Name": "InsectSwarm4",
@@ -8509,7 +8956,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "448": {
       "Name": "Orc1",
@@ -8528,7 +8976,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "449": {
       "Name": "Orc2",
@@ -8547,7 +8996,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "450": {
       "Name": "Orc3",
@@ -8566,7 +9016,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "451": {
       "Name": "Orc4",
@@ -8585,7 +9036,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "452": {
       "Name": "Skeleton1",
@@ -8604,7 +9056,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "453": {
       "Name": "Skeleton2",
@@ -8623,7 +9076,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "454": {
       "Name": "Skeleton3",
@@ -8642,7 +9096,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "455": {
       "Name": "Skeleton4",
@@ -8661,7 +9116,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "456": {
       "Name": "Snake1",
@@ -8680,7 +9136,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "457": {
       "Name": "Snake2",
@@ -8699,7 +9156,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "458": {
       "Name": "Snake3",
@@ -8718,7 +9176,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "459": {
       "Name": "Snake4",
@@ -8737,7 +9196,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "460": {
       "Name": "Ettin1",
@@ -8756,7 +9216,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "461": {
       "Name": "Ettin2",
@@ -8775,7 +9236,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "462": {
       "Name": "Ettin3",
@@ -8794,7 +9256,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "463": {
       "Name": "Ettin4",
@@ -8813,7 +9276,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "464": {
       "Name": "Headless1",
@@ -8832,7 +9296,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "465": {
       "Name": "Headless2",
@@ -8851,7 +9316,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "466": {
       "Name": "Headless3",
@@ -8870,7 +9336,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "467": {
       "Name": "Headless4",
@@ -8889,7 +9356,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "468": {
       "Name": "Wisp1",
@@ -8908,7 +9376,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "469": {
       "Name": "Wisp2",
@@ -8927,7 +9396,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "470": {
       "Name": "Wisp3",
@@ -8946,7 +9416,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "471": {
       "Name": "Wisp4",
@@ -8965,7 +9436,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "472": {
       "Name": "Daemon1",
@@ -8984,7 +9456,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "473": {
       "Name": "Daemon2",
@@ -9003,7 +9476,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "474": {
       "Name": "Daemon3",
@@ -9022,7 +9496,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "475": {
       "Name": "Daemon4",
@@ -9041,7 +9516,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "476": {
       "Name": "Dragon1",
@@ -9060,7 +9536,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "477": {
       "Name": "Dragon2",
@@ -9079,7 +9556,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "478": {
       "Name": "Dragon3",
@@ -9098,7 +9576,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "479": {
       "Name": "Dragon4",
@@ -9117,7 +9596,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "480": {
       "Name": "SandTrap1",
@@ -9136,7 +9616,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "481": {
       "Name": "SandTrap2",
@@ -9155,7 +9636,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "482": {
       "Name": "SandTrap3",
@@ -9174,7 +9656,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "483": {
       "Name": "SandTrap4",
@@ -9193,7 +9676,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "484": {
       "Name": "Troll1",
@@ -9212,7 +9696,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "485": {
       "Name": "Troll2",
@@ -9231,7 +9716,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "486": {
       "Name": "Troll3",
@@ -9250,7 +9736,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "487": {
       "Name": "Troll4",
@@ -9269,7 +9756,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "488": {
       "Name": "PoisonField",
@@ -9288,7 +9776,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "489": {
       "Name": "MagicField",
@@ -9307,7 +9796,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "490": {
       "Name": "FireField",
@@ -9326,7 +9816,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "491": {
       "Name": "ColdField",
@@ -9345,7 +9836,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "492": {
       "Name": "Whirpool1",
@@ -9364,7 +9856,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "493": {
       "Name": "Whirpool2",
@@ -9383,7 +9876,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "494": {
       "Name": "Whirpool3",
@@ -9402,7 +9896,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "495": {
       "Name": "Whirpool4",
@@ -9421,7 +9916,8 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": false,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "496": {
       "Name": "MongBat1",
@@ -9440,7 +9936,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "497": {
       "Name": "MongBat2",
@@ -9459,7 +9956,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "498": {
       "Name": "MongBat3",
@@ -9478,7 +9976,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "499": {
       "Name": "MongBat4",
@@ -9497,7 +9996,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "500": {
       "Name": "Corpser1",
@@ -9516,7 +10016,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "501": {
       "Name": "Corpser2",
@@ -9535,7 +10036,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "502": {
       "Name": "Corpser3",
@@ -9554,7 +10056,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "503": {
       "Name": "Corpser4",
@@ -9573,7 +10076,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "504": {
       "Name": "RotWork1",
@@ -9592,7 +10096,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "505": {
       "Name": "RotWork2",
@@ -9611,7 +10116,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "506": {
       "Name": "RotWork3",
@@ -9630,7 +10136,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "507": {
       "Name": "RotWork4",
@@ -9649,7 +10156,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "508": {
       "Name": "ShadowLord1",
@@ -9668,7 +10176,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "509": {
       "Name": "ShadowLord2",
@@ -9687,7 +10196,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "510": {
       "Name": "ShadowLord3",
@@ -9706,7 +10216,8 @@
       "FlatTileSubstitionName": "Guess",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    },
    "511": {
       "Name": "ShadowLord4",
@@ -9725,6 +10236,7 @@
       "FlatTileSubstitionName": "None",
       "IsEnemy": true,
       "IsNPC": false,
-      "IsBuilding": false
+      "IsBuilding": false,
+      "DontDraw": false
    }
 }

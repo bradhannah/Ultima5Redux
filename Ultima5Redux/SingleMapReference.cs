@@ -22,6 +22,8 @@ namespace Ultima5Redux
                 Floor = floor;
                 FileOffset = fileOffset;
                 DataRef = dataRef;
+
+
             }
             #endregion
 
