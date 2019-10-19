@@ -96,6 +96,13 @@ namespace Ultima5Redux
             return bIsChair;
         }
 
+        public bool IsDoorWithView(int nSprite)
+        {
+            bool bIsDoorWithView = nSprite == GetTileNumberByName("RegularDoorView") || nSprite == GetTileNumberByName("LockedDoorView") ||
+                 nSprite == GetTileNumberByName("MagicLockDoorWithView");
+            return bIsDoorWithView;
+        }
+
         /// <summary>
         /// When building a map, there are times where default tiles need to be replaced with substitute tiles (like klimbing a ladder)
         /// or replaced with an animation (like eating in a chair). 
