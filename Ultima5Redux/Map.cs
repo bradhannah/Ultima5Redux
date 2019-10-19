@@ -17,6 +17,29 @@ namespace Ultima5Redux
             this.u5Directory = u5Directory;
         }
 
+        /// <summary>
+        /// We use this because the raw map files only store a single byte per tile (0-255), but the REAL world is made up for sprites numbered from 0-511
+        /// so we make a copy for the game to use as a the live map which can contain the bigger sprite indexes
+        /// </summary>
+        /// <returns></returns>
+        public int[][] GetCopyOfMapAsInt()
+        {
+            int nCols = theMap.Length;
+            int nRows = theMap[0].Length;
+
+            int[][] intMap = Utils.Init2DArray<int>(nCols, nRows, 0);
+
+            for (int curRow = 0; curRow < nRows; curRow++)
+            {
+                for (int curCol = 0; curCol < nCols; curCol++)
+                {
+                    // no casting required since we go from byte to int
+                    intMap[curCol][curRow] = theMap[curCol][curRow];
+                }
+            }
+            return intMap;
+        }
+
         public byte[][] TheMap
         {
             get

@@ -42,7 +42,8 @@ namespace Ultima5Redux
             CHIT_CHAT,
             KEYPRESS_COMMANDS,
             VISION1,
-            VISION2
+            VISION2,
+            OPENING_THINGS_STUFF
         };
 
         public enum VISION1_STRINGS { DEATH_VISION = 0, STRANGE_VISION }
@@ -59,7 +60,6 @@ namespace Ultima5Redux
             DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE, GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q,
             PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME, MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
         }
-
 
         public enum LOCATION_STRINGS
         {
@@ -79,6 +79,14 @@ namespace Ultima5Redux
         JUNK_1, ATTACK_DASH, ON_FOOT, NOTHING_TO_ATTACK, NEW_ON_FOOT_NEW, ATTACKED_ENTRANCE, TWO_NEWLINES, BRIT_DAT, DUNGEON_DAT, NEW_WHAT_DUNGEON_NEW, ENTER_SPACE, to_enter_THE_SHRINE_OF, to_enter_HUT, to_enter_SHRINE_CODEX,
         to_enter_KEEP, to_enter_VILLAGE, to_enter_TOWNE, to_enter_CASTLE, to_enter_CAVE, to_enter_MINE, to_enter_DUNGEON, to_enter_RUINS, to_enter_LIGHTHOUSE, to_enter_PALACE_B, to_enter_CASTLE_LB,
         WHAT, EARTHQUAKE, ZZZ, BRIT_DAT_2, EXIT_TO_DOS, N, V1_16, SOUND, OFF, ON, WHAT_2, NEW_DQUOTE, PASS_SEEKER, NOT_SACRED_QUEST, PASSAGE_DENIED, ROUGH_SEAS }
+
+        public enum OPENING_THINGS_STRINGS { T = 0, HOU_DOST_FIND, A_HIDDEN_DOOR, KEY_BROKE, SUCCESS, KEY_BROKE2, NEWLINE, NO_KEYS, KEY_BROKE3, NO_KEYS2, CHEST_UNLOCKED, KEY_BROKE4,
+            ALREADY_OPEN, WHAT, NO_KEYS3, KEY_BROKE6, UNLOCKED, KEY_BROKE5, NO_ONE_IS_THERE, KEY_BROKE7, COULDNT_FIND_NPC, N_N_I_THANK_THREE_N, UNLOCKED2, NO_LOCK, FOUND,
+            CANT, NOTHING_TO_OPEN, TRAPPED, CHEST_EMPTY, CHEST_OPENED, ALREADY_OPEN2, WHAT2, ITS_OPEN, TOO_HEAVY, LOCKED_N, OPENED
+        }
+
+
+  
 
         /// <summary>
         /// Conversational phrase indexes
@@ -350,7 +358,9 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "random texts", 0x84aa, 0x74);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "finding/searching for things strings ", 0x851e, 0x442);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "wher you found something (ie. In the wall) ", 0x8960, 0xe4);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "strings about unlocking or finding doors", 0x8a44, 0x1ac);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "strings about unlocking or finding doors", 0x8a44, 0x1b3, 0x00, DataChunkName.OPENING_THINGS_STUFF);
+            SomeStrings str2 = dataChunks.GetDataChunk(DataChunkName.OPENING_THINGS_STUFF).GetChunkAsStringList();
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "potion colours", 0x8bfa, 0x34);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "scroll shortfroms", 0x8c2e, 0x20);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "more found things!", 0x8c4e, 0xcc);

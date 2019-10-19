@@ -10238,5 +10238,25 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false
+   },
+   "512": {
+      "Name": "BrickWallArchwayWithPortcullis",
+      "Description": "",
+      "IsWalking_Passable": false,
+      "IsBoat_Passable": false,
+      "IsSkiff_Passable": false,
+      "IsCarpet_Passable": false,
+      "IsKlimable": false,
+      "IsOpenable": false,
+      "SpeedFactor": 1,
+      "IsPartOfAnimation": false,
+      "AnimationIndex": 0,
+      "IsUpright": false,
+      "FlatTileSubstitionIndex": 68,
+      "FlatTileSubstitionName": "BrickFloor",
+      "IsEnemy": false,
+      "IsNPC": false,
+      "IsBuilding": false,
+      "DontDraw": false
    }
 }
