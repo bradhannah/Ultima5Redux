@@ -22,7 +22,8 @@ namespace Ultima5Redux
             for (int nRecord = 0; nRecord < 16; nRecord++)
             {
                 byte[] characterArray = new byte[CHARACTER_OFFSET];
-                rawByteList.CopyTo(nRecord * CHARACTER_OFFSET, characterArray, 0, CharacterRecord.CHARACTER_RECORD_BYTE_ARRAY_SIZE);
+                // start at 0x02 byte because the first two characters are 0x0000
+                rawByteList.CopyTo(nRecord * CHARACTER_OFFSET , characterArray, 0x00, CharacterRecord.CHARACTER_RECORD_BYTE_ARRAY_SIZE);
                 Records[nRecord] = new CharacterRecord(characterArray);
             }
         }
@@ -44,7 +45,7 @@ namespace Ultima5Redux
             int nPartyMembers = 0;
             foreach (CharacterRecord characterRecord in Records)
             {
-                if (characterRecord.InnOrParty == (int)CharacterRecord.CharacterInnOrParty.InParty)
+                if (characterRecord.PartyStatus == CharacterRecord.CharacterPartyStatus.InParty)
                     nPartyMembers++;
             }
             Debug.Assert(nPartyMembers > 0 && nPartyMembers <= 6);
@@ -58,8 +59,7 @@ namespace Ultima5Redux
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
 
-
-        public enum CharacterInnOrParty { InParty = 0x00, HasntJoined = 0xFF, PermanentlyKilled = 0x7F };
+        //private enum CharacterInnOrParty { InParty = 0x00, HasntJoined = 0xFF, PermanentlyKilled = 0x7F };
         public enum CharacterGender { Male = 0x0B, Female = 0x0C };
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'};
         public enum CharacterStatus { Good = 'G', Poisioned = 'P'};
@@ -67,17 +67,26 @@ namespace Ultima5Redux
         
         public enum CharacterPartyStatus { InParty = 0x00, HasntJoinedYet = 0xFF, KilledPermanently = 0x7F}; // otherwise it is at an inn at Settlement # in byte value
 
-
         private byte Unknown1 { get; set; }
         private byte Unknown2 { get; set; }
 
-        public byte InnOrParty { get; set; }
+        private byte InnOrParty { get; set; }
 
         public string Name { get; set; }
         public CharacterGender Gender { get; set; }
         public CharacterClass Class { get; set; }
         public CharacterStatus Status { get; set; }
-        public CharacterPartyStatus PartyStatus { get; set; }
+        public CharacterPartyStatus PartyStatus
+        {
+            get
+            {
+                return (CharacterPartyStatus)InnOrParty;
+            }
+            set
+            {
+                InnOrParty = (byte)value;
+            }
+        }
         public CharacterEquipped Equipped = new CharacterEquipped();
         public CharacterStats Stats = new CharacterStats();
 

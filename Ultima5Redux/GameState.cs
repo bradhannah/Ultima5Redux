@@ -34,7 +34,7 @@ namespace Ultima5Redux
         /// <summary>
         /// All player character records
         /// </summary>
-        private CharacterRecords characterRecords;
+        public CharacterRecords CharacterRecords { get; }
         #endregion
 
         #region Public Properties
@@ -46,7 +46,7 @@ namespace Ultima5Redux
         /// <summary>
         /// The name of the Avatar
         /// </summary>
-        public string AvatarsName { get { return characterRecords.Records[CharacterRecords.AVATAR_RECORD].Name; } }
+        public string AvatarsName { get { return CharacterRecords.Records[CharacterRecords.AVATAR_RECORD].Name; } }
         #endregion
 
         #region Enumerations
@@ -58,7 +58,8 @@ namespace Ultima5Redux
             Unused,
             CHARACTER_RECORDS,
             NPC_ISALIVE_TABLE,
-            NPC_ISMET_TABLE
+            NPC_ISMET_TABLE,
+            N_PEOPLE_PARTY
         };
         #endregion
 
@@ -78,11 +79,12 @@ namespace Ultima5Redux
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20*16, 0x00, DataChunkName.CHARACTER_RECORDS);
             DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
-            characterRecords = new CharacterRecords(rawCharacterRecords.GetAsByteList());
+            CharacterRecords = new CharacterRecords(rawCharacterRecords.GetAsByteList());
 
             //dataChunks.AddDataChunk()
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Number of Party Members", 0x2B5, 0x1, 0x00, DataChunkName.N_PEOPLE_PARTY);
 
             // Initialize the table to determine if an NPC is dead
             List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();
@@ -129,14 +131,43 @@ namespace Ultima5Redux
             npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = true;
         }
 
+    public List<CharacterRecord> GetActiveCharacterRecords()
+    {
+        List<CharacterRecord> activeCharacterRecords = new List<CharacterRecord>();
+
+        foreach (CharacterRecord characterRecord in CharacterRecords.Records)
+        {
+            if (characterRecord.PartyStatus == CharacterRecord.CharacterPartyStatus.InParty)
+                activeCharacterRecords.Add(characterRecord);
+        }
+        if (activeCharacterRecords.Count == 0) throw new Exception("Even the Avatar is dead, no records returned in active party");
+        if (activeCharacterRecords.Count > CharacterRecords.MAX_PARTY_MEMBERS) throw new Exception("There are too many party members in the party... party...");
+
+        return activeCharacterRecords;
+    }
+
+    public CharacterRecord GetCharacterFromParty(int nPosition)
+        {
+            Debug.Assert(nPosition > 0 && nPosition < CharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
+            Debug.Assert(nPosition >= CharacterRecords.TotalPartyMembers(), "You cannot request a character that isn't on the roster");
+
+            int nPartyMember = 0;
+            foreach (CharacterRecord characterRecord in CharacterRecords.Records)
+            {
+                if (characterRecord.PartyStatus == CharacterRecord.CharacterPartyStatus.InParty)
+                    if (nPartyMember++ == nPosition) return characterRecord;
+            }
+            throw new Exception("I've asked for member of the party who is aparently not there...");
+        }
+
         /// <summary>
         /// Adds an NPC character to the party, and maps their CharacterRecord
         /// </summary>
         /// <param name="npc">the NPC to add</param>
         public void AddMemberToParty(NonPlayerCharacters.NonPlayerCharacter npc)
         {
-            CharacterRecord record = characterRecords.GetCharacterRecordByNPC(npc);
-            record.InnOrParty = (int)CharacterRecord.CharacterInnOrParty.InParty;
+            CharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
+            record.PartyStatus = CharacterRecord.CharacterPartyStatus.InParty;
         }
 
         /// <summary>
@@ -145,8 +176,8 @@ namespace Ultima5Redux
         /// <returns>true if party is full</returns>
         public bool IsFullParty()
         {
-            Debug.Assert(!(characterRecords.TotalPartyMembers() > CharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
-            return (characterRecords.TotalPartyMembers() == CharacterRecords.MAX_PARTY_MEMBERS);
+            Debug.Assert(!(CharacterRecords.TotalPartyMembers() > CharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
+            return (CharacterRecords.TotalPartyMembers() == CharacterRecords.MAX_PARTY_MEMBERS);
         }
 
         /// <summary>
