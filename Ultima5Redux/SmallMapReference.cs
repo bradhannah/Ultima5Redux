@@ -276,7 +276,7 @@ namespace Ultima5Redux
             DataChunk locationNameOffsetChunk = dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAME_INDEXES);
 
             // get the offsets 
-            List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUINT16();
+            List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUINT16List();
             locationNames = new List<string>(locationOffsets.Count+1);
 
             // I happen to know that the underworld and overworld is [0], so let's add a placeholder

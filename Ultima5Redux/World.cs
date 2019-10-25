@@ -87,10 +87,21 @@ namespace Ultima5Redux
             // build the NPC tables
             NpcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
 
+            State.Year = 100;
+            State.Month = 13;
+            State.Day = 28;
+            State.Hour = 22;
+            State.Minute = 2;
+            while (true)
+            {
+                State.AdvanceTime(60*9-3);
+            }
+        
+
             //Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
-//            Conversation convo = new Conversation(NpcRef.NPCs[296], State, DataOvlRef); // Gwenno
+            //            Conversation convo = new Conversation(NpcRef.NPCs[296], State, DataOvlRef); // Gwenno
             // 19 = Margarett
- //           NpcRef.NPCs[296].Script.PrintComprehensiveScript();
+            //           NpcRef.NPCs[296].Script.PrintComprehensiveScript();
 
             int count = 0;
             if (false)

@@ -62,7 +62,7 @@ namespace Ultima5Redux
         //private enum CharacterInnOrParty { InParty = 0x00, HasntJoined = 0xFF, PermanentlyKilled = 0x7F };
         public enum CharacterGender { Male = 0x0B, Female = 0x0C };
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'};
-        public enum CharacterStatus { Good = 'G', Poisioned = 'P'};
+        public enum CharacterStatus { Good = 'G', Poisioned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D'};
         // if your InnorParty value is included in the list, then it's clear - if not then they are at the location referenced by the number
         
         public enum CharacterPartyStatus { InParty = 0x00, HasntJoinedYet = 0xFF, KilledPermanently = 0x7F}; // otherwise it is at an inn at Settlement # in byte value
@@ -137,9 +137,9 @@ namespace Ultima5Redux
             Stats.Dexterity = rawRecordByteList[(int)CharacterRecordOffsets.Dexterity];
             Stats.Intelligence = rawRecordByteList[(int)CharacterRecordOffsets.Intelligence];
             Stats.CurrentMP = rawRecordByteList[(int)CharacterRecordOffsets.CurrentMP];
-            Stats.CurrentHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Current hit points", rawRecordByteList, (int)CharacterRecordOffsets.CurrentHP, sizeof(UInt16)).GetChunkAsUINT16()[0];
-            Stats.MaximumHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.MaximimumHP, sizeof(UInt16)).GetChunkAsUINT16()[0];
-            Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.ExperiencePoints, sizeof(UInt16)).GetChunkAsUINT16()[0];
+            Stats.CurrentHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Current hit points", rawRecordByteList, (int)CharacterRecordOffsets.CurrentHP, sizeof(UInt16)).GetChunkAsUINT16List()[0];
+            Stats.MaximumHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.MaximimumHP, sizeof(UInt16)).GetChunkAsUINT16List()[0];
+            Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.ExperiencePoints, sizeof(UInt16)).GetChunkAsUINT16List()[0];
             Stats.Level = rawRecordByteList[(int)CharacterRecordOffsets.Level];
             Equipped.Helmet = rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
             Equipped.Armor = rawRecordByteList[(int)CharacterRecordOffsets.Armor];

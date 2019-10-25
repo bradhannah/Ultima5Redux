@@ -177,7 +177,7 @@ namespace Ultima5Redux
         /// <summary>
         /// The encoding of the data
         /// </summary>
-        public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, ByteList, Bitmap };
+        public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, UINT16, ByteList, Bitmap, Byte };
 
         #region Constructors
         /// <summary>
@@ -249,14 +249,25 @@ namespace Ultima5Redux
                 case DataFormatType.StringList:
                     GetChunkAsStringList().PrintSomeStrings();
                     break;
+                case DataFormatType.Byte:
+                    {
+                        System.Console.WriteLine(RawData[0].ToString("X"));
+                    }
+                    break;
                 case DataFormatType.ByteList:
                     foreach (byte b in RawData)
                     {
                         System.Console.WriteLine(b.ToString("X"));
                     }
                     break;
+                case DataFormatType.UINT16:
+                    {
+                        UInt16 word = GetChunkAsUINT16List()[0];
+                        System.Console.WriteLine("Word: " + word.ToString("X"));
+                        break;
+                    }
                 case DataFormatType.UINT16List:
-                    foreach (UInt16 word in GetChunkAsUINT16())
+                    foreach (UInt16 word in GetChunkAsUINT16List())
                     {
                         System.Console.WriteLine("Word: " + word.ToString("X"));
                     }
@@ -313,12 +324,38 @@ namespace Ultima5Redux
             return data;
         }
 
+        public void SetChunkAsByte(byte data)
+        {
+            RawData[0] = data;
+        }
+        
+        public void SetChunkAsUINT16(UInt16 data)
+        {
+            RawData[0] = (byte)(data & 0xFF);
+            RawData[1] = (byte)((data >> 8) & 0xFF);
+        }
+
+        public byte GetChunkAsByte()
+        {
+            return RawData[0];
+        }
+
+        /// <summary>
+        /// Returns the data as a single UINT16. It uses little endian convention.
+        /// </summary>
+        /// <returns>UINT16s</returns>
+        public UInt16 GetChunkAsUINT16()
+        {
+            UInt16 data = ((UInt16)(RawData[0] | (((UInt16)RawData[1]) << 8)));
+            return data;
+        }
+
         /// <summary>
         /// Returns the data as a UINT16 list. It uses little endian convention.
         /// Note: this will add/subtract using the addToValue
         /// </summary>
         /// <returns>list of UINT16s</returns>
-        public List<UInt16> GetChunkAsUINT16()
+        public List<UInt16> GetChunkAsUINT16List()
         {
             List<UInt16> data = Utils.CreateOffsetList(RawData, FileOffset, DataLength);
             for (int i = 0; i < data.Count; i++)

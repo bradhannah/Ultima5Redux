@@ -38,6 +38,148 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Properties
+        public string FormattedDate
+        {
+            get
+            {
+                return Month + "-" + Day + "-" + Year;
+            }
+        }
+
+        public string FormattedTime
+        {
+            get
+            {
+                string suffix;
+                if (Hour < 12) suffix = "AM"; else suffix = "PM";
+                return Hour % 12 + ":" + String.Format("{0:D2}", Minute) + " " + suffix;
+            }
+        }
+
+        
+        public UInt16 Year
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR).GetChunkAsUINT16();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR).SetChunkAsUINT16(value);
+            }
+        }
+
+        public byte Month
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH).GetChunkAsByte();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH).SetChunkAsByte(value);
+            }
+        }
+
+        public byte Day
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY).GetChunkAsByte();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY).SetChunkAsByte(value);
+            }
+        }
+
+        public byte Hour
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR).GetChunkAsByte();
+            }
+            set
+            {
+                Debug.Assert(value >= 0 && value <= 23);
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR).SetChunkAsByte(value);
+            }
+        }
+
+        public byte Minute
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE).GetChunkAsByte();
+            }
+            set
+            {
+                Debug.Assert(value >= 0 && value <= 59);
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE).SetChunkAsByte(value);
+            }
+        }
+
+        public UInt16 Gems
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsUINT16();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsUINT16(value);
+            }
+        }
+        public UInt16 Torches
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsUINT16();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsUINT16(value);
+
+            }
+        }
+        public UInt16 Keys
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsUINT16();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsUINT16(value);
+
+            }
+        }
+        public UInt16 Gold 
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUINT16();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).SetChunkAsUINT16(value);
+
+            }
+        }
+
+        public UInt16 Food
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUINT16();
+            }
+            set
+            {
+                dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).SetChunkAsUINT16(value);
+            }
+        }
+
+
         /// <summary>
         /// Users Karma
         /// </summary>
@@ -59,7 +201,17 @@ namespace Ultima5Redux
             CHARACTER_RECORDS,
             NPC_ISALIVE_TABLE,
             NPC_ISMET_TABLE,
-            N_PEOPLE_PARTY
+            N_PEOPLE_PARTY,
+            FOOD_QUANTITY,
+            GOLD_QUANTITY,
+            KEYS_QUANTITY,
+            GEMS_QUANTITY,
+            TORCHES_QUANTITY,
+            CURRENT_YEAR,
+            CURRENT_MONTH,
+            CURRENT_DAY,
+            CURRENT_HOUR,
+            CURRENT_MINUTE
         };
         #endregion
 
@@ -81,6 +233,22 @@ namespace Ultima5Redux
             DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
             CharacterRecords = new CharacterRecords(rawCharacterRecords.GetAsByteList());
 
+            // quantities of standard items
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00, DataChunkName.FOOD_QUANTITY);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Gold Quantity", 0x204, 0x02, 0x00, DataChunkName.GOLD_QUANTITY);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00, DataChunkName.KEYS_QUANTITY);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
+
+            // time and date
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Current Year", 0x2CE, 0x02, 0x00, DataChunkName.CURRENT_YEAR);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Month", 0x2D7, 0x01, 0x00, DataChunkName.CURRENT_MONTH);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Day", 0x2D8, 0x01, 0x00, DataChunkName.CURRENT_DAY);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2D9, 0x01, 0x00, DataChunkName.CURRENT_HOUR);
+            // 0x2DA is copy of 2D9 for some reason
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
+
+
             //dataChunks.AddDataChunk()
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
@@ -98,6 +266,62 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Advances time and takes care of all day, month, year calculations
+        /// </summary>
+        /// <param name="nMinutes">Number of minutes to advance (maximum of 9*60)</param>
+        public void AdvanceTime(int nMinutes)
+        {
+            // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
+            if (nMinutes > (60 * 9)) throw new Exception("You can not advance more than 9 hours at a time");
+
+            // if we add the time, and it enters the next hour then we have some work to do
+            if (Minute + nMinutes > 59)
+            {
+                int nExtraMinutes;
+                byte nHours = (byte)Math.DivRem(nMinutes, 60, out nExtraMinutes);
+
+                byte newHour = (byte)((Hour + nHours + 1));//% 24);
+                Minute = (byte)((Minute + (byte)nExtraMinutes) % 60);
+
+                // if it puts us into a new day
+                if (newHour <= 23)
+                {
+                    Hour = newHour;
+                }
+                else
+                {
+                    Hour = (byte)(newHour % 24);
+                    // if the day + 1 is more days then we are allow in the month, then restart the days, and go to next month
+                    int nDay = (byte)(Day + 1);
+                    if (nDay > 28)
+                    {
+                        Day = 1;
+                        int nMonth = (byte)(Month + 1);
+                        // if the next month goes beyond 13, then we reset and advance the year
+                        if (nMonth > 13)
+                        {
+                            Month = 1;
+                            Year += 1;
+                        }
+                        else
+                        {
+                            Month += 1;
+                        }
+                    }
+                    else
+                    {
+                        Day = (byte)(Day + 1);
+                    }
+                }
+            }
+            else
+            {
+                Minute += (byte)nMinutes;
+            }
+        }
+
         /// <summary>
         /// Using the random number generator, provides 1 in howMany odds of returning true
         /// </summary>
