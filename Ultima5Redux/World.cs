@@ -47,9 +47,9 @@ namespace Ultima5Redux
 
             State = new GameState(u5Directory);
             
-            SpriteTileReferences = new TileReferences();
-
             DataOvlRef = new DataOvlReference(u5Directory);
+
+            SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
             SmallMapRef = new SmallMapReference(DataOvlRef);
 
@@ -87,16 +87,12 @@ namespace Ultima5Redux
             // build the NPC tables
             NpcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
 
-            State.Year = 100;
-            State.Month = 13;
-            State.Day = 28;
-            State.Hour = 22;
-            State.Minute = 2;
-            while (true)
-            {
-                State.AdvanceTime(60*9-3);
-            }
-        
+            //State.Year = 100;
+            //State.Month = 13;
+            //State.Day = 28;
+            //State.Hour = 22;
+            //State.Minute = 2;
+          
 
             //Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
             //            Conversation convo = new Conversation(NpcRef.NPCs[296], State, DataOvlRef); // Gwenno

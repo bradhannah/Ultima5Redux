@@ -47,6 +47,8 @@ namespace Ultima5Redux
         public bool IsBuilding;
         [DataMember]
         public bool DontDraw;
+        [DataMember]
+        public int SpeedFactor;
 
         public bool IsStaircase()
         {

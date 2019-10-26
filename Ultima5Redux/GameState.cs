@@ -119,38 +119,38 @@ namespace Ultima5Redux
             }
         }
 
-        public UInt16 Gems
+        public byte Gems
         {
             get
             {
-                return dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsUINT16();
+                return dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
             }
             set
             {
-                dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsUINT16(value);
+                dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
             }
         }
-        public UInt16 Torches
+        public byte Torches
         {
             get
             {
-                return dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsUINT16();
+                return dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
             }
             set
             {
-                dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsUINT16(value);
+                dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
 
             }
         }
-        public UInt16 Keys
+        public byte Keys
         {
             get
             {
-                return dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsUINT16();
+                return dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
             }
             set
             {
-                dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsUINT16(value);
+                dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
 
             }
         }

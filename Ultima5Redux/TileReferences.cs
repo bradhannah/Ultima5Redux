@@ -13,8 +13,11 @@ namespace Ultima5Redux
         public Dictionary<int, TileReference> TileReferenceDictionary { get; }
         public Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } = new Dictionary<string, TileReference>(512);
 
-        public TileReferences()
+        private U5StringRef u5StringRef;
+
+        public TileReferences(U5StringRef u5StringRef)
         {
+            this.u5StringRef = u5StringRef;
             TileReferenceDictionary = TileReferences.Load();
 
             //foreach (TileReference tileRef in TileReferenceDictionary)
@@ -101,6 +104,34 @@ namespace Ultima5Redux
             bool bIsDoorWithView = nSprite == GetTileNumberByName("RegularDoorView") || nSprite == GetTileNumberByName("LockedDoorView") ||
                  nSprite == GetTileNumberByName("MagicLockDoorWithView");
             return bIsDoorWithView;
+        }
+
+        public int GetMinuteIncrement(int nSprite)
+        {
+            return GetTileReference(nSprite).SpeedFactor;
+        }
+
+        public string GetSlowMovementString(int nSprite)
+        {
+            TileReference tileRef = GetTileReference(nSprite);
+            switch (tileRef.SpeedFactor)
+            {
+                case 1:
+                case -1:
+                    throw new Exception("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
+                case 2:
+                case 4:
+                    // this is normal speed
+                    return String.Empty;
+                    break;
+                case 6:
+                    return u5StringRef.GetString(DataOvlReference.WORLD_STRINGS.SLOW_PROG);
+                case 8:
+                    return u5StringRef.GetString(DataOvlReference.WORLD_STRINGS.VERY_SLOW);
+                default:
+                    throw new Exception("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
+            }
+
         }
 
         /// <summary>
