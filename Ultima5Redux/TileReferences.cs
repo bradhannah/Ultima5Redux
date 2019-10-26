@@ -106,6 +106,17 @@ namespace Ultima5Redux
             return bIsDoorWithView;
         }
 
+        public bool RequiresGrapplingHook(int nSprite)
+        {
+            return nSprite == GetTileNumberByName("SmallMountains");
+
+        }
+
+        public bool IsKlimbable(int nSprite)
+        {
+            return GetTileReference(nSprite).IsKlimable;
+        }
+
         public int GetMinuteIncrement(int nSprite)
         {
             return GetTileReference(nSprite).SpeedFactor;

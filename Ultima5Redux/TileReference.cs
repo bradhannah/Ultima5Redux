@@ -49,6 +49,8 @@ namespace Ultima5Redux
         public bool DontDraw;
         [DataMember]
         public int SpeedFactor;
+        [DataMember]
+        public bool IsKlimable;
 
         public bool IsStaircase()
         {

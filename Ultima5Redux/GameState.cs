@@ -56,7 +56,7 @@ namespace Ultima5Redux
             }
         }
 
-        
+
         public UInt16 Year
         {
             get
@@ -154,7 +154,7 @@ namespace Ultima5Redux
 
             }
         }
-        public UInt16 Gold 
+        public UInt16 Gold
         {
             get
             {
@@ -179,6 +179,10 @@ namespace Ultima5Redux
             }
         }
 
+        public bool HasGrapple
+        {
+            get; set;
+        } = true;
 
         /// <summary>
         /// Users Karma
@@ -266,6 +270,11 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
+
+        public void GrapplingFall()
+        {
+            // called when falling from a Klimb on a mountain
+        }
 
         /// <summary>
         /// Advances time and takes care of all day, month, year calculations

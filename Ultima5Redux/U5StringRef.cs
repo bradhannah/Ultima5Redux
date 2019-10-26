@@ -24,6 +24,7 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.VISION1_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.VISION1).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.VISION2_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.VISION2).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.OPENING_THINGS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.OPENING_THINGS_STUFF).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.KLIMBING_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.KLIMBING).GetChunkAsStringList());
             
         }
 

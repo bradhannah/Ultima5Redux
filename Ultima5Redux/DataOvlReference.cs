@@ -43,11 +43,14 @@ namespace Ultima5Redux
             KEYPRESS_COMMANDS,
             VISION1,
             VISION2,
-            OPENING_THINGS_STUFF
+            OPENING_THINGS_STUFF,
+            KLIMBING
         };
 
         public enum VISION1_STRINGS { DEATH_VISION = 0, STRANGE_VISION }
         public enum VISION2_STRINGS {THOU_DOST_SEE, YOU_SEE_DARKNESS, YOU_SEE }
+
+        public enum KLIMBING_STRINGS { WITH_WHAT = 0 , ON_FOOT , IMPASSABLE, NOT_CLIMABLE, FELL}
 
         public enum KEYPRESS_COMMANDS_STRINGS { BUFFER_O = 0, BUFFER_FF, BUFFER_N, SHEETS_IN_IRONS, PASS, BOARD, CAST_DOT, D_WHAT, ENTER_WHAT, FIRE, GET, HOLE_UP, ONLY_IN_BED,
             IGNITE_TORCH, JIMMY, KLIMB, LOOK, DOT_DOT_DOT, MIX_REAGENTS, NEW_ORDER, OPEN, PUSH_NOT_HER, PUSH, QUIT, READY, SEARCH, SEARCH_DOR, TALK, FUNNY_NO_RESPONSE,
@@ -367,7 +370,7 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "getting things string!", 0x8c4e, 0x238);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "movement strings", 0x8e86, 0xed);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Mixing spells", 0x8f74, 0xbe);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "movement strings", 0x9032, 0x30);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Klimbing strings", 0x9026, 0x3A, 0x00, DataChunkName.KLIMBING);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "pay fine/bribe, merchant chat", 0x9062, 0x1b2, 0x00, DataChunkName.CHIT_CHAT);
             SomeStrings someStrings = GetDataChunk(DataChunkName.CHIT_CHAT).GetChunkAsStringList();
 
