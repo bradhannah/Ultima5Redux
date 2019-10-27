@@ -34,13 +34,14 @@ namespace Ultima5Redux
             public enum NPCDialogTypeEnum
             {
                 Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
-                InnKeeper = 0x88, UnknownX85 = 0x85, UnknownX86 = 0x86, Unknown = 0xFF
+                InnKeeper = 0x88, MagicSeller = 0x85, UnknownX86 = 0x86, Unknown = 0xFF
                     // unknowns may be crown and sandlewood box
             };
             public enum NPCKeySpriteEnum
             {
                 Custom = -1, Guard = 368, Merchant = 340, Healer = 320,
-                UnknownX85 = 368, UnknownX86 = 368, Unknown = 0xFF
+                UnknownX85 = 368, UnknownX86 = 368, Bard = 324, Fighter = 328, Towny = 336, BardPlaying = 348, Jester = 344, Child = 360, Beggar = 364,
+                Apparition = 372, BlackThorn = 376, LordBritish = 380, Unknown = 0xFF
             };
 
             // based on Xu4 AI = (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
@@ -136,7 +137,8 @@ namespace Ultima5Redux
                     switch (this.NPCType)
                     {
                         case NPCDialogTypeEnum.Custom:
-                            return (int)NPCKeySpriteEnum.Guard;
+                            return (int)CharacterType + 0x100;
+//                            return (int)NPCKeySpriteEnum.Guard;
                         case NPCDialogTypeEnum.Guard:
                             return (int)NPCKeySpriteEnum.Guard;
                         case NPCDialogTypeEnum.WeaponsDealer:
@@ -147,7 +149,7 @@ namespace Ultima5Redux
                             return (int)NPCKeySpriteEnum.Merchant;
                         case NPCDialogTypeEnum.Healer:
                             return (int)NPCKeySpriteEnum.Healer;
-                        case NPCDialogTypeEnum.UnknownX85:
+                        case NPCDialogTypeEnum.MagicSeller:
                         case NPCDialogTypeEnum.UnknownX86:
                         case NPCDialogTypeEnum.Unknown:
                             return (int)NPCKeySpriteEnum.Guard;

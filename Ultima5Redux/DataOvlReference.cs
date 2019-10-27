@@ -88,9 +88,6 @@ namespace Ultima5Redux
             CANT, NOTHING_TO_OPEN, TRAPPED, CHEST_EMPTY, CHEST_OPENED, ALREADY_OPEN2, WHAT2, ITS_OPEN, TOO_HEAVY, LOCKED_N, OPENED
         }
 
-
-  
-
         /// <summary>
         /// Conversational phrase indexes
         /// </summary>

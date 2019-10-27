@@ -215,7 +215,8 @@ namespace Ultima5Redux
             CURRENT_MONTH,
             CURRENT_DAY,
             CURRENT_HOUR,
-            CURRENT_MINUTE
+            CURRENT_MINUTE,
+            NPC_TYPES
         };
         #endregion
 
@@ -257,6 +258,9 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Number of Party Members", 0x2B5, 0x1, 0x00, DataChunkName.N_PEOPLE_PARTY);
+
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Type Map", 0x5B4, 0x20, 0x00, DataChunkName.NPC_TYPES);
+            List<byte> chunks = dataChunks.GetDataChunk(DataChunkName.NPC_TYPES).GetAsByteList();
 
             // Initialize the table to determine if an NPC is dead
             List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();

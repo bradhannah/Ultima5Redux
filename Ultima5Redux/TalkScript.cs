@@ -245,7 +245,19 @@ namespace Ultima5Redux
             /// <summary>
             /// Associated string (can be empty)
             /// </summary>
-            public string Str => str;
+            public string Str
+            {
+                get
+                {
+                    return str;
+                }
+                set
+                {
+                    str = value;
+                }
+                
+            }
+            //=> str;
 
             /// <summary>
             /// If there is a label, then this is a zero based index
@@ -419,11 +431,11 @@ namespace Ultima5Redux
             {
                 if (GetScriptItem(0).Command == TalkCommand.PlainString && GetScriptItem(0).Str != "\"")
                 {
-                    InsertScriptItemAtFront(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
+                    //InsertScriptItemAtFront(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
                 }
                 if (GetScriptItem(NumberOfScriptItems - 1).Command == TalkCommand.PlainString && GetScriptItem(NumberOfScriptItems - 1).Str != "\"")
                 {
-                    AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
+                    //AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
                 }
             }
 
@@ -556,7 +568,7 @@ namespace Ultima5Redux
         /// <summary>
         /// The default script line offsets for the static responses
         /// </summary>
-        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
+        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye, PreEmp_Name }
 
 
         /// <summary>
@@ -655,7 +667,7 @@ namespace Ultima5Redux
             string question;
 
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
-            List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name"); 
+            List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name");
             scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, scriptLines[(int)TalkConstants.Name]));
             List<string> jobQuestion = new List<string>(1); jobQuestion.Add("job"); jobQuestion.Add("work");
             scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, scriptLines[(int)TalkConstants.Job]));

@@ -193,7 +193,7 @@ namespace Ultima5Redux
                 // process the individual line
                 // it will return a skip instruction, telling us how to to handle subsequent calls
                 await ProcessLine(scriptLines[i], nTalkLineIndex, i);
-                //SkipInstruction skipInstruction =
+                
                 SkipInstruction skipInstruction = currentSkipInstruction;
 
                 if (skipCounter != -1) --skipCounter;
@@ -246,7 +246,6 @@ namespace Ultima5Redux
             {
                 currentSkipInstruction = SkipInstruction.DontSkip;
                 return;
-                //return SkipInstruction.DontSkip;
             }
 
             int nItem = 0;
@@ -271,14 +270,12 @@ namespace Ultima5Redux
                             // we continue to the next block, but skip the one after
                             currentSkipInstruction = SkipInstruction.SkipAfterNext;
                             return;
-                            //return SkipInstruction.SkipAfterNext;
                         }
                         else
                         {
                             // we skip the next block because it is the line used when we actually know the Avatar
                             currentSkipInstruction = SkipInstruction.SkipNext;
                             return;
-                            //return SkipInstruction.SkipNext;
                         }
                     case TalkScript.TalkCommand.AvatarsName:
                         // we should already know if they know the avatars name....
@@ -514,23 +511,25 @@ namespace Ultima5Redux
                 /// If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
                 // OR if the Name line contains an IfElseKnowsName (#Eb)
-                if ((!npcKnowsAvatar && conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting) && 
-                    (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) || 
-                    script.GetScriptLine(TalkScript.TalkConstants.Name).ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
+                if ((!npcKnowsAvatar && conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting) &&
+                                 (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) ||
+                                 script.GetScriptLine(TalkScript.TalkConstants.Name).ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
                 {
                     // randomly add an introduction of the Avatar since they haven't met him
                     if (gameStateRef.OneInXOdds(2) || true)
                     {
+                        // okay, tell them who you are
                         conversationOrder.Add((int)TalkScript.TalkConstants.Name);
 
                         script.GetScriptLine(TalkScript.TalkConstants.Name).InsertScriptItemAtFront(
                             new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "I am called "));
                         script.GetScriptLine(TalkScript.TalkConstants.Name).EncloseInQuotes();
                         conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
+
                     }
                 }
-                // if in label && next line include <AvatarName>, then skip label
 
+                // if in label && next line include <AvatarName>, then skip label
                 const int STARTING_INDEX_FOR_LABEL = 0;
 
                 ///// IT'S A LABEL
@@ -560,11 +559,24 @@ namespace Ultima5Redux
                     string userResponse = string.Empty;
                     if (scriptLabel.ContainsQuestions())
                     {
-                        // need to figure out if we are going to ask a question...
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
-                        // we wait patiently for the user to respond
-                        await AwaitResponse();
-                        userResponse = GetResponse();
+                        int nTimes = 0;
+                        do
+                        {
+                            // need to figure out if we are going to ask a question...
+                            if (nTimes++ == 0)
+                            {
+                                EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
+                            }
+                            else
+                            {
+                                EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.WHAT_YOU_SAY)));//"What didst thou say?"));
+                                EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
+                            }
+                            // we wait patiently for the user to respond
+
+                            await AwaitResponse();
+                            userResponse = GetResponse();
+                        } while (userResponse == String.Empty);
                     }
                     else
                     {
