@@ -155,6 +155,7 @@ namespace Ultima5Redux
                 {
                     throw new Exception("You have requested an answer for a question that doesn't exist. Use AnswerIsAvailable to check for existence first.");
                 }
+                
                 return QuestionAnswers[GetQuestionKey(question)];
             }
 
@@ -224,12 +225,13 @@ namespace Ultima5Redux
         protected internal class ScriptQuestionAnswer
         {
             public ScriptLine Answer { get; }
+
             public List<string> questions { get; }
 
             public ScriptQuestionAnswer(List<string> questions, ScriptLine answer)
             {
                 this.questions = questions;
-                Answer = answer;
+                this.Answer = answer;
             }
         }
 
@@ -249,7 +251,11 @@ namespace Ultima5Redux
             {
                 get
                 {
-                    return str;
+                    // we trim the double quotes out since they are so hard to deal with
+                    // the boys at Origin must have had some very specific rules for dealing with newlines and
+                    // double quotes
+                    char[] trimChars = new[] { '"' };
+                    return str.Trim(trimChars);
                 }
                 set
                 {

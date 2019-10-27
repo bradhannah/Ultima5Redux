@@ -258,7 +258,7 @@ namespace Ultima5Redux
                 // we must describe what we "see"
                 if (nTalkLineIndex == (int)TalkScript.TalkConstants.Description && nSplitLine == 0 && nItem == 0)
                 {
-                    EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOU_SEE)));
+                    EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOU_SEE)+" "));
                 }
 
                 switch (item.Command)
@@ -420,7 +420,10 @@ namespace Ultima5Redux
         /// <returns>associated string</returns>
         public string GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION index)
         {
-            return (dataOvlRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index));
+            char[] trimChars = new[] { '"' };
+            string convStr = dataOvlRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index).Trim();
+            convStr = convStr.Trim(trimChars);
+            return (convStr);
         }
         #endregion
 
@@ -519,13 +522,12 @@ namespace Ultima5Redux
                     if (gameStateRef.OneInXOdds(2) || true)
                     {
                         // okay, tell them who you are
-                        conversationOrder.Add((int)TalkScript.TalkConstants.Name);
+                        //conversationOrder.Add((int)TalkScript.TalkConstants.Name);
+                        //script.GetScriptLine(TalkScript.TalkConstants.Name).InsertScriptItemAtFront(
+                        //    new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\nI am called "));
+                        //conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
 
-                        script.GetScriptLine(TalkScript.TalkConstants.Name).InsertScriptItemAtFront(
-                            new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "I am called "));
-                        script.GetScriptLine(TalkScript.TalkConstants.Name).EncloseInQuotes();
-                        conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
-
+                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\nI am called " + Npc.Name));
                     }
                 }
 
