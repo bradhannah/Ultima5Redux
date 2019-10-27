@@ -671,9 +671,10 @@ namespace Ultima5Redux
             bool labelEncountered = false;
 
             string question;
-
+            
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
             List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name");
+            //scriptLines[(int)TalkConstants.Name].InsertScriptItemAtFront(new ScriptItem(TalkCommand.PlainString, "My name is "));
             scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, scriptLines[(int)TalkConstants.Name]));
             List<string> jobQuestion = new List<string>(1); jobQuestion.Add("job"); jobQuestion.Add("work");
             scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, scriptLines[(int)TalkConstants.Job]));

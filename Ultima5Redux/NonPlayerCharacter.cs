@@ -40,7 +40,7 @@ namespace Ultima5Redux
             public enum NPCKeySpriteEnum
             {
                 Custom = -1, Guard = 368, Merchant = 340, Healer = 320,
-                UnknownX85 = 368, UnknownX86 = 368, Bard = 324, Fighter = 328, Towny = 336, BardPlaying = 348, Jester = 344, Child = 360, Beggar = 364,
+                UnknownX86 = 368, Bard = 324, Fighter = 328, Towny = 336, BardPlaying = 348, Jester = 344, Child = 360, Beggar = 364,
                 Apparition = 372, BlackThorn = 376, LordBritish = 380, Unknown = 0xFF
             };
 
@@ -146,10 +146,10 @@ namespace Ultima5Redux
                         case NPCDialogTypeEnum.HorseSeller:
                         case NPCDialogTypeEnum.ShipSeller:
                         case NPCDialogTypeEnum.InnKeeper:
+                        case NPCDialogTypeEnum.MagicSeller:
                             return (int)NPCKeySpriteEnum.Merchant;
                         case NPCDialogTypeEnum.Healer:
                             return (int)NPCKeySpriteEnum.Healer;
-                        case NPCDialogTypeEnum.MagicSeller:
                         case NPCDialogTypeEnum.UnknownX86:
                         case NPCDialogTypeEnum.Unknown:
                             return (int)NPCKeySpriteEnum.Guard;

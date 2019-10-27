@@ -117,6 +117,7 @@ namespace Ultima5Redux
                     return item.Str;
                 case TalkScript.TalkCommand.Rune:
                     runeMode = !runeMode;
+                    if (runeMode) return " ";
                     return string.Empty;
                 default:
                     throw new Exception("Passed in an unsupported TalkCommand: " + item.Command.ToString() + " to the TextProcessItem method");
@@ -476,6 +477,14 @@ namespace Ultima5Redux
                     {
                         userResponse = TalkScript.TalkConstants.Bye.ToString().ToLower();
                     }
+                    // if someone has asked their name then we need to add "My name is " to beginning 
+                    else if (userResponse.ToLower() == "name")
+                    {
+                        TalkScript.ScriptLine scriptLine = new TalkScript.ScriptLine();
+                        scriptLine.AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, 
+                            GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.MY_NAME_IS)+" "));
+                        await ProcessLine(scriptLine);
+                    }
 
                     if (Npc.Script.QuestionAnswers.AnswerIsAvailable(userResponse))
                     {
@@ -522,11 +531,6 @@ namespace Ultima5Redux
                     if (gameStateRef.OneInXOdds(2) || true)
                     {
                         // okay, tell them who you are
-                        //conversationOrder.Add((int)TalkScript.TalkConstants.Name);
-                        //script.GetScriptLine(TalkScript.TalkConstants.Name).InsertScriptItemAtFront(
-                        //    new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\nI am called "));
-                        //conversationOrderScriptLines.Add(script.GetScriptLine(TalkScript.TalkConstants.Name));
-
                         EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\nI am called " + Npc.Name));
                     }
                 }
