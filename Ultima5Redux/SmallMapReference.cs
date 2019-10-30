@@ -286,7 +286,7 @@ namespace Ultima5Redux
             // it isn't the most efficient way, but it gets the job done
             foreach (ushort offset in locationOffsets)
             {
-                    locationNames.Add(dataRef.GetDataChunk(DataChunk.DataFormatType.SimpleString, string.Empty, offset, 20).GetChunkAsString());
+                    locationNames.Add(dataRef.GetDataChunk(DataChunk.DataFormatType.SimpleString, string.Empty, offset, 20).GetChunkAsString().Replace("_"," "));
             }
         }
         #endregion

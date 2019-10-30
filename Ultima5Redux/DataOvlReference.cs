@@ -44,9 +44,16 @@ namespace Ultima5Redux
             VISION1,
             VISION2,
             OPENING_THINGS_STUFF,
-            KLIMBING
+            KLIMBING,
+            GET_THINGS
         };
 
+        public enum GET_THINGS_STRINGS { OPEN_IT_FIRST = 0, A_MOONSTONE, A_MAGIC_CARPET, S_FOOD, A_SANDLEWOOD_BOX, S_TORCH, BANG, ES_BANG, S_GEM, BANG2, S_BANG3, S_ODD_KEY, S_KEY,
+            BANG4, S_BANG, PLANS_FOR_HMS_CAPE, A_SCROLL_COLON, BANG5, S_GOLD, A_SPACE, S_POTION, BANG6, THE_SHARD_OF, FALSEHOOD, HATRED, COWARDICE, CROWN_OF_LB,
+            SCEPTRE_OF_LB, AMULET_OF_LB, NOTHING_TO_GET, GET, MUST_OPEN_FIRST, CONTENTS_OF_CHEST_YOU_FIND, NOT_HER, NEWLINE, BORROWED, CROPS_PICKED, MMMM_DOT, CANT_REACH_PLATE, MMM_DOT2, CANT_REACH_PLATE2,
+            CANT_REACH_PLATE3, MMM_DOT3, NOTHING_TO_GET2
+        }
+       
         public enum VISION1_STRINGS { DEATH_VISION = 0, STRANGE_VISION }
         public enum VISION2_STRINGS {THOU_DOST_SEE, YOU_SEE_DARKNESS, YOU_SEE }
 
@@ -93,7 +100,6 @@ namespace Ultima5Redux
         /// </summary>
         public enum CHUNK__PHRASES_CONVERSATION { CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
         YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F, YOU_SEE = 0x11, I_AM_CALLED = 0x12 };
-        //private Dictionary<DataChunkName, DataChunk> chunkMap=new Dictionary<DataChunkName, DataChunk>();
 
         #endregion
 
@@ -359,11 +365,12 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "finding/searching for things strings ", 0x851e, 0x442);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "wher you found something (ie. In the wall) ", 0x8960, 0xe4);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "strings about unlocking or finding doors", 0x8a44, 0x1b3, 0x00, DataChunkName.OPENING_THINGS_STUFF);
-            SomeStrings str2 = dataChunks.GetDataChunk(DataChunkName.OPENING_THINGS_STUFF).GetChunkAsStringList();
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "potion colours", 0x8bfa, 0x34);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "scroll shortfroms", 0x8c2e, 0x20);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "more found things!", 0x8c4e, 0xcc);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "more found things!", 0x8c4e, 0x236, 0x00, DataChunkName.GET_THINGS);
+            SomeStrings str2 = dataChunks.GetDataChunk(DataChunkName.GET_THINGS).GetChunkAsStringList();
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "getting things string!", 0x8c4e, 0x238);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "movement strings", 0x8e86, 0xed);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Mixing spells", 0x8f74, 0xbe);

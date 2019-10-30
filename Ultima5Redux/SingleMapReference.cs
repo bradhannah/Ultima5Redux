@@ -120,7 +120,18 @@ namespace Ultima5Redux
                 }
             }
 
-           
+
+            #endregion
+
+            #region Public Methods
+            public override string ToString()
+            {
+                string mapStr = this.MapLocation.ToString().Replace("_", " ") + " - ";
+                if (Floor == -1) mapStr += "Basement";
+                else if (Floor == 0) mapStr += "Main Level";
+                else mapStr += "Floor " + Floor.ToString();
+                return mapStr;
+            }
             #endregion
 
             #region Public Static Methods

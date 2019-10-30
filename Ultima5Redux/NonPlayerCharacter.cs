@@ -34,7 +34,7 @@ namespace Ultima5Redux
             public enum NPCDialogTypeEnum
             {
                 Custom = -1, Guard = 0, WeaponsDealer = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
-                InnKeeper = 0x88, MagicSeller = 0x85, UnknownX86 = 0x86, Unknown = 0xFF
+                InnKeeper = 0x88, MagicSeller = 0x85, GuildMaster = 0x86, Unknown = 0xFF
                     // unknowns may be crown and sandlewood box
             };
             public enum NPCKeySpriteEnum
@@ -147,10 +147,10 @@ namespace Ultima5Redux
                         case NPCDialogTypeEnum.ShipSeller:
                         case NPCDialogTypeEnum.InnKeeper:
                         case NPCDialogTypeEnum.MagicSeller:
+                        case NPCDialogTypeEnum.GuildMaster:
                             return (int)NPCKeySpriteEnum.Merchant;
                         case NPCDialogTypeEnum.Healer:
                             return (int)NPCKeySpriteEnum.Healer;
-                        case NPCDialogTypeEnum.UnknownX86:
                         case NPCDialogTypeEnum.Unknown:
                             return (int)NPCKeySpriteEnum.Guard;
                         default:

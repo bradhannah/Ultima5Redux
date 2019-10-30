@@ -124,6 +124,10 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Just chill out and wait for a response, but we introduce a small sleep so we don't stress out the CPU
+        /// </summary>
+        /// <returns></returns>
         async Task AwaitResponse()
         {
             while (responseQueue.Count == 0)
