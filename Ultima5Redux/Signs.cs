@@ -89,6 +89,56 @@ namespace Ultima5Redux
         /// </summary>
         private List<Sign> signList = new List<Sign>(TOTAL_SIGNS);
 
+        public Sign GetSign(int nSign)
+        {
+            return signList[nSign];
+        }
+
+        public Sign GetSign(SmallMapReference.SingleMapReference.Location location, int x, int y)
+        {
+            foreach (Sign sign in signList)
+            {
+                if (sign.X == x && sign.Y == y && sign.Location == location)
+                {
+                    return sign;
+                }
+            }
+            throw new Exception("You asked for a sigh that simple doesn't exist in " + location + " at X=" + x.ToString() + " Y="+y.ToString());
+        }
+
+        public static string GetEightLawsSign(SmallMapReference.SingleMapReference.Location location)
+        {
+            switch (location)
+            {
+                case SmallMapReference.SingleMapReference.Location.Moonglow:
+                    //honesty
+                    return "Thou shalt not lie, or thou shalt lose thy tongue.";
+                case SmallMapReference.SingleMapReference.Location.Britain:
+                    // compassion
+                    return "Thou shalt help those in need, or thou shalt suffer the same need.";
+                case SmallMapReference.SingleMapReference.Location.Jhelom:
+                    // valor
+                    return "Thou shalt fight to the death if challenged, or thou shalt be banished as a coward.";
+                case SmallMapReference.SingleMapReference.Location.Yew:
+                    // justice
+                    return "Thou shalt confess to thy crime and suffer its just punishment, or thou shalt be put to death.";
+                case SmallMapReference.SingleMapReference.Location.Minoc:
+                    // sacrifice
+                    return "Thou shalt donate half of thy income to charity, or thou shalt have no income.";
+                case SmallMapReference.SingleMapReference.Location.Trinsic:
+                    // honor
+                    return "If thou dost lose thine own honor, thou shalt take thine own life.";
+                case SmallMapReference.SingleMapReference.Location.Skara_Brae:
+                    // spirituality
+                    return "Thou shalt enforce the laws of virtue, or thou shalt die as a heretic.";
+                case SmallMapReference.SingleMapReference.Location.New_Magincia:
+                    // humility
+                    return "Thou shalt humble thyself to thy superiors, or thou shalt suffer their wrath.";
+                default:
+                    throw new Exception("You can't get a string for the eight laws from a place that isn't one of the cities of virtue (place=" + location + ")");
+            }
+
+        }
 
         /// <summary>
         /// Loads the "Look" descriptions
