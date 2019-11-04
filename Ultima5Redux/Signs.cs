@@ -32,7 +32,23 @@ namespace Ultima5Redux
             /// <summary>
             /// Actual text of sign
             /// </summary>
-            public string SignText { get; }
+            public string SignText { 
+                get
+                {
+                    return ScrubSignText(RawSignText);
+                }
+            }
+
+            public string SignTextCleanedSpaces
+            { 
+                get
+                {
+                    return TrimSpareSpacesFromSign(SignText);
+                }
+            }
+
+
+            public string RawSignText { get; }
 
             /// <summary>
             /// A print function that frankly doesn't work very well...
@@ -49,6 +65,66 @@ namespace Ultima5Redux
                 }
             }
 
+            private static string TrimSpareSpacesFromSign(string signText)
+            {
+                char[] signTextArray = signText.ToArray();
+                string trimmedStr = string.Empty;
+
+                string[] lines = signText.Split('\n');
+
+                foreach (string line in lines)
+                {
+                    trimmedStr += line.Trim() + "\n";
+                }
+                return trimmedStr.Trim();
+
+            }
+
+            private static string ScrubSignText(string signText)
+            {
+                char[] signTextArray = signText.ToArray();
+                string scrubbedStr = string.Empty;
+
+                // 8 = top left
+                // l = horizontal line
+                // m = top num
+                // 9 = top right
+                // g = verticle line
+                // n = bottom sign post
+                // : = bottom left
+                // ; = bottom right
+                // +)g = small sign top row
+                // f)* = small sign bottom row
+
+                Dictionary<char, string> replacementChars = new Dictionary<char, string>();
+                replacementChars.Add('@', "*"); // the actual character is a solid circle for separation //((char)0xA7).ToString());
+                replacementChars.Add('[', "TH");
+                replacementChars.Add('^', "EA");
+                replacementChars.Add('_', "ST");
+
+
+                char prevChar = '\0';
+                foreach (char signChar in signTextArray)
+                {
+                    if (char.IsUpper(signChar) || signChar == ' ')
+                    {
+                        scrubbedStr += signChar;
+                    }
+                    else if (replacementChars.ContainsKey(signChar))
+                    {
+                        scrubbedStr += replacementChars[signChar];
+                    }
+                    // if we have two verticle bars then we move to the next line
+                    else if (signChar == 'g' && prevChar == 'g')
+                    {
+                        // do nothing and leave it out
+                        scrubbedStr += '\n';
+                    }
+                    prevChar = signChar;
+                }
+                return scrubbedStr;
+            }
+
             /// <summary>
             /// Create a sign object
             /// </summary>
@@ -63,7 +139,8 @@ namespace Ultima5Redux
                 Floor = floor;
                 X = x;
                 Y = y;
-                SignText = signText;
+                RawSignText = signText;
+                //SignText = signText;
             }
         }
 
@@ -155,19 +232,25 @@ namespace Ultima5Redux
                 signsOffsets.Add((int)(signsByteArray[i] | (((uint)signsByteArray[i + 1]) << 8)));
             }
 
-            // using the offsets, populate the sign objects
-            // note: this could be on demand, but would seem like a lot of wasted cycles in exchange for a little bit more free memory
-            for (int i = 0; i < TOTAL_SIGNS; i++)
+            int nIndex = TOTAL_SIGNS * 2;
+            // we are ignoring the "offsets" which are likely used to help optimize the lookup 
+            // on older hardware, instead we will just be lazy and search for them by cycling
+            // through the whole list
+            // TODO: optimize storage to improve lookup spped
+            do
             {
-                int offset = signsOffsets[i];
-                string signtxt = Utils.BytesToStringNullTerm(signsByteArray, offset + 4, 0xFF);
-                signList.Add(new Sign((SmallMapReference.SingleMapReference.Location)signsByteArray[offset],
-                    signsByteArray[offset + 1],
-                    signsByteArray[offset + 2],
-                    signsByteArray[offset + 3],
-                    Utils.BytesToStringNullTerm(signsByteArray, offset+4, 0xFF) ) );
-                signList[i].PrintSign();
-            }
+                string rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4, 0xFF);
+                //string signtxt = ScrubSignText(rawSignTxt);
+                signList.Add(new Sign((SmallMapReference.SingleMapReference.Location)signsByteArray[nIndex],
+                    signsByteArray[nIndex + 1],
+                    signsByteArray[nIndex + 2],
+                    signsByteArray[nIndex + 3],
+                    rawSignTxt));
+                nIndex += rawSignTxt.Length + 1 + 4; // we hop over the string plus it's null byte plus the four bytes for definition
+            // while we don't encounter four zero bytes in a row, which is eseentially the end of the file
+            } while (!(signsByteArray[nIndex] == 0 && signsByteArray[nIndex+1] == 0 && signsByteArray[nIndex+2] == 0 && signsByteArray[nIndex+3] == 0));
         }
+
+     
     }
 }
