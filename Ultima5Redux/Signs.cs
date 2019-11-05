@@ -11,7 +11,9 @@ namespace Ultima5Redux
     {
         public class Sign
         {
-            private const int CHARS_PER_LINE= 16;
+            private const int CHARS_PER_LINE = 16;
+
+            public int Offset { get; }
 
             /// <summary>
             /// General location of sign
@@ -24,15 +26,15 @@ namespace Ultima5Redux
             /// <summary>
             /// X coordinate of sign
             /// </summary>
-            public byte X { get; } 
+            public byte X { get; }
             /// <summary>
             /// Y coordinate of sign
             /// </summary>
-            public byte Y { get;  }
+            public byte Y { get; }
             /// <summary>
             /// Actual text of sign
             /// </summary>
-            public string SignText { 
+            public string SignText {
                 get
                 {
                     return ScrubSignText(RawSignText);
@@ -80,6 +82,17 @@ namespace Ultima5Redux
 
             }
 
+            private static string ScrubSignText(byte[] signBytes)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (byte curByte in signBytes)
+                {
+                    if (curByte != '\0')
+                        sb.Append((char)curByte);
+                }
+                return sb.ToString();
+            }
+
             private static string ScrubSignText(string signText)
             {
                 char[] signTextArray = signText.ToArray();
@@ -95,6 +108,13 @@ namespace Ultima5Redux
                 // ; = bottom right
                 // +)g = small sign top row
                 // f)* = small sign bottom row
+                // a = scrawly top left
+                // b = scrawly horizontal
+                // c = scrawly top right
+                // d = scrawly bottom left
+                // e = scrawly bottom horizontal (double line)
+                // f = scrawly bottom right
+
 
                 Dictionary<char, string> replacementChars = new Dictionary<char, string>();
                 replacementChars.Add('@', "*"); // the actual character is a solid circle for separation //((char)0xA7).ToString());
@@ -125,6 +145,13 @@ namespace Ultima5Redux
                 return scrubbedStr;
             }
 
+            public Sign(SmallMapReference.SingleMapReference.Location location, int floor, byte x, byte y, byte[] signText, int nOffset)
+                : this (location, floor, x, y, ScrubSignText(signText), nOffset)
+            {
+                
+            }
+
+
             /// <summary>
             /// Create a sign object
             /// </summary>
@@ -133,13 +160,14 @@ namespace Ultima5Redux
             /// <param name="x">x coord of sign</param>
             /// <param name="y">y coord of sign</param>
             /// <param name="signText">Text of sign (may contain unpritable txt that requires fonts from ibm.ch and runes.ch</param>
-            public Sign(SmallMapReference.SingleMapReference.Location location, int floor,  byte x, byte y, string signText)
+            public Sign(SmallMapReference.SingleMapReference.Location location, int floor,  byte x, byte y, string signText, int nOffset)
             {
                 Location = location;
                 Floor = floor;
                 X = x;
                 Y = y;
                 RawSignText = signText;
+                Offset = nOffset;
                 //SignText = signText;
             }
         }
@@ -227,10 +255,10 @@ namespace Ultima5Redux
 
             // add all of the offsets to a list
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
-            for (int i = 0; i < (TOTAL_SIGNS * 2); i += 2)
-            {
-                signsOffsets.Add((int)(signsByteArray[i] | (((uint)signsByteArray[i + 1]) << 8)));
-            }
+            //for (int i = 0; i < (TOTAL_SIGNS * 2); i += 2)
+            //{
+            //    signsOffsets.Add((int)(signsByteArray[i] | (((uint)signsByteArray[i + 1]) << 8)));
+            //}
 
             int nIndex = TOTAL_SIGNS * 2;
             // we are ignoring the "offsets" which are likely used to help optimize the lookup 
@@ -245,12 +273,18 @@ namespace Ultima5Redux
                     signsByteArray[nIndex + 1],
                     signsByteArray[nIndex + 2],
                     signsByteArray[nIndex + 3],
-                    rawSignTxt));
+                    rawSignTxt, nIndex) );
                 nIndex += rawSignTxt.Length + 1 + 4; // we hop over the string plus it's null byte plus the four bytes for definition
             // while we don't encounter four zero bytes in a row, which is eseentially the end of the file
             } while (!(signsByteArray[nIndex] == 0 && signsByteArray[nIndex+1] == 0 && signsByteArray[nIndex+2] == 0 && signsByteArray[nIndex+3] == 0));
+
+            List<byte> dataovlSignsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.DATA_OVL));
+            List<byte> shSign = DataChunk.CreateDataChunk(DataChunk.DataFormatType.ByteList, "SH Sign of Eight Laws", dataovlSignsByteArray, 0x743a, 0x66).GetAsByteList();
+            signList.Add(new Sign(SmallMapReference.SingleMapReference.Location.Serpents_Hold, 0, 15, 19, shSign.ToArray(), 0x743a));
+            //signList.Add();
+
         }
 
-     
+
     }
 }

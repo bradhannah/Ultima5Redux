@@ -81,7 +81,6 @@ namespace Ultima5Redux
             // build the sign tables
             SignRef = new Signs(ultima5Directory);
 
-
             TalkScriptsRef = new TalkScripts(u5Directory, DataOvlRef);
 
             // build the NPC tables
