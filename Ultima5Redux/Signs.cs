@@ -117,10 +117,11 @@ namespace Ultima5Redux
 
 
                 Dictionary<char, string> replacementChars = new Dictionary<char, string>();
-                replacementChars.Add('@', "*"); // the actual character is a solid circle for separation //((char)0xA7).ToString());
+                replacementChars.Add('@', " "); // the actual character is a solid circle for separation //((char)0xA7).ToString());
                 replacementChars.Add('[', "TH");
                 replacementChars.Add('^', "EA");
                 replacementChars.Add('_', "ST");
+                replacementChars.Add((char)138, "\n");
 
 
                 char prevChar = '\0';
@@ -208,7 +209,8 @@ namespace Ultima5Redux
                     return sign;
                 }
             }
-            throw new Exception("You asked for a sigh that simple doesn't exist in " + location + " at X=" + x.ToString() + " Y="+y.ToString());
+            //throw new Exception("You asked for a sigh that simple doesn't exist in " + location + " at X=" + x.ToString() + " Y="+y.ToString());
+            return null;
         }
 
         public static string GetEightLawsSign(SmallMapReference.SingleMapReference.Location location)
@@ -243,6 +245,11 @@ namespace Ultima5Redux
                     throw new Exception("You can't get a string for the eight laws from a place that isn't one of the cities of virtue (place=" + location + ")");
             }
 
+        }
+
+        public int GetNumberOfSigns()
+        {
+            return this.signList.Count;
         }
 
         /// <summary>
