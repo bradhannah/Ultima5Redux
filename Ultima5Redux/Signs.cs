@@ -121,13 +121,16 @@ namespace Ultima5Redux
                 replacementChars.Add('[', "TH");
                 replacementChars.Add('^', "EA");
                 replacementChars.Add('_', "ST");
-                replacementChars.Add((char)138, "\n");
+                replacementChars.Add(']', "NG");
+                replacementChars.Add('\\', "EE");
+                //replacementChars.Add((char)138, "\n");
 
 
                 char prevChar = '\0';
                 foreach (char signChar in signTextArray)
                 {
-                    if (char.IsUpper(signChar) || signChar == ' ')
+                    // do not translate lowercase because they are often used for drawing the actual signs
+                    if ((signChar >= 'A' && signChar <= 'Z') || signChar == ' ')
                     {
                         scrubbedStr += signChar;
                     }
@@ -140,6 +143,11 @@ namespace Ultima5Redux
                     {
                         // do nothing and leave it out
                         scrubbedStr += '\n';
+                    }
+                    //else if ((signChar >= 127 + 'a' && signChar <= 127 + 'z') || (signChar >= 127 + 'A' && signChar <= 127 + 'Z'))
+                    else if (signChar > 127)
+                    {
+                        scrubbedStr += ((char)(signChar - 128)).ToString();
                     }
                     prevChar = signChar;
                 }

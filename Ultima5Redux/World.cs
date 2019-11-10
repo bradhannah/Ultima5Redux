@@ -81,7 +81,8 @@ namespace Ultima5Redux
             // build the sign tables
             SignRef = new Signs(ultima5Directory);
 
-            Signs.Sign sign = SignRef.GetSign(SmallMapReference.SingleMapReference.Location.Yew, 16, 2);
+            //Signs.Sign sign = SignRef.GetSign(SmallMapReference.SingleMapReference.Location.Yew, 16, 2);
+            Signs.Sign sign = SignRef.GetSign(42);
 
             string str = sign.SignText;
             TalkScriptsRef = new TalkScripts(u5Directory, DataOvlRef);
