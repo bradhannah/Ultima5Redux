@@ -61,7 +61,5 @@ namespace Ultima5Redux
         {
             return (nSprite >= 196 && nSprite <= 199);
         }
-
-
     }
 }

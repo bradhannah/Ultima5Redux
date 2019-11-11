@@ -31,6 +31,8 @@ namespace Ultima5Redux
         /// </summary>
         private bool[][] npcIsDeadArray;
 
+        private DataOvlReference dataRef;
+
         /// <summary>
         /// All player character records
         /// </summary>
@@ -154,6 +156,12 @@ namespace Ultima5Redux
 
             }
         }
+
+        public Inventory PlayerInventory
+        {
+            get;
+        }
+
         public UInt16 Gold
         {
             get
@@ -220,13 +228,17 @@ namespace Ultima5Redux
         };
         #endregion
 
+
+
         #region Constructors
         /// <summary>
         /// Construct the GameState
         /// </summary>
         /// <param name="u5Directory">Directory of the game State files</param>
-        public GameState(string u5Directory)
+        public GameState(string u5Directory, DataOvlReference dataOvlRef)
         {
+            dataRef = dataOvlRef;
+
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
             dataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
@@ -234,9 +246,13 @@ namespace Ultima5Redux
             List<byte> gameStateByteArray;
             gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
+            // import all character records
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20*16, 0x00, DataChunkName.CHARACTER_RECORDS);
             DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
             CharacterRecords = new CharacterRecords(rawCharacterRecords.GetAsByteList());
+
+            // import the players invetry
+            PlayerInventory = new Inventory(gameStateByteArray, dataRef);
 
             // quantities of standard items
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00, DataChunkName.FOOD_QUANTITY);
@@ -270,6 +286,7 @@ namespace Ultima5Redux
             List<bool> npcMet = dataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
             // these will map directly to the towns and the NPC dialog #
             npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
+
         }
         #endregion
 

@@ -99,6 +99,15 @@ namespace Ultima5Redux
             return bIsChair;
         }
 
+        public bool IsSign(int nSprite)
+        {
+            return (GetTileNumberByName("Sign") == nSprite ||
+              GetTileNumberByName("SimpleCross") == nSprite ||
+              GetTileNumberByName("StoneHeadstone") == nSprite ||
+              GetTileNumberByName("SmallSign") == nSprite ||
+              GetTileNumberByName("SignWarning") == nSprite);
+        }
+
         public bool IsDoorWithView(int nSprite)
         {
             bool bIsDoorWithView = nSprite == GetTileNumberByName("RegularDoorView") || nSprite == GetTileNumberByName("LockedDoorView") ||

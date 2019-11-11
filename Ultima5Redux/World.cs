@@ -45,9 +45,9 @@ namespace Ultima5Redux
             // build the underworld map
             UnderworldMap = new LargeMap(u5Directory, LargeMap.Maps.Underworld);
 
-            State = new GameState(u5Directory);
-            
             DataOvlRef = new DataOvlReference(u5Directory);
+
+            State = new GameState(u5Directory, DataOvlRef);
 
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 

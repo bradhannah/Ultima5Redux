@@ -45,7 +45,9 @@ namespace Ultima5Redux
             VISION2,
             OPENING_THINGS_STUFF,
             KLIMBING,
-            GET_THINGS
+            GET_THINGS,
+            SPECIAL_ITEM_NAMES,
+            WEAR_USE_ITEM
         };
 
         public enum GET_THINGS_STRINGS { OPEN_IT_FIRST = 0, A_MOONSTONE, A_MAGIC_CARPET, S_FOOD, A_SANDLEWOOD_BOX, S_TORCH, BANG, ES_BANG, S_GEM, BANG2, S_BANG3, S_ODD_KEY, S_KEY,
@@ -53,7 +55,10 @@ namespace Ultima5Redux
             SCEPTRE_OF_LB, AMULET_OF_LB, NOTHING_TO_GET, GET, MUST_OPEN_FIRST, CONTENTS_OF_CHEST_YOU_FIND, NOT_HER, NEWLINE, BORROWED, CROPS_PICKED, MMMM_DOT, CANT_REACH_PLATE, MMM_DOT2, CANT_REACH_PLATE2,
             CANT_REACH_PLATE3, MMM_DOT3, NOTHING_TO_GET2
         }
-       
+
+        public enum SPECIAL_ITEM_NAMES_STRINGS { MAGIC_CRPT, SKULL_KEYS, AMULET, CROWN, SCEPTRE };
+
+
         public enum VISION1_STRINGS { DEATH_VISION = 0, STRANGE_VISION }
         public enum VISION2_STRINGS {THOU_DOST_SEE, YOU_SEE_DARKNESS, YOU_SEE }
 
@@ -94,6 +99,54 @@ namespace Ultima5Redux
             ALREADY_OPEN, WHAT, NO_KEYS3, KEY_BROKE6, UNLOCKED, KEY_BROKE5, NO_ONE_IS_THERE, KEY_BROKE7, COULDNT_FIND_NPC, N_N_I_THANK_THREE_N, UNLOCKED2, NO_LOCK, FOUND,
             CANT, NOTHING_TO_OPEN, TRAPPED, CHEST_EMPTY, CHEST_OPENED, ALREADY_OPEN2, WHAT2, ITS_OPEN, TOO_HEAVY, LOCKED_N, OPENED
         }
+
+        public enum WEAR_USE_ITEM_STRINGS { REMOVED, NO_USEABLE_ITEMS, ITEM_COLON, ITEMS_COLON, CARPET_BANG, BOARDED_BANG, XIT_SHIP_FIRST, ONLY_ON_FOOT, 
+        NOT_HERE_BANG, SKULL_KEY_BANG, NOT_HERE_BANG_2, AMULET_N_N, WEARING_AMULET, CROWN_N_N, DON_THE_CROWN, SCEPTRE_N_N, WIELD_SCEPTRE, FIELD_DISSOLVED, NO_EFFECT_BANG,
+        SPYGLASS_N_N, LOOKING_DOT_DOT_DOT, NO_STARS, NOT_HERE_BANG_3, PLANS_N_N, SHIP_RIGGED_DOUBLE_SPEED, ONLY_USE_ON_SHIPBOARD, SEXTANT_N_N, ONLY_OUTDOORS_BANG,
+        ONLY_AT_NIGHT_BANG, POSITION_COLON, WATCH_N_N_THE_POCKET_W_READS, SPACE_PM, SPACE_AM, BADGE_N_N, BADGE_WORN_BANG_N, BOX_N_HOW_N, FAILED_BANG_N, 
+            SPACE_OF_LORD_BRITISH_DOT_N};
+
+
+
+
+        //        [0]	"Removed!\n"	string
+        //[1]	"No usable items!\n"	string
+        //[2]	"Item: "	string
+        //[3]	"Items:"	string
+        //[4]	"Carpet\n\n"	string
+        //[5]	"Boarded!\n"	string
+        //[6]	"X-it ship first!\n"	string
+        //[7]	"Only on foot!\n"	string
+        //[8]	"Not here!\n"	string
+        //[9]	"Skull Key\n"	string
+        //[10]	"Not here!\n"	string
+        //[11]	"Amulet\n\n"	string
+        //[12]	"Wearing the Amulet"	string
+        //[13]	"Crown\n\n"	string
+        //[14]	"Thou dost don the Crown"	string
+        //[15]	"Sceptre\n\n"	string
+        //[16]	"Wielding the Sceptre"	string
+        //[17]	"Field dissolved!\n"	string
+        //[18]	"No effect!\n"	string
+        //[19]	"Spyglass\n\n"	string
+        //[20]	"Looking...\n"	string
+        //[21]	"No stars!\n"	string
+        //[22]	"Not here!\n"	string
+        //[23]	"Plans\n\n"	string
+        //[24]	"Ship rigged for double speed!\n"	string
+        //[25]	"Only usable on shipboard!\n"	string
+        //[26]	"Sextant\n\n"	string
+        //[27]	"Only outdoors!\n"	string
+        //[28]	"Only at night!\n"	string
+        //[29]	"Position:"	string
+        //[30]	"Watch\n\nThe pocket watch reads "	string
+        //[31]	" PM.\n"	string
+        //[32]	" AM.\n"	string
+        //[33]	"Badge\n\n"	string
+        //[34]	"Badge worn!\n"	string
+        //[35]	"Box\n\nHow?\n"	string
+        //[36]	"Failed!\n"	string
+        //[37]	" of Lord British...\n"	string
 
         /// <summary>
         /// Conversational phrase indexes
@@ -164,7 +217,7 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character type, monster names (44 of them)", 0x1d3, 0x158);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character type, monster names in capital letters (44 of them)", 0x32b, 0x165);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Unknown", 0x490, 0x33);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Item names (5 of them)", 0x4c3, 0x2b);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Item names (5 of them)", 0x4c3, 0x2b, 0, DataChunkName.SPECIAL_ITEM_NAMES);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "(x where x goes from 0 to 7", 0x4ee, 0x18);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shard names (3 of them)", 0x506, 0x29); // changed from 0x28 to 0x29
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional item names (6 of them)", 0x52f, 0x43);
@@ -292,6 +345,10 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (item)", 0x4050, 0x72);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (item)", 0x40C2, 0x72);
 
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204, 0, DataChunkName.WEAR_USE_ITEM);
+            SomeStrings someStrings = GetDataChunk(DataChunkName.WEAR_USE_ITEM).GetChunkAsStringList();
+
+
             // dock coordinates (where puchased ships/skiffs are placed)
             // 0 = Jhelom
             // 1 = Minoc
@@ -369,14 +426,12 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "potion colours", 0x8bfa, 0x34);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "scroll shortfroms", 0x8c2e, 0x20);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "more found things!", 0x8c4e, 0x236, 0x00, DataChunkName.GET_THINGS);
-            SomeStrings str2 = dataChunks.GetDataChunk(DataChunkName.GET_THINGS).GetChunkAsStringList();
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "getting things string!", 0x8c4e, 0x238);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "movement strings", 0x8e86, 0xed);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Mixing spells", 0x8f74, 0xbe);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Klimbing strings", 0x9026, 0x3A, 0x00, DataChunkName.KLIMBING);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "pay fine/bribe, merchant chat", 0x9062, 0x1b2, 0x00, DataChunkName.CHIT_CHAT);
-            SomeStrings someStrings = GetDataChunk(DataChunkName.CHIT_CHAT).GetChunkAsStringList();
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".tlk file list", 0x9216, 0x2e);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Talking strings for ALL npcs", 0x9244, 0x1a);

@@ -26,11 +26,11 @@ namespace Ultima5Redux
             /// <summary>
             /// X coordinate of sign
             /// </summary>
-            public byte X { get; }
+            public int X { get; }
             /// <summary>
             /// Y coordinate of sign
             /// </summary>
-            public byte Y { get; }
+            public int Y { get; }
             /// <summary>
             /// Actual text of sign
             /// </summary>
@@ -138,7 +138,7 @@ namespace Ultima5Redux
                     {
                         scrubbedStr += replacementChars[signChar];
                     }
-                    // if we have two verticle bars then we move to the next line
+                    // if we have two verticle bars then we move to the next line   
                     else if (signChar == 'g' && prevChar == 'g')
                     {
                         // do nothing and leave it out
@@ -154,7 +154,7 @@ namespace Ultima5Redux
                 return scrubbedStr;
             }
 
-            public Sign(SmallMapReference.SingleMapReference.Location location, int floor, byte x, byte y, byte[] signText, int nOffset)
+            public Sign(SmallMapReference.SingleMapReference.Location location, int floor, int x, int y, byte[] signText, int nOffset)
                 : this (location, floor, x, y, ScrubSignText(signText), nOffset)
             {
                 
@@ -169,7 +169,7 @@ namespace Ultima5Redux
             /// <param name="x">x coord of sign</param>
             /// <param name="y">y coord of sign</param>
             /// <param name="signText">Text of sign (may contain unpritable txt that requires fonts from ibm.ch and runes.ch</param>
-            public Sign(SmallMapReference.SingleMapReference.Location location, int floor,  byte x, byte y, string signText, int nOffset)
+            public Sign(SmallMapReference.SingleMapReference.Location location, int floor,  int x, int y, string signText, int nOffset)
             {
                 Location = location;
                 Floor = floor;
@@ -221,40 +221,23 @@ namespace Ultima5Redux
             return null;
         }
 
-        public static string GetEightLawsSign(SmallMapReference.SingleMapReference.Location location)
+        /// <summary>
+        /// Gets a copy of a sign and assigns new X, Y values 
+        /// Commonly used for Blackthornes Eight Laws signs
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="newX">new X value</param>
+        /// <param name="newY">new Y value</param>
+        /// <returns>a new copy of the sign</returns>
+        public Sign CopySign(SmallMapReference.SingleMapReference.Location location, int x, int y, int newX, int newY)
         {
-            switch (location)
-            {
-                case SmallMapReference.SingleMapReference.Location.Moonglow:
-                    //honesty
-                    return "Thou shalt not lie, or thou shalt lose thy tongue.";
-                case SmallMapReference.SingleMapReference.Location.Britain:
-                    // compassion
-                    return "Thou shalt help those in need, or thou shalt suffer the same need.";
-                case SmallMapReference.SingleMapReference.Location.Jhelom:
-                    // valor
-                    return "Thou shalt fight to the death if challenged, or thou shalt be banished as a coward.";
-                case SmallMapReference.SingleMapReference.Location.Yew:
-                    // justice
-                    return "Thou shalt confess to thy crime and suffer its just punishment, or thou shalt be put to death.";
-                case SmallMapReference.SingleMapReference.Location.Minoc:
-                    // sacrifice
-                    return "Thou shalt donate half of thy income to charity, or thou shalt have no income.";
-                case SmallMapReference.SingleMapReference.Location.Trinsic:
-                    // honor
-                    return "If thou dost lose thine own honor, thou shalt take thine own life.";
-                case SmallMapReference.SingleMapReference.Location.Skara_Brae:
-                    // spirituality
-                    return "Thou shalt enforce the laws of virtue, or thou shalt die as a heretic.";
-                case SmallMapReference.SingleMapReference.Location.New_Magincia:
-                    // humility
-                    return "Thou shalt humble thyself to thy superiors, or thou shalt suffer their wrath.";
-                default:
-                    throw new Exception("You can't get a string for the eight laws from a place that isn't one of the cities of virtue (place=" + location + ")");
-            }
-
+            Sign origSign = GetSign(location, x, y);
+            return new Sign(origSign.Location, origSign.Floor, newX, newY, origSign.RawSignText, origSign.Offset);
         }
 
+    
         public int GetNumberOfSigns()
         {
             return this.signList.Count;
@@ -268,13 +251,6 @@ namespace Ultima5Redux
         {
             signsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.SIGNS_DAT));
 
-            // add all of the offsets to a list
-            // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
-            //for (int i = 0; i < (TOTAL_SIGNS * 2); i += 2)
-            //{
-            //    signsOffsets.Add((int)(signsByteArray[i] | (((uint)signsByteArray[i + 1]) << 8)));
-            //}
-
             int nIndex = TOTAL_SIGNS * 2;
             // we are ignoring the "offsets" which are likely used to help optimize the lookup 
             // on older hardware, instead we will just be lazy and search for them by cycling
@@ -283,23 +259,29 @@ namespace Ultima5Redux
             do
             {
                 string rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4, 0xFF);
-                //string signtxt = ScrubSignText(rawSignTxt);
+                int nRawSignTxtLength = rawSignTxt.Length;
+                
+                // there are often two "warning signs" in the main virtue townes. Only one of the signs text is actually 
+                // populated - so if we see a "\n" as the only string, then we look ahead to the next signs text and use
+                // it instead
+                if (rawSignTxt.Trim() == String.Empty) { 
+                    int nNextSignAdjust = rawSignTxt.Length + 1 + 4; 
+                    rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4 + nNextSignAdjust, 0xFF); 
+                }
+
                 signList.Add(new Sign((SmallMapReference.SingleMapReference.Location)signsByteArray[nIndex],
                     signsByteArray[nIndex + 1],
                     signsByteArray[nIndex + 2],
                     signsByteArray[nIndex + 3],
                     rawSignTxt, nIndex) );
-                nIndex += rawSignTxt.Length + 1 + 4; // we hop over the string plus it's null byte plus the four bytes for definition
+                nIndex += nRawSignTxtLength + 1 + 4; // we hop over the string plus it's null byte plus the four bytes for definition
             // while we don't encounter four zero bytes in a row, which is eseentially the end of the file
             } while (!(signsByteArray[nIndex] == 0 && signsByteArray[nIndex+1] == 0 && signsByteArray[nIndex+2] == 0 && signsByteArray[nIndex+3] == 0));
 
+            // there are some signs that are not included in the signs.dat file, so we manually pont to them and add them to our sign list
             List<byte> dataovlSignsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.DATA_OVL));
             List<byte> shSign = DataChunk.CreateDataChunk(DataChunk.DataFormatType.ByteList, "SH Sign of Eight Laws", dataovlSignsByteArray, 0x743a, 0x66).GetAsByteList();
             signList.Add(new Sign(SmallMapReference.SingleMapReference.Location.Serpents_Hold, 0, 15, 19, shSign.ToArray(), 0x743a));
-            //signList.Add();
-
         }
-
-
     }
 }
