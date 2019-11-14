@@ -47,8 +47,29 @@ namespace Ultima5Redux
             KLIMBING,
             GET_THINGS,
             SPECIAL_ITEM_NAMES,
-            WEAR_USE_ITEM
+            WEAR_USE_ITEM,
+            SHARDS,
+            SHADOWLORD
         };
+
+        public enum SHADOWLORD_STRINGS { GEM_SHARD_THOU_HOLD_EVIL_SHARD, FALSEHOOD_DOT, HATRED_DOT, COWARDICE_DOT, N_N_NO_EFFECT, N_N_AND_CAST_INTO_FLAME,
+            TRUTH, LOVE, COURAGE, THE_DOOM_OF_SHADOWLORD, FALSEHOOD_WORD, HATRED_WORD, COWARDICE_WORD, IS_WROUGHT_N };
+//        [0]	"Gem Shard\n\nThou dost hold above thee the evil Shard of "	string
+//[1]	"Falsehood..."	string
+//[2]	"Hatred..."	string
+//[3]	"Cowardice..."	string
+//[4]	"\n\nNo effect!\n"	string
+//[5]	"\n\n...and cast it into the Flame of "	string
+//[6]	"Truth!\n"	string
+//[7]	"Love!\n"	string
+//[8]	"Courage!\n"	string
+//[9]	"\nThe doom of the Shadowlord "	string
+//[10]	"Faulinei"	string
+//[11]	"Astaroth"	string
+//[12]	"Nosfentor"	string
+//[13]	" is wrought!\n"	string
+
+        public enum SHARDS_STRINGS { FALSEHOOD, HATRED, COWARDICE };
 
         public enum GET_THINGS_STRINGS { OPEN_IT_FIRST = 0, A_MOONSTONE, A_MAGIC_CARPET, S_FOOD, A_SANDLEWOOD_BOX, S_TORCH, BANG, ES_BANG, S_GEM, BANG2, S_BANG3, S_ODD_KEY, S_KEY,
             BANG4, S_BANG, PLANS_FOR_HMS_CAPE, A_SCROLL_COLON, BANG5, S_GOLD, A_SPACE, S_POTION, BANG6, THE_SHARD_OF, FALSEHOOD, HATRED, COWARDICE, CROWN_OF_LB,
@@ -88,12 +109,12 @@ namespace Ultima5Redux
         }
 
         public enum TRAVEL_STRINGS { UP = 0, DOWN , RIDE, FLY, ROW, NORTH, SOUTH, EAST, WEST, WISH_TO_LEAVE, EXIT_TO, UNDERWORLD, BRITANNIA, NO, BLOCKED, ATTACK, ON_FOOT, BROKEN, NOTHING_TO_ATTACK,
-        MISSED, MURDERED, KLIMB, DASH_ON_FOOT, WHAT }
+            MISSED, MURDERED, KLIMB, DASH_ON_FOOT, WHAT }
 
         public enum WORLD_STRINGS { RIDE = 0, FLY, ROW, HEAD, NORTH, SOUTH, EAST, WEST, HULL_WEAK, ROWING, BREAKING_UP, COLISSION, DOCKED, BLOCKED, OUCH, SLOW_PROG, VERY_SLOW, NORTH_2, SOUTH_2, EAST_2, WEST_2,
-        JUNK_1, ATTACK_DASH, ON_FOOT, NOTHING_TO_ATTACK, NEW_ON_FOOT_NEW, ATTACKED_ENTRANCE, TWO_NEWLINES, BRIT_DAT, DUNGEON_DAT, NEW_WHAT_DUNGEON_NEW, ENTER_SPACE, to_enter_THE_SHRINE_OF, to_enter_HUT, to_enter_SHRINE_CODEX,
-        to_enter_KEEP, to_enter_VILLAGE, to_enter_TOWNE, to_enter_CASTLE, to_enter_CAVE, to_enter_MINE, to_enter_DUNGEON, to_enter_RUINS, to_enter_LIGHTHOUSE, to_enter_PALACE_B, to_enter_CASTLE_LB,
-        WHAT, EARTHQUAKE, ZZZ, BRIT_DAT_2, EXIT_TO_DOS, N, V1_16, SOUND, OFF, ON, WHAT_2, NEW_DQUOTE, PASS_SEEKER, NOT_SACRED_QUEST, PASSAGE_DENIED, ROUGH_SEAS }
+            JUNK_1, ATTACK_DASH, ON_FOOT, NOTHING_TO_ATTACK, NEW_ON_FOOT_NEW, ATTACKED_ENTRANCE, TWO_NEWLINES, BRIT_DAT, DUNGEON_DAT, NEW_WHAT_DUNGEON_NEW, ENTER_SPACE, to_enter_THE_SHRINE_OF, to_enter_HUT, to_enter_SHRINE_CODEX,
+            to_enter_KEEP, to_enter_VILLAGE, to_enter_TOWNE, to_enter_CASTLE, to_enter_CAVE, to_enter_MINE, to_enter_DUNGEON, to_enter_RUINS, to_enter_LIGHTHOUSE, to_enter_PALACE_B, to_enter_CASTLE_LB,
+            WHAT, EARTHQUAKE, ZZZ, BRIT_DAT_2, EXIT_TO_DOS, N, V1_16, SOUND, OFF, ON, WHAT_2, NEW_DQUOTE, PASS_SEEKER, NOT_SACRED_QUEST, PASSAGE_DENIED, ROUGH_SEAS }
 
         public enum OPENING_THINGS_STRINGS { T = 0, HOU_DOST_FIND, A_HIDDEN_DOOR, KEY_BROKE, SUCCESS, KEY_BROKE2, NEWLINE, NO_KEYS, KEY_BROKE3, NO_KEYS2, CHEST_UNLOCKED, KEY_BROKE4,
             ALREADY_OPEN, WHAT, NO_KEYS3, KEY_BROKE6, UNLOCKED, KEY_BROKE5, NO_ONE_IS_THERE, KEY_BROKE7, COULDNT_FIND_NPC, N_N_I_THANK_THREE_N, UNLOCKED2, NO_LOCK, FOUND,
@@ -101,58 +122,18 @@ namespace Ultima5Redux
         }
 
         public enum WEAR_USE_ITEM_STRINGS { REMOVED, NO_USEABLE_ITEMS, ITEM_COLON, ITEMS_COLON, CARPET_BANG, BOARDED_BANG, XIT_SHIP_FIRST, ONLY_ON_FOOT, 
-        NOT_HERE_BANG, SKULL_KEY_BANG, NOT_HERE_BANG_2, AMULET_N_N, WEARING_AMULET, CROWN_N_N, DON_THE_CROWN, SCEPTRE_N_N, WIELD_SCEPTRE, FIELD_DISSOLVED, NO_EFFECT_BANG,
-        SPYGLASS_N_N, LOOKING_DOT_DOT_DOT, NO_STARS, NOT_HERE_BANG_3, PLANS_N_N, SHIP_RIGGED_DOUBLE_SPEED, ONLY_USE_ON_SHIPBOARD, SEXTANT_N_N, ONLY_OUTDOORS_BANG,
-        ONLY_AT_NIGHT_BANG, POSITION_COLON, WATCH_N_N_THE_POCKET_W_READS, SPACE_PM, SPACE_AM, BADGE_N_N, BADGE_WORN_BANG_N, BOX_N_HOW_N, FAILED_BANG_N, 
+            NOT_HERE_BANG, SKULL_KEY_BANG, NOT_HERE_BANG_2, AMULET_N_N, WEARING_AMULET, CROWN_N_N, DON_THE_CROWN, SCEPTRE_N_N, WIELD_SCEPTRE, FIELD_DISSOLVED, NO_EFFECT_BANG,
+            SPYGLASS_N_N, LOOKING_DOT_DOT_DOT, NO_STARS, NOT_HERE_BANG_3, PLANS_N_N, SHIP_RIGGED_DOUBLE_SPEED, ONLY_USE_ON_SHIPBOARD, SEXTANT_N_N, ONLY_OUTDOORS_BANG,
+            ONLY_AT_NIGHT_BANG, POSITION_COLON, WATCH_N_N_THE_POCKET_W_READS, SPACE_PM, SPACE_AM, BADGE_N_N, BADGE_WORN_BANG_N, BOX_N_HOW_N, FAILED_BANG_N, 
             SPACE_OF_LORD_BRITISH_DOT_N};
 
 
-
-
-        //        [0]	"Removed!\n"	string
-        //[1]	"No usable items!\n"	string
-        //[2]	"Item: "	string
-        //[3]	"Items:"	string
-        //[4]	"Carpet\n\n"	string
-        //[5]	"Boarded!\n"	string
-        //[6]	"X-it ship first!\n"	string
-        //[7]	"Only on foot!\n"	string
-        //[8]	"Not here!\n"	string
-        //[9]	"Skull Key\n"	string
-        //[10]	"Not here!\n"	string
-        //[11]	"Amulet\n\n"	string
-        //[12]	"Wearing the Amulet"	string
-        //[13]	"Crown\n\n"	string
-        //[14]	"Thou dost don the Crown"	string
-        //[15]	"Sceptre\n\n"	string
-        //[16]	"Wielding the Sceptre"	string
-        //[17]	"Field dissolved!\n"	string
-        //[18]	"No effect!\n"	string
-        //[19]	"Spyglass\n\n"	string
-        //[20]	"Looking...\n"	string
-        //[21]	"No stars!\n"	string
-        //[22]	"Not here!\n"	string
-        //[23]	"Plans\n\n"	string
-        //[24]	"Ship rigged for double speed!\n"	string
-        //[25]	"Only usable on shipboard!\n"	string
-        //[26]	"Sextant\n\n"	string
-        //[27]	"Only outdoors!\n"	string
-        //[28]	"Only at night!\n"	string
-        //[29]	"Position:"	string
-        //[30]	"Watch\n\nThe pocket watch reads "	string
-        //[31]	" PM.\n"	string
-        //[32]	" AM.\n"	string
-        //[33]	"Badge\n\n"	string
-        //[34]	"Badge worn!\n"	string
-        //[35]	"Box\n\nHow?\n"	string
-        //[36]	"Failed!\n"	string
-        //[37]	" of Lord British...\n"	string
 
         /// <summary>
         /// Conversational phrase indexes
         /// </summary>
         public enum CHUNK__PHRASES_CONVERSATION { CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
-        YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F, YOU_SEE = 0x11, I_AM_CALLED = 0x12 };
+            YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F, YOU_SEE = 0x11, I_AM_CALLED = 0x12 };
 
         #endregion
 
@@ -219,7 +200,7 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Unknown", 0x490, 0x33);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Item names (5 of them)", 0x4c3, 0x2b, 0, DataChunkName.SPECIAL_ITEM_NAMES);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "(x where x goes from 0 to 7", 0x4ee, 0x18);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shard names (3 of them)", 0x506, 0x29); // changed from 0x28 to 0x29
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shard names (3 of them)", 0x506, 0x29, 0, DataChunkName.SHARDS); // changed from 0x28 to 0x29
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional item names (6 of them)", 0x52f, 0x43);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names (29 of them)", 0x572, 0x11a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Potion colors (8 of them)", 0x68c, 0x30);
@@ -345,8 +326,10 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (item)", 0x4050, 0x72);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (item)", 0x40C2, 0x72);
 
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "ShadowLord strings", 0x47A4, 0xED, 0, DataChunkName.SHADOWLORD);
+            SomeStrings someStrings = GetDataChunk(DataChunkName.SHADOWLORD).GetChunkAsStringList();
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204, 0, DataChunkName.WEAR_USE_ITEM);
-            SomeStrings someStrings = GetDataChunk(DataChunkName.WEAR_USE_ITEM).GetChunkAsStringList();
 
 
             // dock coordinates (where puchased ships/skiffs are placed)

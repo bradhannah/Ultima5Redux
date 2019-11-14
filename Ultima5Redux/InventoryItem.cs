@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
@@ -16,31 +17,50 @@ namespace Ultima5Redux
 
         public string ShortName { get; }
 
-        public InventoryItem(int quantity, string longName, string shortName)
+        public int SpriteNum { get; }
+
+        public InventoryItem(int quantity, string longName, string shortName, int spriteNum)
         {
             this.Quantity = quantity;
             this.LongName = longName;
             this.ShortName = shortName;
+            this.SpriteNum = spriteNum;
         }
+    }
 
-        public class LordBritishArtifact : InventoryItem
+    public class ShadowlordShard : InventoryItem
+    {
+        public enum ShardType { Falsehood, Hatred, Cowardice };
+
+        public ShardType Shard { get; }
+        public string EquipMessage { get; }
+
+        public ShadowlordShard(ShardType shardType, int quantity, string longName, string equipMessage) : base(quantity, longName, longName, 436)
         {
-            public enum ArtifactType { Amulet, Crown, Sceptre };
+            Debug.WriteLine("Shard: " + shardType.ToString());
+            Shard = shardType;
+            EquipMessage = equipMessage;
+        }
+    }
 
-            public string EquipMessage { get; }
 
-            public bool HasItem()
-            {
-                return Quantity != 0;
-            }
+    public class LordBritishArtifact : InventoryItem
+    {
+        public enum ArtifactType { Amulet = 439, Crown = 437, Sceptre = 438};
 
-            public ArtifactType Artifact { get; } 
-            public LordBritishArtifact(ArtifactType artifact, int quantity, string longName, string equipMessage) : base (quantity, longName, longName)
-            {
-                Artifact = artifact;
-                EquipMessage = equipMessage;
-            }
+        public string EquipMessage { get; }
+
+        public bool HasItem()
+        {
+            return Quantity != 0;
         }
 
+        public ArtifactType Artifact { get; }
+        
+        public LordBritishArtifact(ArtifactType artifact, int quantity, string longName, string equipMessage) : base(quantity, longName, longName, (int)artifact)
+        {
+            Artifact = artifact;
+            EquipMessage = equipMessage;
+        }
     }
 }

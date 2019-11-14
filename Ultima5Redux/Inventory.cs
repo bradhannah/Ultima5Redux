@@ -8,9 +8,13 @@ namespace Ultima5Redux
     public class Inventory
     {
         private List<byte> gameStateByteArray;
-        private DataChunks<DataChunkName> dataChunks;
+        //private DataChunks<DataChunkName> dataChunks;
 
-        List<InventoryItem.LordBritishArtifact> Artifacts;
+        //public List<LordBritishArtifact> Artifacts;
+        //public List<ShadowlordShards> Shards;
+
+        public LordBritishArtifacts Artifacts { get; }
+        public ShadowlordShards Shards { get; }
 
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
@@ -71,10 +75,11 @@ namespace Ultima5Redux
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
 
-            Artifacts = new List<InventoryItem.LordBritishArtifact>(3);
-            LordBritishArtifacts artifacts = new LordBritishArtifacts(dataOvlRef, gameStateByteArray);
-            
+            //Artifacts = new List<LordBritishArtifact>(3);
+            Artifacts = new LordBritishArtifacts(dataOvlRef, gameStateByteArray);
 
+            //Shards = new List<ShadowlordShards>(3);
+            Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
         }
     }
 }

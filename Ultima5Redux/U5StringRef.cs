@@ -29,7 +29,10 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.GET_THINGS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.GET_THINGS).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.WEAR_USE_ITEM_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WEAR_USE_ITEM).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.SHARDS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHARDS).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.SHADOWLORD_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHADOWLORD).GetChunkAsStringList());
             
+
 
 
         }
