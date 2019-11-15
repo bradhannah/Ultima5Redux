@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using static Ultima5Redux.GameState;
+
 
 namespace Ultima5Redux
 {
     public class Inventory
     {
         private List<byte> gameStateByteArray;
-        //private DataChunks<DataChunkName> dataChunks;
-
-        //public List<LordBritishArtifact> Artifacts;
-        //public List<ShadowlordShards> Shards;
 
         public LordBritishArtifacts Artifacts { get; }
         public ShadowlordShards Shards { get; }
+
+        public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
 
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
@@ -75,11 +75,12 @@ namespace Ultima5Redux
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
 
-            //Artifacts = new List<LordBritishArtifact>(3);
             Artifacts = new LordBritishArtifacts(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(Artifacts.GenericItemList);
 
-            //Shards = new List<ShadowlordShards>(3);
             Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(Shards.GenericItemList);
         }
+
     }
 }

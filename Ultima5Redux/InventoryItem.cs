@@ -30,12 +30,13 @@ namespace Ultima5Redux
 
     public class ShadowlordShard : InventoryItem
     {
-        public enum ShardType { Falsehood, Hatred, Cowardice };
+        public enum ShardType { Falsehood, Hatred, Cowardice};
 
         public ShardType Shard { get; }
         public string EquipMessage { get; }
 
-        public ShadowlordShard(ShardType shardType, int quantity, string longName, string equipMessage) : base(quantity, longName, longName, 436)
+        private const int SHARD_SPRITE = 436;
+        public ShadowlordShard(ShardType shardType, int quantity, string longName, string equipMessage) : base(quantity, longName, longName, SHARD_SPRITE)
         {
             Debug.WriteLine("Shard: " + shardType.ToString());
             Shard = shardType;
