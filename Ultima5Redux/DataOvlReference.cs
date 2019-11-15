@@ -47,27 +47,27 @@ namespace Ultima5Redux
             KLIMBING,
             GET_THINGS,
             SPECIAL_ITEM_NAMES,
+            SPECIAL_ITEM_NAMES2,
             WEAR_USE_ITEM,
             SHARDS,
-            SHADOWLORD
+            SHADOWLORD,
+            POTIONS,
+            SPELLS
         };
+
+        public enum POTIONS_STRINGS { BLUE, YELLOW, RED, GREEN, ORANGE, PURPLE, BLACK, WHITE}
+
+        public enum SPELL_STRINGS
+        {
+            IN_LOR, GRAV_POR, AN_ZU, AN_NOX, MANI, AN_YLEM, AN_SANCT, AN_XEN_CORP, REL_HUR, IN_WIS, KAL_XEN, IN_XEN_MANI, VAS_LOR, VAS_FLAM, IN_FLAM_GRAV,
+            IN_NOX_GRAV, IN_ZU_GRAV, IN_POR, AN_GRAV, IN_SANCT, IN_SANCT_GRAV, UUS_POR, DES_POR, WIS_QUAS, IN_BET_XEN, AN_EX_POR, IN_EX_POR, VAS_MANI,
+            IN_ZU, REL_TYM, IN_VAS_POR_YLEM, QUAS_AN_WIS, IN_AN, WIS_AN_YLEM, AN_XEN_EX, REL_XEN_BET, SANCT_LOR, XEN_CORP, IN_QUAS_XEN, IN_QUAS_WIS,
+            IN_NOX_HUR, IN_QUAS_CORP, IN_MANI_CORP, KAL_XEN_CORP, IN_VAS_GRAV_CORP, IN_FLAM_HUR, VAS_REL_POR, AN_TYM
+        }
+
 
         public enum SHADOWLORD_STRINGS { GEM_SHARD_THOU_HOLD_EVIL_SHARD, FALSEHOOD_DOT, HATRED_DOT, COWARDICE_DOT, N_N_NO_EFFECT, N_N_AND_CAST_INTO_FLAME,
             TRUTH, LOVE, COURAGE, THE_DOOM_OF_SHADOWLORD, FALSEHOOD_WORD, HATRED_WORD, COWARDICE_WORD, IS_WROUGHT_N };
-//        [0]	"Gem Shard\n\nThou dost hold above thee the evil Shard of "	string
-//[1]	"Falsehood..."	string
-//[2]	"Hatred..."	string
-//[3]	"Cowardice..."	string
-//[4]	"\n\nNo effect!\n"	string
-//[5]	"\n\n...and cast it into the Flame of "	string
-//[6]	"Truth!\n"	string
-//[7]	"Love!\n"	string
-//[8]	"Courage!\n"	string
-//[9]	"\nThe doom of the Shadowlord "	string
-//[10]	"Faulinei"	string
-//[11]	"Astaroth"	string
-//[12]	"Nosfentor"	string
-//[13]	" is wrought!\n"	string
 
         public enum SHARDS_STRINGS { FALSEHOOD, HATRED, COWARDICE };
 
@@ -79,6 +79,7 @@ namespace Ultima5Redux
 
         public enum SPECIAL_ITEM_NAMES_STRINGS { MAGIC_CRPT, SKULL_KEYS, AMULET, CROWN, SCEPTRE };
 
+        public enum SPECIAL_ITEM_NAMES2_STRINGS { SPYGLASS, HMS_CAPE_PLAN, SEXTANT, POCKET_WATCH, BLACK_BADGE, WOODEN_BOX }
 
         public enum VISION1_STRINGS { DEATH_VISION = 0, STRANGE_VISION }
         public enum VISION2_STRINGS {THOU_DOST_SEE, YOU_SEE_DARKNESS, YOU_SEE }
@@ -201,11 +202,11 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Item names (5 of them)", 0x4c3, 0x2b, 0, DataChunkName.SPECIAL_ITEM_NAMES);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "(x where x goes from 0 to 7", 0x4ee, 0x18);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shard names (3 of them)", 0x506, 0x29, 0, DataChunkName.SHARDS); // changed from 0x28 to 0x29
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional item names (6 of them)", 0x52f, 0x43);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional item names (6 of them)", 0x52f, 0x43, 0, DataChunkName.SPECIAL_ITEM_NAMES2);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names (29 of them)", 0x572, 0x11a);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Potion colors (8 of them)", 0x68c, 0x30);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Potion colors (8 of them)", 0x68c, 0x30, 0, DataChunkName.POTIONS);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Reagents (8 of them)", 0x6bc, 0x4d);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Spell names", 0x709, 0x1bb);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Spell names", 0x709, 0x1bb, 0, DataChunkName.SPELLS);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character type and names (11 of them)", 0x8c4, 0x54);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Health text (5 of them)", 0x918, 0x29);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Spell runes (26 of them)", 0x941, 0x64);

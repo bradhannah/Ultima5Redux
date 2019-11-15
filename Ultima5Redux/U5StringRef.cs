@@ -31,11 +31,11 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.WEAR_USE_ITEM_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WEAR_USE_ITEM).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SHARDS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHARDS).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SHADOWLORD_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHADOWLORD).GetChunkAsStringList());
-            
-
-
-
+            strMap.Add(typeof(DataOvlReference.POTIONS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.POTIONS).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.SPELL_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPELLS).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES2).GetChunkAsStringList());
         }
+        
 
         private Dictionary<Type, SomeStrings> strMap;
 

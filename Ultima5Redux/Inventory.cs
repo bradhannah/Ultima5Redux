@@ -13,6 +13,10 @@ namespace Ultima5Redux
 
         public LordBritishArtifacts Artifacts { get; }
         public ShadowlordShards Shards { get; }
+        public Potions MagicPotions { get; }
+        public Scrolls MagicScrolls { get; }
+
+        public SpecialItems SpecializedItems { get; }
 
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
 
@@ -75,11 +79,24 @@ namespace Ultima5Redux
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
 
+            
+
+            MagicScrolls = new Scrolls(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(MagicScrolls.GenericItemList);
+
+            MagicPotions = new Potions(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(MagicPotions.GenericItemList);
+
+            SpecializedItems = new SpecialItems(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(SpecializedItems.GenericItemList);    
+
             Artifacts = new LordBritishArtifacts(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Artifacts.GenericItemList);
 
             Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Shards.GenericItemList);
+
+
         }
 
     }
