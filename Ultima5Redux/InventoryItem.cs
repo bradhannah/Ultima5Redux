@@ -66,9 +66,72 @@ namespace Ultima5Redux
         }
     }
 
+    public class Amulet : Armour
+    {
+        public AmuletEnum AmuletType;
+        public enum AmuletEnum { AmuletTurning = 0x247, SpikeCollar = 0x248, Ankh = 0x249 }
+
+        private const int AMULET_SPRITE = 268;
+
+        public override int AttackStat { get; }
+
+        public override int DefendStat { get; }
+
+        public override bool HideQuantity => false;
+
+        public Amulet(AmuletEnum amuletType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
+            base(quantity, longName, shortName, AMULET_SPRITE, attackStat, defendStat)
+        {
+            AmuletType = amuletType;
+        }
+    }
+
+    public class Ring : Armour
+    {
+        public RingEnum RingType;
+
+        public enum RingEnum { RingInvisibility = 0x244, RingProtection = 0x245, RingRegeneration = 0x246 }
+
+        private const int RING_SPRITE = 266;
+
+        public override int AttackStat { get; }
+
+        public override int DefendStat { get; }
+
+        public override bool HideQuantity => false;
+
+        public Ring(RingEnum ringType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
+            base(quantity, longName, shortName, RING_SPRITE, attackStat, defendStat)
+        {
+            RingType = ringType;
+        }
+    }
+
+    public class Helm : Armour
+    {
+        public enum HelmEnum { LeatherHelm = 0x21A, ChainCoif = 0x21B, IronHelm = 0x21C, SpikedHelm = 0x21D }
+
+        public HelmEnum HelmType;
+
+        private const int HELM_SPRITE = 265;
+
+        public override int AttackStat { get; }
+
+        public override int DefendStat { get; }
+
+        public override bool HideQuantity => false;
+
+        public Helm(HelmEnum helmType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
+            base(quantity, longName, shortName, HELM_SPRITE, attackStat, defendStat)
+        {
+            HelmType = helmType;
+        }
+    }
+
     public class ChestArmour : Armour
     {
-        public enum ChestArmourEnum { ClothArmour, LeatherArmour, Ringmail, ScaleMail, ChainMail, PlateMail, MysticArmour }
+        public enum ChestArmourEnum { ClothArmour = 0x223, LeatherArmour = 0x224, Ringmail = 0x225, ScaleMail = 0x226 , 
+            ChainMail = 0x227, PlateMail = 0x228 , MysticArmour = 0x229 }
 
         public ChestArmourEnum ChestArmourType;
 

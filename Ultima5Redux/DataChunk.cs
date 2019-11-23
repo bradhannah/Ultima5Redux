@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Ultima5Redux
@@ -81,7 +82,7 @@ namespace Ultima5Redux
         /// <param name="dataLength">the length of the data in bytes</param>
         /// <param name="addToValue">the byte value to add (or subtract) from each byte read</param>
         /// <param name="dataChunkName">name of the data chunk for easy access</param>
-        public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue, T dataChunkName)
+        public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue, T dataChunkName)
         {
             // create the data chunk 
             DataChunk chunk = new DataChunk(dataFormat, description, FileByteList, offset, dataLength, addToValue);
@@ -94,6 +95,7 @@ namespace Ultima5Redux
             {
                 chunkMap.Add(dataChunkName, chunk);
             }
+            return chunk;
         }
 
         /// <summary>
@@ -105,9 +107,9 @@ namespace Ultima5Redux
         /// <param name="offset">the offset to begin processing at</param>
         /// <param name="dataLength">the length of the data in bytes</param>
         /// <param name="addToValue">the byte value to add (or subtract) from each byte read</param>
-        public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue)
+        public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue)
         {
-            AddDataChunk(dataFormat, description, offset, dataLength, addToValue, unusedValue);
+            return AddDataChunk(dataFormat, description, offset, dataLength, addToValue, unusedValue);
         }
 
         /// <summary>
@@ -117,9 +119,9 @@ namespace Ultima5Redux
         /// <param name="description">a brief written description of what the data is</param>
         /// <param name="offset">the offset to begin processing at</param>
         /// <param name="dataLength">the length of the data in bytes</param>
-        public void AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength)
+        public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength)
         {
-            AddDataChunk(dataFormat, description, offset, dataLength, 0x00, unusedValue);
+            return AddDataChunk(dataFormat, description, offset, dataLength, 0x00, unusedValue);
         }
 
         /// <summary>
@@ -172,12 +174,18 @@ namespace Ultima5Redux
         /// Are we running in debug mode?
         /// </summary>
         private const bool isDebug = false;
+
+        /// <summary>
+        /// A link to the actual Full RawData 
+        /// used in StringListFromIndexes - but private so no one accessess it directly
+        /// </summary>
+        private List<byte> fullRawData;
         #endregion
 
         /// <summary>
         /// The encoding of the data
         /// </summary>
-        public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, UINT16, ByteList, Bitmap, Byte };
+        public enum DataFormatType { Unknown, FixedString, SimpleString, StringList, UINT16List, UINT16, ByteList, Bitmap, Byte, StringListFromIndexes };
 
         #region Constructors
         /// <summary>
@@ -198,6 +206,10 @@ namespace Ultima5Redux
             RawData = new byte[dataLength];
             rawData.CopyTo(offset, RawData, 0, dataLength);
             ValueModifier = addToValue;
+            if (dataFormat == DataFormatType.StringListFromIndexes || dataFormat == DataFormatType.UINT16List)
+            {
+                fullRawData = rawData;
+            }
         }
 
         /// <summary>
@@ -239,6 +251,8 @@ namespace Ultima5Redux
         {
             switch (DataFormat)
             {
+                case DataFormatType.StringListFromIndexes:
+                   
                 case DataFormatType.Bitmap:
                     System.Console.WriteLine("BITMAP");
                     break;
@@ -278,6 +292,25 @@ namespace Ultima5Redux
             }
         }
 
+        public List<string> GetAsStringListFromIndexes()
+        {
+            return DataChunk.GetAsStringListFromIndexes(GetChunkAsUINT16List(), fullRawData);
+        }
+
+        static private List<string> GetAsStringListFromIndexes(List<ushort> indexList, List<byte> rawByteList)
+        {
+            List<string> strList = new List<string>(indexList.Count);
+            const int MAX_STR_LENGTH = 20;
+
+            foreach (ushort index in indexList)
+            {
+                // we grab the strings from the fullRawData because it is the entire file
+                strList.Add(DataChunk.CreateDataChunk(DataFormatType.SimpleString, String.Empty, rawByteList, index, MAX_STR_LENGTH).GetChunkAsString());
+            }
+
+            return strList;
+        }
+
         /// <summary>
         /// Returns the data in the form of each bit represented as a boolean value
         /// </summary>
@@ -298,7 +331,7 @@ namespace Ultima5Redux
                 {
                     bool curBit = (((curByte >> nBit)) & shiftBit) == shiftBit;
                     boolList.Add(curBit);
-                    if (isDebug) Console.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
+                    if (isDebug) Debug.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
                 }
             }
 
