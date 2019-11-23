@@ -7,6 +7,9 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
+    /// <summary>
+    /// A shortcut class that allows you to put in the STRING enum without the DataChunkName when looking up original U5 strings
+    /// </summary>
     public class U5StringRef
     {
         private DataOvlReference dataRef;
@@ -34,8 +37,9 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.POTIONS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.POTIONS).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SPELL_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPELLS).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES2).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.LONG_ARMOUR_STRING), dataRef.GetDataChunk(DataOvlReference.DataChunkName.LONG_ARMOUR).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.SHORT_ARMOUR_STRING), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHORT_ARMOUR).GetChunkAsStringList());
         }
-        
 
         private Dictionary<Type, SomeStrings> strMap;
 

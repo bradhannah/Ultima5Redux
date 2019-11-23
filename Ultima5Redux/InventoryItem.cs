@@ -66,6 +66,73 @@ namespace Ultima5Redux
         }
     }
 
+    public class ChestArmour : Armour
+    {
+        public enum ChestArmourEnum { ClothArmour, LeatherArmour, Ringmail, ScaleMail, ChainMail, PlateMail, MysticArmour }
+
+        public ChestArmourEnum ChestArmourType;
+
+        private const int CHEST_ARMOUR_SPRITE = 267;
+
+        public override int AttackStat { get; }
+
+        public override int DefendStat { get; }
+
+        public override bool HideQuantity => false;
+
+        public ChestArmour(ChestArmourEnum chestArmourType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
+            base(quantity, longName, shortName, CHEST_ARMOUR_SPRITE, attackStat, defendStat)
+        {
+            ChestArmourType = chestArmourType;
+        }
+    }
+
+
+    public class Shield : Armour
+    {
+        public enum ShieldEnum { SmallShield = 0x21E, LargeShield = 0x21F,  SpikedShield = 0x220, MagicShield = 0x221, JewelShield = 0x222 }
+        
+        private const int SHIELD_SPRITE = 262;
+        public Shield(ShieldEnum shieldType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
+            base(quantity, longName, shortName, SHIELD_SPRITE, attackStat, defendStat)
+        {
+            ShieldType = shieldType;
+        }
+
+        public ShieldEnum ShieldType { get; }
+        public override int AttackStat { get; }
+
+        public override int DefendStat { get; }
+
+        public override bool HideQuantity => false;
+    }
+
+    abstract public class Weapon : CombatItem
+    {
+        public Weapon(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : 
+            base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat)
+        {
+        }
+    }
+
+    abstract public class Armour : CombatItem
+    {
+        public Armour(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : 
+            base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat)
+        {
+        }
+    }
+
+    abstract public class CombatItem : InventoryItem
+    {
+        abstract public int AttackStat { get; }
+        abstract public int DefendStat { get; }
+        public CombatItem(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : base(quantity, longName, shortName, nSpriteNum)
+        {
+            attackStat = AttackStat;
+            defendStat = DefendStat;
+        }
+    }
 
     public class Potion : InventoryItem
     {

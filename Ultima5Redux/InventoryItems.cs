@@ -9,7 +9,7 @@ namespace Ultima5Redux
     public abstract class InventoryItems <EnumType, T>
     {
         public abstract Dictionary<EnumType, T> Items { get; }
-        public List<InventoryItem> GenericItemList
+        public virtual List<InventoryItem> GenericItemList
         {
             get
             {
@@ -32,6 +32,117 @@ namespace Ultima5Redux
         }
     }
 
+
+    public class Armours : InventoryItems<Armours.ArmourTypeEnum, List<Armour>>
+    {
+        public List<Armour> Shields = new List<Armour>();
+        public List<Armour> ChestArmours = new List<Armour>();
+
+        public enum ArmourTypeEnum { Shield, Chest, Helm, Ring, Amulet }
+        public Armours(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef, gameStateByteArray)
+        {
+            InitializeShields();
+            InitializeChestArmour();
+        }
+
+        // override to allow for inserting entire lists
+        public override List<InventoryItem> GenericItemList
+        {
+            get
+            {
+                List<InventoryItem> itemList = new List<InventoryItem>();
+                foreach (Shield shield in Shields) { itemList.Add(shield); }
+                foreach (ChestArmour chestArmour in ChestArmours) { itemList.Add(chestArmour); }
+                return itemList;
+            }
+        }
+
+        private void InitializeChestArmour()
+        {
+            ChestArmours.Add(new ChestArmour(ChestArmour.ChestArmourEnum.ClothArmour,
+                gameStateByteArray[(int)ChestArmour.ChestArmourEnum.ClothArmour],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.CLOTH_ARMOUR),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.CLOTH_ARMOUR),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.ClothArmour],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.ClothArmour]));
+            ChestArmours.Add(new ChestArmour(ChestArmour.ChestArmourEnum.LeatherArmour,
+                gameStateByteArray[(int)ChestArmour.ChestArmourEnum.LeatherArmour],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.LEATHER_ARMOUR),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.LEATHER_ARMOUR),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.LeatherArmour],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.LeatherArmour]));
+            ChestArmours.Add(new ChestArmour(ChestArmour.ChestArmourEnum.Ringmail,
+                gameStateByteArray[(int)ChestArmour.ChestArmourEnum.Ringmail],
+                "Ring Mail", "Ring Mail",
+                   //dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.),
+                   //dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.CLOTH_ARMOUR),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.Ringmail],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.Ringmail]));
+            ChestArmours.Add(new ChestArmour(ChestArmour.ChestArmourEnum.ScaleMail,
+                gameStateByteArray[(int)ChestArmour.ChestArmourEnum.ScaleMail],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.SCALE_MAIL),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.SCALE_MAIL),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.ScaleMail],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.ScaleMail]));
+            ChestArmours.Add(new ChestArmour(ChestArmour.ChestArmourEnum.ChainMail,
+                gameStateByteArray[(int)ChestArmour.ChestArmourEnum.ChainMail],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.CHAIN_MAIL),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.CHAIN_MAIL),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.ChainMail],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.ChainMail]));
+            ChestArmours.Add(new ChestArmour(ChestArmour.ChestArmourEnum.PlateMail,
+                gameStateByteArray[(int)ChestArmour.ChestArmourEnum.PlateMail],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.PLATE_MAIL),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.PLATE_MAIL),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.PlateMail],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.PlateMail]));
+            ChestArmours.Add(new ChestArmour(ChestArmour.ChestArmourEnum.MysticArmour,
+                gameStateByteArray[(int)ChestArmour.ChestArmourEnum.MysticArmour],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.MYSTIC_ARMOUR),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.MYSTIC_ARMOUR),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.MysticArmour],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.MysticArmour]));
+
+        }
+
+        private void InitializeShields()
+        {
+            Shields.Add(new Shield(Shield.ShieldEnum.SmallShield,
+                gameStateByteArray[(int)Shield.ShieldEnum.SmallShield],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.SMALL_SHIELD),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.SMALL_SHIELD),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.SmallShield],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.SmallShield]));
+            Shields.Add(new Shield(Shield.ShieldEnum.LargeShield,
+                gameStateByteArray[(int)Shield.ShieldEnum.LargeShield],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.LARGE_SHIELD),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.LARGE_SHIELD),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.LargeShield],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.LargeShield]));
+            Shields.Add(new Shield(Shield.ShieldEnum.SpikedShield,
+                gameStateByteArray[(int)Shield.ShieldEnum.SpikedShield],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.SPIKED_SHIELD),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.SPIKED_SHIELD),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.SpikedShield],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.SpikedShield]));
+            Shields.Add(new Shield(Shield.ShieldEnum.MagicShield,
+                gameStateByteArray[(int)Shield.ShieldEnum.MagicShield],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.MAGIC_SHIELD),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.MAGIC_SHIELD),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.MagicShield],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.MagicShield]));
+            Shields.Add(new Shield(Shield.ShieldEnum.JewelShield,
+                gameStateByteArray[(int)Shield.ShieldEnum.JewelShield],
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.LONG_ARMOUR_STRING.JEWEL_SHIELD),
+                   dataOvlRef.StringReferences.GetString(DataOvlReference.SHORT_ARMOUR_STRING.JEWEL_SHIELD),
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.JewelShield],
+                   dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList()[(int)DataOvlReference.EQUIPMENT.JewelShield]));
+        }
+
+        public override Dictionary<ArmourTypeEnum, List<Armour>> Items => new Dictionary<ArmourTypeEnum, List<Armour>>();
+    }
+
+
     public class SpecialItems : InventoryItems<SpecialItem.ItemTypeSpriteEnum, SpecialItem>
     {
         public override Dictionary<SpecialItem.ItemTypeSpriteEnum, SpecialItem> Items { get; } = new Dictionary<SpecialItem.ItemTypeSpriteEnum, SpecialItem>();
@@ -48,7 +159,6 @@ namespace Ultima5Redux
                 gameStateByteArray[(int)SpecialItem.ItemTypeEnum.Grapple],
                 "Grappling Hook",
                 "Grapple");
-
             Items[SpecialItem.ItemTypeSpriteEnum.Spyglass] = new SpecialItem(SpecialItem.ItemTypeSpriteEnum.Spyglass,
                 gameStateByteArray[(int)SpecialItem.ItemTypeEnum.Spyglass],
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS.SPYGLASS),
@@ -62,7 +172,8 @@ namespace Ultima5Redux
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS.SEXTANT),
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS.SEXTANT));
             Items[SpecialItem.ItemTypeSpriteEnum.PocketWatch] = new SpecialItem(SpecialItem.ItemTypeSpriteEnum.PocketWatch,
-                gameStateByteArray[(int)SpecialItem.ItemTypeEnum.PocketWatch],
+                //gameStateByteArray[(int)SpecialItem.ItemTypeEnum.PocketWatch],
+                1,
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS.POCKET_WATCH),
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS.POCKET_WATCH));
             Items[SpecialItem.ItemTypeSpriteEnum.BlackBadge] = new SpecialItem(SpecialItem.ItemTypeSpriteEnum.BlackBadge,

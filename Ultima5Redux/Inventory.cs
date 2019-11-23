@@ -15,10 +15,10 @@ namespace Ultima5Redux
         public ShadowlordShards Shards { get; }
         public Potions MagicPotions { get; }
         public Scrolls MagicScrolls { get; }
-
         public SpecialItems SpecializedItems { get; }
-
+        public Armours ProtectiveArmour { get; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
+        public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
 
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
@@ -72,14 +72,14 @@ namespace Ultima5Redux
         }
 
 
+
+
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef)
         {
             this.gameStateByteArray = gameStateByteArray;
 
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
-
-            
 
             MagicScrolls = new Scrolls(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(MagicScrolls.GenericItemList);
@@ -96,7 +96,9 @@ namespace Ultima5Redux
             Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Shards.GenericItemList);
 
-
+            ProtectiveArmour = new Armours(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(ProtectiveArmour.GenericItemList);
+            ReadyItems.AddRange(ProtectiveArmour.GenericItemList);
         }
 
     }

@@ -52,8 +52,95 @@ namespace Ultima5Redux
             SHARDS,
             SHADOWLORD,
             POTIONS,
-            SPELLS
+            SPELLS,
+            LONG_ARMOUR,
+            SHORT_ARMOUR,
+            //SHIELD_DEFENSE,
+            //CHEST_DEFENSE,
+            //HELM_DEFENSE,
+            //RING_AMULET_DEFENSE,
+            //WEAPON_DEFENSE
+            DEFENSE_VALUES,
+            ATTACK_VALUES,
+            ATTACK_RANGE_VALUES,
+            SPELL_ATTACK_RANGE
+            //GUESSING
         };
+
+        public enum EQUIPMENT
+        {
+            LeatherHelm,
+            ChainCoif,
+            IronHelm,
+            SpikedHelm,
+            SmallShield,
+            LargeShield,
+            SpikedShield,
+            MagicShield,
+            JewelShield,
+            ClothArmour,
+            LeatherArmour,
+            Ringmail,
+            ScaleMail,
+            ChainMail,
+            PlateMail,
+            MysticArmour,
+            Dagger,
+            Sling,
+            Club,
+            FlamingOil,
+            MainGauche,
+            Spear,
+            ThrowingAxe,
+            ShortSword,
+            Mace,
+            MorningStar,
+            Bow,
+            Arrows,
+            Crossbow,
+            Quarrels,
+            LongSword,
+            TwoHHammer,
+            TwoHAxe,
+            TwoHSword,
+            Halberd,
+            SwordofChaos,
+            MagicBow,
+            SilverSword,
+            MagicAxe,
+            GlassSword,
+            JeweledSword,
+            MysticSword,
+            Ringinvis,
+            Ringprotection,
+            Ringregen,
+            Amuletofturning,
+            Spikedcollar,
+            Ankh,
+            FlamPor,
+            VasFlam,
+            InCorp,
+            UusNox,
+            UusZu,
+            UusFlam,
+            UusSanct
+        }
+
+        //public enum HELM_DEFENSE { LeatherHelm = 0, ChainCoif, IronHelm, SpikedHelm }
+
+        //public enum SHIELD_DEFENSE_BYTE { SmallShield = 0, LargeShield, SpikedShield, MagicShield, JewelShield }
+
+        public enum LONG_ARMOUR_STRING
+        {
+            LEATHER_HELM, SPIKED_HELM, SMALL_SHIELD, LARGE_SHIELD, SPIKED_SHIELD, MAGIC_SHIELD, JEWEL_SHIELD, CLOTH_ARMOUR,
+            LEATHER_ARMOUR, SCALE_MAIL, CHAIN_MAIL, PLATE_MAIL, MYSTIC_ARMOUR
+        }
+        public enum SHORT_ARMOUR_STRING
+        {
+            LEATHER_HELM, SPIKED_HELM, SMALL_SHIELD, LARGE_SHIELD, SPIKED_SHIELD, MAGIC_SHIELD, JEWEL_SHIELD, CLOTH_ARMOUR,
+            LEATHER_ARMOUR, SCALE_MAIL, CHAIN_MAIL, PLATE_MAIL, MYSTIC_ARMOUR
+        }
+
 
         public enum POTIONS_STRINGS { BLUE, YELLOW, RED, GREEN, ORANGE, PURPLE, BLACK, WHITE}
 
@@ -193,7 +280,7 @@ namespace Ultima5Redux
             //dataOvlByteArray = Utils.GetFileAsByteList(dataOvlFileAndPath);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unkown", 0x00, 0x18);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.FixedString, "Licence for the MS-Runtime", 0x18, 0x38);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Armour strings (13 of them)", 0x52, 0xA6);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Long Armour strings (13 of them)", 0x52, 0xA6, 0, DataChunkName.LONG_ARMOUR);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Weapon strings (10 of them)", 0xF8, 0x81);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Ring and amulet strings (5 of them)", 0x179, 0x5a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character type, monster names (44 of them)", 0x1d3, 0x158);
@@ -203,7 +290,8 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "(x where x goes from 0 to 7", 0x4ee, 0x18);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shard names (3 of them)", 0x506, 0x29, 0, DataChunkName.SHARDS); // changed from 0x28 to 0x29
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional item names (6 of them)", 0x52f, 0x43, 0, DataChunkName.SPECIAL_ITEM_NAMES2);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names (29 of them)", 0x572, 0x11a);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names - Armour", 0x572, 0x77, 0, DataChunkName.SHORT_ARMOUR);
+            //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names (29 of them)", 0x572, 0x11a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Potion colors (8 of them)", 0x68c, 0x30, 0, DataChunkName.POTIONS);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Reagents (8 of them)", 0x6bc, 0x4d);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Spell names", 0x709, 0x1bb, 0, DataChunkName.SPELLS);
@@ -229,6 +317,15 @@ namespace Ultima5Redux
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
+
+
+
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Attack values", 0x160C, 0x37, 0x00, DataChunkName.ATTACK_VALUES);
+            // excludes extended items such as ankh and spells
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Defense values", 0x1644, 0x2F, 0x00, DataChunkName.DEFENSE_VALUES);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Attack Range values", 0x1674, 0x37, 0x00, DataChunkName.ATTACK_RANGE_VALUES);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Spell Attack Range values", 0x16ad, 0x37, 0x00, DataChunkName.SPELL_ATTACK_RANGE);
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Weapon strings (add + 0x10)", 0x175c, 0xa9, 0x10);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armor index (add + 0x10)", 0x1806, 0x70, 0x10);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Text index (add + 0x10)", 0x187a, 0x1ee, 0x10);
