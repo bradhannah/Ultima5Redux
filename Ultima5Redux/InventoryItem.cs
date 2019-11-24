@@ -149,8 +149,7 @@ namespace Ultima5Redux
             ChestArmourType = chestArmourType;
         }
     }
-
-
+    
     public class Shield : Armour
     {
         public enum ShieldEnum { SmallShield = 0x21E, LargeShield = 0x21F,  SpikedShield = 0x220, MagicShield = 0x221, JewelShield = 0x222 }
@@ -170,9 +169,31 @@ namespace Ultima5Redux
         public override bool HideQuantity => false;
     }
 
-    abstract public class Weapon : CombatItem
+    public class Weapon : CombatItem
     {
-        public Weapon(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : 
+        public enum WeaponTypeEnum { Dagger = 0x22a, Sling, Club, FlamingOil, MainGauche, Spear, ThrowingAxe, ShortSword, Mace,
+            MorningStar, Bow, Arrows, Crossbow, Quarrels, LongSword, TwoHHammer, TwoHAxe, TwoHSword, Halberd, SwordofChaos,
+            MagicBow, SilverSword, MagicAxe, GlassSword, JeweledSword, MysticSword
+        }
+
+        public enum WeaponTypeSpriteEnum {
+            Dagger = 261, Sling = 261, Club = 261, FlamingOil = 261, MainGauche = 261,
+            Spear = 261, ThrowingAxe = 261, ShortSword = 261, Mace = 261,
+            MorningStar = 261, Bow = 261, Arrows = 261, Crossbow = 261, Quarrels = 261, 
+            LongSword = 261, TwoHHammer = 261, TwoHAxe = 261, TwoHSword = 261, Halberd = 261, 
+            SwordofChaos = 261, MagicBow = 261, SilverSword = 261, MagicAxe = 261, 
+            GlassSword = 261, JeweledSword = 261, MysticSword = 261
+        }
+
+        public WeaponTypeEnum WeaponType { get; }
+
+        public override int AttackStat { get; }
+
+        public override int DefendStat { get; }
+
+        public override bool HideQuantity => false;
+
+        public Weapon(WeaponTypeEnum weapon, int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : 
             base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat)
         {
         }
@@ -188,6 +209,25 @@ namespace Ultima5Redux
 
     abstract public class CombatItem : InventoryItem
     {
+        static internal int GetAttack(DataOvlReference dataOvlRef, int nIndex)
+        {
+            List<byte> attackValueList = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList();
+            if (nIndex >= attackValueList.Count)
+            {
+                return 0;
+            }
+            return attackValueList[nIndex]; 
+        }
+        static internal int GetDefense(DataOvlReference dataOvlRef, int nIndex)
+        {
+            List<byte> defenseValueList = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList();
+            if (nIndex >= defenseValueList.Count)
+            {
+                return 0;
+            }
+            return defenseValueList[nIndex];
+        }
+
         abstract public int AttackStat { get; }
         abstract public int DefendStat { get; }
         public CombatItem(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : base(quantity, longName, shortName, nSpriteNum)
@@ -232,8 +272,7 @@ namespace Ultima5Redux
         }
 
     }
-
-
+    
     public class Scroll : InventoryItem
     {
         public enum ScrollSpells { Vas_Lor = 0 , Rel_Hur, In_Sanct, In_An, In_Quas_Wis, Kal_Xen_Corp, In_Mani_Corp, An_Tym }
@@ -267,8 +306,7 @@ namespace Ultima5Redux
             EquipMessage = equipMessage;
         }
     }
-
-
+    
     public class LordBritishArtifact : InventoryItem
     {
         public enum ArtifactType { Amulet = 439, Crown = 437, Sceptre = 438};

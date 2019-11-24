@@ -17,6 +17,7 @@ namespace Ultima5Redux
         public Scrolls MagicScrolls { get; }
         public SpecialItems SpecializedItems { get; }
         public Armours ProtectiveArmour { get; }
+        public Weapons TheWeapons { get; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
 
@@ -99,6 +100,10 @@ namespace Ultima5Redux
             ProtectiveArmour = new Armours(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(ProtectiveArmour.GenericItemList);
             ReadyItems.AddRange(ProtectiveArmour.GenericItemList);
+
+            TheWeapons = new Weapons(dataOvlRef, gameStateByteArray);
+            ReadyItems.AddRange(TheWeapons.GenericItemList);
+
         }
 
     }
