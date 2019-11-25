@@ -141,12 +141,12 @@ namespace Ultima5Redux
             Stats.MaximumHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.MaximimumHP, sizeof(UInt16)).GetChunkAsUINT16List()[0];
             Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.ExperiencePoints, sizeof(UInt16)).GetChunkAsUINT16List()[0];
             Stats.Level = rawRecordByteList[(int)CharacterRecordOffsets.Level];
-            Equipped.Helmet = rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
-            Equipped.Armor = rawRecordByteList[(int)CharacterRecordOffsets.Armor];
-            Equipped.Weapon = rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
-            Equipped.Shield = rawRecordByteList[(int)CharacterRecordOffsets.Shield];
-            Equipped.Ring = rawRecordByteList[(int)CharacterRecordOffsets.Ring];
-            Equipped.Amulet = rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
+            Equipped.Helmet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
+            Equipped.Armor = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
+            Equipped.Weapon = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
+            Equipped.Shield = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
+            Equipped.Ring = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
+            Equipped.Amulet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
             InnOrParty = rawRecordByteList[(int)CharacterRecordOffsets.InnParty];
 
             Unknown1 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown1];
@@ -155,12 +155,12 @@ namespace Ultima5Redux
 
         public class CharacterEquipped
         {
-            public byte Helmet { get; set; }
-            public byte Armor { get; set; }
-            public byte Weapon { get; set; }
-            public byte Shield { get; set; }
-            public byte Ring { get; set; }
-            public byte Amulet { get; set; }
+            public DataOvlReference.EQUIPMENT Helmet { get; set; }
+            public DataOvlReference.EQUIPMENT Armor { get; set; }
+            public DataOvlReference.EQUIPMENT Weapon { get; set; }
+            public DataOvlReference.EQUIPMENT Shield { get; set; }
+            public DataOvlReference.EQUIPMENT Ring { get; set; }
+            public DataOvlReference.EQUIPMENT Amulet { get; set; }
         }
 
 

@@ -9,7 +9,6 @@ namespace Ultima5Redux
 {
     public abstract class InventoryItem
     {
-       
         public abstract bool HideQuantity { get; }
         public int Quantity { get; set; }
 
@@ -79,8 +78,8 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
-        public Amulet(AmuletEnum amuletType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
-            base(quantity, longName, shortName, AMULET_SPRITE, attackStat, defendStat)
+        public Amulet(AmuletEnum amuletType, int quantity, string longName, string shortName, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
+            base(quantity, longName, shortName, AMULET_SPRITE, attackStat, defendStat, specificEquipment)
         {
             AmuletType = amuletType;
         }
@@ -100,8 +99,8 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
-        public Ring(RingEnum ringType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
-            base(quantity, longName, shortName, RING_SPRITE, attackStat, defendStat)
+        public Ring(RingEnum ringType, int quantity, string longName, string shortName, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
+            base(quantity, longName, shortName, RING_SPRITE, attackStat, defendStat, specificEquipment)
         {
             RingType = ringType;
         }
@@ -121,8 +120,8 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
-        public Helm(HelmEnum helmType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
-            base(quantity, longName, shortName, HELM_SPRITE, attackStat, defendStat)
+        public Helm(HelmEnum helmType, int quantity, string longName, string shortName, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
+            base(quantity, longName, shortName, HELM_SPRITE, attackStat, defendStat, specificEquipment)
         {
             HelmType = helmType;
         }
@@ -143,8 +142,9 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
-        public ChestArmour(ChestArmourEnum chestArmourType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
-            base(quantity, longName, shortName, CHEST_ARMOUR_SPRITE, attackStat, defendStat)
+        public ChestArmour(ChestArmourEnum chestArmourType, int quantity, string longName, string shortName, int attackStat,
+            int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
+            base(quantity, longName, shortName, CHEST_ARMOUR_SPRITE, attackStat, defendStat, specificEquipment)
         {
             ChestArmourType = chestArmourType;
         }
@@ -155,8 +155,8 @@ namespace Ultima5Redux
         public enum ShieldEnum { SmallShield = 0x21E, LargeShield = 0x21F,  SpikedShield = 0x220, MagicShield = 0x221, JewelShield = 0x222 }
         
         private const int SHIELD_SPRITE = 262;
-        public Shield(ShieldEnum shieldType, int quantity, string longName, string shortName, int attackStat, int defendStat) : 
-            base(quantity, longName, shortName, SHIELD_SPRITE, attackStat, defendStat)
+        public Shield(ShieldEnum shieldType, int quantity, string longName, string shortName, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
+            base(quantity, longName, shortName, SHIELD_SPRITE, attackStat, defendStat, specificEquipment)
         {
             ShieldType = shieldType;
         }
@@ -193,22 +193,25 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
-        public Weapon(WeaponTypeEnum weapon, int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : 
-            base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat)
+        public Weapon(WeaponTypeEnum weapon, int quantity, string longName, string shortName, int nSpriteNum, int attackStat, 
+            int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
+            base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat, specificEquipment)
         {
         }
     }
 
     abstract public class Armour : CombatItem
     {
-        public Armour(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : 
-            base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat)
+        public Armour(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
+            base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat, specificEquipment)
         {
         }
     }
 
     abstract public class CombatItem : InventoryItem
     {
+        public DataOvlReference.EQUIPMENT SpecificEquipment;
+
         static internal int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
             List<byte> attackValueList = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList();
@@ -230,10 +233,12 @@ namespace Ultima5Redux
 
         abstract public int AttackStat { get; }
         abstract public int DefendStat { get; }
-        public CombatItem(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat) : base(quantity, longName, shortName, nSpriteNum)
+        public CombatItem(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) 
+            : base(quantity, longName, shortName, nSpriteNum)
         {
             attackStat = AttackStat;
             defendStat = DefendStat;
+            this.SpecificEquipment = specificEquipment;
         }
     }
 

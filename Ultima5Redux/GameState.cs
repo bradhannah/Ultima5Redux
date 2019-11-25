@@ -385,6 +385,11 @@ namespace Ultima5Redux
             npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = true;
         }
 
+        public int GetNumberOfActiveCharacters()
+        {
+            return GetActiveCharacterRecords().Count;
+        }
+
     public List<CharacterRecord> GetActiveCharacterRecords()
     {
         List<CharacterRecord> activeCharacterRecords = new List<CharacterRecord>();
@@ -402,8 +407,8 @@ namespace Ultima5Redux
 
     public CharacterRecord GetCharacterFromParty(int nPosition)
         {
-            Debug.Assert(nPosition > 0 && nPosition < CharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
-            Debug.Assert(nPosition >= CharacterRecords.TotalPartyMembers(), "You cannot request a character that isn't on the roster");
+            Debug.Assert(nPosition >= 0 && nPosition < CharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
+            Debug.Assert(nPosition < CharacterRecords.TotalPartyMembers(), "You cannot request a character that isn't on the roster");
 
             int nPartyMember = 0;
             foreach (CharacterRecord characterRecord in CharacterRecords.Records)

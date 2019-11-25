@@ -74,7 +74,7 @@ namespace Ultima5Redux
             Weapon newWeapon = new Weapon(weapon, gameStateByteArray[(int)weapon],
                equipmentNames[(int)equipment], equipmentNames[(int)equipment], (int)weaponSprite,
                CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment));
+               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment);
             Items.Add(weapon, newWeapon);
         }
     }
@@ -121,7 +121,7 @@ namespace Ultima5Redux
             ChestArmours.Add(new ChestArmour(chestArmour, gameStateByteArray[(int)chestArmour],
                equipmentNames[(int)equipment], equipmentNames[(int)equipment],
                CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment)));
+               CombatItem.GetDefense(dataOvlRef, (int)equipment),equipment));
         }
 
         private void AddShield(Shield.ShieldEnum shield, DataOvlReference.EQUIPMENT equipment)
@@ -129,7 +129,7 @@ namespace Ultima5Redux
             Shields.Add(new Shield(shield, gameStateByteArray[(int)shield],
                equipmentNames[(int)equipment], equipmentNames[(int)equipment],
                CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment)));
+               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
         }
 
         private void AddHelm(Helm.HelmEnum helm, DataOvlReference.EQUIPMENT equipment)
@@ -137,7 +137,7 @@ namespace Ultima5Redux
             Helms.Add(new Helm(helm, gameStateByteArray[(int)helm],
                equipmentNames[(int)equipment], equipmentNames[(int)equipment],
                CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment)));
+               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
         }
 
         private void AddAmulet(Amulet.AmuletEnum amulet, DataOvlReference.EQUIPMENT equipment)
@@ -145,7 +145,7 @@ namespace Ultima5Redux
             Amulets.Add(new Amulet(amulet, gameStateByteArray[(int)amulet],
                equipmentNames[(int)equipment], equipmentNames[(int)equipment],
                CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment)));
+               CombatItem.GetDefense(dataOvlRef, (int)equipment),equipment));
         }
 
         private void AddRing(Ring.RingEnum ring, DataOvlReference.EQUIPMENT equipment)
@@ -153,7 +153,7 @@ namespace Ultima5Redux
             Rings.Add(new Ring(ring, gameStateByteArray[(int)ring],
                equipmentNames[(int)equipment], equipmentNames[(int)equipment],
                CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment)));
+               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
         }
 
         private void InitializeRings()
