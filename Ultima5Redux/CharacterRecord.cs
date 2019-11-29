@@ -117,7 +117,7 @@ namespace Ultima5Redux
         //0x1F        1           inn/party n/a
 
         private enum CharacterRecordOffsets { Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D, Intelligence = 0x0E,
-        CurrentMP = 0x0F, CurrentHP = 0x10, MaximimumHP = 0x12, ExperiencePoints = 0x14, Level = 0x16, Helmet = 0x19, Armor = 0x1A, Shield = 0x1B, Weapon = 0x1C,
+        CurrentMP = 0x0F, CurrentHP = 0x10, MaximimumHP = 0x12, ExperiencePoints = 0x14, Level = 0x16, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B, Shield  = 0x1C,
         Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F, Unknown1 = 0x17, Unknown2 = 0x18 };
         
         /// <summary>

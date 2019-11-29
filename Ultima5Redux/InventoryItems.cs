@@ -71,10 +71,7 @@ namespace Ultima5Redux
 
         private void AddWeapon(Weapon.WeaponTypeEnum weapon, Weapon.WeaponTypeSpriteEnum weaponSprite, DataOvlReference.EQUIPMENT equipment)
         {
-            Weapon newWeapon = new Weapon(weapon, gameStateByteArray[(int)weapon],
-               equipmentNames[(int)equipment], equipmentNames[(int)equipment], (int)weaponSprite,
-               CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment);
+            Weapon newWeapon = new Weapon(weapon, weaponSprite, equipment, dataOvlRef, gameStateByteArray);
             Items.Add(weapon, newWeapon);
         }
     }
@@ -118,18 +115,20 @@ namespace Ultima5Redux
 
         private void AddChestArmour(ChestArmour.ChestArmourEnum chestArmour, DataOvlReference.EQUIPMENT equipment)
         {
+            //ChestArmours.Add(new ChestArmour())
             ChestArmours.Add(new ChestArmour(chestArmour, gameStateByteArray[(int)chestArmour],
                equipmentNames[(int)equipment], equipmentNames[(int)equipment],
                CombatItem.GetAttack(dataOvlRef, (int)equipment),
                CombatItem.GetDefense(dataOvlRef, (int)equipment),equipment));
         }
 
-        private void AddShield(Shield.ShieldEnum shield, DataOvlReference.EQUIPMENT equipment)
+        private void AddShield(Shield.ShieldTypeEnum shield, DataOvlReference.EQUIPMENT equipment)
         {
-            Shields.Add(new Shield(shield, gameStateByteArray[(int)shield],
-               equipmentNames[(int)equipment], equipmentNames[(int)equipment],
-               CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
+            Shields.Add(new Shield(shield, equipment, dataOvlRef, gameStateByteArray));
+            //Shields.Add(new Shield(shield, gameStateByteArray[(int)shield],
+            //   equipmentNames[(int)equipment], equipmentNames[(int)equipment],
+            //   CombatItem.GetAttack(dataOvlRef, (int)equipment),
+            //   CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
         }
 
         private void AddHelm(Helm.HelmEnum helm, DataOvlReference.EQUIPMENT equipment)
@@ -190,11 +189,11 @@ namespace Ultima5Redux
 
         private void InitializeShields()
         {
-            AddShield(Shield.ShieldEnum.SmallShield, DataOvlReference.EQUIPMENT.SmallShield);
-            AddShield(Shield.ShieldEnum.LargeShield, DataOvlReference.EQUIPMENT.LargeShield);
-            AddShield(Shield.ShieldEnum.SpikedShield, DataOvlReference.EQUIPMENT.SpikedShield);
-            AddShield(Shield.ShieldEnum.MagicShield, DataOvlReference.EQUIPMENT.MagicShield);
-            AddShield(Shield.ShieldEnum.JewelShield, DataOvlReference.EQUIPMENT.JewelShield);
+            AddShield(Shield.ShieldTypeEnum.SmallShield, DataOvlReference.EQUIPMENT.SmallShield);
+            AddShield(Shield.ShieldTypeEnum.LargeShield, DataOvlReference.EQUIPMENT.LargeShield);
+            AddShield(Shield.ShieldTypeEnum.SpikedShield, DataOvlReference.EQUIPMENT.SpikedShield);
+            AddShield(Shield.ShieldTypeEnum.MagicShield, DataOvlReference.EQUIPMENT.MagicShield);
+            AddShield(Shield.ShieldTypeEnum.JewelShield, DataOvlReference.EQUIPMENT.JewelShield);
         }
 
         public override Dictionary<ArmourTypeEnum, List<Armour>> Items => new Dictionary<ArmourTypeEnum, List<Armour>>();

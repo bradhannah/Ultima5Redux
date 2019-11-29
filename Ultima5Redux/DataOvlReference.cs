@@ -64,7 +64,8 @@ namespace Ultima5Redux
             ATTACK_VALUES,
             ATTACK_RANGE_VALUES,
             SPELL_ATTACK_RANGE,
-            EQUIP_INDEXES
+            EQUIP_INDEXES,
+            REQ_STRENGTH_EQUIP
             //GUESSING
         };
 
@@ -330,6 +331,8 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Addtional Weapon/Armour strings", 0x175c, 0xa9, 0x10);
             DataChunk strEquipIndexes = dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "String indexes for all equipment (except scrolls) (add 0x10 to index)", 
                 0x1806, 0x2F*2+2, 0x10, DataChunkName.EQUIP_INDEXES);
+
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Required Strength for Equipment Values", 0x1ABE, 0x2F, 0x00, DataChunkName.REQ_STRENGTH_EQUIP);
 
             List<string> strsss = strEquipIndexes.GetAsStringListFromIndexes();
                 //DataChunk.GetAsStringListFromIndexes(strEquipIndexes.GetChunkAsUINT16List(), this.dataChunks.FileByteList);
