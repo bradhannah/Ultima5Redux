@@ -141,12 +141,56 @@ namespace Ultima5Redux
             Stats.MaximumHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.MaximimumHP, sizeof(UInt16)).GetChunkAsUINT16List()[0];
             Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.ExperiencePoints, sizeof(UInt16)).GetChunkAsUINT16List()[0];
             Stats.Level = rawRecordByteList[(int)CharacterRecordOffsets.Level];
-            Equipped.Helmet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
-            Equipped.Armor = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
-            Equipped.Weapon = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
-            Equipped.Shield = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
-            Equipped.Ring = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
-            Equipped.Amulet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
+
+            // this approach is necessary because I have found circumstances where shields and weapons were swapped in the save file
+            // I couldn't guarantee that other items wouldn't do the same so instead we allow each of the equipment save
+            // slots can be "whatever" in "whatever" order. When I save them back to disk, I will save them in the correct order
+            // Also confirmed that Ultima 5 can handle these equipment saves out of order as well
+            List<DataOvlReference.EQUIPMENT> allEquipment = new List<DataOvlReference.EQUIPMENT>(6);
+            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet]);
+            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor]);
+            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon]);
+            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield]);
+            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring]);
+            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet]);
+
+            foreach (DataOvlReference.EQUIPMENT equipment in allEquipment)
+            {
+                if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.SpikedHelm)
+                {
+                    Equipped.Helmet = equipment;
+                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.JewelShield)
+                {
+                    Equipped.Shield = equipment;
+                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticArmour)
+                {
+                    Equipped.Weapon = equipment;
+                }  else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticSword)
+                {
+                    Equipped.Weapon = equipment;
+                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.RingRegen)
+                {
+                    Equipped.Ring = equipment;
+                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Ankh)
+                {
+                    Equipped.Amulet = equipment;
+                }
+                else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Nothing) // nothing is preset by constructor
+                { } else
+                {
+                    throw new Exception("Save file appears to refer to equipment #" + ((int)equipment).ToString() + " but that doesn't exist");
+                }
+
+
+            }
+
+            //    Equipped.Helmet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
+            //Equipped.Armor = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
+            //Equipped.Weapon = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
+            //Equipped.Shield = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
+            //Equipped.Ring = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
+            //Equipped.Amulet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
+            
             InnOrParty = rawRecordByteList[(int)CharacterRecordOffsets.InnParty];
 
             Unknown1 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown1];
@@ -155,6 +199,21 @@ namespace Ultima5Redux
 
         public class CharacterEquipped
         {
+            public bool IsEquipped(DataOvlReference.EQUIPMENT equipment)
+            {
+                return (Helmet == equipment || Armor == equipment || Weapon == equipment || Shield == equipment || Ring == equipment || Amulet == equipment);
+            }
+
+            public CharacterEquipped()
+            {
+                Helmet = DataOvlReference.EQUIPMENT.Nothing;
+                Armor = DataOvlReference.EQUIPMENT.Nothing;
+                Weapon = DataOvlReference.EQUIPMENT.Nothing;
+                Shield = DataOvlReference.EQUIPMENT.Nothing;
+                Ring = DataOvlReference.EQUIPMENT.Nothing;
+                Amulet = DataOvlReference.EQUIPMENT.Nothing;
+            }
+
             public DataOvlReference.EQUIPMENT Helmet { get; set; }
             public DataOvlReference.EQUIPMENT Armor { get; set; }
             public DataOvlReference.EQUIPMENT Weapon { get; set; }

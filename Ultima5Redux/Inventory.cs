@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using static Ultima5Redux.GameState;
-
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
@@ -72,8 +72,17 @@ namespace Ultima5Redux
             }
         }
 
-
-
+        public CombatItem GetItemFromEquipment(DataOvlReference.EQUIPMENT equipment)
+        {
+            foreach (CombatItem item in ReadyItems)
+            {
+                if (item.SpecificEquipment == equipment)
+                {
+                    return item;
+                }
+            }
+            throw new Exception("Requested " + equipment.ToString() + " but is not a combat type");
+        }
 
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef)
         {
@@ -81,6 +90,13 @@ namespace Ultima5Redux
 
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
+
+            ProtectiveArmour = new Armours(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(ProtectiveArmour.GenericItemList);
+            ReadyItems.AddRange(ProtectiveArmour.GenericItemList);
+
+            TheWeapons = new Weapons(dataOvlRef, gameStateByteArray);
+            ReadyItems.AddRange(TheWeapons.GenericItemList);
 
             MagicScrolls = new Scrolls(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(MagicScrolls.GenericItemList);
@@ -97,12 +113,6 @@ namespace Ultima5Redux
             Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Shards.GenericItemList);
 
-            ProtectiveArmour = new Armours(dataOvlRef, gameStateByteArray);
-            AllItems.AddRange(ProtectiveArmour.GenericItemList);
-            ReadyItems.AddRange(ProtectiveArmour.GenericItemList);
-
-            TheWeapons = new Weapons(dataOvlRef, gameStateByteArray);
-            ReadyItems.AddRange(TheWeapons.GenericItemList);
 
         }
 

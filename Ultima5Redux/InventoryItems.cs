@@ -104,9 +104,9 @@ namespace Ultima5Redux
             get
             {
                 List<InventoryItem> itemList = new List<InventoryItem>();
+                foreach (Helm helm in Helms) { itemList.Add(helm); }
                 foreach (Shield shield in Shields) { itemList.Add(shield); }
                 foreach (ChestArmour chestArmour in ChestArmours) { itemList.Add(chestArmour); }
-                foreach (Helm helm in Helms) { itemList.Add(helm); }
                 foreach (Amulet amulet in Amulets) { itemList.Add(amulet); }
                 foreach (Ring ring in Rings) { itemList.Add(ring); }
                 return itemList;

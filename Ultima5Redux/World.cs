@@ -58,6 +58,8 @@ namespace Ultima5Redux
             AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory);
 
             CharacterRecord character = State.GetCharacterFromParty(0);
+            CharacterRecord character3 = State.GetCharacterFromParty(3);
+            CharacterRecord character4 = State.GetCharacterFromParty(4);
             //character.Equipped.Amulet = DataOvlReference.EQUIPMENT.Ankh;
             //CharacterRecord character2 = State.GetCharacterFromParty(0);
 

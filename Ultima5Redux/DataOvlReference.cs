@@ -125,7 +125,8 @@ namespace Ultima5Redux
             UusNox,
             UusZu,
             UusFlam,
-            UusSanct
+            UusSanct,
+            Nothing = 0xFF
         }
 
         //public enum HELM_DEFENSE { LeatherHelm = 0, ChainCoif, IronHelm, SpikedHelm }
