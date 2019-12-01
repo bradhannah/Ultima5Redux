@@ -180,17 +180,8 @@ namespace Ultima5Redux
                 {
                     throw new Exception("Save file appears to refer to equipment #" + ((int)equipment).ToString() + " but that doesn't exist");
                 }
-
-
             }
 
-            //    Equipped.Helmet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
-            //Equipped.Armor = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
-            //Equipped.Weapon = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
-            //Equipped.Shield = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
-            //Equipped.Ring = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
-            //Equipped.Amulet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
-            
             InnOrParty = rawRecordByteList[(int)CharacterRecordOffsets.InnParty];
 
             Unknown1 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown1];

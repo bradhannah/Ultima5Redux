@@ -65,8 +65,9 @@ namespace Ultima5Redux
             ATTACK_RANGE_VALUES,
             SPELL_ATTACK_RANGE,
             EQUIP_INDEXES,
-            REQ_STRENGTH_EQUIP
-            //GUESSING
+            REQ_STRENGTH_EQUIP,
+            EQUIPPING,
+            ZSTATS
         };
 
         public enum EQUIPMENT
@@ -129,9 +130,71 @@ namespace Ultima5Redux
             Nothing = 0xFF
         }
 
-        //public enum HELM_DEFENSE { LeatherHelm = 0, ChainCoif, IronHelm, SpikedHelm }
+        public enum EQUIPPING_STRINGS
+        {
+            ITEM_COLOR, CANT_CHANGE_IN_BATTLE, AMBFDTPRS, NO_AMMO_BANG, REMOVE_HELM_FIRST_BANG, REMOVE_ARMOUR_FIRST_BANG, FREE_ONE_HAND_BANG,
+            FREE_BOTH_HANDS_FIRST_BANG, REMOVE_THY_AMULET_BANG, ONLY_ONE_RING_BANG, NOT_STRONG_ENOUGH_BANG, N_N_RING_VANISHES_N, DONE_N, NONE_BANG_N,
+            THOU_ART_EMPTY_N_HANDED_BANG_N, ITEM_COLON2 }
+//            [0] "Item: "	string
+//[1]	"Thou canst not change armour in heated battle!"	string
+//[2]	"AMBFDTPRS"	string
+//[3]	"Thou hast no ammunition for that weapon!"	string
+//[4]	"Remove first thy present helm!"	string
+//[5]	"Thou must first remove thine other armour!"	string
+//[6]	"Thou must free one of thy hands first!"	string
+//[7]	"Both hands must be free before thou canst wield that!"	string
+//[8]	"Thou must remove thine other amulet!"	string
+//[9]	"Only one magic ring may be worn at a time!"	string
+//[10]	"Thou art not strong enough!"	string
+//[11]	"\n\nRing vanishes!\n"	string
+//[12]	"Done\n"	string
+//[13]	"None!\n"	string
+//[14]	"Thou art empty-\nhanded!\n"	string
+//[15]	"Item: "	string
 
-        //public enum SHIELD_DEFENSE_BYTE { SmallShield = 0, LargeShield, SpikedShield, MagicShield, JewelShield }
+    public enum ZSTATS_STRINGS
+    {
+            DONE_DOT_N, PLAYER_COLON, NONE_BANG_N, AMBFDTPRS, GPDSC, SPACE_LV_DASH, STR_EQUALS, _SPACE2_HP_COLON, N_INT_EQUALS, SPACE2_HM_COLON,
+            N_DEX_EQUALS, SPACE2_EX_COLON, N_N_SPACE4_MAGIC_COLON, ARMS_N_N, NON_READY, EQUIPMENT, N_SPACE_FOOD_COLON, N_SPACE_GOLD_COLON,
+            N_N_SPACE_KEYS_DOTS, N_SPACE_GEMS_DOTS, N_TORCHES_DOTS, N_SPACE_GRAPPLE, DASH_DASH, CODE1, CODE2, MOONSTONE_SPACE, NONE_OWNED_BANG,
+            N_STATUS_COLON, REAGENTS, SPELLS, ITEMS, ARMAMENTS, DONE_N, N_N
+
+            //[0] "Done.\n"	string
+            //[1]	"Player: "	string
+            //[2]	"None!\n"	string
+            //[3]	"AMBFDTPRS"	string
+            //[4]	"GPDSC"	string
+            //[5]	" Lv-"	string
+            //[6]	"Str="	string
+            //[7]	"  HP:"	string
+            //[8]	"\nInt="	string
+            //[9]	"  HM:"	string
+            //[10]	"\nDex="	string
+            //[11]	"  Ex:"	string
+            //[12]	"\n\n    Magic:"	string
+            //[13]	"Arms\n\n"	string
+            //[14]	"(None ready)"	string
+            //[15]	"Equipment"	string
+            //[16]	"\n Food: "	string
+            //[17]	"\n Gold: "	string
+            //[18]	"\n\n Keys......."	string
+            //[19]	"\n Gems......."	string
+            //[20]	"\n Torches...."	string
+            //[21]	"\n Grapple"	string
+            //[22]	"--"	string
+            //[23]	"\u001c + "	string
+            //[24]	"\u001d + "	string
+            //[25]	"Moonstone "	string
+            //[26]	"(None owned!)"	string
+            //[27]	"\nStatus: "	string
+            //[28]	"Reagents"	string
+            //[29]	"Spells"	string
+            //[30]	"Items"	string
+            //[31]	"Armaments"	string
+            //[32]	"Done\n"	string
+            //[33]	"\n\n"	string
+
+        }
 
         public enum LONG_ARMOUR_STRING
         {
@@ -143,7 +206,6 @@ namespace Ultima5Redux
             LEATHER_HELM, SPIKED_HELM, SMALL_SHIELD, LARGE_SHIELD, SPIKED_SHIELD, MAGIC_SHIELD, JEWEL_SHIELD, CLOTH_ARMOUR,
             LEATHER_ARMOUR, SCALE_MAIL, CHAIN_MAIL, PLATE_MAIL, MYSTIC_ARMOUR
         }
-
 
         public enum POTIONS_STRINGS { BLUE, YELLOW, RED, GREEN, ORANGE, PURPLE, BLACK, WHITE}
 
@@ -333,7 +395,7 @@ namespace Ultima5Redux
             DataChunk strEquipIndexes = dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "String indexes for all equipment (except scrolls) (add 0x10 to index)", 
                 0x1806, 0x2F*2+2, 0x10, DataChunkName.EQUIP_INDEXES);
 
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Required Strength for Equipment Values", 0x1ABE, 0x2F, 0x00, DataChunkName.REQ_STRENGTH_EQUIP);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Required Strength for Equipment Values", 0x1ABE, 0x2F, 0x00, DataChunkName.REQ_STRENGTH_EQUIP);
 
             List<string> strsss = strEquipIndexes.GetAsStringListFromIndexes();
                 //DataChunk.GetAsStringListFromIndexes(strEquipIndexes.GetChunkAsUINT16List(), this.dataChunks.FileByteList);
@@ -537,8 +599,11 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "urn strings", 0x9635, 0x33);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "save game strings", 0x9668, 0x21);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "OOL and SAV files", 0x968a, 0x32);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory and Stats strings", 0x96BC, 0x136);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory warnings", 0x97f2, 0x1c8);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory and Stats strings", 0x96BC, 0x12B, 0, DataChunkName.ZSTATS);
+            SomeStrings someStrings2 = GetDataChunk(DataChunkName.ZSTATS).GetChunkAsStringList();
+
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory warnings", 0x97EA, 0x1c5, 0, DataChunkName.EQUIPPING);
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle messages", 0x99ba, 0xfe);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Buying wine dialog", 0x9ab8, 0x22c);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "4 character short form NPC questions, all quest related ", 0x9ce4, 0x9c);

@@ -39,6 +39,10 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES2).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.LONG_ARMOUR_STRING), dataRef.GetDataChunk(DataOvlReference.DataChunkName.LONG_ARMOUR).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SHORT_ARMOUR_STRING), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHORT_ARMOUR).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.EQUIPPING_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIPPING).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.ZSTATS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.ZSTATS).GetChunkAsStringList());
+
+            
         }
 
         private Dictionary<Type, SomeStrings> strMap;

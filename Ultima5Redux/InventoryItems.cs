@@ -115,11 +115,11 @@ namespace Ultima5Redux
 
         private void AddChestArmour(ChestArmour.ChestArmourEnum chestArmour, DataOvlReference.EQUIPMENT equipment)
         {
-            //ChestArmours.Add(new ChestArmour())
-            ChestArmours.Add(new ChestArmour(chestArmour, gameStateByteArray[(int)chestArmour],
-               equipmentNames[(int)equipment], equipmentNames[(int)equipment],
-               CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment),equipment));
+            ChestArmours.Add(new ChestArmour(chestArmour, equipment, dataOvlRef, gameStateByteArray));
+            //ChestArmours.Add(new ChestArmour(chestArmour, gameStateByteArray[(int)chestArmour],
+            //   equipmentNames[(int)equipment], equipmentNames[(int)equipment],
+            //   CombatItem.GetAttack(dataOvlRef, (int)equipment),
+            //   CombatItem.GetDefense(dataOvlRef, (int)equipment),equipment));
         }
 
         private void AddShield(Shield.ShieldTypeEnum shield, DataOvlReference.EQUIPMENT equipment)
@@ -133,26 +133,29 @@ namespace Ultima5Redux
 
         private void AddHelm(Helm.HelmEnum helm, DataOvlReference.EQUIPMENT equipment)
         {
-            Helms.Add(new Helm(helm, gameStateByteArray[(int)helm],
-               equipmentNames[(int)equipment], equipmentNames[(int)equipment],
-               CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
+            Helms.Add(new Helm(helm, equipment, dataOvlRef, gameStateByteArray));
+            //Helms.Add(new Helm(helm, gameStateByteArray[(int)helm],
+            //   equipmentNames[(int)equipment], equipmentNames[(int)equipment],
+            //   CombatItem.GetAttack(dataOvlRef, (int)equipment),
+            //   CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
         }
 
         private void AddAmulet(Amulet.AmuletEnum amulet, DataOvlReference.EQUIPMENT equipment)
         {
-            Amulets.Add(new Amulet(amulet, gameStateByteArray[(int)amulet],
-               equipmentNames[(int)equipment], equipmentNames[(int)equipment],
-               CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment),equipment));
+            Amulets.Add(new Amulet(amulet, equipment, dataOvlRef, gameStateByteArray));
+            //Amulets.Add(new Amulet(amulet, gameStateByteArray[(int)amulet],
+            //   equipmentNames[(int)equipment], equipmentNames[(int)equipment],
+            //   CombatItem.GetAttack(dataOvlRef, (int)equipment),
+            //   CombatItem.GetDefense(dataOvlRef, (int)equipment),equipment));
         }
 
         private void AddRing(Ring.RingEnum ring, DataOvlReference.EQUIPMENT equipment)
         {
-            Rings.Add(new Ring(ring, gameStateByteArray[(int)ring],
-               equipmentNames[(int)equipment], equipmentNames[(int)equipment],
-               CombatItem.GetAttack(dataOvlRef, (int)equipment),
-               CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
+            Rings.Add(new Ring(ring, equipment, dataOvlRef, gameStateByteArray));
+            //Rings.Add(new Ring(ring, gameStateByteArray[(int)ring],
+            //   equipmentNames[(int)equipment], equipmentNames[(int)equipment],
+            //   CombatItem.GetAttack(dataOvlRef, (int)equipment),
+            //   CombatItem.GetDefense(dataOvlRef, (int)equipment), equipment));
         }
 
         private void InitializeRings()
