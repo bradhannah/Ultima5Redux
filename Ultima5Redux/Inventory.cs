@@ -72,6 +72,17 @@ namespace Ultima5Redux
             }
         }
 
+        public bool IsShield(DataOvlReference.EQUIPMENT equipment)
+        {
+            foreach (Shield shield in this.ProtectiveArmour.Shields)
+            {
+                if (shield.SpecificEquipment == equipment)
+                    return true;
+            }
+            return false;
+        }
+
+
         public CombatItem GetItemFromEquipment(DataOvlReference.EQUIPMENT equipment)
         {
             foreach (CombatItem item in ReadyItems)
@@ -112,8 +123,6 @@ namespace Ultima5Redux
 
             Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Shards.GenericItemList);
-
-
         }
 
     }

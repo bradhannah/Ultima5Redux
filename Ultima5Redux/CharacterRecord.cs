@@ -154,33 +154,48 @@ namespace Ultima5Redux
             allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring]);
             allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet]);
 
-            foreach (DataOvlReference.EQUIPMENT equipment in allEquipment)
+            Equipped.Helmet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
+            Equipped.Armor = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
+            Equipped.Weapon = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
+            Equipped.Shield = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
+            Equipped.Ring = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
+            Equipped.Amulet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
+
+            // sometimes U5 swaps the shield and weapon, so we are going to be careful and just swap them back
+            if ((int)Equipped.Weapon <= (int)DataOvlReference.EQUIPMENT.JewelShield && (int)Equipped.Weapon >= (int)DataOvlReference.EQUIPMENT.Dagger)
             {
-                if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.SpikedHelm)
-                {
-                    Equipped.Helmet = equipment;
-                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.JewelShield)
-                {
-                    Equipped.Shield = equipment;
-                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticArmour)
-                {
-                    Equipped.Weapon = equipment;
-                }  else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticSword)
-                {
-                    Equipped.Weapon = equipment;
-                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.RingRegen)
-                {
-                    Equipped.Ring = equipment;
-                } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Ankh)
-                {
-                    Equipped.Amulet = equipment;
-                }
-                else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Nothing) // nothing is preset by constructor
-                { } else
-                {
-                    throw new Exception("Save file appears to refer to equipment #" + ((int)equipment).ToString() + " but that doesn't exist");
-                }
+                DataOvlReference.EQUIPMENT shieldEquip = Equipped.Shield;
+                Equipped.Shield = Equipped.Weapon;
+                Equipped.Weapon = shieldEquip;
             }
+
+            //foreach (DataOvlReference.EQUIPMENT equipment in allEquipment)
+            //{
+            //    if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.SpikedHelm)
+            //    {
+            //        Equipped.Helmet = equipment;
+            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.JewelShield)
+            //    {
+            //        Equipped.Shield = equipment;
+            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticArmour)
+            //    {
+            //        Equipped.Weapon = equipment;
+            //    }  else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticSword)
+            //    {
+            //        Equipped.Weapon = equipment;
+            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.RingRegen)
+            //    {
+            //        Equipped.Ring = equipment;
+            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Ankh)
+            //    {
+            //        Equipped.Amulet = equipment;
+            //    }
+            //    else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Nothing) // nothing is preset by constructor
+            //    { } else
+            //    {
+            //        throw new Exception("Save file appears to refer to equipment #" + ((int)equipment).ToString() + " but that doesn't exist");
+            //    }
+            //}
 
             InnOrParty = rawRecordByteList[(int)CharacterRecordOffsets.InnParty];
 

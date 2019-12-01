@@ -184,12 +184,15 @@ namespace Ultima5Redux
 
     public class Weapon : CombatItem
     {
-        public enum WeaponTypeEnum { Dagger = 0x22a, Sling, Club, FlamingOil, MainGauche, Spear, ThrowingAxe, ShortSword, Mace,
+        public enum WeaponTypeEnum {
+            SmallShield = 0x21E, LargeShield = 0x21F, SpikedShield = 0x220, MagicShield = 0x221, JewelShield = 0x222,
+            Dagger = 0x22a, Sling, Club, FlamingOil, MainGauche, Spear, ThrowingAxe, ShortSword, Mace,
             MorningStar, Bow, Arrows, Crossbow, Quarrels, LongSword, TwoHHammer, TwoHAxe, TwoHSword, Halberd, SwordofChaos,
             MagicBow, SilverSword, MagicAxe, GlassSword, JeweledSword, MysticSword
         }
 
         public enum WeaponTypeSpriteEnum {
+            SmallShield = 261, LargeShield = 261, SpikedShield = 261, MagicShield = 261, JewelShield = 261,
             Dagger = 261, Sling = 261, Club = 261, FlamingOil = 261, MainGauche = 261,
             Spear = 261, ThrowingAxe = 261, ShortSword = 261, Mace = 261,
             MorningStar = 261, Bow = 261, Arrows = 261, Crossbow = 261, Quarrels = 261, 
@@ -200,29 +203,24 @@ namespace Ultima5Redux
 
         public WeaponTypeEnum WeaponType { get; }
 
-        //public override int AttackStat { get; }
-
         public bool IsAmmo { get; }
 
         public bool IsTwoHanded { get; }
 
-        //public override int DefendStat { get; }
+        public bool IsShield { get; }
 
         public override bool HideQuantity => false;
-
-        //public Weapon(WeaponTypeEnum weapon, int quantity, string longName, string shortName, int nSpriteNum, int attackStat, 
-        //    int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
-        //    base(quantity, longName, shortName, nSpriteNum, attackStat, defendStat, specificEquipment)
-        //{
-        //    IsAmmo = specificEquipment == DataOvlReference.EQUIPMENT.Quarrels || specificEquipment == DataOvlReference.EQUIPMENT.Arrows;
-        //}
 
         public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
             : base (equipment, dataOvlRef, gameStateByteArray, (int)weapon, (int)sprite)
         {
             IsAmmo = equipment == DataOvlReference.EQUIPMENT.Quarrels || equipment == DataOvlReference.EQUIPMENT.Arrows;
             IsTwoHanded = equipment == DataOvlReference.EQUIPMENT.TwoHAxe || equipment == DataOvlReference.EQUIPMENT.TwoHSword ||
-                equipment == DataOvlReference.EQUIPMENT.TwoHHammer || equipment == DataOvlReference.EQUIPMENT.Bow || equipment == DataOvlReference.EQUIPMENT.MagicBow;
+                equipment == DataOvlReference.EQUIPMENT.TwoHHammer || equipment == DataOvlReference.EQUIPMENT.Bow || equipment == DataOvlReference.EQUIPMENT.MagicBow ||
+                equipment == DataOvlReference.EQUIPMENT.Crossbow || equipment == DataOvlReference.EQUIPMENT.Halberd;
+            IsShield = equipment == DataOvlReference.EQUIPMENT.SmallShield || equipment == DataOvlReference.EQUIPMENT.LargeShield ||
+                equipment == DataOvlReference.EQUIPMENT.SpikedShield || equipment == DataOvlReference.EQUIPMENT.MagicShield || 
+                equipment == DataOvlReference.EQUIPMENT.JewelShield;
         }
     }
 
