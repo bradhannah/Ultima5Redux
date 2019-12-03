@@ -40,21 +40,21 @@ namespace Ultima5Redux
         /// <summary>
         /// Override to ensure that shields are removed
         /// </summary>
-        public override List<InventoryItem> GenericItemList
-        { 
-            get
-            {
-                List<InventoryItem> weaponList=new List<Ultima5Redux.InventoryItem>();
-                foreach (Weapon weapon in Items.Values)
-                {
-                    if (!weapon.IsShield)
-                    {
-                        weaponList.Add((InventoryItem)weapon);
-                    }
-                }
-                return weaponList;
-            }
-        }
+        //public override List<InventoryItem> GenericItemList
+        //{ 
+        //    get
+        //    {
+        //        List<InventoryItem> weaponList=new List<Ultima5Redux.InventoryItem>();
+        //        foreach (Weapon weapon in Items.Values)
+        //        {
+        //            if (!weapon.IsShield)
+        //            {
+        //                weaponList.Add((InventoryItem)weapon);
+        //            }
+        //        }
+        //        return weaponList;
+        //    }
+        //}
 
 
         public Weapons(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef, gameStateByteArray)
@@ -106,7 +106,7 @@ namespace Ultima5Redux
 
     public class Armours : InventoryItems<Armours.ArmourTypeEnum, List<Armour>>
     {
-        public List<Shield> Shields = new List<Shield>();
+        //public List<Shield> Shields = new List<Shield>();
         public List<ChestArmour> ChestArmours = new List<ChestArmour>();
         public List<Helm> Helms = new List<Helm>();
         public List<Amulet> Amulets = new List<Amulet>();
@@ -120,7 +120,7 @@ namespace Ultima5Redux
             equipmentNames = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIP_INDEXES).GetAsStringListFromIndexes();
 
             InitializeHelms();
-            InitializeShields();
+            //InitializeShields();
             InitializeChestArmour();
             InitializeAmulets();
             InitializeRings();
@@ -133,7 +133,7 @@ namespace Ultima5Redux
             {
                 List<InventoryItem> itemList = new List<InventoryItem>();
                 foreach (Helm helm in Helms) { itemList.Add(helm); }
-                foreach (Shield shield in Shields) { itemList.Add(shield); }
+                //foreach (Shield shield in Shields) { itemList.Add(shield); }
                 foreach (ChestArmour chestArmour in ChestArmours) { itemList.Add(chestArmour); }
                 foreach (Amulet amulet in Amulets) { itemList.Add(amulet); }
                 foreach (Ring ring in Rings) { itemList.Add(ring); }
@@ -146,10 +146,10 @@ namespace Ultima5Redux
             ChestArmours.Add(new ChestArmour(chestArmour, equipment, dataOvlRef, gameStateByteArray));
         }
 
-        private void AddShield(Shield.ShieldTypeEnum shield, DataOvlReference.EQUIPMENT equipment)
-        {
-            Shields.Add(new Shield(shield, equipment, dataOvlRef, gameStateByteArray));
-        }
+        //private void AddShield(Shield.ShieldTypeEnum shield, DataOvlReference.EQUIPMENT equipment)
+        //{
+        //    Shields.Add(new Shield(shield, equipment, dataOvlRef, gameStateByteArray));
+        //}
 
         private void AddHelm(Helm.HelmEnum helm, DataOvlReference.EQUIPMENT equipment)
         {
@@ -198,14 +198,14 @@ namespace Ultima5Redux
             AddChestArmour(ChestArmour.ChestArmourEnum.MysticArmour, DataOvlReference.EQUIPMENT.MysticArmour);
         }
 
-        private void InitializeShields()
-        {
-            AddShield(Shield.ShieldTypeEnum.SmallShield, DataOvlReference.EQUIPMENT.SmallShield);
-            AddShield(Shield.ShieldTypeEnum.LargeShield, DataOvlReference.EQUIPMENT.LargeShield);
-            AddShield(Shield.ShieldTypeEnum.SpikedShield, DataOvlReference.EQUIPMENT.SpikedShield);
-            AddShield(Shield.ShieldTypeEnum.MagicShield, DataOvlReference.EQUIPMENT.MagicShield);
-            AddShield(Shield.ShieldTypeEnum.JewelShield, DataOvlReference.EQUIPMENT.JewelShield);
-        }
+        //private void InitializeShields()
+        //{
+        //    AddShield(Shield.ShieldTypeEnum.SmallShield, DataOvlReference.EQUIPMENT.SmallShield);
+        //    AddShield(Shield.ShieldTypeEnum.LargeShield, DataOvlReference.EQUIPMENT.LargeShield);
+        //    AddShield(Shield.ShieldTypeEnum.SpikedShield, DataOvlReference.EQUIPMENT.SpikedShield);
+        //    AddShield(Shield.ShieldTypeEnum.MagicShield, DataOvlReference.EQUIPMENT.MagicShield);
+        //    AddShield(Shield.ShieldTypeEnum.JewelShield, DataOvlReference.EQUIPMENT.JewelShield);
+        //}
 
         public override Dictionary<ArmourTypeEnum, List<Armour>> Items => new Dictionary<ArmourTypeEnum, List<Armour>>();
     }

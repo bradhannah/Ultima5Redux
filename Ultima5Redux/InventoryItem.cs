@@ -18,6 +18,15 @@ namespace Ultima5Redux
 
         public int SpriteNum { get; }
 
+        public string QuantityString
+        {
+            get
+            {
+                if (HideQuantity) return string.Empty;
+                return Quantity == 0 ? "--" : Quantity.ToString();
+            }
+        }
+
         public InventoryItem(int quantity, string longName, string shortName, int spriteNum)
         {
             this.Quantity = quantity;
@@ -192,7 +201,7 @@ namespace Ultima5Redux
         }
 
         public enum WeaponTypeSpriteEnum {
-            SmallShield = 261, LargeShield = 261, SpikedShield = 261, MagicShield = 261, JewelShield = 261,
+            SmallShield = 262, LargeShield = 262, SpikedShield = 262, MagicShield = 262, JewelShield = 262,
             Dagger = 261, Sling = 261, Club = 261, FlamingOil = 261, MainGauche = 261,
             Spear = 261, ThrowingAxe = 261, ShortSword = 261, Mace = 261,
             MorningStar = 261, Bow = 261, Arrows = 261, Crossbow = 261, Quarrels = 261, 
@@ -211,13 +220,14 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
+
         public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
             : base (equipment, dataOvlRef, gameStateByteArray, (int)weapon, (int)sprite)
         {
             IsAmmo = equipment == DataOvlReference.EQUIPMENT.Quarrels || equipment == DataOvlReference.EQUIPMENT.Arrows;
             IsTwoHanded = equipment == DataOvlReference.EQUIPMENT.TwoHAxe || equipment == DataOvlReference.EQUIPMENT.TwoHSword ||
                 equipment == DataOvlReference.EQUIPMENT.TwoHHammer || equipment == DataOvlReference.EQUIPMENT.Bow || equipment == DataOvlReference.EQUIPMENT.MagicBow ||
-                equipment == DataOvlReference.EQUIPMENT.Crossbow || equipment == DataOvlReference.EQUIPMENT.Halberd;
+                equipment == DataOvlReference.EQUIPMENT.Crossbow || equipment == DataOvlReference.EQUIPMENT.Halberd || equipment == DataOvlReference.EQUIPMENT.FlamingOil;
             IsShield = equipment == DataOvlReference.EQUIPMENT.SmallShield || equipment == DataOvlReference.EQUIPMENT.LargeShield ||
                 equipment == DataOvlReference.EQUIPMENT.SpikedShield || equipment == DataOvlReference.EQUIPMENT.MagicShield || 
                 equipment == DataOvlReference.EQUIPMENT.JewelShield;

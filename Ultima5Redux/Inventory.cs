@@ -20,7 +20,7 @@ namespace Ultima5Redux
         public Weapons TheWeapons { get; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
-
+        public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
         private byte BoolToByte(bool bBool)
@@ -72,15 +72,15 @@ namespace Ultima5Redux
             }
         }
 
-        public bool IsShield(DataOvlReference.EQUIPMENT equipment)
-        {
-            foreach (Shield shield in this.ProtectiveArmour.Shields)
-            {
-                if (shield.SpecificEquipment == equipment)
-                    return true;
-            }
-            return false;
-        }
+        //public bool IsShield(DataOvlReference.EQUIPMENT equipment)
+        //{
+        //    foreach (Weapon weapon in this.ProtectiveArmour.Right)
+        //    {
+        //        if (shield.SpecificEquipment == equipment)
+        //            return true;
+        //    }
+        //    return false;
+        //}
 
 
         public CombatItem GetItemFromEquipment(DataOvlReference.EQUIPMENT equipment)
@@ -110,19 +110,22 @@ namespace Ultima5Redux
             ReadyItems.AddRange(TheWeapons.GenericItemList);
 
             MagicScrolls = new Scrolls(dataOvlRef, gameStateByteArray);
-            AllItems.AddRange(MagicScrolls.GenericItemList);
+            UseItems.AddRange(MagicScrolls.GenericItemList);
 
             MagicPotions = new Potions(dataOvlRef, gameStateByteArray);
-            AllItems.AddRange(MagicPotions.GenericItemList);
+            UseItems.AddRange(MagicPotions.GenericItemList);
 
             SpecializedItems = new SpecialItems(dataOvlRef, gameStateByteArray);
-            AllItems.AddRange(SpecializedItems.GenericItemList);    
+            AllItems.AddRange(SpecializedItems.GenericItemList);
+            UseItems.AddRange(SpecializedItems.GenericItemList);
 
             Artifacts = new LordBritishArtifacts(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Artifacts.GenericItemList);
+            UseItems.AddRange(Artifacts.GenericItemList);
 
             Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Shards.GenericItemList);
+            UseItems.AddRange(Shards.GenericItemList);
         }
 
     }

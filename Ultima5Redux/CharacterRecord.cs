@@ -156,17 +156,17 @@ namespace Ultima5Redux
 
             Equipped.Helmet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
             Equipped.Armor = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
-            Equipped.Weapon = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
-            Equipped.Shield = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
+            Equipped.LeftHand = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
+            Equipped.RightHand = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
             Equipped.Ring = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
             Equipped.Amulet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
 
             // sometimes U5 swaps the shield and weapon, so we are going to be careful and just swap them back
-            if ((int)Equipped.Weapon <= (int)DataOvlReference.EQUIPMENT.JewelShield && (int)Equipped.Weapon >= (int)DataOvlReference.EQUIPMENT.Dagger)
+            if ((int)Equipped.LeftHand <= (int)DataOvlReference.EQUIPMENT.JewelShield && (int)Equipped.LeftHand >= (int)DataOvlReference.EQUIPMENT.Dagger)
             {
-                DataOvlReference.EQUIPMENT shieldEquip = Equipped.Shield;
-                Equipped.Shield = Equipped.Weapon;
-                Equipped.Weapon = shieldEquip;
+                DataOvlReference.EQUIPMENT shieldEquip = Equipped.RightHand;
+                Equipped.RightHand = Equipped.LeftHand;
+                Equipped.LeftHand = shieldEquip;
             }
 
             //foreach (DataOvlReference.EQUIPMENT equipment in allEquipment)
@@ -207,23 +207,23 @@ namespace Ultima5Redux
         {
             public bool IsEquipped(DataOvlReference.EQUIPMENT equipment)
             {
-                return (Helmet == equipment || Armor == equipment || Weapon == equipment || Shield == equipment || Ring == equipment || Amulet == equipment);
+                return (Helmet == equipment || Armor == equipment || LeftHand == equipment || RightHand == equipment || Ring == equipment || Amulet == equipment);
             }
 
             public CharacterEquipped()
             {
                 Helmet = DataOvlReference.EQUIPMENT.Nothing;
                 Armor = DataOvlReference.EQUIPMENT.Nothing;
-                Weapon = DataOvlReference.EQUIPMENT.Nothing;
-                Shield = DataOvlReference.EQUIPMENT.Nothing;
+                LeftHand = DataOvlReference.EQUIPMENT.Nothing;
+                RightHand = DataOvlReference.EQUIPMENT.Nothing;
                 Ring = DataOvlReference.EQUIPMENT.Nothing;
                 Amulet = DataOvlReference.EQUIPMENT.Nothing;
             }
 
             public DataOvlReference.EQUIPMENT Helmet { get; set; }
             public DataOvlReference.EQUIPMENT Armor { get; set; }
-            public DataOvlReference.EQUIPMENT Weapon { get; set; }
-            public DataOvlReference.EQUIPMENT Shield { get; set; }
+            public DataOvlReference.EQUIPMENT LeftHand { get; set; }
+            public DataOvlReference.EQUIPMENT RightHand { get; set; }
             public DataOvlReference.EQUIPMENT Ring { get; set; }
             public DataOvlReference.EQUIPMENT Amulet { get; set; }
         }
