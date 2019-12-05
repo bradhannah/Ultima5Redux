@@ -67,7 +67,8 @@ namespace Ultima5Redux
             EQUIP_INDEXES,
             REQ_STRENGTH_EQUIP,
             EQUIPPING,
-            ZSTATS
+            ZSTATS,
+            SLEEP_TRANSPORT
         };
 
         public enum EQUIPMENT
@@ -129,6 +130,60 @@ namespace Ultima5Redux
             UusSanct,
             Nothing = 0xFF
         }
+
+        public enum SLEEP_TRANSPORT_STRINGS { ZZZZZ_N_N, AMBUSHED_BANG_N, PARTY_RESTED_BANG_N, NO_EFFECT_DOTS_N, FOR_HOW_MANY_HOURS, ZZZZZZ_DOTS_N, THROWN_OUT_OF_BED_N, 
+        N_ON_FOOT_N, N_ON_FOOT_N_2, N_NOT_HER_BANG_N, NAY_BANG_N, HORSE_N, CARPET_N, SKIFF_N, SHIP_N, N_DANGER_SHIP_BADLY_DAMAGED_N, M_WARNING_NO_SKIFFS_N, 
+        WHAT_N, WHAT_N_2, FIRE_BROADSIDE_ONLY_BANG_N, WHAT_N_3, WHAT_N_4, BOOM_BANG_N, DOOR_DESTROYED_BANG_N, NONE_OWNED_BANG_N, N_N_SWAP_SPACE, NOBODY_BANG_N,
+        N_N, SPACE_MUST_LEAD_BANG_N, N_WITH_SPACE, NOBODY_BANG_N_2, N_N_2, SPACE_MUST_LEAD_BANG_N_2, BANG_N, N_NOT_HERE_BANG_N, WHAT_N_LOWERCASE, N_UNDER_SAIL_BANG_N,
+        CARPET_BANG_N, N_NO_LAND_NEARBY_BANG_N, N_NOT_HERE_BANG_N_3, HORSE_BANG_N, N_NO_LAND_NEARBY_BANG_N_3, N_NOT_HERE_BANG_N_4, HORSE_N_2, N_NO_LAND_NEARBY_BANG_N_5,
+        N_NOT_HERE_BANG_N_6, SKIFF_BANG_N_LOWERCASE, SHIP_BANG_N_LOWERCASE, N_NO_SKIFFS_ON_BOARD_BANG_N_2}
+
+        //        [0]	"Zzzzzz...\n\n"	string
+        //[1]	"Ambushed!\n\n"	string
+        //[2]	"Party rested!\n"	string
+        //[3]	"No effect...\n"	string
+        //[4]	"For how many hours? "	string
+        //[5]	"Zzzzzzz...\n"	string
+        //[6]	"Thrown out of bed!\n"	string
+        //[7]	"\nOn foot\n"	string
+        //[8]	"\nOn foot\n"	string
+        //[9]	"\nNot here!\n"	string
+        //[10]	"\"Nay!\"\n"	string
+        //[11]	"horse\n"	string
+        //[12]	"carpet\n"	string
+        //[13]	"skiff\n"	string
+        //[14]	"Ship\n"	string
+        //[15]	"\nDANGER: SHIP BADLY DAMAGED!\n"	string
+        //[16]	"\nWARNING: NO SKIFFS ON BOARD!\n"	string
+        //[17]	"What?\n"	string
+        //[18]	"What?\n"	string
+        //[19]	"Fire broadsides only!\n"	string
+        //[20]	"What?\n"	string
+        //[21]	"What?\n"	string
+        //[22]	"BOOOM!\n"	string
+        //[23]	"Door destroyed!\n"	string
+        //[24]	"None owned!\n"	string
+        //[25]	"\n\nSwap "	string
+        //[26]	"nobody!\n"	string
+        //[27]	"\n\n"	string
+//        [28]	" must lead!\n"	string
+//[29]	"\nwith "	string
+//[30]	"nobody!\n"	string
+//[31]	"\n\n"	string
+//[32]	" must lead!\n"	string
+//[33]	"!\n"	string
+//[34]	"\nNot here!\n"	string
+//[35]	"what?\n"	string
+//[36]	"\nUnder sail!\n"	string
+//[37]	"carpet!\n"	string
+//[38]	"\nNo land nearby!\n"	string
+//[39]	"\nNot here!\n"	string
+//[40]	"horse!\n"	string
+//[41]	"\nNo land nearby!\n"	string
+//[42]	"\nNot here!\n"	string
+//[43]	"skiff!\n"	string
+//[44]	"ship!\n"	string
+//[45]	"\nNo skiffs on board!\n"	string
 
         public enum EQUIPPING_STRINGS
         {
@@ -462,7 +517,8 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3b3a, 0x38);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Innkeeper welcome text index into SHOPPE.DAT (+0x0, 2 bytes for each index)", 0x3b72, 0x8);
 
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x41e4, 0x8c1);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Sleeping, transportation stuff, others, ", 0x41e4, 0x21a, 0, DataChunkName.SLEEP_TRANSPORT);
+            SomeStrings someStrings = GetDataChunk(DataChunkName.SLEEP_TRANSPORT).GetChunkAsStringList();
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x4aa5, 0x2f2);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x4d97, 0x361);
 
@@ -497,7 +553,6 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (item)", 0x40C2, 0x72);
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "ShadowLord strings", 0x47A4, 0xED, 0, DataChunkName.SHADOWLORD);
-            SomeStrings someStrings = GetDataChunk(DataChunkName.SHADOWLORD).GetChunkAsStringList();
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204, 0, DataChunkName.WEAR_USE_ITEM);
 
