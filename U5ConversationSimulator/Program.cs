@@ -4,11 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
+
 namespace U5ConversationSimulator
 {
     class Program
     {
         static World world;
+  
         static void Main(string[] args)
         {
             world = new World("C:\\games\\ultima_5_late\\bucden4");
