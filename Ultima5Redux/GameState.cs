@@ -157,6 +157,40 @@ namespace Ultima5Redux
             }
         }
 
+        public SmallMapReference.SingleMapReference.Location Location
+        {
+            get
+            {
+                return (SmallMapReference.SingleMapReference.Location)dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
+            }
+        }        
+        
+        public int Floor
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
+            }
+        }
+
+        public int X
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
+            }
+        }
+
+        public int Y
+        {
+            get
+            {
+                return dataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
+            }
+        }
+
+
+
         public Inventory PlayerInventory
         {
             get;
@@ -224,7 +258,11 @@ namespace Ultima5Redux
             CURRENT_DAY,
             CURRENT_HOUR,
             CURRENT_MINUTE,
-            NPC_TYPES
+            NPC_TYPES,
+            PARTY_LOC,
+            Z_COORD,
+            X_COORD,
+            Y_COORD
         };
         #endregion
 
@@ -253,6 +291,13 @@ namespace Ultima5Redux
 
             // import the players invetry
             PlayerInventory = new Inventory(gameStateByteArray, dataRef);
+
+            // player location
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party Location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Z Coordinate of Party [10]", 0x2EF, 0x01, 0x00, DataChunkName.Z_COORD);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "X Coordinate of Party", 0x2F0, 0x01, 0x00, DataChunkName.X_COORD);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Y Coordinate of Party", 0x2F1, 0x01, 0x00, DataChunkName.Y_COORD);
+
 
             // quantities of standard items
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00, DataChunkName.FOOD_QUANTITY);

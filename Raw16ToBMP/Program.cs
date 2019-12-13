@@ -7,9 +7,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using PbvCompressor;
 
 namespace Raw16ToBMP
 {
+
+
     static class BitmapWriter
     {
   
@@ -216,12 +219,32 @@ namespace Raw16ToBMP
             BitmapWriter.Write16BitmapFile(bmpFilename, nForcedWidth, nForcedHeigh, flameGraphic);
         }
 
+        private ICompressorAlgorithm _compressorAlgorithm;
+
+        public ICompressorAlgorithm CompressorAlgorithm
+        {
+            // allows us to set the algorithm at runtime, also lets us set the algorithm dynamically if we creata  factory class
+            set
+            {
+                _compressorAlgorithm = value;
+            }
+        }
+
+        //public PbvCompressor()
+        //{
+        //    // setting this by default but we could create a facotry class to let us set the algorithm based on arguments passed to the main method
+        //    // IE. "Compress.exe zip -c blah.txt" would use the zip algorithm as opposed to the default one.
+        //    CompressorAlgorithm = new PbvCompressorLZW();
+        //}
 
         static void Main(string[] args)
         {
             StartScreen();
             UltimaScreen();
             FireScreen();
+
+            PbvCompressorLZW lzw = new PbvCompressorLZW();
+            lzw.Decompress("C:\\games\\ultima_5\\temp\\ultima.16", "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp2");
         }
     }
 }
