@@ -8,7 +8,6 @@ using System.Diagnostics;
 namespace Ultima5Redux
 {
 
-
     public class CharacterRecord
     {
         private const int NAME_LENGTH = 8;
@@ -19,7 +18,21 @@ namespace Ultima5Redux
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'};
         public enum CharacterStatus { Good = 'G', Poisioned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D'};
         // if your InnorParty value is included in the list, then it's clear - if not then they are at the location referenced by the number
-        
+        public int TotalDefense
+        {
+            get
+            {
+                return 30;
+            }
+        }
+
+        public int TotalAttack
+        {
+            get
+            {
+                return 25;
+            }
+        }
         public enum CharacterPartyStatus { InParty = 0x00, HasntJoinedYet = 0xFF, KilledPermanently = 0x7F}; // otherwise it is at an inn at Settlement # in byte value
 
         private byte Unknown1 { get; set; }

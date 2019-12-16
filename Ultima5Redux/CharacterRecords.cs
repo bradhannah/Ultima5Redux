@@ -14,6 +14,7 @@ namespace Ultima5Redux
         private const byte CHARACTER_OFFSET = 0x20;
         public const int MAX_PARTY_MEMBERS = 6;
 
+
         public CharacterRecords(List<byte> rawByteList)
         {
             for (int nRecord = 0; nRecord < 16; nRecord++)
