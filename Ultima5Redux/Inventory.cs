@@ -72,17 +72,70 @@ namespace Ultima5Redux
             }
         }
 
-        //public bool IsShield(DataOvlReference.EQUIPMENT equipment)
-        //{
-        //    foreach (Weapon weapon in this.ProtectiveArmour.Right)
-        //    {
-        //        if (shield.SpecificEquipment == equipment)
-        //            return true;
-        //    }
-        //    return false;
-        //}
+        /// <summary>
+        /// Gets the attack of a particular piece of equipment
+        /// </summary>
+        /// <param name="equipment"></param>
+        /// <returns></returns>
+        private int GetAttack(DataOvlReference.EQUIPMENT equipment)
+        {
+            if (TheWeapons.GetWeaponFromEquipment(equipment) != null)
+            {
+                return TheWeapons.GetWeaponFromEquipment(equipment).AttackStat;
+            }
+            if (ProtectiveArmour.GetArmourFromEquipment(equipment) != null)
+            {
+                return (ProtectiveArmour.GetArmourFromEquipment(equipment).AttackStat);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Gets the defense of a particular piece of equipment
+        /// </summary>
+        /// <param name="equipment"></param>
+        /// <returns></returns>
+        private int GetDefense(DataOvlReference.EQUIPMENT equipment)
+        {
+            if (TheWeapons.GetWeaponFromEquipment(equipment) != null)
+            {
+                return TheWeapons.GetWeaponFromEquipment(equipment).AttackStat;
+            }
+            if (ProtectiveArmour.GetArmourFromEquipment(equipment) != null)
+            {
+                return (ProtectiveArmour.GetArmourFromEquipment(equipment).DefendStat);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Gets the characters total attack if left and right hand both attacked succesfully
+        /// </summary>
+        /// <param name="record">Character record</param>
+        /// <returns>amount of total damage</returns>
+        public int GetCharacterTotalAttack (CharacterRecord record)
+        {
+            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armor) + GetAttack(record.Equipped.Helmet)
+                + GetAttack(record.Equipped.Ring) + GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
+        }
+
+        /// <summary>
+        /// Gets the players total defense of all items equipped
+        /// </summary>
+        /// <param name="record">character record</param>
+        /// <returns>the players total defense</returns>
+        public int GetCharacterTotalDefense (CharacterRecord record)
+        {
+            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armor) + GetDefense(record.Equipped.Helmet) +
+                GetDefense(record.Equipped.LeftHand) + GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
+        }
 
 
+        /// <summary>
+        /// Gets the Combat Item (inventory item) based on the equipped item
+        /// </summary>
+        /// <param name="equipment">type of combat equipment</param>
+        /// <returns>combat item object</returns>
         public CombatItem GetItemFromEquipment(DataOvlReference.EQUIPMENT equipment)
         {
             foreach (CombatItem item in ReadyItems)

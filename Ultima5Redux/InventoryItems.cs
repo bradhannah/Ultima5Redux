@@ -9,6 +9,7 @@ namespace Ultima5Redux
     public abstract class InventoryItems <EnumType, T>
     {
         public abstract Dictionary<EnumType, T> Items { get; }
+
         public virtual List<InventoryItem> GenericItemList
         {
             get
@@ -37,25 +38,19 @@ namespace Ultima5Redux
         public override Dictionary<Weapon.WeaponTypeEnum, Weapon> Items { get; } = new Dictionary<Weapon.WeaponTypeEnum, Weapon>();
         private List<string> equipmentNames;
 
-        /// <summary>
-        /// Override to ensure that shields are removed
-        /// </summary>
-        //public override List<InventoryItem> GenericItemList
-        //{ 
-        //    get
-        //    {
-        //        List<InventoryItem> weaponList=new List<Ultima5Redux.InventoryItem>();
-        //        foreach (Weapon weapon in Items.Values)
-        //        {
-        //            if (!weapon.IsShield)
-        //            {
-        //                weaponList.Add((InventoryItem)weapon);
-        //            }
-        //        }
-        //        return weaponList;
-        //    }
-        //}
-
+        private Dictionary<DataOvlReference.EQUIPMENT, Weapon> ItemsFromEquipment { get; } = new Dictionary<DataOvlReference.EQUIPMENT, Weapon>();
+        public Weapon GetWeaponFromEquipment(DataOvlReference.EQUIPMENT equipment)
+        {
+            if (equipment == DataOvlReference.EQUIPMENT.Nothing)
+            {
+                return null;
+            }
+            if (!ItemsFromEquipment.ContainsKey(equipment))
+            {
+                return null;
+            }
+            return ItemsFromEquipment[equipment];
+        }
 
         public Weapons(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef, gameStateByteArray)
         {
@@ -101,6 +96,7 @@ namespace Ultima5Redux
         {
             Weapon newWeapon = new Weapon(weapon, weaponSprite, equipment, dataOvlRef, gameStateByteArray);
             Items.Add(weapon, newWeapon);
+            ItemsFromEquipment.Add(equipment, newWeapon);
         }
     }
 
@@ -113,6 +109,20 @@ namespace Ultima5Redux
         public List<Ring> Rings = new List<Ring>();
       
         private List<string> equipmentNames;
+
+        private Dictionary<DataOvlReference.EQUIPMENT, Armour> ItemsFromEquipment { get; } = new Dictionary<DataOvlReference.EQUIPMENT, Armour>();
+        public Armour GetArmourFromEquipment(DataOvlReference.EQUIPMENT equipment)
+        {
+            if (equipment == DataOvlReference.EQUIPMENT.Nothing)
+            {
+                return null;
+            }
+            if (!ItemsFromEquipment.ContainsKey(equipment))
+            {
+                return null;
+            }
+            return ItemsFromEquipment[equipment];
+        }
 
         public enum ArmourTypeEnum { Shield, Chest, Helm, Ring, Amulet }
         public Armours(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef, gameStateByteArray)
@@ -143,7 +153,9 @@ namespace Ultima5Redux
 
         private void AddChestArmour(ChestArmour.ChestArmourEnum chestArmour, DataOvlReference.EQUIPMENT equipment)
         {
-            ChestArmours.Add(new ChestArmour(chestArmour, equipment, dataOvlRef, gameStateByteArray));
+            ChestArmour armour = new ChestArmour(chestArmour, equipment, dataOvlRef, gameStateByteArray);
+            ChestArmours.Add(armour);
+            ItemsFromEquipment.Add(equipment, armour);
         }
 
         //private void AddShield(Shield.ShieldTypeEnum shield, DataOvlReference.EQUIPMENT equipment)
@@ -153,17 +165,23 @@ namespace Ultima5Redux
 
         private void AddHelm(Helm.HelmEnum helm, DataOvlReference.EQUIPMENT equipment)
         {
-            Helms.Add(new Helm(helm, equipment, dataOvlRef, gameStateByteArray));
+            Helm armour = new Helm(helm, equipment, dataOvlRef, gameStateByteArray);
+            Helms.Add(armour);
+            ItemsFromEquipment.Add(equipment, armour);
         }
 
         private void AddAmulet(Amulet.AmuletEnum amulet, DataOvlReference.EQUIPMENT equipment)
         {
-            Amulets.Add(new Amulet(amulet, equipment, dataOvlRef, gameStateByteArray));
+            Amulet armour = new Amulet(amulet, equipment, dataOvlRef, gameStateByteArray);
+            Amulets.Add(armour);
+            ItemsFromEquipment.Add(equipment, armour);
         }
 
         private void AddRing(Ring.RingEnum ring, DataOvlReference.EQUIPMENT equipment)
         {
-            Rings.Add(new Ring(ring, equipment, dataOvlRef, gameStateByteArray));
+            Ring armour = new Ring(ring, equipment, dataOvlRef, gameStateByteArray);
+            Rings.Add(armour);
+            ItemsFromEquipment.Add(equipment, armour);
         }
 
         private void InitializeRings()
