@@ -68,7 +68,8 @@ namespace Ultima5Redux
             REQ_STRENGTH_EQUIP,
             EQUIPPING,
             ZSTATS,
-            SLEEP_TRANSPORT
+            SLEEP_TRANSPORT,
+            REAGENTS
         };
 
         public enum EQUIPMENT
@@ -264,6 +265,11 @@ namespace Ultima5Redux
 
         public enum POTIONS_STRINGS { BLUE, YELLOW, RED, GREEN, ORANGE, PURPLE, BLACK, WHITE}
 
+        public enum REAGENT_STRINGS
+        {
+            SULFUR_ASH, GINSENG, GARLIC, SPIDER_SILK, BLOOD_MOSS, BLACK_PEARL, NIGHTSHADE, MANDRAKE_ROOT
+        };
+
         public enum SPELL_STRINGS
         {
             IN_LOR, GRAV_POR, AN_ZU, AN_NOX, MANI, AN_YLEM, AN_SANCT, AN_XEN_CORP, REL_HUR, IN_WIS, KAL_XEN, IN_XEN_MANI, VAS_LOR, VAS_FLAM, IN_FLAM_GRAV,
@@ -413,7 +419,7 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names - Armour", 0x572, 0x77, 0, DataChunkName.SHORT_ARMOUR);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names (29 of them)", 0x572, 0x11a);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Potion colors (8 of them)", 0x68c, 0x30, 0, DataChunkName.POTIONS);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Reagents (8 of them)", 0x6bc, 0x4d);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Reagents (8 of them)", 0x6bc, 0x4d, 0, DataChunkName.REAGENTS);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Spell names", 0x709, 0x1bb, 0, DataChunkName.SPELLS);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character type and names (11 of them)", 0x8c4, 0x54);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Health text (5 of them)", 0x918, 0x29);

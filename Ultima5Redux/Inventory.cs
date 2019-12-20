@@ -15,9 +15,11 @@ namespace Ultima5Redux
         public ShadowlordShards Shards { get; }
         public Potions MagicPotions { get; }
         public Scrolls MagicScrolls { get; }
+        public Spells MagicSpells { get; }
         public SpecialItems SpecializedItems { get; }
         public Armours ProtectiveArmour { get; }
         public Weapons TheWeapons { get; }
+        public Reagents SpellReagents { get; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
@@ -179,6 +181,14 @@ namespace Ultima5Redux
             Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(Shards.GenericItemList);
             UseItems.AddRange(Shards.GenericItemList);
+
+            SpellReagents = new Reagents(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(SpellReagents.GenericItemList);
+
+            MagicSpells = new Spells(dataOvlRef, gameStateByteArray);
+            AllItems.AddRange(MagicSpells.GenericItemList);
+
+
         }
 
     }

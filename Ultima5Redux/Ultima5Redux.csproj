@@ -97,6 +97,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Reagent.cs" />
     <Compile Include="SmallMaps.cs" />
     <Compile Include="TileReference.cs" />
     <Compile Include="GenericTileset.cs" />

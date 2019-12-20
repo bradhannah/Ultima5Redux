@@ -274,6 +274,28 @@ namespace Ultima5Redux
 
     }
 
+    public class Spells : InventoryItems<Spell.SpellWords, Spell>
+    {
+        public Spells(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef, gameStateByteArray)
+        {
+            int nIndex = 0;
+            foreach (Spell.SpellWords spell in Enum.GetValues(typeof(Spell.SpellWords)))
+            {
+                AddSpell(spell, (DataOvlReference.SPELL_STRINGS)nIndex++);
+            }
+        }
+
+        private void AddSpell(Spell.SpellWords spellWord, DataOvlReference.SPELL_STRINGS spellStr)
+        {
+            Items[spellWord] = new Spell(spellWord, gameStateByteArray[(int)spellWord],
+              dataOvlRef.StringReferences.GetString(spellStr),
+              dataOvlRef.StringReferences.GetString(spellStr));
+        }
+
+        public override Dictionary<Spell.SpellWords, Spell> Items { get; } = new Dictionary<Spell.SpellWords, Spell>();
+    }
+
+
     public class Scrolls : InventoryItems<Spell.SpellWords, Scroll>
     {
         public override Dictionary<Spell.SpellWords, Scroll> Items { get; } = new Dictionary<Spell.SpellWords, Scroll>(8);
@@ -282,12 +304,12 @@ namespace Ultima5Redux
         // I wouldn't normally like to use offsets like this, but I want spells and scrolls to be linkable by the same enum
         private readonly int nQuantityIndexAdjust = Enum.GetValues(typeof(Spell.SpellWords)).Length;
 
-        private void AddScroll(Spell.SpellWords spell, DataOvlReference.SPELL_STRINGS spellStr)
+        private void AddScroll(Spell.SpellWords spellWord, DataOvlReference.SPELL_STRINGS spellStr)
         {
-            Scroll.ScrollSpells scrollSpell = (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spell.ToString());
+            Scroll.ScrollSpells scrollSpell = (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
 
             int nIndex = 0x27A + (int)scrollSpell;
-            Items[spell] = new Scroll(spell, gameStateByteArray[nIndex],
+            Items[spellWord] = new Scroll(spellWord, gameStateByteArray[nIndex],
               dataOvlRef.StringReferences.GetString(spellStr),
               dataOvlRef.StringReferences.GetString(spellStr));
         }

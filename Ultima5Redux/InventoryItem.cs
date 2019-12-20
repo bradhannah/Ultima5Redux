@@ -333,7 +333,10 @@ namespace Ultima5Redux
 
     public class Spell : InventoryItem
     {
+        private const int SPRITE_NUM = 260;
         public override bool HideQuantity { get; } = false;
+
+        public SpellWords SpellIncantation { get; }
 
         public enum SpellWords
         {
@@ -345,8 +348,9 @@ namespace Ultima5Redux
             Kal_Xen_Corp, In_Vas_Grav_Corp, In_Flam_Hur, Vas_Rel_Por, An_Tym
         }
     
-        public Spell(int quantity, string longName, string shortName, int spriteNum) : base(quantity, longName, shortName, spriteNum)
+        public Spell(SpellWords spellWord, int quantity, string longName, string shortName) : base(quantity, longName, shortName, SPRITE_NUM)
         {
+            SpellIncantation = spellWord;
         }
 
     }

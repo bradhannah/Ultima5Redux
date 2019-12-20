@@ -138,34 +138,7 @@ namespace Ultima5Redux
                 Equipped.LeftHand = shieldEquip;
             }
 
-            //foreach (DataOvlReference.EQUIPMENT equipment in allEquipment)
-            //{
-            //    if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.SpikedHelm)
-            //    {
-            //        Equipped.Helmet = equipment;
-            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.JewelShield)
-            //    {
-            //        Equipped.Shield = equipment;
-            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticArmour)
-            //    {
-            //        Equipped.Weapon = equipment;
-            //    }  else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.MysticSword)
-            //    {
-            //        Equipped.Weapon = equipment;
-            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.RingRegen)
-            //    {
-            //        Equipped.Ring = equipment;
-            //    } else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Ankh)
-            //    {
-            //        Equipped.Amulet = equipment;
-            //    }
-            //    else if ((int)equipment <= (int)DataOvlReference.EQUIPMENT.Nothing) // nothing is preset by constructor
-            //    { } else
-            //    {
-            //        throw new Exception("Save file appears to refer to equipment #" + ((int)equipment).ToString() + " but that doesn't exist");
-            //    }
-            //}
-
+       
             InnOrParty = rawRecordByteList[(int)CharacterRecordOffsets.InnParty];
 
             Unknown1 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown1];
