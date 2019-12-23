@@ -26,6 +26,15 @@ namespace Ultima5Redux
             }
         }
 
+        public bool IsEquipmentEquipped(DataOvlReference.EQUIPMENT equipment)
+        {
+            foreach (CharacterRecord record in Records)
+            {
+                if (record.Equipped.IsEquipped(equipment))
+                    return true;
+            }
+            return false;
+        }
 
         public void SwapPositions(int nFirstPos, int nSecondPos)
         {

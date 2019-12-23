@@ -97,6 +97,8 @@ namespace Ultima5Redux
             // build the NPC tables
             NpcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
 
+            State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
+            
             //State.Year = 100;
             //State.Month = 13;
             //State.Day = 28;

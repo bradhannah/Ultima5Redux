@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -290,6 +291,40 @@ namespace Ultima5Redux
             Items[spellWord] = new Spell(spellWord, gameStateByteArray[(int)spellWord],
               dataOvlRef.StringReferences.GetString(spellStr),
               dataOvlRef.StringReferences.GetString(spellStr));
+        }
+
+        private static TextInfo ti = new CultureInfo("en-US", false).TextInfo;
+        private static Dictionary<string, string> literalTranslationDictionary = new Dictionary<string, string>
+        {
+            {"An","Negate"},
+            {"Bet","Small"},
+            {"Corp","Death"},
+            {"Des","Down"},
+            {"Ex","Freedom"},
+            {"Flam","Flame"},
+            {"Grav","Energy"},
+            {"Hur","Wind"},
+            {"In","Create"},
+            {"Kal","Invoke"},
+            {"Lor","Light"},
+            {"Mani","Life"},
+            {"Nox","Poison"},
+            {"Por","Movement"},
+            {"Quas","Illusion"},
+            {"Rel","Change"},
+            {"Sanct","Protection"},
+            {"Tym","Time"},
+            {"Uus","Up"},
+            {"Vas","Great"},
+            {"Wis","Knowledge"},
+            {"Xen","Creature"},
+            {"Ylem","Matter"},
+            {"Zu","Sleep"}
+        };
+
+        static public string GetLiteralTranslation(string syllable)
+        {
+            return (literalTranslationDictionary[ti.ToTitleCase(syllable)]);
         }
 
         public override Dictionary<Spell.SpellWords, Spell> Items { get; } = new Dictionary<Spell.SpellWords, Spell>();
