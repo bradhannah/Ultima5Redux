@@ -19,8 +19,20 @@ namespace Ultima5Redux
 
         // override map is responsible for overriding tiles that would otherwise be static
         private int[][] overrideMap;
-        
-        public Point2D CurrentPosition { get; private set; }
+
+        private Point2D _currentPosition = new Point2D(0, 0);
+        public Point2D CurrentPosition { 
+            get
+            {
+                return _currentPosition;
+            }
+            set 
+            {
+                _currentPosition.X = value.X; 
+                _currentPosition.Y = value.Y; 
+            } 
+        } 
+
         public SmallMap CurrentSmallMap { get; private set; }
         public LargeMap CurrentLargeMap { get; private set; }
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; private set; }
