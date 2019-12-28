@@ -33,14 +33,14 @@ namespace Ultima5Redux
         /// <summary>
         /// Dictionary that refers to the raw bytes for each NPC based on Map master file and NPC index
         /// </summary>
-        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> talkRefs =
-            new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>(sizeof(SmallMapReference.SingleMapReference.SmallMapMasterFiles));
+        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> talkRefs =
+            new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>(sizeof(SmallMapReferences.SingleMapReference.SmallMapMasterFiles));
 
         /// <summary>
         /// Dictionary that refers to the fully interpreted TalkScripts for each NPC based on Master map file and NPC index
         /// </summary>
-        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> talkScriptRefs = 
-            new Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>();
+        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> talkScriptRefs = 
+            new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>();
 
         /// <summary>
         /// when you must adjust the offset into the compressed word lookup, subtract this
@@ -65,16 +65,16 @@ namespace Ultima5Redux
             this.compressedWordRef = new CompressedWordReference(dataRef);
 
             // just a lazy array that is easier to enumerate than the enum
-            SmallMapReference.SingleMapReference.SmallMapMasterFiles[] smallMapRefs =
+            SmallMapReferences.SingleMapReference.SmallMapMasterFiles[] smallMapRefs =
             {
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle,
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne,
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep,
-                SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling
+                SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Castle,
+                SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Towne,
+                SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Keep,
+                SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Dwelling
             };
 
             // for each of the maps we are going to initialize
-            foreach (SmallMapReference.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
+            foreach (SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
             {
                 // initialize the raw component of the talk scripts
                 InitalizeTalkScriptsRaw(u5Directory, mapRef);
@@ -91,7 +91,7 @@ namespace Ultima5Redux
             }
         }
 
-        public TalkScript GetTalkScript(SmallMapReference.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
+        public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
         {
             if (NonPlayerCharacters.NonPlayerCharacter.IsSpecialDialogType((NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum)nNPC))
             { return null; }
@@ -103,13 +103,13 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="u5Directory">directory of Ultima 5 data files</param>
         /// <param name="mapMaster">the small map reference (helps pick *.tlk file)</param>
-        private void InitalizeTalkScriptsRaw(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster)
+        private void InitalizeTalkScriptsRaw(string u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster)
         {
             // example NPC 1 at Castle in Lord British's castle
             // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
             // 65 108  69 
 
-            string talkFilename = Path.Combine(u5Directory, SmallMapReference.SingleMapReference.GetTLKFilenameFromMasterFile(mapMaster));
+            string talkFilename = Path.Combine(u5Directory, SmallMapReferences.SingleMapReference.GetTLKFilenameFromMasterFile(mapMaster));
 
             // the raw bytes of the talk file
             List<byte> talkByteList = Utils.GetFileAsByteList(talkFilename);
@@ -185,7 +185,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="smallMapRef">the small map reference</param>
         /// <param name="index">NPC Index</param>
-        private TalkScript InitializeTalkScriptFromRaw (SmallMapReference.SingleMapReference.SmallMapMasterFiles smallMapRef, int index)
+        private TalkScript InitializeTalkScriptFromRaw (SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int index)
         {
             TalkScript talkScript = new TalkScript(); // the script we are building and will return
 

@@ -29,6 +29,22 @@ namespace Ultima5Redux
             return Init2DArray<byte>(numberOfRows, numberOfCols);
         }
 
+        static public List<List<T>> Init2DList<T>(int numberOfRows, int numberOfCols)
+        {
+            List<List<T>> rowList = new List<List<T>>(numberOfRows);
+
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                rowList.Add(new List<T>(numberOfCols));
+                //for (int j = 0; j < numberOfCols; j++)
+                //{
+
+                //}
+            }
+            return rowList;
+
+        }
+
         static public T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
         {
             T[][] theArray = new T[numberOfRows][];

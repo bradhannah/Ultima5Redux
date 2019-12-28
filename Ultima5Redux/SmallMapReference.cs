@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    public partial class SmallMapReference
+    public partial class SmallMapReferences
     {
 
         #region Private Variables
@@ -23,7 +23,7 @@ namespace Ultima5Redux
         private Dictionary<string, short> roomOffsetCountDictionary = new Dictionary<string, short>();
         
         // a mapping of the master file -> a list of locations, which also provides an index value for the town (implied within list)
-        private Dictionary<SmallMapReference.SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>> masterFileLocationDictionary = 
+        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>> masterFileLocationDictionary = 
             new Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>(MASTER_FILES);
 
         private Dictionary<SingleMapReference.Location, bool> smallMapBasementDictionary = new Dictionary<SingleMapReference.Location, bool>();
@@ -134,12 +134,12 @@ namespace Ultima5Redux
             return smallMapBasementDictionary[location];
         }
 
-        static public Point2D GetStartingXYByLocation(SmallMapReference.SingleMapReference.Location location)
+        static public Point2D GetStartingXYByLocation(SmallMapReferences.SingleMapReference.Location location)
         {
             return new Point2D(32 / 2 - 1, 30);
         }
 
-        public string GetLocationName(SmallMapReference.SingleMapReference.Location location)
+        public string GetLocationName(SmallMapReferences.SingleMapReference.Location location)
         {
             Func<DataOvlReference.LOCATION_STRINGS, string> getLocationNameStr = delegate (DataOvlReference.LOCATION_STRINGS index)
             {
@@ -175,7 +175,7 @@ namespace Ultima5Redux
             }
     }
 
-        public string GetLocationTypeStr(SmallMapReference.SingleMapReference.Location location)
+        public string GetLocationTypeStr(SmallMapReferences.SingleMapReference.Location location)
         {
             // anon function for quick lookup of strings
             Func<DataOvlReference.WORLD_STRINGS, string> getTypePlaceStr = delegate (DataOvlReference.WORLD_STRINGS index)
@@ -185,56 +185,56 @@ namespace Ultima5Redux
 
             switch (location)
             {
-                case SmallMapReference.SingleMapReference.Location.Lord_Britishs_Castle:
+                case SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_CASTLE_LB);
-                case SmallMapReference.SingleMapReference.Location.Palace_of_Blackthorn:
+                case SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_PALACE_B);
-                case SmallMapReference.SingleMapReference.Location.East_Britanny:
-                case SmallMapReference.SingleMapReference.Location.West_Britanny:
-                case SmallMapReference.SingleMapReference.Location.North_Britanny:
-                case SmallMapReference.SingleMapReference.Location.Paws:
-                case SmallMapReference.SingleMapReference.Location.Cove:
+                case SmallMapReferences.SingleMapReference.Location.East_Britanny:
+                case SmallMapReferences.SingleMapReference.Location.West_Britanny:
+                case SmallMapReferences.SingleMapReference.Location.North_Britanny:
+                case SmallMapReferences.SingleMapReference.Location.Paws:
+                case SmallMapReferences.SingleMapReference.Location.Cove:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_VILLAGE);
-                case SmallMapReference.SingleMapReference.Location.Buccaneers_Den:
+                case SmallMapReferences.SingleMapReference.Location.Buccaneers_Den:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_KEEP);
-                case SmallMapReference.SingleMapReference.Location.Moonglow:
-                case SmallMapReference.SingleMapReference.Location.Britain:
-                case SmallMapReference.SingleMapReference.Location.Jhelom:
-                case SmallMapReference.SingleMapReference.Location.Yew:
-                case SmallMapReference.SingleMapReference.Location.Minoc:
-                case SmallMapReference.SingleMapReference.Location.Trinsic:
-                case SmallMapReference.SingleMapReference.Location.Skara_Brae:
-                case SmallMapReference.SingleMapReference.Location.New_Magincia:
+                case SmallMapReferences.SingleMapReference.Location.Moonglow:
+                case SmallMapReferences.SingleMapReference.Location.Britain:
+                case SmallMapReferences.SingleMapReference.Location.Jhelom:
+                case SmallMapReferences.SingleMapReference.Location.Yew:
+                case SmallMapReferences.SingleMapReference.Location.Minoc:
+                case SmallMapReferences.SingleMapReference.Location.Trinsic:
+                case SmallMapReferences.SingleMapReference.Location.Skara_Brae:
+                case SmallMapReferences.SingleMapReference.Location.New_Magincia:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_TOWNE);
-                case SmallMapReference.SingleMapReference.Location.Fogsbane:
-                case SmallMapReference.SingleMapReference.Location.Stormcrow:
-                case SmallMapReference.SingleMapReference.Location.Waveguide:
-                case SmallMapReference.SingleMapReference.Location.Greyhaven:
+                case SmallMapReferences.SingleMapReference.Location.Fogsbane:
+                case SmallMapReferences.SingleMapReference.Location.Stormcrow:
+                case SmallMapReferences.SingleMapReference.Location.Waveguide:
+                case SmallMapReferences.SingleMapReference.Location.Greyhaven:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_LIGHTHOUSE);
-                case SmallMapReference.SingleMapReference.Location.Iolos_Hut:
+                case SmallMapReferences.SingleMapReference.Location.Iolos_Hut:
                 //case Location.spektran
-                case SmallMapReference.SingleMapReference.Location.Suteks_Hut:
-                case SmallMapReference.SingleMapReference.Location.SinVraals_Hut:
-                case SmallMapReference.SingleMapReference.Location.Grendels_Hut:
+                case SmallMapReferences.SingleMapReference.Location.Suteks_Hut:
+                case SmallMapReferences.SingleMapReference.Location.SinVraals_Hut:
+                case SmallMapReferences.SingleMapReference.Location.Grendels_Hut:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_HUT);
-                case SmallMapReference.SingleMapReference.Location.Ararat:
+                case SmallMapReferences.SingleMapReference.Location.Ararat:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_RUINS);
-                case SmallMapReference.SingleMapReference.Location.Bordermarch:
-                case SmallMapReference.SingleMapReference.Location.Farthing:
-                case SmallMapReference.SingleMapReference.Location.Windemere:
-                case SmallMapReference.SingleMapReference.Location.Stonegate:
-                case SmallMapReference.SingleMapReference.Location.Lycaeum:
-                case SmallMapReference.SingleMapReference.Location.Empath_Abbey:
-                case SmallMapReference.SingleMapReference.Location.Serpents_Hold:
+                case SmallMapReferences.SingleMapReference.Location.Bordermarch:
+                case SmallMapReferences.SingleMapReference.Location.Farthing:
+                case SmallMapReferences.SingleMapReference.Location.Windemere:
+                case SmallMapReferences.SingleMapReference.Location.Stonegate:
+                case SmallMapReferences.SingleMapReference.Location.Lycaeum:
+                case SmallMapReferences.SingleMapReference.Location.Empath_Abbey:
+                case SmallMapReferences.SingleMapReference.Location.Serpents_Hold:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_KEEP);
-                case SmallMapReference.SingleMapReference.Location.Deceit:
-                case SmallMapReference.SingleMapReference.Location.Despise:
-                case SmallMapReference.SingleMapReference.Location.Destard:
-                case SmallMapReference.SingleMapReference.Location.Wrong:
-                case SmallMapReference.SingleMapReference.Location.Covetous:
-                case SmallMapReference.SingleMapReference.Location.Shame:
-                case SmallMapReference.SingleMapReference.Location.Hythloth:
-                case SmallMapReference.SingleMapReference.Location.Doom:
+                case SmallMapReferences.SingleMapReference.Location.Deceit:
+                case SmallMapReferences.SingleMapReference.Location.Despise:
+                case SmallMapReferences.SingleMapReference.Location.Destard:
+                case SmallMapReferences.SingleMapReference.Location.Wrong:
+                case SmallMapReferences.SingleMapReference.Location.Covetous:
+                case SmallMapReferences.SingleMapReference.Location.Shame:
+                case SmallMapReferences.SingleMapReference.Location.Hythloth:
+                case SmallMapReferences.SingleMapReference.Location.Doom:
                     return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_DUNGEON);
             }
             return "";
@@ -295,7 +295,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Construct all small map references
         /// </summary>
-        public SmallMapReference(DataOvlReference dataRef)
+        public SmallMapReferences(DataOvlReference dataRef)
         {
             // I wish I could do this a smarter way, but as of now I have no idea where this data is stored in any of the data files
 

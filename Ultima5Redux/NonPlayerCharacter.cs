@@ -111,7 +111,7 @@ namespace Ultima5Redux
             /// <summary>
             /// Which map is the NPC on?
             /// </summary>
-            public SmallMapReference.SingleMapReference MapReference { get; }
+            public SmallMapReferences.SingleMapReference MapReference { get; }
 
             /// <summary>
             /// What type of NPC are they? 
@@ -202,7 +202,7 @@ namespace Ultima5Redux
             /// <param name="dialogNumber">dialog number referencing data OVL</param>
             /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
             /// <param name="talkScript">their conversation script</param>
-            public NonPlayerCharacter (SmallMapReference.SingleMapReference mapRef, GameState gameStateRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
+            public NonPlayerCharacter (SmallMapReferences.SingleMapReference mapRef, GameState gameStateRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
             {
                 Schedule = new NPCSchedule(sched);
                 MapReference = mapRef;

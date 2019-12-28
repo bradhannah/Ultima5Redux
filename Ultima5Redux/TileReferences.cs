@@ -42,6 +42,11 @@ namespace Ultima5Redux
             return TileReferenceByStringDictionary[name].Index;
         }
 
+        public TileReference GetTileReferenceByName(string name)
+        {
+            return TileReferenceByStringDictionary[name];
+        }
+
         public TileReference GetTileReference(int nSprite)
         {
             return TileReferenceDictionary[nSprite];
@@ -143,7 +148,6 @@ namespace Ultima5Redux
                 case 4:
                     // this is normal speed
                     return String.Empty;
-                    break;
                 case 6:
                     return u5StringRef.GetString(DataOvlReference.WORLD_STRINGS.SLOW_PROG);
                 case 8:

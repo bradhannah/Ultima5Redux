@@ -13,21 +13,23 @@ namespace Ultima5Redux
         public const int XTILES = 32;
         public const int YTILES = 32;
 
-        public SmallMapReference.SingleMapReference.Location MapLocation { get { return MapRef.MapLocation; } }
+        public SmallMapReferences.SingleMapReference.Location MapLocation { get { return MapRef.MapLocation; } }
         public int MapFloor { get { return MapRef.Floor; } }
 
-        private SmallMapReference.SingleMapReference MapRef;
-
+        private SmallMapReferences.SingleMapReference MapRef;
         /// <summary>
         /// Creates a small map object using a pre-defined map reference
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="mapRef"></param>
-        public SmallMap(string u5Directory, SmallMapReference.SingleMapReference mapRef) : base(u5Directory)
+        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference mapRef, TileReferences spriteTileReferences) : base(u5Directory)
         {
             MapRef = mapRef;
 
+            // load the map into memory
             theMap = LoadSmallMapFile(Path.Combine(u5Directory, mapRef.MapFilename), mapRef.FileOffset);
+
+            InitializeAStarMap(spriteTileReferences);
         }
 
         /// <summary>

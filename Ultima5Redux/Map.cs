@@ -4,17 +4,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    public class Map
+    abstract public class Map
     {
         protected byte[][] theMap;
         protected string u5Directory;
+        protected List<List<AStarSharp.Node>> aStarNodes;
+        protected AStarSharp.Astar astar;
 
         public Map(string u5Directory)
         {
             this.u5Directory = u5Directory;
+        }
+
+        protected void InitializeAStarMap(TileReferences spriteTileReferences)
+        {
+            Debug.Assert(TheMap != null);
+            Debug.Assert(TheMap.Length > 0);
+            int nXTiles = theMap[0].Length;
+            int nYTiles = theMap.Length;
+
+            // load the A-Star compatible map into memory
+            aStarNodes = Utils.Init2DList<AStarSharp.Node>(nXTiles, nYTiles);
+
+            for (int x = 0; x < nXTiles; x++)
+            {
+                for (int y = 0; y < nYTiles; y++)
+                {
+                    TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[x][y]);
+                    bool bIsWalkable = currentTile.IsWalking_Passable || currentTile.Index == 184 || currentTile.Index == 186;
+                    
+                    AStarSharp.Node node = new AStarSharp.Node(new System.Numerics.Vector2(x, y), bIsWalkable);
+                    aStarNodes[x].Add(node);
+                }
+            }
+            astar = new AStarSharp.Astar(aStarNodes);
         }
 
         /// <summary>
@@ -53,7 +80,7 @@ namespace Ultima5Redux
         {
             get
             {
-                // I think this is probably too expensive, but 
+                // I think this is probably too expensive, but...
                 return (byte[][])theMap.Clone();
             }
         }

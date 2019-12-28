@@ -22,7 +22,7 @@ namespace Ultima5Redux
         public TileReferences SpriteTileReferences { get; }
 
         private string u5Directory;
-        public SmallMapReference SmallMapRef;
+        public SmallMapReferences SmallMapRef;
         private CombatMapReference combatMapRef = new CombatMapReference();
         public Look LookRef { get; }
         public Signs SignRef { get; }
@@ -47,16 +47,16 @@ namespace Ultima5Redux
 
             DataOvlRef = new DataOvlReference(u5Directory);
 
-            State = new GameState(u5Directory, DataOvlRef);
 
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
-            SmallMapRef = new SmallMapReference(DataOvlRef);
+            SmallMapRef = new SmallMapReferences(DataOvlRef);
 
             LargeMapRef = new LargeMapReference(DataOvlRef, SmallMapRef);
 
-            AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory);
+            AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory, SpriteTileReferences);
 
+            State = new GameState(u5Directory, DataOvlRef);
             //CharacterRecord character = State.GetCharacterFromParty(0);
             //CharacterRecord character3 = State.GetCharacterFromParty(3);
             //CharacterRecord character4 = State.GetCharacterFromParty(4);
@@ -65,7 +65,7 @@ namespace Ultima5Redux
 
 
             // build all the small maps from the Small Map reference
-            //foreach (SmallMapReference.SingleMapReference mapRef in SmallMapRef.MapReferenceList)
+            //foreach (SmallMapReferences.SingleMapReference mapRef in SmallMapRef.MapReferenceList)
             //{
             //    // now I can go through each and every reference
             //    SmallMap smallMap = new SmallMap(u5Directory, mapRef);
@@ -88,7 +88,7 @@ namespace Ultima5Redux
             // build the sign tables
             SignRef = new Signs(ultima5Directory);
 
-            //Signs.Sign sign = SignRef.GetSign(SmallMapReference.SingleMapReference.Location.Yew, 16, 2);
+            //Signs.Sign sign = SignRef.GetSign(SmallMapReferences.SingleMapReference.Location.Yew, 16, 2);
             Signs.Sign sign = SignRef.GetSign(42);
 
             string str = sign.SignText;
@@ -96,6 +96,9 @@ namespace Ultima5Redux
 
             // build the NPC tables
             NpcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
+
+            // sadly I have to initilize this after the Npcs are created because there is a circular dependency
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences);
 
             State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
             

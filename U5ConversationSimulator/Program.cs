@@ -16,15 +16,15 @@ namespace U5ConversationSimulator
             world = new World("C:\\games\\ultima_5_late\\bucden4");
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             world.OverworldMap.PrintMap();
-            world.SmallMapRef.GetLocationName(SmallMapReference.SingleMapReference.Location.Lord_Britishs_Castle);
-            world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReference.SingleMapReference.Location.Britain);
+            world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle);
+            world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Britain);
 
             Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
 
-            convo.BeginConversation();
+            //convo.BeginConversation();
         }
 
         static private void EnqueuedScriptItem(Conversation conversation)

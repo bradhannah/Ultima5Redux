@@ -24,7 +24,7 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
-        public List<NonPlayerCharacter> GetNonPlayerCharactersByLocation(SmallMapReference.SingleMapReference.Location location)
+        public List<NonPlayerCharacter> GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location location)
         {
             List<NonPlayerCharacter> npcs = new List<NonPlayerCharacter>();
             foreach (NonPlayerCharacter npc in NPCs)
@@ -98,10 +98,11 @@ namespace Ultima5Redux
         /// <param name="u5Directory">Directory with Ultima 5</param>
         /// <param name="mapMaster">The master map from which to load</param>
         /// <param name="smallMapRef">Small map reference to help link NPCs to a map</param>
-        private void InitializeNPCs(string u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReference smallMapRef, TalkScripts talkScriptsRef, GameState gameStateRef)
+        private void InitializeNPCs(string u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReferences smallMapRef, 
+            TalkScripts talkScriptsRef, GameState gameStateRef)
         {
             // open the appropriate NPC data file
-            string dataFilenameAndPath = Path.Combine(u5Directory, SmallMapReference.SingleMapReference.GetNPCFilenameFromMasterFile(mapMaster));
+            string dataFilenameAndPath = Path.Combine(u5Directory, SmallMapReferences.SingleMapReference.GetNPCFilenameFromMasterFile(mapMaster));
 
             // load the file into memory
             List<byte> npcData = Utils.GetFileAsByteList(dataFilenameAndPath);
@@ -113,8 +114,8 @@ namespace Ultima5Redux
                 List<byte> npcTypes = new List<byte>(NPCS_PER_TOWN);
                 List<byte> npcDialogNumber = new List<byte>(NPCS_PER_TOWN);
 
-                SmallMapReference.SingleMapReference.Location location = smallMapRef.GetLocationByIndex(mapMaster, nTown);
-                SmallMapReference.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByLocation(location, 0);
+                SmallMapReferences.SingleMapReference.Location location = smallMapRef.GetLocationByIndex(mapMaster, nTown);
+                SmallMapReferences.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByLocation(location, 0);
 
                 //sing = SmallMapRef.GetSingleMapByLocation(SmallMapRef.GetLocationByIndex(mapMaster, nTown);
 
@@ -155,12 +156,12 @@ namespace Ultima5Redux
         /// <param name="u5Directory">the directory with Ultima 5 data files</param>
         /// <param name="smallMapRef">The small map reference</param>
         /// <param name="talkScriptsRe">Talk script references</param>
-        public NonPlayerCharacters(string u5Directory, SmallMapReference smallMapRef, TalkScripts talkScriptsRef, GameState gameStateRef)
+        public NonPlayerCharacters(string u5Directory, SmallMapReferences smallMapRef, TalkScripts talkScriptsRef, GameState gameStateRef)
         {
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef, talkScriptsRef, gameStateRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef, talkScriptsRef, gameStateRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef, talkScriptsRef, gameStateRef);
-            InitializeNPCs(u5Directory, SmallMapReference.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef, talkScriptsRef, gameStateRef);
+            InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef, talkScriptsRef, gameStateRef);
+            InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef, talkScriptsRef, gameStateRef);
+            InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef, talkScriptsRef, gameStateRef);
+            InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef, talkScriptsRef, gameStateRef);
         }
         #endregion    
     }

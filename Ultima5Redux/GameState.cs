@@ -40,6 +40,8 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Properties
+        public VirtualMap TheVirtualMap { get; set; }
+
         public string FormattedDate
         {
             get
@@ -157,11 +159,11 @@ namespace Ultima5Redux
             }
         }
 
-        public SmallMapReference.SingleMapReference.Location Location
+        public SmallMapReferences.SingleMapReference.Location Location
         {
             get
             {
-                return (SmallMapReference.SingleMapReference.Location)dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
+                return (SmallMapReferences.SingleMapReference.Location)dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
             }
         }        
         
@@ -269,6 +271,12 @@ namespace Ultima5Redux
 
 
         #region Constructors
+        public void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
+            LargeMapReference largeMapReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacters nonPlayerCharacters, TileReferences TileReferences)
+        {
+            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap, nonPlayerCharacters, TileReferences);
+        }
+
         /// <summary>
         /// Construct the GameState
         /// </summary>
@@ -325,12 +333,12 @@ namespace Ultima5Redux
 
             // Initialize the table to determine if an NPC is dead
             List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();
-            npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
+            npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
             // Initialize a table to determine if an NPC has been met
             List<bool> npcMet = dataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
             // these will map directly to the towns and the NPC dialog #
-            npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReference.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
+            npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
         }
         #endregion

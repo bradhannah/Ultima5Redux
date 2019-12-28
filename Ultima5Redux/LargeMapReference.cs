@@ -12,13 +12,13 @@ namespace Ultima5Redux
         /// <summary>
         /// Maps the locatin to an actual 0,0 based map xy coord
         /// </summary>
-        public Dictionary<SmallMapReference.SingleMapReference.Location, Point2D> LocationXY { get; } = new Dictionary<SmallMapReference.SingleMapReference.Location, Point2D>();
-        public Dictionary<Point2D, SmallMapReference.SingleMapReference.Location> LocationXYLocations { get; } = new Dictionary<Point2D, SmallMapReference.SingleMapReference.Location>();
+        public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } = new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
+        public Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXYLocations { get; } = new Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location>();
 
         private enum MasterFileOrder_LocationXY { Towns = 0, Dwellings, Castles, Keeps, Dungeons };
 //        private enum MasterFileOrder_LocationXY { Towns = 0, Dwellings, Castles, Keeps, Dungeons };
 
-        public SmallMapReference.SingleMapReference.Location GetLocationByMapXY (Point2D mapXY)
+        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY (Point2D mapXY)
         {
             return LocationXYLocations[mapXY];
         }
@@ -29,7 +29,7 @@ namespace Ultima5Redux
             return LocationXYLocations.ContainsKey(mapXY);
         }
 
-        public LargeMapReference(DataOvlReference dataRef, SmallMapReference smallMapRef)
+        public LargeMapReference(DataOvlReference dataRef, SmallMapReferences smallMapRef)
         {
 
             // Load the location XYs and map them against the location
@@ -43,9 +43,9 @@ namespace Ultima5Redux
             for (int nVector = 0; nVector < 0x28; nVector++)
             {
                 Point2D mapPoint = new Point2D(xLocs[nVector], yLocs[nVector]);
-                SmallMapReference.SingleMapReference.Location location = (SmallMapReference.SingleMapReference.Location)nVector + 1;
+                SmallMapReferences.SingleMapReference.Location location = (SmallMapReferences.SingleMapReference.Location)nVector + 1;
                 //vectors.Add(new Point2D(xLocs[nVector], yLocs[nVector]));
-                //                LocationXY.Add((SmallMapReference.SingleMapReference.Location)nVector + 1, new Point2D(xLocs[nVector], yLocs[nVector]));
+                //                LocationXY.Add((SmallMapReferences.SingleMapReference.Location)nVector + 1, new Point2D(xLocs[nVector], yLocs[nVector]));
                 LocationXY.Add(location, mapPoint);
                 LocationXYLocations.Add(mapPoint, location);
             }

@@ -11,18 +11,18 @@ namespace Ultima5Redux
     {
         private List<SmallMap> smallMaps = new List<SmallMap>();
 
-        private Dictionary<SmallMapReference.SingleMapReference.Location, Dictionary<int, SmallMap>> mapLocationDictionary =
-            new Dictionary<SmallMapReference.SingleMapReference.Location, Dictionary<int, SmallMap>>();
+        private Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>> mapLocationDictionary =
+            new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
 
-        private SmallMapReference smallMapRef;
+        private SmallMapReferences smallMapRef;
 
-        public SmallMaps(SmallMapReference smallMapRef, string u5Directory)
+        public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences SpriteTileReferences)
         {
             this.smallMapRef = smallMapRef;
-            foreach (SmallMapReference.SingleMapReference mapRef in smallMapRef.MapReferenceList)
+            foreach (SmallMapReferences.SingleMapReference mapRef in smallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(u5Directory, mapRef);
+                SmallMap smallMap = new SmallMap(u5Directory, mapRef, SpriteTileReferences);
                 smallMaps.Add(smallMap);
 
                 // we make a map that allows us to map the Location and Floor number to the small map with 
@@ -35,14 +35,19 @@ namespace Ultima5Redux
             }
         }
 
-        public SmallMap GetSmallMap(SmallMapReference.SingleMapReference.Location location, int nFloor)
+        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference.Location location, int nFloor)
         {
             return mapLocationDictionary[location][nFloor];
         }
 
-        public bool DoStrairsGoUp(SmallMapReference.SingleMapReference.Location location, int nFloor, Point2D tilePos)
+        public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
         {
-            //SmallMapReference smallMapref = smallMapRef.Get(location, nFloor);
+            return !DoStrairsGoUp(location, nFloor, tilePos);
+        }
+
+        public bool DoStrairsGoUp(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
+        {
+            //SmallMapReferences smallMapref = smallMapRef.Get(location, nFloor);
             SmallMap currentFloorSmallMap = mapLocationDictionary[location][nFloor];
             bool bHasLowerFloor = mapLocationDictionary[location].ContainsKey(nFloor - 1);
             bool bHasHigherFllor = mapLocationDictionary[location].ContainsKey(nFloor + 1);

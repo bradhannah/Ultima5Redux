@@ -18,7 +18,7 @@ namespace Ultima5Redux
             /// <summary>
             /// General location of sign
             /// </summary>
-            public SmallMapReference.SingleMapReference.Location Location { get; }
+            public SmallMapReferences.SingleMapReference.Location Location { get; }
             /// <summary>
             /// Floor of location
             /// </summary>
@@ -154,7 +154,7 @@ namespace Ultima5Redux
                 return scrubbedStr;
             }
 
-            public Sign(SmallMapReference.SingleMapReference.Location location, int floor, int x, int y, byte[] signText, int nOffset)
+            public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y, byte[] signText, int nOffset)
                 : this (location, floor, x, y, ScrubSignText(signText), nOffset)
             {
                 
@@ -169,7 +169,7 @@ namespace Ultima5Redux
             /// <param name="x">x coord of sign</param>
             /// <param name="y">y coord of sign</param>
             /// <param name="signText">Text of sign (may contain unpritable txt that requires fonts from ibm.ch and runes.ch</param>
-            public Sign(SmallMapReference.SingleMapReference.Location location, int floor,  int x, int y, string signText, int nOffset)
+            public Sign(SmallMapReferences.SingleMapReference.Location location, int floor,  int x, int y, string signText, int nOffset)
             {
                 Location = location;
                 Floor = floor;
@@ -208,7 +208,7 @@ namespace Ultima5Redux
             return signList[nSign];
         }
 
-        public Sign GetSign(SmallMapReference.SingleMapReference.Location location, int x, int y)
+        public Sign GetSign(SmallMapReferences.SingleMapReference.Location location, int x, int y)
         {
             foreach (Sign sign in signList)
             {
@@ -231,7 +231,7 @@ namespace Ultima5Redux
         /// <param name="newX">new X value</param>
         /// <param name="newY">new Y value</param>
         /// <returns>a new copy of the sign</returns>
-        public Sign CopySign(SmallMapReference.SingleMapReference.Location location, int x, int y, int newX, int newY)
+        public Sign CopySign(SmallMapReferences.SingleMapReference.Location location, int x, int y, int newX, int newY)
         {
             Sign origSign = GetSign(location, x, y);
             return new Sign(origSign.Location, origSign.Floor, newX, newY, origSign.RawSignText, origSign.Offset);
@@ -269,7 +269,7 @@ namespace Ultima5Redux
                     rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4 + nNextSignAdjust, 0xFF); 
                 }
 
-                signList.Add(new Sign((SmallMapReference.SingleMapReference.Location)signsByteArray[nIndex],
+                signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location)signsByteArray[nIndex],
                     signsByteArray[nIndex + 1],
                     signsByteArray[nIndex + 2],
                     signsByteArray[nIndex + 3],
@@ -281,7 +281,7 @@ namespace Ultima5Redux
             // there are some signs that are not included in the signs.dat file, so we manually pont to them and add them to our sign list
             List<byte> dataovlSignsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.DATA_OVL));
             List<byte> shSign = DataChunk.CreateDataChunk(DataChunk.DataFormatType.ByteList, "SH Sign of Eight Laws", dataovlSignsByteArray, 0x743a, 0x66).GetAsByteList();
-            signList.Add(new Sign(SmallMapReference.SingleMapReference.Location.Serpents_Hold, 0, 15, 19, shSign.ToArray(), 0x743a));
+            signList.Add(new Sign(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0, 15, 19, shSign.ToArray(), 0x743a));
         }
     }
 }
