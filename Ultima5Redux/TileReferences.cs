@@ -126,10 +126,10 @@ namespace Ultima5Redux
 
         }
 
-        public bool IsKlimbable(int nSprite)
-        {
-            return GetTileReference(nSprite).IsKlimable;
-        }
+        //public bool IsKlimbable(int nSprite)
+        //{
+        //    return GetTileReference(nSprite).IsKlimable;
+        //}
 
         public int GetMinuteIncrement(int nSprite)
         {

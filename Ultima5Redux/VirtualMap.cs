@@ -14,8 +14,7 @@ namespace Ultima5Redux
         private SmallMaps smallMaps;
         private Dictionary<LargeMap.Maps, LargeMap> largeMaps = new Dictionary<LargeMap.Maps, LargeMap>(2);
         private TileReferences tileReferences;
-        
-
+        public enum Direction { Up, Down, Left, Right };
 
         // override map is responsible for overriding tiles that would otherwise be static
         private int[][] overrideMap;
@@ -41,6 +40,7 @@ namespace Ultima5Redux
         public bool IsLargeMap { get; private set; } = false;
         public LargeMap.Maps LargeMapOverUnder { get; private set; } = (LargeMap.Maps)(-1);
 
+        #region Constructor, Initializers and Loaders
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences, 
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacters nonPlayerCharacters, TileReferences tileReferences)
         {
@@ -79,9 +79,15 @@ namespace Ultima5Redux
             IsLargeMap = true;
             LargeMapOverUnder = map;
         }
+        #endregion
 
+        #region Tile references and character positioning
         public TileReference GetTileReference(int x, int y)
         {
+            // we check to see if our override map has something on top of it
+            if (overrideMap[x][y] != 0)
+                return tileReferences.GetTileReference(overrideMap[x][y]);
+
             if (IsLargeMap)
             {
                 return (tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]));
@@ -107,26 +113,54 @@ namespace Ultima5Redux
             overrideMap[x][y] = tileReference.Index;
         }
 
-        public void PickUpThing(Point2D xy)
-        {
-            overrideMap[xy.X][xy.Y] = tileReferences.GetTileNumberByName("BrickFloor");// 68;
-        }
-
         public void SetCharacterPosition(Point2D xy)
         {
             CurrentPosition = xy;
         }
+        #endregion
+
+        public NonPlayerCharacters.NonPlayerCharacter GetNPCOnTile(Point2D point2D)
+        {
+            SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
+            List<NonPlayerCharacters.NonPlayerCharacter> npcs = nonPlayerCharacters.GetNonPlayerCharactersByLocation(location);
+            foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcs)
+            {
+                int nIndex = 1;
+                Point2D npcXy = npc.Schedule.GetHardCoord(nIndex);
+
+                // the NPC is a non-NPC, so we keep looking
+                if (npcXy.X == 0 && npcXy.Y == 0) continue;
+
+                // we found the right NPC and are they on the correct floor
+                if (npcXy == point2D && CurrentSingleMapReference.Floor == npc.Schedule.Coords[nIndex].Z)
+                {
+                    return npc;
+                }
+            }
+            return null;
+        }
 
         #region Public Actions Methods
-        // public void UseStairs()
-        //{
-        //    int nCurrentFloor = CurrentSmallMap.MapFloor;
-        //    bool bStairGoUp = smallMaps.DoStrairsGoUp(CurrentSingleMapReference.MapLocation,
-        //        nCurrentFloor, CurrentPosition);
+        // Action methods are things that the Avatar may do that will affect things around him like
+        // getting a torch changes the tile underneath, openning a door may set a timer that closes it again
+        // in a few turns
+        public void PickUpThing(Point2D xy)
+        {
+            SetOverridingTileReferece(tileReferences.GetTileReferenceByName("BrickFloor"), xy);
+        }
 
-        //    LoadSmallMap(currentSingleSmallMapReferences.MapLocation, nCurrentFloor + (bStairGoUp ? 1 : -1), Ultima3DWorldSmallMap.CharacterPositionOnMap, Camera.main);
-        //    //LoadSmallMap(currentSingleSmallMapReferences.MapLocation, nCurrentFloor + (bStairGoUp ? 1 : -1), Ultima3DWorldSmallMap.CharacterPositionOnMap, Camera.main);
-        //}
+        public bool OpenDoor(Point2D xy)
+        {
+            return true;
+        }
+
+        public bool UnlockDoor(Point2D xy)
+        {
+            return true;
+        }
+
+
+
         #endregion
 
         #region Public Boolean Properties/Method
@@ -140,9 +174,6 @@ namespace Ultima5Redux
                 GetTileReference(characterPos.X, characterPos.Y - 1).Index <= 156) ||
                 (GetTileReference(characterPos.X, characterPos.Y + 1).Index >= 154 &&
                 GetTileReference(characterPos.X, characterPos.Y + 1).Index <= 156);
-            //UltimaGlobal.currentSmallMap.TheMap[characterPos.X][characterPos.Y - 1] <= 156) ||
-            //(UltimaGlobal.currentSmallMap.TheMap[characterPos.X][characterPos.Y + 1] >= 154 &&
-            //UltimaGlobal.currentSmallMap.TheMap[characterPos.X][characterPos.Y + 1] <= 156);
             return bIsFoodNearby;
 
         }
@@ -168,9 +199,37 @@ namespace Ultima5Redux
 
         public bool IsStairGoingUp()
         {
-            //bool bStairGoUp = UltimaGlobal.Ultima5World.AllSmallMaps.DoStrairsGoUp(UltimaGlobal.currentSmallMap.MapLocation, currentSmallMap.MapFloor,
-            //      Vector2IntToPoint2D(Ultima3DWorldSmallMap.CharacterPositionOnMap));
             return IsStairGoingUp(CurrentPosition);
+        }
+
+        public Direction GetStairsDirection(Point2D stairsXY)
+        {
+            // we are making a BIG assumption at this time that a stair case ONLY ever has a single
+            // entrance point, and solid walls on all other sides... hopefully this is true
+            if (!GetTileReference(stairsXY.X - 1, stairsXY.Y).IsSolidSprite) return Direction.Left;
+            if (!GetTileReference(stairsXY.X + 1, stairsXY.Y).IsSolidSprite) return Direction.Right;
+            if (!GetTileReference(stairsXY.X, stairsXY.Y - 1).IsSolidSprite) return Direction.Up;
+            if (!GetTileReference(stairsXY.X, stairsXY.Y + 1).IsSolidSprite) return Direction.Down;
+            throw new Exception("Can't get stair direction - something is amiss....");
+        }
+
+        public bool IsHorizDoor(Point2D doorXY)
+        {
+            if ((GetTileReference(doorXY.X - 1, doorXY.Y).IsSolidSpriteButNotDoor
+                || GetTileReference(doorXY.X + 1, doorXY.Y).IsSolidSpriteButNotDoor))
+                return true;
+            return false;
+        }
+
+        public bool IsNPCTile(Point2D point2D)
+        {
+            // this method isnt super efficient, may want to optimize in the future
+            if (IsLargeMap) return false;
+            return (GetNPCOnTile(point2D) != null);
+        }
+        public int GuessTile(Point2D characterPos)
+        {
+            return 5;
         }
         #endregion
 
