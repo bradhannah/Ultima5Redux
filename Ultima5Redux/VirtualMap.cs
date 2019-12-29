@@ -148,10 +148,11 @@ namespace Ultima5Redux
         // Action methods are things that the Avatar may do that will affect things around him like
         // getting a torch changes the tile underneath, openning a door may set a timer that closes it again
         // in a few turns
-        public void PickUpThing(Point2D xy)
-        {
-            SetOverridingTileReferece(tileReferences.GetTileReferenceByName("BrickFloor"), xy);
-        }
+        //public void PickUpThing(Point2D xy)
+        //{
+        //    // todo: will need to actually poccket the thing I picked up
+        //    SetOverridingTileReferece(tileReferences.GetTileReferenceByName("BrickFloor"), xy);
+        //}
 
 
         public void UseStairs(Point2D xy)
@@ -227,9 +228,44 @@ namespace Ultima5Redux
             if (IsLargeMap) return false;
             return (GetNPCOnTile(point2D) != null);
         }
-        public int GuessTile(Point2D characterPos)
+
+        /// <summary>
+        /// Attempts to guess the tile underneath a thing that is upright such as a fountain
+        /// </summary>
+        /// <param name="xy">position of the thing</param>
+        /// <returns>tile (sprite) number</returns>
+        public int GuessTile(Point2D xy)
         {
-            return 5;
+            Dictionary<int, int> tileCountDictionary = new Dictionary<int, int>();
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    // if it is out of bounds then we skips them altogether
+                    if (xy.X + i < 0 || xy.X + i >= NumberOfRowTiles || xy.Y + j < 0 || xy.Y + j >= NumberOfColumnTiles)
+                        continue;
+                    TileReference tileRef = GetTileReference(xy.X + i, xy.Y + j);
+                    // only look at non-upright sprites
+                    if (!tileRef.IsUpright)
+                    {
+                        int nTile = tileRef.Index;
+                        if (tileCountDictionary.ContainsKey(nTile)) { tileCountDictionary[nTile] += 1; }
+                        else { tileCountDictionary.Add(nTile, 1); }
+                    }
+                }
+            }
+
+            int nMostTile = -1;
+            int nMostTileTotal = -1;
+            // go through each of the tiles we saw and record the tile with the most instances
+            foreach (int nTile in tileCountDictionary.Keys)
+            {
+                int nTotal = tileCountDictionary[nTile];
+                if (nMostTile == -1 || nTotal > nMostTileTotal) { nMostTile = nTile; nMostTileTotal = nTotal; }
+            }
+
+            // just in case we didn't find a match - just use grass for now
+            return nMostTile == -1?5:nMostTile;
         }
         #endregion
 

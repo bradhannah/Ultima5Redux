@@ -104,7 +104,10 @@ namespace Ultima5Redux
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences);
 
             State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
-            
+
+            State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0));
+            int nSpriteGeuss = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
+
             //State.Year = 100;
             //State.Month = 13;
             //State.Day = 28;
@@ -220,7 +223,7 @@ namespace Ultima5Redux
                 tileReference.Index == SpriteTileReferences.GetTileNumberByName("RightSconce"))
             {
                 State.Torches++;
-                State.TheVirtualMap.PickUpThing(xy);
+                State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);//PickUpThing(xy);
                 bGotAThing = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.GET_THINGS_STRINGS.BORROWED));
             }
@@ -563,6 +566,13 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Attempt to enter a building at a coordinate
+        /// Will load new map if successful
+        /// </summary>
+        /// <param name="xy">position of building</param>
+        /// <param name="bWasSuccessful">true if successfully entered</param>
+        /// <returns>output string</returns>
         public string EnterBuilding(Point2D xy, out bool bWasSuccessful)
         {
             bool isOnBuilding = LargeMapRef.IsMapXYEnterable(State.TheVirtualMap.CurrentPosition);
