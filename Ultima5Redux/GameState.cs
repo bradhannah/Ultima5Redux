@@ -42,6 +42,11 @@ namespace Ultima5Redux
         #region Public Properties
         public VirtualMap TheVirtualMap { get; set; }
 
+        public bool IsDayLight
+        {
+            get; set;
+        } = true;
+
         public string FormattedDate
         {
             get

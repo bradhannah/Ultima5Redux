@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
@@ -419,6 +420,177 @@ namespace Ultima5Redux
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.OPENING_THINGS_STRINGS.OPENED));
             }
         }
+
+        public enum TryToMoveResult { Moved, Blocked, OfferToExitScreen, UsedStairs }
+
+        /// <summary>
+        /// Gets a +/- 1 x/y adjustement based on the current position and given direction
+        /// </summary>
+        /// <param name="direction">direction to go</param>
+        /// <param name="xAdjust">output X adjustment</param>
+        /// <param name="yAdjust">output Y adjustment</param>
+        private void GetAdjustments(VirtualMap.Direction direction, out int xAdjust, out int yAdjust)
+        {
+            xAdjust = 0;
+            yAdjust = 0;
+
+            // if you are on a repeating map then you should assume that the adjust suc
+
+            switch (direction)
+            {
+                case VirtualMap.Direction.Down:
+                    if (State.TheVirtualMap.CurrentPosition.Y < State.TheVirtualMap.NumberOfRowTiles - 1 || State.TheVirtualMap.IsLargeMap) yAdjust = 1;
+                    break;
+                case VirtualMap.Direction.Up:
+                    if (State.TheVirtualMap.CurrentPosition.Y > 0 || State.TheVirtualMap.IsLargeMap) yAdjust = -1;
+                    break;
+                case VirtualMap.Direction.Right:
+                    if (State.TheVirtualMap.CurrentPosition.X < State.TheVirtualMap.NumberOfColumnTiles - 1 || State.TheVirtualMap.IsLargeMap) xAdjust = 1;
+                    break;
+                case VirtualMap.Direction.Left:
+                    if (State.TheVirtualMap.CurrentPosition.X > 0 || State.TheVirtualMap.IsLargeMap) xAdjust = -1;
+                    break;
+                default:
+                    throw new Exception("Requested an adjustment but didn't provide a KeyCode that represents a direction.");
+            }
+        }
+
+        /// <summary>
+        /// Tries to move the avatar in a given direction - if succesful it will move him
+        /// </summary>
+        /// <param name="direction">the direction you want to move</param>
+        /// <param name="bKlimb">is the avatar K-limbing?</param>
+        /// <param name="bFreeMove">is "free move" on?</param>
+        /// <param name="tryToMoveResult">outputs the result of the attempt</param>
+        /// <returns>output string (may be empty)</returns>
+        public string TryToMove(VirtualMap.Direction direction, bool bKlimb, bool bFreeMove, out TryToMoveResult tryToMoveResult)
+        {
+            int xAdjust = 0;
+            int yAdjust = 0;
+
+            int nTilesPerMapRow = State.TheVirtualMap.NumberOfRowTiles;
+            int nTilesPerMapCol = State.TheVirtualMap.NumberOfColumnTiles;
+
+            // if we were to move, which direction would we move
+            GetAdjustments(direction, out xAdjust, out yAdjust);
+
+            // would we be leaving a small map if we went forward?
+            if (!State.TheVirtualMap.IsLargeMap &&
+                (State.TheVirtualMap.CurrentPosition.Y == (nTilesPerMapRow - 1) && direction == VirtualMap.Direction.Down) ||
+                (State.TheVirtualMap.CurrentPosition.Y == (0) && direction == VirtualMap.Direction.Up) ||
+                (State.TheVirtualMap.CurrentPosition.X == (nTilesPerMapCol - 1) && direction == VirtualMap.Direction.Right) ||
+                (State.TheVirtualMap.CurrentPosition.X == (0) && direction == VirtualMap.Direction.Left))
+
+            {
+                tryToMoveResult = TryToMoveResult.OfferToExitScreen;
+                // it is expected that the called will offer an exit option, but we won't move the avatar because the space
+                // is empty
+                return string.Empty;
+            }
+
+            // calculate our new x and y values based on the adjustments
+            int newX = (State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol;
+            int newY = (State.TheVirtualMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow;
+            Point2D newPos = new Point2D(newX, newY);
+
+            // if we have reached 0, and we are adjusting -1 then we should assume it's a round world and we are going to the opposite side
+            // this should only be true if it is a RepeatMap
+            if (newX < 0) { Debug.Assert(State.TheVirtualMap.IsLargeMap, "You should not reach the very end of a map +/- 1 if you are not on a repeating map"); newX = nTilesPerMapCol + newX; }
+            if (newY < 0) { Debug.Assert(State.TheVirtualMap.IsLargeMap, "You should not reach the very end of a map +/- 1 if you are not on a repeating map"); newY = nTilesPerMapRow + newY; }
+
+            // we get the newTile so that we can determine if it's passable
+            //int newTile = GetTileNumber(newX, newY);
+            TileReference newTileReference = State.TheVirtualMap.GetTileReference(newX, newY);
+            // it's passable if it's marked as passable, 
+            // but we double check if the portcullis is down
+            bool bPassable = newTileReference.IsWalking_Passable &&
+                !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index && !State.IsDayLight)
+                && !State.TheVirtualMap.IsNPCTile(newPos);
+
+
+            // this isinsufficient in case I am in a boat
+            if (bPassable || bFreeMove || (bKlimb && newTileReference.IsKlimable))
+            {
+                State.TheVirtualMap.CurrentPosition.X = newX;
+                State.TheVirtualMap.CurrentPosition.Y = newY;
+            }
+            else
+            {
+                tryToMoveResult = TryToMoveResult.Blocked;
+                // if it's not passable then we have no more business here
+                State.AdvanceTime(2);
+                return (DataOvlRef.StringReferences.GetString(DataOvlReference.TRAVEL_STRINGS.BLOCKED));
+            }
+
+            // the world is a circular - so when you get to the end, start over again
+            // this will prevent a never ending growth or shrinking of character position in case the travel the world only moving right a bagillion times
+            State.TheVirtualMap.CurrentPosition.X %= nTilesPerMapCol;
+            State.TheVirtualMap.CurrentPosition.Y %= nTilesPerMapRow;
+
+            // if you walk on top of a staircase then we will immediately jump to the next floor
+            if (TileReference.IsStaircase(newTileReference.Index))
+            {
+                tryToMoveResult = TryToMoveResult.UsedStairs;
+                State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition);
+                return string.Empty;
+            }
+
+            // if we are on a big map then we may issue extra information about slow moving terrain
+            if (State.TheVirtualMap.IsLargeMap)
+            {
+                State.AdvanceTime(SpriteTileReferences.GetMinuteIncrement(newTileReference.Index));
+
+                string strMovement = String.Empty;
+                // we don't want to lookup slow moving strings if we are moving freely over all tiles
+                if (!bFreeMove)
+                {
+                    strMovement = SpriteTileReferences.GetSlowMovementString(newTileReference.Index);
+                }
+                if (strMovement != String.Empty)
+                {
+                }
+                tryToMoveResult = TryToMoveResult.Moved;
+                return strMovement;
+            }
+            else
+            {
+                tryToMoveResult = TryToMoveResult.Moved;
+
+                // if we are indoors then all walking takes 2 minutes
+                State.AdvanceTime(2);
+
+                return string.Empty;
+            }
+        }
+
+        public string EnterBuilding(Point2D xy, out bool bWasSuccessful)
+        {
+            bool isOnBuilding = LargeMapRef.IsMapXYEnterable(State.TheVirtualMap.CurrentPosition);
+
+            if (isOnBuilding)
+            {
+                SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(State.TheVirtualMap.CurrentPosition);
+                Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
+                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0));
+                // set us to the front of the building
+                State.TheVirtualMap.CurrentPosition = SmallMapReferences.GetStartingXYByLocation(location);
+
+                string returnStr =
+                    (DataOvlRef.StringReferences.GetString(DataOvlReference.WORLD_STRINGS.ENTER_SPACE)
+                    + SmallMapRef.GetLocationTypeStr(location)) + "\n" +
+                    SmallMapRef.GetLocationName(location);
+                bWasSuccessful = true;
+                return returnStr;
+            }
+            else
+            {
+                string enterWhatStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WORLD_STRINGS.ENTER_SPACE)
+                    + DataOvlRef.StringReferences.GetString(DataOvlReference.WORLD_STRINGS.WHAT);
+                bWasSuccessful = false;
+                return enterWhatStr;
+            }
+        }
+
 
         #endregion
 

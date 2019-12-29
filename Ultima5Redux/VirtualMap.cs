@@ -32,6 +32,10 @@ namespace Ultima5Redux
             } 
         } 
 
+        public int NumberOfColumnTiles { get { return overrideMap[0].Length; } }
+        public int NumberOfRowTiles { get { return overrideMap.Length; } }
+
+
         public SmallMap CurrentSmallMap { get; private set; }
         public LargeMap CurrentLargeMap { get; private set; }
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; private set; }
@@ -149,17 +153,13 @@ namespace Ultima5Redux
             SetOverridingTileReferece(tileReferences.GetTileReferenceByName("BrickFloor"), xy);
         }
 
-        public bool OpenDoor(Point2D xy)
+
+        public void UseStairs(Point2D xy)
         {
-            return true;
+            bool bStairGoUp = IsStairGoingUp();
+
+            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)));
         }
-
-        public bool UnlockDoor(Point2D xy)
-        {
-            return true;
-        }
-
-
 
         #endregion
 
