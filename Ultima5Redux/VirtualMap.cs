@@ -102,6 +102,11 @@ namespace Ultima5Redux
             }
         }
 
+        public TileReference GetTileReferenceOnCurrentTile()
+        {
+            return GetTileReference(CurrentPosition);
+        }
+
         public TileReference GetTileReference(Point2D xy)
         {
             return GetTileReference(xy.X, xy.Y);
@@ -212,6 +217,38 @@ namespace Ultima5Redux
             if (!GetTileReference(stairsXY.X, stairsXY.Y - 1).IsSolidSprite) return Direction.Up;
             if (!GetTileReference(stairsXY.X, stairsXY.Y + 1).IsSolidSprite) return Direction.Down;
             throw new Exception("Can't get stair direction - something is amiss....");
+        }
+
+        /// <summary>
+        /// Given the orientation of the stairs, it returns the correct sprite to display
+        /// </summary>
+        /// <param name="xy">position of stairs</param>
+        /// <returns>stair sprite</returns>
+        public int GetStairsSprite(Point2D xy)
+        {
+            bool bGoingUp = IsStairGoingUp(xy);//UltimaGlobal.IsStairGoingUp(voxelPos);
+            VirtualMap.Direction direction = GetStairsDirection(xy);
+            int nSpriteNum = -1;
+            switch (direction)
+            {
+                case VirtualMap.Direction.Up:
+                    nSpriteNum = bGoingUp ? tileReferences.GetTileReferenceByName("StairsNorth").Index
+                        : tileReferences.GetTileReferenceByName("StairsSouth").Index;
+                    break;
+                case VirtualMap.Direction.Down:
+                    nSpriteNum = bGoingUp ? tileReferences.GetTileReferenceByName("StairsSouth").Index
+                        : tileReferences.GetTileReferenceByName("StairsNorth").Index;
+                    break;
+                case VirtualMap.Direction.Left:
+                    nSpriteNum = bGoingUp ? tileReferences.GetTileReferenceByName("StairsWest").Index
+                        : tileReferences.GetTileReferenceByName("StairsEast").Index;
+                    break;
+                case VirtualMap.Direction.Right:
+                    nSpriteNum = bGoingUp ? tileReferences.GetTileReferenceByName("StairsEast").Index
+                        : tileReferences.GetTileReferenceByName("StairsWest").Index;
+                    break;
+            }
+            return nSpriteNum;
         }
 
         public bool IsHorizDoor(Point2D doorXY)

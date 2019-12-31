@@ -44,8 +44,11 @@ namespace Ultima5Redux
 
         public bool IsDayLight
         {
-            get; set;
-        } = true;
+            get
+            {
+                return (Hour >= 5 &&  Hour < (8+12));
+            }
+        } 
 
         public string FormattedDate
         {
