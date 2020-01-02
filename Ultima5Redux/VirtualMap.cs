@@ -9,17 +9,46 @@ namespace Ultima5Redux
 {
     public class VirtualMap
     {
+        #region Private fields
+        /// <summary>
+        /// Reference to towne/keep etc locations on the large map
+        /// </summary>
         private LargeMapReference largeMapReferences;
+        /// <summary>
+        /// Non player characters on current map
+        /// </summary>
         private NonPlayerCharacters nonPlayerCharacters;
+        /// <summary>
+        /// All the small maps
+        /// </summary>
         private SmallMaps smallMaps;
+        /// <summary>
+        /// Both underworld and overworld maps
+        /// </summary>
         private Dictionary<LargeMap.Maps, LargeMap> largeMaps = new Dictionary<LargeMap.Maps, LargeMap>(2);
+        /// <summary>
+        /// References to all tiles
+        /// </summary>
         private TileReferences tileReferences;
+        /// <summary>
+        /// override map is responsible for overriding tiles that would otherwise be static
+        /// </summary>
+        private int[][] overrideMap;
+        /// <summary>
+        /// Current position of player character (avatar)
+        /// </summary>
+        private Point2D _currentPosition = new Point2D(0, 0);
+        #endregion
+
+        #region Public Properties 
+        /// <summary>
+        /// 4 way direction
+        /// </summary>
         public enum Direction { Up, Down, Left, Right };
 
-        // override map is responsible for overriding tiles that would otherwise be static
-        private int[][] overrideMap;
-
-        private Point2D _currentPosition = new Point2D(0, 0);
+        /// <summary>
+        /// Current position of player character (avatar)
+        /// </summary>
         public Point2D CurrentPosition { 
             get
             {
@@ -32,19 +61,51 @@ namespace Ultima5Redux
             } 
         } 
 
+        /// <summary>
+        /// Number of total columns for current map
+        /// </summary>
         public int NumberOfColumnTiles { get { return overrideMap[0].Length; } }
+        /// <summary>
+        /// Number of total rows for current map
+        /// </summary>
         public int NumberOfRowTiles { get { return overrideMap.Length; } }
-
-
+        /// <summary>
+        /// The current small map (null if on large map)
+        /// </summary>
         public SmallMap CurrentSmallMap { get; private set; }
+        /// <summary>
+        /// Current large map (null if on small map)
+        /// </summary>
         public LargeMap CurrentLargeMap { get; private set; }
+        /// <summary>
+        /// Detailed reference of current small map
+        /// </summary>
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; private set; }
+        /// <summary>
+        /// All small map references
+        /// </summary>
         public SmallMapReferences SmallMapRefs { get; private set; }
-
+        /// <summary>
+        /// Are we currently on a large map?
+        /// </summary>
         public bool IsLargeMap { get; private set; } = false;
+        /// <summary>
+        /// If we are on a large map - then are we on overworld or underworld
+        /// </summary>
         public LargeMap.Maps LargeMapOverUnder { get; private set; } = (LargeMap.Maps)(-1);
+        #endregion
 
         #region Constructor, Initializers and Loaders
+        /// <summary>
+        /// Construct the VirtualMap (requires initalization still)
+        /// </summary>
+        /// <param name="smallMapReferences"></param>
+        /// <param name="smallMaps"></param>
+        /// <param name="largeMapReferences"></param>
+        /// <param name="overworldMap"></param>
+        /// <param name="underworldMap"></param>
+        /// <param name="nonPlayerCharacters"></param>
+        /// <param name="tileReferences"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences, 
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacters nonPlayerCharacters, TileReferences tileReferences)
         {
@@ -55,9 +116,12 @@ namespace Ultima5Redux
             this.tileReferences = tileReferences;
             largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
-                //new LargeMap[] { overworldMap, underworldMap };
         }
 
+        /// <summary>
+        /// Loads a small map based on the provided reference
+        /// </summary>
+        /// <param name="singleMapReference"></param>
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference)
         {
             CurrentSingleMapReference = singleMapReference;
@@ -67,13 +131,10 @@ namespace Ultima5Redux
             LargeMapOverUnder = (LargeMap.Maps)(-1);
         }
 
-        public void LoadLargeMap(SmallMapReferences.SingleMapReference singleMapReference)
-        {
-            Debug.Assert(singleMapReference.MapLocation == SmallMapReferences.SingleMapReference.Location.Britainnia_Underworld);
-
-            LoadLargeMap(singleMapReference.Floor == 0 ? LargeMap.Maps.Overworld : LargeMap.Maps.Underworld);
-        }
-
+        /// <summary>
+        /// Loads a large map -either overworld or underworld
+        /// </summary>
+        /// <param name="map"></param>
         public void LoadLargeMap(LargeMap.Maps map)
         {
             int nFloor = map == LargeMap.Maps.Overworld ? 0 : -1;
@@ -86,6 +147,12 @@ namespace Ultima5Redux
         #endregion
 
         #region Tile references and character positioning
+        /// <summary>
+        /// Gets a tile reference from the given coordinate
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public TileReference GetTileReference(int x, int y)
         {
             // we check to see if our override map has something on top of it
@@ -102,32 +169,61 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Gets a tile reference from the tile the avatar currently resides on
+        /// </summary>
+        /// <returns></returns>
         public TileReference GetTileReferenceOnCurrentTile()
         {
             return GetTileReference(CurrentPosition);
         }
 
+        /// <summary>
+        /// Gets a tile reference from the given coordinate
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
         public TileReference GetTileReference(Point2D xy)
         {
             return GetTileReference(xy.X, xy.Y);
         }
 
+        /// <summary>
+        /// Sets an override for the current tile which will be favoured over the static map tile
+        /// </summary>
+        /// <param name="tileReference">the reference (sprite)</param>
+        /// <param name="xy"></param>
         public void SetOverridingTileReferece(TileReference tileReference, Point2D xy)
         {
             SetOverridingTileReferece(tileReference, xy.X, xy.Y);
         }
 
+        /// <summary>
+        /// Sets an override for the current tile which will be favoured over the static map tile
+        /// </summary>
+        /// <param name="tileReference"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void SetOverridingTileReferece(TileReference tileReference, int x, int y)
         {
             overrideMap[x][y] = tileReference.Index;
         }
 
+
+        /// <summary>
+        /// Moves the player character to the specified coordinate
+        /// </summary>
+        /// <param name="xy"></param>
         public void SetCharacterPosition(Point2D xy)
         {
             CurrentPosition = xy;
         }
-        #endregion
 
+        /// <summary>
+        /// If an NPC is on a tile, then it will get them
+        /// </summary>
+        /// <param name="point2D"></param>
+        /// <returns>the NPC or null if one does not exist</returns>
         public NonPlayerCharacters.NonPlayerCharacter GetNPCOnTile(Point2D point2D)
         {
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
@@ -148,6 +244,7 @@ namespace Ultima5Redux
             }
             return null;
         }
+        #endregion
 
         #region Public Actions Methods
         // Action methods are things that the Avatar may do that will affect things around him like
@@ -169,7 +266,13 @@ namespace Ultima5Redux
 
         #endregion
 
-        #region Public Boolean Properties/Method
+        #region Public Boolean Method
+        /// <summary>
+        /// Is there food on a table within 1 (4 way) tile
+        /// Used for determining if eating animation should be used
+        /// </summary>
+        /// <param name="characterPos"></param>
+        /// <returns>true if food is within a tile</returns>
         public bool IsFoodNearby(Point2D characterPos)
         {
             //Todo: use TileReference lookups instead of hard coded values
@@ -184,38 +287,61 @@ namespace Ultima5Redux
 
         }
 
-        public bool IsStairGoingUp(Point2D characterPos)
+        /// <summary>
+        /// Are the stairs at the given position going up?
+        /// Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsStairGoingUp(Point2D xy)
         {
-            bool bStairGoUp = smallMaps.DoStrairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor,
-                  characterPos);
+            bool bStairGoUp = smallMaps.DoStrairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
             return bStairGoUp;
         }
 
-        public bool IsStairsGoingDown(Point2D characterPos)
+        /// <summary>
+        /// Are the stairs at the given position going down?
+        /// Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsStairsGoingDown(Point2D xy)
         {
-            bool bStairGoUp = smallMaps.DoStairsGoDown(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor,
-                  characterPos);
+            bool bStairGoUp = smallMaps.DoStairsGoDown(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
             return bStairGoUp;
         }
 
+        /// <summary>
+        /// Are the stairs at the player characters current position going down?
+        /// </summary>
+        /// <returns></returns>
         public bool IsStairGoingDown()
         {
             return IsStairsGoingDown(CurrentPosition);
         }
 
+        /// <summary>
+        /// Are the stairs at the player characters current position going up?
+        /// </summary>
+        /// <returns></returns>
         public bool IsStairGoingUp()
         {
             return IsStairGoingUp(CurrentPosition);
         }
 
-        public Direction GetStairsDirection(Point2D stairsXY)
+        /// <summary>
+        /// When orienting the stairs, which direction should they be drawn 
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public Direction GetStairsDirection(Point2D xy)
         {
             // we are making a BIG assumption at this time that a stair case ONLY ever has a single
             // entrance point, and solid walls on all other sides... hopefully this is true
-            if (!GetTileReference(stairsXY.X - 1, stairsXY.Y).IsSolidSprite) return Direction.Left;
-            if (!GetTileReference(stairsXY.X + 1, stairsXY.Y).IsSolidSprite) return Direction.Right;
-            if (!GetTileReference(stairsXY.X, stairsXY.Y - 1).IsSolidSprite) return Direction.Up;
-            if (!GetTileReference(stairsXY.X, stairsXY.Y + 1).IsSolidSprite) return Direction.Down;
+            if (!GetTileReference(xy.X - 1, xy.Y).IsSolidSprite) return Direction.Left;
+            if (!GetTileReference(xy.X + 1, xy.Y).IsSolidSprite) return Direction.Right;
+            if (!GetTileReference(xy.X, xy.Y - 1).IsSolidSprite) return Direction.Up;
+            if (!GetTileReference(xy.X, xy.Y + 1).IsSolidSprite) return Direction.Down;
             throw new Exception("Can't get stair direction - something is amiss....");
         }
 
@@ -251,19 +377,29 @@ namespace Ultima5Redux
             return nSpriteNum;
         }
 
-        public bool IsHorizDoor(Point2D doorXY)
+        /// <summary>
+        /// Is the door at the specified coordinate horizontal?
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsHorizDoor(Point2D xy)
         {
-            if ((GetTileReference(doorXY.X - 1, doorXY.Y).IsSolidSpriteButNotDoor
-                || GetTileReference(doorXY.X + 1, doorXY.Y).IsSolidSpriteButNotDoor))
+            if ((GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoor
+                || GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoor))
                 return true;
             return false;
         }
 
-        public bool IsNPCTile(Point2D point2D)
+        /// <summary>
+        /// Is there an NPC on the tile specified?
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsNPCTile(Point2D xy)
         {
             // this method isnt super efficient, may want to optimize in the future
             if (IsLargeMap) return false;
-            return (GetNPCOnTile(point2D) != null);
+            return (GetNPCOnTile(xy) != null);
         }
 
         /// <summary>
