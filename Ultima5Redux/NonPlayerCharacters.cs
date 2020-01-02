@@ -26,15 +26,21 @@ namespace Ultima5Redux
         #region Public Methods
         public List<NonPlayerCharacter> GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location location)
         {
-            List<NonPlayerCharacter> npcs = new List<NonPlayerCharacter>();
-            foreach (NonPlayerCharacter npc in NPCs)
+            if (!this.locationToNPCsDictionary.ContainsKey(location)) return new List<NonPlayerCharacter>();
+
+            return locationToNPCsDictionary[location];
+        }
+
+        public NonPlayerCharacter GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
+        {
+            foreach (NonPlayerCharacter npc in GetNonPlayerCharactersByLocation(location))
             {
-                if (npc.MapReference.MapLocation == location)
+                if (npc.CurrentMapPosition == xy && npc.CurrentFloor == nFloor)
                 {
-                    npcs.Add(npc);
+                    return npc;
                 }
             }
-            return (npcs);
+            return null; 
         }
         #endregion
 
@@ -43,6 +49,8 @@ namespace Ultima5Redux
         /// All of the NPCs
         /// </summary>
         private List<NonPlayerCharacter> npcs = new List<NonPlayerCharacter>();
+        private Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacter>> locationToNPCsDictionary
+            = new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacter>>();
         #endregion
 
         #region Constants, Enums
@@ -145,7 +153,15 @@ namespace Ultima5Redux
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
-                    npcs.Add(new NonPlayerCharacter(singleMapRef, gameStateRef, schedules[nNpc], npcTypes[nNpc], npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc])));
+                    NonPlayerCharacter npc = new NonPlayerCharacter(location, gameStateRef, schedules[nNpc], npcTypes[nNpc], 
+                        npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]));
+                    npcs.Add(npc);
+                    // we also create a quick lookup table by location but first need to check that there is an initialized list inside
+                    if (!locationToNPCsDictionary.ContainsKey(singleMapRef.MapLocation)) 
+                    { 
+                        locationToNPCsDictionary.Add(singleMapRef.MapLocation, new List<NonPlayerCharacter>());  
+                    }
+                    locationToNPCsDictionary[singleMapRef.MapLocation].Add(npc);
                 }
             }
         }

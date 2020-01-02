@@ -227,26 +227,35 @@ namespace Ultima5Redux
         /// <summary>
         /// If an NPC is on a tile, then it will get them
         /// </summary>
-        /// <param name="point2D"></param>
+        /// <param name="xy"></param>
         /// <returns>the NPC or null if one does not exist</returns>
-        public NonPlayerCharacters.NonPlayerCharacter GetNPCOnTile(Point2D point2D)
+        public NonPlayerCharacters.NonPlayerCharacter GetNPCOnTile(Point2D xy)
         {
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
             List<NonPlayerCharacters.NonPlayerCharacter> npcs = nonPlayerCharacters.GetNonPlayerCharactersByLocation(location);
-            foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcs)
-            {
-                int nIndex = 1;
-                Point2D npcXy = npc.Schedule.GetHardCoord(nIndex);
 
-                // the NPC is a non-NPC, so we keep looking
-                if (npcXy.X == 0 && npcXy.Y == 0) continue;
+            // get the NPC on the current tile
+            NonPlayerCharacters.NonPlayerCharacter npc = nonPlayerCharacters.GetNonPlayerCharacter(location, xy, CurrentSingleMapReference.Floor);
 
-                // we found the right NPC and are they on the correct floor
-                if (npcXy == point2D && CurrentSingleMapReference.Floor == npc.Schedule.Coords[nIndex].Z)
-                {
-                    return npc;
-                }
-            }
+            if (npc == null)
+                throw new Exception("You asked for an NPC on a tile that one does not exist - you should have checked first!");
+
+            return npc;
+            //foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcs)
+            //{
+
+            //    int nIndex = 1;
+            //    Point2D npcXy = npc.Schedule.GetHardCoord(nIndex);
+
+            //    // the NPC is a non-NPC, so we keep looking
+            //    if (npcXy.X == 0 && npcXy.Y == 0) continue;
+
+            //    // we found the right NPC and are they on the correct floor
+            //    if (npcXy == xy && CurrentSingleMapReference.Floor == npc.Schedule.Coords[nIndex].Z)
+            //    {
+            //        return npc;
+            //    }
+            //}
             return null;
         }
         #endregion

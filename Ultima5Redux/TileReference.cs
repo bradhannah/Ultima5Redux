@@ -62,6 +62,15 @@ namespace Ultima5Redux
             return (nSprite >= 196 && nSprite <= 199);
         }
 
+        public bool IsNPCCapableSpace
+        {
+            get
+            {
+                return (this.IsWalking_Passable || this.IsOpenable);
+            }
+        }
+
+
         public bool IsSolidSpriteButNotDoor
         {
             get

@@ -8,9 +8,14 @@ namespace Ultima5Redux
         {
             public class NPCSchedule
             {
-                public Point2D GetHardCoord(int index)
+                public Point2D GetHardCoord(int nIndex)
                 {
-                    return (new Point2D(Coords[index].X, Coords[index].Y));
+                    return (new Point2D(Coords[nIndex].X, Coords[nIndex].Y));
+                }
+
+                public int GetFloor(int nIndex)
+                {
+                    return Coords[nIndex].Z;
                 }
 
                 /// <summary>

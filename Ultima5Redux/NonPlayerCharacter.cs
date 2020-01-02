@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Ultima5Redux
 {
@@ -66,6 +67,14 @@ namespace Ultima5Redux
             }
             #endregion
 
+            #region Public Methods
+            public void Move(Point2D xy, int nFloor)
+            {
+                CurrentMapPosition = xy;
+                CurrentFloor = nFloor;
+            }
+            #endregion
+
             #region Public Properties
             /// <summary>
             /// NPCs name
@@ -85,7 +94,7 @@ namespace Ultima5Redux
                 } 
             }
 
-            public NonPlayerCharacterMovement PlayerMovement { get; }
+            public NonPlayerCharacterMovement NPCMovement { get; }
 
             /// <summary>
             /// The daily schedule of the NPC
@@ -111,10 +120,15 @@ namespace Ultima5Redux
             /// </summary>
             public TalkScript Script { get; }
 
+            public Point2D CurrentMapPosition { get; private set; }
+            public int CurrentFloor { get; private set; }
+
             /// <summary>
             /// Which map is the NPC on?
             /// </summary>
-            public SmallMapReferences.SingleMapReference MapReference { get; }
+            //public SmallMapReferences.SingleMapReference MapReference { get; }
+            public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
+            public byte MapLocationID { get { return (byte)(MapLocation - 1); } }
 
             /// <summary>
             /// What type of NPC are they? 
@@ -205,34 +219,68 @@ namespace Ultima5Redux
             /// <param name="dialogNumber">dialog number referencing data OVL</param>
             /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
             /// <param name="talkScript">their conversation script</param>
-            public NonPlayerCharacter (SmallMapReferences.SingleMapReference mapRef, GameState gameStateRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
+            public NonPlayerCharacter (SmallMapReferences.SingleMapReference.Location location, GameState gameStateRef, NPC_Schedule sched, 
+                byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
             {
                 Schedule = new NPCSchedule(sched);
-                PlayerMovement = new NonPlayerCharacterMovement(dialogIndex, gameStateRef.NonPlayerCharacterMovementLists, gameStateRef.NonPlayerCharacterMovementOffsets);
-                //gameStateRef.Get
-                MapReference = mapRef;
+                NPCMovement = new NonPlayerCharacterMovement(dialogIndex, gameStateRef.NonPlayerCharacterMovementLists, gameStateRef.NonPlayerCharacterMovementOffsets);
+                MapLocation = location;
+
                 CharacterType = npcType;
                 DialogNumber = dialogNumber;
                 Script = talkScript;
                 DialogIndex = dialogIndex;
                 this.gameStateRef = gameStateRef;
 
+                if (NPCMovement.IsNextCommandAvailable())
+                {
+
+                }
+                else
+                {
+                    // there is no special movement instructions - so they are where they are expected to be
+                    MoveNPCToDefaultScheduledPosition();
+                }
+
                 // no schedule? I guess you're not real
                 if (!IsEmptySched(sched))
                 {
-                    System.Console.WriteLine(mapRef.MasterFile.ToString() + "     NPC Number: " + this.DialogNumber + " in " + mapRef.MapLocation.ToString());
+                    System.Console.WriteLine(location.ToString() + "     NPC Number: " + this.DialogNumber + " in " + location.ToString());
                 }
             }
             #endregion
 
             #region Private Methods
+            /// <summary>
+            /// Gets the appropriate schedule index based on the current time
+            /// </summary>
+            /// <returns></returns>
+            private int GetScheduleIndex()
+            {
+                return 1;
+            }
+
+            /// <summary>
+            /// Moves the NPC to the appropriate floor and location based on the their expected location and position
+            /// </summary>
+            private void MoveNPCToDefaultScheduledPosition()
+            {
+                int nIndex = GetScheduleIndex();
+                Point2D npcXy = Schedule.GetHardCoord(nIndex);
+
+                // the NPC is a non-NPC, so we keep looking
+                if (npcXy.X == 0 && npcXy.Y == 0) return;
+
+                Move(npcXy, Schedule.GetFloor(nIndex));
+            }
+        }
 
             /// <summary>
             /// Does the NPC have an empty schedule? If so, then they aren't actually an NPC
             /// </summary>
             /// <param name="sched">daily schedule</param>
             /// <returns></returns>
-            static private bool IsEmptySched(NPC_Schedule sched)
+            static private bool IsEmptySched(NonPlayerCharacter.NPC_Schedule sched)
             {
                 unsafe
                 {
@@ -242,7 +290,7 @@ namespace Ultima5Redux
                 return false;
             }
             #endregion
-        }
+        //}
 
 
 

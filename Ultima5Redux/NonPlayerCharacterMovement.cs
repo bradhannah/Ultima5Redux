@@ -62,6 +62,29 @@ namespace Ultima5Redux
                 }
             }
 
+            static internal Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection direction)
+            {
+                Point2D adjustedPos = new Point2D(xy.X, xy.Y);
+                
+                switch (direction)
+                {
+                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.East:
+                        adjustedPos.X += 1;
+                        break;
+                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.North:
+                        adjustedPos.Y -= 1;
+                        break;
+                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.West:
+                        adjustedPos.X -= 1;
+                        break;
+                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.South:
+                        adjustedPos.Y += 1;
+                        break;
+                }
+                return adjustedPos;
+            }
+
+
             private DataChunk movementInstructionDataChunk;
             private DataChunk movementOffsetDataChunk;
             private int nDialogIndex;
@@ -122,18 +145,19 @@ namespace Ultima5Redux
                 return MovementQueue.Count > 0;
             }
             
+
             /// <summary>
             /// Gets the next movement command - expects you to have confirmed there is a movement first
             /// </summary>
             /// <returns></returns>
-            public MovementCommandDirection GetNextMovementCommand()
+            public MovementCommandDirection GetNextMovementCommand(bool bPeek = false)
             {
                 if (MovementQueue.Count <= 0) { throw new Exception("You have requested to GetNextMovementCommand but there are non left."); }
                 MovementCommandDirection direction = MovementQueue.Peek().Direction;
                 int nRemaining = MovementQueue.Peek().SpendSingleMovement();
                 Debug.Assert(nRemaining >= 0);
 
-                if (nRemaining == 0)
+                if (nRemaining == 0 && !bPeek)
                 {
                     // we are done with it, so let's toss it
                     MovementQueue.Dequeue();

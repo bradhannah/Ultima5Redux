@@ -10,7 +10,7 @@ namespace Ultima5Redux
 {
     public class GameState
     {
-        #region Private Variables
+        #region Private Fields
         /// <summary>
         /// A random number generator - capable of seeding in future
         /// </summary>
@@ -371,11 +371,21 @@ namespace Ultima5Redux
             // called when falling from a Klimb on a mountain
         }
 
+
+
         /// <summary>
-        /// Advances time and takes care of all day, month, year calculations
+        /// Using the random number generator, provides 1 in howMany odds of returning true
         /// </summary>
-        /// <param name="nMinutes">Number of minutes to advance (maximum of 9*60)</param>
-        public void AdvanceTime(int nMinutes)
+        /// <param name="howMany">1 in howMany odds of returning true</param>
+        /// <returns>true if odds are beat</returns>
+        public bool OneInXOdds(int howMany)
+        {
+            // if ran%howMany is zero then we beat the odds
+            int nextRan = ran.Next();
+            return ((nextRan % howMany) == 0);
+        }
+
+        internal void AdvanceClock(int nMinutes)
         {
             // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
             if (nMinutes > (60 * 9)) throw new Exception("You can not advance more than 9 hours at a time");
@@ -386,7 +396,7 @@ namespace Ultima5Redux
                 int nExtraMinutes;
                 byte nHours = (byte)Math.DivRem(nMinutes, 60, out nExtraMinutes);
 
-                byte newHour = (byte)((Hour + nHours + 1));//% 24);
+                byte newHour = (byte)((Hour + nHours + 1));
                 Minute = (byte)((Minute + (byte)nExtraMinutes) % 60);
 
                 // if it puts us into a new day
@@ -427,18 +437,6 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Using the random number generator, provides 1 in howMany odds of returning true
-        /// </summary>
-        /// <param name="howMany">1 in howMany odds of returning true</param>
-        /// <returns>true if odds are beat</returns>
-        public bool OneInXOdds(int howMany)
-        {
-            // if ran%howMany is zero then we beat the odds
-            int nextRan = ran.Next();
-            return ((nextRan % howMany) == 0);
-        }
-
-        /// <summary>
         /// Is NPC alive?
         /// </summary>
         /// <param name="npc">NPC object</param>
@@ -447,7 +445,7 @@ namespace Ultima5Redux
         {
             // the array isDead becasue LB stores 0=alive, 1=dead
             // I think it's easier to evaluate if they are alive
-            return npcIsDeadArray[npc.MapReference.Id][npc.DialogIndex]==false;
+            return npcIsDeadArray[npc.MapLocationID][npc.DialogIndex]==false;
         }
 
         /// <summary>
@@ -456,7 +454,7 @@ namespace Ultima5Redux
         /// <param name="npc"></param>
         public void SetMetNPC(NonPlayerCharacters.NonPlayerCharacter npc)
         {
-            npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = true;
+            npcIsMetArray[npc.MapLocationID][npc.DialogIndex] = true;
         }
 
         public int GetNumberOfActiveCharacters()
@@ -520,7 +518,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public bool NpcHasMetAvatar(NonPlayerCharacters.NonPlayerCharacter npc)
         {
-            return npcIsMetArray[npc.MapReference.Id][npc.DialogIndex];
+            return npcIsMetArray[npc.MapLocationID][npc.DialogIndex];
         }
 
         /// <summary>
@@ -529,7 +527,7 @@ namespace Ultima5Redux
         /// <param name="npc"></param>
         public void SetNpcHasMetAvatar(NonPlayerCharacters.NonPlayerCharacter npc, bool hasMet)
         {
-            npcIsMetArray[npc.MapReference.Id][npc.DialogIndex] = hasMet;
+            npcIsMetArray[npc.MapLocationID][npc.DialogIndex] = hasMet;
         }
 
         #endregion

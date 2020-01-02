@@ -168,7 +168,46 @@ namespace Ultima5Redux
 
         }
 
+        #region Private Methods
+        private bool MoveNPCs()
+        {
+            // if not on small map - then no NPCs!
+            if (State.TheVirtualMap.IsLargeMap) return false;
+
+            // go through each of the NPCs on the map
+            foreach (NonPlayerCharacters.NonPlayerCharacter npc in NpcRef.GetNonPlayerCharactersByLocation(State.TheVirtualMap.CurrentSingleMapReference.MapLocation))
+            {
+                // this NPC has a command in the buffer, so let's execute!
+                if (npc.NPCMovement.IsNextCommandAvailable())
+                {
+                    // peek and see what we have before we pop it off
+                    NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection direction = npc.NPCMovement.GetNextMovementCommand(true);
+                    Point2D adjustedPos = NonPlayerCharacters.NonPlayerCharacterMovement.GetAdjustedPos(npc.CurrentMapPosition, direction);
+                    // need to evaluate if I can even move to the next tile before actually popping out of the queue
+                    if (State.TheVirtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace)
+                    {
+                        // pop the direction from the queue
+                        direction = npc.NPCMovement.GetNextMovementCommand(false);
+                        npc.Move(adjustedPos, npc.CurrentFloor);
+                    }
+                }
+            }
+
+            return true;
+        }
+        #endregion
+
         #region World actions - do a thing, report or change the state
+        /// <summary>
+        /// Advances time and takes care of all day, month, year calculations
+        /// </summary>
+        /// <param name="nMinutes">Number of minutes to advance (maximum of 9*60)</param>
+        public void AdvanceTime(int nMinutes)
+        {
+            State.AdvanceClock(nMinutes);
+
+            MoveNPCs();
+        }
 
         /// <summary>
         /// Looks at a particular tile, detecting if NPCs are present as well
@@ -521,7 +560,7 @@ namespace Ultima5Redux
             {
                 tryToMoveResult = TryToMoveResult.Blocked;
                 // if it's not passable then we have no more business here
-                State.AdvanceTime(2);
+                AdvanceTime(2);
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.TRAVEL_STRINGS.BLOCKED));
             }
 
@@ -541,7 +580,7 @@ namespace Ultima5Redux
             // if we are on a big map then we may issue extra information about slow moving terrain
             if (State.TheVirtualMap.IsLargeMap)
             {
-                State.AdvanceTime(SpriteTileReferences.GetMinuteIncrement(newTileReference.Index));
+                AdvanceTime(SpriteTileReferences.GetMinuteIncrement(newTileReference.Index));
 
                 string strMovement = String.Empty;
                 // we don't want to lookup slow moving strings if we are moving freely over all tiles
@@ -560,7 +599,7 @@ namespace Ultima5Redux
                 tryToMoveResult = TryToMoveResult.Moved;
 
                 // if we are indoors then all walking takes 2 minutes
-                State.AdvanceTime(2);
+                AdvanceTime(2);
 
                 return string.Empty;
             }
@@ -614,7 +653,7 @@ namespace Ultima5Redux
             return CurrentConversation;
         }
 
-    
+
 
     }
 }
