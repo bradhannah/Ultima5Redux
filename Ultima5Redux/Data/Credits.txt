@@ -4,3 +4,18 @@ A star algorithm hooped from
 
 Voxel import library
 https://assetstore.unity.com/packages/tools/modeling/voxel-importer-62914
+
+http://wiki.ultimacodex.com/wiki/Ultima_V_Internal_Formats#SAVED.GAM
+Nytegard <email: append "at yahoo dot com" to his nick>
+
+http://nodling.nullneuron.net/nytegard/nytegard.html
+
+http://nodling.nullneuron.net/ultima/ultima.html
+
+http://martin.brenner.de/ultima/u5save.html
+
+http://www.cosy.sbg.ac.at/~lendl/ultima/ultima5/ on the Internet Archive
+
+http://www.wi.leidenuniv.nl/~psimoons/ultima5t.htm on the Internet Archive
+
+Sheng Long Gradilla <email: replace the two spaces in his name with dots and append "at gmail dot com">

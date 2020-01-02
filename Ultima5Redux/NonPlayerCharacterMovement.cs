@@ -4,35 +4,66 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
+    /*                                                                                                           
+        +---------------------+                 +------------------------+              +--------------------+      
+        |                     |       0x19..0x19|                        |         1..1 |                    |      
+        | NonPlayerCharacters ------------------>   NonPlayerCharacter   --------------->    NPC_Schedule    |      
+        |                     |                 |                        |              |                    |      
+        +---------------------+                 +------------|-----------+              +--------------------+      
+                                                             |                                                      
+                                                             |                                                      
+                                                             | 1..1                                                 
+                                              +--------------v-------------+                +----------------------+
+                                              |                            |        0..0x10 |                      |
+                                              | NonPlayerCharacterMovement ----------------->   MovementCommand    |
+                                              |                            |                |                      |
+                                              +----------------------------+                +----------------------+
+    */
     public partial class NonPlayerCharacters
     {
         public class NonPlayerCharacterMovement
         {
-            public NonPlayerCharacterMovement(int nDialogIndex, DataChunk dataChunk)
+            public NonPlayerCharacterMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
             {
-                this.dataChunk = dataChunk;
+                this.movementInstructionDataChunk = movementInstructionDataChunk;
+                this.movementOffsetDataChunk = movementOffsetDataChunk;
                 this.nDialogIndex = nDialogIndex;
+                // todo: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
+                UInt16 nOffset = movementOffsetDataChunk.GetChunkAsUINT16List()[nDialogIndex];
+
+                // if it has the value of 0xFFFF then it indicates there are currently no instructions
+                if (nOffset == 0xFFFF) return;
 
                 // calculate the offset
                 int nOffsetIndex = nDialogIndex * (MAX_COMMAND_LIST_ENTRIES * MAX_MOVEMENT_COMMAND_SIZE);
 
-                List<byte> rawData = dataChunk.GetAsByteList();
+                // get a copy because the GetAsByteList is an expensive method call
+                List<byte> rawData = movementInstructionDataChunk.GetAsByteList();
 
-                for (int i = 0; i < MAX_COMMAND_LIST_ENTRIES; i++)
+                int nIndex = nOffset;
+                for (int i = 0 ; i < MAX_COMMAND_LIST_ENTRIES; i++)
                 {
-                    byte nIterations = rawData[nOffsetIndex + (i * MAX_MOVEMENT_COMMAND_SIZE)];
-                    MovementCommandDirection direction = (MovementCommandDirection)rawData[nOffsetIndex + (i * MAX_MOVEMENT_COMMAND_SIZE) + 1];
+                    byte nIterations = rawData[nOffsetIndex + (nIndex * MAX_MOVEMENT_COMMAND_SIZE)];
+                    MovementCommandDirection direction = (MovementCommandDirection)rawData[nOffsetIndex + (nIndex * MAX_MOVEMENT_COMMAND_SIZE) + 1];
 
                     // if we have hit 0xFF then there is nothing else in the list and we can just return
-                    if (nIterations == 0xFF) return;
+                    if (nIterations == 0xFF || nIterations == 0) return;
+
+                    if (!(direction == MovementCommandDirection.East || direction == MovementCommandDirection.West || direction == MovementCommandDirection.North
+                        || direction == MovementCommandDirection.South)) { throw new Exception("a bad direction was set: " + direction.ToString()); }
+
 
                     // we have a proper movement instruction so let's add it to the queue
                     MovementCommand movementCommand = new MovementCommand(direction, nIterations);
                     this.MovementQueue.Enqueue(movementCommand);
+                    
+                    // we actually grab from the offset, but it is circular, so we need to mod it
+                    nIndex = (nIndex + 1) % MAX_COMMAND_LIST_ENTRIES;
                 }
             }
 
-            private DataChunk dataChunk;
+            private DataChunk movementInstructionDataChunk;
+            private DataChunk movementOffsetDataChunk;
             private int nDialogIndex;
 
             /// <summary>
@@ -112,8 +143,5 @@ namespace Ultima5Redux
             }
             #endregion
         }
-
-
-
     }
 }

@@ -106,7 +106,7 @@ namespace Ultima5Redux
             State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
 
             State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0));
-            int nSpriteGeuss = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
+            int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
 
             //State.Year = 100;
             //State.Month = 13;
