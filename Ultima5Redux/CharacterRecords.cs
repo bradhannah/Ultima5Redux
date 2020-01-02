@@ -17,7 +17,7 @@ namespace Ultima5Redux
 
         public CharacterRecords(List<byte> rawByteList)
         {
-            for (int nRecord = 0; nRecord < 16; nRecord++)
+            for (int nRecord = 0; nRecord < TOTAL_CHARACTER_RECORDS; nRecord++)
             {
                 byte[] characterArray = new byte[CHARACTER_OFFSET];
                 // start at 0x02 byte because the first two characters are 0x0000

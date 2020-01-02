@@ -35,17 +35,17 @@ namespace Ultima5Redux
             switch (mapChoice)
             {
                 case Maps.Overworld:
-                    theMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.BRIT_DAT), Path.Combine(u5Directory, FileConstants.DATA_OVL), false);
+                    TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.BRIT_DAT), Path.Combine(u5Directory, FileConstants.DATA_OVL), false);
                     break;
                 case Maps.Underworld:
-                theMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.UNDER_DAT), "", true);
+                TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.UNDER_DAT), "", true);
                     break;
             }
         }
 
         public void PrintMap()
         {
-            Map.PrintMapSection(theMap, 0, 0, 160, 80);
+            Map.PrintMapSection(TheMap, 0, 0, 160, 80);
         }
 
         /// <summary>

@@ -1,0 +1,6 @@
+﻿
+A star algorithm hooped from
+// Courtesy of https://github.com/davecusatis/A-Star-Sharp
+
+Voxel import library
+https://assetstore.unity.com/packages/tools/modeling/voxel-importer-62914

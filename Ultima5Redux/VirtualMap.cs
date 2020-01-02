@@ -78,6 +78,11 @@ namespace Ultima5Redux
         /// </summary>
         public LargeMap CurrentLargeMap { get; private set; }
         /// <summary>
+        /// The abstracted Map object for the current map 
+        /// Returns large or small depending on what is active
+        /// </summary>
+        public Map CurrentMap { get { return (IsLargeMap ? (Map)CurrentLargeMap : (Map)CurrentSmallMap); } }
+        /// <summary>
         /// Detailed reference of current small map
         /// </summary>
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; private set; }

@@ -10,10 +10,24 @@ namespace Ultima5Redux
 {
     abstract public class Map
     {
-        protected byte[][] theMap;
+        #region Protected Fields
+        /// <summary>
+        /// The directory of the U5 data files
+        /// </summary>
         protected string u5Directory;
-        protected List<List<AStarSharp.Node>> aStarNodes;
-        protected AStarSharp.Astar astar;
+        #endregion
+
+        #region Internal Fields
+        /// <summary>
+        /// All A* nodes for the current map
+        /// Accessed by [x][y]
+        /// </summary>
+        internal List<List<AStarSharp.Node>> aStarNodes;
+        /// <summary>
+        /// A* algorithm helper class
+        /// </summary>
+        internal AStarSharp.Astar astar;
+        #endregion
 
         public Map(string u5Directory)
         {
@@ -24,8 +38,8 @@ namespace Ultima5Redux
         {
             Debug.Assert(TheMap != null);
             Debug.Assert(TheMap.Length > 0);
-            int nXTiles = theMap[0].Length;
-            int nYTiles = theMap.Length;
+            int nXTiles = TheMap[0].Length;
+            int nYTiles = TheMap.Length;
 
             // load the A-Star compatible map into memory
             aStarNodes = Utils.Init2DList<AStarSharp.Node>(nXTiles, nYTiles);
@@ -49,41 +63,34 @@ namespace Ultima5Redux
         /// so we make a copy for the game to use as a the live map which can contain the bigger sprite indexes
         /// </summary>
         /// <returns></returns>
-        public int[][] GetCopyOfMapAsInt()
-        {
-            int nCols = theMap.Length;
-            int nRows = theMap[0].Length;
+        //public int[][] GetCopyOfMapAsInt()
+        //{
+        //    int nCols = theMap.Length;
+        //    int nRows = theMap[0].Length;
 
-            int[][] intMap = Utils.Init2DArray<int>(nCols, nRows, 0);
+        //    int[][] intMap = Utils.Init2DArray<int>(nCols, nRows, 0);
 
-            for (int curRow = 0; curRow < nRows; curRow++)
-            {
-                for (int curCol = 0; curCol < nCols; curCol++)
-                {
-                    // no casting required since we go from byte to int
-                    intMap[curCol][curRow] = theMap[curCol][curRow];
-                }
-            }
-            return intMap;
-        }
+        //    for (int curRow = 0; curRow < nRows; curRow++)
+        //    {
+        //        for (int curCol = 0; curCol < nCols; curCol++)
+        //        {
+        //            // no casting required since we go from byte to int
+        //            intMap[curCol][curRow] = theMap[curCol][curRow];
+        //        }
+        //    }
+        //    return intMap;
+        //}
 
         public byte[][] TheMap
         {
-            get
-            {
-                return theMap;
-            }
+            get; protected set;
+            //get
+            //{
+            //    return theMap;
+            //}
         }
 
-
-        public byte[][] RawMap
-        {
-            get
-            {
-                // I think this is probably too expensive, but...
-                return (byte[][])theMap.Clone();
-            }
-        }
+        #region Debug methods
         /// <summary>
         /// Filthy little map to assign single letter to map elements
         /// </summary>
@@ -174,6 +181,7 @@ namespace Ultima5Redux
                 }
             }
         }
+        #endregion
 
 
     }

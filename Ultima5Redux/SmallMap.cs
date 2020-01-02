@@ -27,7 +27,7 @@ namespace Ultima5Redux
             MapRef = mapRef;
 
             // load the map into memory
-            theMap = LoadSmallMapFile(Path.Combine(u5Directory, mapRef.MapFilename), mapRef.FileOffset);
+            TheMap = LoadSmallMapFile(Path.Combine(u5Directory, mapRef.MapFilename), mapRef.FileOffset);
 
             InitializeAStarMap(spriteTileReferences);
         }

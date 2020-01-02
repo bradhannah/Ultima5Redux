@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Collections;
 
 namespace Ultima5Redux
 {
@@ -83,6 +84,8 @@ namespace Ultima5Redux
                     }
                 } 
             }
+
+            public NonPlayerCharacterMovement PlayerMovement { get; }
 
             /// <summary>
             /// The daily schedule of the NPC
@@ -205,6 +208,8 @@ namespace Ultima5Redux
             public NonPlayerCharacter (SmallMapReferences.SingleMapReference mapRef, GameState gameStateRef, NPC_Schedule sched, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
             {
                 Schedule = new NPCSchedule(sched);
+                PlayerMovement = new NonPlayerCharacterMovement(dialogIndex, gameStateRef.NonPlayerCharacterMovementLists);
+                //gameStateRef.Get
                 MapReference = mapRef;
                 CharacterType = npcType;
                 DialogNumber = dialogNumber;

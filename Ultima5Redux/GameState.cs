@@ -39,6 +39,10 @@ namespace Ultima5Redux
         public CharacterRecords CharacterRecords { get; }
         #endregion
 
+        #region Internal Properties for direct save memory access
+        internal DataChunk NonPlayerCharacterMovementLists { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS); } }
+        #endregion
+
         #region Public Properties
         public VirtualMap TheVirtualMap { get; set; }
 
@@ -269,6 +273,7 @@ namespace Ultima5Redux
             CURRENT_HOUR,
             CURRENT_MINUTE,
             NPC_TYPES,
+            NPC_MOVEMENT_LISTS,
             PARTY_LOC,
             Z_COORD,
             X_COORD,
@@ -338,6 +343,9 @@ namespace Ultima5Redux
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Type Map", 0x5B4, 0x20, 0x00, DataChunkName.NPC_TYPES);
             List<byte> chunks = dataChunks.GetDataChunk(DataChunkName.NPC_TYPES).GetAsByteList();
+
+            // get the NPCs movement list - 0x20 NPCs, with 0x10 movement commands each, consisting of 0x1 direction byte + 0x1 repetitions
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Movement List", 0xBB8, 0x20 * 0x10 * (sizeof(byte) * 2), 0x00, DataChunkName.NPC_MOVEMENT_LISTS);
 
             // Initialize the table to determine if an NPC is dead
             List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();

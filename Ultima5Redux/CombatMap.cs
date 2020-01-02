@@ -144,7 +144,7 @@ namespace Ultima5Redux
             // TOOD: reads in the data from the file - should read file into memory once and leave it there so quicker reference
             List<byte> mapList = Utils.GetFileAsByteList(dataFilenameAndPath, mapRef.FileOffset, CombatMapReference.SingleCombatMapReference.MAP_BYTE_COUNT);
 
-            theMap = ReadCombatBytesIntoByteArray(mapList);
+            TheMap = ReadCombatBytesIntoByteArray(mapList);
 
             // initialize the legacy structures that describe the map details
             InitializeCombatMapStructures(dataFilenameAndPath, mapRef.FileOffset);
