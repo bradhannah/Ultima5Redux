@@ -19,8 +19,6 @@ namespace Ultima5Redux
                                               |                            |                |                      |
                                               +----------------------------+                +----------------------+
     */
-    public partial class NonPlayerCharacterReferences
-    {
         public class NonPlayerCharacterMovement
         {
             public NonPlayerCharacterMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
@@ -62,22 +60,22 @@ namespace Ultima5Redux
                 }
             }
 
-            static internal Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection direction)
+            static internal Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterMovement.MovementCommandDirection direction)
             {
                 Point2D adjustedPos = new Point2D(xy.X, xy.Y);
                 
                 switch (direction)
                 {
-                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.East:
+                    case NonPlayerCharacterMovement.MovementCommandDirection.East:
                         adjustedPos.X += 1;
                         break;
-                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.North:
+                    case NonPlayerCharacterMovement.MovementCommandDirection.North:
                         adjustedPos.Y -= 1;
                         break;
-                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.West:
+                    case NonPlayerCharacterMovement.MovementCommandDirection.West:
                         adjustedPos.X -= 1;
                         break;
-                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.South:
+                    case NonPlayerCharacterMovement.MovementCommandDirection.South:
                         adjustedPos.Y += 1;
                         break;
                 }
@@ -167,5 +165,4 @@ namespace Ultima5Redux
             }
             #endregion
         }
-    }
 }

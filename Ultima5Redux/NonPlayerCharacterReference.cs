@@ -2,12 +2,10 @@
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Diagnostics;
-using static Ultima5Redux.NonPlayerCharacterReferences;
+//using static Ultima5Redux.NonPlayerCharacterReferences;
 
 namespace Ultima5Redux
 {
-    //public partial class NonPlayerCharacterReferences
-    //{
     /// <summary>
     /// A single non player character (NPC)
     /// </summary>

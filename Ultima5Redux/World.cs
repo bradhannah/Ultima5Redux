@@ -188,8 +188,8 @@ namespace Ultima5Redux
                 if (npc.NPCMovement.IsNextCommandAvailable())
                 {
                     // peek and see what we have before we pop it off
-                    NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection direction = npc.NPCMovement.GetNextMovementCommand(true);
-                    Point2D adjustedPos = NonPlayerCharacterReferences.NonPlayerCharacterMovement.GetAdjustedPos(npc.CurrentMapPosition, direction);
+                    NonPlayerCharacterMovement.MovementCommandDirection direction = npc.NPCMovement.GetNextMovementCommand(true);
+                    Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(npc.CurrentMapPosition, direction);
                     // need to evaluate if I can even move to the next tile before actually popping out of the queue
                     if (State.TheVirtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace)
                     {
