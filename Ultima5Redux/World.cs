@@ -27,10 +27,11 @@ namespace Ultima5Redux
         private CombatMapReference combatMapRef = new CombatMapReference();
         public Look LookRef { get; }
         public Signs SignRef { get; }
-        public NonPlayerCharacters NpcRef { get; }
+        public NonPlayerCharacterReferences NpcRef { get; }
         public DataOvlReference DataOvlRef { get; }
         public TalkScripts TalkScriptsRef { get; }
         public GameState State { get; }
+        public CharacterAnimationStates CharAnimationStates { get; }
         public CharacterStates CharStates { get; }
         #endregion
         public LargeMapReference LargeMapRef { get; }
@@ -99,17 +100,20 @@ namespace Ultima5Redux
             TalkScriptsRef = new TalkScripts(u5Directory, DataOvlRef);
 
             // build the NPC tables
-            NpcRef = new NonPlayerCharacters(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
+            NpcRef = new NonPlayerCharacterReferences(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
+
+            CharAnimationStates = new CharacterAnimationStates(State, SpriteTileReferences);
+            CharStates = new CharacterStates(State, SpriteTileReferences);
 
             // sadly I have to initilize this after the Npcs are created because there is a circular dependency
-            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences);
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, CharAnimationStates);
 
             State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
 
             State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0));
-            int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
 
-            CharStates = new CharacterStates(State, SpriteTileReferences);
+            //int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
+            NpcRef.GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location.Britain, new Point2D(0, 31), 0);
 
             //State.Year = 100;
             //State.Month = 13;
@@ -126,7 +130,7 @@ namespace Ultima5Redux
             int count = 0;
             if (false)
             {
-                foreach (NonPlayerCharacters.NonPlayerCharacter npc in NpcRef.NPCs)
+                foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
                 {
                     if (npc.NPCType != 0 && npc.Script != null)
                     {
@@ -178,14 +182,14 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.IsLargeMap) return false;
 
             // go through each of the NPCs on the map
-            foreach (NonPlayerCharacters.NonPlayerCharacter npc in NpcRef.GetNonPlayerCharactersByLocation(State.TheVirtualMap.CurrentSingleMapReference.MapLocation))
+            foreach (NonPlayerCharacterReference npc in NpcRef.GetNonPlayerCharactersByLocation(State.TheVirtualMap.CurrentSingleMapReference.MapLocation))
             {
                 // this NPC has a command in the buffer, so let's execute!
                 if (npc.NPCMovement.IsNextCommandAvailable())
                 {
                     // peek and see what we have before we pop it off
-                    NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection direction = npc.NPCMovement.GetNextMovementCommand(true);
-                    Point2D adjustedPos = NonPlayerCharacters.NonPlayerCharacterMovement.GetAdjustedPos(npc.CurrentMapPosition, direction);
+                    NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection direction = npc.NPCMovement.GetNextMovementCommand(true);
+                    Point2D adjustedPos = NonPlayerCharacterReferences.NonPlayerCharacterMovement.GetAdjustedPos(npc.CurrentMapPosition, direction);
                     // need to evaluate if I can even move to the next tile before actually popping out of the queue
                     if (State.TheVirtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace)
                     {
@@ -227,7 +231,7 @@ namespace Ultima5Redux
             // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
             if (State.TheVirtualMap.IsNPCTile(xy))
             {
-                NonPlayerCharacters.NonPlayerCharacter npc = State.TheVirtualMap.GetNPCOnTile(xy);
+                NonPlayerCharacterReference npc = State.TheVirtualMap.GetNPCOnTile(xy);
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.VISION2_STRINGS.THOU_DOST_SEE).Trim()
                 + " " + (LookRef.GetLookDescription(npc.NPCKeySprite).Trim());
             }
@@ -646,7 +650,7 @@ namespace Ultima5Redux
 
         #endregion
 
-        public Conversation CreateConverationAndBegin(NonPlayerCharacters.NonPlayerCharacter npc, Conversation.EnqueuedScriptItem enqueuedScriptItem)
+        public Conversation CreateConverationAndBegin(NonPlayerCharacterReference npc, Conversation.EnqueuedScriptItem enqueuedScriptItem)
         {
             CurrentConversation = new Conversation(npc, State, DataOvlRef);
 

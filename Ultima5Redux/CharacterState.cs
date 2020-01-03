@@ -3,61 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    //    http://wiki.ultimacodex.com/wiki/Ultima_V_Internal_Formats#SAVED.GAM
-    //    Monster Format
-    //offset length  purpose
-    //0	1	tile
-    //1	1	tile
-    //2	1	x coordinate
-    //3	1	y coordinate
-    //4	1	z coordinate(level)
-    //5	1	depends on object type
-    //6	1	depends on object type
-    //7	1	depends on object type
-
     public class CharacterState
     {
-        public const int NBYTES = 0x8;
+        public int X { get; }
+        public int Y { get; }
+        public int Floor { get; }
+        public int CharacterAnimationStateIndex { get; }
+        public int NPCIndex { get; }
+        TileReference TileRef { get; }
+        public bool Active { get; }
 
-
-        #region Private Fields
-        private int Tile1;
-        private int Tile2;
-        #endregion
-
-        #region Public Properties
-        public byte X;
-        public byte Y;
-        public byte Floor;
-        public byte Depends1;
-        public byte Depends2;
-        public byte Depends3;
-        public TileReference Tile1Ref;
-        public TileReference Tile2Ref;
-        #endregion
-
-        public CharacterState(TileReferences tileReferences, byte[] stateBytes)
+        public CharacterState(TileReferences tileReferences, UInt16[] stateUInts, int nNPCIndex)
         {
-            Debug.Assert(stateBytes.Length == 0x8);
-            //
-            Tile1 = stateBytes[0] + 0x100;
-            Tile2 = stateBytes[1] + 0x100;
-            Tile1Ref = tileReferences.GetTileReference(Tile1);
-            Tile2Ref = tileReferences.GetTileReference(Tile2);
-
-            X = stateBytes[2];
-            Y = stateBytes[3];
-            Floor = stateBytes[4];
-            Depends1 = stateBytes[5];
-            Depends2 = stateBytes[6];
-            Depends3 = stateBytes[7];
+            Debug.Assert(stateUInts.Length == 0x8);
+            NPCIndex = nNPCIndex;
+            X = stateUInts[1];
+            Y = stateUInts[2];
+            Floor = stateUInts[3];
+            TileRef = tileReferences.GetTileReference(stateUInts[4]+0x100);
+            CharacterAnimationStateIndex = stateUInts[6];
+            Active = stateUInts[7]>0;
         }
-
-
     }
 }

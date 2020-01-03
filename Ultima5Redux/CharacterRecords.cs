@@ -47,7 +47,7 @@ namespace Ultima5Redux
             Records[nSecondPos] = tempRec;
         }
 
-        public CharacterRecord GetCharacterRecordByNPC(NonPlayerCharacters.NonPlayerCharacter npc)
+        public CharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc)
         {
             foreach (CharacterRecord record in Records)
             {

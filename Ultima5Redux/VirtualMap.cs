@@ -17,11 +17,12 @@ namespace Ultima5Redux
         /// <summary>
         /// Non player characters on current map
         /// </summary>
-        private NonPlayerCharacters nonPlayerCharacters;
+        private NonPlayerCharacterReferences nonPlayerCharacters;
         /// <summary>
         /// All the small maps
         /// </summary>
         private SmallMaps smallMaps;
+        private CharacterAnimationStates characterStates;
         /// <summary>
         /// Both underworld and overworld maps
         /// </summary>
@@ -112,13 +113,15 @@ namespace Ultima5Redux
         /// <param name="nonPlayerCharacters"></param>
         /// <param name="tileReferences"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences, 
-            LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacters nonPlayerCharacters, TileReferences tileReferences)
+            LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
+            CharacterAnimationStates characterStates)
         {
             this.SmallMapRefs = smallMapReferences;
             this.smallMaps = smallMaps;
             this.nonPlayerCharacters = nonPlayerCharacters;
             this.largeMapReferences = largeMapReferences;
             this.tileReferences = tileReferences;
+            this.characterStates = characterStates;
             largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
         }
@@ -226,19 +229,22 @@ namespace Ultima5Redux
 
         /// <summary>
         /// If an NPC is on a tile, then it will get them
+        /// assumes it's on the same floor
         /// </summary>
         /// <param name="xy"></param>
         /// <returns>the NPC or null if one does not exist</returns>
-        public NonPlayerCharacters.NonPlayerCharacter GetNPCOnTile(Point2D xy)
+        public NonPlayerCharacterReference GetNPCOnTile(Point2D xy)
         {
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
-            List<NonPlayerCharacters.NonPlayerCharacter> npcs = nonPlayerCharacters.GetNonPlayerCharactersByLocation(location);
+            List<NonPlayerCharacterReference> npcs = nonPlayerCharacters.GetNonPlayerCharactersByLocation(location);
+
+            CharacterAnimationState characterState = characterStates.GetCharacterStateByPosition(xy, CurrentSingleMapReference.Floor);
 
             // get the NPC on the current tile
-            NonPlayerCharacters.NonPlayerCharacter npc = nonPlayerCharacters.GetNonPlayerCharacter(location, xy, CurrentSingleMapReference.Floor);
+            NonPlayerCharacterReference npc = nonPlayerCharacters.GetNonPlayerCharacter(location, xy, CurrentSingleMapReference.Floor);
 
-            if (npc == null)
-                throw new Exception("You asked for an NPC on a tile that one does not exist - you should have checked first!");
+            //if (npc == null)
+                //throw new Exception("You asked for an NPC on a tile that one does not exist - you should have checked first!");
 
             return npc;
             //foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcs)

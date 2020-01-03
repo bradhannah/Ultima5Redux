@@ -40,9 +40,11 @@ namespace Ultima5Redux
         #endregion
 
         #region Internal Properties for direct save memory access
+        internal DataChunk CharacterAnimationStatesDataChunk { get { return dataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES); } }
         internal DataChunk CharacterStatesDataChunk { get { return dataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES); } }
         internal DataChunk NonPlayerCharacterMovementLists { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS); } }
         internal DataChunk NonPlayerCharacterMovementOffsets { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS); } }
+        internal DataChunk NonPlayerCharacterKeySprites { get { return dataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES); } }
         #endregion
 
         #region Public Properties
@@ -277,11 +279,13 @@ namespace Ultima5Redux
             NPC_TYPES,
             NPC_MOVEMENT_LISTS,
             NPC_MOVEMENT_OFFSETS,
+            NPC_SPRITE_INDEXES,
             PARTY_LOC,
             Z_COORD,
             X_COORD,
             Y_COORD,
-            CHARACTER_STATES
+            CHARACTER_ANIMATION_STATES,
+            CHARACTER_STATES,
         };
         #endregion
 
@@ -289,9 +293,11 @@ namespace Ultima5Redux
 
         #region Constructors
         public void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapReference largeMapReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacters nonPlayerCharacters, TileReferences TileReferences)
+            LargeMapReference largeMapReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, 
+            TileReferences TileReferences, CharacterAnimationStates characterStates)
         {
-            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap, nonPlayerCharacters, TileReferences);
+            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap, 
+                nonPlayerCharacters, TileReferences, characterStates);
         }
 
         /// <summary>
@@ -353,18 +359,23 @@ namespace Ultima5Redux
             // get the offsets to the current movement instructions of the NPCs
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "NPC Movement Offset Lists", 0xFB8, 0x20 * (sizeof(byte) * 2), 0x00, DataChunkName.NPC_MOVEMENT_OFFSETS);
 
+            // we will need to add 0x100 for now, but cannot because it's read in as a bytelist
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Sprite (by smallmap)", 0xFF8, 0x20, 0x00, DataChunkName.NPC_SPRITE_INDEXES);
 
             // Initialize the table to determine if an NPC is dead
             List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();
-            npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
+            npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
             // Initialize a table to determine if an NPC has been met
             List<bool> npcMet = dataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
             // these will map directly to the towns and the NPC dialog #
-            npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
+            npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character States - including xyz", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_STATES);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_ANIMATION_STATES);
+
+            // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Character States - including xyz", 0x9B8, 0x200, 0x00, DataChunkName.CHARACTER_STATES);
         }
         #endregion
 
@@ -445,7 +456,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="npc">NPC object</param>
         /// <returns>true if NPC is alive</returns>
-        public bool NpcIsAlive(NonPlayerCharacters.NonPlayerCharacter npc)
+        public bool NpcIsAlive(NonPlayerCharacterReference npc)
         {
             // the array isDead becasue LB stores 0=alive, 1=dead
             // I think it's easier to evaluate if they are alive
@@ -456,7 +467,7 @@ namespace Ultima5Redux
         /// Sets the flag to indicate the NPC is met
         /// </summary>
         /// <param name="npc"></param>
-        public void SetMetNPC(NonPlayerCharacters.NonPlayerCharacter npc)
+        public void SetMetNPC(NonPlayerCharacterReference npc)
         {
             npcIsMetArray[npc.MapLocationID][npc.DialogIndex] = true;
         }
@@ -499,7 +510,7 @@ namespace Ultima5Redux
         /// Adds an NPC character to the party, and maps their CharacterRecord
         /// </summary>
         /// <param name="npc">the NPC to add</param>
-        public void AddMemberToParty(NonPlayerCharacters.NonPlayerCharacter npc)
+        public void AddMemberToParty(NonPlayerCharacterReference npc)
         {
             CharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
             record.PartyStatus = CharacterRecord.CharacterPartyStatus.InParty;
@@ -520,7 +531,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="npc"></param>
         /// <returns></returns>
-        public bool NpcHasMetAvatar(NonPlayerCharacters.NonPlayerCharacter npc)
+        public bool NpcHasMetAvatar(NonPlayerCharacterReference npc)
         {
             return npcIsMetArray[npc.MapLocationID][npc.DialogIndex];
         }
@@ -529,7 +540,7 @@ namespace Ultima5Redux
         /// DEBUG FUNCTION
         /// </summary>
         /// <param name="npc"></param>
-        public void SetNpcHasMetAvatar(NonPlayerCharacters.NonPlayerCharacter npc, bool hasMet)
+        public void SetNpcHasMetAvatar(NonPlayerCharacterReference npc, bool hasMet)
         {
             npcIsMetArray[npc.MapLocationID][npc.DialogIndex] = hasMet;
         }

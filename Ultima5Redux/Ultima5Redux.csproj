@@ -92,6 +92,8 @@
   <ItemGroup>
     <Compile Include="CharacterRecord.cs" />
     <Compile Include="CharacterRecords.cs" />
+    <Compile Include="CharacterAnimationState.cs" />
+    <Compile Include="CharacterAnimationStates.cs" />
     <Compile Include="CharacterState.cs" />
     <Compile Include="CharacterStates.cs" />
     <Compile Include="External\AStarSharp.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="InventoryItems.cs" />
     <Compile Include="LargeMapReference.cs" />
     <Compile Include="NonPlayerCharacterMovement.cs" />
+    <Compile Include="NonPlayerCharacterReference.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -112,8 +115,6 @@
     <Compile Include="GameState.cs" />
     <Compile Include="Conversation.cs" />
     <Compile Include="CompressedWordReference.cs" />
-    <Compile Include="NonPlayerCharacter.cs" />
-    <Compile Include="NPCSchedule.cs" />
     <Compile Include="SingleMapReference.cs" />
     <Compile Include="SomeStrings.cs" />
     <Compile Include="TalkScript.cs" />
@@ -121,7 +122,7 @@
     <Compile Include="DataChunk.cs" />
     <Compile Include="DataOvlReference.cs" />
     <Compile Include="Point3D.cs" />
-    <Compile Include="NonPlayerCharacters.cs" />
+    <Compile Include="NonPlayerCharacterReferences.cs" />
     <Compile Include="Signs.cs" />
     <Compile Include="Look.cs" />
     <Compile Include="CombatMap.cs" />

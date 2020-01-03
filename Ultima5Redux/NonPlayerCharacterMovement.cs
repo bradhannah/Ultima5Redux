@@ -19,7 +19,7 @@ namespace Ultima5Redux
                                               |                            |                |                      |
                                               +----------------------------+                +----------------------+
     */
-    public partial class NonPlayerCharacters
+    public partial class NonPlayerCharacterReferences
     {
         public class NonPlayerCharacterMovement
         {
@@ -62,22 +62,22 @@ namespace Ultima5Redux
                 }
             }
 
-            static internal Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection direction)
+            static internal Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection direction)
             {
                 Point2D adjustedPos = new Point2D(xy.X, xy.Y);
                 
                 switch (direction)
                 {
-                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.East:
+                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.East:
                         adjustedPos.X += 1;
                         break;
-                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.North:
+                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.North:
                         adjustedPos.Y -= 1;
                         break;
-                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.West:
+                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.West:
                         adjustedPos.X -= 1;
                         break;
-                    case NonPlayerCharacters.NonPlayerCharacterMovement.MovementCommandDirection.South:
+                    case NonPlayerCharacterReferences.NonPlayerCharacterMovement.MovementCommandDirection.South:
                         adjustedPos.Y += 1;
                         break;
                 }

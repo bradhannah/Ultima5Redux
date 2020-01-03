@@ -19,7 +19,7 @@ namespace Ultima5Redux
         /// <summary>
         /// The NPC with whom you are having a conversation
         /// </summary>
-        public NonPlayerCharacters.NonPlayerCharacter Npc { get; }
+        public NonPlayerCharacterReference Npc { get; }
 
         /// <summary>
         /// Has the conversation ended?
@@ -90,7 +90,7 @@ namespace Ultima5Redux
         /// <param name="npc">NPC you will have a conversation with</param>
         /// <param name="state">The games current State</param>
         /// <param name="dataOvlRef">Data.OVL for reference</param>
-        public Conversation(NonPlayerCharacters.NonPlayerCharacter npc, GameState state, DataOvlReference dataOvlRef)
+        public Conversation(NonPlayerCharacterReference npc, GameState state, DataOvlReference dataOvlRef)
         {
             this.Npc = npc;
             script = npc.Script;

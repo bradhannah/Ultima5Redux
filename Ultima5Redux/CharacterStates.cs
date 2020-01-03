@@ -4,11 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.Diagnostics;
-
 namespace Ultima5Redux
 {
-
     public class CharacterStates
     {
         private const int MAX_CHARACTER_STATES = 0x20;
@@ -20,17 +17,29 @@ namespace Ultima5Redux
             return characterStates[nIndex];
         }
 
+        public CharacterState GetCharacterStateByPosition(Point2D xy, int nFloor)
+        {
+            foreach (CharacterState characterState in characterStates)
+            {
+                if (characterState.X == xy.X && characterState.Y == xy.Y && characterState.Floor == nFloor)
+                    return characterState;
+            }
+            return null;
+        }
+
         public CharacterStates(GameState state, TileReferences tileReferences)
         {
             DataChunk dataChunk = state.CharacterStatesDataChunk;
 
-            List<byte> characterStateBytes = dataChunk.GetAsByteList();
+            List<UInt16> characterStateBytes = dataChunk.GetChunkAsUINT16List();
 
-            for (int i = 0; i < MAX_CHARACTER_STATES; i++)
+            for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {
-                characterStates.Add(new CharacterState(tileReferences, characterStateBytes.GetRange(i * CharacterState.NBYTES, CharacterState.NBYTES).ToArray()));
+                characterStates.Add(new CharacterState(tileReferences, 
+                    characterStateBytes.GetRange(nIndex * CharacterAnimationState.NBYTES, CharacterAnimationState.NBYTES).ToArray(), nIndex));
             }
         }
+
 
     }
 }

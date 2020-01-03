@@ -93,7 +93,7 @@ namespace Ultima5Redux
 
         public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
         {
-            if (NonPlayerCharacters.NonPlayerCharacter.IsSpecialDialogType((NonPlayerCharacters.NonPlayerCharacter.NPCDialogTypeEnum)nNPC))
+            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC))
             { return null; }
             return (talkScriptRefs[smallMapRef][nNPC]);
         }
