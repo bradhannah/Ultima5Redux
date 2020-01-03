@@ -92,6 +92,8 @@
   <ItemGroup>
     <Compile Include="CharacterRecord.cs" />
     <Compile Include="CharacterRecords.cs" />
+    <Compile Include="CharacterState.cs" />
+    <Compile Include="CharacterStates.cs" />
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="InventoryItem.cs" />

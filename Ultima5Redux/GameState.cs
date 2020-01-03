@@ -40,6 +40,7 @@ namespace Ultima5Redux
         #endregion
 
         #region Internal Properties for direct save memory access
+        internal DataChunk CharacterStatesDataChunk { get { return dataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES); } }
         internal DataChunk NonPlayerCharacterMovementLists { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS); } }
         internal DataChunk NonPlayerCharacterMovementOffsets { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS); } }
         #endregion
@@ -279,7 +280,8 @@ namespace Ultima5Redux
             PARTY_LOC,
             Z_COORD,
             X_COORD,
-            Y_COORD
+            Y_COORD,
+            CHARACTER_STATES
         };
         #endregion
 
@@ -361,6 +363,8 @@ namespace Ultima5Redux
             // these will map directly to the towns and the NPC dialog #
             npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacters.NPCS_PER_TOWN, 0x00, NonPlayerCharacters.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
+            // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character States - including xyz", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_STATES);
         }
         #endregion
 

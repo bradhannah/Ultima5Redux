@@ -31,6 +31,7 @@ namespace Ultima5Redux
         public DataOvlReference DataOvlRef { get; }
         public TalkScripts TalkScriptsRef { get; }
         public GameState State { get; }
+        public CharacterStates CharStates { get; }
         #endregion
         public LargeMapReference LargeMapRef { get; }
 
@@ -108,12 +109,14 @@ namespace Ultima5Redux
             State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0));
             int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
 
+            CharStates = new CharacterStates(State, SpriteTileReferences);
+
             //State.Year = 100;
             //State.Month = 13;
             //State.Day = 28;
             //State.Hour = 22;
             //State.Minute = 2;
-          
+
 
             //Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
             //            Conversation convo = new Conversation(NpcRef.NPCs[296], State, DataOvlRef); // Gwenno
