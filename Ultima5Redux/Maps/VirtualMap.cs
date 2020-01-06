@@ -24,7 +24,6 @@ namespace Ultima5Redux
         /// All the small maps
         /// </summary>
         private SmallMaps smallMaps;
-        private MapCharacterAnimationStates characterStates;
         /// <summary>
         /// Both underworld and overworld maps
         /// </summary>
@@ -131,13 +130,17 @@ namespace Ultima5Redux
             //this.characterStates = characterStates;
             largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
+
+            TheMapCharacters = new MapCharacters(tileReferences, npcRefs, 
+               state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
+               state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
         }
 
         /// <summary>
         /// Loads a small map based on the provided reference
         /// </summary>
         /// <param name="singleMapReference"></param>
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference)
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, bool bLoadFromDisk)
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
@@ -145,9 +148,11 @@ namespace Ultima5Redux
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
-            TheMapCharacters = new MapCharacters(tileReferences, npcRefs, singleMapReference, LargeMap.Maps.Small,
-                state.CharacterAnimationStatesDataChunk,state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
-                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
+            TheMapCharacters.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small, bLoadFromDisk);
+
+            //TheMapCharacters = new MapCharacters(tileReferences, npcRefs, singleMapReference, LargeMap.Maps.Small,
+            //    state.CharacterAnimationStatesDataChunk,state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
+            //    state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
         }
 
         /// <summary>
@@ -157,15 +162,13 @@ namespace Ultima5Redux
         public void LoadLargeMap(LargeMap.Maps map)
         {
             int nFloor = map == LargeMap.Maps.Overworld ? 0 : -1;
-            CurrentSingleMapReference = null;//SmallMapRefs.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britainnia_Underworld, nFloor);
+            CurrentSingleMapReference = null;
             CurrentLargeMap = largeMaps[map];
             overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
             IsLargeMap = true;
             LargeMapOverUnder = map;
 
-            TheMapCharacters = new MapCharacters(tileReferences, npcRefs, null, LargeMapOverUnder,
-                state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
-                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
+            TheMapCharacters.SetCurrentMapType(null, map, true);
 
         }
         #endregion
@@ -329,7 +332,7 @@ namespace Ultima5Redux
         {
             bool bStairGoUp = IsStairGoingUp();
 
-            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)));
+            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), false);
         }
 
         #endregion

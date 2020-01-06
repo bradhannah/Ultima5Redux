@@ -13,7 +13,7 @@ namespace U5ConversationSimulator
   
         static void Main(string[] args)
         {
-            world = new World("C:\\games\\ultima_5_late\\bucden4");
+            world = new World("C:\\games\\ultima_5_late\\britain");
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             world.OverworldMap.PrintMap();
             world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle);
@@ -23,7 +23,6 @@ namespace U5ConversationSimulator
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
-
             //convo.BeginConversation();
         }
 

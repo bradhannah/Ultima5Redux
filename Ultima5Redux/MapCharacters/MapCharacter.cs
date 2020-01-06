@@ -31,8 +31,8 @@ namespace Ultima5Redux
             CharacterState = mapCharacterState;
             Movement = nonPlayerCharacterMovement;
 
-            CurrentFloor = CharacterState.Floor;
-            CurrentMapPosition = new Point2D(CharacterState.X, CharacterState.Y);
+            CurrentFloor = CharacterState == null? 0: CharacterState.Floor;
+            CurrentMapPosition = CharacterState == null ? new Point2D(0, 0) : new Point2D(CharacterState.X, CharacterState.Y);
             //Movement = new NonPlayerCharacterMovement(Reference.DialogIndex,)
         }
 

@@ -112,7 +112,7 @@ namespace Ultima5Redux
 
             if (State.Location != SmallMapReferences.SingleMapReference.Location.Britainnia_Underworld)
             {
-                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(State.Location, State.Floor));
+                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(State.Location, State.Floor), true);
             }
             else
             {
@@ -277,7 +277,7 @@ namespace Ultima5Redux
             {
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
-                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1));
+                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1), false);
                     return DataOvlRef.StringReferences.GetString(DataOvlReference.TRAVEL_STRINGS.DOWN);
                 }
             }
@@ -285,7 +285,7 @@ namespace Ultima5Redux
             {
                 if (nCurrentFloor + 1 < nTopFloor)
                 {
-                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1));
+                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1), false);
                     return DataOvlRef.StringReferences.GetString(DataOvlReference.TRAVEL_STRINGS.UP);
                 }
             }
@@ -610,7 +610,7 @@ namespace Ultima5Redux
             {
                 SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(State.TheVirtualMap.CurrentPosition);
                 Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
-                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0));
+                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0), false);
                 // set us to the front of the building
                 State.TheVirtualMap.CurrentPosition = SmallMapReferences.GetStartingXYByLocation(location);
 
