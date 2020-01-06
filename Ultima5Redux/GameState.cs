@@ -21,6 +21,10 @@ namespace Ultima5Redux
         /// </summary>
         private DataChunks<DataChunkName> dataChunks;
 
+        private DataChunks<OverlayChunkName> overworldOverlayDataChunks;
+
+        private DataChunks<OverlayChunkName> underworldOverlayDataChunks;
+
         /// <summary>
         /// 2D array of flag indicating if an NPC is met [mastermap][npc#]
         /// </summary>
@@ -36,7 +40,7 @@ namespace Ultima5Redux
         /// <summary>
         /// All player character records
         /// </summary>
-        public CharacterRecords CharacterRecords { get; }
+        public PlayerCharacterRecords CharacterRecords { get; }
         #endregion
 
         #region Internal Properties for direct save memory access
@@ -45,6 +49,8 @@ namespace Ultima5Redux
         internal DataChunk NonPlayerCharacterMovementLists { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS); } }
         internal DataChunk NonPlayerCharacterMovementOffsets { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS); } }
         internal DataChunk NonPlayerCharacterKeySprites { get { return dataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES); } }
+        internal DataChunk OverworldOverlayDataChunks { get { return overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
+        internal DataChunk UnderworldOverlayDataChunks { get { return underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
         #endregion
 
         #region Public Properties
@@ -252,10 +258,15 @@ namespace Ultima5Redux
         /// <summary>
         /// The name of the Avatar
         /// </summary>
-        public string AvatarsName { get { return CharacterRecords.Records[CharacterRecords.AVATAR_RECORD].Name; } }
+        public string AvatarsName { get { return CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name; } }
         #endregion
 
         #region Enumerations
+        public enum OverlayChunkName
+        {
+            Unused,
+            CHARACTER_ANIMATION_STATES
+        }
         /// <summary>
         /// Data chunks for each of the save game sections
         /// </summary>
@@ -294,10 +305,10 @@ namespace Ultima5Redux
         #region Constructors
         public void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMapReference largeMapReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, 
-            TileReferences TileReferences, CharacterAnimationStates characterStates)
+            TileReferences TileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
         {
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap, 
-                nonPlayerCharacters, TileReferences, characterStates);
+                nonPlayerCharacters, TileReferences, state, npcRefs);
         }
 
         /// <summary>
@@ -318,7 +329,7 @@ namespace Ultima5Redux
             // import all character records
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20*16, 0x00, DataChunkName.CHARACTER_RECORDS);
             DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
-            CharacterRecords = new CharacterRecords(rawCharacterRecords.GetAsByteList());
+            CharacterRecords = new PlayerCharacterRecords(rawCharacterRecords.GetAsByteList());
 
             // import the players invetry
             PlayerInventory = new Inventory(gameStateByteArray, dataRef);
@@ -376,6 +387,17 @@ namespace Ultima5Redux
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Character States - including xyz", 0x9B8, 0x200, 0x00, DataChunkName.CHARACTER_STATES);
+
+            // load the overworld and underworld overlays
+            string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
+            string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
+
+            overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(overworldOverlayPath, OverlayChunkName.Unused);
+            underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(underworldOverlayPath, OverlayChunkName.Unused);
+
+            overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+
         }
         #endregion
 
@@ -477,30 +499,30 @@ namespace Ultima5Redux
             return GetActiveCharacterRecords().Count;
         }
 
-    public List<CharacterRecord> GetActiveCharacterRecords()
+    public List<PlayerCharacterRecord> GetActiveCharacterRecords()
     {
-        List<CharacterRecord> activeCharacterRecords = new List<CharacterRecord>();
+        List<PlayerCharacterRecord> activeCharacterRecords = new List<PlayerCharacterRecord>();
 
-        foreach (CharacterRecord characterRecord in CharacterRecords.Records)
+        foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
         {
-            if (characterRecord.PartyStatus == CharacterRecord.CharacterPartyStatus.InParty)
+            if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
                 activeCharacterRecords.Add(characterRecord);
         }
         if (activeCharacterRecords.Count == 0) throw new Exception("Even the Avatar is dead, no records returned in active party");
-        if (activeCharacterRecords.Count > CharacterRecords.MAX_PARTY_MEMBERS) throw new Exception("There are too many party members in the party... party...");
+        if (activeCharacterRecords.Count > PlayerCharacterRecords.MAX_PARTY_MEMBERS) throw new Exception("There are too many party members in the party... party...");
 
         return activeCharacterRecords;
     }
 
-    public CharacterRecord GetCharacterFromParty(int nPosition)
+    public PlayerCharacterRecord GetCharacterFromParty(int nPosition)
         {
-            Debug.Assert(nPosition >= 0 && nPosition < CharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
+            Debug.Assert(nPosition >= 0 && nPosition < PlayerCharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
             Debug.Assert(nPosition < CharacterRecords.TotalPartyMembers(), "You cannot request a character that isn't on the roster");
 
             int nPartyMember = 0;
-            foreach (CharacterRecord characterRecord in CharacterRecords.Records)
+            foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
             {
-                if (characterRecord.PartyStatus == CharacterRecord.CharacterPartyStatus.InParty)
+                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
                     if (nPartyMember++ == nPosition) return characterRecord;
             }
             throw new Exception("I've asked for member of the party who is aparently not there...");
@@ -512,8 +534,8 @@ namespace Ultima5Redux
         /// <param name="npc">the NPC to add</param>
         public void AddMemberToParty(NonPlayerCharacterReference npc)
         {
-            CharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
-            record.PartyStatus = CharacterRecord.CharacterPartyStatus.InParty;
+            PlayerCharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
+            record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InParty;
         }
 
         /// <summary>
@@ -522,8 +544,8 @@ namespace Ultima5Redux
         /// <returns>true if party is full</returns>
         public bool IsFullParty()
         {
-            Debug.Assert(!(CharacterRecords.TotalPartyMembers() > CharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
-            return (CharacterRecords.TotalPartyMembers() == CharacterRecords.MAX_PARTY_MEMBERS);
+            Debug.Assert(!(CharacterRecords.TotalPartyMembers() > PlayerCharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
+            return (CharacterRecords.TotalPartyMembers() == PlayerCharacterRecords.MAX_PARTY_MEMBERS);
         }
 
         /// <summary>

@@ -10,6 +10,8 @@ namespace Ultima5Redux
     public class VirtualMap
     {
         #region Private fields
+        private NonPlayerCharacterReferences npcRefs;
+        private GameState state;
         /// <summary>
         /// Reference to towne/keep etc locations on the large map
         /// </summary>
@@ -22,7 +24,7 @@ namespace Ultima5Redux
         /// All the small maps
         /// </summary>
         private SmallMaps smallMaps;
-        private CharacterAnimationStates characterStates;
+        private MapCharacterAnimationStates characterStates;
         /// <summary>
         /// Both underworld and overworld maps
         /// </summary>
@@ -99,6 +101,9 @@ namespace Ultima5Redux
         /// If we are on a large map - then are we on overworld or underworld
         /// </summary>
         public LargeMap.Maps LargeMapOverUnder { get; private set; } = (LargeMap.Maps)(-1);
+
+        public MapCharacters TheMapCharacters { get; private set; }
+
         #endregion
 
         #region Constructor, Initializers and Loaders
@@ -114,14 +119,16 @@ namespace Ultima5Redux
         /// <param name="tileReferences"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences, 
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
-            CharacterAnimationStates characterStates)
+            GameState state, NonPlayerCharacterReferences npcRefs)
         {
             this.SmallMapRefs = smallMapReferences;
             this.smallMaps = smallMaps;
             this.nonPlayerCharacters = nonPlayerCharacters;
             this.largeMapReferences = largeMapReferences;
             this.tileReferences = tileReferences;
-            this.characterStates = characterStates;
+            this.state = state;
+            this.npcRefs = npcRefs;
+            //this.characterStates = characterStates;
             largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
         }
@@ -137,6 +144,10 @@ namespace Ultima5Redux
             overrideMap = Utils.Init2DArray<int>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
+
+            TheMapCharacters = new MapCharacters(tileReferences, npcRefs, singleMapReference, LargeMap.Maps.Small,
+                state.CharacterAnimationStatesDataChunk,state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
+                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
         }
 
         /// <summary>
@@ -151,6 +162,11 @@ namespace Ultima5Redux
             overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
             IsLargeMap = true;
             LargeMapOverUnder = map;
+
+            TheMapCharacters = new MapCharacters(tileReferences, npcRefs, null, LargeMapOverUnder,
+                state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
+                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
+
         }
         #endregion
 
@@ -233,20 +249,22 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="xy"></param>
         /// <returns>the NPC or null if one does not exist</returns>
-        public NonPlayerCharacterReference GetNPCOnTile(Point2D xy)
+        public MapCharacter GetNPCOnTile(Point2D xy)
         {
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
-            List<NonPlayerCharacterReference> npcs = nonPlayerCharacters.GetNonPlayerCharactersByLocation(location);
 
-            CharacterAnimationState characterState = characterStates.GetCharacterStateByPosition(xy, CurrentSingleMapReference.Floor);
+            MapCharacter mapCharacter = TheMapCharacters.GetMapCharacterByLocation(location, xy, CurrentSingleMapReference.Floor);
+            //List<NonPlayerCharacterReference> npcs = nonPlayerCharacters.GetNonPlayerCharactersByLocation(location);
+
+            //MapCharacterAnimationState characterState = characterStates.GetCharacterStateByPosition(xy, CurrentSingleMapReference.Floor);
 
             // get the NPC on the current tile
-            NonPlayerCharacterReference npc = nonPlayerCharacters.GetNonPlayerCharacter(location, xy, CurrentSingleMapReference.Floor);
+            //NonPlayerCharacterReference npc = nonPlayerCharacters.GetNonPlayerCharacter(location, xy, CurrentSingleMapReference.Floor);
 
             //if (npc == null)
-                //throw new Exception("You asked for an NPC on a tile that one does not exist - you should have checked first!");
+            //throw new Exception("You asked for an NPC on a tile that one does not exist - you should have checked first!");
 
-            return npc;
+            return mapCharacter;
             //foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcs)
             //{
 
@@ -263,6 +281,36 @@ namespace Ultima5Redux
             //    }
             //}
             return null;
+        }
+        #endregion
+
+        #region Private Methods
+        internal bool MoveNPCs()
+        {
+            // if not on small map - then no NPCs!
+            if (IsLargeMap) return false;
+
+            // go through each of the NPCs on the map
+            //foreach (NonPlayerCharacterReference npc in TheMapCharacters.NPCRefs.GetNonPlayerCharactersByLocation(CurrentSingleMapReference.MapLocation))
+            foreach (MapCharacter mapChar in TheMapCharacters.Characters)
+            {
+                // this NPC has a command in the buffer, so let's execute!
+                if (mapChar.Movement.IsNextCommandAvailable())
+                {
+                    // peek and see what we have before we pop it off
+                    NonPlayerCharacterMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommand(true);
+                    Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(mapChar.CurrentMapPosition, direction);
+                    // need to evaluate if I can even move to the next tile before actually popping out of the queue
+                    if (GetTileReference(adjustedPos).IsNPCCapableSpace)
+                    {
+                        // pop the direction from the queue
+                        direction = mapChar.Movement.GetNextMovementCommand(false);
+                        mapChar.Move(adjustedPos, mapChar.CurrentFloor);
+                    }
+                }
+            }
+
+            return true;
         }
         #endregion
 

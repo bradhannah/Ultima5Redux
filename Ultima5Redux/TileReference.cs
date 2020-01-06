@@ -62,6 +62,11 @@ namespace Ultima5Redux
             return (nSprite >= 196 && nSprite <= 199);
         }
 
+        public override string ToString()
+        {
+            return this.Name;
+        }
+
         public bool IsNPCCapableSpace
         {
             get

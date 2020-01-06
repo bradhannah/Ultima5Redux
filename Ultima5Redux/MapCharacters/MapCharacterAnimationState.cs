@@ -20,7 +20,7 @@ namespace Ultima5Redux
     //6	1	depends on object type
     //7	1	depends on object type
 
-    public class CharacterAnimationState
+    public class MapCharacterAnimationState
     {
         public const int NBYTES = 0x8;
 
@@ -41,7 +41,7 @@ namespace Ultima5Redux
         public TileReference Tile2Ref { get; }
         #endregion
 
-        public CharacterAnimationState(TileReferences tileReferences, byte[] stateBytes)
+        public MapCharacterAnimationState(TileReferences tileReferences, byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
             //

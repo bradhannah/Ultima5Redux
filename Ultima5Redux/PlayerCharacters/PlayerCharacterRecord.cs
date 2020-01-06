@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace Ultima5Redux
 {
 
-    public class CharacterRecord
+    public class PlayerCharacterRecord
     {
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
@@ -93,7 +93,7 @@ namespace Ultima5Redux
         /// Creates a character record from a raw record that begins at offset 0
         /// </summary>
         /// <param name="rawRecord"></param>
-        public CharacterRecord(byte[] rawRecord)
+        public PlayerCharacterRecord(byte[] rawRecord)
         {
             Debug.Assert(rawRecord.Length == (int)CHARACTER_RECORD_BYTE_ARRAY_SIZE);
             List<byte> rawRecordByteList = new List<byte>(rawRecord);

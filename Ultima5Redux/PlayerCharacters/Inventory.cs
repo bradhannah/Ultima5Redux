@@ -115,7 +115,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="record">Character record</param>
         /// <returns>amount of total damage</returns>
-        public int GetCharacterTotalAttack (CharacterRecord record)
+        public int GetCharacterTotalAttack (PlayerCharacterRecord record)
         {
             return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armor) + GetAttack(record.Equipped.Helmet)
                 + GetAttack(record.Equipped.Ring) + GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
@@ -126,7 +126,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="record">character record</param>
         /// <returns>the players total defense</returns>
-        public int GetCharacterTotalDefense (CharacterRecord record)
+        public int GetCharacterTotalDefense (PlayerCharacterRecord record)
         {
             return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armor) + GetDefense(record.Equipped.Helmet) +
                 GetDefense(record.Equipped.LeftHand) + GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);

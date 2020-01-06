@@ -120,11 +120,11 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
-        public void Move(Point2D xy, int nFloor)
-        {
-            CurrentMapPosition = xy;
-            CurrentFloor = nFloor;
-        }
+        //public void Move(Point2D xy, int nFloor)
+        //{
+        //    CurrentMapPosition = xy;
+        //    CurrentFloor = nFloor;
+        //}
         #endregion
 
         #region Public Properties
@@ -146,7 +146,6 @@ namespace Ultima5Redux
             }
         }
 
-        public NonPlayerCharacterMovement NPCMovement { get; }
 
         /// <summary>
         /// The daily schedule of the NPC
@@ -200,33 +199,41 @@ namespace Ultima5Redux
             }
         }
 
+        //public int NPCKeySprite
+        //{
+        //    get; private set;
+        //}
+        private int _npcKeySprite;
         public int NPCKeySprite
         {
-            get; private set;
-            //                {
-            //                    switch (this.NPCType)
-            //                    {
-            //                        case NPCDialogTypeEnum.Custom:
-            //                            return (int)CharacterType + 0x100;
-            ////                            return (int)NPCKeySpriteEnum.Guard;
-            //                        case NPCDialogTypeEnum.Guard:
-            //                            return (int)NPCKeySpriteEnum.Guard;
-            //                        case NPCDialogTypeEnum.WeaponsDealer:
-            //                        case NPCDialogTypeEnum.Barkeeper:
-            //                        case NPCDialogTypeEnum.HorseSeller:
-            //                        case NPCDialogTypeEnum.ShipSeller:
-            //                        case NPCDialogTypeEnum.InnKeeper:
-            //                        case NPCDialogTypeEnum.MagicSeller:
-            //                        case NPCDialogTypeEnum.GuildMaster:
-            //                            return (int)NPCKeySpriteEnum.Merchant;
-            //                        case NPCDialogTypeEnum.Healer:
-            //                            return (int)NPCKeySpriteEnum.Healer;
-            //                        case NPCDialogTypeEnum.Unknown:
-            //                            return (int)NPCKeySpriteEnum.Guard;
-            //                        default:
-            //                            throw new Exception("Unrecognized NPC type");
-            //                    }
-            //                }
+            set { _npcKeySprite = value; }
+            get
+            {
+                {
+                    switch (this.NPCType)
+                    {
+                        case NPCDialogTypeEnum.Custom:
+                            return (int)CharacterType + 0x100;
+                        //                            return (int)NPCKeySpriteEnum.Guard;
+                        case NPCDialogTypeEnum.Guard:
+                            return (int)NPCKeySpriteEnum.Guard;
+                        case NPCDialogTypeEnum.WeaponsDealer:
+                        case NPCDialogTypeEnum.Barkeeper:
+                        case NPCDialogTypeEnum.HorseSeller:
+                        case NPCDialogTypeEnum.ShipSeller:
+                        case NPCDialogTypeEnum.InnKeeper:
+                        case NPCDialogTypeEnum.MagicSeller:
+                        case NPCDialogTypeEnum.GuildMaster:
+                            return (int)NPCKeySpriteEnum.Merchant;
+                        case NPCDialogTypeEnum.Healer:
+                            return (int)NPCKeySpriteEnum.Healer;
+                        case NPCDialogTypeEnum.Unknown:
+                            return (int)NPCKeySpriteEnum.Guard;
+                        default:
+                            throw new Exception("Unrecognized NPC type");
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -276,7 +283,7 @@ namespace Ultima5Redux
             byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript, int nKeySprite)
         {
             Schedule = new NPCSchedule(sched);
-            NPCMovement = new NonPlayerCharacterMovement(dialogIndex, gameStateRef.NonPlayerCharacterMovementLists, gameStateRef.NonPlayerCharacterMovementOffsets);
+            
             MapLocation = location;
             NPCKeySprite = nKeySprite;
 
@@ -286,15 +293,6 @@ namespace Ultima5Redux
             DialogIndex = dialogIndex;
             this.gameStateRef = gameStateRef;
 
-            if (NPCMovement.IsNextCommandAvailable())
-            {
-
-            }
-            else
-            {
-                // there is no special movement instructions - so they are where they are expected to be
-                MoveNPCToDefaultScheduledPosition();
-            }
 
             // no schedule? I guess you're not real
             if (!IsEmptySched(sched))
@@ -309,24 +307,12 @@ namespace Ultima5Redux
         /// Gets the appropriate schedule index based on the current time
         /// </summary>
         /// <returns></returns>
-        private int GetScheduleIndex()
-        {
-            return 1;
-        }
+        //internal int GetScheduleIndex()
+        //{
+        //    return 1;
+        //}
 
-        /// <summary>
-        /// Moves the NPC to the appropriate floor and location based on the their expected location and position
-        /// </summary>
-        private void MoveNPCToDefaultScheduledPosition()
-        {
-            int nIndex = GetScheduleIndex();
-            Point2D npcXy = Schedule.GetHardCoord(nIndex);
 
-            // the NPC is a non-NPC, so we keep looking
-            if (npcXy.X == 0 && npcXy.Y == 0) return;
-
-            Move(npcXy, Schedule.GetFloor(nIndex));
-        }
 
         /// <summary>
         /// Does the NPC have an empty schedule? If so, then they aren't actually an NPC

@@ -31,8 +31,8 @@ namespace Ultima5Redux
         public DataOvlReference DataOvlRef { get; }
         public TalkScripts TalkScriptsRef { get; }
         public GameState State { get; }
-        public CharacterAnimationStates CharAnimationStates { get; }
-        public CharacterStates CharStates { get; }
+        //public MapCharacterAnimationStates CharAnimationStates { get; }
+        //public MapCharacterStates CharStates { get; }
         #endregion
         public LargeMapReference LargeMapRef { get; }
 
@@ -102,18 +102,29 @@ namespace Ultima5Redux
             // build the NPC tables
             NpcRef = new NonPlayerCharacterReferences(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
 
-            CharAnimationStates = new CharacterAnimationStates(State, SpriteTileReferences);
-            CharStates = new CharacterStates(State, SpriteTileReferences);
+            //CharAnimationStates = new MapCharacterAnimationStates(State, SpriteTileReferences);
+            //CharStates = new MapCharacterStates(State, SpriteTileReferences);
+
+            
 
             // sadly I have to initilize this after the Npcs are created because there is a circular dependency
-            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, CharAnimationStates);
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef);
 
-            State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
+            if (State.Location != SmallMapReferences.SingleMapReference.Location.Britainnia_Underworld)
+            {
+                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(State.Location, State.Floor));
+            }
+            else
+            {
+                State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+            }
+            //State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
 
-            State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0));
+            //State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0));
 
             //int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
-            NpcRef.GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location.Britain, new Point2D(0, 31), 0);
+            //NpcRef.GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location.Britain, new Point2D(0, 31), 0);
+
 
             //State.Year = 100;
             //State.Month = 13;
@@ -175,35 +186,7 @@ namespace Ultima5Redux
 
         }
 
-        #region Private Methods
-        private bool MoveNPCs()
-        {
-            // if not on small map - then no NPCs!
-            if (State.TheVirtualMap.IsLargeMap) return false;
-
-            // go through each of the NPCs on the map
-            foreach (NonPlayerCharacterReference npc in NpcRef.GetNonPlayerCharactersByLocation(State.TheVirtualMap.CurrentSingleMapReference.MapLocation))
-            {
-                // this NPC has a command in the buffer, so let's execute!
-                if (npc.NPCMovement.IsNextCommandAvailable())
-                {
-                    // peek and see what we have before we pop it off
-                    NonPlayerCharacterMovement.MovementCommandDirection direction = npc.NPCMovement.GetNextMovementCommand(true);
-                    Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(npc.CurrentMapPosition, direction);
-                    // need to evaluate if I can even move to the next tile before actually popping out of the queue
-                    if (State.TheVirtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace)
-                    {
-                        // pop the direction from the queue
-                        direction = npc.NPCMovement.GetNextMovementCommand(false);
-                        npc.Move(adjustedPos, npc.CurrentFloor);
-                    }
-                }
-            }
-
-            return true;
-        }
-        #endregion
-
+   
         #region World actions - do a thing, report or change the state
         /// <summary>
         /// Advances time and takes care of all day, month, year calculations
@@ -213,7 +196,7 @@ namespace Ultima5Redux
         {
             State.AdvanceClock(nMinutes);
 
-            MoveNPCs();
+             //State.TheVirtualMap.MoveNPCs();
         }
 
         /// <summary>
@@ -231,9 +214,9 @@ namespace Ultima5Redux
             // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
             if (State.TheVirtualMap.IsNPCTile(xy))
             {
-                NonPlayerCharacterReference npc = State.TheVirtualMap.GetNPCOnTile(xy);
+                MapCharacter mapCharacter = State.TheVirtualMap.GetNPCOnTile(xy);
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.VISION2_STRINGS.THOU_DOST_SEE).Trim()
-                + " " + (LookRef.GetLookDescription(npc.NPCKeySprite).Trim());
+                + " " + (LookRef.GetLookDescription(mapCharacter.NPCRef.NPCKeySprite).Trim());
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (SpriteTileReferences.IsSign(tileReference.Index))
@@ -371,7 +354,7 @@ namespace Ultima5Redux
         /// <param name="record">character who will attempt to open it</param>
         /// <param name="bWasSuccesful">was it a successful jimmy?</param>
         /// <returns></returns>
-        public string TryToJimmyDoor(Point2D xy, CharacterRecord record, out bool bWasSuccesful)
+        public string TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record, out bool bWasSuccesful)
         {
             bWasSuccesful = false;
             //Point2D doorPos = GetAdustedPos(CurrentVirtualMap.CurrentPosition, keyCode);

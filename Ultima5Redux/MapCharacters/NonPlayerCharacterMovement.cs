@@ -4,21 +4,6 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    /*                                                                                                           
-        +---------------------+                 +------------------------+              +--------------------+      
-        |                     |       0x19..0x19|                        |         1..1 |                    |      
-        | NonPlayerCharacters ------------------>   NonPlayerCharacter   --------------->    NPC_Schedule    |      
-        |                     |                 |                        |              |                    |      
-        +---------------------+                 +------------|-----------+              +--------------------+      
-                                                             |                                                      
-                                                             |                                                      
-                                                             | 1..1                                                 
-                                              +--------------v-------------+                +----------------------+
-                                              |                            |        0..0x10 |                      |
-                                              | NonPlayerCharacterMovement ----------------->   MovementCommand    |
-                                              |                            |                |                      |
-                                              +----------------------------+                +----------------------+
-    */
         public class NonPlayerCharacterMovement
         {
             public NonPlayerCharacterMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
@@ -81,7 +66,6 @@ namespace Ultima5Redux
                 }
                 return adjustedPos;
             }
-
 
             private DataChunk movementInstructionDataChunk;
             private DataChunk movementOffsetDataChunk;

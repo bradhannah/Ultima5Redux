@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    public class CharacterState
+    public class MapCharacterState
     {
         public int X { get; }
         public int Y { get; }
@@ -17,7 +17,7 @@ namespace Ultima5Redux
         TileReference TileRef { get; }
         public bool Active { get; }
 
-        public CharacterState(TileReferences tileReferences, UInt16[] stateUInts, int nNPCIndex)
+        public MapCharacterState(TileReferences tileReferences, UInt16[] stateUInts, int nNPCIndex)
         {
             Debug.Assert(stateUInts.Length == 0x8);
             NPCIndex = nNPCIndex;

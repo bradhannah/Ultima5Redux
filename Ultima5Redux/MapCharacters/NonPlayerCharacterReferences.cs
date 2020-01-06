@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    public partial class NonPlayerCharacterReferences
+    public class NonPlayerCharacterReferences
     {
         #region Public Properties
         /// <summary>

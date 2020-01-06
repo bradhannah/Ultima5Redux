@@ -22,7 +22,7 @@ namespace Ultima5Redux
         public const int TILES_PER_MAP_ROW = TilesPerChunkY * TotalChunksPerX; // total number of tiles per row in the large map 
         public const int TILES_PER_MAP_COL = TilesPerChunkX * TotalChunksPerX; // total number of tiles per column in the large map
 
-        public enum Maps { Overworld, Underworld};
+        public enum Maps {Small = -1 , Overworld, Underworld};
 
         #endregion
         /// <summary>
