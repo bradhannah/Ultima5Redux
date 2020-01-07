@@ -70,7 +70,10 @@ namespace Ultima5Redux
             List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
             
             currentMapType = largeMap;
-            
+
+            // I may need make an additional save of state before wiping these mapcharacters out
+            Characters.Clear();
+
             switch (largeMap)
             {
                 case LargeMap.Maps.Small:
@@ -105,6 +108,7 @@ namespace Ultima5Redux
                 }
 
                 NonPlayerCharacterMovement charMovement = bIsLargeMap ? null : movements.GetMovement(i);
+
                 Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement));
 
                 //Debug.Assert(charAnimState.X == mapCharState.X);

@@ -118,9 +118,11 @@ namespace Ultima5Redux
             {
                 State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
             }
+
+            //State.TheVirtualMap.LoadSmallMap()
             //State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
 
-            //State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0));
+            //State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0), false);
 
             //int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
             //NpcRef.GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location.Britain, new Point2D(0, 31), 0);

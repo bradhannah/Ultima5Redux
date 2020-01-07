@@ -254,6 +254,7 @@ namespace Ultima5Redux
         /// <returns>the NPC or null if one does not exist</returns>
         public MapCharacter GetNPCOnTile(Point2D xy)
         {
+            if (IsLargeMap) return null;
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
 
             MapCharacter mapCharacter = TheMapCharacters.GetMapCharacterByLocation(location, xy, CurrentSingleMapReference.Floor);
