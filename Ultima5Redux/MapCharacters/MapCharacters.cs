@@ -79,6 +79,7 @@ namespace Ultima5Redux
                 case LargeMap.Maps.Small:
                     npcCurrentMapRefs = npcRefs.GetNonPlayerCharactersByLocation(singleMapReference.MapLocation);
                     smallMapAnimationStates.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.SAVED_GAM, bLoadFromDisk);
+                    
                     break;
                 case LargeMap.Maps.Overworld:
                     // we don't reload them because the over and underworld are only loaded at boot time
@@ -92,22 +93,39 @@ namespace Ultima5Redux
             {
                 // the animations are out of order - so we use this reference to track it down
                 NonPlayerCharacterReference npcRef = bIsLargeMap ? null: npcCurrentMapRefs[i];
-                MapCharacterState mapCharState = bIsLargeMap ? null : charStates.GetCharacterState(i);
+                MapCharacterState mapCharState;
 
                 MapCharacterAnimationState charAnimState = null;
+
+                NonPlayerCharacterMovement charMovement;
                 if (bIsLargeMap)
                 {
-                    charAnimState = CurrentAnimationState.GetCharacterState(i); 
+                    mapCharState = null;
+                    charMovement = null;
+                    charAnimState = CurrentAnimationState.GetCharacterState(i);
                 }
                 else
                 {
-                    if (CurrentAnimationState.HasAnyAnimationStates())
+                    
+                    charMovement = movements.GetMovement(i);
+                    
+                    if (!bLoadFromDisk)
                     {
-                        charAnimState = CurrentAnimationState.GetCharacterState(mapCharState.CharacterAnimationStateIndex);
+                        // we keep the object because we may be required to save this to disk - but since we are leaving the map there is no need to save their movements
+                        charMovement.ClearMovements();
+                        mapCharState = null;
+                    }
+                    else
+                    {
+                        // character states are only loaded when forced from disk and only on small maps
+                        mapCharState = charStates.GetCharacterState(i);
+
+                        if (CurrentAnimationState.HasAnyAnimationStates())
+                        {
+                            charAnimState = CurrentAnimationState.GetCharacterState(mapCharState.CharacterAnimationStateIndex);
+                        }
                     }
                 }
-
-                NonPlayerCharacterMovement charMovement = bIsLargeMap ? null : movements.GetMovement(i);
 
                 Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement));
 

@@ -38,7 +38,7 @@ namespace Ultima5Redux
 
                     // we have a proper movement instruction so let's add it to the queue
                     MovementCommand movementCommand = new MovementCommand(direction, nIterations);
-                    this.MovementQueue.Enqueue(movementCommand);
+                    this.movementQueue.Enqueue(movementCommand);
                     
                     // we actually grab from the offset, but it is circular, so we need to mod it
                     nIndex = (nIndex + 1) % MAX_COMMAND_LIST_ENTRIES;
@@ -112,19 +112,26 @@ namespace Ultima5Redux
             /// <summary>
             /// all movements 
             /// </summary>
-            private Queue<MovementCommand> MovementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
-            #endregion
+            private Queue<MovementCommand> movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
+        #endregion
 
-            #region Public Methods
-            /// <summary>
-            /// Checks to see if any movement commands are available
-            /// </summary>
-            /// <returns>true if there are commands available</returns>
-            public bool IsNextCommandAvailable()
+        #region Public Methods
+
+        public void ClearMovements()
+        {
+            movementQueue.Clear();
+        }
+
+
+        /// <summary>
+        /// Checks to see if any movement commands are available
+        /// </summary>
+        /// <returns>true if there are commands available</returns>
+        public bool IsNextCommandAvailable()
             {
-                if (MovementQueue.Count > 0) { Debug.Assert(MovementQueue.Peek().Iterations > 0, 
+                if (movementQueue.Count > 0) { Debug.Assert(movementQueue.Peek().Iterations > 0, 
                     "You have no iterations left on your movement command but it's still in the queue"); }
-                return MovementQueue.Count > 0;
+                return movementQueue.Count > 0;
             }
             
 
@@ -134,15 +141,15 @@ namespace Ultima5Redux
             /// <returns></returns>
             public MovementCommandDirection GetNextMovementCommand(bool bPeek = false)
             {
-                if (MovementQueue.Count <= 0) { throw new Exception("You have requested to GetNextMovementCommand but there are non left."); }
-                MovementCommandDirection direction = MovementQueue.Peek().Direction;
-                int nRemaining = MovementQueue.Peek().SpendSingleMovement();
+                if (movementQueue.Count <= 0) { throw new Exception("You have requested to GetNextMovementCommand but there are non left."); }
+                MovementCommandDirection direction = movementQueue.Peek().Direction;
+                int nRemaining = movementQueue.Peek().SpendSingleMovement();
                 Debug.Assert(nRemaining >= 0);
 
                 if (nRemaining == 0 && !bPeek)
                 {
                     // we are done with it, so let's toss it
-                    MovementQueue.Dequeue();
+                    movementQueue.Dequeue();
                 }
 
                 return direction;

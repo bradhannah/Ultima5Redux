@@ -14,7 +14,6 @@ namespace Ultima5Redux
         private DataChunk movementInstructionDataChunk;
         private DataChunk movementOffsetDataChunk;
 
-
         public NonPlayerCharacterMovements(DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
         {
             this.movementInstructionDataChunk = movementInstructionDataChunk;
