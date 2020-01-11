@@ -16,6 +16,20 @@ namespace Ultima5Redux
         public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
         public int CurrentFloor { get; private set; } = 0;
 
+        public bool IsActive
+        { 
+            get
+            {
+                if (CharacterState != null)
+                {
+                    if (CharacterState.CharacterAnimationStateIndex == 0) return false;
+                    return CharacterState.Active;
+                }
+                return false;
+            }
+        }
+        
+
         public void Move(Point2D xy, int nFloor)
         {
             CurrentMapPosition = xy;
