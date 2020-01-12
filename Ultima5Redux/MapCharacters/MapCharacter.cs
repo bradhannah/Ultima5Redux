@@ -45,6 +45,15 @@ namespace Ultima5Redux
         //TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, DataChunk animationStatesDataChunk, DataChunk charStatesDataChunk,
         //DataChunk nonPlayerCharacterMovementLists, DataChunk NonPlayerCharacterMovementOffsets
 
+        public MapCharacter()
+        {
+            NPCRef = null;
+            AnimationState = null;
+            CharacterState = null;
+            Movement = null;
+            
+        }
+
         public MapCharacter(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, MapCharacterState mapCharacterState,
             NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay)
         {

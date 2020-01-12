@@ -9,17 +9,72 @@ namespace Ultima5Redux
         {
             private int GetScheduleIndex(TimeOfDay timeOfDay)
             {
-                return 1;
+                int nHour = timeOfDay.Hour;
+
+                // there are some characters who are apparently always in the exact same location
+                if (Times[0] == 0 && Times[1] == 0 && Times[2] == 0 && Times[3] == 0) return 0;
+
+                if (nHour >= Times[3] && nHour < Times[0]) return 0;
+                if (nHour >= Times[0] && nHour < Times[1]) return 1;
+                if (nHour >= Times[1] && nHour < Times[2]) return 2;
+                if (nHour >= Times[2] && nHour < Times[3]) return 1;
+
+                if (nHour < Times[GetEarliestTimeIndex()]) return GetEarliestTimeIndex();
+                if (nHour > Times[GetLatestTimeIndex()]) return GetLatestTimeIndex();
+
+                throw new System.Exception("GetScheduleIndex fell all the way through which doesn't make sense.");
+            }
+
+            /// <summary>
+            /// Gets the index of the earliest time in the daily schedule
+            /// </summary>
+            /// <returns></returns>
+            private int GetEarliestTimeIndex()
+            {
+                int nEarliest = Times[0];
+                int nEarliestIndex = 0;
+                for (int i = 1; i < Times.Count; i++)
+                {
+                    if (Times[i] < nEarliest)
+                    {
+                        nEarliestIndex = i;
+                        nEarliest = Times[i];
+                    }
+                }
+                return nEarliestIndex;
+            }
+
+            /// <summary>
+            /// Gets the index of the latest time in the daily schedule
+            /// </summary>
+            /// <returns></returns>
+            private int GetLatestTimeIndex()
+            {
+                int nLargest = Times[0];
+                int nLargestIndex = 0;
+                for (int i = 1; i < Times.Count; i++)
+                {
+                    if (Times[i] > nLargest)
+                    {
+                        nLargestIndex = i;
+                        nLargest = Times[i];
+                    }
+                }
+                return nLargestIndex;
             }
 
             public CharacterPosition GetCharacterDefaultPositionByTime(TimeOfDay timeOfDay)
             {
                 CharacterPosition characterPosition = new CharacterPosition();
                 int nIndex = GetScheduleIndex(timeOfDay);
+
+                characterPosition.Floor = GetFloor(nIndex);
+                characterPosition.XY = GetXY(nIndex);
+
                 return characterPosition;
             }
 
-            public Point2D GetHardCoord(int nIndex)
+            public Point2D GetXY(int nIndex)
             {
                 return (new Point2D(Coords[nIndex].X, Coords[nIndex].Y));
             }

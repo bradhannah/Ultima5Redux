@@ -116,6 +116,9 @@ namespace Ultima5Redux
         {
             foreach (MapCharacter character in Characters)
             {
+                // sometimes characters are null because they don't exist - and that is OK
+                if (!character.IsActive) continue;
+
                 if (character.CurrentCharacterPosition.XY == xy && character.CurrentCharacterPosition.Floor == nFloor && character.NPCRef.MapLocation == location)
                 {
                     return character;
@@ -143,6 +146,13 @@ namespace Ultima5Redux
 
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
+                if (i == 0)
+                {
+                    Characters.Add(new MapCharacter());
+                    continue;
+                }
+
+
                 NonPlayerCharacterReference npcRef = npcCurrentMapRefs[i];
                 MapCharacterState mapCharState;
                 MapCharacterAnimationState charAnimState = null;

@@ -24,7 +24,7 @@ namespace Ultima5Redux
             TileRef = tileReferences.GetTileReference(npcRef.NPCKeySprite);
             CharacterAnimationStateIndex = nCharacterAnimationStateIndex;
             // if you are adding by hand then we can assume that the character is active
-
+            TheCharacterPosition = npcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
             Active = true;
         }

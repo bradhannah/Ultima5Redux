@@ -267,7 +267,7 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Day", 0x2D8, 0x01, 0x00, DataChunkName.CURRENT_DAY);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2D9, 0x01, 0x00, DataChunkName.CURRENT_HOUR);
             // 0x2DA is copy of 2D9 for some reason
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Minute", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
 
 
             //dataChunks.AddDataChunk()
@@ -312,7 +312,7 @@ namespace Ultima5Redux
             underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
             TheTimeOfDay = new TimeOfDay(dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE), 
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR), 
                 dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
         }
         #endregion
