@@ -13,8 +13,10 @@ namespace Ultima5Redux
         internal MapCharacterAnimationState AnimationState { get; }
         internal MapCharacterState CharacterState { get; }
 
-        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
-        public int CurrentFloor { get; private set; } = 0;
+        public CharacterPosition CurrentCharacterPosition = new CharacterPosition();
+
+        //public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
+        //public int CurrentFloor { get; private set; } = 0;
 
         public bool IsActive
         { 
@@ -28,37 +30,41 @@ namespace Ultima5Redux
                 return false;
             }
         }
-        
 
         public void Move(Point2D xy, int nFloor)
         {
-            CurrentMapPosition = xy;
-            CurrentFloor = nFloor;
+            CurrentCharacterPosition.XY = xy;
+            CurrentCharacterPosition.Floor = nFloor;
+        }
+
+        public void Move(CharacterPosition characterPosition)//Point2D xy, int nFloor)
+        {
+            CurrentCharacterPosition = characterPosition;
         }
 
         //TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, DataChunk animationStatesDataChunk, DataChunk charStatesDataChunk,
         //DataChunk nonPlayerCharacterMovementLists, DataChunk NonPlayerCharacterMovementOffsets
 
         public MapCharacter(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, MapCharacterState mapCharacterState,
-            NonPlayerCharacterMovement nonPlayerCharacterMovement)
+            NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay)
         {
             NPCRef = npcRef;
             AnimationState = mapCharacterAnimationState;
             CharacterState = mapCharacterState;
             Movement = nonPlayerCharacterMovement;
 
-            CurrentFloor = CharacterState == null? 0: CharacterState.Floor;
+            CurrentCharacterPosition.Floor = CharacterState == null? 0: CharacterState.TheCharacterPosition.Floor;
             
             if (CharacterState == null)
             {
                 if (npcRef != null)
                 {
-                    MoveNPCToDefaultScheduledPosition();
+                    MoveNPCToDefaultScheduledPosition(timeOfDay);
                 }
             }
             else
             {
-                CurrentMapPosition = new Point2D(CharacterState.X, CharacterState.Y);
+                CurrentCharacterPosition.XY = new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y);
             }
 
             //Movement = new NonPlayerCharacterMovement(Reference.DialogIndex,)
@@ -67,17 +73,19 @@ namespace Ultima5Redux
         /// <summary>
         /// Moves the NPC to the appropriate floor and location based on the their expected location and position
         /// </summary>
-        internal void MoveNPCToDefaultScheduledPosition()
+        internal void MoveNPCToDefaultScheduledPosition(TimeOfDay timeOfDay)
         {
             // todo: need to determine actual schedule time
             // we could even just ask the NPC where they should be at the time given
-            int nIndex = 1;
-            Point2D npcXy = NPCRef.Schedule.GetHardCoord(nIndex);
+            //int nIndex = 1;
+            //Point2D npcXy = NPCRef.Schedule.GetHardCoord(nIndex);
+
+            CharacterPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
 
-            Move(npcXy, NPCRef.Schedule.GetFloor(nIndex));
+            Move(npcXy);// npcXy, NPCRef.Schedule.GetFloor(nIndex));
         }
 
     }

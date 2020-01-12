@@ -21,7 +21,7 @@ namespace Ultima5Redux
         {
             foreach (MapCharacterState characterState in characterStates)
             {
-                if (characterState.X == xy.X && characterState.Y == xy.Y && characterState.Floor == nFloor)
+                if (characterState.TheCharacterPosition.X == xy.X && characterState.TheCharacterPosition.Y == xy.Y && characterState.TheCharacterPosition.Floor == nFloor)
                     return characterState;
             }
             return null;

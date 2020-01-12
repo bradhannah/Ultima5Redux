@@ -21,7 +21,7 @@ namespace Ultima5Redux
         /// </summary>
         private NonPlayerCharacterReferences npcRefs { get; }
         private NonPlayerCharacterMovements movements { get; }
-
+        private TileReferences tileRefs;
         private MapCharacterAnimationStates smallMapAnimationStates;
         private MapCharacterAnimationStates overworldAnimationState;
         private MapCharacterAnimationStates underworldAnimationState;
@@ -50,6 +50,7 @@ namespace Ultima5Redux
             DataChunk animationStatesDataChunk, DataChunk overworldAnimationStatesDataChunk, DataChunk underworldAnimationStatesDataChunk, DataChunk charStatesDataChunk,
             DataChunk nonPlayerCharacterMovementLists, DataChunk NonPlayerCharacterMovementOffsets)
         {
+            this.tileRefs = tileRefs;
             smallMapAnimationStates = new MapCharacterAnimationStates(animationStatesDataChunk, tileRefs);
             overworldAnimationState = new MapCharacterAnimationStates(overworldAnimationStatesDataChunk, tileRefs);
             underworldAnimationState = new MapCharacterAnimationStates(underworldAnimationStatesDataChunk, tileRefs);
@@ -65,7 +66,7 @@ namespace Ultima5Redux
 
         }
 
-        public void SetCurrentMapType(SmallMapReferences.SingleMapReference singleMapReference, LargeMap.Maps largeMap, bool bLoadFromDisk)
+        public void SetCurrentMapType(SmallMapReferences.SingleMapReference singleMapReference, LargeMap.Maps largeMap, TimeOfDay timeOfDay, bool bLoadFromDisk)
         {
             List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
             
@@ -77,10 +78,8 @@ namespace Ultima5Redux
             switch (largeMap)
             {
                 case LargeMap.Maps.Small:
-                    npcCurrentMapRefs = npcRefs.GetNonPlayerCharactersByLocation(singleMapReference.MapLocation);
-                    smallMapAnimationStates.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.SAVED_GAM, bLoadFromDisk);
-                    
-                    break;
+                    LoadSmallMap(singleMapReference, timeOfDay, bLoadFromDisk);
+                    return;
                 case LargeMap.Maps.Overworld:
                     // we don't reload them because the over and underworld are only loaded at boot time
                     break;
@@ -89,46 +88,24 @@ namespace Ultima5Redux
             }
             bool bIsLargeMap = largeMap != LargeMap.Maps.Small;
 
-            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
+            if (bIsLargeMap)
             {
-                // the animations are out of order - so we use this reference to track it down
-                NonPlayerCharacterReference npcRef = bIsLargeMap ? null: npcCurrentMapRefs[i];
-                MapCharacterState mapCharState;
-
-                MapCharacterAnimationState charAnimState = null;
-
-                NonPlayerCharacterMovement charMovement;
-                if (bIsLargeMap)
+                for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
                 {
+                    // the animations are out of order - so we use this reference to track it down
+                    NonPlayerCharacterReference npcRef = bIsLargeMap ? null : npcCurrentMapRefs[i];
+                    MapCharacterState mapCharState;
+
+                    MapCharacterAnimationState charAnimState = null;
+
+                    NonPlayerCharacterMovement charMovement;
+
                     mapCharState = null;
                     charMovement = null;
                     charAnimState = CurrentAnimationState.GetCharacterState(i);
+
+                    Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, timeOfDay));
                 }
-                else
-                {
-                    
-                    charMovement = movements.GetMovement(i);
-                    
-                    if (!bLoadFromDisk)
-                    {
-                        // we keep the object because we may be required to save this to disk - but since we are leaving the map there is no need to save their movements
-                        charMovement.ClearMovements();
-                        mapCharState = null;
-                    }
-                    else
-                    {
-                        // character states are only loaded when forced from disk and only on small maps
-                        mapCharState = charStates.GetCharacterState(i);
-
-                        if (CurrentAnimationState.HasAnyAnimationStates())
-                        {
-                            charAnimState = CurrentAnimationState.GetCharacterState(mapCharState.CharacterAnimationStateIndex);
-                        }
-                    }
-                }
-
-                Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement));
-
                 //Debug.Assert(charAnimState.X == mapCharState.X);
                 //Debug.Assert(charAnimState.Y == mapCharState.Y);
                 //Debug.Assert(charAnimState.Floor == mapCharState.Floor);
@@ -139,12 +116,61 @@ namespace Ultima5Redux
         {
             foreach (MapCharacter character in Characters)
             {
-                if (character.CurrentMapPosition == xy && character.CurrentFloor == nFloor && character.NPCRef.MapLocation == location)
+                if (character.CurrentCharacterPosition.XY == xy && character.CurrentCharacterPosition.Floor == nFloor && character.NPCRef.MapLocation == location)
                 {
                     return character;
                 }
             }
             return null;
         }
+
+        /// <summary>
+        /// Resets the current map to a default state - typically no monsters and NPCs in there default positions
+        /// </summary>
+        private List<NonPlayerCharacterReference> LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, TimeOfDay timeOfDay, bool bLoadFromDisk)
+        {
+            List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
+
+            npcCurrentMapRefs = npcRefs.GetNonPlayerCharactersByLocation(singleMapReference.MapLocation);
+            if (bLoadFromDisk)
+            {
+                smallMapAnimationStates.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.SAVED_GAM, bLoadFromDisk);
+            }
+            else
+            {
+
+            }
+
+            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
+            {
+                NonPlayerCharacterReference npcRef = npcCurrentMapRefs[i];
+                MapCharacterState mapCharState;
+                MapCharacterAnimationState charAnimState = null;
+                NonPlayerCharacterMovement charMovement;
+
+                charMovement = movements.GetMovement(i);
+
+                if (!bLoadFromDisk)
+                {
+                    // we keep the object because we may be required to save this to disk - but since we are leaving the map there is no need to save their movements
+                    charMovement.ClearMovements();
+                    mapCharState = new MapCharacterState(tileRefs, npcRef, i, timeOfDay);
+                }
+                else
+                {
+                    // character states are only loaded when forced from disk and only on small maps
+                    mapCharState = charStates.GetCharacterState(i);
+
+                    if (CurrentAnimationState.HasAnyAnimationStates())
+                    {
+                        charAnimState = CurrentAnimationState.GetCharacterState(mapCharState.CharacterAnimationStateIndex);
+                    }
+                }
+
+                Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, timeOfDay));
+            }
+            return npcCurrentMapRefs;
+        }
+
     }
 }

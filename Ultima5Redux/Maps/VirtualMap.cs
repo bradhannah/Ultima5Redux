@@ -40,6 +40,7 @@ namespace Ultima5Redux
         /// Current position of player character (avatar)
         /// </summary>
         private Point2D _currentPosition = new Point2D(0, 0);
+        private TimeOfDay timeOfDay;
         #endregion
 
         #region Public Properties 
@@ -118,7 +119,7 @@ namespace Ultima5Redux
         /// <param name="tileReferences"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences, 
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
-            GameState state, NonPlayerCharacterReferences npcRefs)
+            GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay)
         {
             this.SmallMapRefs = smallMapReferences;
             this.smallMaps = smallMaps;
@@ -127,6 +128,7 @@ namespace Ultima5Redux
             this.tileReferences = tileReferences;
             this.state = state;
             this.npcRefs = npcRefs;
+            this.timeOfDay = timeOfDay;
             //this.characterStates = characterStates;
             largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
@@ -148,7 +150,7 @@ namespace Ultima5Redux
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
-            TheMapCharacters.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small, bLoadFromDisk);
+            TheMapCharacters.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small, timeOfDay, bLoadFromDisk);
 
             //TheMapCharacters = new MapCharacters(tileReferences, npcRefs, singleMapReference, LargeMap.Maps.Small,
             //    state.CharacterAnimationStatesDataChunk,state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
@@ -168,7 +170,7 @@ namespace Ultima5Redux
             IsLargeMap = true;
             LargeMapOverUnder = map;
 
-            TheMapCharacters.SetCurrentMapType(null, map, true);
+            TheMapCharacters.SetCurrentMapType(null, map, timeOfDay, true);
 
         }
         #endregion
@@ -303,13 +305,13 @@ namespace Ultima5Redux
                 {
                     // peek and see what we have before we pop it off
                     NonPlayerCharacterMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommand(true);
-                    Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(mapChar.CurrentMapPosition, direction);
+                    Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
                     // need to evaluate if I can even move to the next tile before actually popping out of the queue
                     if (GetTileReference(adjustedPos).IsNPCCapableSpace)
                     {
                         // pop the direction from the queue
                         direction = mapChar.Movement.GetNextMovementCommand(false);
-                        mapChar.Move(adjustedPos, mapChar.CurrentFloor);
+                        mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor);
                     }
                 }
             }

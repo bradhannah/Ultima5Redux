@@ -90,7 +90,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
+    <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecord.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecords.cs" />
     <Compile Include="MapCharacters\MapCharacterAnimationState.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="Maps\SmallMapReference.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="TileReferences.cs" />
+    <Compile Include="TimeOfDay.cs" />
     <Compile Include="U5StringRef.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Maps\SmallMap.cs" />

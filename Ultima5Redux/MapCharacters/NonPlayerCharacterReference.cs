@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
 using System.Diagnostics;
 //using static Ultima5Redux.NonPlayerCharacterReferences;
 
@@ -9,60 +8,8 @@ namespace Ultima5Redux
     /// <summary>
     /// A single non player character (NPC)
     /// </summary>
-    public class NonPlayerCharacterReference
+    public partial class NonPlayerCharacterReference
     {
-        public class NPCSchedule
-        {
-            public Point2D GetHardCoord(int nIndex)
-            {
-                return (new Point2D(Coords[nIndex].X, Coords[nIndex].Y));
-            }
-
-            public int GetFloor(int nIndex)
-            {
-                return Coords[nIndex].Z;
-            }
-
-            /// <summary>
-            /// TODO: Need to figure out what these AI types actually mean
-            /// </summary>
-            public List<byte> AIType = new List<byte>();
-            /// <summary>
-            /// 3D Coordinates including floor number
-            /// </summary>
-            public List<Point3D> Coords { get; }
-            /// <summary>
-            /// Times of day to move to the next scheduled item
-            /// TODO: figure out why there are 4 times, but only three xyz's to go to?!
-            /// </summary>
-            public List<byte> Times { get; }
-
-            /// <summary>
-            /// Creates an NPC Schedule object 
-            /// This is easier to consume than the structure
-            /// </summary>
-            /// <param name="sched"></param>
-            public NPCSchedule(NPC_Schedule sched)
-            {
-                Coords = new List<Point3D>();
-                Times = new List<byte>();
-
-                unsafe
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        AIType.Add(sched.AI_types[i]);
-                        Coords.Add(new Point3D(sched.x_coordinates[i], sched.y_coordinates[i], sched.z_coordinates[i]));
-                        if (sched.z_coordinates[i] != 0) { System.Console.Write(""); }
-                    }
-                    // argh, I can't get the size dynamically of the arrays
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Times.Add(sched.times[i]);
-                    }
-                }
-            }
-        }
 
         #region Private Variables
         private GameState gameStateRef;
@@ -150,7 +97,7 @@ namespace Ultima5Redux
         /// <summary>
         /// The daily schedule of the NPC
         /// </summary>
-        public NPCSchedule Schedule { get; }
+        public NonPlayerCharacterSchedule Schedule { get; }
         /// <summary>
         /// The Dialog identifier
         /// </summary>
@@ -171,8 +118,8 @@ namespace Ultima5Redux
         /// </summary>
         public TalkScript Script { get; }
 
-        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
-        public int CurrentFloor { get; private set; }
+//        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
+//        public int CurrentFloor { get; private set; }
 
         /// <summary>
         /// Which map is the NPC on?
@@ -282,7 +229,7 @@ namespace Ultima5Redux
         public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location, GameState gameStateRef, NPC_Schedule sched,
             byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript, int nKeySprite)
         {
-            Schedule = new NPCSchedule(sched);
+            Schedule = new NonPlayerCharacterSchedule(sched);
             
             MapLocation = location;
             NPCKeySprite = nKeySprite;

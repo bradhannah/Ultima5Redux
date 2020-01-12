@@ -196,7 +196,7 @@ namespace Ultima5Redux
         /// <param name="nMinutes">Number of minutes to advance (maximum of 9*60)</param>
         public void AdvanceTime(int nMinutes)
         {
-            State.AdvanceClock(nMinutes);
+            State.TheTimeOfDay.AdvanceClock(nMinutes);
 
              //State.TheVirtualMap.MoveNPCs();
         }
@@ -230,7 +230,7 @@ namespace Ultima5Redux
             {
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.VISION2_STRINGS.THOU_DOST_SEE).Trim()
                    + " " + (LookRef.GetLookDescription(tileReference.Index).TrimStart()
-                   + State.FormattedTime));
+                   + State.TheTimeOfDay.FormattedTime));
             }
             else // lets see what we've got here!
             {
@@ -538,7 +538,7 @@ namespace Ultima5Redux
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
             bool bPassable = newTileReference.IsWalking_Passable &&
-                !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index && !State.IsDayLight)
+                !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index && !State.TheTimeOfDay.IsDayLight)
                 && !State.TheVirtualMap.IsNPCTile(newPos);
 
 

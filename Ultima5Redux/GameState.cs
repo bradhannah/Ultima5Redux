@@ -55,95 +55,8 @@ namespace Ultima5Redux
 
         #region Public Properties
         public VirtualMap TheVirtualMap { get; set; }
+        public TimeOfDay TheTimeOfDay { get; }
 
-        public bool IsDayLight
-        {
-            get
-            {
-                return (Hour >= 5 &&  Hour < (8+12));
-            }
-        } 
-
-        public string FormattedDate
-        {
-            get
-            {
-                return Month + "-" + Day + "-" + Year;
-            }
-        }
-
-        public string FormattedTime
-        {
-            get
-            {
-                string suffix;
-                if (Hour < 12) suffix = "AM"; else suffix = "PM";
-                return Hour % 12 + ":" + String.Format("{0:D2}", Minute) + " " + suffix;
-            }
-        }
-
-
-        public UInt16 Year
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR).GetChunkAsUINT16();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR).SetChunkAsUINT16(value);
-            }
-        }
-
-        public byte Month
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH).GetChunkAsByte();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH).SetChunkAsByte(value);
-            }
-        }
-
-        public byte Day
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY).GetChunkAsByte();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY).SetChunkAsByte(value);
-            }
-        }
-
-        public byte Hour
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR).GetChunkAsByte();
-            }
-            set
-            {
-                Debug.Assert(value >= 0 && value <= 23);
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR).SetChunkAsByte(value);
-            }
-        }
-
-        public byte Minute
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE).GetChunkAsByte();
-            }
-            set
-            {
-                Debug.Assert(value >= 0 && value <= 59);
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE).SetChunkAsByte(value);
-            }
-        }
 
         public byte Gems
         {
@@ -308,7 +221,7 @@ namespace Ultima5Redux
             TileReferences TileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
         {
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap, 
-                nonPlayerCharacters, TileReferences, state, npcRefs);
+                nonPlayerCharacters, TileReferences, state, npcRefs, TheTimeOfDay);
         }
 
         /// <summary>
@@ -398,6 +311,9 @@ namespace Ultima5Redux
             overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
             underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
+            TheTimeOfDay = new TimeOfDay(dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE), 
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
         }
         #endregion
 
@@ -422,57 +338,7 @@ namespace Ultima5Redux
             return ((nextRan % howMany) == 0);
         }
 
-        internal void AdvanceClock(int nMinutes)
-        {
-            // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
-            if (nMinutes > (60 * 9)) throw new Exception("You can not advance more than 9 hours at a time");
-
-            // if we add the time, and it enters the next hour then we have some work to do
-            if (Minute + nMinutes > 59)
-            {
-                int nExtraMinutes;
-                byte nHours = (byte)Math.DivRem(nMinutes, 60, out nExtraMinutes);
-
-                byte newHour = (byte)((Hour + nHours + 1));
-                Minute = (byte)((Minute + (byte)nExtraMinutes) % 60);
-
-                // if it puts us into a new day
-                if (newHour <= 23)
-                {
-                    Hour = newHour;
-                }
-                else
-                {
-                    Hour = (byte)(newHour % 24);
-                    // if the day + 1 is more days then we are allow in the month, then restart the days, and go to next month
-                    int nDay = (byte)(Day + 1);
-                    if (nDay > 28)
-                    {
-                        Day = 1;
-                        int nMonth = (byte)(Month + 1);
-                        // if the next month goes beyond 13, then we reset and advance the year
-                        if (nMonth > 13)
-                        {
-                            Month = 1;
-                            Year += 1;
-                        }
-                        else
-                        {
-                            Month += 1;
-                        }
-                    }
-                    else
-                    {
-                        Day = (byte)(Day + 1);
-                    }
-                }
-            }
-            else
-            {
-                Minute += (byte)nMinutes;
-            }
-        }
-
+ 
         /// <summary>
         /// Is NPC alive?
         /// </summary>

@@ -31,17 +31,17 @@ namespace Ultima5Redux
             return locationToNPCsDictionary[location];
         }
 
-        public NonPlayerCharacterReference GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
-        {
-            foreach (NonPlayerCharacterReference npc in GetNonPlayerCharactersByLocation(location))
-            {
-                if (npc.CurrentMapPosition == xy && npc.CurrentFloor == nFloor)
-                {
-                    return npc;
-                }
-            }
-            return null; 
-        }
+        //public NonPlayerCharacterReference GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
+        //{
+        //    foreach (NonPlayerCharacterReference npc in GetNonPlayerCharactersByLocation(location))
+        //    {
+        //        if (npc.CurrentMapPosition == xy && npc.CurrentFloor == nFloor)
+        //        {
+        //            return npc;
+        //        }
+        //    }
+        //    return null; 
+        //}
         #endregion
 
         #region Private Variables
