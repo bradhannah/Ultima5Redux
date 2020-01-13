@@ -311,7 +311,7 @@ namespace Ultima5Redux
                     // need to evaluate if I can even move to the next tile before actually popping out of the queue
                     bool bIsNPCOnSpace = IsNPCTile(adjustedPos);
                     TileReference adjustedTile = GetTileReference(adjustedPos);
-                    //if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNPCOnSpace)
+                    if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNPCOnSpace)
                     {
                         // pop the direction from the queue
                         direction = mapChar.Movement.GetNextMovementCommandDirection(false);

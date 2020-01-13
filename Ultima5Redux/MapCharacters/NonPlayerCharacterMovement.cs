@@ -16,7 +16,7 @@ namespace Ultima5Redux
             this.nDialogIndex = nDialogIndex;
             
             // todo: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
-            UInt16 nOffset = movementOffsetDataChunk.GetChunkAsUINT16List()[nDialogIndex-1];
+            UInt16 nOffset = movementOffsetDataChunk.GetChunkAsUINT16List() [nDialogIndex];
 
             // if it has the value of 0xFFFF then it indicates there are currently no instructions
             if (nOffset == 0xFFFF) return;
@@ -27,7 +27,8 @@ namespace Ultima5Redux
             // get a copy because the GetAsByteList is an expensive method call
             List<byte> rawData = movementInstructionDataChunk.GetAsByteList();
 
-            List<byte> specificRawData = rawData.GetRange((nOffsetIndex - 0x20) + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
+            //List<byte> specificRawData = rawData.GetRange((nOffsetIndex - 0x20) + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
+            List<byte> specificRawData = rawData.GetRange((nOffsetIndex) + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
             //List<byte> smallRawData = rawData.GetRange(nOffsetIndex + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
             //List<byte> smallRawDataLow = rawData.GetRange((nOffsetIndex + 0x20)+ MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
             //List<byte> smallRawDataHigh = rawData.GetRange((nOffsetIndex - 0x20) + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
