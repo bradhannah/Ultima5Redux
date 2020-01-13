@@ -300,17 +300,21 @@ namespace Ultima5Redux
             //foreach (NonPlayerCharacterReference npc in TheMapCharacters.NPCRefs.GetNonPlayerCharactersByLocation(CurrentSingleMapReference.MapLocation))
             foreach (MapCharacter mapChar in TheMapCharacters.Characters)
             {
+                if (!mapChar.IsActive) continue;
+
                 // this NPC has a command in the buffer, so let's execute!
                 if (mapChar.Movement.IsNextCommandAvailable())
                 {
                     // peek and see what we have before we pop it off
-                    NonPlayerCharacterMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommand(true);
+                    NonPlayerCharacterMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommandDirection(true);
                     Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
                     // need to evaluate if I can even move to the next tile before actually popping out of the queue
-                    if (GetTileReference(adjustedPos).IsNPCCapableSpace)
+                    bool bIsNPCOnSpace = IsNPCTile(adjustedPos);
+                    TileReference adjustedTile = GetTileReference(adjustedPos);
+                    //if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNPCOnSpace)
                     {
                         // pop the direction from the queue
-                        direction = mapChar.Movement.GetNextMovementCommand(false);
+                        direction = mapChar.Movement.GetNextMovementCommandDirection(false);
                         mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor);
                     }
                 }

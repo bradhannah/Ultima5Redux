@@ -51,7 +51,6 @@ namespace Ultima5Redux
             AnimationState = null;
             CharacterState = null;
             Movement = null;
-            
         }
 
         public MapCharacter(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, MapCharacterState mapCharacterState,

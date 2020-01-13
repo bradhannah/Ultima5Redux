@@ -119,10 +119,11 @@ namespace Ultima5Redux
                 State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
             }
 
+
             //State.TheVirtualMap.LoadSmallMap()
             //State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
 
-            State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0), false);
+            //State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0), false);
 
             //int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
             //NpcRef.GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location.Britain, new Point2D(0, 31), 0);
@@ -198,12 +199,12 @@ namespace Ultima5Redux
         {
             State.TheTimeOfDay.AdvanceClock(nMinutes);
 
-             //State.TheVirtualMap.MoveNPCs();
+             State.TheVirtualMap.MoveNPCs();
         }
 
         /// <summary>
         /// Looks at a particular tile, detecting if NPCs are present as well
-        /// Provides string output or special instructions if it is "special"
+        /// Provides string output or special instructions if it is "special"B
         /// </summary>
         /// <param name="xy">positon of tile to look at</param>
         /// <param name="specialLookCommand">Special command such as look at gem or sign</param>
