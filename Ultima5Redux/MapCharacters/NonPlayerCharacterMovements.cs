@@ -28,17 +28,5 @@ namespace Ultima5Redux
         {
             return movementList[nIndex];
         }
-        //        if (NPCMovement.IsNextCommandAvailable())
-        //        {
-
-        //        }
-        //        else
-        //        {
-        //            // there is no special movement instructions - so they are where they are expected to be
-        //            MoveNPCToDefaultScheduledPosition();
-        //}
-
-
-        //NPCMovement = new NonPlayerCharacterMo vement(dialogIndex, gameStateRef.NonPlayerCharacterMovementLists, gameStateRef.NonPlayerCharacterMovementOffsets);
     }
 }

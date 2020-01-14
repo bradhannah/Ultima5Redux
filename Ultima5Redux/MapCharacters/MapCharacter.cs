@@ -15,8 +15,6 @@ namespace Ultima5Redux
 
         public CharacterPosition CurrentCharacterPosition = new CharacterPosition();
 
-        //public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
-        //public int CurrentFloor { get; private set; } = 0;
 
         public bool IsActive
         { 
@@ -31,19 +29,9 @@ namespace Ultima5Redux
             }
         }
 
-        public void Move(Point2D xy, int nFloor)
-        {
-            CurrentCharacterPosition.XY = xy;
-            CurrentCharacterPosition.Floor = nFloor;
-        }
-
-        public void Move(CharacterPosition characterPosition)//Point2D xy, int nFloor)
-        {
-            CurrentCharacterPosition = characterPosition;
-        }
-
-        //TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, DataChunk animationStatesDataChunk, DataChunk charStatesDataChunk,
-        //DataChunk nonPlayerCharacterMovementLists, DataChunk NonPlayerCharacterMovementOffsets
+        #region Public Methods
+     
+        #endregion
 
         public MapCharacter()
         {
@@ -74,8 +62,6 @@ namespace Ultima5Redux
             {
                 CurrentCharacterPosition.XY = new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y);
             }
-
-            //Movement = new NonPlayerCharacterMovement(Reference.DialogIndex,)
         }
 
         /// <summary>
@@ -83,17 +69,40 @@ namespace Ultima5Redux
         /// </summary>
         internal void MoveNPCToDefaultScheduledPosition(TimeOfDay timeOfDay)
         {
-            // todo: need to determine actual schedule time
-            // we could even just ask the NPC where they should be at the time given
-            //int nIndex = 1;
-            //Point2D npcXy = NPCRef.Schedule.GetHardCoord(nIndex);
-
             CharacterPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
 
-            Move(npcXy);// npcXy, NPCRef.Schedule.GetFloor(nIndex));
+            Move(npcXy);
+        }
+
+        /// <summary>
+        /// move the character to a new position
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="nFloor"></param>
+        internal void Move(Point2D xy, int nFloor)
+        {
+            CurrentCharacterPosition.XY = xy;
+            CurrentCharacterPosition.Floor = nFloor;
+        }
+
+        /// <summary>
+        /// Move the character to a new positon
+        /// </summary>
+        /// <param name="characterPosition"></param>
+        internal void Move(CharacterPosition characterPosition)
+        {
+            CurrentCharacterPosition = characterPosition;
+        }
+
+        /// <summary>
+        /// calculates and stores new path for NPC
+        /// </summary>
+        internal void CalculateNextPath()
+        {
+            
         }
 
     }

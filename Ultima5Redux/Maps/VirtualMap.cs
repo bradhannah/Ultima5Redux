@@ -297,7 +297,6 @@ namespace Ultima5Redux
             if (IsLargeMap) return false;
 
             // go through each of the NPCs on the map
-            //foreach (NonPlayerCharacterReference npc in TheMapCharacters.NPCRefs.GetNonPlayerCharactersByLocation(CurrentSingleMapReference.MapLocation))
             foreach (MapCharacter mapChar in TheMapCharacters.Characters)
             {
                 if (!mapChar.IsActive) continue;
@@ -317,6 +316,10 @@ namespace Ultima5Redux
                         direction = mapChar.Movement.GetNextMovementCommandDirection(false);
                         mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor);
                     }
+                }
+                else 
+                {
+                    mapChar.CalculateNextPath();
                 }
             }
 
