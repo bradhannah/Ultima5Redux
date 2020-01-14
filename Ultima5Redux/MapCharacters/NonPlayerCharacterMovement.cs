@@ -6,6 +6,7 @@ namespace Ultima5Redux
 {
     public class NonPlayerCharacterMovement
     {
+
         public NonPlayerCharacterMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
         {
             // we totally ignore the first entry, since it's bad stuff
@@ -16,7 +17,7 @@ namespace Ultima5Redux
             this.nDialogIndex = nDialogIndex;
             
             // todo: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
-            UInt16 nOffset = movementOffsetDataChunk.GetChunkAsUINT16List() [nDialogIndex];
+            nOffset = movementOffsetDataChunk.GetChunkAsUINT16List() [nDialogIndex];
 
             // if it has the value of 0xFFFF then it indicates there are currently no instructions
             if (nOffset == 0xFFFF) return;
@@ -27,17 +28,14 @@ namespace Ultima5Redux
             // get a copy because the GetAsByteList is an expensive method call
             List<byte> rawData = movementInstructionDataChunk.GetAsByteList();
 
-            //List<byte> specificRawData = rawData.GetRange((nOffsetIndex - 0x20) + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
-            List<byte> specificRawData = rawData.GetRange((nOffsetIndex) + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
-            //List<byte> smallRawData = rawData.GetRange(nOffsetIndex + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
-            //List<byte> smallRawDataLow = rawData.GetRange((nOffsetIndex + 0x20)+ MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
-            //List<byte> smallRawDataHigh = rawData.GetRange((nOffsetIndex - 0x20) + MAX_MOVEMENT_COMMAND_SIZE, MAX_COMMAND_LIST_ENTRIES * 2);
+            // gets a smaller version of it - much easier to keep track of
+            loadedData = rawData.GetRange(nOffsetIndex, MAX_COMMAND_LIST_ENTRIES * 2);
 
             int nIndex = nOffset;
             for (int i = 0; i < MAX_COMMAND_LIST_ENTRIES; i++)
             {
-                byte nIterations = specificRawData[nIndex];//rawData[nOffsetIndex + (nIndex * MAX_MOVEMENT_COMMAND_SIZE)];
-                MovementCommandDirection direction = (MovementCommandDirection)specificRawData[nIndex + 1];//rawData[nOffsetIndex + (nIndex * MAX_MOVEMENT_COMMAND_SIZE) + 1];
+                byte nIterations = loadedData[nIndex];
+                MovementCommandDirection direction = (MovementCommandDirection)loadedData[nIndex + 1];
 
                 // if we have hit 0xFF then there is nothing else in the list and we can just return
                 if (nIterations == 0xFF || nIterations == 0) return;
@@ -80,6 +78,9 @@ namespace Ultima5Redux
         private DataChunk movementInstructionDataChunk;
         private DataChunk movementOffsetDataChunk;
         private int nDialogIndex;
+        private List<byte> loadedData = new List<byte>();
+        private UInt16 nOffset;
+
 
         /// <summary>
         /// The direction of the movement as defined in saved.gam
