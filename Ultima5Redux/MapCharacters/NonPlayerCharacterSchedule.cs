@@ -7,6 +7,13 @@ namespace Ultima5Redux
     {
         public class NonPlayerCharacterSchedule
         {
+            public enum AIType { Fixed = 0, Wander = 1, BigWander = 2, ChildRunAway = 3, MerchantThing = 4, ExtortOrAttackOrFollow = 6 }
+
+            /// <summary>
+            /// Get the index of the scheduled based on the specified time of day
+            /// </summary>
+            /// <param name="timeOfDay"></param>
+            /// <returns></returns>
             private int GetScheduleIndex(TimeOfDay timeOfDay)
             {
                 int nHour = timeOfDay.Hour;
@@ -63,6 +70,18 @@ namespace Ultima5Redux
                 return nLargestIndex;
             }
 
+            public AIType GetCharacterAITypeByTime(TimeOfDay timeOfDay)
+            {
+                int nIndex = GetScheduleIndex(timeOfDay);
+
+                return (AIType)AITypeList[nIndex];
+            }
+
+            /// <summary>
+            /// Gets the characters preferred/default position based on the time of day
+            /// </summary>
+            /// <param name="timeOfDay"></param>
+            /// <returns></returns>
             public CharacterPosition GetCharacterDefaultPositionByTime(TimeOfDay timeOfDay)
             {
                 CharacterPosition characterPosition = new CharacterPosition();
@@ -74,12 +93,12 @@ namespace Ultima5Redux
                 return characterPosition;
             }
 
-            public Point2D GetXY(int nIndex)
+            private Point2D GetXY(int nIndex)
             {
                 return (new Point2D(Coords[nIndex].X, Coords[nIndex].Y));
             }
 
-            public int GetFloor(int nIndex)
+            private int GetFloor(int nIndex)
             {
                 return Coords[nIndex].Z;
             }
@@ -87,16 +106,16 @@ namespace Ultima5Redux
             /// <summary>
             /// TODO: Need to figure out what these AI types actually mean
             /// </summary>
-            public List<byte> AIType = new List<byte>();
+            private List<byte> AITypeList = new List<byte>();
             /// <summary>
             /// 3D Coordinates including floor number
             /// </summary>
-            public List<Point3D> Coords { get; }
+            private List<Point3D> Coords { get; }
             /// <summary>
             /// Times of day to move to the next scheduled item
             /// TODO: figure out why there are 4 times, but only three xyz's to go to?!
             /// </summary>
-            public List<byte> Times { get; }
+            private List<byte> Times { get; }
 
             /// <summary>
             /// Creates an NPC Schedule object 
@@ -112,7 +131,7 @@ namespace Ultima5Redux
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        AIType.Add(sched.AI_types[i]);
+                        AITypeList.Add(sched.AI_types[i]);
                         Coords.Add(new Point3D(sched.x_coordinates[i], sched.y_coordinates[i], sched.z_coordinates[i]));
                         if (sched.z_coordinates[i] != 0) { System.Console.Write(""); }
                     }

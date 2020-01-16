@@ -260,37 +260,108 @@ namespace Ultima5Redux
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
 
             MapCharacter mapCharacter = TheMapCharacters.GetMapCharacterByLocation(location, xy, CurrentSingleMapReference.Floor);
-            //List<NonPlayerCharacterReference> npcs = nonPlayerCharacters.GetNonPlayerCharactersByLocation(location);
-
-            //MapCharacterAnimationState characterState = characterStates.GetCharacterStateByPosition(xy, CurrentSingleMapReference.Floor);
-
-            // get the NPC on the current tile
-            //NonPlayerCharacterReference npc = nonPlayerCharacters.GetNonPlayerCharacter(location, xy, CurrentSingleMapReference.Floor);
-
-            //if (npc == null)
-            //throw new Exception("You asked for an NPC on a tile that one does not exist - you should have checked first!");
 
             return mapCharacter;
-            //foreach (NonPlayerCharacters.NonPlayerCharacter npc in npcs)
-            //{
-
-            //    int nIndex = 1;
-            //    Point2D npcXy = npc.Schedule.GetHardCoord(nIndex);
-
-            //    // the NPC is a non-NPC, so we keep looking
-            //    if (npcXy.X == 0 && npcXy.Y == 0) continue;
-
-            //    // we found the right NPC and are they on the correct floor
-            //    if (npcXy == xy && CurrentSingleMapReference.Floor == npc.Schedule.Coords[nIndex].Z)
-            //    {
-            //        return npc;
-            //    }
-            //}
-            return null;
         }
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// calculates and stores new path for NPC
+        /// Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapCharacter itself
+        /// </summary>
+        private void CalculateNextPath(MapCharacter mapChar)
+        {
+            CharacterPosition npcXy = mapChar.NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+
+
+            // the NPC is a non-NPC, so we keep looking
+            if (npcXy.X == 0 && npcXy.Y == 0) return;
+
+            // the tile the NPC current resides on
+            TileReference currentTileRef = GetTileReference(npcXy.XY);
+
+            bool bNPCShouldKlimb = CheckNPCAndKlimb(currentTileRef);
+            if (bNPCShouldKlimb)
+            {
+                // teleport them and return immediately
+            }
+
+            // is the character is in their prescribed location?
+            if (mapChar.CurrentCharacterPosition == npcXy)
+            {
+                NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType aiType = mapChar.NPCRef.Schedule.GetCharacterAITypeByTime(timeOfDay);
+                // test all the possibilities, special calculations for all of them
+                switch (aiType)
+                {
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Fixed:
+                        // do nothing, they are where they are supposed to be 
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
+                        // choose a tile within N tiles that is not blocked, and build a single path
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
+                        // choose a tile within N tiles that is not blocked, and build a single path
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ChildRunAway:
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.MerchantThing:
+                        // don't think they move....?
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ExtortOrAttackOrFollow:
+                        // set location of Avatar as way point, but only set the first movement from the list
+                        break;
+                    default:
+                        throw new Exception("An unexpected movement AI was encountered: " + aiType.ToString() + " for NPC: " + mapChar.NPCRef.Name);
+                }
+            }
+            else // character not in correct position
+            {
+                // build a path
+            }
+            // calculate the path to get them to exactly their prescribed position
+        }
+
+        /// <summary>
+        /// Checks if an NPC is on a stair or ladder, and if it goes in the correct direction then it returns true indicating they can teleport
+        /// </summary>
+        /// <param name="currentTileRef">the tile they are currently on</param>
+        /// <param name="bIsOnStairCaseOrLadder"></param>
+        /// <returns></returns>
+        private bool CheckNPCAndKlimb(TileReference currentTileRef)
+        {
+            // is player on a ladder or staircase going in the direction they intend to go?
+            bool bIsOnStairCaseOrLadder = tileReferences.IsStaircase(currentTileRef.Index) || tileReferences.IsLadder(currentTileRef.Index);
+
+            if (bIsOnStairCaseOrLadder)
+            {
+                // are they destined to go up or down it?
+                if (tileReferences.IsStaircase(currentTileRef.Index))
+                {
+                    if (IsStairGoingUp())
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                else // it's a ladder
+                {
+                    if (tileReferences.IsLadderUp(currentTileRef.Index))
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            return false;
+        }
+
         internal bool MoveNPCs()
         {
             // if not on small map - then no NPCs!
@@ -319,7 +390,7 @@ namespace Ultima5Redux
                 }
                 else 
                 {
-                    mapChar.CalculateNextPath();
+                    CalculateNextPath(mapChar);
                 }
             }
 

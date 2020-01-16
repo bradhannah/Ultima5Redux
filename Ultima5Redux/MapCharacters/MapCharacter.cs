@@ -8,14 +8,33 @@ namespace Ultima5Redux
 {
     public class MapCharacter
     {
+        #region Private and Internal Properties 
+        /// <summary>
+        /// All the movements for the map character
+        /// </summary>
         internal NonPlayerCharacterMovement Movement { get; }
-        public NonPlayerCharacterReference NPCRef { get; }
+        /// <summary>
+        /// the state of the animations
+        /// </summary>
         internal MapCharacterAnimationState AnimationState { get; }
+        /// <summary>
+        /// The location state of the character
+        /// </summary>
         internal MapCharacterState CharacterState { get; }
+        /// <summary>
+        /// Reference to current NPC (if it's an NPC at all!)
+        /// </summary>
+        internal NonPlayerCharacterReference NPCRef { get; }
+        /// <summary>
+        /// The characters current position on the map
+        /// </summary>
+        internal CharacterPosition CurrentCharacterPosition { get; private set; }  = new CharacterPosition();
+        #endregion
 
-        public CharacterPosition CurrentCharacterPosition = new CharacterPosition();
-
-
+        #region Public Properties
+        /// <summary>
+        /// Is the character currently active on the map?
+        /// </summary>
         public bool IsActive
         { 
             get
@@ -28,11 +47,12 @@ namespace Ultima5Redux
                 return false;
             }
         }
-
-        #region Public Methods
-     
         #endregion
 
+        #region Constructors
+        /// <summary>
+        /// emtpy constructor if there is nothing in the map character slot
+        /// </summary>
         public MapCharacter()
         {
             NPCRef = null;
@@ -41,6 +61,14 @@ namespace Ultima5Redux
             Movement = null;
         }
 
+        /// <summary>
+        /// Builds a MpaCharacter from precreated objects - typically loaded from disk in advance
+        /// </summary>
+        /// <param name="npcRef"></param>
+        /// <param name="mapCharacterAnimationState"></param>
+        /// <param name="mapCharacterState"></param>
+        /// <param name="nonPlayerCharacterMovement"></param>
+        /// <param name="timeOfDay"></param>
         public MapCharacter(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, MapCharacterState mapCharacterState,
             NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay)
         {
@@ -63,6 +91,7 @@ namespace Ultima5Redux
                 CurrentCharacterPosition.XY = new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y);
             }
         }
+        #endregion
 
         /// <summary>
         /// Moves the NPC to the appropriate floor and location based on the their expected location and position
@@ -96,14 +125,6 @@ namespace Ultima5Redux
         {
             CurrentCharacterPosition = characterPosition;
         }
-
-        /// <summary>
-        /// calculates and stores new path for NPC
-        /// </summary>
-        internal void CalculateNextPath()
-        {
-            
-        }
-
+  
     }
 }

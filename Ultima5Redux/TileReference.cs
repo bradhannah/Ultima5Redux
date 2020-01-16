@@ -52,15 +52,15 @@ namespace Ultima5Redux
         [DataMember]
         public bool IsKlimable;
 
-        public bool IsStaircase()
-        {
-            return (IsStaircase(Index));
-        }
+        //public bool IsStaircase()
+        //{
+        //    return (IsStaircase(Index));
+        //}
 
-        static public bool IsStaircase(int nSprite)
-        {
-            return (nSprite >= 196 && nSprite <= 199);
-        }
+        //static public bool IsStaircase(int nSprite)
+        //{
+        //    return (nSprite >= 196 && nSprite <= 199);
+        //}
 
         public override string ToString()
         {

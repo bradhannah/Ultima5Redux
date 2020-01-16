@@ -4,9 +4,15 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
-    public class NonPlayerCharacterMovement
+    public partial class NonPlayerCharacterMovement
     {
-
+        #region Constructors
+        /// <summary>
+        /// Construct a NonPlayerCharacterMovement 
+        /// </summary>
+        /// <param name="nDialogIndex">the index of an NPC</param>
+        /// <param name="movementInstructionDataChunk">The full memory chunk of all movement instructions</param>
+        /// <param name="movementOffsetDataChunk">the full memory chunk of the movement offsets</param>
         public NonPlayerCharacterMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
         {
             // we totally ignore the first entry, since it's bad stuff
@@ -52,7 +58,9 @@ namespace Ultima5Redux
                 nIndex = (nIndex + 2) % (MAX_COMMAND_LIST_ENTRIES * 2);
             }
         }
+        #endregion
 
+        #region Static Methods
         static internal Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterMovement.MovementCommandDirection direction)
         {
             Point2D adjustedPos = new Point2D(xy.X, xy.Y);
@@ -74,60 +82,54 @@ namespace Ultima5Redux
             }
             return adjustedPos;
         }
+        #endregion
 
-        private DataChunk movementInstructionDataChunk;
-        private DataChunk movementOffsetDataChunk;
-        private int nDialogIndex;
-        private List<byte> loadedData = new List<byte>();
-        private UInt16 nOffset;
-
-
+        #region Private fields
         /// <summary>
-        /// The direction of the movement as defined in saved.gam
+        /// DataChunk of current map characters movement list
         /// </summary>
-        public enum MovementCommandDirection { East = 1, North = 2, West = 3, South = 4 }
-
+        private DataChunk movementInstructionDataChunk;
+        /// <summary>
+        /// DataChunk of current map characters offset into movement list
+        /// </summary>
+        private DataChunk movementOffsetDataChunk;
+        /// <summary>
+        /// Dialog index of the map character
+        /// </summary>
+        private int nDialogIndex;
+        /// <summary>
+        /// The data that was loaded into the list initially (primarily for debug)
+        /// </summary>
+        private List<byte> loadedData = new List<byte>();
+        /// <summary>
+        /// the offset into the movement list
+        /// </summary>
+        private UInt16 nOffset;
+        /// <summary>
+        /// Maximum number of movement commands per map character
+        /// </summary>
         private const int MAX_COMMAND_LIST_ENTRIES = 0x10;
+        /// <summary>
+        /// Maximum size of each command (iterations+direction)
+        /// </summary>
         private const int MAX_MOVEMENT_COMMAND_SIZE = sizeof(byte) * 2;
-
-        public class MovementCommand
-        {
-
-            public MovementCommand(MovementCommandDirection direction, int iterations)
-            {
-                Iterations = iterations;
-                Direction = direction;
-            }
-
-            /// <summary>
-            /// the direction of the command
-            /// </summary>
-            public MovementCommandDirection Direction { get; set; }
-            /// <summary>
-            /// how many iterations of the command left
-            /// </summary>
-            public int Iterations { get; set; }
-
-            /// <summary>
-            /// Use a single iteration -decrement and return the number of remaining movements
-            /// </summary>
-            /// <returns></returns>
-            public int SpendSingleMovement()
-            {
-                if (Iterations == 0) { throw new Exception("You spent a single movement - but you didn't have any repeats left "); }
-                return --Iterations;
-            }
-        }
-
-        #region Private Fields
         /// <summary>
         /// all movements 
         /// </summary>
         private Queue<MovementCommand> movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
         #endregion
 
-        #region Public Methods
+        #region Public enums
+        /// <summary>
+        /// The direction of the movement as defined in saved.gam
+        /// </summary>
+        public enum MovementCommandDirection { East = 1, North = 2, West = 3, South = 4 }
+        #endregion
 
+        #region Public Methods
+        /// <summary>
+        /// Clear all movements from the current list
+        /// </summary>
         public void ClearMovements()
         {
             movementQueue.Clear();
@@ -171,12 +173,16 @@ namespace Ultima5Redux
             else if (!bPeek)
             {
                 // we have more moves, but we are going to spend one 
-                movementQueue.Peek().SpendSingleMovement();
+                int nRemainingMovements = movementQueue.Peek().SpendSingleMovement();
             }
 
             return direction;
         }
 
+        /// <summary>
+        /// ToString override to simplify debug reading
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             if (this.movementQueue.Count == 0) return "Empty";

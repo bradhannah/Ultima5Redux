@@ -57,9 +57,27 @@ namespace Ultima5Redux
             return GetTileReference(nSprite).IsOpenable;
         }
 
+        public bool IsStaircase(int nSprite)
+        {
+            bool bIsLadder = nSprite == GetTileNumberByName("StairsWest") || nSprite == GetTileNumberByName("StairsEast")
+                || nSprite == GetTileNumberByName("StairsNorth") || nSprite == GetTileNumberByName("StairsSouth"); // is it a ladder
+            return bIsLadder;
+        }
+
+        public bool IsLadderUp(int nSprite)
+        {
+            return nSprite == GetTileNumberByName("LadderUp");
+        }
+
+        public bool IsLadderDown(int nSprite)
+        {
+            return nSprite == GetTileNumberByName("LadderDown");
+        }
+
+
         public bool IsLadder(int nSprite)
         {
-            bool bIsLadder = nSprite == GetTileNumberByName("LadderUp") || nSprite == GetTileNumberByName("LadderDown"); // is it a ladder
+            bool bIsLadder = IsLadderDown(nSprite) || IsLadderUp(nSprite); // is it a ladder
             return bIsLadder;
         }
 
@@ -206,7 +224,7 @@ namespace Ultima5Redux
             {
                 if (bIsNPCTile || bIsAvatarTile)
                 {
-                    nNewSprite = nSprite == GetTileNumberByName("LadderUp") ?
+                    nNewSprite = IsLadderUp(nSprite) ?
                         GetTileNumberByName("KlimbLadderUp") : GetTileNumberByName("KlimbLadderDown");
                 }
             }

@@ -15,14 +15,16 @@ namespace Ultima5Redux
             new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
 
         private SmallMapReferences smallMapRef;
+        private TileReferences spriteTileReferences;
 
-        public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences SpriteTileReferences)
+        public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences spriteTileReferences)
         {
             this.smallMapRef = smallMapRef;
+            this.spriteTileReferences = spriteTileReferences;
             foreach (SmallMapReferences.SingleMapReference mapRef in smallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(u5Directory, mapRef, SpriteTileReferences);
+                SmallMap smallMap = new SmallMap(u5Directory, mapRef, spriteTileReferences);
                 smallMaps.Add(smallMap);
 
                 // we make a map that allows us to map the Location and Floor number to the small map with 
@@ -53,18 +55,18 @@ namespace Ultima5Redux
             bool bHasHigherFllor = mapLocationDictionary[location].ContainsKey(nFloor + 1);
 
             // is it a stair case?
-            Debug.Assert(TileReference.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
+            Debug.Assert(spriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
             // is it the bottom or top floor? if so, then we know
             if (!bHasLowerFloor) return true;
             if (!bHasHigherFllor) return false;
             
             // is there a stair case on the lower floor?
-            if (TileReference.IsStaircase(mapLocationDictionary[location][nFloor-1].TheMap[tilePos.X][tilePos.Y]))
+            if (spriteTileReferences.IsStaircase(mapLocationDictionary[location][nFloor-1].TheMap[tilePos.X][tilePos.Y]))
             {
                 return false;
             }
             // is there a stair case on the upper floor?
-            if (TileReference.IsStaircase(mapLocationDictionary[location][nFloor + 1].TheMap[tilePos.X][tilePos.Y]))
+            if (spriteTileReferences.IsStaircase(mapLocationDictionary[location][nFloor + 1].TheMap[tilePos.X][tilePos.Y]))
             {
                 return true;
             }

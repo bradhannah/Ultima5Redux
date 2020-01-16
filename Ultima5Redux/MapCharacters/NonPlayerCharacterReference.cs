@@ -279,9 +279,4 @@ namespace Ultima5Redux
 
 
     #endregion
-    //}
-
-
-
-    //    }
 }

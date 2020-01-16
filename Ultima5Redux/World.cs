@@ -31,8 +31,6 @@ namespace Ultima5Redux
         public DataOvlReference DataOvlRef { get; }
         public TalkScripts TalkScriptsRef { get; }
         public GameState State { get; }
-        //public MapCharacterAnimationStates CharAnimationStates { get; }
-        //public MapCharacterStates CharStates { get; }
         #endregion
         public LargeMapReference LargeMapRef { get; }
 
@@ -272,11 +270,9 @@ namespace Ultima5Redux
             bool hasBasement = State.TheVirtualMap.SmallMapRefs.HasBasement(location);
             int nTotalFloors = State.TheVirtualMap.SmallMapRefs.GetNumberOfFloors(location);
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
-            int ladderDown = SpriteTileReferences.GetTileNumberByName("LadderDown");
-            int ladderUp = SpriteTileReferences.GetTileNumberByName("LadderUp");
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition);//GetCurrentTileNumber();
-            if (tileReference.Index == ladderDown)
+            if (SpriteTileReferences.IsLadderDown(tileReference.Index)) //tileReference.Index == ladderDown)
             {
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
@@ -284,7 +280,7 @@ namespace Ultima5Redux
                     return DataOvlRef.StringReferences.GetString(DataOvlReference.TRAVEL_STRINGS.DOWN);
                 }
             }
-            else if (tileReference.Index == ladderUp)
+            else if (SpriteTileReferences.IsLadderUp(tileReference.Index))
             {
                 if (nCurrentFloor + 1 < nTopFloor)
                 {
@@ -563,7 +559,7 @@ namespace Ultima5Redux
             State.TheVirtualMap.CurrentPosition.Y %= nTilesPerMapRow;
 
             // if you walk on top of a staircase then we will immediately jump to the next floor
-            if (TileReference.IsStaircase(newTileReference.Index))
+            if (SpriteTileReferences.IsStaircase(newTileReference.Index))
             {
                 tryToMoveResult = TryToMoveResult.UsedStairs;
                 State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition);
