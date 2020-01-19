@@ -142,7 +142,7 @@ namespace Ultima5Redux
         /// Loads a small map based on the provided reference
         /// </summary>
         /// <param name="singleMapReference"></param>
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, bool bLoadFromDisk)
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, PlayerCharacterRecords playerCharacterRecords, bool bLoadFromDisk)
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
@@ -150,7 +150,7 @@ namespace Ultima5Redux
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
-            TheMapCharacters.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small, timeOfDay, bLoadFromDisk);
+            TheMapCharacters.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small, timeOfDay, playerCharacterRecords, bLoadFromDisk);
 
             //TheMapCharacters = new MapCharacters(tileReferences, npcRefs, singleMapReference, LargeMap.Maps.Small,
             //    state.CharacterAnimationStatesDataChunk,state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
@@ -170,7 +170,7 @@ namespace Ultima5Redux
             IsLargeMap = true;
             LargeMapOverUnder = map;
 
-            TheMapCharacters.SetCurrentMapType(null, map, timeOfDay, true);
+            TheMapCharacters.SetCurrentMapType(null, map, timeOfDay, null, true);
 
         }
         #endregion
@@ -283,35 +283,48 @@ namespace Ultima5Redux
         /// <summary>
         /// Gets possible directions that are accessible from a particular point
         /// </summary>
-        /// <param name="characterPosition"></param>
+        /// <param name="characterPosition">the curent position of the character</param>
+        /// <param name="scheduledPosition">the place they are supposed to be</param>
+        /// <param name="nMaxDistance">max distance they can travel from that position</param>
         /// <returns></returns>
-        private List<NonPlayerCharacterMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition)
+        private List<NonPlayerCharacterMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition, Point2D scheduledPosition, int nMaxDistance)
         {
             List<NonPlayerCharacterMovement.MovementCommandDirection> directionList = new List<NonPlayerCharacterMovement.MovementCommandDirection>();
 
-            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
-                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.East)))
-            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.East); }
-            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
-                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.West)))
-            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.West); }
-            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
-                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.North)))
-            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.North); }
-            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
-                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.South)))
-            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.South); }
+            // gets an adjusted position OR returns null if the position is not valid
+            Point2D getAdjustedPos(NonPlayerCharacterMovement.MovementCommandDirection direction)
+            {
+                Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(characterPosition, direction);
+
+                // always include none
+                if (direction == NonPlayerCharacterMovement.MovementCommandDirection.None) return adjustedPosition;
+
+                // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
+                if (IsTileFreeToTravel(adjustedPosition) && scheduledPosition.WithinN(adjustedPosition, nMaxDistance))
+                {
+                    return adjustedPosition;
+                }
+                return null;
+            }
+
+
+            foreach (NonPlayerCharacterMovement.MovementCommandDirection direction in Enum.GetValues(typeof(NonPlayerCharacterMovement.MovementCommandDirection)))
+            {
+                Point2D adjustedPos = getAdjustedPos(direction);
+                // if adjustedPos == null then the particular direction was not allowed for one reason or another
+                if (adjustedPos != null) { directionList.Add(direction); }
+            }
 
             return directionList;
         }
 
-        private Point2D GetWanderCharacterPosition(Point2D characterPosition, out NonPlayerCharacterMovement.MovementCommandDirection direction)
+        private Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition, int nMaxDistance, out NonPlayerCharacterMovement.MovementCommandDirection direction)
         {
             Random ran = new Random();
-            List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(characterPosition);
+            List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance);
             
             // we can always go nowhere
-            possibleDirections.Add(NonPlayerCharacterMovement.MovementCommandDirection.None);
+            //possibleDirections.Add(NonPlayerCharacterMovement.MovementCommandDirection.None);
             
             direction = possibleDirections[ran.Next() % possibleDirections.Count];
 
@@ -331,7 +344,8 @@ namespace Ultima5Redux
             Random ran = new Random();
 
             // 50% of the time we won't even try to move at all
-            if (ran.Next() % 2 == 0) return;
+            int nRan = ran.Next(2);
+            if (nRan == 0) return;
             
             CharacterPosition characterPosition = mapCharacter.CurrentCharacterPosition;
             CharacterPosition scheduledPosition = mapCharacter.NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
@@ -342,19 +356,23 @@ namespace Ultima5Redux
             NonPlayerCharacterMovement.MovementCommandDirection direction;// = possibleDirections[ran.Next() % possibleDirections.Count];
             //(NonPlayerCharacterMovement.MovementCommandDirection)(ran.Next()%4);
 
-            Point2D adjustedPosition = GetWanderCharacterPosition(characterPosition.XY, out direction);
+            Point2D adjustedPosition = GetWanderCharacterPosition(characterPosition.XY, scheduledPosition.XY, nMaxDistance, out direction);
 
                 //NonPlayerCharacterMovement.GetAdjustedPos(characterPosition.XY, direction);
             // if it takes us off the map, then we move on
 
             // check to see if the random direction is within the correct distance
-            if (!scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
+            if (direction != NonPlayerCharacterMovement.MovementCommandDirection.None && !scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
             {
-                return;
+                throw new Exception("GetWanderCharacterPosition has told us to go outside of our expected maximum area");
             }
             // can we even travel onto the tile?
             if (!IsTileFreeToTravel(adjustedPosition))
             {
+                if (direction != NonPlayerCharacterMovement.MovementCommandDirection.None)
+                {
+                    throw new Exception("Was sent to a tile, but it isn't in free in WanderWithinN");
+                }
                 // something else is on the tile, so we don't move
                 return;
             }
@@ -397,7 +415,7 @@ namespace Ultima5Redux
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
                         // choose a tile within N tiles that is not blocked, and build a single path
-                        WanderWithinN(mapChar, 3);
+                        WanderWithinN(mapChar, 2);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
                         // choose a tile within N tiles that is not blocked, and build a single path
@@ -425,7 +443,7 @@ namespace Ultima5Redux
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
                         // check to see if wihtin N, if not then plot course, otherwise wander
-                        WanderWithinN(mapChar, 3);
+                        WanderWithinN(mapChar, 2);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
                         // check to see if wihtin N, if not then plot course, otherwise wander
@@ -540,7 +558,7 @@ namespace Ultima5Redux
         {
             bool bStairGoUp = IsStairGoingUp();
 
-            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), false);
+            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), state.CharacterRecords, false);
         }
 
         #endregion

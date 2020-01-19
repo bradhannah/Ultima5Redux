@@ -32,7 +32,7 @@ namespace Ultima5Redux
                     if (Times[i] == nHour) return getIndex(i);
                 }
 
-                 if (nHour > Times[3] && nHour < Times[0]) return 1;
+                if (nHour > Times[3] && nHour < Times[0]) return 1;
                 if (nHour > Times[0] && nHour < Times[1]) return 0;
                 if (nHour > Times[1] && nHour < Times[2]) return 1;
                 if (nHour > Times[2] && nHour < Times[3]) return 2;

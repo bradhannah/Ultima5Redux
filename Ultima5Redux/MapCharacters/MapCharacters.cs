@@ -66,7 +66,8 @@ namespace Ultima5Redux
 
         }
 
-        public void SetCurrentMapType(SmallMapReferences.SingleMapReference singleMapReference, LargeMap.Maps largeMap, TimeOfDay timeOfDay, bool bLoadFromDisk)
+        public void SetCurrentMapType(SmallMapReferences.SingleMapReference singleMapReference, LargeMap.Maps largeMap, TimeOfDay timeOfDay, 
+            PlayerCharacterRecords playerCharacterRecords, bool bLoadFromDisk)
         {
             List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
             
@@ -78,7 +79,7 @@ namespace Ultima5Redux
             switch (largeMap)
             {
                 case LargeMap.Maps.Small:
-                    LoadSmallMap(singleMapReference, timeOfDay, bLoadFromDisk);
+                    LoadSmallMap(singleMapReference, timeOfDay, playerCharacterRecords, bLoadFromDisk);
                     return;
                 case LargeMap.Maps.Overworld:
                     // we don't reload them because the over and underworld are only loaded at boot time
@@ -104,7 +105,7 @@ namespace Ultima5Redux
                     charMovement = null;
                     charAnimState = CurrentAnimationState.GetCharacterState(i);
 
-                    Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, timeOfDay));
+                    Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, timeOfDay, playerCharacterRecords));
                 }
                 //Debug.Assert(charAnimState.X == mapCharState.X);
                 //Debug.Assert(charAnimState.Y == mapCharState.Y);
@@ -130,7 +131,8 @@ namespace Ultima5Redux
         /// <summary>
         /// Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        private List<NonPlayerCharacterReference> LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, TimeOfDay timeOfDay, bool bLoadFromDisk)
+        private List<NonPlayerCharacterReference> LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, TimeOfDay timeOfDay, 
+            PlayerCharacterRecords playerCharacterRecords, bool bLoadFromDisk)
         {
             List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
 
@@ -177,7 +179,7 @@ namespace Ultima5Redux
                     }
                 }
 
-                Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, timeOfDay));
+                Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, timeOfDay, playerCharacterRecords));
             }
             return npcCurrentMapRefs;
         }

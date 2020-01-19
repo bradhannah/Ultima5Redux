@@ -74,16 +74,19 @@ namespace Ultima5Redux
 
             switch (direction)
             {
-                case NonPlayerCharacterMovement.MovementCommandDirection.East:
+                case MovementCommandDirection.None:
+                    // no movement
+                    break;
+                case MovementCommandDirection.East:
                     adjustedPos.X += 1;
                     break;
-                case NonPlayerCharacterMovement.MovementCommandDirection.North:
+                case MovementCommandDirection.North:
                     adjustedPos.Y -= 1;
                     break;
-                case NonPlayerCharacterMovement.MovementCommandDirection.West:
+                case MovementCommandDirection.West:
                     adjustedPos.X -= 1;
                     break;
-                case NonPlayerCharacterMovement.MovementCommandDirection.South:
+                case MovementCommandDirection.South:
                     adjustedPos.Y += 1;
                     break;
             }

@@ -35,10 +35,17 @@ namespace Ultima5Redux
         /// <summary>
         /// Is the character currently active on the map?
         /// </summary>
+        
+        public bool IsInParty
+        {
+            get; set; 
+        }
+
         public bool IsActive
         { 
             get
             {
+                if (IsInParty) return false;
                 if (CharacterState != null)
                 {
                     if (CharacterState.CharacterAnimationStateIndex == 0) return false;
@@ -70,12 +77,14 @@ namespace Ultima5Redux
         /// <param name="nonPlayerCharacterMovement"></param>
         /// <param name="timeOfDay"></param>
         public MapCharacter(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, MapCharacterState mapCharacterState,
-            NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay)
+            NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords)
         {
             NPCRef = npcRef;
             AnimationState = mapCharacterAnimationState;
             CharacterState = mapCharacterState;
             Movement = nonPlayerCharacterMovement;
+            PlayerCharacterRecord record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
+            IsInParty = record==null?false:record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty;
 
             CurrentCharacterPosition.Floor = CharacterState == null? 0: CharacterState.TheCharacterPosition.Floor;
             

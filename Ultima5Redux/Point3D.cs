@@ -28,6 +28,7 @@ namespace Ultima5Redux
 
         public bool Equals(Point2D other)
         {
+            if (other == null) return false;
             if (X != other.X)
                 return false;
 
@@ -44,7 +45,11 @@ namespace Ultima5Redux
 
         public static bool operator ==(Point2D point1, Point2D point2)
         {
-            if (object.ReferenceEquals(point1, null) || object.ReferenceEquals(point2, null)) throw new NullReferenceException("Tried to compare a Point2D with a null reference.");
+            if (object.ReferenceEquals(point1, null))
+            {
+                return (object.ReferenceEquals(point2, null));
+            }
+                //|| object.ReferenceEquals(point2, null)) throw new NullReferenceException("Tried to compare a Point2D with a null reference.");
             
             return point1.Equals(point2);
         }

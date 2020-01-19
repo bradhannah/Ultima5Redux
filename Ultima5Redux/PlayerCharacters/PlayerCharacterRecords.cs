@@ -56,7 +56,8 @@ namespace Ultima5Redux
                     return record;
                 }
             }
-            throw new Exception("Was unable to match CharacterRecord with NPC: " + npc.Name);
+            return null;
+            //throw new Exception("Was unable to match CharacterRecord with NPC: " + npc.Name);
         }
 
         public int TotalPartyMembers()
