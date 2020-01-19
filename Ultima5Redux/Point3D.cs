@@ -11,6 +11,13 @@ namespace Ultima5Redux
         public int X { get; set; }
         public int Y { get; set; }
 
+        public bool WithinN (Point2D xy, int nWithin)
+        {
+            bool bWithinX = Math.Abs(xy.X - X) <= nWithin;
+            bool bWithinY = Math.Abs(xy.Y - Y) <= nWithin;
+            return (bWithinX && bWithinY);
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is Point2D))
@@ -37,12 +44,14 @@ namespace Ultima5Redux
 
         public static bool operator ==(Point2D point1, Point2D point2)
         {
+            if (object.ReferenceEquals(point1, null) || object.ReferenceEquals(point2, null)) throw new NullReferenceException("Tried to compare a Point2D with a null reference.");
+            
             return point1.Equals(point2);
         }
 
         public static bool operator !=(Point2D point1, Point2D point2)
         {
-            return !point1.Equals(point2);
+            return !(point1==point2);
         }
 
 

@@ -22,16 +22,16 @@ namespace Ultima5Redux
         /// </summary>
         internal MapCharacterState CharacterState { get; }
         /// <summary>
-        /// Reference to current NPC (if it's an NPC at all!)
-        /// </summary>
-        internal NonPlayerCharacterReference NPCRef { get; }
-        /// <summary>
         /// The characters current position on the map
         /// </summary>
         internal CharacterPosition CurrentCharacterPosition { get; private set; }  = new CharacterPosition();
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// Reference to current NPC (if it's an NPC at all!)
+        /// </summary>
+        public NonPlayerCharacterReference NPCRef { get; }
         /// <summary>
         /// Is the character currently active on the map?
         /// </summary>

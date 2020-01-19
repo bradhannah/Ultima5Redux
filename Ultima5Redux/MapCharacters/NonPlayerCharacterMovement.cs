@@ -52,7 +52,8 @@ namespace Ultima5Redux
 
                 // we have a proper movement instruction so let's add it to the queue
                 MovementCommand movementCommand = new MovementCommand(direction, nIterations);
-                this.movementQueue.Enqueue(movementCommand);
+                //this.movementQueue.Enqueue(movementCommand);
+                AddNewMovementInstruction(movementCommand);
 
                 // we actually grab from the offset, but it is circular, so we need to mod it
                 nIndex = (nIndex + 2) % (MAX_COMMAND_LIST_ENTRIES * 2);
@@ -61,6 +62,12 @@ namespace Ultima5Redux
         #endregion
 
         #region Static Methods
+        /// <summary>
+        /// Provides an adjust xy coordinate based on a given direction
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
         static internal Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterMovement.MovementCommandDirection direction)
         {
             Point2D adjustedPos = new Point2D(xy.X, xy.Y);
@@ -123,10 +130,19 @@ namespace Ultima5Redux
         /// <summary>
         /// The direction of the movement as defined in saved.gam
         /// </summary>
-        public enum MovementCommandDirection { East = 1, North = 2, West = 3, South = 4 }
+        public enum MovementCommandDirection {None = 0, East = 1, North = 2, West = 3, South = 4 }
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Adds a new movemenent instruction to the end of the queue
+        /// </summary>
+        /// <param name="movementCommand"></param>
+        public void AddNewMovementInstruction(MovementCommand movementCommand)
+        {
+            movementQueue.Enqueue(movementCommand);
+        }
+
         /// <summary>
         /// Clear all movements from the current list
         /// </summary>

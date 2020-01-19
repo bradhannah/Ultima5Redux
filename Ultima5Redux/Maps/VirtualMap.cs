@@ -267,13 +267,109 @@ namespace Ultima5Redux
 
         #region Private Methods
         /// <summary>
+        /// Is the particular tile eligable to be moved onto
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns>true if you can move onto the tile</returns>
+        private bool IsTileFreeToTravel(Point2D xy)
+        {
+            if (xy.X < 0 || xy.Y < 0) return false;
+
+            bool bIsNPCTile = IsNPCTile(xy);
+            bool bIsWalkable = GetTileReference(xy).IsWalking_Passable;
+            return (!bIsNPCTile && bIsWalkable);
+        }
+
+        /// <summary>
+        /// Gets possible directions that are accessible from a particular point
+        /// </summary>
+        /// <param name="characterPosition"></param>
+        /// <returns></returns>
+        private List<NonPlayerCharacterMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition)
+        {
+            List<NonPlayerCharacterMovement.MovementCommandDirection> directionList = new List<NonPlayerCharacterMovement.MovementCommandDirection>();
+
+            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
+                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.East)))
+            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.East); }
+            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
+                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.West)))
+            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.West); }
+            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
+                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.North)))
+            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.North); }
+            if (IsTileFreeToTravel(NonPlayerCharacterMovement.
+                GetAdjustedPos(characterPosition, NonPlayerCharacterMovement.MovementCommandDirection.South)))
+            { directionList.Add(NonPlayerCharacterMovement.MovementCommandDirection.South); }
+
+            return directionList;
+        }
+
+        private Point2D GetWanderCharacterPosition(Point2D characterPosition, out NonPlayerCharacterMovement.MovementCommandDirection direction)
+        {
+            Random ran = new Random();
+            List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(characterPosition);
+            
+            // we can always go nowhere
+            possibleDirections.Add(NonPlayerCharacterMovement.MovementCommandDirection.None);
+            
+            direction = possibleDirections[ran.Next() % possibleDirections.Count];
+
+            Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(characterPosition, direction);
+
+            return adjustedPosition;
+        }
+
+        /// <summary>
+        /// Points a character in a random position within a certain number of tiles to their scheduled position
+        /// </summary>
+        /// <param name="mapCharacter"></param>
+        /// <param name="nMaxDistance"></param>
+        /// <returns>the direction they should move</returns>
+        private void WanderWithinN(MapCharacter mapCharacter, int nMaxDistance)
+        {
+            Random ran = new Random();
+
+            // 50% of the time we won't even try to move at all
+            if (ran.Next() % 2 == 0) return;
+            
+            CharacterPosition characterPosition = mapCharacter.CurrentCharacterPosition;
+            CharacterPosition scheduledPosition = mapCharacter.NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+
+            //List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(characterPosition);
+
+            // i could get the size dyanmically, but thats a waste of CPU cycles
+            NonPlayerCharacterMovement.MovementCommandDirection direction;// = possibleDirections[ran.Next() % possibleDirections.Count];
+            //(NonPlayerCharacterMovement.MovementCommandDirection)(ran.Next()%4);
+
+            Point2D adjustedPosition = GetWanderCharacterPosition(characterPosition.XY, out direction);
+
+                //NonPlayerCharacterMovement.GetAdjustedPos(characterPosition.XY, direction);
+            // if it takes us off the map, then we move on
+
+            // check to see if the random direction is within the correct distance
+            if (!scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
+            {
+                return;
+            }
+            // can we even travel onto the tile?
+            if (!IsTileFreeToTravel(adjustedPosition))
+            {
+                // something else is on the tile, so we don't move
+                return;
+            }
+
+            // add the single instruction to the queue
+            mapCharacter.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(direction, 1));
+        }
+
+        /// <summary>
         /// calculates and stores new path for NPC
         /// Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapCharacter itself
         /// </summary>
         private void CalculateNextPath(MapCharacter mapChar)
         {
             CharacterPosition npcXy = mapChar.NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
-
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
@@ -285,12 +381,14 @@ namespace Ultima5Redux
             if (bNPCShouldKlimb)
             {
                 // teleport them and return immediately
+                return;
             }
+
+            NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType aiType = mapChar.NPCRef.Schedule.GetCharacterAITypeByTime(timeOfDay);
 
             // is the character is in their prescribed location?
             if (mapChar.CurrentCharacterPosition == npcXy)
             {
-                NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType aiType = mapChar.NPCRef.Schedule.GetCharacterAITypeByTime(timeOfDay);
                 // test all the possibilities, special calculations for all of them
                 switch (aiType)
                 {
@@ -299,9 +397,11 @@ namespace Ultima5Redux
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
                         // choose a tile within N tiles that is not blocked, and build a single path
+                        WanderWithinN(mapChar, 3);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
                         // choose a tile within N tiles that is not blocked, and build a single path
+                        WanderWithinN(mapChar, 4);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ChildRunAway:
                         break;
@@ -309,7 +409,7 @@ namespace Ultima5Redux
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ExtortOrAttackOrFollow:
-                        // set location of Avatar as way point, but only set the first movement from the list
+                        // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         break;
                     default:
                         throw new Exception("An unexpected movement AI was encountered: " + aiType.ToString() + " for NPC: " + mapChar.NPCRef.Name);
@@ -317,10 +417,34 @@ namespace Ultima5Redux
             }
             else // character not in correct position
             {
+                switch (aiType)
+                {
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.MerchantThing:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Fixed:
+                        // move to the correct position
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
+                        // check to see if wihtin N, if not then plot course, otherwise wander
+                        WanderWithinN(mapChar, 3);
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
+                        // check to see if wihtin N, if not then plot course, otherwise wander
+                        WanderWithinN(mapChar, 4);
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ChildRunAway:
+                        // if the avatar is close by then move away from him, otherwise return to original path, one move at a time
+                        break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ExtortOrAttackOrFollow:
+                        // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
+                        break;
+                    default:
+                        throw new Exception("An unexpected movement AI was encountered: " + aiType.ToString() + " for NPC: " + mapChar.NPCRef.Name);
+                }
+
                 // build a path
             }
-            // calculate the path to get them to exactly their prescribed position
-        }
+                // calculate the path to get them to exactly their prescribed position
+            }
 
         /// <summary>
         /// Checks if an NPC is on a stair or ladder, and if it goes in the correct direction then it returns true indicating they can teleport
@@ -372,7 +496,14 @@ namespace Ultima5Redux
             {
                 if (!mapChar.IsActive) continue;
 
+                // if there is no next available movement then we gotta recalculate and see if they should move
+                if (!mapChar.Movement.IsNextCommandAvailable())
+                {
+                    CalculateNextPath(mapChar);
+                }
+
                 // this NPC has a command in the buffer, so let's execute!
+                // it's possible that CalculateNextPath came up empty for a variety of reasons, and that's okay
                 if (mapChar.Movement.IsNextCommandAvailable())
                 {
                     // peek and see what we have before we pop it off
@@ -387,10 +518,6 @@ namespace Ultima5Redux
                         direction = mapChar.Movement.GetNextMovementCommandDirection(false);
                         mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor);
                     }
-                }
-                else 
-                {
-                    CalculateNextPath(mapChar);
                 }
             }
 
