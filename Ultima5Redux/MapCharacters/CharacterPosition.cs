@@ -14,8 +14,26 @@ namespace Ultima5Redux
 
         public Point2D XY { get { return new Point2D(X, Y); } set { X = value.X; Y = value.Y; } }
 
+        public static bool operator !=(CharacterPosition pos1, CharacterPosition pos2)
+        {
+            return !(pos1 == pos2);
+        }
+        public static bool operator ==(CharacterPosition pos1, CharacterPosition pos2)
+        {
+            if (object.ReferenceEquals(pos1, null))
+            {
+                return (object.ReferenceEquals(pos2, null));
+            }
+
+            return pos1.Equals(pos2);
+        }
+
+
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
             return obj is CharacterPosition position &&
                    X == position.X &&
                    Y == position.Y &&

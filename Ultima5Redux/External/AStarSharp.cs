@@ -12,7 +12,8 @@ namespace AStarSharp
     public class Node
     {
         // Change this depending on what the desired size is for each element in the grid
-        public static int NODE_SIZE = 32;
+        //public static int NODE_SIZE = 32;
+        public static int NODE_SIZE = 1;
         public Node Parent;
         public Vector2 Position;
         public Vector2 Center
