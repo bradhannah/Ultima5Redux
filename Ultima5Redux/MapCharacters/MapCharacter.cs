@@ -28,6 +28,7 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Properties
+        public int MovementAttempts = 0;
         /// <summary>
         /// Reference to current NPC (if it's an NPC at all!)
         /// </summary>

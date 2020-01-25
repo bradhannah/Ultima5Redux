@@ -473,10 +473,10 @@ namespace Ultima5Redux
             NonPlayerCharacterMovement.MovementCommandDirection getCommandDirection(Point2D fromXy, Point2D toXy)
             {
                 if (fromXy == toXy) return NonPlayerCharacterMovement.MovementCommandDirection.None;
-                if (fromXy.X > toXy.X) return NonPlayerCharacterMovement.MovementCommandDirection.East;
-                if (fromXy.Y > toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.South;
-                if (fromXy.X < toXy.X) return NonPlayerCharacterMovement.MovementCommandDirection.West;
-                if (fromXy.Y < toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.North;
+                if (fromXy.X < toXy.X) return NonPlayerCharacterMovement.MovementCommandDirection.East;
+                if (fromXy.Y < toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.South;
+                if (fromXy.X > toXy.X) return NonPlayerCharacterMovement.MovementCommandDirection.West;
+                if (fromXy.Y > toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.North;
                 throw new Exception("For some reason we couldn't determine the path of the command direction in getCommandDirection");
             }
 
@@ -495,23 +495,35 @@ namespace Ultima5Redux
             Stack<AStarSharp.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
                 new System.Numerics.Vector2(targetXy.X, targetXy.Y));
             
-            int nIndex = 0;
             NonPlayerCharacterMovement.MovementCommandDirection prevDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
+            NonPlayerCharacterMovement.MovementCommandDirection newDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
             Point2D prevPosition = mapCharacter.CurrentCharacterPosition.XY;
 
             // temporary while I figure out why this happens
             if (nodeStack == null) return;
 
+            int nInARow = 0;
             foreach (AStarSharp.Node node in nodeStack)
             {
                 Point2D newPosition = vector2ToPoint2D(node.Position);
-                NonPlayerCharacterMovement.MovementCommandDirection newDirection = getCommandDirection(prevPosition, newPosition);
-                mapCharacter.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(newDirection, 1));
-                if (nIndex++ > 9) break;
+                newDirection = getCommandDirection(prevPosition, newPosition);
+                
+                // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction
+                // that has N iterations (ie. move East 5 times)
+                if (prevDirection == newDirection || prevDirection == NonPlayerCharacterMovement.MovementCommandDirection.None)
+                {
+                    nInARow++;
+                }
+                else
+                {
+                    // if the direction has changed then we add the previous direction and reset the concurrent counter
+                    mapCharacter.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(prevDirection, nInARow));
+                    nInARow = 1;
+                }
                 prevDirection = newDirection;
                 prevPosition = newPosition;
-                //Debug.WriteLine(node.ToString());
             }
+            if (nInARow > 0) { mapCharacter.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(newDirection, nInARow)); }
         }
 
         /// <summary>
@@ -585,6 +597,17 @@ namespace Ultima5Redux
                         // pop the direction from the queue
                         direction = mapChar.Movement.GetNextMovementCommandDirection(false);
                         mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor);
+                        mapChar.MovementAttempts = 0;
+                    }
+                    else
+                    {
+                        mapChar.MovementAttempts++;
+                    }
+                    // if we have tried a few times and failed then we will recalulate
+                    // could have been a fixed NPC, stubborn Avatar or whatever
+                    if (mapChar.MovementAttempts > 2)
+                    {
+                        mapChar.Movement.ClearMovements();
                     }
                 }
             }
