@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ultima5Redux
 {
+    /// <summary>
+    /// Tracks the postion of any character on the screen
+    /// </summary>
     public class CharacterPosition
     {
         public int X { get; set; }
@@ -47,6 +50,11 @@ namespace Ultima5Redux
             hashCode = hashCode * -1521134295 + Y.GetHashCode();
             hashCode = hashCode * -1521134295 + Floor.GetHashCode();
             return hashCode;
+        }
+
+        public override string ToString()
+        {
+            return ("X=" + X + ",Y=" + Y+", Floor="+Floor);
         }
     }
 }

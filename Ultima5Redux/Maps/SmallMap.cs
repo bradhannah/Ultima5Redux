@@ -10,7 +10,13 @@ namespace Ultima5Redux
 {
     public class SmallMap : Map
     {
+        /// <summary>
+        /// Total tiles per row
+        /// </summary>
         public const int XTILES = 32;
+        /// <summary>
+        /// Total tiles per column
+        /// </summary>
         public const int YTILES = 32;
 
         public SmallMapReferences.SingleMapReference.Location MapLocation { get { return MapRef.MapLocation; } }

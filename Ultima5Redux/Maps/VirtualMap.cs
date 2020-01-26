@@ -279,9 +279,12 @@ namespace Ultima5Redux
         {
             if (xy.X < 0 || xy.Y < 0) return false;
 
+            bool bIsAvatarTile = CurrentPosition == xy;
             bool bIsNPCTile = IsNPCTile(xy);
             bool bIsWalkable = GetTileReference(xy).IsWalking_Passable;
-            return (!bIsNPCTile && bIsWalkable);
+            
+            // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
+            return (!bIsNPCTile && bIsWalkable && !bIsAvatarTile);
         }
 
         /// <summary>
@@ -645,14 +648,18 @@ namespace Ultima5Redux
         /// <returns>true if food is within a tile</returns>
         public bool IsFoodNearby(Point2D characterPos)
         {
+            bool isFoodTable(int nSprite)
+            {
+                return (nSprite == tileReferences.GetTileReferenceByName("TableFoodTop").Index
+                    || nSprite == tileReferences.GetTileReferenceByName("TableFoodBottom").Index
+                    || nSprite == tileReferences.GetTileReferenceByName("TableFoodBoth").Index);
+            }
+
             //Todo: use TileReference lookups instead of hard coded values
-            //if (currentSingleSmallMapReferences == null) return false;
             if (CurrentSingleMapReference == null) return false;
             // yuck, but if the food is up one tile or down one tile, then food is nearby
-            bool bIsFoodNearby = (GetTileReference(characterPos.X,characterPos.Y - 1).Index >= 154 &&
-                GetTileReference(characterPos.X, characterPos.Y - 1).Index <= 156) ||
-                (GetTileReference(characterPos.X, characterPos.Y + 1).Index >= 154 &&
-                GetTileReference(characterPos.X, characterPos.Y + 1).Index <= 156);
+            bool bIsFoodNearby = (isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index)
+                || isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index));
             return bIsFoodNearby;
 
         }

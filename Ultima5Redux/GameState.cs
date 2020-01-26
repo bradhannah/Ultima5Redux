@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 
 namespace Ultima5Redux
 {
@@ -54,10 +51,18 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// The virtual map which includes the static map plus all things overlaid on it including NPCs
+        /// </summary>
         public VirtualMap TheVirtualMap { get; set; }
+        /// <summary>
+        /// The current time of day
+        /// </summary>
         public TimeOfDay TheTimeOfDay { get; }
 
-
+        /// <summary>
+        /// Total number of Gems
+        /// </summary>
         public byte Gems
         {
             get
@@ -69,6 +74,10 @@ namespace Ultima5Redux
                 dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
             }
         }
+
+        /// <summary>
+        /// Total nunmber of torches
+        /// </summary>
         public byte Torches
         {
             get
@@ -81,6 +90,10 @@ namespace Ultima5Redux
 
             }
         }
+
+        /// <summary>
+        /// Total number of regular keys
+        /// </summary>
         public byte Keys
         {
             get
@@ -94,14 +107,20 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Current location
+        /// </summary>
         public SmallMapReferences.SingleMapReference.Location Location
         {
             get
             {
                 return (SmallMapReferences.SingleMapReference.Location)dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
             }
-        }        
-        
+        }
+
+        /// <summary>
+        /// Current floor
+        /// </summary>
         public int Floor
         {
             get
@@ -110,6 +129,9 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Saved X location of Avatar
+        /// </summary>
         public int X
         {
             get
@@ -118,6 +140,9 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Saved Y location of Avatar
+        /// </summary>
         public int Y
         {
             get
@@ -127,12 +152,17 @@ namespace Ultima5Redux
         }
 
 
-
+        /// <summary>
+        /// Players current inventory
+        /// </summary>
         public Inventory PlayerInventory
         {
             get;
         }
 
+        /// <summary>
+        /// Players total gold
+        /// </summary>
         public UInt16 Gold
         {
             get
@@ -146,6 +176,9 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Players total food
+        /// </summary>
         public UInt16 Food
         {
             get
@@ -158,10 +191,13 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Does the Avatar have a grapple?
+        /// </summary>
         public bool HasGrapple
         {
-            get; set;
-        } = true;
+            get; private set;
+        }
 
         /// <summary>
         /// Users Karma
@@ -213,14 +249,25 @@ namespace Ultima5Redux
         };
         #endregion
 
-
-
         #region Constructors
-        public void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapReference largeMapReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, 
+        /// <summary>
+        /// Initializes (one time) the virtual map component
+        /// Must be initialized pretty much after everything else has been loaded into memory
+        /// </summary>
+        /// <param name="smallMapReferences"></param>
+        /// <param name="smallMaps"></param>
+        /// <param name="largeMapReferences"></param>
+        /// <param name="overworldMap"></param>
+        /// <param name="underworldMap"></param>
+        /// <param name="nonPlayerCharacters"></param>
+        /// <param name="TileReferences"></param>
+        /// <param name="state"></param>
+        /// <param name="npcRefs"></param>
+        internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
+            LargeMapReference largeMapReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
             TileReferences TileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
         {
-            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap, 
+            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap,
                 nonPlayerCharacters, TileReferences, state, npcRefs, TheTimeOfDay);
         }
 
@@ -240,7 +287,7 @@ namespace Ultima5Redux
             gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
             // import all character records
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20*16, 0x00, DataChunkName.CHARACTER_RECORDS);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20 * 16, 0x00, DataChunkName.CHARACTER_RECORDS);
             DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
             CharacterRecords = new PlayerCharacterRecords(rawCharacterRecords.GetAsByteList());
 
@@ -314,19 +361,20 @@ namespace Ultima5Redux
             underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
             TheTimeOfDay = new TimeOfDay(dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR), 
+                dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
                 dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
         }
         #endregion
 
         #region Public Methods
 
+        /// <summary>
+        /// Take fall damage from klimbing mountains
+        /// </summary>
         public void GrapplingFall()
         {
             // called when falling from a Klimb on a mountain
         }
-
-
 
         /// <summary>
         /// Using the random number generator, provides 1 in howMany odds of returning true
@@ -340,7 +388,7 @@ namespace Ultima5Redux
             return ((nextRan % howMany) == 0);
         }
 
- 
+
         /// <summary>
         /// Is NPC alive?
         /// </summary>
@@ -350,7 +398,7 @@ namespace Ultima5Redux
         {
             // the array isDead becasue LB stores 0=alive, 1=dead
             // I think it's easier to evaluate if they are alive
-            return npcIsDeadArray[npc.MapLocationID][npc.DialogIndex]==false;
+            return npcIsDeadArray[npc.MapLocationID][npc.DialogIndex] == false;
         }
 
         /// <summary>
@@ -362,27 +410,42 @@ namespace Ultima5Redux
             npcIsMetArray[npc.MapLocationID][npc.DialogIndex] = true;
         }
 
+        /// <summary>
+        /// Gets the number of active characters in the Avatars party
+        /// </summary>
+        /// <returns></returns>
         public int GetNumberOfActiveCharacters()
         {
+            // todo: this is inefficient!
             return GetActiveCharacterRecords().Count;
         }
 
-    public List<PlayerCharacterRecord> GetActiveCharacterRecords()
-    {
-        List<PlayerCharacterRecord> activeCharacterRecords = new List<PlayerCharacterRecord>();
-
-        foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
+        /// <summary>
+        /// Gets all active character records for members in the Avatars party
+        /// </summary>
+        /// <returns></returns>
+        public List<PlayerCharacterRecord> GetActiveCharacterRecords()
         {
-            if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
-                activeCharacterRecords.Add(characterRecord);
+            List<PlayerCharacterRecord> activeCharacterRecords = new List<PlayerCharacterRecord>();
+
+            foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
+            {
+                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
+                    activeCharacterRecords.Add(characterRecord);
+            }
+            if (activeCharacterRecords.Count == 0) throw new Exception("Even the Avatar is dead, no records returned in active party");
+            if (activeCharacterRecords.Count > PlayerCharacterRecords.MAX_PARTY_MEMBERS) throw new Exception("There are too many party members in the party... party...");
+
+            return activeCharacterRecords;
         }
-        if (activeCharacterRecords.Count == 0) throw new Exception("Even the Avatar is dead, no records returned in active party");
-        if (activeCharacterRecords.Count > PlayerCharacterRecords.MAX_PARTY_MEMBERS) throw new Exception("There are too many party members in the party... party...");
 
-        return activeCharacterRecords;
-    }
-
-    public PlayerCharacterRecord GetCharacterFromParty(int nPosition)
+        /// <summary>
+        /// Gets a character from the active party by index
+        /// Throws an exception if you asked for a member who isn't there - so check first
+        /// </summary>
+        /// <param name="nPosition"></param>
+        /// <returns></returns>
+        public PlayerCharacterRecord GetCharacterFromParty(int nPosition)
         {
             Debug.Assert(nPosition >= 0 && nPosition < PlayerCharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
             Debug.Assert(nPosition < CharacterRecords.TotalPartyMembers(), "You cannot request a character that isn't on the roster");
