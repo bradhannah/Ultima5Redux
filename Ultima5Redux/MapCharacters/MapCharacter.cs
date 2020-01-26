@@ -42,11 +42,16 @@ namespace Ultima5Redux
             get; set; 
         }
 
+        /// <summary>
+        /// Is the map character currently an active character on the current map
+        /// </summary>
         public bool IsActive
         { 
             get
             {
+                // if they are in our party then we don't include them in the map 
                 if (IsInParty) return false;
+                
                 if (CharacterState != null)
                 {
                     if (CharacterState.CharacterAnimationStateIndex == 0) return false;
@@ -103,6 +108,7 @@ namespace Ultima5Redux
         }
         #endregion
 
+        #region Internal Methods
         /// <summary>
         /// Moves the NPC to the appropriate floor and location based on the their expected location and position
         /// </summary>
@@ -135,6 +141,6 @@ namespace Ultima5Redux
         {
             CurrentCharacterPosition = characterPosition;
         }
-  
+        #endregion
     }
 }

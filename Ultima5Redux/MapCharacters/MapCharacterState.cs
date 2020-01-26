@@ -7,17 +7,29 @@ using System.Diagnostics;
 
 namespace Ultima5Redux
 {
+    /// <summary>
+    /// Based on original U5 data structure
+    /// tracks the position and state of the map character
+    /// </summary>
     public class MapCharacterState
     {
-        //public int X { get; }
-        //public int Y { get; }
-        //public int Floor { get; }
+        #region Public Propeties
         public CharacterPosition TheCharacterPosition { get; } = new CharacterPosition();
         public int CharacterAnimationStateIndex { get; }
         public int NPCIndex { get; }
         TileReference TileRef { get; }
         public bool Active { get; }
+        #endregion
 
+        #region Constructors
+        /// <summary>
+        /// Build the character state based on existing conditions
+        /// This is called when entering a new map within the game - as opposed to loading from disk
+        /// </summary>
+        /// <param name="tileReferences"></param>
+        /// <param name="npcRef"></param>
+        /// <param name="nCharacterAnimationStateIndex"></param>
+        /// <param name="timeOfDay"></param>
         public MapCharacterState(TileReferences tileReferences, NonPlayerCharacterReference npcRef, int nCharacterAnimationStateIndex, TimeOfDay timeOfDay)
         {
             NPCIndex = npcRef.DialogIndex;
@@ -25,10 +37,15 @@ namespace Ultima5Redux
             CharacterAnimationStateIndex = nCharacterAnimationStateIndex;
             // if you are adding by hand then we can assume that the character is active
             TheCharacterPosition = npcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
-
             Active = true;
         }
 
+        /// <summary>
+        /// Build the character state from data retrieved from disk
+        /// </summary>
+        /// <param name="tileReferences"></param>
+        /// <param name="stateUInts"></param>
+        /// <param name="nNPCIndex"></param>
         public MapCharacterState(TileReferences tileReferences, UInt16[] stateUInts, int nNPCIndex)
         {
             Debug.Assert(stateUInts.Length == 0x8);
@@ -40,5 +57,6 @@ namespace Ultima5Redux
             CharacterAnimationStateIndex = stateUInts[6];
             Active = stateUInts[7]>0;
         }
+        #endregion
     }
 }

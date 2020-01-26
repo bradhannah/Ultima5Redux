@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace Ultima5Redux
@@ -56,17 +52,18 @@ namespace Ultima5Redux
         /// <summary>
         /// Current position of player character (avatar)
         /// </summary>
-        public Point2D CurrentPosition { 
+        public Point2D CurrentPosition
+        {
             get
             {
                 return _currentPosition;
             }
-            set 
+            set
             {
-                _currentPosition.X = value.X; 
-                _currentPosition.Y = value.Y; 
-            } 
-        } 
+                _currentPosition.X = value.X;
+                _currentPosition.Y = value.Y;
+            }
+        }
 
         /// <summary>
         /// Number of total columns for current map
@@ -121,7 +118,7 @@ namespace Ultima5Redux
         /// <param name="underworldMap"></param>
         /// <param name="nonPlayerCharacters"></param>
         /// <param name="tileReferences"></param>
-        public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences, 
+        public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
             GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay)
         {
@@ -137,7 +134,7 @@ namespace Ultima5Redux
             largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
 
-            TheMapCharacters = new MapCharacters(tileReferences, npcRefs, 
+            TheMapCharacters = new MapCharacters(tileReferences, npcRefs,
                state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
         }
@@ -282,7 +279,7 @@ namespace Ultima5Redux
             bool bIsAvatarTile = CurrentPosition == xy;
             bool bIsNPCTile = IsNPCTile(xy);
             bool bIsWalkable = GetTileReference(xy).IsWalking_Passable;
-            
+
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
             return (!bIsNPCTile && bIsWalkable && !bIsAvatarTile);
         }
@@ -329,7 +326,7 @@ namespace Ultima5Redux
         {
             Random ran = new Random();
             List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance);
-            
+
             direction = possibleDirections[ran.Next() % possibleDirections.Count];
 
             Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(characterPosition, direction);
@@ -350,7 +347,7 @@ namespace Ultima5Redux
             // 50% of the time we won't even try to move at all
             int nRan = ran.Next(2);
             if (nRan == 0) return;
-            
+
             CharacterPosition characterPosition = mapCharacter.CurrentCharacterPosition;
             CharacterPosition scheduledPosition = mapCharacter.NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
@@ -383,26 +380,39 @@ namespace Ultima5Redux
         /// calculates and stores new path for NPC
         /// Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapCharacter itself
         /// </summary>
-        private void CalculateNextPath(MapCharacter mapCharacter)
+        private void CalculateNextPath(MapCharacter mapCharacter, int nCurrentFloor)
         {
             CharacterPosition npcXy = mapCharacter.NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
 
+            // if the NPC is destined for the floor you are on, but are on a different floor, then they need to find a ladder or staircase
+
             // if the NPC is destined for a different floor then we watch to see if they are on stairs on a ladder
             bool bDifferentFloor = npcXy.Floor != mapCharacter.CurrentCharacterPosition.Floor;
             if (bDifferentFloor)
             {
-                TileReference currentTileReference = GetTileReference(mapCharacter.CurrentCharacterPosition.XY);
+                // if the NPC is supposed to be on a different floor then the floor we are currently on
+                // then we skip it, since he will teleport when we move to the next floor
+                if (nCurrentFloor != npcXy.Floor) return;
 
-                // if we are going to the next floor, then look for something that goes up, otherwise look for something that goes down
-                bool bNPCShouldKlimb = CheckNPCAndKlimb(currentTileReference, npcXy.Floor > mapCharacter.CurrentCharacterPosition.Floor?LadderOrStairDirection.Up:LadderOrStairDirection.Down);
-                if (bNPCShouldKlimb)
+                if (nCurrentFloor == npcXy.Floor) // destined for the current floor
                 {
-                    // teleport them and return immediately
-                    mapCharacter.MoveNPCToDefaultScheduledPosition(timeOfDay);
-                    return;
+
+                }
+                else // map character is destined for a higher or lower floor
+                {
+                    TileReference currentTileReference = GetTileReference(mapCharacter.CurrentCharacterPosition.XY);
+
+                    // if we are going to the next floor, then look for something that goes up, otherwise look for something that goes down
+                    bool bNPCShouldKlimb = CheckNPCAndKlimb(currentTileReference, npcXy.Floor > mapCharacter.CurrentCharacterPosition.Floor ? LadderOrStairDirection.Up : LadderOrStairDirection.Down);
+                    if (bNPCShouldKlimb)
+                    {
+                        // teleport them and return immediately
+                        mapCharacter.MoveNPCToDefaultScheduledPosition(timeOfDay);
+                        return;
+                    }
                 }
             }
 
@@ -497,7 +507,7 @@ namespace Ultima5Redux
 
             Stack<AStarSharp.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
                 new System.Numerics.Vector2(targetXy.X, targetXy.Y));
-            
+
             NonPlayerCharacterMovement.MovementCommandDirection prevDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
             NonPlayerCharacterMovement.MovementCommandDirection newDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
             Point2D prevPosition = mapCharacter.CurrentCharacterPosition.XY;
@@ -510,7 +520,7 @@ namespace Ultima5Redux
             {
                 Point2D newPosition = vector2ToPoint2D(node.Position);
                 newDirection = getCommandDirection(prevPosition, newPosition);
-                
+
                 // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction
                 // that has N iterations (ie. move East 5 times)
                 if (prevDirection == newDirection || prevDirection == NonPlayerCharacterMovement.MovementCommandDirection.None)
@@ -569,6 +579,10 @@ namespace Ultima5Redux
             return false;
         }
 
+        /// <summary>
+        /// Advances each of the NPCs by one movement each
+        /// </summary>
+        /// <returns></returns>
         internal bool MoveNPCs()
         {
             // if not on small map - then no NPCs!
@@ -582,7 +596,7 @@ namespace Ultima5Redux
                 // if there is no next available movement then we gotta recalculate and see if they should move
                 if (!mapChar.Movement.IsNextCommandAvailable())
                 {
-                    CalculateNextPath(mapChar);
+                    CalculateNextPath(mapChar, CurrentSingleMapReference.Floor);
                 }
 
                 // this NPC has a command in the buffer, so let's execute!
@@ -815,7 +829,7 @@ namespace Ultima5Redux
             }
 
             // just in case we didn't find a match - just use grass for now
-            return nMostTile == -1?5:nMostTile;
+            return nMostTile == -1 ? 5 : nMostTile;
         }
         #endregion
 

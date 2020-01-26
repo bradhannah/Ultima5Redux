@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.IO;
 using System.Diagnostics;
 
 namespace Ultima5Redux
@@ -38,7 +31,7 @@ namespace Ultima5Redux
 
         public enum SpecialLookCommand { None, Sign, GemCrystal }
 
-        public World (string ultima5Directory) : base ()
+        public World(string ultima5Directory) : base()
         {
             u5Directory = ultima5Directory;
 
@@ -103,7 +96,7 @@ namespace Ultima5Redux
             //CharAnimationStates = new MapCharacterAnimationStates(State, SpriteTileReferences);
             //CharStates = new MapCharacterStates(State, SpriteTileReferences);
 
-            
+
 
             // sadly I have to initilize this after the Npcs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef);
@@ -176,10 +169,10 @@ namespace Ultima5Redux
             // Tierra 
             //Conversation convo = new Conversation(NpcRef.NPCs[0xeb], State, DataOvlRef);
 
-//            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
-//            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
+            //            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
+            //            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
 
-           // convo.BeginConversation();
+            // convo.BeginConversation();
 
             //0x48 or 0x28
             //Console.WriteLine("Shutting down... Hit any key...");
@@ -187,7 +180,7 @@ namespace Ultima5Redux
 
         }
 
-   
+
         #region World actions - do a thing, report or change the state
         /// <summary>
         /// Advances time and takes care of all day, month, year calculations
@@ -197,7 +190,7 @@ namespace Ultima5Redux
         {
             State.TheTimeOfDay.AdvanceClock(nMinutes);
 
-             State.TheVirtualMap.MoveNPCs();
+            State.TheVirtualMap.MoveNPCs();
         }
 
         /// <summary>
@@ -249,7 +242,7 @@ namespace Ultima5Redux
             bGotAThing = false;
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
-            if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("LeftSconce") || 
+            if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
                 tileReference.Index == SpriteTileReferences.GetTileNumberByName("RightSconce"))
             {
                 State.Torches++;
@@ -385,7 +378,7 @@ namespace Ultima5Redux
                 }
                 //ReassignSprites();
                 bWasSuccesful = true;
-                
+
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.OPENING_THINGS_STRINGS.KEY_BROKE));
             }
             if (bIsDoorLocked)
@@ -397,7 +390,7 @@ namespace Ultima5Redux
 
                 // bh: open player selection dialog here
                 //record.
-                
+
                 // bh: assume it's me for now
 
                 if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
