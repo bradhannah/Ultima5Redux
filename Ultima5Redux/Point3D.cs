@@ -18,6 +18,11 @@ namespace Ultima5Redux
             return (bWithinX && bWithinY);
         }
 
+        public double DistanceBetween(Point2D xy)
+        {
+            return Math.Sqrt(Math.Pow(this.X - xy.X, 2) + Math.Pow(this.Y - xy.Y, 2));
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is Point2D))

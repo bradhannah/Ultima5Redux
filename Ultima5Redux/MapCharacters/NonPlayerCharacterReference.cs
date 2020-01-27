@@ -93,6 +93,17 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// friendlier version of name in case they are a profession and not named
+        /// </summary>
+        public string FriendlyName
+        {
+            get
+            {
+                return (Name == "" ? NPCType.ToString() : Name);
+            }
+        }
+
 
         /// <summary>
         /// The daily schedule of the NPC

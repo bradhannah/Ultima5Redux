@@ -60,6 +60,17 @@ namespace Ultima5Redux
                 return false;
             }
         }
+
+        public string GetDebugDescription(TimeOfDay timeOfDay)
+        { 
+            string debugLookStr = ("Name=" + NPCRef.FriendlyName 
+                + " " + this.CurrentCharacterPosition + " Scheduled to be at: "+
+                NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) + " with AI Mode: "+ 
+                NPCRef.Schedule.GetCharacterAITypeByTime(timeOfDay));
+            
+            return debugLookStr;
+        }
+
         #endregion
 
         #region Constructors

@@ -24,14 +24,12 @@ namespace U5ConversationSimulator
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
             //convo.BeginConversation();
-            int i = 100;
+            int i = 1000;
             while (i > 0)
             {
-                world.AdvanceTime(10);
+                world.AdvanceTime(2);
                 i--;
             }
-            
-            
         }
 
         static private void EnqueuedScriptItem(Conversation conversation)
