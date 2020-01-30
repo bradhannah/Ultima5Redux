@@ -48,7 +48,7 @@ namespace Ultima5Redux
         }
 
         public bool DoStrairsGoUp(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
-        {
+        {   
             //SmallMapReferences smallMapref = smallMapRef.Get(location, nFloor);
             SmallMap currentFloorSmallMap = mapLocationDictionary[location][nFloor];
             bool bHasLowerFloor = mapLocationDictionary[location].ContainsKey(nFloor - 1);

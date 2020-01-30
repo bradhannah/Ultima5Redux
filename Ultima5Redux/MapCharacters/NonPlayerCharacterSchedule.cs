@@ -52,6 +52,39 @@ namespace Ultima5Redux
                 throw new System.Exception("GetScheduleIndex fell all the way through which doesn't make sense.");
             }
 
+            private int GetRawScheduleIndex(TimeOfDay timeOfDay)
+            {
+                int nHour = timeOfDay.Hour;
+
+                // there are some characters who are apparently always in the exact same location
+                if (Times[0] == 0 && Times[1] == 0 && Times[2] == 0 && Times[3] == 0) return 0;
+
+                // if the hour matches, then we are good
+                for (int i = 0; i < 4; i++)
+                {
+                    if (Times[i] == nHour) return i;
+                }
+
+                if (nHour > Times[3] && nHour < Times[0]) return 3;
+                if (nHour > Times[0] && nHour < Times[1]) return 0;
+                if (nHour > Times[1] && nHour < Times[2]) return 1;
+                if (nHour > Times[2] && nHour < Times[3]) return 2;
+
+                // what is the index of the time that is earliest
+                int nEarliestTimeIndex = GetEarliestTimeIndex();
+                // what is the index of the time before the time that is earliest
+                int nIndexPreviousToEarliest = nEarliestTimeIndex == 0 ? 1 : nEarliestTimeIndex - 1;
+                // the index of the index that has the latest time
+                int nLatestTimeIndex = GetLatestTimeIndex();
+
+                // if it less than the lowest value, then go to the index before the lowest value
+                if (nHour < Times[nEarliestTimeIndex]) return nIndexPreviousToEarliest;
+                // if it is more than the highest value, then go to the index of the highest value
+                if (nHour > Times[nLatestTimeIndex]) return nLatestTimeIndex;// == 3 ? 1: nLatestTimeIndex;
+
+                throw new System.Exception("GetRawScheduleIndex fell all the way through which doesn't make sense.");
+            }
+
             /// <summary>
             /// Gets the index of the earliest time in the daily schedule
             /// </summary>
@@ -95,6 +128,36 @@ namespace Ultima5Redux
                 int nIndex = GetScheduleIndex(timeOfDay);
 
                 return (AIType)AITypeList[nIndex];
+            }
+
+            /// <summary>
+            /// Gets the schedule previous to the current one
+            /// Often used for figuring out what floor an NPC would come from
+            /// </summary>
+            /// <param name="timeOfDay"></param>
+            /// <returns></returns>
+            public CharacterPosition GetCharacterPreviousPositionByTime(TimeOfDay timeOfDay)
+            {
+                CharacterPosition characterPosition = new CharacterPosition();
+                int nIndex = GetRawScheduleIndex(timeOfDay);
+
+                //return nOrigIndex == 3 ? 1 : nOrigIndex;
+
+                //if (nHour > Times[3] && nHour < Times[0]) return 1;
+                //if (nHour > Times[0] && nHour < Times[1]) return 0;
+                //if (nHour > Times[1] && nHour < Times[2]) return 1;
+                //if (nHour > Times[2] && nHour < Times[3]) return 2;
+
+                
+                if (nIndex == 0) nIndex = 1;
+                else if (nIndex == 1) nIndex = 0;
+                else if (nIndex == 2) nIndex = 1;
+                else if (nIndex == 3) nIndex = 2;
+
+                characterPosition.Floor = GetFloor(nIndex);
+                characterPosition.XY = GetXY(nIndex);
+
+                return characterPosition;
             }
 
             /// <summary>

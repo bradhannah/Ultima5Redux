@@ -394,8 +394,8 @@ namespace Ultima5Redux
             if (bDifferentFloor)
             {
                 // if the NPC is supposed to be on a different floor then the floor we are currently on
-                // and we they are already on that other floor - then we skip
-                if (nMapCurrentFloor != mapCharacter.CurrentCharacterPosition.Floor)
+                // and we they are already on that other floor - AND they are supposed be on our current floor
+                if (nMapCurrentFloor != mapCharacter.CurrentCharacterPosition.Floor && nMapCurrentFloor != npcXy.Floor)
                 {
                     return;
                 }
@@ -404,6 +404,29 @@ namespace Ultima5Redux
                 {
                     // we already know they aren't on this floor, so that is safe to assume
                     // so we find the closest and best ladder or stairs for them, make sure they are not occupied and send them down
+                    CharacterPosition npcPrevXy = mapCharacter.NPCRef.Schedule.GetCharacterPreviousPositionByTime(timeOfDay);
+                    LadderOrStairDirection ladderOrStairDirection = nMapCurrentFloor > npcPrevXy.Floor ?
+                        LadderOrStairDirection.Down : LadderOrStairDirection.Up;
+
+                    List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationse(ladderOrStairDirection, npcXy.XY);
+                    if (stairsAndLadderLocations.Count <= 0) throw new Exception("Can't find a damn ladder or staircase.");
+
+                    // sloppy, but fine for now
+                    CharacterPosition characterPosition = new CharacterPosition();
+                    characterPosition.XY = stairsAndLadderLocations[0];
+                    characterPosition.Floor = nMapCurrentFloor;
+                    mapCharacter.Move(characterPosition);
+                    return;
+
+                    // we now need to build a path to the best choice of ladder or stair
+                    // the list returned will be prioritized based on vicinity
+                    //foreach (Point2D xy in stairsAndLadderLocations)
+                    //{
+                    //    bool bPathBuilt = BuildPath(mapCharacter, xy);
+                    //    // if a path was succesfully built, then we have no need to build another path since this is the "best" path
+                    //    if (bPathBuilt) { return; }
+                    //}
+                    //System.Diagnostics.Debug.WriteLine("Tried to build a path for " + mapCharacter.NPCRef.FriendlyName + " to " + npcXy + " but it failed, keep an eye on it...");
                 }
                 else // map character is destined for a higher or lower floor
                 {
@@ -423,7 +446,7 @@ namespace Ultima5Redux
 
                     // we now need to build a path to the best choice of ladder or stair
                     // the list returned will be prioritized based on vicinity
-                    List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationsToLeave(ladderOrStairDirection, npcXy.XY);
+                    List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationse(ladderOrStairDirection, npcXy.XY);
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
                         bool bPathBuilt = BuildPath(mapCharacter, xy);
@@ -535,7 +558,7 @@ namespace Ultima5Redux
             return laddersAndStairs;
         }
 
-        private List<Point2D> getBestStairsAndLadderLocationsToLeave(LadderOrStairDirection ladderOrStairDirection, Point2D desintedPosition)
+        private List<Point2D> getBestStairsAndLadderLocationse(LadderOrStairDirection ladderOrStairDirection, Point2D desintedPosition)
         {
             List<Point2D> allLaddersAndStairList = getListOfAllLaddersAndStairs(ladderOrStairDirection);
             SortedDictionary<double, Point2D> sortedPoints = new SortedDictionary<double, Point2D>();
@@ -546,6 +569,12 @@ namespace Ultima5Redux
             {
                 double dDistance = desintedPosition.DistanceBetween(xy);
                 // make them negative so they sort backwards
+                
+                // if the distance is the same then we just add a bit to make sure there is no conflict
+                while (sortedPoints.ContainsKey(dDistance))
+                {
+                    dDistance += 0.0000001;
+                }
                 sortedPoints.Add(dDistance, xy);
             }
             // to make it more familiar, we will transfer to an ordered list
@@ -769,6 +798,8 @@ namespace Ultima5Redux
         /// <returns></returns>
         public bool IsStairGoingUp(Point2D xy)
         {
+            if (!tileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+
             bool bStairGoUp = smallMaps.DoStrairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
             return bStairGoUp;
         }
@@ -781,6 +812,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public bool IsStairsGoingDown(Point2D xy)
         {
+            if (!tileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
             bool bStairGoUp = smallMaps.DoStairsGoDown(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
             return bStairGoUp;
         }
