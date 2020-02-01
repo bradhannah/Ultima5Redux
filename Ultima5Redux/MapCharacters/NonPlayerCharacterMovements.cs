@@ -18,7 +18,6 @@ namespace Ultima5Redux
         /// </summary>
         private List<NonPlayerCharacterMovement> movementList = new List<NonPlayerCharacterMovement>(MAX_PLAYERS);
         
-        
         /// <summary>
         /// DataChunk of all loaded instructions (only needed during save and load)
         /// </summary>
