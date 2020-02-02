@@ -11,9 +11,15 @@ namespace Ultima5Redux
     /// </summary>
     public class CharacterPosition
     {
+        private int _floor;
         public int X { get; set; }
         public int Y { get; set; }
-        public int Floor { get; set; }
+
+        public int Floor
+        {
+            get => _floor;
+            set => _floor = value==0xFF?-1:value;
+        }
 
         public Point2D XY { get { return new Point2D(X, Y); } set { X = value.X; Y = value.Y; } }
 

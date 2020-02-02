@@ -100,7 +100,12 @@ namespace Ultima5Redux
             AnimationState = mapCharacterAnimationState;
             CharacterState = mapCharacterState;
             Movement = nonPlayerCharacterMovement;
-            PlayerCharacterRecord record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
+            PlayerCharacterRecord record = null;
+            if (playerCharacterRecords != null)
+            {
+                record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
+            }
+
             IsInParty = record==null?false:record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty;
 
             CurrentCharacterPosition.Floor = CharacterState == null? 0: CharacterState.TheCharacterPosition.Floor;

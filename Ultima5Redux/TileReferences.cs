@@ -11,7 +11,9 @@ namespace Ultima5Redux
     public class TileReferences
     {
         public Dictionary<int, TileReference> TileReferenceDictionary { get; }
-        public Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } = new Dictionary<string, TileReference>(512);
+        public Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } = new Dictionary<string, TileReference>(1024);
+
+        public int Count { get { return TileReferenceByStringDictionary.Count; } }
 
         private U5StringRef u5StringRef;
 

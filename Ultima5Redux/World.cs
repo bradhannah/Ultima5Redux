@@ -31,6 +31,8 @@ namespace Ultima5Redux
 
         public enum SpecialLookCommand { None, Sign, GemCrystal }
 
+
+
         public World(string ultima5Directory) : base()
         {
             u5Directory = ultima5Directory;
@@ -132,27 +134,27 @@ namespace Ultima5Redux
             // 19 = Margarett
             //           NpcRef.NPCs[296].Script.PrintComprehensiveScript();
 
-            int count = 0;
-            if (false)
-            {
-                foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
-                {
-                    if (npc.NPCType != 0 && npc.Script != null)
-                    {
-                        Console.WriteLine("");
-                        Console.WriteLine("---- SCRIPT for " + npc.Name.Trim() + " -----");
-                        //Npc.Script.PrintScript();
-                        npc.Script.PrintComprehensiveScript();
-
-                        if (npc.Name.Trim() == "Geoffrey")
-                        {
-                            Console.WriteLine(npc.NPCType.ToString());
-
-                        }
-                    }
-                    count++;
-                }
-            }
+            //int count = 0;
+            // if (false)
+            // {
+            //     foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
+            //     {
+            //         if (npc.NPCType != 0 && npc.Script != null)
+            //         {
+            //             Console.WriteLine("");
+            //             Console.WriteLine("---- SCRIPT for " + npc.Name.Trim() + " -----");
+            //             //Npc.Script.PrintScript();
+            //             npc.Script.PrintComprehensiveScript();
+            //
+            //             if (npc.Name.Trim() == "Geoffrey")
+            //             {
+            //                 Console.WriteLine(npc.NPCType.ToString());
+            //
+            //             }
+            //         }
+            //         count++;
+            //     }
+            // }
 
             // Scally
             //Conversation convo = new Conversation(NpcRef.NPCs[0xe6], State, DataOvlRef);

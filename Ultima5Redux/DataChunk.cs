@@ -331,7 +331,7 @@ namespace Ultima5Redux
                 {
                     bool curBit = (((curByte >> nBit)) & shiftBit) == shiftBit;
                     boolList.Add(curBit);
-                    if (isDebug) Debug.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
+                    // if (isDebug) Debug.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
                 }
             }
 
