@@ -30,9 +30,7 @@ namespace Ultima5Redux
         public Conversation CurrentConversation { get; set; }
 
         public enum SpecialLookCommand { None, Sign, GemCrystal }
-
-
-
+        
         public World(string ultima5Directory) : base()
         {
             u5Directory = ultima5Directory;
