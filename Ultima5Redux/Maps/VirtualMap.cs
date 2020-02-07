@@ -736,7 +736,16 @@ namespace Ultima5Redux
                     // could have been a fixed NPC, stubborn Avatar or whatever
                     if (mapChar.MovementAttempts > 2)
                     {
+                        // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
+                        // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
+                        // NPCS
+                        List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(mapChar.CurrentCharacterPosition.XY,
+                            adjustedPos, 1);
+                        Random ran = new Random();
+                        int nRandomIndex =  ran.Next(0, possibleDirections.Count);
+                        NonPlayerCharacterMovement.MovementCommandDirection randomDirection = possibleDirections[nRandomIndex];
                         mapChar.Movement.ClearMovements();
+                        mapChar.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(randomDirection, 1));
                     }
                 }
             }
