@@ -34,7 +34,7 @@ namespace Ultima5Redux
             public const int TOTAL_SMALL_MAP_LOCATIONS = 32;
 
             public enum Location {
-                Britainnia_Underworld = 0x00,
+                Britannia_Underworld = 0x00,
                 Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, // Town
                 Fogsbane, Stormcrow, Greyhaven, Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut, Grendels_Hut, // Dwelling
                 Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny, Paws, Cove, // Castle
