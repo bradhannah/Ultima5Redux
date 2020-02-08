@@ -513,7 +513,7 @@ namespace Ultima5Redux
                         // 
                         if (nMoves <= nWanderTiles)
                         {
-                            WanderWithinN(mapCharacter, 2);
+                            WanderWithinN(mapCharacter, nWanderTiles);
                         }
                         else
                         {
