@@ -404,15 +404,15 @@ namespace Ultima5Redux
         /// <returns>a single string</returns>
         public string GetChunkAsString()
         {
-            if (DataFormat == DataFormatType.FixedString)
+            switch (DataFormat)
             {
-                return (Utils.BytesToStringFixedWidth(RawData.ToList(), 0, DataLength));
+                case DataFormatType.FixedString:
+                    return (Utils.BytesToStringFixedWidth(RawData.ToList(), 0, DataLength));
+                case DataFormatType.SimpleString:
+                    return (Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength));
+                default:
+                    throw new Ultima5ReduxException("String datatype doesn't match predefined list.");
             }
-            else if (DataFormat == DataFormatType.SimpleString)
-            {
-                return (Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength));
-            }
-            throw new Ultima5ReduxException("String datatype doesn't match predefined list.");
         }
 
         /// <summary>

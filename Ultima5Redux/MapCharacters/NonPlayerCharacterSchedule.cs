@@ -196,7 +196,6 @@ namespace Ultima5Redux
             private List<Point3D> Coords { get; }
             /// <summary>
             /// Times of day to move to the next scheduled item
-            /// TODO: figure out why there are 4 times, but only three xyz's to go to?!
             /// </summary>
             private List<byte> Times { get; }
 

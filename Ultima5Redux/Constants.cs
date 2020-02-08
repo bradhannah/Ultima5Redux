@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ultima5Redux
 {
-    public class FileConstants
+    public static class FileConstants
     {
         public const string DATA_OVL = "data.ovl";
 

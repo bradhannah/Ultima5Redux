@@ -64,9 +64,11 @@ namespace Ultima5Redux
         public string GetDebugDescription(TimeOfDay timeOfDay)
         { 
             string debugLookStr = ("Name=" + NPCRef.FriendlyName 
-                + " " + this.CurrentCharacterPosition + " Scheduled to be at: "+
+                + " " + CurrentCharacterPosition + " Scheduled to be at: "+
                 NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) + " with AI Mode: "+ 
-                NPCRef.Schedule.GetCharacterAITypeByTime(timeOfDay));
+                NPCRef.Schedule.GetCharacterAITypeByTime(timeOfDay) +
+                " <b>Movement Attempts</b>: "+ MovementAttempts + " " + 
+                this.Movement.ToString());
             
             return debugLookStr;
         }

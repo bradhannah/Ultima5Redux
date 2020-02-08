@@ -109,6 +109,7 @@
     <Compile Include="MapCharacters\MapCharacters.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovement.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterReference.cs" />
+    <Compile Include="Point2D.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

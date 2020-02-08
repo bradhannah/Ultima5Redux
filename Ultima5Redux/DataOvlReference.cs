@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Chunk names specific to the Data.ovl file
         /// </summary>
+        [SuppressMessage("ReSharper", "IdentifierTypo")]
         public enum DataChunkName {
             Unused = -1,
             TALK_COMPRESSED_WORDS,

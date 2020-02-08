@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 // ReSharper disable IdentifierTypo
 
@@ -280,7 +281,9 @@ namespace Ultima5Redux
             bool bIsAvatarTile = CurrentPosition == xy;
             bool bIsNpcTile = IsNPCTile(xy);
             TileReference tileReference = GetTileReference(xy);
-            bool bStaircaseWalkable = !bNoStaircases || tileReferences.IsStaircase(tileReference.Index); 
+            // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
+            // true indicates that it is walkable
+            bool bStaircaseWalkable = bNoStaircases ? !tileReferences.IsStaircase(tileReference.Index) : true; 
             bool bIsWalkable = tileReference.IsWalking_Passable && bStaircaseWalkable;
 
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
@@ -293,6 +296,7 @@ namespace Ultima5Redux
         /// <param name="characterPosition">the curent position of the character</param>
         /// <param name="scheduledPosition">the place they are supposed to be</param>
         /// <param name="nMaxDistance">max distance they can travel from that position</param>
+        /// <param name="bNoStaircases"></param>
         /// <returns></returns>
         private List<NonPlayerCharacterMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition, Point2D scheduledPosition, int nMaxDistance, bool bNoStaircases)
         {
@@ -605,6 +609,8 @@ namespace Ultima5Redux
             Stack<AStarSharp.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
             new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
+            if (nodeStack == null) return 0;
+            
             return nodeStack.Count;
         }
         
@@ -762,13 +768,17 @@ namespace Ultima5Redux
                         // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
                         // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
                         // NPCS
+                        Debug.WriteLine(mapChar.NPCRef.FriendlyName + " got stuck after " + mapChar.MovementAttempts + " so we are going to find a new direction for them");
                         List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(mapChar.CurrentCharacterPosition.XY,
                             adjustedPos, 1, true);
                         Random ran = new Random();
                         int nRandomIndex =  ran.Next(0, possibleDirections.Count);
                         NonPlayerCharacterMovement.MovementCommandDirection randomDirection = possibleDirections[nRandomIndex];
+                        Debug.WriteLine("Potential directions: " + possibleDirections.Count);
                         mapChar.Movement.ClearMovements();
                         mapChar.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(randomDirection, 1));
+                        Debug.WriteLine(mapChar.NPCRef.FriendlyName + " decided to go " + randomDirection.ToString());
+                        mapChar.MovementAttempts = 0;
                     }
                 }
             }
