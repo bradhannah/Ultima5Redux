@@ -606,7 +606,7 @@ namespace Ultima5Redux
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
         private int GetTotalMovesToLocation(MapCharacter mapCharacter, Point2D targetXy)
         {            
-            Stack<AStarSharp.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
+            Stack<AStarSharpWithWeight.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
             new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
             if (nodeStack == null) return 0;
@@ -644,7 +644,7 @@ namespace Ultima5Redux
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<AStarSharp.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
+            Stack<AStarSharpWithWeight.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
                 new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
             NonPlayerCharacterMovement.MovementCommandDirection prevDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
@@ -656,7 +656,7 @@ namespace Ultima5Redux
 
             int nInARow = 0;
             // builds the movement list that is compatible with the original U5 movement instruction queue stored in the state file
-            foreach (AStarSharp.Node node in nodeStack)
+            foreach (AStarSharpWithWeight.Node node in nodeStack)
             {
                 Point2D newPosition = vector2ToPoint2D(node.Position);
                 newDirection = getCommandDirection(prevPosition, newPosition);
@@ -827,7 +827,7 @@ namespace Ultima5Redux
             if (CurrentSingleMapReference == null) return false;
             // yuck, but if the food is up one tile or down one tile, then food is nearby
             bool bIsFoodNearby = (isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index)
-                || isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index));
+                                  || isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index));
             return bIsFoodNearby;
 
         }

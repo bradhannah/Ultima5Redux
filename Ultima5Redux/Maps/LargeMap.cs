@@ -115,5 +115,10 @@ namespace Ultima5Redux
             }
             return theMap;
         }
+
+        protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
+        {
+            return 1;
+        }
     }
 }

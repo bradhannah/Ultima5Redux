@@ -53,5 +53,28 @@ namespace Ultima5Redux
             // have to transpose the array because the ListTo2DArray function puts the map together backwards...
             return Utils.TransposeArray(smallMap);
         }
+
+        /// <summary>
+        /// Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
+        /// </summary>
+        /// <param name="spriteTileReferences"></param>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
+        {
+            const int fDefaultDeduction = 2;
+            TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+            int nBrickFloorIndex = spriteTileReferences.GetTileReferenceByName("BrickFloor").Index;
+
+            float fCost = 10;
+
+            // we reduce the weight for the A* for each adjacent brick floor tile
+            if (xy.X - 1 >= 0) fCost -= TheMap[xy.X - 1][xy.Y] == nBrickFloorIndex ? fDefaultDeduction : 0;
+            if (xy.X + 1 < XTILES) fCost -= TheMap[xy.X + 1][xy.Y] == nBrickFloorIndex ? fDefaultDeduction : 0;
+            if (xy.Y - 1 >= 0) fCost -= TheMap[xy.X][xy.Y-1] == nBrickFloorIndex ? fDefaultDeduction : 0;
+            if (xy.Y + 1 < YTILES) fCost -= TheMap[xy.X][xy.Y+1] == nBrickFloorIndex ? fDefaultDeduction : 0;
+
+            return fCost;
+        }
     }
 }

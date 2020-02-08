@@ -90,6 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="External\AStarSharpWithWeight.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />

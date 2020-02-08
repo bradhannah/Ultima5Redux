@@ -22,11 +22,11 @@ namespace Ultima5Redux
         /// All A* nodes for the current map
         /// Accessed by [x][y]
         /// </summary>
-        internal List<List<AStarSharp.Node>> aStarNodes;
+        internal List<List<AStarSharpWithWeight.Node>> aStarNodes;
         /// <summary>
         /// A* algorithm helper class
         /// </summary>
-        internal AStarSharp.Astar astar;
+        internal AStarSharpWithWeight.Astar astar;
         #endregion
 
         public Map(string u5Directory)
@@ -34,6 +34,18 @@ namespace Ultima5Redux
             this.u5Directory = u5Directory;
         }
 
+        /// <summary>
+        /// Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
+        /// </summary>
+        /// <param name="spriteTileReferences"></param>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        protected abstract float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy);
+        
+        /// <summary>
+        /// Builds the A* map to be used for NPC pathfinding
+        /// </summary>
+        /// <param name="spriteTileReferences"></param>
         protected void InitializeAStarMap(TileReferences spriteTileReferences)
         {
             Debug.Assert(TheMap != null);
@@ -42,52 +54,30 @@ namespace Ultima5Redux
             int nYTiles = TheMap.Length;
 
             // load the A-Star compatible map into memory
-            aStarNodes = Utils.Init2DList<AStarSharp.Node>(nXTiles, nYTiles);
+            aStarNodes = Utils.Init2DList<AStarSharpWithWeight.Node>(nXTiles, nYTiles);
 
             for (int x = 0; x < nXTiles; x++)
             {
                 for (int y = 0; y < nYTiles; y++)
                 {
                     TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[x][y]);
-                    bool bIsWalkable = currentTile.IsWalking_Passable || currentTile.Index == 184 || currentTile.Index == 186;
                     
-                    AStarSharp.Node node = new AStarSharp.Node(new System.Numerics.Vector2(x, y), bIsWalkable);
+                    bool bIsWalkable = currentTile.IsWalking_Passable || currentTile.Index == spriteTileReferences.GetTileReferenceByName("RegularDoor").Index
+                                                                      || currentTile.Index == spriteTileReferences.GetTileReferenceByName("RegularDoorView").Index;
+                    
+                    float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x,y));
+                    
+                    AStarSharpWithWeight.Node node = new AStarSharpWithWeight.Node(new System.Numerics.Vector2(x, y), bIsWalkable, fWeight);
                     aStarNodes[x].Add(node);
                 }
             }
-            astar = new AStarSharp.Astar(aStarNodes);
+            astar = new AStarSharpWithWeight.Astar(aStarNodes);
         }
 
-        /// <summary>
-        /// We use this because the raw map files only store a single byte per tile (0-255), but the REAL world is made up for sprites numbered from 0-511
-        /// so we make a copy for the game to use as a the live map which can contain the bigger sprite indexes
-        /// </summary>
-        /// <returns></returns>
-        //public int[][] GetCopyOfMapAsInt()
-        //{
-        //    int nCols = theMap.Length;
-        //    int nRows = theMap[0].Length;
-
-        //    int[][] intMap = Utils.Init2DArray<int>(nCols, nRows, 0);
-
-        //    for (int curRow = 0; curRow < nRows; curRow++)
-        //    {
-        //        for (int curCol = 0; curCol < nCols; curCol++)
-        //        {
-        //            // no casting required since we go from byte to int
-        //            intMap[curCol][curRow] = theMap[curCol][curRow];
-        //        }
-        //    }
-        //    return intMap;
-        //}
 
         public byte[][] TheMap
         {
             get; protected set;
-            //get
-            //{
-            //    return theMap;
-            //}
         }
 
         #region Debug methods
