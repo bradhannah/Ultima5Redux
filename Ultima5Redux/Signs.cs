@@ -217,7 +217,7 @@ namespace Ultima5Redux
                     return sign;
                 }
             }
-            //throw new Exception("You asked for a sigh that simple doesn't exist in " + location + " at X=" + x.ToString() + " Y="+y.ToString());
+            //throw new Ultima5ReduxException("You asked for a sigh that simple doesn't exist in " + location + " at X=" + x.ToString() + " Y="+y.ToString());
             return null;
         }
 

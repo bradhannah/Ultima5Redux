@@ -433,8 +433,8 @@ namespace Ultima5Redux
                 if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
                     activeCharacterRecords.Add(characterRecord);
             }
-            if (activeCharacterRecords.Count == 0) throw new Exception("Even the Avatar is dead, no records returned in active party");
-            if (activeCharacterRecords.Count > PlayerCharacterRecords.MAX_PARTY_MEMBERS) throw new Exception("There are too many party members in the party... party...");
+            if (activeCharacterRecords.Count == 0) throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party");
+            if (activeCharacterRecords.Count > PlayerCharacterRecords.MAX_PARTY_MEMBERS) throw new Ultima5ReduxException("There are too many party members in the party... party...");
 
             return activeCharacterRecords;
         }
@@ -456,7 +456,7 @@ namespace Ultima5Redux
                 if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
                     if (nPartyMember++ == nPosition) return characterRecord;
             }
-            throw new Exception("I've asked for member of the party who is aparently not there...");
+            throw new Ultima5ReduxException("I've asked for member of the party who is aparently not there...");
         }
 
         /// <summary>

@@ -120,7 +120,7 @@ namespace Ultima5Redux
                     if (runeMode) return " ";
                     return string.Empty;
                 default:
-                    throw new Exception("Passed in an unsupported TalkCommand: " + item.Command.ToString() + " to the TextProcessItem method");
+                    throw new Ultima5ReduxException("Passed in an unsupported TalkCommand: " + item.Command.ToString() + " to the TextProcessItem method");
             }
         }
 
@@ -378,9 +378,9 @@ namespace Ultima5Redux
                         break;
                     case TalkScript.TalkCommand.Or:
                     case TalkScript.TalkCommand.StartNewSection:
-                        throw new Exception("We should never see the <OR> or <A2> code in conversation");
+                        throw new Ultima5ReduxException("We should never see the <OR> or <A2> code in conversation");
                     default:
-                        throw new Exception("Recieved TalkCommand I wasn't expecting during conversation");
+                        throw new Ultima5ReduxException("Recieved TalkCommand I wasn't expecting during conversation");
 
                 }
                 nItem++;
@@ -442,7 +442,7 @@ namespace Ultima5Redux
         {
             if (this.EnqueuedScriptItemCallback == null)
             {
-                throw new Exception("Called BeginConversation without declaring a EnqueuedScriptItemCallback.");
+                throw new Ultima5ReduxException("Called BeginConversation without declaring a EnqueuedScriptItemCallback.");
             }
 
             System.Console.WriteLine("---- PRE-CONVERSATION SCRIPT -----");

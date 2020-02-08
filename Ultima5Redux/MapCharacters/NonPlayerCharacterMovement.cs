@@ -47,7 +47,7 @@ namespace Ultima5Redux
                 if (nIterations == 0xFF || nIterations == 0) return;
 
                 if (!(direction == MovementCommandDirection.East || direction == MovementCommandDirection.West || direction == MovementCommandDirection.North
-                    || direction == MovementCommandDirection.South)) { throw new Exception("a bad direction was set: " + direction.ToString()); }
+                    || direction == MovementCommandDirection.South)) { throw new Ultima5ReduxException("a bad direction was set: " + direction.ToString()); }
 
 
                 // we have a proper movement instruction so let's add it to the queue
@@ -176,7 +176,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public MovementCommandDirection GetNextMovementCommandDirection(bool bPeek = false)
         {
-            if (movementQueue.Count <= 0) { throw new Exception("You have requested to GetNextMovementCommand but there are non left."); }
+            if (movementQueue.Count <= 0) { throw new Ultima5ReduxException("You have requested to GetNextMovementCommand but there are non left."); }
             MovementCommandDirection direction = movementQueue.Peek().Direction;
             
             // calculate how many you will have left after you 

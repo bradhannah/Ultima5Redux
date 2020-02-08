@@ -49,7 +49,7 @@ namespace Ultima5Redux
                 // if it is more than the highest value, then go to the index of the highest value
                 if (nHour > Times[nLatestTimeIndex]) return getIndex(nLatestTimeIndex);// == 3 ? 1: nLatestTimeIndex;
 
-                throw new System.Exception("GetScheduleIndex fell all the way through which doesn't make sense.");
+                throw new Ultima5ReduxException("GetScheduleIndex fell all the way through which doesn't make sense.");
             }
 
             private int GetRawScheduleIndex(TimeOfDay timeOfDay)
@@ -82,7 +82,7 @@ namespace Ultima5Redux
                 // if it is more than the highest value, then go to the index of the highest value
                 if (nHour > Times[nLatestTimeIndex]) return nLatestTimeIndex;// == 3 ? 1: nLatestTimeIndex;
 
-                throw new System.Exception("GetRawScheduleIndex fell all the way through which doesn't make sense.");
+                throw new Ultima5ReduxException("GetRawScheduleIndex fell all the way through which doesn't make sense.");
             }
 
             /// <summary>

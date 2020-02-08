@@ -38,7 +38,7 @@ namespace Ultima5Redux
                     case LargeMap.Maps.Underworld:
                         return underworldAnimationState;
                 }
-                throw new Exception("Asked for a CurrentAnimationState that doesn't exist:" + currentMapType.ToString());
+                throw new Ultima5ReduxException("Asked for a CurrentAnimationState that doesn't exist:" + currentMapType.ToString());
             }
         }
         private MapCharacterStates charStates;

@@ -101,7 +101,7 @@ namespace Ultima5Redux
             // sadly I have to initilize this after the Npcs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef);
 
-            if (State.Location != SmallMapReferences.SingleMapReference.Location.Britainnia_Underworld)
+            if (State.Location != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
             {
                 State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(State.Location, State.Floor), State.CharacterRecords, true);
             }
@@ -307,7 +307,7 @@ namespace Ultima5Redux
                         klimbResult = KlimbResult.SuccessFell;
                         return DataOvlRef.StringReferences.GetString(DataOvlReference.KLIMBING_STRINGS.FELL);
                     }
-                    throw new Exception("I am not personnaly aware of what on earth you would be klimbing that is not already stated in the following logic...");
+                    throw new Ultima5ReduxException("I am not personnaly aware of what on earth you would be klimbing that is not already stated in the following logic...");
                 }
                 // is it tall mountains? we can't klimb those
                 else if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("TallMountains"))
@@ -475,7 +475,7 @@ namespace Ultima5Redux
                     if (State.TheVirtualMap.CurrentPosition.X > 0 || State.TheVirtualMap.IsLargeMap) xAdjust = -1;
                     break;
                 default:
-                    throw new Exception("Requested an adjustment but didn't provide a KeyCode that represents a direction.");
+                    throw new Ultima5ReduxException("Requested an adjustment but didn't provide a KeyCode that represents a direction.");
             }
         }
 

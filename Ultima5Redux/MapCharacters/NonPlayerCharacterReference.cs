@@ -188,7 +188,7 @@ namespace Ultima5Redux
                         case NPCDialogTypeEnum.Unknown:
                             return (int)NPCKeySpriteEnum.Guard;
                         default:
-                            throw new Exception("Unrecognized NPC type");
+                            throw new Ultima5ReduxException("Unrecognized NPC type");
                     }
                 }
             }

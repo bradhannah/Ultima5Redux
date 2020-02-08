@@ -412,7 +412,7 @@ namespace Ultima5Redux
             {
                 return (Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength));
             }
-            throw new Exception("String datatype doesn't match predefined list.");
+            throw new Ultima5ReduxException("String datatype doesn't match predefined list.");
         }
 
         /// <summary>

@@ -166,7 +166,7 @@ namespace Ultima5Redux
                     case DataOvlReference.LOCATION_STRINGS.Palace_of_Blackthorn:
                         return "PALACE OF BLACKTHORN";
                     default:
-                        throw new Exception("Ummm asked for a location name and wasn't on the guest list.");
+                        throw new Ultima5ReduxException("Ummm asked for a location name and wasn't on the guest list.");
                 }
             }
             else
@@ -267,7 +267,7 @@ namespace Ultima5Redux
                     return mapRef; 
                 }
             }
-            throw new Exception("Location was not found!");
+            throw new Ultima5ReduxException("Location was not found!");
         }
 
         public void InitializeLocationNames ()

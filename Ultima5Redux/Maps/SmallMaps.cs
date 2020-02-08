@@ -71,7 +71,7 @@ namespace Ultima5Redux
                 return true;
             }
             // if not - then WTF?
-            throw new Exception("There is staircase with apparently no matching stair case");
+            throw new Ultima5ReduxException("There is staircase with apparently no matching stair case");
         }
     }
 }

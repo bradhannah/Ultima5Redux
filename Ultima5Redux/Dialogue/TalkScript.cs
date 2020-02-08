@@ -26,7 +26,7 @@ namespace Ultima5Redux
                         return scriptLabel;
                     }
                 }
-                throw new Exception("Asked for a label " + nLabel.ToString() + " that doesn't exist...");
+                throw new Ultima5ReduxException("Asked for a label " + nLabel.ToString() + " that doesn't exist...");
             }
 
             /// <summary>
@@ -153,7 +153,7 @@ namespace Ultima5Redux
             {
                 if (!AnswerIsAvailable(question))
                 {
-                    throw new Exception("You have requested an answer for a question that doesn't exist. Use AnswerIsAvailable to check for existence first.");
+                    throw new Ultima5ReduxException("You have requested an answer for a question that doesn't exist. Use AnswerIsAvailable to check for existence first.");
                 }
                 
                 return QuestionAnswers[GetQuestionKey(question)];
@@ -937,7 +937,7 @@ namespace Ultima5Redux
                 }
                 nCount++;
             }
-            throw new Exception("You requested a script label that doesn't exist");
+            throw new Ultima5ReduxException("You requested a script label that doesn't exist");
 
         }
 
@@ -950,7 +950,7 @@ namespace Ultima5Redux
         {
             if (nLabel < 0 || nLabel > TOTAL_LABELS)
             {
-                throw new Exception("Label Number: " + nLabel.ToString() + " is out of range");
+                throw new Ultima5ReduxException("Label Number: " + nLabel.ToString() + " is out of range");
             }
 
             if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
@@ -960,7 +960,7 @@ namespace Ultima5Redux
             }
             else 
             {
-                throw new Exception("You passed a talk command that isn't a label! ");
+                throw new Ultima5ReduxException("You passed a talk command that isn't a label! ");
             }
         }
 

@@ -124,7 +124,7 @@ namespace Ultima5Redux
         public void AdvanceClock(int nMinutes)
         {
             // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
-            if (nMinutes > (60 * 9)) throw new Exception("You can not advance more than 9 hours at a time");
+            if (nMinutes > (60 * 9)) throw new Ultima5ReduxException("You can not advance more than 9 hours at a time");
 
             // if we add the time, and it enters the next hour then we have some work to do
             if (Minute + nMinutes > 59)

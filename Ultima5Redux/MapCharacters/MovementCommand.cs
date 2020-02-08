@@ -28,7 +28,7 @@ namespace Ultima5Redux
             /// <returns></returns>
             public int SpendSingleMovement()
             {
-                if (Iterations == 0) { throw new Exception("You spent a single movement - but you didn't have any repeats left "); }
+                if (Iterations == 0) { throw new Ultima5ReduxException("You spent a single movement - but you didn't have any repeats left "); }
                 return --Iterations;
             }
         }

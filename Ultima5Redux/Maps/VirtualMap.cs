@@ -362,14 +362,14 @@ namespace Ultima5Redux
             // check to see if the random direction is within the correct distance
             if (direction != NonPlayerCharacterMovement.MovementCommandDirection.None && !scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
             {
-                throw new Exception("GetWanderCharacterPosition has told us to go outside of our expected maximum area");
+                throw new Ultima5ReduxException("GetWanderCharacterPosition has told us to go outside of our expected maximum area");
             }
             // can we even travel onto the tile?
             if (!IsTileFreeToTravel(adjustedPosition, true))
             {
                 if (direction != NonPlayerCharacterMovement.MovementCommandDirection.None)
                 {
-                    throw new Exception("Was sent to a tile, but it isn't in free in WanderWithinN");
+                    throw new Ultima5ReduxException("Was sent to a tile, but it isn't in free in WanderWithinN");
                 }
                 // something else is on the tile, so we don't move
                 return;
@@ -412,7 +412,7 @@ namespace Ultima5Redux
                         LadderOrStairDirection.Down : LadderOrStairDirection.Up;
 
                     List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationse(ladderOrStairDirection, npcXy.XY);
-                    if (stairsAndLadderLocations.Count <= 0) throw new Exception("Can't find a damn ladder or staircase.");
+                    if (stairsAndLadderLocations.Count <= 0) throw new Ultima5ReduxException("Can't find a damn ladder or staircase.");
 
                     // sloppy, but fine for now
                     CharacterPosition characterPosition = new CharacterPosition();
@@ -489,7 +489,7 @@ namespace Ultima5Redux
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         break;
                     default:
-                        throw new Exception("An unexpected movement AI was encountered: " + aiType.ToString() + " for NPC: " + mapCharacter.NPCRef.Name);
+                        throw new Ultima5ReduxException("An unexpected movement AI was encountered: " + aiType.ToString() + " for NPC: " + mapCharacter.NPCRef.Name);
                 }
             }
             else // character not in correct position
@@ -528,7 +528,7 @@ namespace Ultima5Redux
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         break;
                     default:
-                        throw new Exception("An unexpected movement AI was encountered: " + aiType.ToString() + " for NPC: " + mapCharacter.NPCRef.Name);
+                        throw new Ultima5ReduxException("An unexpected movement AI was encountered: " + aiType.ToString() + " for NPC: " + mapCharacter.NPCRef.Name);
                 }
             }
         }
@@ -623,7 +623,7 @@ namespace Ultima5Redux
                 if (fromXy.Y < toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.South;
                 if (fromXy.X > toXy.X) return NonPlayerCharacterMovement.MovementCommandDirection.West;
                 if (fromXy.Y > toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.North;
-                throw new Exception("For some reason we couldn't determine the path of the command direction in getCommandDirection");
+                throw new Ultima5ReduxException("For some reason we couldn't determine the path of the command direction in getCommandDirection");
             }
 
             Point2D vector2ToPoint2D(Vector2 vector)
@@ -633,7 +633,7 @@ namespace Ultima5Redux
 
             if (mapCharacter.CurrentCharacterPosition.XY == targetXy)
             {
-                throw new Exception("Asked to build a path, but " + mapCharacter.NPCRef.Name + " is already at " + targetXy.X.ToString() + "," + targetXy.Y); //+ "," + targetXy.Floor);
+                throw new Ultima5ReduxException("Asked to build a path, but " + mapCharacter.NPCRef.Name + " is already at " + targetXy.X.ToString() + "," + targetXy.Y); //+ "," + targetXy.Floor);
             }
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
@@ -880,7 +880,7 @@ namespace Ultima5Redux
             if (!GetTileReference(xy.X + 1, xy.Y).IsSolidSprite) return Direction.Right;
             if (!GetTileReference(xy.X, xy.Y - 1).IsSolidSprite) return Direction.Up;
             if (!GetTileReference(xy.X, xy.Y + 1).IsSolidSprite) return Direction.Down;
-            throw new Exception("Can't get stair direction - something is amiss....");
+            throw new Ultima5ReduxException("Can't get stair direction - something is amiss....");
         }
 
         /// <summary>

@@ -143,6 +143,7 @@
     <Compile Include="TileReferences.cs" />
     <Compile Include="TimeOfDay.cs" />
     <Compile Include="U5StringRef.cs" />
+    <Compile Include="Ultima5ReduxException.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Maps\SmallMap.cs" />
     <Compile Include="Maps\LargeMap.cs" />

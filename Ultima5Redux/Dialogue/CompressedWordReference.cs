@@ -96,7 +96,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Couldn't find a talking word at the indicated index
         /// </summary>
-        public class NoTalkingWordException: Exception
+        public class NoTalkingWordException: Ultima5ReduxException
         {
             public NoTalkingWordException(string message) :base(message)
             {

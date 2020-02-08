@@ -39,7 +39,7 @@ namespace Ultima5Redux
         public void SwapPositions(int nFirstPos, int nSecondPos)
         {
             int nActiveRecs = this.TotalPartyMembers();
-            if (nFirstPos > nActiveRecs || nSecondPos > nActiveRecs) throw new Exception("Asked to swap a party member who doesn't exist First:#" + nFirstPos.ToString()
+            if (nFirstPos > nActiveRecs || nSecondPos > nActiveRecs) throw new Ultima5ReduxException("Asked to swap a party member who doesn't exist First:#" + nFirstPos.ToString()
                 + " Second:#" + nSecondPos.ToString());
 
             PlayerCharacterRecord tempRec = Records[nFirstPos];
@@ -57,7 +57,7 @@ namespace Ultima5Redux
                 }
             }
             return null;
-            //throw new Exception("Was unable to match CharacterRecord with NPC: " + npc.Name);
+            //throw new Ultima5ReduxException("Was unable to match CharacterRecord with NPC: " + npc.Name);
         }
 
         public int TotalPartyMembers()

@@ -116,7 +116,7 @@ namespace Ultima5Redux
                         case FileConstants.KEEP_DAT:
                             return SmallMapMasterFiles.Keep;
                     }
-                    throw (new Exception("Bad MasterFile"));
+                    throw new Ultima5ReduxException("Bad MasterFile");
                 }
             }
 
@@ -155,7 +155,7 @@ namespace Ultima5Redux
                     case SmallMapMasterFiles.Towne:
                         return FileConstants.TOWNE_TLK;
                 }
-                throw (new Exception("Couldn't map NPC filename"));
+                throw new Ultima5ReduxException("Couldn't map NPC filename");
             }
 
             /// <summary>
@@ -176,7 +176,7 @@ namespace Ultima5Redux
                     case SmallMapMasterFiles.Towne:
                         return FileConstants.TOWNE_NPC;
                 }
-                throw (new Exception("Couldn't map NPC filename"));
+                throw new Ultima5ReduxException("Couldn't map NPC filename");
             }
 
             /// <summary>
@@ -235,7 +235,7 @@ namespace Ultima5Redux
                     case Location.Doom:
                         return SmallMapMasterFiles.Dungeon;
                 }
-                throw new Exception("EH?");
+                throw new Ultima5ReduxException("EH?");
             }
 
             /// <summary>
@@ -258,7 +258,7 @@ namespace Ultima5Redux
                     case SmallMapMasterFiles.Dungeon:
                         return "NOFILE";
                 }
-                throw (new Exception("Bad Location"));
+                throw new Ultima5ReduxException("Bad Location");
             }
             #endregion
         }

@@ -163,7 +163,7 @@ namespace Ultima5Redux
             {
                 case 1:
                 case -1:
-                    throw new Exception("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
+                    throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
                 case 2:
                 case 4:
                     // this is normal speed
@@ -173,7 +173,7 @@ namespace Ultima5Redux
                 case 8:
                     return u5StringRef.GetString(DataOvlReference.WORLD_STRINGS.VERY_SLOW);
                 default:
-                    throw new Exception("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
+                    throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
             }
 
         }

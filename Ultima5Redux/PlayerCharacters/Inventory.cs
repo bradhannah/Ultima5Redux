@@ -147,7 +147,7 @@ namespace Ultima5Redux
                     return item;
                 }
             }
-            throw new Exception("Requested " + equipment.ToString() + " but is not a combat type");
+            throw new Ultima5ReduxException("Requested " + equipment.ToString() + " but is not a combat type");
         }
 
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef)
