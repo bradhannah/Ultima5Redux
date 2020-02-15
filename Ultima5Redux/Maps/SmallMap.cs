@@ -68,6 +68,7 @@ namespace Ultima5Redux
 
             float fCost = 10;
 
+            // todo: at some point I am imagine we will need to identify dirt walkways as preferred paths as well 
             // we reduce the weight for the A* for each adjacent brick floor tile
             if (xy.X - 1 >= 0) fCost -= TheMap[xy.X - 1][xy.Y] == nBrickFloorIndex ? fDefaultDeduction : 0;
             if (xy.X + 1 < XTILES) fCost -= TheMap[xy.X + 1][xy.Y] == nBrickFloorIndex ? fDefaultDeduction : 0;
