@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 // ReSharper disable IdentifierTypo
 
@@ -430,7 +431,13 @@ namespace Ultima5Redux
                         LadderOrStairDirection.Down : LadderOrStairDirection.Up;
 
                     List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationse(ladderOrStairDirection, npcXy.XY, mapCharacter.CurrentCharacterPosition.XY);
-                    if (stairsAndLadderLocations.Count <= 0) throw new Ultima5ReduxException("Can't find a damn ladder or staircase.");
+                    if (stairsAndLadderLocations.Count <= 0)
+                    {
+                        Debug.WriteLine(mapCharacter.NPCRef.FriendlyName + " can't find a damn ladder or staircase at "+timeOfDay.FormattedTime);
+                        return;
+                        // throw new Ultima5ReduxException("");
+                    }
+                    
 
                     // sloppy, but fine for now
                     CharacterPosition characterPosition = new CharacterPosition();
@@ -751,10 +758,8 @@ namespace Ultima5Redux
             if (IsLargeMap) return false;
 
             // go through each of the NPCs on the map
-            foreach (MapCharacter mapChar in TheMapCharacters.Characters)
+            foreach (MapCharacter mapChar in TheMapCharacters.Characters.Where(mapChar => mapChar.IsActive))
             {
-                if (!mapChar.IsActive) continue;
-
                 // if there is no next available movement then we gotta recalculate and see if they should move
                 if (!mapChar.Movement.IsNextCommandAvailable())
                 {

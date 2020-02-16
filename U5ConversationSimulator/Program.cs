@@ -14,7 +14,13 @@ namespace U5ConversationSimulator
         static void Main(string[] args)
         {
             world = new World("C:\\games\\ultima_5_late\\britain");
-            world.State.TheVirtualMap.LoadSmallMap(world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Moonglow, 0), world.State.CharacterRecords, false);
+
+            foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
+            {
+                world.State.TheVirtualMap.LoadSmallMap(world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor), world.State.CharacterRecords, false);
+            }
+            
+            
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
             //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle);
