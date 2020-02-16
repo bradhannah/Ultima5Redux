@@ -90,7 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="External\AStarSharpWithWeight.cs" />
+    <Compile Include="External\AStarSharp.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
@@ -101,7 +101,6 @@
     <Compile Include="MapCharacters\MapCharacterAnimationStates.cs" />
     <Compile Include="MapCharacters\MapCharacterState.cs" />
     <Compile Include="MapCharacters\MapCharacterStates.cs" />
-    <Compile Include="External\AStarSharp.cs" />
     <Compile Include="PlayerCharacters\Inventory.cs" />
     <Compile Include="PlayerCharacters\InventoryItem.cs" />
     <Compile Include="PlayerCharacters\InventoryItems.cs" />

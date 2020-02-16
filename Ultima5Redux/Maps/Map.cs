@@ -22,11 +22,11 @@ namespace Ultima5Redux
         /// All A* nodes for the current map
         /// Accessed by [x][y]
         /// </summary>
-        internal List<List<AStarSharpWithWeight.Node>> aStarNodes;
+        internal List<List<AStarSharp.Node>> aStarNodes;
         /// <summary>
         /// A* algorithm helper class
         /// </summary>
-        internal AStarSharpWithWeight.Astar astar;
+        internal AStarSharp.Astar astar;
         #endregion
 
         public Map(string u5Directory)
@@ -54,7 +54,7 @@ namespace Ultima5Redux
             int nYTiles = TheMap.Length;
 
             // load the A-Star compatible map into memory
-            aStarNodes = Utils.Init2DList<AStarSharpWithWeight.Node>(nXTiles, nYTiles);
+            aStarNodes = Utils.Init2DList<AStarSharp.Node>(nXTiles, nYTiles);
 
             for (int x = 0; x < nXTiles; x++)
             {
@@ -67,11 +67,11 @@ namespace Ultima5Redux
                     
                     float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x,y));
                     
-                    AStarSharpWithWeight.Node node = new AStarSharpWithWeight.Node(new System.Numerics.Vector2(x, y), bIsWalkable, fWeight);
+                    AStarSharp.Node node = new AStarSharp.Node(new System.Numerics.Vector2(x, y), bIsWalkable, fWeight);
                     aStarNodes[x].Add(node);
                 }
             }
-            astar = new AStarSharpWithWeight.Astar(aStarNodes);
+            astar = new AStarSharp.Astar(aStarNodes);
         }
 
 

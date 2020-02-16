@@ -95,14 +95,11 @@ namespace Ultima5Redux
                 {
                     // the animations are out of order - so we use this reference to track it down
                     NonPlayerCharacterReference npcRef = bIsLargeMap ? null : npcCurrentMapRefs[i];
-                    MapCharacterState mapCharState;
 
                     MapCharacterAnimationState charAnimState = null;
 
-                    NonPlayerCharacterMovement charMovement;
-
-                    mapCharState = null;
-                    charMovement = null;
+                    MapCharacterState mapCharState = null;
+                    NonPlayerCharacterMovement charMovement = null;
                     charAnimState = CurrentAnimationState.GetCharacterState(i);
 
                     Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, timeOfDay, playerCharacterRecords));
@@ -139,11 +136,12 @@ namespace Ultima5Redux
             npcCurrentMapRefs = npcRefs.GetNonPlayerCharactersByLocation(singleMapReference.MapLocation);
             if (bLoadFromDisk)
             {
+                Debug.WriteLine("Loading character positions from disk...");
                 smallMapAnimationStates.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.SAVED_GAM, bLoadFromDisk);
             }
             else
             {
-
+                Debug.WriteLine("Loading default character positions...");
             }
 
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
@@ -158,9 +156,8 @@ namespace Ultima5Redux
                 NonPlayerCharacterReference npcRef = npcCurrentMapRefs[i];
                 MapCharacterState mapCharState;
                 MapCharacterAnimationState charAnimState = null;
-                NonPlayerCharacterMovement charMovement;
 
-                charMovement = movements.GetMovement(i);
+                NonPlayerCharacterMovement charMovement = movements.GetMovement(i);
 
                 if (!bLoadFromDisk)
                 {

@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-
-// Courtesy of https://github.com/davecusatis/A-Star-Sharp
 
 namespace AStarSharp
 {
     public class Node
     {
         // Change this depending on what the desired size is for each element in the grid
-        //public static int NODE_SIZE = 32;
         public static int NODE_SIZE = 1;
         public Node Parent;
         public Vector2 Position;
@@ -25,6 +20,7 @@ namespace AStarSharp
         }
         public float DistanceToTarget;
         public float Cost;
+        public float Weight;
         public float F
         {
             get
@@ -37,12 +33,13 @@ namespace AStarSharp
         }
         public bool Walkable;
 
-        public Node(Vector2 pos, bool walkable)
+        public Node(Vector2 pos, bool walkable, float weight = 1)
         {
             Parent = null;
             Position = pos;
             DistanceToTarget = -1;
             Cost = 1;
+            Weight = weight;
             Walkable = walkable;
         }
     }
@@ -54,7 +51,7 @@ namespace AStarSharp
         {
             get
             {
-                return Grid[0].Count;
+               return Grid[0].Count;
             }
         }
         int GridCols
@@ -72,7 +69,7 @@ namespace AStarSharp
 
         public Stack<Node> FindPath(Vector2 Start, Vector2 End)
         {
-            Node start = new Node(new Vector2((int)(Start.X / Node.NODE_SIZE), (int)(Start.Y / Node.NODE_SIZE)), true);
+            Node start = new Node(new Vector2((int)(Start.X/Node.NODE_SIZE), (int) (Start.Y/Node.NODE_SIZE)), true);
             Node end = new Node(new Vector2((int)(End.X / Node.NODE_SIZE), (int)(End.Y / Node.NODE_SIZE)), true);
 
             Stack<Node> Path = new Stack<Node>();
@@ -80,19 +77,19 @@ namespace AStarSharp
             List<Node> ClosedList = new List<Node>();
             List<Node> adjacencies;
             Node current = start;
-
+           
             // add start node to Open List
             OpenList.Add(start);
 
-            while (OpenList.Count != 0 && !ClosedList.Exists(x => x.Position == end.Position))
+            while(OpenList.Count != 0 && !ClosedList.Exists(x => x.Position == end.Position))
             {
                 current = OpenList[0];
                 OpenList.Remove(current);
                 ClosedList.Add(current);
                 adjacencies = GetAdjacentNodes(current);
 
-
-                foreach (Node n in adjacencies)
+ 
+                foreach(Node n in adjacencies)
                 {
                     if (!ClosedList.Contains(n) && n.Walkable)
                     {
@@ -100,16 +97,16 @@ namespace AStarSharp
                         {
                             n.Parent = current;
                             n.DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
-                            n.Cost = 1 + n.Parent.Cost;
+                            n.Cost = n.Weight + n.Parent.Cost;
                             OpenList.Add(n);
                             OpenList = OpenList.OrderBy(node => node.F).ToList<Node>();
                         }
                     }
                 }
             }
-
+            
             // construct path, if end was not closed return null
-            if (!ClosedList.Exists(x => x.Position == end.Position))
+            if(!ClosedList.Exists(x => x.Position == end.Position))
             {
                 return null;
             }
@@ -124,7 +121,7 @@ namespace AStarSharp
             } while (temp != start && temp != null) ;
             return Path;
         }
-
+		
         private List<Node> GetAdjacentNodes(Node n)
         {
             List<Node> temp = new List<Node>();
@@ -132,19 +129,19 @@ namespace AStarSharp
             int row = (int)n.Position.Y;
             int col = (int)n.Position.X;
 
-            if (row + 1 < GridRows)
+            if(row + 1 < GridRows)
             {
                 temp.Add(Grid[col][row + 1]);
             }
-            if (row - 1 >= 0)
+            if(row - 1 >= 0)
             {
                 temp.Add(Grid[col][row - 1]);
             }
-            if (col - 1 >= 0)
+            if(col - 1 >= 0)
             {
                 temp.Add(Grid[col - 1][row]);
             }
-            if (col + 1 < GridCols)
+            if(col + 1 < GridCols)
             {
                 temp.Add(Grid[col + 1][row]);
             }
