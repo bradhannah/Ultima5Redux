@@ -25,6 +25,10 @@ namespace Ultima5Redux
         /// The characters current position on the map
         /// </summary>
         internal CharacterPosition CurrentCharacterPosition { get; private set; }  = new CharacterPosition();
+        /// <summary>
+        /// How many iterations will I force the character to wander?
+        /// </summary>
+        internal int ForcedWandering { get; set; }
         #endregion
 
         #region Public Properties

@@ -625,7 +625,7 @@ namespace Ultima5Redux
         /// <param name="targetXy">where the character would move</param>
         /// <returns>the number of moves to the targetXy</returns>
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
-        private int GetTotalMovesToLocation(Point2D currentXy,  Point2D targetXy)
+        private int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy)
         {            
             Stack<AStarSharp.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(currentXy.X, currentXy.Y),
             new System.Numerics.Vector2(targetXy.X, targetXy.Y));
@@ -782,34 +782,33 @@ namespace Ultima5Redux
                     {
                         mapChar.MovementAttempts++;
                     }
+
+                    if (mapChar.ForcedWandering > 0)
+                    {
+                        WanderWithinN(mapChar, 32, true);
+                        mapChar.ForcedWandering--;
+                        continue;
+                    }
+                    
                     // if we have tried a few times and failed then we will recalculate
                     // could have been a fixed NPC, stubborn Avatar or whatever
-                    if (mapChar.MovementAttempts > 2)
-                    {
-                        // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
-                        // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
-                        // NPCS
-                        Debug.WriteLine(mapChar.NPCRef.FriendlyName + " got stuck after " + mapChar.MovementAttempts + " so we are going to find a new direction for them");
+                    if (mapChar.MovementAttempts <= 2) continue;
+
+                    // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
+                    // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
+                    // NPCs
+                    Debug.WriteLine(mapChar.NPCRef.FriendlyName + " got stuck after " + mapChar.MovementAttempts + " so we are going to find a new direction for them");
                         
-                        mapChar.Movement.ClearMovements();
-                        Random ran = new Random();
-                        int nTimes = ran.Next(0, 2) + 1;
-                        for (int i = 0; i < nTimes; i++)
-                        {
-                            WanderWithinN(mapChar, 32, true);
-                        }
+                    mapChar.Movement.ClearMovements();
                         
-                        // List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections = GetPossibleDirectionsList(mapChar.CurrentCharacterPosition.XY,
-                        //     adjustedPos, 1, true);
-                        // Random ran = new Random();
-                        // int nRandomIndex =  ran.Next(0, possibleDirections.Count);
-                        // NonPlayerCharacterMovement.MovementCommandDirection randomDirection = possibleDirections[nRandomIndex];
-                        // Debug.WriteLine("Potential directions: " + possibleDirections.Count);
-                        // mapChar.Movement.ClearMovements();
-                        // mapChar.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(randomDirection, 1));
-                        // Debug.WriteLine(mapChar.NPCRef.FriendlyName + " decided to go " + randomDirection.ToString());
-                        mapChar.MovementAttempts = 0;
-                    }
+                    // we are sick of waiting and will force a wander for a random number of turns to try to let the little
+                    // dummies figure it out on their own
+                    Random ran = new Random();
+                    int nTimes = ran.Next(0, 2) + 1;
+                    WanderWithinN(mapChar, 32, true);
+
+                    mapChar.ForcedWandering = nTimes;
+                    mapChar.MovementAttempts = 0;
                 }
             }
 
