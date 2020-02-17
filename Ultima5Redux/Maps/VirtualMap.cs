@@ -324,7 +324,6 @@ namespace Ultima5Redux
                 return null;
             }
 
-
             foreach (NonPlayerCharacterMovement.MovementCommandDirection direction in Enum.GetValues(typeof(NonPlayerCharacterMovement.MovementCommandDirection)))
             {
                 // we may be asked to avoid including .None in the list
@@ -338,6 +337,14 @@ namespace Ultima5Redux
             return directionList;
         }
 
+        /// <summary>
+        /// Gets a suitable random position when wandering 
+        /// </summary>
+        /// <param name="characterPosition">position of character</param>
+        /// <param name="scheduledPosition">scheduled position of the character</param>
+        /// <param name="nMaxDistance">max number of tiles the wander can be from the scheduled position</param>
+        /// <param name="direction">OUT - the direction that the character should travel</param>
+        /// <returns></returns>
         private Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition,
             int nMaxDistance, out NonPlayerCharacterMovement.MovementCommandDirection direction)
         {
@@ -363,9 +370,9 @@ namespace Ultima5Redux
         /// <summary>
         /// Points a character in a random position within a certain number of tiles to their scheduled position
         /// </summary>
-        /// <param name="mapCharacter"></param>
-        /// <param name="nMaxDistance"></param>
-        /// <param name="bForceWander"></param>
+        /// <param name="mapCharacter">character to wander</param>
+        /// <param name="nMaxDistance">max distance character should be from their scheduled position</param>
+        /// <param name="bForceWander">force a wander? if not forced then there is a chance they will not move anywhere</param>
         /// <returns>the direction they should move</returns>
         private void WanderWithinN(MapCharacter mapCharacter, int nMaxDistance, bool bForceWander = false)
         {
@@ -574,6 +581,11 @@ namespace Ultima5Redux
             }
         }
 
+        /// <summary>
+        /// Gets a list of points for all stairs and ladders  
+        /// </summary>
+        /// <param name="ladderOrStairDirection">direction of all stairs and ladders</param>
+        /// <returns></returns>
         private List<Point2D> getListOfAllLaddersAndStairs(LadderOrStairDirection ladderOrStairDirection)
         {
             List<Point2D> laddersAndStairs = new List<Point2D>();
@@ -606,12 +618,18 @@ namespace Ultima5Redux
             return laddersAndStairs;
         }
 
-        private SortedDictionary<double, Point2D> getShortestPaths(List<Point2D> allLaddersAndStairList, Point2D destinedPosition)
+        /// <summary>
+        /// Gets the shortest path between a list of 
+        /// </summary>
+        /// <param name="positionList">list of positions</param>
+        /// <param name="destinedPosition">the destination position</param>
+        /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
+        private SortedDictionary<double, Point2D> getShortestPaths(List<Point2D> positionList, Point2D destinedPosition)
         {
             SortedDictionary<double, Point2D> sortedPoints = new SortedDictionary<double, Point2D>();
 
             // get the distances and add to the sorted dictionary
-            foreach (Point2D xy in allLaddersAndStairList)
+            foreach (Point2D xy in positionList)
             {
                 double dDistance = destinedPosition.DistanceBetween(xy);
                 // make them negative so they sort backwards
@@ -628,10 +646,12 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// 
+        /// Gets the best possible stair or ladder location
+        /// to go to the destinedPosition
+        /// Ladder/Stair -> destinedPositon
         /// </summary>
-        /// <param name="ladderOrStairDirection"></param>
-        /// <param name="destinedPosition"></param>
+        /// <param name="ladderOrStairDirection">go up or down a ladder/stair</param>
+        /// <param name="destinedPosition">the position to go to</param>
         /// <returns></returns>
         private List<Point2D> getBestStairsAndLadderLocation(LadderOrStairDirection ladderOrStairDirection,
             Point2D destinedPosition)
@@ -658,6 +678,14 @@ namespace Ultima5Redux
             return bestChoiceList;
         }
 
+        /// <summary>
+        /// Gets the best possible stair or ladder locations from the current position to the given ladder/stair direction
+        /// currentPosition -> best ladder/stair
+        /// </summary>
+        /// <param name="ladderOrStairDirection">which direction will we try to get to</param>
+        /// <param name="destinedPosition">the position you are trying to get to</param>
+        /// <param name="currentPosition">the current position of the character</param>
+        /// <returns></returns>
         private List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
         {
             // get all ladder and stairs locations based (only up or down ladders/stairs)
@@ -769,7 +797,8 @@ namespace Ultima5Redux
         /// Checks if an NPC is on a stair or ladder, and if it goes in the correct direction then it returns true indicating they can teleport
         /// </summary>
         /// <param name="currentTileRef">the tile they are currently on</param>
-        /// <param name="bIsOnStairCaseOrLadder"></param>
+        /// <param name="ladderOrStairDirection"></param>
+        /// <param name="xy"></param>
         /// <returns></returns>
         private bool CheckNPCAndKlimb(TileReference currentTileRef, LadderOrStairDirection ladderOrStairDirection, Point2D xy)
         {
