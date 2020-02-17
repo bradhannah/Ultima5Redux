@@ -15,9 +15,9 @@ namespace U5ConversationSimulator
         {
             world = new World("C:\\games\\ultima_5_late\\britain");
 
-            foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
+            //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
-                world.State.TheVirtualMap.LoadSmallMap(world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor), world.State.CharacterRecords, false);
+                world.State.TheVirtualMap.LoadSmallMap(world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), world.State.CharacterRecords, false);
             }
             
             

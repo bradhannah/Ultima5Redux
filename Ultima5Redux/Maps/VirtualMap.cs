@@ -313,6 +313,9 @@ namespace Ultima5Redux
                 // always include none
                 if (direction == NonPlayerCharacterMovement.MovementCommandDirection.None) return adjustedPosition;
 
+                if (adjustedPosition.X < 0 || adjustedPosition.X >= CurrentMap.TheMap.Length ||
+                    adjustedPosition.Y < 0 || adjustedPosition.Y >= CurrentMap.TheMap[0].Length) return null;
+                
                 // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
                 if (IsTileFreeToTravel(adjustedPosition, bNoStaircases) && scheduledPosition.WithinN(adjustedPosition, nMaxDistance))
                 {
@@ -430,12 +433,22 @@ namespace Ultima5Redux
                     LadderOrStairDirection ladderOrStairDirection = nMapCurrentFloor > npcPrevXy.Floor ?
                         LadderOrStairDirection.Down : LadderOrStairDirection.Up;
 
-                    List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationse(ladderOrStairDirection, npcXy.XY, mapCharacter.CurrentCharacterPosition.XY);
+                    List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocation(ladderOrStairDirection, npcXy.XY);
+                    
+                    // let's make sure we have a path we can travel
                     if (stairsAndLadderLocations.Count <= 0)
                     {
                         Debug.WriteLine(mapCharacter.NPCRef.FriendlyName + " can't find a damn ladder or staircase at "+timeOfDay.FormattedTime);
-                        return;
-                        // throw new Ultima5ReduxException("");
+                        
+                        // there is a rare situation (Gardner in Serpents hold) where he needs to go down, but only has access to an up ladder
+                        stairsAndLadderLocations = getBestStairsAndLadderLocation(ladderOrStairDirection==LadderOrStairDirection.Down?LadderOrStairDirection.Up:LadderOrStairDirection.Down, 
+                            npcXy.XY);
+                        Debug.WriteLine(mapCharacter.NPCRef.FriendlyName + " couldn't find a ladder or stair going "+ladderOrStairDirection+" "+timeOfDay.FormattedTime);
+                        if (stairsAndLadderLocations.Count <= 0)
+                        {
+                            throw new Ultima5ReduxException(mapCharacter.NPCRef.FriendlyName + " can't find a damn ladder or staircase at "+timeOfDay.FormattedTime);
+                        }
+                            
                     }
                     
 
@@ -474,7 +487,8 @@ namespace Ultima5Redux
 
                     // we now need to build a path to the best choice of ladder or stair
                     // the list returned will be prioritized based on vicinity
-                    List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationse(ladderOrStairDirection, npcXy.XY, mapCharacter.CurrentCharacterPosition.XY);
+                    List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationBasedOnCurrentPosition(ladderOrStairDirection, 
+                        npcXy.XY, mapCharacter.CurrentCharacterPosition.XY);
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
                         bool bPathBuilt = BuildPath(mapCharacter, xy);
@@ -497,6 +511,7 @@ namespace Ultima5Redux
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Fixed:
                         // do nothing, they are where they are supposed to be 
                         break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.DrudgeWorthThing:
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(mapCharacter, 2);
@@ -526,6 +541,7 @@ namespace Ultima5Redux
                         // move to the correct position
                         BuildPath(mapCharacter, npcXy.XY);
                         break;
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.DrudgeWorthThing:
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
                         // different wanders have different different radius'
@@ -590,16 +606,14 @@ namespace Ultima5Redux
             return laddersAndStairs;
         }
 
-        private List<Point2D> getBestStairsAndLadderLocationse(LadderOrStairDirection ladderOrStairDirection, Point2D desintedPosition, Point2D currentPosition)
+        private SortedDictionary<double, Point2D> getShortestPaths(List<Point2D> allLaddersAndStairList, Point2D destinedPosition)
         {
-            List<Point2D> allLaddersAndStairList = getListOfAllLaddersAndStairs(ladderOrStairDirection);
             SortedDictionary<double, Point2D> sortedPoints = new SortedDictionary<double, Point2D>();
-            List<Point2D> bestChoiceList = new List<Point2D>(sortedPoints.Count);
 
             // get the distances and add to the sorted dictionary
             foreach (Point2D xy in allLaddersAndStairList)
             {
-                double dDistance = desintedPosition.DistanceBetween(xy);
+                double dDistance = destinedPosition.DistanceBetween(xy);
                 // make them negative so they sort backwards
                 
                 // if the distance is the same then we just add a bit to make sure there is no conflict
@@ -609,16 +623,59 @@ namespace Ultima5Redux
                 }
                 sortedPoints.Add(dDistance, xy);
             }
+
+            return sortedPoints;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ladderOrStairDirection"></param>
+        /// <param name="destinedPosition"></param>
+        /// <returns></returns>
+        private List<Point2D> getBestStairsAndLadderLocation(LadderOrStairDirection ladderOrStairDirection,
+            Point2D destinedPosition)
+        {
+            // get all ladder and stairs locations based (only up or down ladders/stairs)
+            List<Point2D> allLaddersAndStairList = getListOfAllLaddersAndStairs(ladderOrStairDirection);
+
+            // get an ordered dictionary of the shortest straight line paths
+            SortedDictionary<double, Point2D> sortedPoints = getShortestPaths(allLaddersAndStairList, destinedPosition);
+
+            // ordered list of the best choice paths (only valid paths) 
+            List<Point2D> bestChoiceList = new List<Point2D>(sortedPoints.Count);
+
+            // to make it more familiar, we will transfer to an ordered list
+            foreach (Point2D xy in sortedPoints.Values)
+            {
+                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy) > 0;
+                // we first make sure that the path even exists before we add it to the list
+                if (bPathBuilt) bestChoiceList.Add(xy);
+
+                continue;
+            }
+
+            return bestChoiceList;
+        }
+
+        private List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
+        {
+            // get all ladder and stairs locations based (only up or down ladders/stairs)
+            List<Point2D> allLaddersAndStairList = getListOfAllLaddersAndStairs(ladderOrStairDirection);
+
+            // get an ordered dictionary of the shortest straight line paths
+            SortedDictionary<double, Point2D> sortedPoints = getShortestPaths(allLaddersAndStairList, destinedPosition);
+
+            // ordered list of the best choice paths (only valid paths) 
+            List<Point2D> bestChoiceList = new List<Point2D>(sortedPoints.Count);
+            
             // to make it more familiar, we will transfer to an ordered list
             foreach (Point2D xy in sortedPoints.Values)
             {
                 bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy) > 0;
                 // we first make sure that the path even exists before we add it to the list
-                if (bPathBuilt)
-                {
-                    bestChoiceList.Add(xy);
-                }
-                // MAY WANT OR NEED TO REMOVE THIS
+                if (bPathBuilt) bestChoiceList.Add(xy);
+                
                 continue;
             }
 

@@ -61,9 +61,16 @@ namespace Ultima5Redux
                 for (int y = 0; y < nYTiles; y++)
                 {
                     TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[x][y]);
-                    
-                    bool bIsWalkable = currentTile.IsWalking_Passable || currentTile.Index == spriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                                                      || currentTile.Index == spriteTileReferences.GetTileReferenceByName("RegularDoorView").Index;
+
+                    bool bIsWalkable =
+                        currentTile.IsWalking_Passable || currentTile.Index ==
+                                                       spriteTileReferences.GetTileReferenceByName("RegularDoor").Index
+                                                       || currentTile.Index == spriteTileReferences
+                                                           .GetTileReferenceByName("RegularDoorView").Index
+                                                       || currentTile.Index == spriteTileReferences
+                                                           .GetTileReferenceByName("LockedDoor").Index
+                                                       || currentTile.Index == spriteTileReferences
+                                                           .GetTileReferenceByName("LockedDoorView").Index;
                     
                     float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x,y));
                     

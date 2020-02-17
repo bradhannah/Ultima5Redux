@@ -7,7 +7,7 @@ namespace Ultima5Redux
     {
         public class NonPlayerCharacterSchedule
         {
-            public enum AIType { Fixed = 0, Wander = 1, BigWander = 2, ChildRunAway = 3, MerchantThing = 4, ExtortOrAttackOrFollow = 6 }
+            public enum AIType { Fixed = 0, Wander = 1, BigWander = 2, ChildRunAway = 3, MerchantThing = 4, ExtortOrAttackOrFollow = 6, DrudgeWorthThing = 7 }
 
             /// <summary>
             /// Get the index of the scheduled based on the specified time of day
