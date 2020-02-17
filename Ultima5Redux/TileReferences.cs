@@ -73,6 +73,13 @@ namespace Ultima5Redux
             return bIsLadder;
         }
 
+        public bool IsGrate(int nSprite)
+        {
+            bool bIsGrate = nSprite == GetTileNumberByName("Grate");
+            return bIsGrate;
+        }
+        
+
         public bool IsLadderUp(int nSprite)
         {
             return nSprite == GetTileNumberByName("LadderUp");

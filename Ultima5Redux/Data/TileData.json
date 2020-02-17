@@ -2686,7 +2686,7 @@
       "IsBoat_Passable": false,
       "IsSkiff_Passable": false,
       "IsCarpet_Passable": true,
-      "IsKlimable": false,
+      "IsKlimable": true,
       "IsOpenable": false,
       "SpeedFactor": 1,
       "IsPartOfAnimation": false,

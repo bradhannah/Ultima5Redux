@@ -265,7 +265,7 @@ namespace Ultima5Redux
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition);//GetCurrentTileNumber();
-            if (SpriteTileReferences.IsLadderDown(tileReference.Index)) //tileReference.Index == ladderDown)
+            if (SpriteTileReferences.IsLadderDown(tileReference.Index) || SpriteTileReferences.IsGrate(tileReference.Index)) //tileReference.Index == ladderDown)
             {
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
