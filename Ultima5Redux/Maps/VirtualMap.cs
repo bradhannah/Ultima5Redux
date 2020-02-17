@@ -111,8 +111,9 @@ namespace Ultima5Redux
         #endregion
 
         #region Constructor, Initializers and Loaders
+
         /// <summary>
-        /// Construct the VirtualMap (requires initalization still)
+        /// Construct the VirtualMap (requires initialization still)
         /// </summary>
         /// <param name="smallMapReferences"></param>
         /// <param name="smallMaps"></param>
@@ -121,6 +122,9 @@ namespace Ultima5Redux
         /// <param name="underworldMap"></param>
         /// <param name="nonPlayerCharacters"></param>
         /// <param name="tileReferences"></param>
+        /// <param name="state"></param>
+        /// <param name="npcRefs"></param>
+        /// <param name="timeOfDay"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
             GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay)
@@ -146,6 +150,8 @@ namespace Ultima5Redux
         /// Loads a small map based on the provided reference
         /// </summary>
         /// <param name="singleMapReference"></param>
+        /// <param name="playerCharacterRecords"></param>
+        /// <param name="bLoadFromDisk"></param>
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, PlayerCharacterRecords playerCharacterRecords, bool bLoadFromDisk)
         {
             CurrentSingleMapReference = singleMapReference;
@@ -155,10 +161,6 @@ namespace Ultima5Redux
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
             TheMapCharacters.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small, timeOfDay, playerCharacterRecords, bLoadFromDisk);
-
-            //TheMapCharacters = new MapCharacters(tileReferences, npcRefs, singleMapReference, LargeMap.Maps.Small,
-            //    state.CharacterAnimationStatesDataChunk,state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
-            //    state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
         }
 
         /// <summary>
@@ -264,7 +266,7 @@ namespace Ultima5Redux
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
 
             MapCharacter mapCharacter = TheMapCharacters.GetMapCharacterByLocation(location, xy, CurrentSingleMapReference.Floor);
-
+            
             return mapCharacter;
         }
         #endregion

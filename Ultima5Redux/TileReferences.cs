@@ -54,6 +54,13 @@ namespace Ultima5Redux
             return TileReferenceDictionary[nSprite];
         }
 
+        public bool IsPath(int nSprite)
+        {
+            bool bIsPath = GetTileReference(nSprite).Name.Contains("Path");
+            return bIsPath;
+        }
+        
+        
         public bool IsDoor(int nSprite)
         {
             return GetTileReference(nSprite).IsOpenable;

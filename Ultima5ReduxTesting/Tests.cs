@@ -32,7 +32,7 @@ namespace Ultima5ReduxTesting
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 1), world.State.CharacterRecords,
+                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0), world.State.CharacterRecords,
                     false);
             }
             int i = (24 * (60 / 2));

@@ -11,7 +11,7 @@ namespace Ultima5Redux
     {
         private const int MAX_MAP_CHARACTERS = 0x20;
 
-        public List<MapCharacter> Characters = new List<MapCharacter>(MAX_MAP_CHARACTERS);
+        public readonly List<MapCharacter> Characters = new List<MapCharacter>(MAX_MAP_CHARACTERS);
 
         // load the animationstates once from disk, don't worry about again until you are saving to disk
         // load the mapcharacterstates once from disk, don't worry abut again until you are saving to disk

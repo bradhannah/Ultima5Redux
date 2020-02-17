@@ -62,18 +62,22 @@ namespace Ultima5Redux
         /// <returns></returns>
         protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
         {
+            bool isPreferredIndex(int nSprite)
+            {
+                bool bIsPreferredIndex = nSprite == spriteTileReferences.GetTileReferenceByName("BrickFloor").Index || spriteTileReferences.IsPath(nSprite);
+                return bIsPreferredIndex;
+            }
+            
             const int fDefaultDeduction = 2;
             TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
-            int nBrickFloorIndex = spriteTileReferences.GetTileReferenceByName("BrickFloor").Index;
-
+            
             float fCost = 10;
 
-            // todo: at some point I am imagine we will need to identify dirt walkways as preferred paths as well 
-            // we reduce the weight for the A* for each adjacent brick floor tile
-            if (xy.X - 1 >= 0) fCost -= TheMap[xy.X - 1][xy.Y] == nBrickFloorIndex ? fDefaultDeduction : 0;
-            if (xy.X + 1 < XTILES) fCost -= TheMap[xy.X + 1][xy.Y] == nBrickFloorIndex ? fDefaultDeduction : 0;
-            if (xy.Y - 1 >= 0) fCost -= TheMap[xy.X][xy.Y-1] == nBrickFloorIndex ? fDefaultDeduction : 0;
-            if (xy.Y + 1 < YTILES) fCost -= TheMap[xy.X][xy.Y+1] == nBrickFloorIndex ? fDefaultDeduction : 0;
+            // we reduce the weight for the A* for each adjacent brick floor or path tile
+            if (xy.X - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X - 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.X + 1 < XTILES) fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.Y - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y-1]) ? fDefaultDeduction : 0;
+            if (xy.Y + 1 < YTILES) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y+1]) ? fDefaultDeduction : 0;
 
             return fCost;
         }

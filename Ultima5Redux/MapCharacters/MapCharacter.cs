@@ -55,6 +55,9 @@ namespace Ultima5Redux
             {
                 // if they are in our party then we don't include them in the map 
                 if (IsInParty) return false;
+
+                // if they are in 0,0 then I am certain they are not real
+                if (CurrentCharacterPosition.X == 0 && CurrentCharacterPosition.Y == 0) return false;
                 
                 if (CharacterState != null)
                 {
