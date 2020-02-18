@@ -32,75 +32,41 @@ namespace Ultima5Redux
             CurrentMinuteDataChunk = currentMinuteDataChunk;
         }
 
-        public bool IsDayLight
-        {
-            get
-            {
-                return (Hour >= 5 && Hour < (8 + 12));
-            }
-        }
+        public bool IsDayLight => (Hour >= 5 && Hour < (8 + 12));
 
-        public string FormattedDate
-        {
-            get
-            {
-                return Month + "-" + Day + "-" + Year;
-            }
-        }
+        public string FormattedDate => Month + "-" + Day + "-" + Year;
 
         public string FormattedTime
         {
             get
             {
-                string suffix;
-                if (Hour < 12) suffix = "AM"; else suffix = "PM";
-                return Hour % 12 + ":" + String.Format("{0:D2}", Minute) + " " + suffix;
+                string suffix = Hour < 12 ? "AM" : "PM";
+                return Hour % 12 + ":" + $"{Minute:D2}" + " " + suffix;
             }
         }
 
 
         public UInt16 Year
         {
-            get
-            {
-                return CurrentYearDataChunk.GetChunkAsUINT16();
-            }
-            set
-            {
-                CurrentYearDataChunk.SetChunkAsUINT16(value);
-            }
+            get => CurrentYearDataChunk.GetChunkAsUINT16();
+            set => CurrentYearDataChunk.SetChunkAsUINT16(value);
         }
 
         public byte Month
         {
-            get
-            {
-                return CurrentMonthDataChunk.GetChunkAsByte();
-            }
-            set
-            {
-                CurrentMonthDataChunk.SetChunkAsByte(value);
-            }
+            get => CurrentMonthDataChunk.GetChunkAsByte();
+            set => CurrentMonthDataChunk.SetChunkAsByte(value);
         }
 
         public byte Day
         {
-            get
-            {
-                return CurrentDayDataChunk.GetChunkAsByte();
-            }
-            set
-            {
-                CurrentDayDataChunk.SetChunkAsByte(value);
-            }
+            get => CurrentDayDataChunk.GetChunkAsByte();
+            set => CurrentDayDataChunk.SetChunkAsByte(value);
         }
 
         public byte Hour
         {
-            get
-            {
-                return CurrentHourDataChunk.GetChunkAsByte();
-            }
+            get => CurrentHourDataChunk.GetChunkAsByte();
             set
             {
                 Debug.Assert(value >= 0 && value <= 23);
@@ -110,10 +76,7 @@ namespace Ultima5Redux
 
         public byte Minute
         {
-            get
-            {
-                return CurrentMinuteDataChunk.GetChunkAsByte();
-            }
+            get => CurrentMinuteDataChunk.GetChunkAsByte();
             set
             {
                 Debug.Assert(value >= 0 && value <= 59);

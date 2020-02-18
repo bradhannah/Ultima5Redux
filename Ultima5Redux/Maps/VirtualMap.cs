@@ -920,10 +920,15 @@ namespace Ultima5Redux
         //}
 
 
-        public void UseStairs(Point2D xy)
+        /// <summary>
+        /// Use the stairs and change floors, loading a new map
+        /// </summary>
+        /// <param name="xy">the position of the stairs, ladder or trapdoor</param>
+        /// <param name="bForceDown">force a downward stairs</param>
+        public void UseStairs(Point2D xy, bool bForceDown = false)
         {
-            bool bStairGoUp = IsStairGoingUp();
-
+            bool bStairGoUp = IsStairGoingUp() && !bForceDown;
+            CurrentPosition = xy.Copy();
             LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), state.CharacterRecords, false);
         }
 

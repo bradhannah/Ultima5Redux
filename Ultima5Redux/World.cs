@@ -445,7 +445,7 @@ namespace Ultima5Redux
             }
         }
 
-        public enum TryToMoveResult { Moved, Blocked, OfferToExitScreen, UsedStairs }
+        public enum TryToMoveResult { Moved, Blocked, OfferToExitScreen, UsedStairs, Fell }
 
         /// <summary>
         /// Gets a +/- 1 x/y adjustement based on the current position and given direction
@@ -489,14 +489,11 @@ namespace Ultima5Redux
         /// <returns>output string (may be empty)</returns>
         public string TryToMove(VirtualMap.Direction direction, bool bKlimb, bool bFreeMove, out TryToMoveResult tryToMoveResult)
         {
-            int xAdjust = 0;
-            int yAdjust = 0;
-
             int nTilesPerMapRow = State.TheVirtualMap.NumberOfRowTiles;
             int nTilesPerMapCol = State.TheVirtualMap.NumberOfColumnTiles;
 
             // if we were to move, which direction would we move
-            GetAdjustments(direction, out xAdjust, out yAdjust);
+            GetAdjustments(direction, out int xAdjust, out int yAdjust);
 
             // would we be leaving a small map if we went forward?
             if (!State.TheVirtualMap.IsLargeMap &&
@@ -525,6 +522,15 @@ namespace Ultima5Redux
             // we get the newTile so that we can determine if it's passable
             //int newTile = GetTileNumber(newX, newY);
             TileReference newTileReference = State.TheVirtualMap.GetTileReference(newX, newY);
+
+            if (newTileReference.Index == SpriteTileReferences.GetTileNumberByName("BrickFloorHole"))
+            {
+                State.TheVirtualMap.UseStairs(newPos, true);
+                tryToMoveResult = TryToMoveResult.Fell;
+                // todo: get string from data file
+                return ("A TRAPDOOR!");
+            }
+            
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
             bool bPassable = newTileReference.IsWalking_Passable &&
@@ -532,7 +538,7 @@ namespace Ultima5Redux
                 && !State.TheVirtualMap.IsNPCTile(newPos);
 
 
-            // this isinsufficient in case I am in a boat
+            // this is insufficient in case I am in a boat
             if (bPassable || bFreeMove || (bKlimb && newTileReference.IsKlimable))
             {
                 State.TheVirtualMap.CurrentPosition.X = newX;
