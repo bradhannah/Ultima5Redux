@@ -26,11 +26,14 @@ namespace U5ConversationSimulator
             //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle);
             //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Britain);
 
-            Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
+            Conversation convo = new Conversation(world.NpcRef.NPCs[292], world.State, world.DataOvlRef); // justin
+            //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(EnqueuedScriptItem);
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
-            //convo.BeginConversation();
+            
+            
+            convo.BeginConversation();
             int i = 1000;
             while (i > 0)
             {

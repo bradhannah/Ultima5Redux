@@ -380,7 +380,7 @@ namespace Ultima5Redux
                     case TalkScript.TalkCommand.StartNewSection:
                         throw new Ultima5ReduxException("We should never see the <OR> or <A2> code in conversation");
                     default:
-                        throw new Ultima5ReduxException("Recieved TalkCommand I wasn't expecting during conversation");
+                        throw new Ultima5ReduxException("Received TalkCommand I wasn't expecting during conversation");
 
                 }
                 nItem++;

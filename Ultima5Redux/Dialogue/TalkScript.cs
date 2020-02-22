@@ -270,9 +270,11 @@ namespace Ultima5Redux
             /// </summary>
             public int LabelNum { get; }
 
+            public int ItemAdditionalData { get; set; } = 0;
+
             private string str = string.Empty;
 
-            static public bool IsQuestion(string str)
+            public static bool IsQuestion(string str)
             {
                 // if the string is:
                 // 1 to 6 characters
@@ -476,7 +478,7 @@ namespace Ultima5Redux
                     // Code A2 appears to denote the beginning of a new section, so we split it
                     if (item.Command == TalkCommand.StartNewSection)
                     {
-                        // It's a new section, so we simplu advance the section counter and add an empty SplitScriptLine
+                        // It's a new section, so we simply advance the section counter and add an empty SplitScriptLine
                         nSection++;
                         lines.Add(new SplitScriptLine());
                     }
@@ -493,7 +495,40 @@ namespace Ultima5Redux
                         // basically - these items need to part of a single item SplitScriptLine
                         forceSplitNext = true;
                     }
-                    // if there is a default message then it is the defintion of a new label
+                    else if (item.Command == TalkCommand.Change)
+                    {
+                        // advance to next section
+                        nSection++;
+                        // add a stump section
+                        lines.Add(new SplitScriptLine());
+
+                        // this is a bit dirty - but the next item is the item number that we are being given
+                        item.ItemAdditionalData = (int) GetScriptItem(i + 1).Command;
+                        // add the item as-is to the new section
+                        lines[nSection].AddScriptItem(item);
+                        
+                        i++;
+                        forceSplitNext = true;
+                    }
+                    else if (item.Command == TalkCommand.Gold)
+                    {
+                        // advance to next section
+                        nSection++;
+                        // add a stump section
+                        lines.Add(new SplitScriptLine());
+                        
+                        // the next three characters are a 3 digit string that describes how much gold we are giving the NPC
+                        item.ItemAdditionalData = int.Parse(GetScriptItem(i + 1).Str.Substring(0,3));
+                        // let's remove the three character digits from the next string 
+                        GetScriptItem(i + 1).Str = GetScriptItem(i + 1).Str.Remove(0, 3);
+                        
+                        // add the item as-is to the new section
+                        lines[nSection].AddScriptItem(item);
+                        
+                        i++;
+                        forceSplitNext = true;
+                    }
+                    // if there is a default message then it is the definition of a new label
                     else if (item.Command == TalkCommand.StartLabelDefinition)
                     {
                         // advance to next section
@@ -501,6 +536,7 @@ namespace Ultima5Redux
                         Debug.Assert(GetScriptItem(i + 1).Command == TalkCommand.DefineLabel); // StartLabelDefinition must ALWYAYS be followed with a DefineLabel
                         // add the StartLabelDefintion to the new section
                         lines[nSection].AddScriptItem(item);
+                        
                         // add the next item - which is a DefineLabel to the section 
                         lines[nSection].AddScriptItem(GetScriptItem(i + 1));
                         // skip by the DefineLabel section since we just added
