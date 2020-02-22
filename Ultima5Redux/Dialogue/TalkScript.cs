@@ -209,11 +209,11 @@ namespace Ultima5Redux
                     bool first = true;
                     foreach (string question in sqa.questions.ToArray())
                     {
-                        if (first) { first = false; Console.Write("Questions: " + question); }
-                        else { Console.Write(" <OR> " + question); }
+                        if (first) { first = false; Console.Write(@"Questions: " + question); }
+                        else { Console.Write(@" <OR> " + question); }
                     }
                     Console.WriteLine("");
-                    Console.WriteLine("Answer: " + sqa.Answer.ToString());
+                    Console.WriteLine(@"Answer: " + sqa.Answer.ToString());
 
                 }
             }

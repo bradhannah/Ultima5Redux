@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Configuration;
 
 namespace Ultima5Redux
 {
     public class World
     {
         #region Private Variables
+        private string u5Directory;
+        private CombatMapReference combatMapRef = new CombatMapReference();
 
+   
+        #endregion
+
+        #region Public Properties
+
+        public bool IsPendingFall { get; private set; } = false;
+        
         //private List<SmallMap> smallMaps = new List<SmallMap>();
         public SmallMaps AllSmallMaps { get; }
 
@@ -15,20 +25,19 @@ namespace Ultima5Redux
 
         public TileReferences SpriteTileReferences { get; }
 
-        private string u5Directory;
         public SmallMapReferences SmallMapRef;
-        private CombatMapReference combatMapRef = new CombatMapReference();
         public Look LookRef { get; }
         public Signs SignRef { get; }
         public NonPlayerCharacterReferences NpcRef { get; }
         public DataOvlReference DataOvlRef { get; }
         public TalkScripts TalkScriptsRef { get; }
-        public GameState State { get; }
-        #endregion
+        public GameState State { get; }        
         public LargeMapReference LargeMapRef { get; }
 
         public Conversation CurrentConversation { get; set; }
 
+        #endregion
+        
         public enum SpecialLookCommand { None, Sign, GemCrystal }
         
         public World(string ultima5Directory) : base()
@@ -298,7 +307,7 @@ namespace Ultima5Redux
 
             if (State.TheVirtualMap.IsLargeMap)
             {
-                // is it even klimable?
+                // is it even klimbable?
                 if (tileReference.IsKlimable)
                 {
                     if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("SmallMountains"))
@@ -307,7 +316,7 @@ namespace Ultima5Redux
                         klimbResult = KlimbResult.SuccessFell;
                         return DataOvlRef.StringReferences.GetString(DataOvlReference.KLIMBING_STRINGS.FELL);
                     }
-                    throw new Ultima5ReduxException("I am not personnaly aware of what on earth you would be klimbing that is not already stated in the following logic...");
+                    throw new Ultima5ReduxException("I am not personal aware of what on earth you would be klimbing that is not already stated in the following logic...");
                 }
                 // is it tall mountains? we can't klimb those
                 else if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("TallMountains"))
@@ -474,6 +483,9 @@ namespace Ultima5Redux
                 case VirtualMap.Direction.Left:
                     if (State.TheVirtualMap.CurrentPosition.X > 0 || State.TheVirtualMap.IsLargeMap) xAdjust = -1;
                     break;
+                case VirtualMap.Direction.None:
+                    // do nothing, no adjustment
+                    break;
                 default:
                     throw new Ultima5ReduxException("Requested an adjustment but didn't provide a KeyCode that represents a direction.");
             }
@@ -527,9 +539,19 @@ namespace Ultima5Redux
             {
                 State.TheVirtualMap.UseStairs(newPos, true);
                 tryToMoveResult = TryToMoveResult.Fell;
+                // we need to evaluate in the game and let the game know that they should continue to fall
+                TileReference newTileRef = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition);
+                if (newTileRef.Index == SpriteTileReferences.GetTileNumberByName("BrickFloorHole"))
+                {
+                    IsPendingFall = true;
+                }
+
                 // todo: get string from data file
                 return ("A TRAPDOOR!");
             }
+
+            // we have evaluated and now know there is not a further fall (think Blackthorne's palace)
+            IsPendingFall = false;
             
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down

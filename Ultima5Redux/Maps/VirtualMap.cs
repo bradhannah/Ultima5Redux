@@ -46,7 +46,7 @@ namespace Ultima5Redux
         /// <summary>
         /// 4 way direction
         /// </summary>
-        public enum Direction { Up, Down, Left, Right };
+        public enum Direction { Up, Down, Left, Right, None };
         private enum LadderOrStairDirection { Up, Down };
 
 
