@@ -1,45 +1,92 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net.Configuration;
+using NUnit.Framework;
+
 
 namespace Ultima5Redux
 {
+    [TestFixture]
     public class World
     {
         #region Private Variables
         private string u5Directory;
         private CombatMapReference combatMapRef = new CombatMapReference();
-
-   
+        #endregion
+        
+        #region Private Properties
+        /// <summary>
+        /// The overworld map object
+        /// </summary>
+        private LargeMap OverworldMap { get; }
+        
+        /// <summary>
+        /// the underworld map object
+        /// </summary>
+        private LargeMap UnderworldMap { get; }        
         #endregion
 
         #region Public Properties
 
+        /// <summary>
+        /// Is the Avatar positioned to fall? When falling from multiple floors this will be activated
+        /// </summary>
         public bool IsPendingFall { get; private set; } = false;
         
-        //private List<SmallMap> smallMaps = new List<SmallMap>();
+        /// <summary>
+        /// A collection of all the available small maps
+        /// </summary>
         public SmallMaps AllSmallMaps { get; }
 
-        public LargeMap OverworldMap { get; }
-        public LargeMap UnderworldMap { get; }
-
+        /// <summary>
+        /// A collection of all tile references
+        /// </summary>
         public TileReferences SpriteTileReferences { get; }
 
-        public SmallMapReferences SmallMapRef;
+        /// <summary>
+        /// A collection of all small map references
+        /// </summary>
+        public SmallMapReferences SmallMapRef { get; }
+        
+        /// <summary>
+        /// A collection of all Look references
+        /// </summary>
         public Look LookRef { get; }
+        /// <summary>
+        /// A collection of all Sign references
+        /// </summary>
         public Signs SignRef { get; }
+        /// <summary>
+        /// A collection of all NPC references
+        /// </summary>
         public NonPlayerCharacterReferences NpcRef { get; }
+        /// <summary>
+        /// A collection of data.ovl references
+        /// </summary>
         public DataOvlReference DataOvlRef { get; }
+        /// <summary>
+        /// A collection of all talk script references
+        /// </summary>
         public TalkScripts TalkScriptsRef { get; }
+        /// <summary>
+        /// The current game state
+        /// </summary>
         public GameState State { get; }        
+        /// <summary>
+        /// A large map reference
+        /// </summary>
+        /// <remarks>needs to be reviewed</remarks>
         public LargeMapReference LargeMapRef { get; }
-
-        public Conversation CurrentConversation { get; set; }
-
+        /// <summary>
+        /// The current conversation object
+        /// </summary>
+        public Conversation CurrentConversation { get; private set; }
         #endregion
         
+        #region Public enumerations
         public enum SpecialLookCommand { None, Sign, GemCrystal }
-        
+        #endregion
+
         public World(string ultima5Directory) : base()
         {
             u5Directory = ultima5Directory;
@@ -52,7 +99,6 @@ namespace Ultima5Redux
 
             DataOvlRef = new DataOvlReference(u5Directory);
 
-
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
@@ -62,29 +108,11 @@ namespace Ultima5Redux
             AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory, SpriteTileReferences);
 
             State = new GameState(u5Directory, DataOvlRef);
-            //CharacterRecord character = State.GetCharacterFromParty(0);
-            //CharacterRecord character3 = State.GetCharacterFromParty(3);
-            //CharacterRecord character4 = State.GetCharacterFromParty(4);
-            //character.Equipped.Amulet = DataOvlReference.EQUIPMENT.Ankh;
-            //CharacterRecord character2 = State.GetCharacterFromParty(0);
-
-
-            // build all the small maps from the Small Map reference
-            //foreach (SmallMapReferences.SingleMapReference mapRef in SmallMapRef.MapReferenceList)
-            //{
-            //    // now I can go through each and every reference
-            //    SmallMap smallMap = new SmallMap(u5Directory, mapRef);
-            //    smallMaps.Add(smallMap);
-            //    //U5Map.PrintMapSection(smallMap.RawMap, 0, 0, 32, 32);
-            //}
 
             // build all combat maps from the Combat Map References
             foreach (CombatMapReference.SingleCombatMapReference combatMapRef in combatMapRef.MapReferenceList)
             {
                 CombatMap combatMap = new CombatMap(u5Directory, combatMapRef);
-                //System.Console.WriteLine("\n");
-                //System.Console.WriteLine(combatMap.Description);
-                //Map.PrintMapSection(combatMap.RawMap, 0, 0, 11, 11);
             }
 
             // build a "look" table for all tiles
@@ -93,21 +121,13 @@ namespace Ultima5Redux
             // build the sign tables
             SignRef = new Signs(ultima5Directory);
 
-            //Signs.Sign sign = SignRef.GetSign(SmallMapReferences.SingleMapReference.Location.Yew, 16, 2);
-            Signs.Sign sign = SignRef.GetSign(42);
-
-            string str = sign.SignText;
             TalkScriptsRef = new TalkScripts(u5Directory, DataOvlRef);
 
             // build the NPC tables
             NpcRef = new NonPlayerCharacterReferences(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
 
-            //CharAnimationStates = new MapCharacterAnimationStates(State, SpriteTileReferences);
-            //CharStates = new MapCharacterStates(State, SpriteTileReferences);
 
-
-
-            // sadly I have to initilize this after the Npcs are created because there is a circular dependency
+            // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef);
 
             if (State.Location != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
@@ -119,76 +139,7 @@ namespace Ultima5Redux
                 State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
             }
 
-
-            //State.TheVirtualMap.LoadSmallMap()
-            //State.PlayerInventory.MagicSpells.Items[Spell.SpellWords.An_Ex_Por].GetLiteralTranslation();
-
-            //State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0), false);
-
-            //int nSpriteGuess = State.TheVirtualMap.GuessTile(new Point2D(15, 15));
-            //NpcRef.GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location.Britain, new Point2D(0, 31), 0);
-
-
-            //State.Year = 100;
-            //State.Month = 13;
-            //State.Day = 28;
-            //State.Hour = 22;
-            //State.Minute = 2;
-
-
-            //Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
-            //            Conversation convo = new Conversation(NpcRef.NPCs[296], State, DataOvlRef); // Gwenno
-            // 19 = Margarett
-            //           NpcRef.NPCs[296].Script.PrintComprehensiveScript();
-
-            //int count = 0;
-            // if (false)
-            // {
-            //     foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
-            //     {
-            //         if (npc.NPCType != 0 && npc.Script != null)
-            //         {
-            //             Console.WriteLine("");
-            //             Console.WriteLine("---- SCRIPT for " + npc.Name.Trim() + " -----");
-            //             //Npc.Script.PrintScript();
-            //             npc.Script.PrintComprehensiveScript();
-            //
-            //             if (npc.Name.Trim() == "Geoffrey")
-            //             {
-            //                 Console.WriteLine(npc.NPCType.ToString());
-            //
-            //             }
-            //         }
-            //         count++;
-            //     }
-            // }
-
-            // Scally
-            //Conversation convo = new Conversation(NpcRef.NPCs[0xe6], State, DataOvlRef);
-
-            // Bidney
-            //Conversation convo = new Conversation(NpcRef.NPCs[0xe8], State);
-
-            // Lord Dalgrin
-            //Conversation convo = new Conversation(NpcRef.NPCs[0xea], State);
-
-            // Geoffery
-            //Conversation convo = new Conversation(NpcRef.NPCs[0xec], State, DataOvlRef);
-
-            // Tierra 
-            //Conversation convo = new Conversation(NpcRef.NPCs[0xeb], State, DataOvlRef);
-
-            //            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
-            //            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
-
-            // convo.BeginConversation();
-
-            //0x48 or 0x28
-            //Console.WriteLine("Shutting down... Hit any key...");
-            //Console.ReadKey(false);
-
         }
-
 
         #region World actions - do a thing, report or change the state
         /// <summary>
@@ -273,8 +224,8 @@ namespace Ultima5Redux
             int nTotalFloors = State.TheVirtualMap.SmallMapRefs.GetNumberOfFloors(location);
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition);//GetCurrentTileNumber();
-            if (SpriteTileReferences.IsLadderDown(tileReference.Index) || SpriteTileReferences.IsGrate(tileReference.Index)) //tileReference.Index == ladderDown)
+            TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition);
+            if (SpriteTileReferences.IsLadderDown(tileReference.Index) || SpriteTileReferences.IsGrate(tileReference.Index)) 
             {
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
@@ -424,11 +375,11 @@ namespace Ultima5Redux
         /// Opens a door at a specific position
         /// </summary>
         /// <param name="xy">position of door</param>
-        /// <param name="bWasSuccesful">was the door opening succesful?</param>
+        /// <param name="bWasSuccessful">was the door opening successful?</param>
         /// <returns>the output string to write to console</returns>
-        public string OpenDoor(Point2D xy, out bool bWasSuccesful)
+        public string OpenDoor(Point2D xy, out bool bWasSuccessful)
         {
-            bWasSuccesful = false;
+            bWasSuccessful = false;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
@@ -449,7 +400,7 @@ namespace Ultima5Redux
             else
             {
                 State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
-                bWasSuccesful = true;
+                bWasSuccessful = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.OPENING_THINGS_STRINGS.OPENED));
             }
         }
@@ -629,7 +580,7 @@ namespace Ultima5Redux
             if (isOnBuilding)
             {
                 SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(State.TheVirtualMap.CurrentPosition);
-                Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
+                //Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
                 State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0), State.CharacterRecords, false);
                 // set us to the front of the building
                 State.TheVirtualMap.CurrentPosition = SmallMapReferences.GetStartingXYByLocation(location);
@@ -663,7 +614,41 @@ namespace Ultima5Redux
             return CurrentConversation;
         }
 
+        /// <summary>
+        /// Constructor only used for testing
+        /// </summary>
+        public World() : this(@"C:\Games\Ultima_5\Gold")
+        {
+            
+        }
 
+        [Test]
+        public void Test_BasicConversation()
+        {
+            // 19 = Margarett
+            //           NpcRef.NPCs[296].Script.PrintComprehensiveScript();
+            // Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
+
+
+            foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
+            {
+                Conversation convo = new Conversation(npc, State, DataOvlRef); 
+                Debug.Assert(convo != null);
+            }
+        }
+        
+
+        [Test]
+        public void Test_Signs()
+        {
+            Signs.Sign sign = SignRef.GetSign(SmallMapReferences.SingleMapReference.Location.Yew, 16, 2);
+            Signs.Sign sign2 = SignRef.GetSign(42);
+            
+            Assert.True(sign != null);
+            Assert.True(sign2 != null);
+        }
+
+        
 
     }
 }
