@@ -15,7 +15,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Reference to towne/keep etc locations on the large map
         /// </summary>
-        private LargeMapReference largeMapReferences;
+        private LargeMapLocationReferences _largeMapLocationReferenceses;
         /// <summary>
         /// Non player characters on current map
         /// </summary>
@@ -117,7 +117,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="smallMapReferences"></param>
         /// <param name="smallMaps"></param>
-        /// <param name="largeMapReferences"></param>
+        /// <param name="largeMapLocationReferenceses"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
         /// <param name="nonPlayerCharacters"></param>
@@ -125,14 +125,14 @@ namespace Ultima5Redux
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         /// <param name="timeOfDay"></param>
-        public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapReference largeMapReferences,
+        public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapLocationReferences largeMapLocationReferenceses,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
             GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay)
         {
             this.SmallMapRefs = smallMapReferences;
             this.smallMaps = smallMaps;
             this.nonPlayerCharacters = nonPlayerCharacters;
-            this.largeMapReferences = largeMapReferences;
+            this._largeMapLocationReferenceses = largeMapLocationReferenceses;
             this.tileReferences = tileReferences;
             this.state = state;
             this.npcRefs = npcRefs;

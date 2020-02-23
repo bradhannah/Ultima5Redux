@@ -12,7 +12,10 @@ namespace Ultima5Redux
     public class World
     {
         #region Private Variables
-        private string u5Directory;
+        /// <summary>
+        /// Ultima 5 data and save files directory 
+        /// </summary>
+        private readonly string u5Directory;
         private CombatMapReference combatMapRef = new CombatMapReference();
         #endregion
         
@@ -78,7 +81,7 @@ namespace Ultima5Redux
         /// A large map reference
         /// </summary>
         /// <remarks>needs to be reviewed</remarks>
-        public LargeMapReference LargeMapRef { get; }
+        public LargeMapLocationReferences LargeMapRef { get; }
         /// <summary>
         /// The current conversation object
         /// </summary>
@@ -86,9 +89,16 @@ namespace Ultima5Redux
         #endregion
         
         #region Public enumerations
+        /// <summary>
+        /// Special things that can be looked at in the world that will require special consideration
+        /// </summary>
         public enum SpecialLookCommand { None, Sign, GemCrystal }
         #endregion
 
+        /// <summary>
+        /// Constructor 
+        /// </summary>
+        /// <param name="ultima5Directory">ultima 5 data and save game directory</param>
         public World(string ultima5Directory) : base()
         {
             u5Directory = ultima5Directory;
@@ -105,7 +115,7 @@ namespace Ultima5Redux
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
 
-            LargeMapRef = new LargeMapReference(DataOvlRef, SmallMapRef);
+            LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
 
             AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory, SpriteTileReferences);
 

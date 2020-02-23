@@ -256,7 +256,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="smallMapReferences"></param>
         /// <param name="smallMaps"></param>
-        /// <param name="largeMapReferences"></param>
+        /// <param name="largeMapLocationReferenceses"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
         /// <param name="nonPlayerCharacters"></param>
@@ -264,10 +264,10 @@ namespace Ultima5Redux
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapReference largeMapReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
+            LargeMapLocationReferences largeMapLocationReferenceses, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
             TileReferences TileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
         {
-            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapReferences, overworldMap, underworldMap,
+            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferenceses, overworldMap, underworldMap,
                 nonPlayerCharacters, TileReferences, state, npcRefs, TheTimeOfDay);
         }
 

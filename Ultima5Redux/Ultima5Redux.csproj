@@ -107,7 +107,7 @@
     <Compile Include="PlayerCharacters\Inventory.cs" />
     <Compile Include="PlayerCharacters\InventoryItem.cs" />
     <Compile Include="PlayerCharacters\InventoryItems.cs" />
-    <Compile Include="Maps\LargeMapReference.cs" />
+    <Compile Include="Maps\LargeMapLocationReferences.cs" />
     <Compile Include="MapCharacters\MapCharacter.cs" />
     <Compile Include="MapCharacters\MapCharacters.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovement.cs" />
