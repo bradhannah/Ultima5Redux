@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Configuration;
 using NUnit.Framework;
 
 
 namespace Ultima5Redux
 {
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [TestFixture]
     public class World
     {
@@ -601,19 +603,24 @@ namespace Ultima5Redux
             }
         }
 
-
         #endregion
 
-        public Conversation CreateConverationAndBegin(NonPlayerCharacterReference npc, Conversation.EnqueuedScriptItem enqueuedScriptItem)
+        /// <summary>
+        /// Begins the conversation with a particular NPC 
+        /// </summary>
+        /// <param name="npc">the NPC to have a conversation with</param>
+        /// <param name="enqueuedScriptItem">a handler to be called when script items are enqueued</param>
+        /// <returns>A conversation object to be used to follow along with the conversation</returns>
+        public Conversation CreateConversationAndBegin(NonPlayerCharacterReference npc, Conversation.EnqueuedScriptItem enqueuedScriptItem)
         {
             CurrentConversation = new Conversation(npc, State, DataOvlRef);
 
-            //Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(this.EnqueuedScriptItem);
             CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
 
             return CurrentConversation;
         }
 
+        #region Test Procedures
         /// <summary>
         /// Constructor only used for testing
         /// </summary>
@@ -625,11 +632,6 @@ namespace Ultima5Redux
         [Test]
         public void Test_BasicConversation()
         {
-            // 19 = Margarett
-            //           NpcRef.NPCs[296].Script.PrintComprehensiveScript();
-            // Conversation convo = new Conversation(NpcRef.NPCs[21]); // dunkworth
-
-
             foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
             {
                 Conversation convo = new Conversation(npc, State, DataOvlRef); 
@@ -647,8 +649,6 @@ namespace Ultima5Redux
             Assert.True(sign != null);
             Assert.True(sign2 != null);
         }
-
-        
-
+        #endregion
     }
 }
