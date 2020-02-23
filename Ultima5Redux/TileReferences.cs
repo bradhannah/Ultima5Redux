@@ -115,6 +115,21 @@ namespace Ultima5Redux
             return bIsManacles;
         }
 
+        public bool IsMirror(int nSprite)
+        {
+            bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar") 
+                                                                      || nSprite == GetTileNumberByName("MirrorBroken");
+            return bIsMirror;
+        }
+
+        public bool IsUnbrokenMirror(int nSprite)
+        {
+            bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar");
+            return bIsMirror;
+        }
+        
+        
+
         public bool IsDoorMagical(int nSprite)
         {
             Debug.Assert(GetTileReference(nSprite).IsOpenable);

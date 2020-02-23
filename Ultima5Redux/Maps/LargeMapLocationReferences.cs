@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ultima5Redux
 {
@@ -10,7 +11,8 @@ namespace Ultima5Redux
         /// <summary>
         /// Maps the location to an actual 0,0 based map xy coordinates
         /// </summary>
-        private Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } = new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } = new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
         /// <summary>
         /// Maps the xy based on the location
         /// </summary>
