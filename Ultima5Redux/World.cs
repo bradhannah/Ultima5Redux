@@ -2,13 +2,11 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Configuration;
-using NUnit.Framework;
 
 
 namespace Ultima5Redux
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [TestFixture]
     public class World
     {
         #region Private Variables
@@ -639,7 +637,6 @@ namespace Ultima5Redux
             
         }
 
-        [Test]
         public void Test_BasicConversation()
         {
             foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
@@ -650,14 +647,13 @@ namespace Ultima5Redux
         }
         
 
-        [Test]
         public void Test_Signs()
         {
             Signs.Sign sign = SignRef.GetSign(SmallMapReferences.SingleMapReference.Location.Yew, 16, 2);
             Signs.Sign sign2 = SignRef.GetSign(42);
-            
-            Assert.True(sign != null);
-            Assert.True(sign2 != null);
+
+            Debug.Assert(sign != null);
+            Debug.Assert(sign2 != null);
         }
         #endregion
     }
