@@ -30,7 +30,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="mapChoice"></param>
-        public LargeMap (string u5Directory, Maps mapChoice) : base(u5Directory)
+        public LargeMap (string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(u5Directory, tileOverrides)
         {
             switch (mapChoice)
             {
@@ -119,6 +119,16 @@ namespace Ultima5Redux
         protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
         {
             return 1;
+        }
+
+        public override TileOverride GetTileOverride(Point2D xy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsXYOverride(Point2D xy)
+        {
+            throw new NotImplementedException();
         }
     }
 }

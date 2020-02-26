@@ -1,0 +1,116 @@
+﻿{
+  "3": [
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 13,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 17,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 17,
+      "Y": 12,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass"
+    }
+  ],
+  "30": [
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 13,
+      "Y": 25,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 17,
+      "Y": 25,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 23,
+      "Y": 13,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 23,
+      "Y": 15,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 14,
+      "Y": 7,
+      "Z": 1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 16,
+      "Y": 7,
+      "Z": 1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 20,
+      "Y": 15,
+      "Z": 2,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor"
+    },
+    {
+      "IsOverworld": false,
+      "IsUnderworld": false,
+      "IsSmallMap": true,
+      "X": 23,
+      "Y": 15,
+      "Z": 2,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor"
+    }
+  ]
+}

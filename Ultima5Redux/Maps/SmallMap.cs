@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Security.Cryptography.Xml;
 
 
 namespace Ultima5Redux
@@ -22,19 +23,38 @@ namespace Ultima5Redux
         public SmallMapReferences.SingleMapReference.Location MapLocation { get { return MapRef.MapLocation; } }
         public int MapFloor { get { return MapRef.Floor; } }
 
+        private Dictionary<Point2D, TileOverride> xyOverrides;
+
         private SmallMapReferences.SingleMapReference MapRef;
+
+        public override bool IsXYOverride(Point2D xy)
+        {
+            return xyOverrides != null && xyOverrides.ContainsKey(xy);
+        }
+
+        public override TileOverride GetTileOverride(Point2D xy)
+        {
+            return xyOverrides[xy];
+        }
+        
+        
+        
         /// <summary>
         /// Creates a small map object using a pre-defined map reference
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="mapRef"></param>
-        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference mapRef, TileReferences spriteTileReferences) : base(u5Directory)
+        /// <param name="spriteTileReferences"></param>
+        /// <param name="tileOverrides"></param>
+        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference mapRef, TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(u5Directory, tileOverrides)
         {
             MapRef = mapRef;
 
             // load the map into memory
             TheMap = LoadSmallMapFile(Path.Combine(u5Directory, mapRef.MapFilename), mapRef.FileOffset);
 
+            xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
+            
             InitializeAStarMap(spriteTileReferences);
         }
 

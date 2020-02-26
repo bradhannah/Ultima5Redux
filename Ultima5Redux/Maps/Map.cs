@@ -15,6 +15,8 @@ namespace Ultima5Redux
         /// The directory of the U5 data files
         /// </summary>
         protected string u5Directory;
+
+        protected TileOverrides tileOverrides;
         #endregion
 
         #region Internal Fields
@@ -27,12 +29,17 @@ namespace Ultima5Redux
         /// A* algorithm helper class
         /// </summary>
         internal AStarSharp.Astar astar;
+
+
         #endregion
 
-        public Map(string u5Directory)
+        public Map(string u5Directory, TileOverrides tileOverrides)
         {
             this.u5Directory = u5Directory;
+            this.tileOverrides = tileOverrides;
         }
+        
+        
 
         /// <summary>
         /// Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
@@ -86,6 +93,9 @@ namespace Ultima5Redux
         {
             get; protected set;
         }
+
+        public abstract TileOverride GetTileOverride(Point2D xy);
+        public abstract bool IsXYOverride(Point2D xy);
 
         #region Debug methods
         /// <summary>

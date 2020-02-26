@@ -135,7 +135,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="u5Directory">Directory of data files</param>
         /// <param name="mapRef">specific combat map reference</param>
-        public CombatMap (string u5Directory, CombatMapReference.SingleCombatMapReference mapRef) : base (u5Directory)
+        public CombatMap (string u5Directory, CombatMapReference.SingleCombatMapReference mapRef, TileOverrides tileOverrides) : base (u5Directory, tileOverrides)
         {
             string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);
 
@@ -155,6 +155,16 @@ namespace Ultima5Redux
         protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
         {
             return 1;
+        }
+
+        public override TileOverride GetTileOverride(Point2D xy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsXYOverride(Point2D xy)
+        {
+            throw new NotImplementedException();
         }
     }
 }

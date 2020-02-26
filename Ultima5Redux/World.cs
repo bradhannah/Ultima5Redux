@@ -15,6 +15,7 @@ namespace Ultima5Redux
         /// </summary>
         private readonly string u5Directory;
         private CombatMapReference combatMapRef = new CombatMapReference();
+        private readonly TileOverrides tileOverrides = new TileOverrides();
         #endregion
         
         #region Private Properties
@@ -102,10 +103,10 @@ namespace Ultima5Redux
             u5Directory = ultima5Directory;
 
             // build the overworld map
-            OverworldMap = new LargeMap(u5Directory, LargeMap.Maps.Overworld);
+            OverworldMap = new LargeMap(u5Directory, LargeMap.Maps.Overworld, tileOverrides);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(u5Directory, LargeMap.Maps.Underworld);
+            UnderworldMap = new LargeMap(u5Directory, LargeMap.Maps.Underworld, tileOverrides);
 
             DataOvlRef = new DataOvlReference(u5Directory);
 
@@ -115,14 +116,14 @@ namespace Ultima5Redux
 
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
 
-            AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory, SpriteTileReferences);
+            AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory, SpriteTileReferences, tileOverrides);
 
             State = new GameState(u5Directory, DataOvlRef);
 
             // build all combat maps from the Combat Map References
             foreach (CombatMapReference.SingleCombatMapReference combatMapRef in combatMapRef.MapReferenceList)
             {
-                CombatMap combatMap = new CombatMap(u5Directory, combatMapRef);
+                CombatMap combatMap = new CombatMap(u5Directory, combatMapRef, tileOverrides);
             }
 
             // build a "look" table for all tiles

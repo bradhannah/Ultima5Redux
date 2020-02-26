@@ -95,6 +95,7 @@
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
+    <Compile Include="Maps\TileOverrides.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecord.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecords.cs" />
     <Compile Include="MapCharacters\MapCharacterAnimationState.cs" />
@@ -186,6 +187,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Credits.txt" />
+    <Content Include="Data\TileOverrides.csv" />
+    <EmbeddedResource Include="Data\TileOverrides.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

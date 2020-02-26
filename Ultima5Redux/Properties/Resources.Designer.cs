@@ -19,7 +19,7 @@ namespace Ultima5Redux.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -84,6 +84,27 @@ namespace Ultima5Redux.Properties {
         internal static string TileData {
             get {
                 return ResourceManager.GetString("TileData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  {
+        ///    &quot;IsOverworld&quot;: true,
+        ///    &quot;IsUnderworld&quot;: false,
+        ///    &quot;IsSmallMap&quot;: false,
+        ///    &quot;MapNumber&quot;: 1,
+        ///    &quot;X&quot;: 100,
+        ///    &quot;Y&quot;: 100,
+        ///    &quot;Z&quot;: 1,
+        ///    &quot;SpriteNum&quot;: 20,
+        ///    &quot;SpriteName&quot;: &quot;derp&quot;
+        ///  }
+        ///].
+        /// </summary>
+        internal static string TileOverrides {
+            get {
+                return ResourceManager.GetString("TileOverrides", resourceCulture);
             }
         }
     }

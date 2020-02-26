@@ -72,5 +72,22 @@ namespace Ultima5ReduxTesting
             
             Assert.True(true);
         }
+
+        [Test]
+        public void Test_TileOverrides()
+        {
+            TileOverrides to = new TileOverrides();
+            
+            World world = new World("C:\\games\\ultima_5_late\\britain");
+
+            Trace.Write("Starting ");
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1), world.State.CharacterRecords,
+                false);
+
+            world.State.TheVirtualMap.GuessTile(new Point2D(14, 7));
+        }
+        
     }
 }

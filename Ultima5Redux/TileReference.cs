@@ -52,45 +52,16 @@ namespace Ultima5Redux
         [DataMember]
         public bool IsKlimable;
 
-        //public bool IsStaircase()
-        //{
-        //    return (IsStaircase(Index));
-        //}
-
-        //static public bool IsStaircase(int nSprite)
-        //{
-        //    return (nSprite >= 196 && nSprite <= 199);
-        //}
-
         public override string ToString()
         {
             return this.Name;
         }
 
-        public bool IsNPCCapableSpace
-        {
-            get
-            {
-                return (this.IsWalking_Passable || this.IsOpenable);
-            }
-        }
+        public bool IsNPCCapableSpace => (this.IsWalking_Passable || this.IsOpenable);
 
 
-        public bool IsSolidSpriteButNotDoor
-        {
-            get
-            {
-                return (!this.IsWalking_Passable && !this.IsOpenable);
-            }
-        }
+        public bool IsSolidSpriteButNotDoor => (!this.IsWalking_Passable && !this.IsOpenable);
 
-        public bool IsSolidSprite
-        {
-            get 
-            { 
-                return (!IsWalking_Passable);
-            }
-        }
-
+        public bool IsSolidSprite => (!IsWalking_Passable);
     }
 }

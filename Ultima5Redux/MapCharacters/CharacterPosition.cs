@@ -11,6 +11,17 @@ namespace Ultima5Redux
     /// </summary>
     public class CharacterPosition
     {
+        public CharacterPosition()
+        {}
+        
+        public CharacterPosition(int x, int y, int floor)
+        {
+            X = x;
+            Y = y;
+            Floor = floor;
+        }
+        
+        
         private int _floor;
         public int X { get; set; }
         public int Y { get; set; }

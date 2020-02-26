@@ -17,14 +17,14 @@ namespace Ultima5Redux
         private SmallMapReferences smallMapRef;
         private TileReferences spriteTileReferences;
 
-        public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences spriteTileReferences)
+        public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences spriteTileReferences, TileOverrides tileOverrides)
         {
             this.smallMapRef = smallMapRef;
             this.spriteTileReferences = spriteTileReferences;
             foreach (SmallMapReferences.SingleMapReference mapRef in smallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(u5Directory, mapRef, spriteTileReferences);
+                SmallMap smallMap = new SmallMap(u5Directory, mapRef, spriteTileReferences, tileOverrides);
                 smallMaps.Add(smallMap);
 
                 // we make a map that allows us to map the Location and Floor number to the small map with 

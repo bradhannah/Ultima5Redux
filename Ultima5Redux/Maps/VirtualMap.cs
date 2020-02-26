@@ -40,7 +40,15 @@ namespace Ultima5Redux
         /// Current position of player character (avatar)
         /// </summary>
         private Point2D _currentPosition = new Point2D(0, 0);
+        /// <summary>
+        /// Current time of day
+        /// </summary>
         private TimeOfDay timeOfDay;
+
+        /// <summary>
+        /// All overriden tiles
+        /// </summary>
+        private TileOverrides overridenTiles; 
         #endregion
 
         /// <summary>
@@ -71,11 +79,13 @@ namespace Ultima5Redux
         /// <summary>
         /// Number of total columns for current map
         /// </summary>
-        public int NumberOfColumnTiles { get { return overrideMap[0].Length; } }
+        public int NumberOfColumnTiles => overrideMap[0].Length;
+
         /// <summary>
         /// Number of total rows for current map
         /// </summary>
-        public int NumberOfRowTiles { get { return overrideMap.Length; } }
+        public int NumberOfRowTiles => overrideMap.Length;
+
         /// <summary>
         /// The current small map (null if on large map)
         /// </summary>
@@ -88,7 +98,8 @@ namespace Ultima5Redux
         /// The abstracted Map object for the current map 
         /// Returns large or small depending on what is active
         /// </summary>
-        public Map CurrentMap { get { return (IsLargeMap ? (Map)CurrentLargeMap : (Map)CurrentSmallMap); } }
+        public Map CurrentMap => (IsLargeMap ? (Map)CurrentLargeMap : (Map)CurrentSmallMap);
+
         /// <summary>
         /// Detailed reference of current small map
         /// </summary>
@@ -137,6 +148,8 @@ namespace Ultima5Redux
             this.state = state;
             this.npcRefs = npcRefs;
             this.timeOfDay = timeOfDay;
+            this.overridenTiles = new TileOverrides();
+            
             //this.characterStates = characterStates;
             largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
@@ -194,6 +207,12 @@ namespace Ultima5Redux
             if (overrideMap[x][y] != 0)
                 return tileReferences.GetTileReference(overrideMap[x][y]);
 
+            // we check our high level tile override
+            // todo: technically this is only for 3D worlds, we should consider that 
+            // TileOverride tileOverride = overridenTiles.GetReplacementSprite(this.CurrentSingleMapReference.MapLocation, 
+            //     new CharacterPosition(x,y,CurrentSingleMapReference.Floor), IsLargeMap);
+            // if (tileOverride != null) return tileReferences.GetTileReference(tileOverride.SpriteNum);
+            
             if (IsLargeMap)
             {
                 return (tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]));
@@ -1085,6 +1104,16 @@ namespace Ultima5Redux
         public int GuessTile(Point2D xy)
         {
             Dictionary<int, int> tileCountDictionary = new Dictionary<int, int>();
+            
+            // we check our high level tile override
+            // todo: technically this is only for 3D worlds, we should consider that
+            // this method is much quicker because we only load the data once in the maps 
+            if (!IsLargeMap && CurrentMap.IsXYOverride(xy))
+            {
+                //Debug.WriteLine("Wanted to guess a tile but it was overriden: "+new CharacterPosition(xy.X,xy.Y,CurrentSingleMapReference.Floor));
+                return CurrentMap.GetTileOverride(xy).SpriteNum;
+            }
+
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
