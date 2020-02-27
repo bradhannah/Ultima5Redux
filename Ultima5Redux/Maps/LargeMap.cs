@@ -24,23 +24,31 @@ namespace Ultima5Redux
 
         public enum Maps {Small = -1 , Overworld, Underworld};
 
+        private Maps mapChoice;
+        //private Dictionary<Point2D, TileOverride> xyOverrides;
+        
         #endregion
         /// <summary>
         /// Build a large map. There are essentially two choices - Overworld and Underworld
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="mapChoice"></param>
-        public LargeMap (string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(u5Directory, tileOverrides)
+        public LargeMap (string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(u5Directory, tileOverrides, 
+            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
+            this.mapChoice = mapChoice;
             switch (mapChoice)
             {
                 case Maps.Overworld:
                     TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.BRIT_DAT), Path.Combine(u5Directory, FileConstants.DATA_OVL), false);
+                    //xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, 0));
                     break;
                 case Maps.Underworld:
-                TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.UNDER_DAT), "", true);
+                    TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.UNDER_DAT), "", true);
+                    //xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, -1));
                     break;
             }
+            
         }
 
         public void PrintMap()
@@ -121,14 +129,5 @@ namespace Ultima5Redux
             return 1;
         }
 
-        public override TileOverride GetTileOverride(Point2D xy)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsXYOverride(Point2D xy)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

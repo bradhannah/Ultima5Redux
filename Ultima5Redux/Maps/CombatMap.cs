@@ -135,7 +135,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="u5Directory">Directory of data files</param>
         /// <param name="mapRef">specific combat map reference</param>
-        public CombatMap (string u5Directory, CombatMapReference.SingleCombatMapReference mapRef, TileOverrides tileOverrides) : base (u5Directory, tileOverrides)
+        public CombatMap (string u5Directory, CombatMapReference.SingleCombatMapReference mapRef, TileOverrides tileOverrides) : base (u5Directory, tileOverrides, null)
         {
             string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);
 
@@ -157,14 +157,5 @@ namespace Ultima5Redux
             return 1;
         }
 
-        public override TileOverride GetTileOverride(Point2D xy)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsXYOverride(Point2D xy)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

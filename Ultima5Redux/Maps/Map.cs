@@ -10,6 +10,8 @@ namespace Ultima5Redux
 {
     abstract public class Map
     {
+        public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+        
         #region Protected Fields
         /// <summary>
         /// The directory of the U5 data files
@@ -24,22 +26,25 @@ namespace Ultima5Redux
         /// All A* nodes for the current map
         /// Accessed by [x][y]
         /// </summary>
-        internal List<List<AStarSharp.Node>> aStarNodes;
+        protected List<List<AStarSharp.Node>> aStarNodes;
         /// <summary>
         /// A* algorithm helper class
         /// </summary>
         internal AStarSharp.Astar astar;
-
-
         #endregion
 
-        public Map(string u5Directory, TileOverrides tileOverrides)
+        public Map(string u5Directory, TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
         {
             this.u5Directory = u5Directory;
             this.tileOverrides = tileOverrides;
+            CurrentSingleMapReference = mapRef; 
+
+            // for now combat maps don't have overrides
+            if (mapRef != null)
+            {
+                xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
+            }
         }
-        
-        
 
         /// <summary>
         /// Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
@@ -94,8 +99,19 @@ namespace Ultima5Redux
             get; protected set;
         }
 
-        public abstract TileOverride GetTileOverride(Point2D xy);
-        public abstract bool IsXYOverride(Point2D xy);
+        protected Dictionary<Point2D, TileOverride> xyOverrides;
+
+        public bool IsXYOverride(Point2D xy)
+        {
+            return xyOverrides != null && xyOverrides.ContainsKey(xy);
+        }
+
+        public TileOverride GetTileOverride(Point2D xy)
+        {
+            return xyOverrides[xy];
+        }
+        // public abstract TileOverride GetTileOverride(Point2D xy);
+        // public abstract bool IsXYOverride(Point2D xy);
 
         #region Debug methods
         /// <summary>

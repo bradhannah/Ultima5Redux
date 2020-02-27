@@ -88,6 +88,30 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.GuessTile(new Point2D(14, 7));
         }
+
+
+        [Test]
+        public void Test_LoadOverworld()
+        {
+            World world = new World("C:\\games\\ultima_5_late\\britain");
+
+            Trace.Write("Starting ");
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+        }
+
+        [Test]
+        public void Test_LoadOverworldOverrideTile()
+        {
+            World world = new World("C:\\games\\ultima_5_late\\britain");
+
+            Trace.Write("Starting ");
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+            
+            world.State.TheVirtualMap.GuessTile(new Point2D(81, 106));
+        }
+        
         
     }
 }

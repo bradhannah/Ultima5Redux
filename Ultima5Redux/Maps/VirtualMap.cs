@@ -182,9 +182,20 @@ namespace Ultima5Redux
         /// <param name="map"></param>
         public void LoadLargeMap(LargeMap.Maps map)
         {
-            int nFloor = map == LargeMap.Maps.Overworld ? 0 : -1;
-            CurrentSingleMapReference = null;
             CurrentLargeMap = largeMaps[map];
+            int nFloor = map == LargeMap.Maps.Overworld ? 0 : -1;
+            switch (map)
+            {
+                case LargeMap.Maps.Underworld: 
+                    CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
+                    break;
+                case LargeMap.Maps.Overworld:
+                    CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
+                    break;
+                case LargeMap.Maps.Small:
+                    throw new Ultima5ReduxException("You can't load a small large map!");
+            }
+
             overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
             IsLargeMap = true;
             LargeMapOverUnder = map;
@@ -1113,6 +1124,11 @@ namespace Ultima5Redux
                 //Debug.WriteLine("Wanted to guess a tile but it was overriden: "+new CharacterPosition(xy.X,xy.Y,CurrentSingleMapReference.Floor));
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
             }
+            else if (IsLargeMap && CurrentMap.IsXYOverride(xy))
+            {
+                return CurrentMap.GetTileOverride(xy).SpriteNum;
+            }
+            
 
             for (int i = -1; i <= 1; i++)
             {

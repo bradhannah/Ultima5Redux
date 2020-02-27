@@ -93,12 +93,21 @@ namespace Ultima5Redux
             string textAsset = Properties.Resources.TileOverrides;
             _tileOverrides = JsonConvert.DeserializeObject<Dictionary<int, List<TileOverride>>>(textAsset);
 
-            foreach (List<TileOverride> tileOverrideSets in _tileOverrides.Values)
+            // we cycle through each map
+            // we must assign the map to the tile override on the inside
+            foreach (int nMap in _tileOverrides.Keys)
             {
-                foreach (TileOverride tileOverride in tileOverrideSets)
+                // for each TileOverride within the current map
+                foreach (TileOverride tileOverride in _tileOverrides[nMap])
                 {
-                    Debug.Assert(((tileOverride.IsOverworld?1:0) + (tileOverride.IsUnderworld?1:0) + (tileOverride.IsSmallMap?1:0)) == 1,
-                        "You have set multiple overworld, underworld and small map flags which is a big no no");
+                    // I hate that I have to assign it this way, but it seems to be the only way for now
+                    tileOverride.MapNumber = nMap;
+                    if (((tileOverride.IsOverworld ? 1 : 0) + (tileOverride.IsUnderworld ? 1 : 0) +
+                         (tileOverride.IsSmallMap ? 1 : 0)) != 1)
+                    {
+                        throw new Ultima5ReduxException(
+                            "You have set multiple overworld, underworld and small map flags which is a big no no");
+                    }
                 }
                 
             }
@@ -116,12 +125,19 @@ namespace Ultima5Redux
     {
         [JsonProperty]
         public int MapNumber;
-        [JsonProperty]
-        public bool IsOverworld;
-        [JsonProperty]
-        public bool IsUnderworld;
-        [JsonProperty]
-        public bool IsSmallMap;
+
+        public bool IsOverworld
+        {
+            get => MapNumber == 0 && Z == 0;
+        }
+        public bool IsUnderworld
+        {
+            get => MapNumber == 0 && Z == -1;
+        }
+        public bool IsSmallMap
+        {
+            get => MapNumber != 0;
+        }
         [JsonProperty]
         public int X { get; set; }
         [JsonProperty]
@@ -132,6 +148,8 @@ namespace Ultima5Redux
         public int SpriteNum { get; set; }
         [JsonProperty]
         public string SpriteName { get; set; }
+        [JsonProperty]
+        public string Comment { get; set; }
 
         public CharacterPosition Position => new CharacterPosition(X, Y, Z);
     }

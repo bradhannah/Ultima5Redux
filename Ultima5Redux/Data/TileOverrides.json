@@ -1,116 +1,104 @@
 ﻿{
+  "0": [
+    {
+      "X": 45,
+      "Y": 62,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Iolos hut"
+    }
+  ],
   "3": [
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 13,
       "Y": 12,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass"
+      "SpriteName": "Grass",
+      "Comment": "Jhelom"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 17,
       "Y": 12,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass"
+      "SpriteName": "Grass",
+      "Comment": "Jhelom"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 17,
       "Y": 12,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass"
+      "SpriteName": "Grass",
+      "Comment": "Jhelom"
     }
   ],
   "30": [
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 13,
       "Y": 25,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass"
+      "SpriteName": "Grass",
+      "Comment": "Lycaeum"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 17,
       "Y": 25,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass"
+      "SpriteName": "Grass",
+      "Comment": "Lycaeum"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 23,
       "Y": 13,
       "Z": 0,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor"
+      "SpriteName": "BrickFloor",
+      "Comment": "Lycaeum"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 23,
       "Y": 15,
       "Z": 0,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor"
+      "SpriteName": "BrickFloor",
+      "Comment": "Lycaeum"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 14,
       "Y": 7,
       "Z": 1,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor"
+      "SpriteName": "BrickFloor",
+      "Comment": "Lycaeum"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 16,
       "Y": 7,
       "Z": 1,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor"
+      "SpriteName": "BrickFloor",
+      "Comment": "Lycaeum"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 20,
       "Y": 15,
       "Z": 2,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor"
+      "SpriteName": "BrickFloor",
+      "Comment": "Lycaeum"
     },
     {
-      "IsOverworld": false,
-      "IsUnderworld": false,
-      "IsSmallMap": true,
       "X": 23,
       "Y": 15,
       "Z": 2,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor"
+      "SpriteName": "BrickFloor",
+      "Comment": "Lycaeum"
     }
   ]
 }
