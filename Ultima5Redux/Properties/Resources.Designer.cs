@@ -62,6 +62,25 @@ namespace Ultima5Redux.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;Reagent&quot;: [
+        ///      {
+        ///         &quot;ItemName&quot;: &quot;SulfurAsh&quot;,
+        ///         &quot;ItemSprite&quot;: &quot;SulfurAsh.2d&quot;,
+        ///         &quot;ItemDescription&quot;: &quot;&lt;i&gt;\&quot;Common material left by volcanic action, ash is an excellent source of energy in magical mixtures.\&quot;&lt;/i&gt;\n&lt;align=right&gt;- The Book of Lore (Ultima V)&lt;/align&gt;&quot;
+        ///      },
+        ///      {
+        ///         &quot;ItemName&quot;: &quot;Ginseng&quot;,
+        ///         &quot;ItemSprite&quot;: &quot;Ginseng.2d&quot;,
+        ///         &quot;ItemDescription&quot;: &quot;&lt;i&gt;\&quot;Ancient reagent used extensively in healing.\&quot;&lt;/i&gt;\n&lt;align=right&gt;- The Book of Lore (Ultima [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string InventoryDetails {
+            get {
+                return ResourceManager.GetString("InventoryDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;0&quot;: {
         ///      &quot;Name&quot;: &quot;Explosion&quot;,
         ///      &quot;Description&quot;: &quot;&quot;,
@@ -88,19 +107,39 @@ namespace Ultima5Redux.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [
-        ///  {
-        ///    &quot;IsOverworld&quot;: true,
-        ///    &quot;IsUnderworld&quot;: false,
-        ///    &quot;IsSmallMap&quot;: false,
-        ///    &quot;MapNumber&quot;: 1,
-        ///    &quot;X&quot;: 100,
-        ///    &quot;Y&quot;: 100,
-        ///    &quot;Z&quot;: 1,
-        ///    &quot;SpriteNum&quot;: 20,
-        ///    &quot;SpriteName&quot;: &quot;derp&quot;
-        ///  }
-        ///].
+        ///   Looks up a localized string similar to {
+        ///  &quot;0&quot;: [
+        ///    {
+        ///      &quot;X&quot;: 45,
+        ///      &quot;Y&quot;: 62,
+        ///      &quot;Z&quot;: 0,
+        ///      &quot;SpriteNum&quot;: 5,
+        ///      &quot;SpriteName&quot;: &quot;Grass&quot;,
+        ///      &quot;Comment&quot;: &quot;Iolos hut&quot;
+        ///    }
+        ///  ],
+        ///  &quot;3&quot;: [
+        ///    {
+        ///      &quot;X&quot;: 13,
+        ///      &quot;Y&quot;: 12,
+        ///      &quot;Z&quot;: 0,
+        ///      &quot;SpriteNum&quot;: 5,
+        ///      &quot;SpriteName&quot;: &quot;Grass&quot;,
+        ///      &quot;Comment&quot;: &quot;Jhelom&quot;
+        ///    },
+        ///    {
+        ///      &quot;X&quot;: 17,
+        ///      &quot;Y&quot;: 12,
+        ///      &quot;Z&quot;: 0,
+        ///      &quot;SpriteNum&quot;: 5,
+        ///      &quot;SpriteName&quot;: &quot;Grass&quot;,
+        ///      &quot;Comment&quot;: &quot;Jhelom&quot;
+        ///    },
+        ///    {
+        ///      &quot;X&quot;: 17,
+        ///      &quot;Y&quot;: 12,
+        ///      &quot;Z&quot;: 1,
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TileOverrides {
             get {

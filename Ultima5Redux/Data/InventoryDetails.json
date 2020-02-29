@@ -1,0 +1,680 @@
+{
+   "Reagent": [
+      {
+         "ItemName": "SulfurAsh",
+         "ItemSprite": "SulfurAsh.2d",
+         "ItemDescription": "<i>\"Common material left by volcanic action, ash is an excellent source of energy in magical mixtures.\"</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "Ginseng",
+         "ItemSprite": "Ginseng.2d",
+         "ItemDescription": "<i>\"Ancient reagent used extensively in healing.\"</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "Garlic",
+         "ItemSprite": "Garlic.2d",
+         "ItemDescription": "<i>\"Ubiquitous and strong-scented reagent, used effectively in warding off evil spirits.\"</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "SpiderSilk",
+         "ItemSprite": "SpiderSilk.2d",
+         "ItemDescription": "<i>\"The magical product of the garden spider and its relatives has no peer in its ability to bind. As a reagent mixed for magic, spider silk magnifies its binding power many times over.</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "BloodMoss",
+         "ItemSprite": "BloodMoss.2d",
+         "ItemDescription": "<i>\"Fungal growth usually found in deep forests and warm, damp areas; especially favored as a reagent for its ability to enhance mobility.\"</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "BlackPearl",
+         "ItemSprite": "BlackPearl.2d",
+         "ItemDescription": "<i>\"A rare version of the standard white pearl, a black pearl is a forceful reagent in the creation of kinesthetic magic, that is, projecting objects.\"</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "NightShade",
+         "ItemSprite": "NightShade.2d",
+         "ItemDescription": "<i>\"Rare, poisonous plant that appears only when the moons are in a certain conjunction. Those who learn its whereabouts and manage to be there in the dead of night when the moons are full can pick nightshade without danger and benefit from its powerful ability as a reagent to create illusions.\"</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "MandrakeRoot",
+         "ItemSprite": "MandrakeRoot.2d",
+         "ItemDescription": "<i>\"Very rare and usually expensive magical herb growing only in swampy areas, mandrake root is said to bring great power to magic that uses it.\"</i>\n<align=right>- The Book of Lore (Ultima V)</align>"
+      }
+   ],
+   "Armament": [
+      {
+         "ItemName": "LeatherHelm",
+         "ItemSprite": "265",
+         "ItemDescription": "<i>\"A cut above cloth, yet also fairly inexpensive, leather armour is made from thick leather hardened by boiling, often in parafin.\"</i>\n<align=right>\n- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "ChainCoif",
+         "ItemSprite": "265",
+         "ItemDescription": "<i>\"Chain mail is fashioned from small loops of metal wire linked in a manner to make something resembling metal cloth. The best chain mail has each link actually riveted shut. Chain mail provides very good protection, but is quite expensive.\"</i>\n\n<align=right>- The Book of Lore  (Ultima V)</align>"
+      },
+      {
+         "ItemName": "IronHelm",
+         "ItemSprite": "265",
+         "ItemDescription": "<i>\"Custom made from hand-forged sheets of metal, plate armour affords its wearer the most complete protection possible. However, it is very expensive and can be borne only by the strongest.\"</i>\n<align=right>\n\n- Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "SpikedHelm",
+         "ItemSprite": "265",
+         "ItemDescription": "<i>\"It's pointy. Be smart - use your head!\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "SmallShield",
+         "ItemSprite": "262",
+         "ItemDescription": "<i>\"Shields also vary greatly. Not all war rigs call for shields— any use of two handed weapons precludes them and they require some strength— yet many thank shields for their lives.\"</i>\n\n<align=right>- Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "LargeShield",
+         "ItemSprite": "262",
+         "ItemDescription": "<i>\"Shields also vary greatly. Not all war rigs call for shields— any use of two handed weapons precludes them and they require some strength— yet many thank shields for their lives.\"</i>\n\n<align=right>- Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "SpikedShield",
+         "ItemSprite": "262",
+         "ItemDescription": "<i>\"As with the Spiked Helm, the spiked shields have a double function; protection and to attack opponents with its spikes.\"</i>\n<align=right>\n\n- UltimaCodex.com</align>"
+      },
+      {
+         "ItemName": "MagicShield",
+         "ItemSprite": "262",
+         "ItemDescription": "<i>\"The Mystic Armour was wrought by the Minoxian blacksmith Zircon, who entrusted its safekeeping to Sir Simon.\"</i>\n<align=right>\n\n- UltimaCodex.com</align>"
+      },
+      {
+         "ItemName": "JewelShield",
+         "ItemSprite": "262",
+         "ItemDescription": "<i>\" Who can explain the ways of Evil? Why would anyone for Evil's cause or any other, forge a shining sword that can do no damage and a suit of fine plate armour transparent to a foe's blade? Seek the answer if thou wilst, but remember along thy way to beware of any highly touted gifts to thee by Thrud of Windemere, Servant of Blackthorn.\"</i>\n<align=right>\n\n- Paths of Destiny (Ultima V)</align>"
+      },
+      {
+         "ItemName": "ClothArmour",
+         "ItemSprite": "267",
+         "ItemDescription": "<i>\"Usually little more than a heavy quilted gambeson worn below a tunic, cloth armour is inexpensive and comfortable, but it affords only limited protection.\"</i>\n<align=right>\n\n- Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "LeatherArmour",
+         "ItemSprite": "267",
+         "ItemDescription": "<i>\"A cut above cloth, yet also fairly inexpensive, leather armour is made from thick leather hardened by boiling, often in parafin.\"</i>\n<align=right>\n- The Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "Ringmail",
+         "ItemSprite": "267",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "ScaleMail",
+         "ItemSprite": "267",
+         "ItemDescription": "<i>\"Fashioned from four to six inch square overlapping plates attached to cloth or leather gambeson, scale armour looks like its name-sake; fish scales. Although scale is often somewhat noisy, it offers good protection.h\"</i>\n<align=right>\n\n- Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "ChainMail",
+         "ItemSprite": "267",
+         "ItemDescription": "<i>\"Chain mail is fashioned from small loops of metal wire linked in a manner to make something resembling metal cloth. The best chain mail has each link actually riveted shut. Chain mail provides very good protection, but is quite expensive.\"</i>\n\n<align=right>- The Book of Lore  (Ultima V)</align>"
+      },
+      {
+         "ItemName": "PlateMail",
+         "ItemSprite": "267",
+         "ItemDescription": "<i>\"Custom made from hand-forged sheets of metal, plate armour affords its wearer the most complete protection possible. However, it is very expensive and can be borne only by the strongest.\"</i>\n<align=right>\n\n- Book of Lore (Ultima V)</align>"
+      },
+      {
+         "ItemName": "MysticArmour",
+         "ItemSprite": "267",
+         "ItemDescription": "<i>\"The Mystic Armour was wrought by the Minoxian blacksmith Zircon, who entrusted its safekeeping to Sir Simon.\"</i>\n<align=right>\n\n- Wikipedia</align>"
+      },
+      {
+         "ItemName": "Dagger",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Sling",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Club",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "FlamingOil",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "MainGauche",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Spear",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "ThrowingAxe",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "ShortSword",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Mace",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "MorningStar",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Bow",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Arrows",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Crossbow",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Quarrels",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "LongSword",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "TwoHHammer",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "TwoHAxe",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "TwoHSword",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Halberd",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "SwordofChaos",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "MagicBow",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "SilverSword",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "MagicAxe",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "GlassSword",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "JeweledSword",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "MysticSword",
+         "ItemSprite": "261",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "RingInvis",
+         "ItemSprite": "266",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "RingProtection",
+         "ItemSprite": "266",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "RingRegen",
+         "ItemSprite": "266",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Amuletofturning",
+         "ItemSprite": "268",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "SpikedCollar",
+         "ItemSprite": "268",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Ankh",
+         "ItemSprite": "268",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      }
+   ],
+   "Spell": [
+      {
+         "ItemName": "In_Lor",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Grav_Por",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Zu",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Nox",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Mani",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Ylem",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Sanct",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Xen_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Rel_Hur",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Wis",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Kal_Xen",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Xen_Mani",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Vas_Lor",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Vas_Flam",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Flam_Grav",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Nox_Grav",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Zu_Grav",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Por",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Grav",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Sanct",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Sanct_Grav",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Uus_Por",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Des_Por",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Wis_Quas",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Bet_Xen",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Ex_Por",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Ex_Por",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Vas_Mani",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Zu",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Rel_Tym",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Vas_Por_Ylem",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Quas_An_Wis",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_An",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Wis_An_Ylem",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Xen_Ex",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Rel_Xen_Bet",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Sanct_Lor",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Xen_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Quas_Xen",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Quas_Wis",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Nox_Hur",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Quas_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Mani_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Kal_Xen_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Vas_Grav_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "In_Flam_Hur",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Vas_Rel_Por",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "An_Tym",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Cast spell, go poof!\"</i>\n\n<align=right>- Brad</align>"
+      }
+   ],
+   "Item": [
+      {
+         "ItemName": "Carpet",
+         "ItemSprite": "283",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Grapple",
+         "ItemSprite": "12",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Spyglass",
+         "ItemSprite": "89",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "HMSCape",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "PocketWatch",
+         "ItemSprite": "256",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "BlackBadge",
+         "ItemSprite": "256",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "WoodenBox",
+         "ItemSprite": "270",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Sextant",
+         "ItemSprite": "256",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Vas_Lor",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Rel_Hur",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "In_Sanct",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "In_An",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "In_Quas_Wis",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Kal_Xen_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "In_Mani_Corp",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "An_Tym",
+         "ItemSprite": "260",
+         "ItemDescription": "<i>\"Very dangerous, hurt much\"</i>\n<align=right>\n\n- Brad</align>"
+      },
+      {
+         "ItemName": "Blue",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Yellow",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Red",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Green",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Orange",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Purple",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Black",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "White",
+         "ItemSprite": "259",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Falsehood",
+         "ItemSprite": "436",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Hatred",
+         "ItemSprite": "436",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Cowardice",
+         "ItemSprite": "436",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": " Amulet",
+         "ItemSprite": "439",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Crown",
+         "ItemSprite": "437",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      },
+      {
+         "ItemName": "Sceptre",
+         "ItemSprite": "438",
+         "ItemDescription": "<i>\"Very impressive thing you've got here!\"</i>\n\n<align=right>- Brad</align>"
+      }
+   ]
+}

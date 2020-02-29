@@ -124,4 +124,7 @@
   <data name="TileOverrides" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\TileOverrides.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="InventoryDetails" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\InventoryDetails.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

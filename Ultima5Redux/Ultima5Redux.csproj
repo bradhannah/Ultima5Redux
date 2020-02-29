@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="External\AStarSharp.cs" />
+    <Compile Include="InventoryReference.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
@@ -187,6 +188,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Credits.txt" />
+    <EmbeddedResource Include="Data\InventoryDetails.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="Data\InventoryDetailsCSV.csv" />
     <Content Include="Data\TileOverrides.csv" />
     <EmbeddedResource Include="Data\TileOverrides.json" />
   </ItemGroup>
