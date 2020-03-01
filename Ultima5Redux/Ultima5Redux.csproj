@@ -191,6 +191,7 @@
     <EmbeddedResource Include="Data\InventoryDetails.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="Data\InventoryDetails.csv" />
     <Content Include="Data\InventoryDetailsCSV.csv" />
     <Content Include="Data\TileOverrides.csv" />
     <EmbeddedResource Include="Data\TileOverrides.json" />

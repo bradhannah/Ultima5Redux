@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using NUnit.Framework;
 using Ultima5Redux;
+using Ultima5Redux3D;
+using System.Collections.Generic;
 
 namespace Ultima5ReduxTesting
 {
@@ -110,6 +112,17 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
             
             world.State.TheVirtualMap.GuessTile(new Point2D(81, 106));
+        }
+
+        [Test]
+        public void Test_InventoryReferences()
+        {
+            InventoryReferences invRefs = new InventoryReferences();
+            List<InventoryReference> invList = invRefs.GetInventoryReferenceList(InventoryReferences.InventoryReferenceType.Armament);
+            foreach (InventoryReference invRef in invList)
+            {
+                string str = invRef.GetRichTextDescription();
+            }
         }
         
         

@@ -1,0 +1,141 @@
+ItemType,ItemName,ItemSprite,ItemDescription,ItemDescriptionAttribution
+Reagent,SulfurAsh,SulfurAsh.2d,"Common material left by volcanic action, ash is an excellent source of energy in magical mixtures.",The Book of Lore (Ultima V)
+Reagent,Ginseng,Ginseng.2d,Ancient reagent used extensively in healing.,TheBook of Lore (Ultima V)
+Reagent,Garlic,Garlic.2d,"Ubiquitous and strong-scented reagent, used effectively in warding off evil spirits.",The Book of Lore (Ultima V)
+Reagent,SpiderSilk,SpiderSilk.2d,"The magical product of the garden spider and its relatives has no peer in its ability to bind. As a reagent mixed for magic, spider silk magnifies its binding power many times over.",The Book of Lore (Ultima V)
+Reagent,BloodMoss,BloodMoss.2d,"Fungal growth usually found in deep forests and warm, damp areas; especially favored as a reagent for its ability to enhance mobility.",The Book of Lore (Ultima V)
+Reagent,BlackPearl,BlackPearl.2d,"A rare version of the standard white pearl, a black pearl is a forceful reagent in the creation of kinesthetic magic, that is, projecting objects.",The Book of Lore (Ultima V)
+Reagent,NightShade,NightShade.2d,"Rare, poisonous plant that appears only when the moons are in a certain conjunction. Those who learn its whereabouts and manage to be there in the dead of night when the moons are full can pick nightshade without danger and benefit from its powerful ability as a reagent to create illusions.",The Book of Lore (Ultima V)
+Reagent,MandrakeRoot,MandrakeRoot.2d,"Very rare and usually expensive magical herb growing only in swampy areas, mandrake root is said to bring great power to magic that uses it.",The Book of Lore (Ultima V)
+Armament,LeatherHelm,265,"A cut above cloth, yet also fairly inexpensive, leather armour is made from thick leather hardened by boiling, often in parafin.",The Book of Lore (Ultima V)
+Armament,ChainCoif,265,"Chain mail is fashioned from small loops of metal wire linked in a manner to make something resembling metal cloth. The best chain mail has each link actually riveted shut. Chain mail provides very good protection, but is quite expensive.",The Book of Lore  (Ultima V)
+Armament,IronHelm,265,"Custom made from hand-forged sheets of metal, plate armour affords its wearer the most complete protection possible. However, it is very expensive and can be borne only by the strongest.",The Book of Lore (Ultima V)
+Armament,SpikedHelm,265,It's pointy. Be smart - use your head!,Brad
+Armament,SmallShield,262,Shields also vary greatly. Not all war rigs call for shields any use of two handed weapons precludes them and they require some strength yet many thank shields for their lives.,The Book of Lore (Ultima V)
+Armament,LargeShield,262,Shields also vary greatly. Not all war rigs call for shields any use of two handed weapons precludes them and they require some strength yet many thank shields for their lives.,The Book of Lore (Ultima V)
+Armament,SpikedShield,262,"As with the Spiked Helm, the spiked shields have a double function; protection and to attack opponents with its spikes.",UltimaCodex.com
+Armament,MagicShield,262,"The Mystic Armour was wrought by the Minoxian blacksmith Zircon, who entrusted its safekeeping to Sir Simon.",UltimaCodex.com
+Armament,JewelShield,262," Who can explain the ways of Evil? Why would anyone for Evil's cause or any other, forge a shining sword that can do no damage and a suit of fine plate armour transparent to a foe's blade? Seek the answer if thou wilst, but remember along thy way to beware of any highly touted gifts to thee by Thrud of Windemere, Servant of Blackthorn.",Paths of Destiny (Ultima V)
+Armament,ClothArmour,267,"Usually little more than a heavy quilted gambeson worn below a tunic, cloth armour is inexpensive and comfortable, but it affords only limited protection.",The Book of Lore (Ultima V)
+Armament,LeatherArmour,267,"A cut above cloth, yet also fairly inexpensive, leather armour is made from thick leather hardened by boiling, often in parafin.",The Book of Lore (Ultima V)
+Armament,Ringmail,267,"Very dangerous, hurt much",Brad
+Armament,ScaleMail,267,"Fashioned from four to six inch square overlapping plates attached to cloth or leather gambeson, scale armour looks like its name-sake; fish scales. Although scale is often somewhat noisy, it offers good protection.h",The Book of Lore (Ultima V)
+Armament,ChainMail,267,"Chain mail is fashioned from small loops of metal wire linked in a manner to make something resembling metal cloth. The best chain mail has each link actually riveted shut. Chain mail provides very good protection, but is quite expensive.",The Book of Lore  (Ultima V)
+Armament,PlateMail,267,"Custom made from hand-forged sheets of metal, plate armour affords its wearer the most complete protection possible. However, it is very expensive and can be borne only by the strongest.",The Book of Lore (Ultima V)
+Armament,MysticArmour,267,"The Mystic Armour was wrought by the Minoxian blacksmith Zircon, who entrusted its safekeeping to Sir Simon.",UltimaCodex.com
+Armament,Dagger,261," Daggers offer two choices. The common dagger is useful when its ability to be concealed is a benefit; and it can be thrown in open combat. The main gauche is more formidable, especially when used as a second weapon.",The Book of Lore (Ultima V)
+Armament,Sling,261,"Inexpensive and easy to port is the sling, and ammunition is plentiful in open country.",The Book of Lore (Ultima V)
+Armament,Club,261," Oldest of all bludgeons, and probably of all weapons, is the club. Clubs are crude weapons, but when a blow connects, it often does the trick.",The Book of Lore (Ultima V)
+Armament,FlamingOil,261,"Some knights prefer missiles they can hurl without mechanical aid. Popular throwing weapons include daggers, spears, axes, and flasks of flaming oil.",The Book of Lore (Ultima V)
+Armament,MainGauche,261," Daggers offer two choices. The common dagger is useful when its ability to be concealed is a benefit; and it can be thrown in open combat. The main gauche is more formidable, especially when used as a second weapon.",The Book of Lore (Ultima V)
+Armament,Spear,261,"Some knights prefer missiles they can hurl without mechanical aid. Popular throwing weapons include daggers, spears, axes, and flasks of flaming oil.",The Book of Lore (Ultima V)
+Armament,ThrowingAxe,261,"Some knights prefer missiles they can hurl without mechanical aid. Popular throwing weapons include daggers, spears, axes, and flasks of flaming oil.",The Book of Lore (Ultima V)
+Armament,ShortSword,261," Swords continue to be the most popular weapon. There are long and short swords, and two-handed swords.",The Book of Lore (Ultima V)
+Armament,Mace,261,The mace is much more streamlined than the club. Its weight is balanced to derive the most possible effect with the most possible accuracy.,The Book of Lore (Ultima V)
+Armament,MorningStar,261,A mace on a chain is the morning star which reaches over obstacles to smite thy foe at range. One blow straight on from this and the enemy is out till morning at least.,The Book of Lore (Ultima V)
+Armament,Bow,261,"Bows come from craftsmen in the deep forest. Made from strong and resilient yew, bows, and their stronger counterparts, crossbows, make formidable long-range weapons. Be aware, however, that one engaged in hand-to-hand combat is unlikely to be able to load such a weapon, much less shoot it.",The Book of Lore (Ultima V)
+Armament,Arrows,261,"Arrows are made of carfully carved wood, with embedded feathers to keep their flight true. On the opposite end is a sharpened piece of iron, ready to pierce the heart of thine enemy.",Brad
+Armament,Crossbow,261,"Made from strong and resilient yew, bows, and their stronger counterparts, crossbows, make formidable long-range weapons. Be aware, however, that one engaged in hand-to-hand combat is unlikely to be able to load such a weapon, much less shoot it.",The Book of Lore (Ultima V)
+Armament,Quarrels,261,I have no quarrel with you good Sir Knight!,King Arthur
+Armament,LongSword,261," Swords continue to be the most popular weapon. There are long and short swords, and two-handed swords.",The Book of Lore (Ultima V)
+Armament,TwoHHammer,261,"Finally, there is the two-handed hammer. It takes great strength to wield it, but the hammer can inflict devastating damage.",The Book of Lore (Ultima V)
+Armament,TwoHAxe,261," A harbinger of grievance wounds, a battle axe in the hands of a mighty warrior can smash through weapon and shield, armour and plating. An expertly delivered blow from either blade of this doubly edged weapon takes the fight out of all save the most fearsome creatures. Like the rings on a tree of fine wood, the steel of a properly wrought axe most be folded many times.",Journal (Ultima IX: Ascension)
+Armament,TwoHSword,261," Swords continue to be the most popular weapon. There are long and short swords, and two-handed swords.",The Book of Lore (Ultima V)
+Armament,Halberd,261,"Polearms require much strength to wield but they're extremely effective. Most popular among those strong enough to wield it is the halberd, a long stout staff with a battleax blade at the end that allows its wielder to strike a foe at twice the distance of most weapons.",The Book of Lore (Ultima V)
+Armament,SwordofChaos,261," Another of the Oppression's playthings of Evil, the Sword of Chaos possesses the soul of the knight who wields it. Once the Sword is brought to bear, its wielder will seek to slaughter his or her allies in battle. Blows of unmatched strength will be struck until each and every friend suffers a bloody death, whereupon the insane fighter will faint dead away at the sight of the carnage. ",Ultima V Cluebook
+Armament,MagicBow,261,"A magic bow is a bow that has undergone enchantments to strengthen the force and hone the accuracy of any arrows fired from it, giving the archer who employs it a magical edge against his enemies. ",UltimaCodex.com
+Armament,SilverSword,261,"Purveyors of these expensive blades insist their weapons will ""bring true death to those who once arose,] but these claims have not been substantiated.",UltimaCodex.com
+Armament,MagicAxe,261,"Magic axes are axes that have been enchanted to produce desirable effects in combat, and may bear magics which enhance damage done to a foe or allow thrown axes to magically return to their wielder.",UltimaCodex.com
+Armament,GlassSword,261,"A glass sword is a magical blade of nigh unsurpassed power, which is made out of specially prepared glass. While it may kill virtually any being it strikes dead with a single well placed hit, it will always shatter upon impact, making it a weapon to be used cautiously. ",UltimaCodex.com
+Armament,JeweledSword,261,"Who can explain the ways of Evil? Why would anyone for Evil's cause or any other, forge a shining sword that can do no damage and a suit of fine plate armour transparent to a foe's blade?",Paths of Destiny (Ultima V)
+Armament,MysticSword,261,The Mystic Weapons are among the only weapons that work in The Abyss and are the only weapons that are effective in dungeon Doom.,UltimaCodex.com
+Armament,RingInvis,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
+
+This will provide the user with invisibility during battle.",UltimaCodex.com
+Armament,RingProtection,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
+
+This ring provides additional armour protection.",UltimaCodex.com
+Armament,RingRegen,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
+
+This ring will slowly heal the member wearing it.",UltimaCodex.com
+Armament,Amuletofturning,268,You wear it on your neck and it does things?,Brad
+Armament,SpikedCollar,268,"These collars seem to be the precursor of the gorgets found in later sets of plate armour. It basically is a leather neckband, riddled with metal spikes. While it may resemble something more likely to be found in certain bedrooms, it did grant the wearer some protection.These collarswere later made obsolete by the appearance of gorgets.",UltimaCodex.com
+Armament,Ankh,268,"An ankh amulet is a small, loop-headed cross displayed by those who have attained Avatarhood or those undertaking the path to Avatarhood in striving to embody the Eight Virtues. ",UltimaCodex.com
+Spell,In_Lor,260,"Cast spell, go poof!",Brad
+Spell,Grav_Por,260,"Cast spell, go poof!",Brad
+Spell,An_Zu,260,"Cast spell, go poof!",Brad
+Spell,An_Nox,260,"Cast spell, go poof!",Brad
+Spell,Mani,260,"Cast spell, go poof!",Brad
+Spell,An_Ylem,260,"Cast spell, go poof!",Brad
+Spell,An_Sanct,260,"Cast spell, go poof!",Brad
+Spell,An_Xen_Corp,260,"Cast spell, go poof!",Brad
+Spell,Rel_Hur,260,"Cast spell, go poof!",Brad
+Spell,In_Wis,260,"Cast spell, go poof!",Brad
+Spell,Kal_Xen,260,"Cast spell, go poof!",Brad
+Spell,In_Xen_Mani,260,"Cast spell, go poof!",Brad
+Spell,Vas_Lor,260,"Cast spell, go poof!",Brad
+Spell,Vas_Flam,260,"Cast spell, go poof!",Brad
+Spell,In_Flam_Grav,260,"Cast spell, go poof!",Brad
+Spell,In_Nox_Grav,260,"Cast spell, go poof!",Brad
+Spell,In_Zu_Grav,260,"Cast spell, go poof!",Brad
+Spell,In_Por,260,"Cast spell, go poof!",Brad
+Spell,An_Grav,260,"Cast spell, go poof!",Brad
+Spell,In_Sanct,260,"Cast spell, go poof!",Brad
+Spell,In_Sanct_Grav,260,"Cast spell, go poof!",Brad
+Spell,Uus_Por,260,"Cast spell, go poof!",Brad
+Spell,Des_Por,260,"Cast spell, go poof!",Brad
+Spell,Wis_Quas,260,"Cast spell, go poof!",Brad
+Spell,In_Bet_Xen,260,"Cast spell, go poof!",Brad
+Spell,An_Ex_Por,260,"Cast spell, go poof!",Brad
+Spell,In_Ex_Por,260,"Cast spell, go poof!",Brad
+Spell,Vas_Mani,260,"Cast spell, go poof!",Brad
+Spell,In_Zu,260,"Cast spell, go poof!",Brad
+Spell,Rel_Tym,260,"Cast spell, go poof!",Brad
+Spell,In_Vas_Por_Ylem,260,"Cast spell, go poof!",Brad
+Spell,Quas_An_Wis,260,"Cast spell, go poof!",Brad
+Spell,In_An,260,"Cast spell, go poof!",Brad
+Spell,Wis_An_Ylem,260,"Cast spell, go poof!",Brad
+Spell,An_Xen_Ex,260,"Cast spell, go poof!",Brad
+Spell,Rel_Xen_Bet,260,"Cast spell, go poof!",Brad
+Spell,Sanct_Lor,260,"Cast spell, go poof!",Brad
+Spell,Xen_Corp,260,"Cast spell, go poof!",Brad
+Spell,In_Quas_Xen,260,"Cast spell, go poof!",Brad
+Spell,In_Quas_Wis,260,"Cast spell, go poof!",Brad
+Spell,In_Nox_Hur,260,"Cast spell, go poof!",Brad
+Spell,In_Quas_Corp,260,"Cast spell, go poof!",Brad
+Spell,In_Mani_Corp,260,"Cast spell, go poof!",Brad
+Spell,Kal_Xen_Corp,260,"Cast spell, go poof!",Brad
+Spell,In_Vas_Grav_Corp,260,"Cast spell, go poof!",Brad
+Spell,In_Flam_Hur,260,"Cast spell, go poof!",Brad
+Spell,Vas_Rel_Por,260,"Cast spell, go poof!",Brad
+Spell,An_Tym,260,"Cast spell, go poof!",Brad
+Item,Carpet,283,"Said to have been brought to Britannia from a faraway land of trackless deserts and strange, humped beasts, the magic carpet is an excellent conveyance for quick travel over swamps, calm waters and other places when ground travel is impeded or imperiled. Since it flies only a handspan from the ground, it cannot be used to pass over mountains, walls, or any sort of high obstruction. Rapid waters will soak it, subjecting its riders to freezing spray and possible drowning.",Paths of Destiny (Ultima V)
+Item,Grapple,12,The grapple is an important tool for mountain-climbing.,UltimaCodex.com
+Item,Spyglass,89,"Normally used by sailors as a navigational aid, it is possible to study the planets and brighter stars with even a small spyglass. ",Paths of Destiny (Ultima V)
+Item,HMSCape,260,"The H.M.S. Cape had seen better days. Algae and ribbons of seaweed covered her. Bloated, dead sailors bobbed with the current, arms and legs tangled in the seaweed and wreckage. I shuddered at the sight of their watery grave, but I did not hesitate.",Ultima: The Avatar Adventures
+Item,PocketWatch,256,"A pocket watch is a portable timepiece meant to be kept in one's pocket. Such a device numbers among the scant personal affects that the Avatar brought to Britannia from Earth, and the hero routinely carries this particular pocket watch. ",UltimaCodex.com
+Item,BlackBadge,256,Exploring the dark paths of Blackthorn's palace may be quite hazardous to the health of one who is not recognizable as a member of the Oppression.,Paths of Destiny (Ultima V)
+Item,WoodenBox,270,What a curious little box... You feel compelled to bring it along on your journey.,Brad
+Item,Sextant,256,"The sextant is a tool commonly used in celestial navigation, as it allows its user to take an accurate measurement of a heavenly body relative to the horizon. Once a navigator ascertains this angle, he may use it to reliably determine his geographic position. ",UltimaCodex.com
+Item,Vas_Lor,260,"Very dangerous, hurt much",Brad
+Item,Rel_Hur,260,"Very dangerous, hurt much",Brad
+Item,In_Sanct,260,"Very dangerous, hurt much",Brad
+Item,In_An,260,"Very dangerous, hurt much",Brad
+Item,In_Quas_Wis,260,"Very dangerous, hurt much",Brad
+Item,Kal_Xen_Corp,260,"Very dangerous, hurt much",Brad
+Item,In_Mani_Corp,260,"Very dangerous, hurt much",Brad
+Item,An_Tym,260,"Very dangerous, hurt much",Brad
+Item,Blue,259,"An Zu, which requires a simple mixture of ginseng and garlic, is used to awaken sleeping comrades. An Zu has limitations; it works only on members of the caster's party, it awakens only one person per casting, and it has no lasting preventive effect.",The Book of Lore (Ultima V)
+Item,Yellow,259,"This simple spell heals the caster of superficial cuts and bruises, restoring a modicum of vitality.  Although healing spells of higher circles offer relief from injury, Lesser Heal is of great use to inexperienced spell-casters who have no better alternatives. ",The Book of Lore (Ultima V)
+Item,Red,259," Few deadly problems are as easy to arrest as poison. So common is the use of poison that alchemists have been able to devise a formula, using the relatively common plants garlic and ginseng, that is effective against nearly every form of poison in nearly every user. However, the magic works on individuals only; thus, simple as it is, novice mages in a party mush have magic endurance among them great enough to cast An Nox as many times as they have afflicted members. Even then, safety is not secured. Strength already sapped by toxins is not regained without peaceful rest or healing magic.",The Book of Lore (Ultima V)
+Item,Green,259,"Splashing the potion on an enemy, if hit, the enemy is weakened by the poison, losing much of his fighting power. However, many creatures are immune to this spell, and often enough the poison won't hit or have no effect at all. Just don't poison yourself in the process!",UltimaCodex.com and Brad
+Item,Orange,259,"The first mass effect spell the developing magician learns, In Zu causes the scent of poppies to emanate from the caster in an ever-widening wedge, dropping into a sound of sleep all those touched by it. Only the toughest minds and wills may deny it. Note that this spell is just as effective on friend as foe; aim carefully.",The Book of Lore (Ultima V)
+Item,Purple,259,Perhaps Grendel got thirsty one night? ,Brad
+Item,Black,259,"Sanct Lor affects the path of light, bending it around the caster; so it may continue on. The result is an illusion that the caster is not there. ",The Book of Lore (Ultima V)
+Item,White,259,"Adept magicians are relied upon, not only to aid in battle and to repair wounds, but to guide their party wisely. Wis An Ylem provides the necessary insight, by making the hidden apparent. For an instant, the caster may see through the densest forest, tallest mountain and most solid rock. No wall can be too thick, no door too heavy. Requiring intensity of concentration, Wis An Ylem cannot be maintained for more than a flash of time.",The Book of Lore (Ultima V)
+Item,Falsehood,436,Very impressive thing you've got here!,Brad
+Item,Hatred,436,Very impressive thing you've got here!,Brad
+Item,Cowardice,436,Very impressive thing you've got here!,Brad
+Item, Amulet,439,Very impressive thing you've got here!,Brad
+Item,Crown,437,Very impressive thing you've got here!,Brad
+Item,Sceptre,438,Very impressive thing you've got here!,Brad

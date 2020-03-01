@@ -45,14 +45,19 @@ namespace Ultima5Redux3D
     [JsonObject(MemberSerialization.OptIn)]
     public class InventoryReference
     {
-        //public string Reagent;
         [JsonProperty]
         public string ItemName { get; set; }
         [JsonProperty]
         public string ItemSprite { get; set; }
         [JsonProperty]
         public string ItemDescription { get; set; }
+        [JsonProperty]
+        public string ItemDescriptionAttribution { get; set; }
 
-    
+        public string GetRichTextDescription()
+        {
+            return "<i>\"" + ItemDescription + "</i>\"" + "\n\n" + "<align=right>- " + ItemDescriptionAttribution +
+                   "</align>";
+        }
     }
 }
