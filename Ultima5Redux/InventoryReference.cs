@@ -15,7 +15,8 @@ namespace Ultima5Redux3D
     public class InventoryReferences
     {
         private Dictionary<string, List<InventoryReference>> invRefsDictionary;
-        private List<string> keywordHighlightList;
+        private readonly List<string> reagentKeywordHighlightList;
+        private List<string> spellKeywordHighlightList;
         public enum InventoryReferenceType { Reagent, Armament, Spell, Item }
 
         public List<InventoryReference> GetInventoryReferenceList(InventoryReferenceType inventoryReferenceType)
@@ -23,19 +24,36 @@ namespace Ultima5Redux3D
             return (invRefsDictionary[inventoryReferenceType.ToString()]);
         }
 
-        private const string HIGHLIGHT_COLOR = "<color=#00CC00>";
+        public enum HighlightType
+        {
+            Spell,
+            Reagent
+        };
+        
+        private const string REAGENT_HIGHLIGHT_COLOR = "<color=#00CC00>";
+        private const string SPELL_HIGHLIGHT_COLOR = "<color=red>";
 
         public string HighlightKeywords(string description)
         {
             string finalDescription = description;
-            foreach (string highlightKeyword in keywordHighlightList)
+            foreach (string highlightKeyword in reagentKeywordHighlightList)
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
                 
-                finalDescription = Regex.Replace(finalDescription, highlightKeyword, HIGHLIGHT_COLOR
+                finalDescription = Regex.Replace(finalDescription, highlightKeyword, REAGENT_HIGHLIGHT_COLOR
                                                                                      + highlightKeyword + "</color>");
                 string upperCaseStr = char.ToUpper(highlightKeyword[0]) + highlightKeyword.Substring(1);
-                finalDescription = Regex.Replace(finalDescription, upperCaseStr, HIGHLIGHT_COLOR
+                finalDescription = Regex.Replace(finalDescription, upperCaseStr, REAGENT_HIGHLIGHT_COLOR
+                                                                                 + upperCaseStr + "</color>");
+            }
+            foreach (string highlightKeyword in spellKeywordHighlightList)
+            {
+                if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
+                
+                finalDescription = Regex.Replace(finalDescription, highlightKeyword, SPELL_HIGHLIGHT_COLOR
+                                                                                     + highlightKeyword + "</color>");
+                string upperCaseStr = char.ToUpper(highlightKeyword[0]) + highlightKeyword.Substring(1);
+                finalDescription = Regex.Replace(finalDescription, upperCaseStr, SPELL_HIGHLIGHT_COLOR
                                                                                  + upperCaseStr + "</color>");
             }
 
@@ -57,21 +75,29 @@ namespace Ultima5Redux3D
 
         public InventoryReferences()
         {
-             invRefsDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<InventoryReference>>>(Ultima5Redux.Properties.Resources.InventoryDetails);
+            invRefsDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<InventoryReference>>>(Ultima5Redux.Properties.Resources.InventoryDetails);
              
              // we initialize the highlight text list
-             keywordHighlightList = new List<string>();
-             foreach (List<InventoryReference> invRefs in invRefsDictionary.Values)
+             reagentKeywordHighlightList = new List<string>();
+             spellKeywordHighlightList = new List<string>();
+
+             List<InventoryReference> reagentInvRefs = invRefsDictionary["Reagent"];
+             List<InventoryReference> spellInvRefs = invRefsDictionary["Spell"];
+             
+             foreach (InventoryReference invRef in reagentInvRefs)
              {
-                 foreach (InventoryReference invRef in invRefs)
+                 if (invRef.ItemNameHighLights.Length == 0) continue;
+                     foreach (string highlightWord in invRef.ItemNameHighLights)
                  {
-                     if (invRef.ItemNameHighLights.Length > 0)
-                     {
-                         foreach (string highlightWord in invRef.ItemNameHighLights)
-                         {
-                             keywordHighlightList.Add(highlightWord);
-                         }
-                     }
+                     reagentKeywordHighlightList.Add(highlightWord);
+                 }
+             }
+             foreach (InventoryReference invRef in spellInvRefs)
+             {
+                 if (invRef.ItemNameHighLights.Length == 0) continue;
+                 foreach (string highlightWord in invRef.ItemNameHighLights)
+                 {
+                     spellKeywordHighlightList.Add(highlightWord);
                  }
              }
              
@@ -96,11 +122,11 @@ namespace Ultima5Redux3D
 
         public string[] ItemNameHighLights => ItemNameHighlight.Length == 0 ? new string[0] : ItemNameHighlight.Split(',');
 
-        public string GetRichTextDescription()
-        {
-            return "<i>\"" + ItemDescription + "</i>\"" + "\n\n" + "<align=right>- " + ItemDescriptionAttribution +
-                   "</align>";
-        }
+     public string GetRichTextDescription()
+                 {
+                     return "<i>\"" + ItemDescription + "</i>\"" + "\n\n" + "<align=right>- " + ItemDescriptionAttribution +
+                            "</align>";
+                 }   
         
         public string GetRichTextDescriptionNoAttribution()
         {

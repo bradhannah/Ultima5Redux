@@ -9,6 +9,56 @@
       "Comment": "Iolos hut"
     }
   ],
+  "2": [
+    {
+      "X": 13,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 48,
+      "SpriteName": "OutsidePath1",
+      "Comment": "Britain lamps"
+    },
+    {
+      "X": 17,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 48,
+      "SpriteName": "OutsidePath1",
+      "Comment": "Britain lamps"
+    },
+    {
+      "X": 17,
+      "Y": 11,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3",
+      "Comment": "Britain lamps"
+    },
+    {
+      "X": 13,
+      "Y": 11,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3",
+      "Comment": "Britain lamps"
+    },
+    {
+      "X": 13,
+      "Y": 8,
+      "Z": 0,
+      "SpriteNum": 49,
+      "SpriteName": "OutsidePath4",
+      "Comment": "Britain signs"
+    },
+    {
+      "X": 17,
+      "Y": 8,
+      "Z": 0,
+      "SpriteNum": 51,
+      "SpriteName": "OutsidePath2",
+      "Comment": "Britain signs"
+    }
+  ],
   "3": [
     {
       "X": 13,
