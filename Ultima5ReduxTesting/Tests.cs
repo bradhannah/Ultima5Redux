@@ -122,6 +122,7 @@ namespace Ultima5ReduxTesting
             foreach (InventoryReference invRef in invList)
             {
                 string str = invRef.GetRichTextDescription();
+                str = invRefs.HighlightKeywords(str);
             }
         }
         
