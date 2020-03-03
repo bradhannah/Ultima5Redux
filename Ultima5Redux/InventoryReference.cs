@@ -6,36 +6,65 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Ultima5Redux;
 
 namespace Ultima5Redux3D
 {
 
 
-    //[DataContract]
+    /// <summary>
+    /// Collection of all inventory meta data such as descriptions
+    /// </summary>
     public class InventoryReferences
     {
-        private Dictionary<string, List<InventoryReference>> invRefsDictionary;
+        /// <summary>
+        /// All inventory references separated by item types
+        /// </summary>
+        private readonly Dictionary<string, List<InventoryReference>> invRefsDictionary;
+        /// <summary>
+        /// All keywords that will be highlighted specifically for reagents 
+        /// </summary>
         private readonly List<string> reagentKeywordHighlightList;
-        private List<string> spellKeywordHighlightList;
+        /// <summary>
+        /// All keywords that will be highlighted specifically for spells 
+        /// </summary>
+        private readonly List<string> spellKeywordHighlightList;
+        
+        /// <summary>
+        /// reagents are highlighted green
+        /// </summary>
+        private const string REAGENT_HIGHLIGHT_COLOR = "<color=#00CC00>";
+        /// <summary>
+        /// spells are highlighted red
+        /// </summary>
+        private const string SPELL_HIGHLIGHT_COLOR = "<color=red>";
+
+        /// <summary>
+        /// Inventory reference types
+        /// </summary>
         public enum InventoryReferenceType { Reagent, Armament, Spell, Item }
 
+        /// <summary>
+        /// Return the full list of particular inventory references
+        /// </summary>
+        /// <param name="inventoryReferenceType"></param>
+        /// <returns></returns>
         public List<InventoryReference> GetInventoryReferenceList(InventoryReferenceType inventoryReferenceType)
         {
             return (invRefsDictionary[inventoryReferenceType.ToString()]);
         }
 
-        public enum HighlightType
-        {
-            Spell,
-            Reagent
-        };
-        
-        private const string REAGENT_HIGHLIGHT_COLOR = "<color=#00CC00>";
-        private const string SPELL_HIGHLIGHT_COLOR = "<color=red>";
-
+        /// <summary>
+        /// Returns a string with all available keywords highlighted
+        /// </summary>
+        /// <remarks>the string returned is in a richtext format compatible with Unity's TextMeshPro library</remarks>
+        /// <param name="description"></param>
+        /// <returns>the string with highlight tags</returns>
         public string HighlightKeywords(string description)
         {
             string finalDescription = description;
+            
+            // highlight all reagents
             foreach (string highlightKeyword in reagentKeywordHighlightList)
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
@@ -46,20 +75,25 @@ namespace Ultima5Redux3D
                 finalDescription = Regex.Replace(finalDescription, upperCaseStr, REAGENT_HIGHLIGHT_COLOR
                                                                                  + upperCaseStr + "</color>");
             }
+            // highlight all spell names
             foreach (string highlightKeyword in spellKeywordHighlightList)
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
                 
                 finalDescription = Regex.Replace(finalDescription, highlightKeyword, SPELL_HIGHLIGHT_COLOR
                                                                                      + highlightKeyword + "</color>");
-                string upperCaseStr = char.ToUpper(highlightKeyword[0]) + highlightKeyword.Substring(1);
-                finalDescription = Regex.Replace(finalDescription, upperCaseStr, SPELL_HIGHLIGHT_COLOR
-                                                                                 + upperCaseStr + "</color>");
             }
 
             return finalDescription;
         }
         
+        /// <summary>
+        /// Retrieve a specific inventory reference based on reference type and string index
+        /// </summary>
+        /// <param name="inventoryReferenceType"></param>
+        /// <param name="invItem"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
         public InventoryReference GetInventoryReference(InventoryReferenceType inventoryReferenceType, string invItem)
         {
             // todo: this is a really slow and inefficient way to search the list, albeit a small list
@@ -70,9 +104,12 @@ namespace Ultima5Redux3D
                     return invRef;
                 }
             }
-            throw new Exception("Asked for an inventory reference : " + invItem + " but it doesn't exist");
+            throw new Ultima5ReduxException("Asked for an inventory reference : " + invItem + " but it doesn't exist");
         }
 
+        /// <summary>
+        /// Constructor builds reference tables from embedded resources
+        /// </summary>
         public InventoryReferences()
         {
             invRefsDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<InventoryReference>>>(Ultima5Redux.Properties.Resources.InventoryDetails);
@@ -84,14 +121,17 @@ namespace Ultima5Redux3D
              List<InventoryReference> reagentInvRefs = invRefsDictionary["Reagent"];
              List<InventoryReference> spellInvRefs = invRefsDictionary["Spell"];
              
+             // build reagent highlight table
              foreach (InventoryReference invRef in reagentInvRefs)
              {
                  if (invRef.ItemNameHighLights.Length == 0) continue;
-                     foreach (string highlightWord in invRef.ItemNameHighLights)
+                 
+                 foreach (string highlightWord in invRef.ItemNameHighLights)
                  {
                      reagentKeywordHighlightList.Add(highlightWord);
                  }
              }
+             //build spell name highlight table
              foreach (InventoryReference invRef in spellInvRefs)
              {
                  if (invRef.ItemNameHighLights.Length == 0) continue;
@@ -106,6 +146,9 @@ namespace Ultima5Redux3D
     }
 
  
+    /// <summary>
+    /// Specific inventory item reference
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class InventoryReference
     {
@@ -122,12 +165,19 @@ namespace Ultima5Redux3D
 
         public string[] ItemNameHighLights => ItemNameHighlight.Length == 0 ? new string[0] : ItemNameHighlight.Split(',');
 
-     public string GetRichTextDescription()
-                 {
-                     return "<i>\"" + ItemDescription + "</i>\"" + "\n\n" + "<align=right>- " + ItemDescriptionAttribution +
-                            "</align>";
-                 }   
+        /// <summary>
+        /// Gets a formatted description including the attribution of the quoted material
+        /// </summary>
+        /// <returns></returns>
+        public string GetRichTextDescription()
+         {
+             return "<i>\"" + ItemDescription + "</i>\"" + "\n\n" + "<align=right>- " + ItemDescriptionAttribution + "</align>";
+         }   
         
+        /// <summary>
+        /// Gets a formatted description WITHOUT any attribution
+        /// </summary>
+        /// <returns></returns>
         public string GetRichTextDescriptionNoAttribution()
         {
             return ItemDescription;

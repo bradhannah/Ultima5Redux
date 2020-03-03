@@ -22,7 +22,6 @@ namespace Ultima5Redux
             this.u5StringRef = u5StringRef;
             TileReferenceDictionary = TileReferences.Load();
 
-            //foreach (TileReference tileRef in TileReferenceDictionary)
             for (int i = 0; i < TileReferenceDictionary.Count; i++)
             {
                 TileReference tileRef = TileReferenceDictionary[i];
