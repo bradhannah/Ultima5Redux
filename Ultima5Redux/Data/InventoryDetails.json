@@ -139,8 +139,8 @@
          "ItemName": "Ringmail",
          "ItemNameHighlight": "",
          "ItemSprite": "267",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "A curious form of armour seen only briefly in Britannia, ring mail was used most commonly.",
+         "ItemDescriptionAttribution": "UltimaCodex.com"
       },
       {
          "ItemName": "ScaleMail",
@@ -428,13 +428,13 @@
          "ItemName": "Mani",
          "ItemNameHighlight": "Vas Mani,Mani",
          "ItemSprite": "260",
-         "ItemDescription": " Mani is the simplest healing spell. Mani does not cure patients, but it does make them feel better and may take them out of immediate danger. Mani is useful even to higher circle magicians, because it is simple enough to cast during combat. Spider silk and ginseng are the components needed for Mani. No special conditions are necessary during mixing or casting.",
+         "ItemDescription": "Mani is the simplest healing spell. Mani does not cure patients, but it does make them feel better and may take them out of immediate danger. Mani is useful even to higher circle magicians, because it is simple enough to cast during combat. Spider silk and ginseng are the components needed for Mani. No special conditions are necessary during mixing or casting.",
          "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "An_Ylem",
          "ItemNameHighlight": "An Ylem",
-         "ItemSprite": "260",
+         "ItemSprite": "260+D109",
          "ItemDescription": "Don't want it? Don't like it? An Ylem it!",
          "ItemDescriptionAttribution": "The Book of Brad"
       },
@@ -781,7 +781,7 @@
          "ItemNameHighlight": "",
          "ItemSprite": "270",
          "ItemDescription": "What a curious little box... You feel compelled to bring it along on your journey.",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescriptionAttribution": "The Book of Brad"
       },
       {
          "ItemName": "Sextant",
@@ -795,56 +795,56 @@
          "ItemNameHighlight": "",
          "ItemSprite": "260",
          "ItemDescription": "Vas Lor conjures a great light. This light is equivalent to In Lor's in quality and range, but Vas Lor lasts longer. Its endurance comes from mandrake root.",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "Rel_Hur",
          "ItemNameHighlight": "",
          "ItemSprite": "260",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "Those who love the open sea will find frequent use of Rel Hur. This powerful spell can redirect the wind for a time. Complete the spell by blowing in the direction the wind should follow.",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "In_Sanct",
          "ItemNameHighlight": "",
          "ItemSprite": "260",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "Sometimes young questers join in battles beyond their might. In Sanct helps balance the fight by creating a protective shield around each party member. In Sanct works only during combat and does not last long, so knights should be sure to hit hard and fast while the iron is doubled. ",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "In_An",
          "ItemNameHighlight": "",
          "ItemSprite": "260",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "In An creates an air of magical negation. Spells fizzle when In An is in effect and neither side in combat can use magic for several rounds.",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "In_Quas_Wis",
          "ItemNameHighlight": "",
          "ItemSprite": "260",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "Travelers in Britannia tell of magical gems that transport the vision of one gazing into their depths to a viewpoint thousands of feet above the land, like that of an eagle suspended in flight. It is illusion and reality. The change of viewpoint is illusion, but the knowledge provided is real. Powerful mages can replicate these miraculous effects through magic.",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "Kal_Xen_Corp",
          "ItemNameHighlight": "",
          "ItemSprite": "260",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "Beginning mages often find their responsibility onerous, with an entire group of adventurers relying on their meager magical skills for protection and assistance in difficult situations. These novice mages may quickly and frequently turn to Kal Xen to add to the offensive ranks of their party in battle. Kal Xen summons small nasty creatures such as rats and snakes to help in combat. Nasty or not, these summoned beasts are always loyal to the caster, and often direct a foe's attention away from members of the mage's party. ",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "In_Mani_Corp",
          "ItemNameHighlight": "",
          "ItemSprite": "260",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "There are many rewards for hard work and concentrated practice. For practiced wizards, having attained the eighth circle, there is the reward of being able to reverse death itself. Resurrection requires such total concentration and peace of mind that it should never be attempted on the harried field of battle. The resurrected person will be weak and in need of further assistance.",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "An_Tym",
          "ItemNameHighlight": "",
          "ItemSprite": "260",
-         "ItemDescription": "Very dangerous, hurt much",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "Perhaps the most difficult of spells, An Tym appears to stop time itself. For eons, scholars of thaumaturgy have tried to learn the secret of controlling the universe, and the more they discovered, the more convinced they became that they could never control this power even if they understood it. It is a tribute to the brilliance and creativity of Britannian minds that experts, undaunted by their failures, simply turned the problem around and found a way to achieve every advantage of briefly controlling time without actually controlling it at all. Those capable of this spell will witness their foes paralyzed in mid-motion. After a few moments, all returns to normal, just as though time had actually stopped and started up again. However, the caster's party remains active throughout the spell.",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "Blue",
@@ -906,43 +906,43 @@
          "ItemName": "Falsehood",
          "ItemNameHighlight": "",
          "ItemSprite": "436",
-         "ItemDescription": "Very impressive thing you've got here!",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "At the same time as Lord British was gaining a reputation for fair and honest government over his provinces and attracting attention for his startlingly innovative ideas, Mondain was using his father's gem against itself to produce a black jewel that would render him and his evil immortal. Success meant gaining even greater power over the minions of darkness.\n\nWithin days, a stranger arrived in Sosaria. With utter devotion to truth and good, the stranger grew into a hero capable of facing Mondain. Eventually, the heroic stranger found the malevolent gem and destroyed it, along with its creator. With Mondain's destruction, the forces of evil began to wane.\n\nThis shard is one third of that very powerful gem!",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "Hatred",
          "ItemNameHighlight": "",
          "ItemSprite": "436",
-         "ItemDescription": "Very impressive thing you've got here!",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "At the same time as Lord British was gaining a reputation for fair and honest government over his provinces and attracting attention for his startlingly innovative ideas, Mondain was using his father's gem against itself to produce a black jewel that would render him and his evil immortal. Success meant gaining even greater power over the minions of darkness.\n\nWithin days, a stranger arrived in Sosaria. With utter devotion to truth and good, the stranger grew into a hero capable of facing Mondain. Eventually, the heroic stranger found the malevolent gem and destroyed it, along with its creator. With Mondain's destruction, the forces of evil began to wane.\n\nThis shard is one third of that very powerful gem!",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
          "ItemName": "Cowardice",
          "ItemNameHighlight": "",
          "ItemSprite": "436",
-         "ItemDescription": "Very impressive thing you've got here!",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "At the same time as Lord British was gaining a reputation for fair and honest government over his provinces and attracting attention for his startlingly innovative ideas, Mondain was using his father's gem against itself to produce a black jewel that would render him and his evil immortal. Success meant gaining even greater power over the minions of darkness.\n\nWithin days, a stranger arrived in Sosaria. With utter devotion to truth and good, the stranger grew into a hero capable of facing Mondain. Eventually, the heroic stranger found the malevolent gem and destroyed it, along with its creator. With Mondain's destruction, the forces of evil began to wane.\n\nThis shard is one third of that very powerful gem!",
+         "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
       },
       {
-         "ItemName": " Amulet",
+         "ItemName": "Amulet",
          "ItemNameHighlight": "",
          "ItemSprite": "439",
-         "ItemDescription": "Very impressive thing you've got here!",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "The magical amulet consists of a silver, serpentine medallion suspended from a gold chain, its likeness variously attributed to Britannia's rarely-observed silver serpents, and even the Great Earth Serpent itself. It emanates a blue aura and is notably warm to the touch, imbued with enchantments that have allowed it both to facilitate interplanetary moongate travel and pierce supernatural forms of darkness.",
+         "ItemDescriptionAttribution": "UltimaCodex.com"
       },
       {
          "ItemName": "Crown",
          "ItemNameHighlight": "",
          "ItemSprite": "437",
-         "ItemDescription": "Very impressive thing you've got here!",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "Lord British's Crown is one of Lord British's Royal Crown Jewels. It has a powerful magic effect that the Avatar will need to discover!",
+         "ItemDescriptionAttribution": "UltimaCodex.com and The Book of Brad"
       },
       {
          "ItemName": "Sceptre",
          "ItemNameHighlight": "",
          "ItemSprite": "438",
-         "ItemDescription": "Very impressive thing you've got here!",
-         "ItemDescriptionAttribution": "Brad"
+         "ItemDescription": "The Sceptre of Lord British, one of the three Royal Crown Jewels, is a powerful magical artifact. This powerful tool has an amazing ability that the Avatar will need to discover!",
+         "ItemDescriptionAttribution": "UltimaCodex.com and The Book of Brad"
       }
    ]
 }
