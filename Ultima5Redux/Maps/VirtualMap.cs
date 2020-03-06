@@ -745,7 +745,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Returns the total number of moves to the number of moves for the character to reach a point
         /// </summary>
-        /// <param name="mapCharacter">The character that would move</param>
+        /// <param name="currentXy"></param>
         /// <param name="targetXy">where the character would move</param>
         /// <returns>the number of moves to the targetXy</returns>
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
@@ -754,9 +754,7 @@ namespace Ultima5Redux
             Stack<AStarSharp.Node> nodeStack = CurrentMap.astar.FindPath(new System.Numerics.Vector2(currentXy.X, currentXy.Y),
             new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
-            if (nodeStack == null) return 0;
-            
-            return nodeStack.Count;
+            return nodeStack == null ? 0 : nodeStack.Count;
         }
         
         /// <summary>
@@ -837,33 +835,31 @@ namespace Ultima5Redux
             // is player on a ladder or staircase going in the direction they intend to go?
             bool bIsOnStairCaseOrLadder = tileReferences.IsStaircase(currentTileRef.Index) || tileReferences.IsLadder(currentTileRef.Index);
 
-            if (bIsOnStairCaseOrLadder)
+            if (!bIsOnStairCaseOrLadder) return false;
+            
+            // are they destined to go up or down it?
+            if (tileReferences.IsStaircase(currentTileRef.Index))
             {
-                // are they destined to go up or down it?
-                if (tileReferences.IsStaircase(currentTileRef.Index))
+                if (IsStairGoingUp(xy))
                 {
-                    if (IsStairGoingUp(xy))
-                    {
-                        return ladderOrStairDirection == LadderOrStairDirection.Up;
-                    }
-                    else
-                    {
-                        return ladderOrStairDirection == LadderOrStairDirection.Down;
-                    }
+                    return ladderOrStairDirection == LadderOrStairDirection.Up;
                 }
-                else // it's a ladder
+                else
                 {
-                    if (tileReferences.IsLadderUp(currentTileRef.Index))
-                    {
-                        return ladderOrStairDirection == LadderOrStairDirection.Up;
-                    }
-                    else
-                    {
-                        return ladderOrStairDirection == LadderOrStairDirection.Down;
-                    }
+                    return ladderOrStairDirection == LadderOrStairDirection.Down;
                 }
             }
-            return false;
+            else // it's a ladder
+            {
+                if (tileReferences.IsLadderUp(currentTileRef.Index))
+                {
+                    return ladderOrStairDirection == LadderOrStairDirection.Up;
+                }
+                else
+                {
+                    return ladderOrStairDirection == LadderOrStairDirection.Down;
+                }
+            }
         }
 
         /// <summary>
@@ -1078,6 +1074,10 @@ namespace Ultima5Redux
                     nSpriteNum = bGoingUp ? tileReferences.GetTileReferenceByName("StairsEast").Index
                         : tileReferences.GetTileReferenceByName("StairsWest").Index;
                     break;
+                case Direction.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             return nSpriteNum;
         }
@@ -1092,6 +1092,7 @@ namespace Ultima5Redux
             if ((GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoor
                 || GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoor))
                 return true;
+            
             return false;
         }
 
@@ -1139,12 +1140,11 @@ namespace Ultima5Redux
                         continue;
                     TileReference tileRef = GetTileReference(xy.X + i, xy.Y + j);
                     // only look at non-upright sprites
-                    if (!tileRef.IsUpright)
-                    {
-                        int nTile = tileRef.Index;
-                        if (tileCountDictionary.ContainsKey(nTile)) { tileCountDictionary[nTile] += 1; }
-                        else { tileCountDictionary.Add(nTile, 1); }
-                    }
+                    if (tileRef.IsUpright) continue;
+                    
+                    int nTile = tileRef.Index;
+                    if (tileCountDictionary.ContainsKey(nTile)) { tileCountDictionary[nTile] += 1; }
+                    else { tileCountDictionary.Add(nTile, 1); }
                 }
             }
 
