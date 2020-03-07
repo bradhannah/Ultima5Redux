@@ -999,6 +999,14 @@ namespace Ultima5Redux
             return bStairGoUp;
         }
 
+        
+        
+        public bool IsAvatarSitting()
+        {
+            return (tileReferences.IsChair(GetTileReferenceOnCurrentTile().Index));
+        }
+        
+
         /// <summary>
         /// Are the stairs at the given position going down?
         /// Be sure to check if they are stairs first

@@ -228,6 +228,30 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        /// Gets the tile reference for a chair when pushed in a given direction
+        /// </summary>
+        /// <param name="chairDirection"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        private TileReference getChairNewDirection(VirtualMap.Direction chairDirection)
+        {
+            switch (chairDirection)
+            {
+                case VirtualMap.Direction.Up:
+                    return SpriteTileReferences.GetTileReferenceByName("ChairBackForward");
+                case VirtualMap.Direction.Down:
+                    return SpriteTileReferences.GetTileReferenceByName("ChairBackBack");
+                case VirtualMap.Direction.Left:
+                    return SpriteTileReferences.GetTileReferenceByName("ChairBackRight");
+                case VirtualMap.Direction.Right:
+                    return SpriteTileReferences.GetTileReferenceByName("ChairBackLeft");
+                case VirtualMap.Direction.None:
+                default:
+                    throw new Ultima5ReduxException("Asked for a chair direction that I don't recognize");
+            }
+        }        
+        
+        /// <summary>
         /// Attempts to push (or pull!) a map item
         /// </summary>
         /// <param name="avatarXy">the avatar's current map position</param>
@@ -241,8 +265,8 @@ namespace Ultima5Redux
 
             TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
 
-            // it's not pushable so let's bail
-            if (!adjustedTileReference.IsPushable)
+            // it's not pushable OR if an NPC occupies the tile -so let's bail
+            if (!adjustedTileReference.IsPushable || State.TheVirtualMap.IsNPCTile(adjustedPos))
             {
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.WONT_BUDGE_BANG_N);
             }
@@ -252,21 +276,34 @@ namespace Ultima5Redux
             // we get the thing one tile further than the thing to see if we have room to push it forward
             Point2D oneMoreTileAdjusted = NonPlayerCharacterMovement.GetAdjustedPos(adjustedPos, direction);
             TileReference oneMoreTileReference = State.TheVirtualMap.GetTileReference(oneMoreTileAdjusted);
+            
+            // if I'm sitting and the proceeding tile is an upright tile then I can't swap things 
+            if (State.TheVirtualMap.IsAvatarSitting() && oneMoreTileReference.IsUpright)  return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.WONT_BUDGE_BANG_N);
 
-            // is the next tile walkable?
-            if (oneMoreTileReference.IsWalking_Passable)
+            // if you are pushing a chair then change the direction of chair when it's pushed
+            if (SpriteTileReferences.IsChair(adjustedTileReference.Index))
+            {
+                adjustedTileReference = getChairNewDirection(direction);
+                State.TheVirtualMap.SetOverridingTileReferece(adjustedTileReference, adjustedPos);
+            }
+            
+            // is there an NPC on the tile? if so, we won't move anything into them
+            bool bIsNPCOneMoreTile = State.TheVirtualMap.IsNPCTile(oneMoreTileAdjusted);
+
+            // is the next tile walkable and is there NOT an NPC on it
+            if (oneMoreTileReference.IsWalking_Passable && !bIsNPCOneMoreTile)
             {
                 State.TheVirtualMap.SwapTiles(adjustedPos, oneMoreTileAdjusted);
-                State.TheVirtualMap.CurrentPosition = adjustedPos.Copy();
-                return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.PUSHED_BANG_N);
             }
             else // the next tile isn't walkable so we just swap the avatar and the push tile
             {
                 // we will pull (swap) the thing
                 State.TheVirtualMap.SwapTiles(avatarXy, adjustedPos);
-                State.TheVirtualMap.CurrentPosition = adjustedPos.Copy();
-                return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.PULLED_BANG_N);
             }
+            
+            // move the avatar to the new spot
+            State.TheVirtualMap.CurrentPosition = adjustedPos.Copy();
+            return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.PUSHED_BANG_N);
         }
         
         /// <summary>

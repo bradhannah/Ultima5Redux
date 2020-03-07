@@ -354,8 +354,6 @@ namespace Ultima5Redux
             {
                 // this is trickier than you would think because the chair can 
                 // be in multiple directions
-                // sitting in chair
-                // sitting in chair
                 Dictionary<int, int> npcOnTopMapWithFood = new Dictionary<int, int>
                 {
                     [GetTileNumberByName("ChairBackForward")] = GetTileNumberByName("SitChairDown1"),
