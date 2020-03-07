@@ -22,6 +22,7 @@ namespace Ultima5Redux
         private DataChunk CurrentHourDataChunk;
         private DataChunk CurrentMinuteDataChunk;
 
+        
         public TimeOfDay(DataChunk currentYearDataChunk, DataChunk currentMonthDataChunk, DataChunk currentDayDataChunk, DataChunk currentHourDataChunk,
             DataChunk currentMinuteDataChunk)
         {

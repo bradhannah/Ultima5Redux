@@ -147,5 +147,30 @@ namespace Ultima5ReduxTesting
             Assert.True(bWasPushed);
             Debug.WriteLine(pushAThing);
         }
+
+        [Test]
+        public void Test_MoonPhaseReference()
+        {
+            World world = new World("C:\\games\\ultima_5_late\\britain");
+            
+            MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(world.DataOvlRef);
+
+            for (byte nDay = 1; nDay <= 28; nDay++)
+            {
+                for (byte nHour = 0; nHour < 24; nHour++)
+                {
+                    TimeOfDay tod = new TimeOfDay(world.State.GetDataChunk(GameState.DataChunkName.CURRENT_YEAR),
+                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MONTH),
+                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_DAY),
+                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_HOUR),
+                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MINUTE));
+
+                    tod.Day = nDay;
+                    tod.Hour = nHour;
+
+                    MoonPhaseReferences.MoonPhases moonPhase = moonPhaseReferences.GetMoonGateMoonPhase(tod);
+                }
+            }
+        }
     }
 }

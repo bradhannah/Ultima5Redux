@@ -368,6 +368,11 @@ namespace Ultima5Redux
 
         #region Public Methods
 
+        public DataChunk GetDataChunk(DataChunkName dataChunkName)
+        {
+            return dataChunks.GetDataChunk(dataChunkName);
+        }
+
         /// <summary>
         /// Take fall damage from klimbing mountains
         /// </summary>

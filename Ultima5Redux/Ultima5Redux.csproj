@@ -97,6 +97,7 @@
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
     <Compile Include="Maps\TileOverrides.cs" />
+    <Compile Include="MoonPhaseReferences.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecord.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecords.cs" />
     <Compile Include="MapCharacters\MapCharacterAnimationState.cs" />

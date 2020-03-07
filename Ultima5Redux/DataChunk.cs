@@ -62,7 +62,6 @@ namespace Ultima5Redux
         public void AddDataChunk(DataChunk chunk, T dataChunkName)
         {
             // all data chunks get added to the chunk list
-            //AddDataChunk(chunk);
             dataChunks.Add(chunk);
 
             // if the datachunk is not classified as unused then add it to the chunk map for quick reference

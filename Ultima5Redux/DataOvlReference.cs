@@ -72,7 +72,8 @@ namespace Ultima5Redux
             ZSTATS,
             SLEEP_TRANSPORT,
             REAGENTS,
-            EXCLAIMS
+            EXCLAIMS,
+            MOON_PHASES
         };
 
         public enum EQUIPMENT
@@ -543,11 +544,8 @@ namespace Ultima5Redux
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "X-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1e9a, 0x28, 0x00, DataChunkName.LOCATIONS_X);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28, 0x00, DataChunkName.LOCATIONS_Y);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "moon phases (28 byte pairs, one for each day of the month)", 0x1EEA, 0x1C*2, 0, DataChunkName.MOON_PHASES);
+            
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Virtue and mantra index (add + 0x10)", 0x1f5e, 0x20, 0x10);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x1f7e, 0x33b);
             /// extended stuff "old list"
