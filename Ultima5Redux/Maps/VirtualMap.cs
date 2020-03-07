@@ -1108,6 +1108,15 @@ namespace Ultima5Redux
             return (GetNPCOnTile(xy) != null);
         }
 
+        public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
+        {
+            TileReference tileRef1 = GetTileReference(tile1Pos);
+            TileReference tileRef2 = GetTileReference(tile2Pos);
+            
+            SetOverridingTileReferece(tileRef1, tile2Pos);
+            SetOverridingTileReferece(tileRef2, tile1Pos);
+        }
+
         /// <summary>
         /// Attempts to guess the tile underneath a thing that is upright such as a fountain
         /// </summary>

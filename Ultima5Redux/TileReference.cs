@@ -51,6 +51,9 @@ namespace Ultima5Redux
         public int SpeedFactor;
         [DataMember]
         public bool IsKlimable;
+        [DataMember] 
+        public bool IsPushable;
+
 
         public override string ToString()
         {

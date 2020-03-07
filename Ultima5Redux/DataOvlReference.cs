@@ -52,7 +52,7 @@ namespace Ultima5Redux
             SPECIAL_ITEM_NAMES2,
             WEAR_USE_ITEM,
             SHARDS,
-            SHADOWLORD,
+            WORDS_OF_POWER,
             POTIONS,
             SPELLS,
             LONG_ARMOUR,
@@ -71,7 +71,8 @@ namespace Ultima5Redux
             EQUIPPING,
             ZSTATS,
             SLEEP_TRANSPORT,
-            REAGENTS
+            REAGENTS,
+            EXCLAIMS
         };
 
         public enum EQUIPMENT
@@ -253,6 +254,70 @@ namespace Ultima5Redux
             //[33]	"\n\n"	string
 
         }
+
+    public enum EXCLAIM_STRINGS
+    {
+        NO_EFFECT_BANG_N, PUSHED_BANG_N, PULLED_BANG_N, WONT_BUDGE_BANG_N, WONT_BUDGE_BANG_N_2, ESCAPE, DASH_NOT_HERE_BANG_N, DASH_NOT_YET_BANG_N,
+        GOO_POOF_BANG_N, DISARMED_BANG_N, CHEST_OPENED_BANG_N, CREATURE_COLON, SPACE_CHARMED_BANG_N, CREATURE_COLON_2, CREATURE_COLON_3, TO_PHASE_COLON,
+        MAGIC_ABSORBED_BANG_N, SPELL_NAME_COLON_N_COLON, NONE_BANG, NO_EFFECT_BANG, ABSORBED_BANG_N, NOT_HERE_BANG_N, NON_MIXED_BANG_N,
+        MP_TOO_LOW_BANG_N, SUCCESS_BANG_N, FAILED_BANG_N, SCROLL_N_N, LIGHT_BANG_N, WIND_CHANGE_BANG_N, PROTECTION_BANG_N, NEGATE_MAGIC_BANG_N,
+        VIEW_BANG_N, NOT_HERE_BANG_N_2, SUMMON_DAEMON_BANG_N, NOT_HERE_BANG_N_3, RESURRECTION_BANG_N, NOT_HERE_BANG, NO_EFFECT_BANG_N_2, NEGATE_TIME_BANG_N,
+        POTION_N, HEALED_BANG_N, POISON_CURED_BANG_N, POISONED_BANG_N, SLEPT_BANG_N, POOF_BANG_N, INVISIBLE_BANG_N, N_NO_NOTICEABLE_EFFECT_NOW_BANG_N,
+        MOONSTONE_SPACE, BURIED_BANG_N, CANNOT_BE_BURIED_HERE_BANG_N, GEM_SHARD_N_N_THOU_DOES_HOLD
+    }
+
+
+    // [43] = {string} "Slept!\n"
+    // [44] = {string} "Poof!\n"
+    // [45] = {string} "Invisible!\n"
+    // [46] = {string} "\nNo noticeable effect now!\n"
+    // [47] = {string} "Moonstone "
+    // [48] = {string} "buried!\n"
+    // [49] = {string} "cannot be buried here!\n"
+    // [50] = {string} "Gem Shard\n\nThou dost hold above t"
+    // [0] = {string} "No effect!\n"
+    // [1] = {string} "Pushed!\n"
+    // [2] = {string} "Pulled!\n"
+    // [3] = {string} "Won't budge!\n"
+    // [4] = {string} "Won't budge\n"
+    // [5] = {string} "Escape"
+    // [6] = {string} "-Not here!\n"
+    // [7] = {string} "-Not yet!\n"
+    // [8] = {string} "5346POOF!\n"
+    // [9] = {string} "Disarmed!\n"
+    // [10] = {string} "Chest opened!\n"
+    // [11] = {string} "Creature: "
+    // [12] = {string} " charmed!\n"
+    // [13] = {string} "Creature: "
+    // [14] = {string} "Creature: "
+    // [15] = {string} "To phase: "
+    // [16] = {string} "Magic absorbed!\n"
+    // [17] = {string} "Spell name:\n:"
+    // [18] = {string} "None!\n"
+    // [19] = {string} "No effect!\n"
+    // [20] = {string} "Absorbed!\n"
+    // [21] = {string} "Not here!\n"
+    // [22] = {string} "None mixed!\n"
+    // [23] = {string} "M.P. too low!\n"
+    // [24] = {string} "Success!\n"
+    // [25] = {string} "Failed!\n"
+    // [26] = {string} "Scroll\n\n"
+    // [27] = {string} "Light!\n"
+    // [28] = {string} "Wind change!\n"
+    // [29] = {string} "Protection!\n"
+    // [30] = {string} "Negate magic!\n"
+    // [31] = {string} "View!\n"
+    // [32] = {string} "Not here!\n"
+    // [33] = {string} "Summon Daemon!\n"
+    // [34] = {string} "Not here!\n"
+    // [35] = {string} "Resurrection!\n"
+    // [36] = {string} "Not here!\n"
+    // [37] = {string} "No effect!\n"
+    // [38] = {string} "Negate time!\n"
+    // [39] = {string} "Potion\n"
+    // [40] = {string} "Healed!\n"
+    // [41] = {string} "Poison cured!\n"
+    // [42] = {string} "POISONED!\n"    
 
         public enum LONG_ARMOUR_STRING
         {
@@ -484,7 +549,22 @@ namespace Ultima5Redux
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Y-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1ec2, 0x28);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Virtue and mantra index (add + 0x10)", 0x1f5e, 0x20, 0x10);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x1f7e, 0x33b);
+            //dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x1f7e, 0x33b);
+            /// extended stuff "old list"
+            //flags that define the special abilities of
+            //             monsters during combat; 32 bits per monster
+            //             0x0020 = undead (affected by An Xen Corp)
+            //             todo:
+            //             - passes through walls (ghost, shadowlord)
+            //             - can become invisible (wisp, ghost, shadowlord)
+            //             - can teleport (wisp, shadowlord)
+            //             - can't move (reaper, mimic)
+            //             - able to camouflage itself
+            //             - may divide when hit (slime, gargoyle)
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "flags that define the special abilities of monsters during combat", 0x154C, 0x30 * 2);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "moon phases (28 byte pairs, one for each day of the month)", 0x1EEA, 0x38);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinates of shrines", 0x1F7E, 0x8);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinates of shrines", 0x1F86, 0x8);            
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Arms seller's name index", 0x22da, 0x12);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x22ec, 0x20c);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Indexes to the dialog text (add + 0x10) (see .TLK)", 0x24f8, 0x13e, 0x10);
@@ -524,43 +604,31 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	", 0x3af2, 0x48);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3b3a, 0x38);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Innkeeper welcome text index into SHOPPE.DAT (+0x0, 2 bytes for each index)", 0x3b72, 0x8);
-
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Sleeping, transportation stuff, others, ", 0x41e4, 0x21a, 0, DataChunkName.SLEEP_TRANSPORT);
-            SomeStrings someStrings = GetDataChunk(DataChunkName.SLEEP_TRANSPORT).GetChunkAsStringList();
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x4aa5, 0x2f2);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x4d97, 0x361);
-
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Inn room description text", 0x4e7e, 0xc);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed X-coordinate", 0x4e8a, 0x5);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed Y-coordinate", 0x4e90, 0x5);
-
-
-            /// extended stuff "old list"
-            //flags that define the special abilities of
-            //             monsters during combat; 32 bits per monster
-            //             0x0020 = undead (affected by An Xen Corp)
-            //             todo:
-            //             - passes through walls (ghost, shadowlord)
-            //             - can become invisible (wisp, ghost, shadowlord)
-            //             - can teleport (wisp, shadowlord)
-            //             - can't move (reaper, mimic)
-            //             - able to camouflage itself
-            //             - may divide when hit (slime, gargoyle)
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "flags that define the special abilities of monsters during combat", 0x154C, 0x30 * 2);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "moon phases (28 byte pairs, one for each day of the month)", 0x1EEA, 0x38);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinates of shrines", 0x1F7E, 0x8);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinates of shrines", 0x1F86, 0x8);
-
             // this section contains information about hidden, non-regenerating objects (e.g. the magic axe in the dead tree in Jhelom); there are
             // only 0x71 such objects; the last entry in each table is 0
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object type (tile - 0x100) (item)", 0x3E88, 0x72);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object quality (e.g. potion type, number of gems) (item)", 0x3EFA, 0x72);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party Location\") (item)", 0x3F6C, 0x72);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "level (item)", 0x3FDE, 0x72);
+
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (item)", 0x4050, 0x72);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (item)", 0x40C2, 0x72);
 
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "ShadowLord strings", 0x47A4, 0xED, 0, DataChunkName.SHADOWLORD);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Sleeping, transportation stuff, others, ", 0x41e4, 0x21a, 0, DataChunkName.SLEEP_TRANSPORT);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Exclamations!, ", 0x454b, 0x27A, 0, DataChunkName.EXCLAIMS);
+
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Word of power strings", 0x47A4, 0x96, 0, DataChunkName.WORDS_OF_POWER);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Word of power locations (PERHAPS?!?)", 0x4512, 0x10);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Sprite index of replacement tile for word of power", 0x4513, 0xF);
+
+            SomeStrings someStrings = GetDataChunk(DataChunkName.EXCLAIMS).GetChunkAsStringList();
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x4aa5, 0x259);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x4d97, 0x361);
+
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Inn room description text", 0x4e7e, 0xc);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed X-coordinate", 0x4e8a, 0x5);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed Y-coordinate", 0x4e90, 0x5);
+
 
             dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204, 0, DataChunkName.WEAR_USE_ITEM);
 

@@ -33,7 +33,7 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.WEAR_USE_ITEM_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WEAR_USE_ITEM).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SHARDS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHARDS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SHADOWLORD_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHADOWLORD).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.SHADOWLORD_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORDS_OF_POWER).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.POTIONS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.POTIONS).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SPELL_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPELLS).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES2).GetChunkAsStringList());
@@ -43,6 +43,7 @@ namespace Ultima5Redux
             strMap.Add(typeof(DataOvlReference.ZSTATS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.ZSTATS).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.SLEEP_TRANSPORT_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SLEEP_TRANSPORT).GetChunkAsStringList());
             strMap.Add(typeof(DataOvlReference.REAGENT_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENTS).GetChunkAsStringList());
+            strMap.Add(typeof(DataOvlReference.EXCLAIM_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EXCLAIMS).GetChunkAsStringList());
             
         }
 

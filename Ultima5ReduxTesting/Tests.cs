@@ -125,7 +125,27 @@ namespace Ultima5ReduxTesting
                 str = invRefs.HighlightKeywords(str);
             }
         }
-        
-        
+
+        [Test]
+        public void Test_PushPull_WontBudge()
+        {
+            World world = new World("C:\\games\\ultima_5_late\\britain");
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), world.State.CharacterRecords,
+                false);
+
+            string pushAThing = world.PushAThing(new Point2D(5, 7), VirtualMap.Direction.Down, out bool bWasPushed);
+            Assert.False(bWasPushed);
+            Debug.WriteLine(pushAThing);
+            
+            pushAThing = world.PushAThing(new Point2D(22, 2), VirtualMap.Direction.Left, out bWasPushed);
+            Assert.True(bWasPushed);
+            Debug.WriteLine(pushAThing);
+            
+            pushAThing = world.PushAThing(new Point2D(2, 8), VirtualMap.Direction.Right, out bWasPushed);
+            Assert.True(bWasPushed);
+            Debug.WriteLine(pushAThing);
+        }
     }
 }

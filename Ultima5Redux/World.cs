@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Configuration;
+using System.Resources;
 
 
 namespace Ultima5Redux
@@ -170,7 +171,7 @@ namespace Ultima5Redux
         /// Looks at a particular tile, detecting if NPCs are present as well
         /// Provides string output or special instructions if it is "special"B
         /// </summary>
-        /// <param name="xy">positon of tile to look at</param>
+        /// <param name="xy">position of tile to look at</param>
         /// <param name="specialLookCommand">Special command such as look at gem or sign</param>
         /// <returns>String to output to user</returns>
         public string Look(Point2D xy, out SpecialLookCommand specialLookCommand)
@@ -226,6 +227,48 @@ namespace Ultima5Redux
             return DataOvlRef.StringReferences.GetString(DataOvlReference.GET_THINGS_STRINGS.NOTHING_TO_GET);
         }
 
+        /// <summary>
+        /// Attempts to push (or pull!) a map item
+        /// </summary>
+        /// <param name="avatarXy">the avatar's current map position</param>
+        /// <param name="direction">the direction of the thing the avatar wants to push</param>
+        /// <param name="bPushedAThing">was a thing actually pushed?</param>
+        /// <returns>the string to output to the user</returns>
+        public string PushAThing(Point2D avatarXy, VirtualMap.Direction direction, out bool bPushedAThing)
+        {
+            bPushedAThing = false;
+            Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(avatarXy, direction);
+
+            TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
+
+            // it's not pushable so let's bail
+            if (!adjustedTileReference.IsPushable)
+            {
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.WONT_BUDGE_BANG_N);
+            }
+
+            bPushedAThing = true;
+
+            // we get the thing one tile further than the thing to see if we have room to push it forward
+            Point2D oneMoreTileAdjusted = NonPlayerCharacterMovement.GetAdjustedPos(adjustedPos, direction);
+            TileReference oneMoreTileReference = State.TheVirtualMap.GetTileReference(oneMoreTileAdjusted);
+
+            // is the next tile walkable?
+            if (oneMoreTileReference.IsWalking_Passable)
+            {
+                State.TheVirtualMap.SwapTiles(adjustedPos, oneMoreTileAdjusted);
+                State.TheVirtualMap.CurrentPosition = adjustedPos.Copy();
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.PUSHED_BANG_N);
+            }
+            else // the next tile isn't walkable so we just swap the avatar and the push tile
+            {
+                // we will pull (swap) the thing
+                State.TheVirtualMap.SwapTiles(avatarXy, adjustedPos);
+                State.TheVirtualMap.CurrentPosition = adjustedPos.Copy();
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.EXCLAIM_STRINGS.PULLED_BANG_N);
+            }
+        }
+        
         /// <summary>
         /// Climbs the ladder on the current tile that the Avatar occupies
         /// </summary>
