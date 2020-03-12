@@ -393,7 +393,6 @@ namespace Ultima5Redux
             return ((nextRan % howMany) == 0);
         }
 
-
         /// <summary>
         /// Is NPC alive?
         /// </summary>

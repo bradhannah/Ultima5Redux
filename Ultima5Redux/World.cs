@@ -86,6 +86,8 @@ namespace Ultima5Redux
         /// The current conversation object
         /// </summary>
         public Conversation CurrentConversation { get; private set; }
+
+        public MoonPhaseReferences MoonPhaseRefs { get; private set; }
         #endregion
         
         #region Public enumerations
@@ -121,6 +123,8 @@ namespace Ultima5Redux
 
             AllSmallMaps = new SmallMaps(SmallMapRef, u5Directory, SpriteTileReferences, tileOverrides);
 
+            MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
+            
             State = new GameState(u5Directory, DataOvlRef);
 
             // build all combat maps from the Combat Map References
@@ -165,6 +169,11 @@ namespace Ultima5Redux
             State.TheTimeOfDay.AdvanceClock(nMinutes);
 
             State.TheVirtualMap.MoveNPCs();
+        }
+
+        public float GetMoonAngle()
+        {
+            return MoonPhaseRefs.GetMoonAngle(State.TheTimeOfDay);
         }
 
         /// <summary>

@@ -169,6 +169,9 @@ namespace Ultima5ReduxTesting
                     tod.Hour = nHour;
 
                     MoonPhaseReferences.MoonPhases moonPhase = moonPhaseReferences.GetMoonGateMoonPhase(tod);
+
+                    float fMoonAngle = moonPhaseReferences.GetMoonAngle(tod);
+                    Assert.True(fMoonAngle >= 0 && fMoonAngle < 360);
                 }
             }
         }
