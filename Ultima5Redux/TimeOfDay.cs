@@ -80,7 +80,7 @@ namespace Ultima5Redux
             get
             {
                 string suffix = Hour < 12 ? "AM" : "PM";
-                return Hour % 12 + ":" + $"{Minute:D2}" + " " + suffix;
+                return (Hour % 12 == 0 ? 12 : Hour % 12) + ":" + $"{Minute:D2}" + " " + suffix;
             }
         }
 

@@ -13,6 +13,8 @@ namespace Ultima5Redux
         // private const int SUN_OFFSET = 12;
         
         public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
+
+        public enum TimeOfDayPhases { Daytime, Nighttime, Sunrise, Sunset }
         
         /// <summary>
         /// All available moon phases
@@ -60,6 +62,16 @@ namespace Ultima5Redux
             if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23) return (MoonPhases)getAdjustedValue(moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2 + 1]);
             
             throw new Ultima5ReduxException("We have asked for a moongate phase but did not met the criteria. "+timeOfDay);
+        }
+
+        public TimeOfDayPhases GetTimeOfDayPhase(TimeOfDay tod)
+        {
+            const int nSunsetHour = 19;
+            const int nSunriseHour = 6;
+            if (tod.Hour == nSunsetHour && (tod.Minute <= 50)) return TimeOfDayPhases.Sunrise;
+            if (tod.Hour == nSunriseHour && (tod.Minute >= 10 && tod.Minute <= 60)) return TimeOfDayPhases.Sunrise;
+            if (tod.Hour > nSunriseHour && tod.Hour < nSunsetHour) return TimeOfDayPhases.Daytime;
+            return TimeOfDayPhases.Nighttime;
         }
 
         public float GetMoonAngle(TimeOfDay timeOfDay)
