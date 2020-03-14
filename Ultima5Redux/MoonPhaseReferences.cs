@@ -73,5 +73,33 @@ namespace Ultima5Redux
             return (int) moonAndSun;
         }
         
+        private Point2DFloat getSunMoonPosition(double dAngle, double dDiameter, double dOffset)
+        {
+            //const double dOffset = 35;
+            dAngle %= dDiameter;
+            double radius = (dDiameter - dOffset) / 2d;
+            double x = radius * Math.Cos(dAngle * (Math.PI / 180));
+            double y = radius * Math.Sin(dAngle * (Math.PI / 180));
+            return new Point2DFloat((float)x, (float)y);
+        }
+
+        private const double dTrammelAngle = (16 / 24d) * 360d - 90d;
+        private const double dFeluccaAngle = (8 / 24d) * 360d - 90d;
+        private const double dSunAngle = 270; 
+        
+        public Point2DFloat GetMoonSunPositionOnCircle(MoonsAndSun moonAndSun, double dDiameter, double dOffset)
+        {
+            switch (moonAndSun)
+            {
+                case MoonsAndSun.Trammel:
+                    return (getSunMoonPosition(dTrammelAngle, dDiameter, dOffset));
+                case MoonsAndSun.Felucca:
+                    return (getSunMoonPosition(dFeluccaAngle, dDiameter, dOffset));
+                case MoonsAndSun.Sun:
+                    return (getSunMoonPosition(dSunAngle, dDiameter, dOffset));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(moonAndSun), moonAndSun, null);
+            }
+        }
     }
 }

@@ -22,6 +22,8 @@ namespace Ultima5Redux
         private DataChunk CurrentHourDataChunk;
         private DataChunk CurrentMinuteDataChunk;
 
+        private Dictionary<int, bool> timeHasChangedDictionary = new Dictionary<int, bool>();
+        private int nTotalChangeTrackers = 0;
         
         public TimeOfDay(DataChunk currentYearDataChunk, DataChunk currentMonthDataChunk, DataChunk currentDayDataChunk, DataChunk currentHourDataChunk,
             DataChunk currentMinuteDataChunk)
@@ -35,6 +37,42 @@ namespace Ultima5Redux
 
         public bool IsDayLight => (Hour >= 5 && Hour < (8 + 12));
 
+        /// <summary>
+        /// Registers a change tracker, returning the int handle to it that will need to be stored
+        /// </summary>
+        /// <returns>the int handler of the change tracker</returns>
+        public int RegisterChangeTracker()
+        {
+            int nChangeTracker = nTotalChangeTrackers++;
+            timeHasChangedDictionary[nChangeTracker] = true;
+            return nChangeTracker;
+        }
+
+        /// <summary>
+        /// Sets all the flags to indicate if time has or hasn't changed for all "RegisterChangeTracker" registered
+        /// change tracker id
+        /// </summary>
+        /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
+        private void SetAllChangeTrackers(bool bTimeChangeHappened = true)
+        {
+            for (int i = 0; i < nTotalChangeTrackers; i++)
+            {
+                timeHasChangedDictionary[i] = bTimeChangeHappened;
+            }
+        }
+
+        /// <summary>
+        /// Has the time changed since the last time we checked with the given change tracker id
+        /// </summary>
+        /// <param name="nChangeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
+        /// <returns>true if change has occured, otherwise false</returns>
+        public bool HasTimeChanged(int nChangeTrackerId)
+        {
+            bool bTimeChangeOccured = timeHasChangedDictionary[nChangeTrackerId];
+            // we reset it to false to say we saw it until the next change
+            timeHasChangedDictionary[nChangeTrackerId] = false;
+            return bTimeChangeOccured;
+        }
         public string FormattedDate => Month + "-" + Day + "-" + Year;
 
         public string FormattedTime
@@ -87,6 +125,8 @@ namespace Ultima5Redux
 
         public void AdvanceClock(int nMinutes)
         {
+            const int nDaysInMonth = 28;
+            
             // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
             if (nMinutes > (60 * 9)) throw new Ultima5ReduxException("You can not advance more than 9 hours at a time");
 
@@ -109,7 +149,7 @@ namespace Ultima5Redux
                     Hour = (byte)(newHour % 24);
                     // if the day + 1 is more days then we are allow in the month, then restart the days, and go to next month
                     int nDay = (byte)(Day + 1);
-                    if (nDay > 28)
+                    if (nDay > nDaysInMonth)
                     {
                         Day = 1;
                         int nMonth = (byte)(Month + 1);
@@ -134,6 +174,9 @@ namespace Ultima5Redux
             {
                 Minute += (byte)nMinutes;
             }
+
+            // time has changed, so we reset all our change tracking flags
+            SetAllChangeTrackers();
         }
     }
 }
