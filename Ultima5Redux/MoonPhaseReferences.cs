@@ -5,12 +5,26 @@ namespace Ultima5Redux
 {
     public class MoonPhaseReferences
     {
+        /// <summary>
+        /// DataChunk that describes the moon phases and which moongate gets into town by town
+        /// </summary>
         private readonly DataChunk moonPhaseChunk;
+        /// <summary>
+        /// Standard offset for insetting moon and suns into plan
+        /// </summary>
         private const int nOffsetAdjust = -30; 
-        
-        // private const int TRAMMEL_OFFSET = 4;
-        // private const int FELUCCA_OFFSET = 8 + 12;
-        // private const int SUN_OFFSET = 12;
+        /// <summary>
+        /// Angle of the Trammel moon
+        /// </summary>
+        private const double dTrammelAngle = (16 / 24d) * 360d - 90d;
+        /// <summary>
+        /// Angle of the Felucca moon
+        /// </summary>
+        private const double dFeluccaAngle = (8 / 24d) * 360d - 90d;
+        /// <summary>
+        /// Angle of the Sun
+        /// </summary>
+        private const double dSunAngle = 270; 
         
         public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
 
@@ -42,6 +56,16 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        /// Based on time of day, indicates if ambient lights should be turned on
+        /// </summary>
+        /// <param name="tod"></param>
+        /// <returns>true if lights should be on</returns>
+        public bool AreAmbientLightsOn(TimeOfDay tod)
+        {
+            return (GetTimeOfDayPhase(tod) != TimeOfDayPhases.Daytime);
+        }
+
+        /// <summary>
         /// Gets moonphase that i will be used by a moongate based on current time of day
         /// </summary>
         /// <param name="timeOfDay"></param>
@@ -64,6 +88,12 @@ namespace Ultima5Redux
             throw new Ultima5ReduxException("We have asked for a moongate phase but did not met the criteria. "+timeOfDay);
         }
 
+        /// <summary>
+        /// Returns the general "day phase"
+        /// Used for lighting
+        /// </summary>
+        /// <param name="tod">current time of day</param>
+        /// <returns></returns>
         public TimeOfDayPhases GetTimeOfDayPhase(TimeOfDay tod)
         {
             const int nSunsetHour = 19;
@@ -74,17 +104,35 @@ namespace Ultima5Redux
             return TimeOfDayPhases.Nighttime;
         }
 
+        /// <summary>
+        /// With the sun at top (270degrees) this will return the number of degrees to rotate by based
+        /// on the time of day 
+        /// </summary>
+        /// <param name="timeOfDay">current time of day</param>
+        /// <returns></returns>
         public float GetMoonAngle(TimeOfDay timeOfDay)
         {
             float moonPercentageOfDay = ((float)timeOfDay.Hour * 60f + (float)timeOfDay.Minute) / (60f * 24f);
             return moonPercentageOfDay * 360f;
         }
         
+        /// <summary>
+        /// Returns a numeric offset for the moon and sun types 
+        /// </summary>
+        /// <param name="moonAndSun">particular moon or sun</param>
+        /// <returns></returns>
         public int GetMoonsOrSunOffset(MoonsAndSun moonAndSun)
         {
             return (int) moonAndSun;
         }
         
+        /// <summary>
+        /// Gives an x,y coordinate of a moon or sun position on a cartesian plan
+        /// </summary>
+        /// <param name="dAngle">the angle of the entity</param>
+        /// <param name="dDiameter">the diameter of the square space</param>
+        /// <param name="dOffset">an offset to inset into the circle</param>
+        /// <returns></returns>
         private Point2DFloat getSunMoonPosition(double dAngle, double dDiameter, double dOffset)
         {
             //const double dOffset = 35;
@@ -94,11 +142,15 @@ namespace Ultima5Redux
             double y = radius * Math.Sin(dAngle * (Math.PI / 180));
             return new Point2DFloat((float)x, (float)y);
         }
-
-        private const double dTrammelAngle = (16 / 24d) * 360d - 90d;
-        private const double dFeluccaAngle = (8 / 24d) * 360d - 90d;
-        private const double dSunAngle = 270; 
         
+        /// <summary>
+        /// Based on the moon or sun provided it will provide the x,y coordinate on a plane 
+        /// </summary>
+        /// <param name="moonAndSun"></param>
+        /// <param name="dDiameter"></param>
+        /// <param name="dOffset"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public Point2DFloat GetMoonSunPositionOnCircle(MoonsAndSun moonAndSun, double dDiameter, double dOffset)
         {
             switch (moonAndSun)
