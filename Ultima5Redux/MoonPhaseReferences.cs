@@ -68,7 +68,7 @@ namespace Ultima5Redux
         {
             const int nSunsetHour = 19;
             const int nSunriseHour = 6;
-            if (tod.Hour == nSunsetHour && (tod.Minute <= 50)) return TimeOfDayPhases.Sunrise;
+            if (tod.Hour == nSunsetHour && (tod.Minute <= 50)) return TimeOfDayPhases.Sunset;
             if (tod.Hour == nSunriseHour && (tod.Minute >= 10 && tod.Minute <= 60)) return TimeOfDayPhases.Sunrise;
             if (tod.Hour > nSunriseHour && tod.Hour < nSunsetHour) return TimeOfDayPhases.Daytime;
             return TimeOfDayPhases.Nighttime;

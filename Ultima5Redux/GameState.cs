@@ -65,14 +65,8 @@ namespace Ultima5Redux
         /// </summary>
         public byte Gems
         {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
-            }
+            get => dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
+            set => dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
         }
 
         /// <summary>
@@ -80,15 +74,19 @@ namespace Ultima5Redux
         /// </summary>
         public byte Torches
         {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
+            get => dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
+            set => dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
+        }
 
-            }
+        public bool IsTorchLit => TorchTurnsLeft > 0;
+
+        /// <summary>
+        /// How many turns left until your torch is burnt out?
+        /// </summary>
+        public byte TorchTurnsLeft
+        {
+            get => dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
+            set => dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).SetChunkAsByte(value);
         }
 
         /// <summary>
@@ -96,60 +94,29 @@ namespace Ultima5Redux
         /// </summary>
         public byte Keys
         {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
-
-            }
+            get => dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
+            set => dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
         }
 
         /// <summary>
         /// Current location
         /// </summary>
-        public SmallMapReferences.SingleMapReference.Location Location
-        {
-            get
-            {
-                return (SmallMapReferences.SingleMapReference.Location)dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
-            }
-        }
+        public SmallMapReferences.SingleMapReference.Location Location => (SmallMapReferences.SingleMapReference.Location)dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
 
         /// <summary>
         /// Current floor
         /// </summary>
-        public int Floor
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
-            }
-        }
+        public int Floor => dataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
 
         /// <summary>
         /// Saved X location of Avatar
         /// </summary>
-        public int X
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
-            }
-        }
+        public int X => dataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
 
         /// <summary>
         /// Saved Y location of Avatar
         /// </summary>
-        public int Y
-        {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
-            }
-        }
+        public int Y => dataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
 
 
         /// <summary>
@@ -165,15 +132,8 @@ namespace Ultima5Redux
         /// </summary>
         public UInt16 Gold
         {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUINT16();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).SetChunkAsUINT16(value);
-
-            }
+            get => dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUINT16();
+            set => dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).SetChunkAsUINT16(value);
         }
 
         /// <summary>
@@ -181,14 +141,8 @@ namespace Ultima5Redux
         /// </summary>
         public UInt16 Food
         {
-            get
-            {
-                return dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUINT16();
-            }
-            set
-            {
-                dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).SetChunkAsUINT16(value);
-            }
+            get => dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUINT16();
+            set => dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).SetChunkAsUINT16(value);
         }
 
         /// <summary>
@@ -207,7 +161,8 @@ namespace Ultima5Redux
         /// <summary>
         /// The name of the Avatar
         /// </summary>
-        public string AvatarsName { get { return CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name; } }
+        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
+
         #endregion
 
         #region Enumerations
@@ -231,6 +186,7 @@ namespace Ultima5Redux
             KEYS_QUANTITY,
             GEMS_QUANTITY,
             TORCHES_QUANTITY,
+            TORCHES_TURNS,
             CURRENT_YEAR,
             CURRENT_MONTH,
             CURRENT_DAY,
@@ -307,7 +263,8 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00, DataChunkName.KEYS_QUANTITY);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
-
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01, 0x00, DataChunkName.TORCHES_TURNS);
+            
             // time and date
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Current Year", 0x2CE, 0x02, 0x00, DataChunkName.CURRENT_YEAR);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Month", 0x2D7, 0x01, 0x00, DataChunkName.CURRENT_MONTH);

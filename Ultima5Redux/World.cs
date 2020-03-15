@@ -669,6 +669,21 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        /// Ignites a torch, if available and set the number of turns for the torch to be burnt out
+        /// </summary>
+        /// <returns></returns>
+        public string IgniteTorch()
+        {
+            const byte nDefaultNumberOfTurnsForTorch = 0xF0;
+            // if there are no torches then report back and make no change
+            if (State.Torches <= 0) return DataOvlRef.StringReferences.GetString(DataOvlReference.SLEEP_TRANSPORT_STRINGS.NONE_OWNED_BANG_N);
+
+            State.Torches--;
+            State.TorchTurnsLeft = nDefaultNumberOfTurnsForTorch;
+            return DataOvlRef.StringReferences.GetString(DataOvlReference.KEYPRESS_COMMANDS_STRINGS.IGNITE_TORCH);
+        }
+        
+        /// <summary>
         /// Attempt to enter a building at a coordinate
         /// Will load new map if successful
         /// </summary>

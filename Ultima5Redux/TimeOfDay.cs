@@ -53,7 +53,7 @@ namespace Ultima5Redux
         /// change tracker id
         /// </summary>
         /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
-        private void SetAllChangeTrackers(bool bTimeChangeHappened = true)
+        public void SetAllChangeTrackers(bool bTimeChangeHappened = true)
         {
             for (int i = 0; i < nTotalChangeTrackers; i++)
             {
@@ -83,7 +83,6 @@ namespace Ultima5Redux
                 return (Hour % 12 == 0 ? 12 : Hour % 12) + ":" + $"{Minute:D2}" + " " + suffix;
             }
         }
-
 
         public UInt16 Year
         {
@@ -121,8 +120,13 @@ namespace Ultima5Redux
                 Debug.Assert(value >= 0 && value <= 59);
                 CurrentMinuteDataChunk.SetChunkAsByte(value);
             }
-        }
+        } 
 
+        /// <summary>
+        /// Advances the clock by certain number of minutes
+        /// </summary>
+        /// <param name="nMinutes"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
         public void AdvanceClock(int nMinutes)
         {
             const int nDaysInMonth = 28;
