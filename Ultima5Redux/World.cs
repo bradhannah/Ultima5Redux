@@ -167,7 +167,7 @@ namespace Ultima5Redux
         public void AdvanceTime(int nMinutes)
         {
             State.TheTimeOfDay.AdvanceClock(nMinutes);
-
+            if (State.TorchTurnsLeft > 0) State.TorchTurnsLeft--;
             State.TheVirtualMap.MoveNPCs();
         }
 
@@ -561,11 +561,11 @@ namespace Ultima5Redux
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
 
             // would we be leaving a small map if we went forward?
-            if (!State.TheVirtualMap.IsLargeMap &&
+            if (!State.TheVirtualMap.IsLargeMap && (
                 (State.TheVirtualMap.CurrentPosition.Y == (nTilesPerMapRow - 1) && direction == VirtualMap.Direction.Down) ||
                 (State.TheVirtualMap.CurrentPosition.Y == (0) && direction == VirtualMap.Direction.Up) ||
                 (State.TheVirtualMap.CurrentPosition.X == (nTilesPerMapCol - 1) && direction == VirtualMap.Direction.Right) ||
-                (State.TheVirtualMap.CurrentPosition.X == (0) && direction == VirtualMap.Direction.Left))
+                (State.TheVirtualMap.CurrentPosition.X == (0) && direction == VirtualMap.Direction.Left)))
 
             {
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
@@ -680,6 +680,8 @@ namespace Ultima5Redux
 
             State.Torches--;
             State.TorchTurnsLeft = nDefaultNumberOfTurnsForTorch;
+            // this will trigger a re-read of time of day changes
+            State.TheTimeOfDay.SetAllChangeTrackers();
             return DataOvlRef.StringReferences.GetString(DataOvlReference.KEYPRESS_COMMANDS_STRINGS.IGNITE_TORCH);
         }
         
