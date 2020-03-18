@@ -46,6 +46,11 @@ namespace Ultima5Redux
         private TimeOfDay timeOfDay;
 
         /// <summary>
+        /// Details of where the moongates are
+        /// </summary>
+        private Moongates moongates;
+
+        /// <summary>
         /// All overriden tiles
         /// </summary>
         private TileOverrides overridenTiles; 
@@ -138,7 +143,7 @@ namespace Ultima5Redux
         /// <param name="timeOfDay"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapLocationReferences largeMapLocationReferenceses,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
-            GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay)
+            GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates)
         {
             this.SmallMapRefs = smallMapReferences;
             this.smallMaps = smallMaps;
@@ -148,6 +153,7 @@ namespace Ultima5Redux
             this.state = state;
             this.npcRefs = npcRefs;
             this.timeOfDay = timeOfDay;
+            this.moongates = moongates;
             this.overridenTiles = new TileOverrides();
             
             //this.characterStates = characterStates;
@@ -214,16 +220,17 @@ namespace Ultima5Redux
         /// <returns></returns>
         public TileReference GetTileReference(int x, int y)
         {
+            // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
+            if (IsLargeMap && !timeOfDay.IsDayLight &&
+                moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF)))
+            {
+                return tileReferences.GetTileReferenceByName("Moongate");
+            }
+            
             // we check to see if our override map has something on top of it
             if (overrideMap[x][y] != 0)
                 return tileReferences.GetTileReference(overrideMap[x][y]);
 
-            // we check our high level tile override
-            // todo: technically this is only for 3D worlds, we should consider that 
-            // TileOverride tileOverride = overridenTiles.GetReplacementSprite(this.CurrentSingleMapReference.MapLocation, 
-            //     new CharacterPosition(x,y,CurrentSingleMapReference.Floor), IsLargeMap);
-            // if (tileOverride != null) return tileReferences.GetTileReference(tileOverride.SpriteNum);
-            
             if (IsLargeMap)
             {
                 return (tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]));

@@ -54,12 +54,14 @@ namespace Ultima5Redux
         /// <summary>
         /// The virtual map which includes the static map plus all things overlaid on it including NPCs
         /// </summary>
-        public VirtualMap TheVirtualMap { get; set; }
+        public VirtualMap TheVirtualMap { get; private set; }
         /// <summary>
         /// The current time of day
         /// </summary>
         public TimeOfDay TheTimeOfDay { get; }
 
+        public Moongates TheMoongates { get; }
+        
         /// <summary>
         /// Total number of Gems
         /// </summary>
@@ -202,6 +204,10 @@ namespace Ultima5Redux
             Y_COORD,
             CHARACTER_ANIMATION_STATES,
             CHARACTER_STATES,
+            MOONSTONE_X_COORDS, 
+            MOONSTONE_Y_COORDS, 
+            MOONSTONE_BURIED,
+            MOONSTONE_Z_COORDS
         };
         #endregion
 
@@ -224,7 +230,7 @@ namespace Ultima5Redux
             TileReferences TileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
         {
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferenceses, overworldMap, underworldMap,
-                nonPlayerCharacters, TileReferences, state, npcRefs, TheTimeOfDay);
+                nonPlayerCharacters, TileReferences, state, npcRefs, TheTimeOfDay, TheMoongates);
         }
 
         /// <summary>
@@ -264,6 +270,12 @@ namespace Ultima5Redux
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01, 0x00, DataChunkName.TORCHES_TURNS);
+            
+            // moonstones and moongates
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0-0xFF Moonstone X Coordinates (valid only if buried)", 0x28A, 0x08, 0x00, DataChunkName.MOONSTONE_X_COORDS);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0-0xFF Moonstone Y Coordinates (valid only if buried)", 0x292, 0x08, 0x00, DataChunkName.MOONSTONE_Y_COORDS);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=buried,0xFF=Inventory Moonstone Flags", 0x29A, 0x08, 0x00, DataChunkName.MOONSTONE_BURIED);
+            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=Britannia,0xFF=Underworld Moonstone Z Coordinates (valid only if buried)", 0x2A2, 0x08, 0x00, DataChunkName.MOONSTONE_Z_COORDS);
             
             // time and date
             dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Current Year", 0x2CE, 0x02, 0x00, DataChunkName.CURRENT_YEAR);
@@ -317,6 +329,9 @@ namespace Ultima5Redux
             overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
             underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
+            TheMoongates = new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS), GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS), 
+                GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
+            
             TheTimeOfDay = new TimeOfDay(dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
                 dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
                 dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));

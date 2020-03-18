@@ -167,6 +167,25 @@ namespace Ultima5ReduxTesting
         }
         
         [Test]
+        public void Test_FreeMoveAcrossWorldWithMoongates()
+        {
+            World world = new World("C:\\games\\ultima_5_late\\britain");
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+            
+            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            
+            for (int i = 0; i < 256; i++)
+            {
+                world.TryToMove(VirtualMap.Direction.Up, false, true, out World.TryToMoveResult moveResult);
+                
+            }
+            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            
+            Assert.True(finalLocation == startLocation);
+        }
+        
+        [Test]
         public void Test_MoonPhaseReference()
         {
             World world = new World("C:\\games\\ultima_5_late\\britain");
