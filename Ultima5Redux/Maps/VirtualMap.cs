@@ -200,6 +200,8 @@ namespace Ultima5Redux
                     break;
                 case LargeMap.Maps.Small:
                     throw new Ultima5ReduxException("You can't load a small large map!");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(map), map, null);
             }
 
             overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);

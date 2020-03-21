@@ -9,30 +9,38 @@ namespace Ultima5Redux
 {
     public class TimeOfDay
     {
-        //dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Current Year", 0x2CE, 0x02, 0x00, DataChunkName.CURRENT_YEAR);
-        //    dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Month", 0x2D7, 0x01, 0x00, DataChunkName.CURRENT_MONTH);
-        //    dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Day", 0x2D8, 0x01, 0x00, DataChunkName.CURRENT_DAY);
-        //    dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2D9, 0x01, 0x00, DataChunkName.CURRENT_HOUR);
-        //    // 0x2DA is copy of 2D9 for some reason
-        //    dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
+        private readonly DataChunk _currentYearDataChunk;
+        private readonly DataChunk _currentMonthDataChunk;
+        private readonly DataChunk _currentDayDataChunk;
+        private readonly DataChunk _currentHourDataChunk;
+        private readonly DataChunk _currentMinuteDataChunk;
 
-        private DataChunk CurrentYearDataChunk;
-        private DataChunk CurrentMonthDataChunk;
-        private DataChunk CurrentDayDataChunk;
-        private DataChunk CurrentHourDataChunk;
-        private DataChunk CurrentMinuteDataChunk;
-
-        private Dictionary<int, bool> timeHasChangedDictionary = new Dictionary<int, bool>();
-        private int nTotalChangeTrackers = 0;
+        /// <summary>
+        /// Dictionary of all change trackers and if time has changed since last check
+        /// </summary>
+        private readonly Dictionary<int, bool> _timeHasChangedDictionary = new Dictionary<int, bool>();
         
+        /// <summary>
+        /// tracks the total number of registered change trackers
+        /// </summary>
+        private int _nTotalChangeTrackers = 0;
+        
+        /// <summary>
+        /// Constructor. Builds with datachunks from save game file
+        /// </summary>
+        /// <param name="currentYearDataChunk"></param>
+        /// <param name="currentMonthDataChunk"></param>
+        /// <param name="currentDayDataChunk"></param>
+        /// <param name="currentHourDataChunk"></param>
+        /// <param name="currentMinuteDataChunk"></param>
         public TimeOfDay(DataChunk currentYearDataChunk, DataChunk currentMonthDataChunk, DataChunk currentDayDataChunk, DataChunk currentHourDataChunk,
             DataChunk currentMinuteDataChunk)
         {
-            CurrentYearDataChunk = currentYearDataChunk;
-            CurrentMonthDataChunk = currentMonthDataChunk;
-            CurrentDayDataChunk = currentDayDataChunk;
-            CurrentHourDataChunk = currentHourDataChunk;
-            CurrentMinuteDataChunk = currentMinuteDataChunk;
+            _currentYearDataChunk = currentYearDataChunk;
+            _currentMonthDataChunk = currentMonthDataChunk;
+            _currentDayDataChunk = currentDayDataChunk;
+            _currentHourDataChunk = currentHourDataChunk;
+            _currentMinuteDataChunk = currentMinuteDataChunk;
         }
 
         public bool IsDayLight => (Hour >= 5 && Hour < (8 + 12));
@@ -43,8 +51,8 @@ namespace Ultima5Redux
         /// <returns>the int handler of the change tracker</returns>
         public int RegisterChangeTracker()
         {
-            int nChangeTracker = nTotalChangeTrackers++;
-            timeHasChangedDictionary[nChangeTracker] = true;
+            int nChangeTracker = _nTotalChangeTrackers++;
+            _timeHasChangedDictionary[nChangeTracker] = true;
             return nChangeTracker;
         }
 
@@ -55,9 +63,9 @@ namespace Ultima5Redux
         /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
         public void SetAllChangeTrackers(bool bTimeChangeHappened = true)
         {
-            for (int i = 0; i < nTotalChangeTrackers; i++)
+            for (int i = 0; i < _nTotalChangeTrackers; i++)
             {
-                timeHasChangedDictionary[i] = bTimeChangeHappened;
+                _timeHasChangedDictionary[i] = bTimeChangeHappened;
             }
         }
 
@@ -68,9 +76,9 @@ namespace Ultima5Redux
         /// <returns>true if change has occured, otherwise false</returns>
         public bool HasTimeChanged(int nChangeTrackerId)
         {
-            bool bTimeChangeOccured = timeHasChangedDictionary[nChangeTrackerId];
+            bool bTimeChangeOccured = _timeHasChangedDictionary[nChangeTrackerId];
             // we reset it to false to say we saw it until the next change
-            timeHasChangedDictionary[nChangeTrackerId] = false;
+            _timeHasChangedDictionary[nChangeTrackerId] = false;
             return bTimeChangeOccured;
         }
         public string FormattedDate => Month + "-" + Day + "-" + Year;
@@ -84,41 +92,41 @@ namespace Ultima5Redux
             }
         }
 
-        public UInt16 Year
+        public ushort Year
         {
-            get => CurrentYearDataChunk.GetChunkAsUINT16();
-            set => CurrentYearDataChunk.SetChunkAsUINT16(value);
+            get => _currentYearDataChunk.GetChunkAsUINT16();
+            set => _currentYearDataChunk.SetChunkAsUINT16(value);
         }
 
         public byte Month
         {
-            get => CurrentMonthDataChunk.GetChunkAsByte();
-            set => CurrentMonthDataChunk.SetChunkAsByte(value);
+            get => _currentMonthDataChunk.GetChunkAsByte();
+            set => _currentMonthDataChunk.SetChunkAsByte(value);
         }
 
         public byte Day
         {
-            get => CurrentDayDataChunk.GetChunkAsByte();
-            set => CurrentDayDataChunk.SetChunkAsByte(value);
+            get => _currentDayDataChunk.GetChunkAsByte();
+            set => _currentDayDataChunk.SetChunkAsByte(value);
         }
 
         public byte Hour
         {
-            get => CurrentHourDataChunk.GetChunkAsByte();
+            get => _currentHourDataChunk.GetChunkAsByte();
             set
             {
-                Debug.Assert(value >= 0 && value <= 23);
-                CurrentHourDataChunk.SetChunkAsByte(value);
+                Debug.Assert(value <= 23);
+                _currentHourDataChunk.SetChunkAsByte(value);
             }
         }
 
         public byte Minute
         {
-            get => CurrentMinuteDataChunk.GetChunkAsByte();
+            get => _currentMinuteDataChunk.GetChunkAsByte();
             set
             {
-                Debug.Assert(value >= 0 && value <= 59);
-                CurrentMinuteDataChunk.SetChunkAsByte(value);
+                Debug.Assert(value <= 59);
+                _currentMinuteDataChunk.SetChunkAsByte(value);
             }
         } 
 

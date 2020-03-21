@@ -167,19 +167,21 @@ namespace Ultima5ReduxTesting
         }
         
         [Test]
-        public void Test_FreeMoveAcrossWorldWithMoongates()
+        public void Test_CheckAlLTilesForMoongates()
         {
             World world = new World("C:\\games\\ultima_5_late\\britain");
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
-            
+
             Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
-            
-            for (int i = 0; i < 256; i++)
+            for (int x = 0; x < 256; x++)
             {
-                world.TryToMove(VirtualMap.Direction.Up, false, true, out World.TryToMoveResult moveResult);
-                
+                for (int y = 0; y < 256; y++)
+                {
+                    TileReference tileReference = world.State.TheVirtualMap.GetTileReference(x, y);
+                }
             }
+
             Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
             
             Assert.True(finalLocation == startLocation);
