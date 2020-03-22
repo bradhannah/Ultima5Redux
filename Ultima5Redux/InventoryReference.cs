@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,10 +9,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ultima5Redux;
 
-namespace Ultima5Redux3D
+namespace Ultima5Redux
 {
-
-
     /// <summary>
     /// Collection of all inventory meta data such as descriptions
     /// </summary>
@@ -94,6 +93,7 @@ namespace Ultima5Redux3D
         /// <param name="invItem"></param>
         /// <returns></returns>
         /// <exception cref="Ultima5ReduxException"></exception>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public InventoryReference GetInventoryReference(InventoryReferenceType inventoryReferenceType, string invItem)
         {
             // todo: this is a really slow and inefficient way to search the list, albeit a small list

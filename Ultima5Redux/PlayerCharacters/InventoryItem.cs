@@ -4,17 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ultima5Redux
 {
+    [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public abstract class InventoryItem
     {
         public abstract bool HideQuantity { get; }
-        public int Quantity { get; set; }
+        public virtual int Quantity { get; set; }
 
-        public string LongName { get; }
+        public virtual string LongName { get; }
 
-        public string ShortName { get; }
+        public virtual string ShortName { get; }
 
         public int SpriteNum { get; }
 
@@ -38,11 +41,37 @@ namespace Ultima5Redux
 
     public class Moonstone : InventoryItem
     {
-        public Moonstone(int quantity, string longName, string shortName, int spriteNum) 
-            : base(quantity, longName, shortName, spriteNum)
+        public MoonPhaseReferences.MoonPhases Phase { get; }
+        private readonly Moongates _moongates;
+
+        public Moonstone(MoonPhaseReferences.MoonPhases phase, string longName, string shortName, Moongates moongates) 
+            : base(0, longName, shortName, MOONSTONE_SPRITE)
         {
+            Phase = phase;
+            _moongates = moongates;
         }
 
+        private const int MOONSTONE_SPRITE = 220;
+        
+        // we will hold onto this enum for later when we assign custom sprites
+        //public enum ItemTypeEnum { NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter, CrescentWaning, NoMoon }
+
+        private string AddSpacesBeforeCaps(string str)
+        {
+            // filthy method from here: https://stackoverflow.com/questions/272633/add-spaces-before-capital-letters
+            return new string(str.SelectMany((c, i) => i > 0 && char.IsUpper(c) ? new[] { ' ', c } : new[] { c }).ToArray());
+        }
+        
+        public override string LongName => AddSpacesBeforeCaps(Phase.ToString());
+        public override string ShortName => AddSpacesBeforeCaps(Phase.ToString());
+            
+        
+        /// <summary>
+        /// If the moonstone is buried, then it's not in your inventory
+        /// otherwise if it is NOT buried, then it has to be in your inventory
+        /// </summary>
+        public override int Quantity => _moongates.IsMoonstoneBuried((int) Phase) ? 0 : 1;
+        
         public override bool HideQuantity => true;
     }
     

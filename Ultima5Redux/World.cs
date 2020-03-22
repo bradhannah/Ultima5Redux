@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Configuration;
 using System.Resources;
 
-
 namespace Ultima5Redux
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -76,7 +75,11 @@ namespace Ultima5Redux
         /// <summary>
         /// The current game state
         /// </summary>
-        public GameState State { get; }        
+        public GameState State { get; }
+        /// <summary>
+        /// Detailed inventory information reference
+        /// </summary>
+        public InventoryReferences InvRef { get; }
         /// <summary>
         /// A large map reference
         /// </summary>
@@ -118,6 +121,7 @@ namespace Ultima5Redux
 
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
+            InvRef = new InventoryReferences();
 
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
 

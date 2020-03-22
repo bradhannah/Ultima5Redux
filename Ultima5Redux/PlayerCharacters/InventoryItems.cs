@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -391,17 +392,29 @@ namespace Ultima5Redux
         private Moongates _moongates;
         private MoonPhaseReferences _moonPhaseReferences;
         
-        public Moonstones(MoonPhaseReferences moonPhaseReferences, Moongates moongates) 
-            : base(null, null)
+        
+        
+        public Moonstones(DataOvlReference dataOvlRef, MoonPhaseReferences moonPhaseReferences, Moongates moongates) 
+            : base(dataOvlRef, null)
         {
             _moongates = moongates;
             _moonPhaseReferences = moonPhaseReferences;
             
-            foreach (Moonstone moonestone in _moongates)
-            
+            // go through each of the moon phases one by one and create a moonstone
+            //foreach (Spell.SpellWords spell in Enum.GetValues(typeof(Spell.SpellWords)))
+            foreach (MoonPhaseReferences.MoonPhases phase in Enum.GetValues(typeof(MoonPhaseReferences.MoonPhases)))
+            {
+                // there is no "no moon" moonstone
+                if (phase == MoonPhaseReferences.MoonPhases.NoMoon) continue;
+                Items[phase]= new Moonstone(phase,
+                    dataOvlRef.StringReferences.GetString(DataOvlReference.ZSTATS_STRINGS.MOONSTONE_SPACE).TrimEnd(),
+                    dataOvlRef.StringReferences.GetString(DataOvlReference.ZSTATS_STRINGS.MOONSTONE_SPACE).TrimEnd(),
+                    moongates);
+            }
         }
 
-        public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; }
+        public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; } = 
+            new Dictionary<MoonPhaseReferences.MoonPhases, Moonstone>();
     }
     
     public class ShadowlordShards : InventoryItems <ShadowlordShard.ShardType, ShadowlordShard>

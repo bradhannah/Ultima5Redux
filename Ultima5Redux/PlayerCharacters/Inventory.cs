@@ -178,8 +178,9 @@ namespace Ultima5Redux
             MagicSpells = new Spells(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(MagicSpells.GenericItemList);
 
-            TheMoonstones = new Moonstones(moonPhaseReferences, moongates);
+            TheMoonstones = new Moonstones(dataOvlRef, moonPhaseReferences, moongates);
             AllItems.AddRange(TheMoonstones.GenericItemList);
+            UseItems.AddRange(TheMoonstones.GenericItemList);
         }
 
     }

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using NUnit.Framework;
 using Ultima5Redux;
-using Ultima5Redux3D;
 using System.Collections.Generic;
 using System.Media;
 using System.Runtime.InteropServices;
@@ -200,6 +199,23 @@ namespace Ultima5ReduxTesting
             
             Assert.True(finalLocation == startLocation);
         }
+
+        [Test]
+        public void Test_LookupMoonstoneInInventory()
+        {
+            World world = new World(SaveDirectory);
+
+            //for (int i = 0; i < 8; i++)
+            foreach (MoonPhaseReferences.MoonPhases phase in Enum.GetValues(typeof(MoonPhaseReferences.MoonPhases)))
+            {
+                if (phase == MoonPhaseReferences.MoonPhases.NoMoon) continue;
+                bool bBuried = world.State.TheMoongates.IsMoonstoneBuried((int)phase);
+                int nMoonstonesInInv = world.State.PlayerInventory.TheMoonstones.Items[phase].Quantity;
+                string desc = world.InvRef.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item,
+                    phase.ToString()).ItemDescription;
+            }
+        }
+        
         
         [Test]
         public void Test_MoonPhaseReference()
