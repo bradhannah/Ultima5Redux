@@ -193,6 +193,7 @@
     <EmbeddedResource Include="Data\InventoryDetails.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="Data\DataConversion\tileData.py" />
     <Content Include="Data\InventoryDetails.csv" />
     <Content Include="Data\InventoryDetailsCSV.csv" />
     <Content Include="Data\TileOverrides.csv" />
@@ -200,7 +201,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
-copy $(TargetDir)\*.pdb "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"</PostBuildEvent>
+  <!--  <PostBuildEvent>copy $(TargetPath) "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+copy $(TargetDir)\*.pdb "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"</PostBuildEvent>-->
   </PropertyGroup>
 </Project>

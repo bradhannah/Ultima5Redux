@@ -386,7 +386,24 @@ namespace Ultima5Redux
         }
     }
 
+    public class Moonstones :  InventoryItems <MoonPhaseReferences.MoonPhases, Moonstone>
+    {
+        private Moongates _moongates;
+        private MoonPhaseReferences _moonPhaseReferences;
+        
+        public Moonstones(MoonPhaseReferences moonPhaseReferences, Moongates moongates) 
+            : base(null, null)
+        {
+            _moongates = moongates;
+            _moonPhaseReferences = moonPhaseReferences;
+            
+            foreach (Moonstone moonestone in _moongates)
+            
+        }
 
+        public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; }
+    }
+    
     public class ShadowlordShards : InventoryItems <ShadowlordShard.ShardType, ShadowlordShard>
     {
         private enum OFFSETS { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 };

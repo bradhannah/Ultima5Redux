@@ -20,6 +20,7 @@ namespace Ultima5Redux
         public Armours ProtectiveArmour { get; }
         public Weapons TheWeapons { get; }
         public Reagents SpellReagents { get; }
+        public Moonstones TheMoonstones { get; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
@@ -45,33 +46,21 @@ namespace Ultima5Redux
             gameStateByteArray[(int)thing] = BoolToByte(bBool);
         }
 
-        public bool GetInvetoryBool(InventoryThings thing)
+        public bool GetInventoryBool(InventoryThings thing)
         {
             return DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "", gameStateByteArray, (int)thing, sizeof(byte)).GetChunkAsByte() > 0;
         }
 
         public bool Grapple 
         { 
-            get
-            {
-                return GetInvetoryBool(InventoryThings.Grapple);
-            }
-            set
-            {
-                SetInventoryBool(InventoryThings.Grapple, value);
-            }
+            get => GetInventoryBool(InventoryThings.Grapple);
+            set => SetInventoryBool(InventoryThings.Grapple, value);
         }
 
         public int MagicCarpets
         { 
-            get
-            {
-                return GetInventoryQuantity(InventoryThings.MagicCarpets);
-            }
-            set
-            {
-                SetInventoryQuantity(InventoryThings.MagicCarpets, (byte)value);
-            }
+            get => GetInventoryQuantity(InventoryThings.MagicCarpets);
+            set => SetInventoryQuantity(InventoryThings.MagicCarpets, (byte)value);
         }
 
         /// <summary>
@@ -147,10 +136,11 @@ namespace Ultima5Redux
                     return item;
                 }
             }
-            throw new Ultima5ReduxException("Requested " + equipment.ToString() + " but is not a combat type");
+            throw new Ultima5ReduxException("Requested " + equipment + " but is not a combat type");
         }
 
-        public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef)
+        public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,  
+            MoonPhaseReferences moonPhaseReferences, Moongates moongates)
         {
             this.gameStateByteArray = gameStateByteArray;
 
@@ -188,7 +178,8 @@ namespace Ultima5Redux
             MagicSpells = new Spells(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(MagicSpells.GenericItemList);
 
-
+            TheMoonstones = new Moonstones(moonPhaseReferences, moongates);
+            AllItems.AddRange(TheMoonstones.GenericItemList);
         }
 
     }

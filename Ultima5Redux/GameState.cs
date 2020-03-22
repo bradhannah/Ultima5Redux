@@ -253,8 +253,6 @@ namespace Ultima5Redux
             DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
             CharacterRecords = new PlayerCharacterRecords(rawCharacterRecords.GetAsByteList());
 
-            // import the players invetry
-            PlayerInventory = new Inventory(gameStateByteArray, dataRef);
 
             // player location
             dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party Location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
@@ -335,6 +333,9 @@ namespace Ultima5Redux
             TheTimeOfDay = new TimeOfDay(dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
                 dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
                 dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
+            
+            // import the players invetry
+            PlayerInventory = new Inventory(gameStateByteArray, dataRef, new MoonPhaseReferences(dataRef), TheMoongates);
         }
         #endregion
 

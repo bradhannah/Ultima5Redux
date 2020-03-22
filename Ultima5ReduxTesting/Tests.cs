@@ -4,16 +4,30 @@ using NUnit.Framework;
 using Ultima5Redux;
 using Ultima5Redux3D;
 using System.Collections.Generic;
+using System.Media;
+using System.Runtime.InteropServices;
 
 namespace Ultima5ReduxTesting
 {
     [TestFixture]
     public class Tests
     {
+        private string SaveDirectory
+        {
+            get
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    return @"/Users/bradhannah/games/u5/Gold";
+                return @"C:\games\ultima_5_late\britain";
+            }
+            
+        }
+        
         [Test]
         public void AllSmallMapsLoadTest()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+
+            World world = new World(SaveDirectory);
 
             foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
@@ -28,7 +42,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void LoadBritishBasement()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             Trace.Write("Starting ");
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
@@ -54,7 +68,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void AllSmallMapsLoadWithOneDayTest()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
@@ -80,7 +94,7 @@ namespace Ultima5ReduxTesting
         {
             TileOverrides to = new TileOverrides();
             
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             Trace.Write("Starting ");
 
@@ -95,7 +109,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_LoadOverworld()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             Trace.Write("Starting ");
 
@@ -105,7 +119,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_LoadOverworldOverrideTile()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             Trace.Write("Starting ");
 
@@ -129,7 +143,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_PushPull_WontBudge()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadSmallMap(
                 world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), world.State.CharacterRecords,
@@ -151,7 +165,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_FreeMoveAcrossWorld()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
             
@@ -169,7 +183,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_CheckAlLTilesForMoongates()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
@@ -190,7 +204,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_MoonPhaseReference()
         {
-            World world = new World("C:\\games\\ultima_5_late\\britain");
+            World world = new World(SaveDirectory);
             
             MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(world.DataOvlRef);
 

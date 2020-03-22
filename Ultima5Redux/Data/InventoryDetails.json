@@ -944,5 +944,70 @@
          "ItemDescription": "The Sceptre of Lord British, one of the three Royal Crown Jewels, is a powerful magical artifact. This powerful tool has an amazing ability that the Avatar will need to discover!",
          "ItemDescriptionAttribution": "UltimaCodex.com and The Book of Brad"
       }
+   ],
+   "Moonstone": [
+      {
+         "ItemName": "NewMoon",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "CrescentWaxing",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "FirstQuarter",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "GibbousWaxing",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "FullMoon",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "LastQuarter",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "GibbousWaxing",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "CrescentWaning",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      },
+      {
+         "ItemName": "NoMoon",
+         "ItemNameHighlight": "",
+         "ItemSprite": "281",
+         "ItemDescription": "",
+         "ItemDescriptionAttribution": ""
+      }
    ]
 }

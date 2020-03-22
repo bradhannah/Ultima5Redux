@@ -36,6 +36,16 @@ namespace Ultima5Redux
         }
     }
 
+    public class Moonstone : InventoryItem
+    {
+        public Moonstone(int quantity, string longName, string shortName, int spriteNum) 
+            : base(quantity, longName, shortName, spriteNum)
+        {
+        }
+
+        public override bool HideQuantity => true;
+    }
+    
     public class SpecialItem : InventoryItem
     {
         public override bool HideQuantity
@@ -88,11 +98,6 @@ namespace Ultima5Redux
         {
             AmuletType = amuletType;
         }
-        //public Amulet(AmuletEnum amuletType, int quantity, string longName, string shortName, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
-        //    base(quantity, longName, shortName, AMULET_SPRITE, attackStat, defendStat, specificEquipment)
-        //{
-        //    AmuletType = amuletType;
-        //}
     }
 
     public class Ring : Armour
@@ -110,12 +115,6 @@ namespace Ultima5Redux
         {
             RingType = ringType;
         }
-
-        //public Ring(RingEnum ringType, int quantity, string longName, string shortName, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
-        //    base(quantity, longName, shortName, RING_SPRITE, attackStat, defendStat, specificEquipment)
-        //{
-        //    RingType = ringType;
-        //}
     }
 
     public class Helm : Armour
@@ -126,22 +125,12 @@ namespace Ultima5Redux
 
         private const int HELM_SPRITE = 265;
 
-        //public override int AttackStat { get; }
-
-        //public override int DefendStat { get; }
-
         public override bool HideQuantity => false;
         public Helm(HelmEnum helmType, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
                         : base(equipment, dataOvlRef, gameStateByteArray, (int)helmType, HELM_SPRITE)
         {
             HelmType = helmType;
         }
-
-        //public Helm(HelmEnum helmType, int quantity, string longName, string shortName, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 
-        //    base(quantity, longName, shortName, HELM_SPRITE, attackStat, defendStat, specificEquipment)
-        //{
-        //    HelmType = helmType;
-        //}
     }
 
     public class ChestArmour : Armour
