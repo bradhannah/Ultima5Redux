@@ -151,7 +151,7 @@ namespace Ultima5Redux
             /// </summary>
             /// <param name="mapMaster"></param>
             /// <returns>name of the .TLK file</returns>
-            public static string GetTLKFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
+            public static string GetTlkFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
                 switch (mapMaster)
                 {

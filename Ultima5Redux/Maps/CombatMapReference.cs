@@ -22,9 +22,9 @@ namespace Ultima5Redux
             }
 
             /// Descriptions of each combat map
-            private static readonly string[] britanniaDescriptions = { "Camp Fire", "Swamp", "Glade", "Treed", "Desert", "Clean Tree", "Mountains", "Big Bridge", "Brick", "Basement", "Psychodelic",
+            private static readonly string[] BritanniaDescriptions = { "Camp Fire", "Swamp", "Glade", "Treed", "Desert", "Clean Tree", "Mountains", "Big Bridge", "Brick", "Basement", "Psychodelic",
                 "Boat - Ocean", "Boat - North", "Boat - South", "Boat-Boat", "Bay"};
-            private static readonly string[] dungeonDescriptions = { "A", "B" };
+            private static readonly string[] DungeonDescriptions = { "A", "B" };
 
             /// <summary>
             /// How many bytes for each combat map entry in data file
@@ -61,11 +61,11 @@ namespace Ultima5Redux
                 {
                     if (MapTerritory==Territory.Britannia)
                     {
-                        return britanniaDescriptions[CombatMapNum];
+                        return BritanniaDescriptions[CombatMapNum];
                     }
                     else
                     {
-                        return dungeonDescriptions[CombatMapNum];
+                        return DungeonDescriptions[CombatMapNum];
                     }
                 }
             }
@@ -114,12 +114,12 @@ namespace Ultima5Redux
         {
             for (short i=0; i < 16; i++)
             {
-                mapReferences.Add(new SingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i));
+                _mapReferences.Add(new SingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i));
             }
         }
 
         // the master copy of the map references
-        private List<SingleCombatMapReference> mapReferences = new List<SingleCombatMapReference>();
+        private List<SingleCombatMapReference> _mapReferences = new List<SingleCombatMapReference>();
 
         /// <summary>
         /// The list of map references
@@ -128,7 +128,7 @@ namespace Ultima5Redux
         {
             get
             {
-                return mapReferences;
+                return _mapReferences;
             }
         }
 

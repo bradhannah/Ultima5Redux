@@ -28,13 +28,13 @@ namespace Ultima5Redux
         //11,10 to 26,10 is the x, then y coordinate of the second location replaced by the respective tile from 11,0-18,0.
 
 
-        private CombatMapReference.SingleCombatMapReference MapRef;
+        private CombatMapReference.SingleCombatMapReference _mapRef;
 
         private const int MAX_X_COLS =11 , MAX_Y_ROWS = 11;
         private const int ROW_BYTES = 32;
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct Map_Row
+        private unsafe struct MapRow
         {
             fixed byte tiles[11];
             fixed byte newTiles[8];
@@ -42,7 +42,7 @@ namespace Ultima5Redux
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct Map_PlayerPos_Row
+        private unsafe struct MapPlayerPosRow
         {
             fixed byte tiles[11];
             fixed byte initial_X[6]; // initial x position of each party member
@@ -51,7 +51,7 @@ namespace Ultima5Redux
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct Map_MonsterTile_Row
+        private unsafe struct MapMonsterTileRow
         {
             fixed byte tiles[11];
             fixed byte monster_tiles[16]; // tile for each monster
@@ -59,7 +59,7 @@ namespace Ultima5Redux
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct Map_MonsterX_Row
+        private unsafe struct MapMonsterXRow
         {
             fixed byte tiles[11];
             fixed byte initial_X[16]; // initial x position of each monster
@@ -67,7 +67,7 @@ namespace Ultima5Redux
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct Map_MonsterY_Row
+        private unsafe struct MapMonsterYRow
         {
             fixed byte tiles[11];
             fixed byte initial_Y[16]; // initial y position of each monster
@@ -78,7 +78,7 @@ namespace Ultima5Redux
         {
             get
             {
-                return MapRef.Description;
+                return _mapRef.Description;
             }
         }
 
@@ -100,31 +100,31 @@ namespace Ultima5Redux
         }
 
         // These are the legacy structures read in from the file. They will need to be abstracted into useable data.
-        private Map_Row Row0; // Information contains the new tiles once a trigger happens  
-        private List<Map_PlayerPos_Row> Row1To4_Player=new List<Map_PlayerPos_Row>(4); // row 1 = east, row 2 = west, row 3 = south, row 4 = north
-        private Map_MonsterTile_Row Row5_Monster; 
-        private Map_MonsterX_Row Row6_MonsterX;
-        private Map_MonsterY_Row Row7_MonsterY;  
-        private Map_Row Row8_Trigger; // row 8: positions of triggers, one position hits to new tiles
-        private Map_Row Row9_NewTilesX;// row 9: position X of the new tiles
-        private Map_Row Row10_NewTilesY; // row 10: position Y of the new tiles
+        private MapRow _row0; // Information contains the new tiles once a trigger happens  
+        private List<MapPlayerPosRow> _row1To4Player=new List<MapPlayerPosRow>(4); // row 1 = east, row 2 = west, row 3 = south, row 4 = north
+        private MapMonsterTileRow _row5Monster; 
+        private MapMonsterXRow _row6MonsterX;
+        private MapMonsterYRow _row7MonsterY;  
+        private MapRow _row8Trigger; // row 8: positions of triggers, one position hits to new tiles
+        private MapRow _row9NewTilesX;// row 9: position X of the new tiles
+        private MapRow _row10NewTilesY; // row 10: position Y of the new tiles
 
         private void InitializeCombatMapStructures(string dataFilenameAndPath, int fileOffset)
         {
             FileStream fs = File.OpenRead(dataFilenameAndPath);
             fs.Seek(fileOffset, SeekOrigin.Begin);
 
-            Row0 = (Map_Row)Utils.ReadStruct(fs, typeof(Map_Row));
-            Row1To4_Player.Add((Map_PlayerPos_Row)Utils.ReadStruct(fs, typeof(Map_PlayerPos_Row)));
-            Row1To4_Player.Add((Map_PlayerPos_Row)Utils.ReadStruct(fs, typeof(Map_PlayerPos_Row)));
-            Row1To4_Player.Add((Map_PlayerPos_Row)Utils.ReadStruct(fs, typeof(Map_PlayerPos_Row)));
-            Row1To4_Player.Add((Map_PlayerPos_Row)Utils.ReadStruct(fs, typeof(Map_PlayerPos_Row)));
-            Row5_Monster = (Map_MonsterTile_Row)Utils.ReadStruct(fs, typeof(Map_MonsterTile_Row));
-            Row6_MonsterX = (Map_MonsterX_Row)Utils.ReadStruct(fs, typeof(Map_MonsterX_Row));
-            Row7_MonsterY = (Map_MonsterY_Row)Utils.ReadStruct(fs, typeof(Map_MonsterY_Row));
-            Row8_Trigger = (Map_Row)Utils.ReadStruct(fs, typeof(Map_Row));
-            Row9_NewTilesX = (Map_Row)Utils.ReadStruct(fs, typeof(Map_Row));
-            Row10_NewTilesY = (Map_Row)Utils.ReadStruct(fs, typeof(Map_Row));
+            _row0 = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
+            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row5Monster = (MapMonsterTileRow)Utils.ReadStruct(fs, typeof(MapMonsterTileRow));
+            _row6MonsterX = (MapMonsterXRow)Utils.ReadStruct(fs, typeof(MapMonsterXRow));
+            _row7MonsterY = (MapMonsterYRow)Utils.ReadStruct(fs, typeof(MapMonsterYRow));
+            _row8Trigger = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
+            _row9NewTilesX = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
+            _row10NewTilesY = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
             fs.Close();
 
             System.Console.WriteLine("");
@@ -139,7 +139,7 @@ namespace Ultima5Redux
         {
             string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);
 
-            MapRef = mapRef;
+            _mapRef = mapRef;
 
             // TOOD: reads in the data from the file - should read file into memory once and leave it there so quicker reference
             List<byte> mapList = Utils.GetFileAsByteList(dataFilenameAndPath, mapRef.FileOffset, CombatMapReference.SingleCombatMapReference.MAP_BYTE_COUNT);

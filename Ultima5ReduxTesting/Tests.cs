@@ -215,7 +215,17 @@ namespace Ultima5ReduxTesting
                     phase.ToString()).ItemDescription;
             }
         }
-        
+
+        [Test]
+        public void Test_MoongateHunting()
+        {
+            World world = new World(SaveDirectory);
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+            world.State.TheVirtualMap.CurrentPosition = new Point2D(167, 22);
+            bool bOnMoongate = world.IsAvatarOnActiveMoongate();
+            Point3D p3d = world.GetMoongateTeleportLocation();
+        }
         
         [Test]
         public void Test_MoonPhaseReference()

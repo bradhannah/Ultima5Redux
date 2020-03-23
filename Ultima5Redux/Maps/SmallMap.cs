@@ -20,11 +20,11 @@ namespace Ultima5Redux
         /// </summary>
         public const int YTILES = 32;
 
-        public SmallMapReferences.SingleMapReference.Location MapLocation { get { return MapRef.MapLocation; } }
-        public int MapFloor { get { return MapRef.Floor; } }
+        public SmallMapReferences.SingleMapReference.Location MapLocation { get { return _mapRef.MapLocation; } }
+        public int MapFloor { get { return _mapRef.Floor; } }
 
 
-        private SmallMapReferences.SingleMapReference MapRef;
+        private SmallMapReferences.SingleMapReference _mapRef;
 
      
         
@@ -37,7 +37,7 @@ namespace Ultima5Redux
         /// <param name="tileOverrides"></param>
         public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference mapRef, TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(u5Directory, tileOverrides, mapRef)
         {
-            MapRef = mapRef;
+            _mapRef = mapRef;
 
             // load the map into memory
             TheMap = LoadSmallMapFile(Path.Combine(u5Directory, mapRef.MapFilename), mapRef.FileOffset);

@@ -13,9 +13,9 @@ namespace Ultima5Redux
         public override int GetHashCode()
         {
             int hashCode = -307843816;
-            hashCode = hashCode * -1521134295 + X.GetHashCode();
-            hashCode = hashCode * -1521134295 + Y.GetHashCode();
-            hashCode = hashCode * -1521134295 + Z.GetHashCode();
+            hashCode = hashCode * -1521134295 + X;
+            hashCode = hashCode * -1521134295 + Y;
+            hashCode = hashCode * -1521134295 + Z;
             return hashCode;
         }
 

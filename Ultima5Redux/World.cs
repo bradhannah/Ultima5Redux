@@ -175,6 +175,32 @@ namespace Ultima5Redux
             State.TheVirtualMap.MoveNPCs();
         }
 
+
+        /// <summary>
+        /// Determines if the current tile the Avatar is on, is an ACTIVE moongate
+        /// </summary>
+        /// <returns>true if the Avatar is on an active moongate</returns>
+        public bool IsAvatarOnActiveMoongate()
+        {
+            if (!State.TheVirtualMap.IsLargeMap) return false;
+            if (State.TheTimeOfDay.IsDayLight) return false;
+
+            Point3D currentPos = new Point3D(State.TheVirtualMap.CurrentPosition.X, 
+                State.TheVirtualMap.CurrentPosition.Y,State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
+
+            return (State.TheMoongates.IsMoonstoneBuried(currentPos));
+        }
+        
+        public Point3D GetMoongateTeleportLocation()
+        {
+            Debug.Assert(State.TheVirtualMap.IsLargeMap);
+
+            Point3D currentPos = new Point3D(State.TheVirtualMap.CurrentPosition.X, 
+                State.TheVirtualMap.CurrentPosition.Y, State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
+
+            return State.TheMoongates.GetMoongatePosition((int)MoonPhaseRefs.GetMoonGateMoonPhase(State.TheTimeOfDay));
+        }        
+        
         public float GetMoonAngle()
         {
             return MoonPhaseRefs.GetMoonAngle(State.TheTimeOfDay);

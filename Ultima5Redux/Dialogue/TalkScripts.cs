@@ -109,7 +109,7 @@ namespace Ultima5Redux
             // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
             // 65 108  69 
 
-            string talkFilename = Path.Combine(u5Directory, SmallMapReferences.SingleMapReference.GetTLKFilenameFromMasterFile(mapMaster));
+            string talkFilename = Path.Combine(u5Directory, SmallMapReferences.SingleMapReference.GetTlkFilenameFromMasterFile(mapMaster));
 
             // the raw bytes of the talk file
             List<byte> talkByteList = Utils.GetFileAsByteList(talkFilename);

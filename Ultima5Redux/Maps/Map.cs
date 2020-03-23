@@ -16,9 +16,9 @@ namespace Ultima5Redux
         /// <summary>
         /// The directory of the U5 data files
         /// </summary>
-        protected string u5Directory;
+        protected string U5Directory;
 
-        protected TileOverrides tileOverrides;
+        protected TileOverrides TileOverrides;
         #endregion
 
         #region Internal Fields
@@ -26,23 +26,23 @@ namespace Ultima5Redux
         /// All A* nodes for the current map
         /// Accessed by [x][y]
         /// </summary>
-        protected List<List<AStarSharp.Node>> aStarNodes;
+        protected List<List<AStarSharp.Node>> AStarNodes;
         /// <summary>
         /// A* algorithm helper class
         /// </summary>
-        internal AStarSharp.Astar astar;
+        internal AStarSharp.Astar Astar;
         #endregion
 
         public Map(string u5Directory, TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
         {
-            this.u5Directory = u5Directory;
-            this.tileOverrides = tileOverrides;
+            this.U5Directory = u5Directory;
+            this.TileOverrides = tileOverrides;
             CurrentSingleMapReference = mapRef; 
 
             // for now combat maps don't have overrides
             if (mapRef != null)
             {
-                xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
+                XYOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Ultima5Redux
             int nYTiles = TheMap.Length;
 
             // load the A-Star compatible map into memory
-            aStarNodes = Utils.Init2DList<AStarSharp.Node>(nXTiles, nYTiles);
+            AStarNodes = Utils.Init2DList<AStarSharp.Node>(nXTiles, nYTiles);
 
             for (int x = 0; x < nXTiles; x++)
             {
@@ -87,10 +87,10 @@ namespace Ultima5Redux
                     float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x,y));
                     
                     AStarSharp.Node node = new AStarSharp.Node(new System.Numerics.Vector2(x, y), bIsWalkable, fWeight);
-                    aStarNodes[x].Add(node);
+                    AStarNodes[x].Add(node);
                 }
             }
-            astar = new AStarSharp.Astar(aStarNodes);
+            Astar = new AStarSharp.Astar(AStarNodes);
         }
 
 
@@ -99,16 +99,16 @@ namespace Ultima5Redux
             get; protected set;
         }
 
-        protected Dictionary<Point2D, TileOverride> xyOverrides;
+        protected Dictionary<Point2D, TileOverride> XYOverrides;
 
         public bool IsXYOverride(Point2D xy)
         {
-            return xyOverrides != null && xyOverrides.ContainsKey(xy);
+            return XYOverrides != null && XYOverrides.ContainsKey(xy);
         }
 
         public TileOverride GetTileOverride(Point2D xy)
         {
-            return xyOverrides[xy];
+            return XYOverrides[xy];
         }
         // public abstract TileOverride GetTileOverride(Point2D xy);
         // public abstract bool IsXYOverride(Point2D xy);
