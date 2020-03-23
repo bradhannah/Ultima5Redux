@@ -12,7 +12,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Standard offset for insetting moon and suns into plan
         /// </summary>
-        private const int nOffsetAdjust = -30; 
+        private const int nOffsetAdjust = 0x30; 
         /// <summary>
         /// Angle of the Trammel moon
         /// </summary>

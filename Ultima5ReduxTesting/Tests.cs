@@ -222,9 +222,21 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+
+
             world.State.TheVirtualMap.CurrentPosition = new Point2D(167, 22);
             bool bOnMoongate = world.IsAvatarOnActiveMoongate();
+            world.State.TheTimeOfDay.Hour = 23;
+            world.State.TheTimeOfDay.Day=1;
             Point3D p3d = world.GetMoongateTeleportLocation();
+            // moonglow
+            world.State.TheTimeOfDay.Day=25;
+            p3d = world.GetMoongateTeleportLocation();
+            // Skara Brae
+            world.State.TheTimeOfDay.Day=27;
+            p3d = world.GetMoongateTeleportLocation();
+            // New Magincia
+            
         }
         
         [Test]
