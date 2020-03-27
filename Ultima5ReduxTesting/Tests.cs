@@ -17,7 +17,7 @@ namespace Ultima5ReduxTesting
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return @"/Users/bradhannah/games/u5/Gold";
-                return @"C:\games\ultima_5_late\britain";
+                return @"C:\games\ultima_5\Gold";
             }
             
         }
@@ -223,20 +223,18 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-
             world.State.TheVirtualMap.CurrentPosition = new Point2D(167, 22);
             bool bOnMoongate = world.IsAvatarOnActiveMoongate();
             world.State.TheTimeOfDay.Hour = 23;
             world.State.TheTimeOfDay.Day=1;
-            Point3D p3d = world.GetMoongateTeleportLocation();
-            // moonglow
-            world.State.TheTimeOfDay.Day=25;
-            p3d = world.GetMoongateTeleportLocation();
-            // Skara Brae
-            world.State.TheTimeOfDay.Day=27;
-            p3d = world.GetMoongateTeleportLocation();
-            // New Magincia
-            
+            for (int i = 1; i <= 28; i++)
+            {
+                world.State.TheTimeOfDay.Day=(byte)i;
+                world.State.TheTimeOfDay.Hour = 23;
+                Point3D p3d = world.GetMoongateTeleportLocation();
+                world.State.TheTimeOfDay.Hour = 4;
+                p3d = world.GetMoongateTeleportLocation();
+            }
         }
         
         [Test]
