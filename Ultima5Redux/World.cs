@@ -339,7 +339,7 @@ namespace Ultima5Redux
             bool bIsNPCOneMoreTile = State.TheVirtualMap.IsNPCTile(oneMoreTileAdjusted);
 
             // is the next tile walkable and is there NOT an NPC on it
-            if (oneMoreTileReference.IsWalkingPassable && !bIsNPCOneMoreTile)
+            if (oneMoreTileReference.IsWalking_Passable && !bIsNPCOneMoreTile)
             {
                 State.TheVirtualMap.SwapTiles(adjustedPos, oneMoreTileAdjusted);
             }
@@ -659,7 +659,7 @@ namespace Ultima5Redux
             
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
-            bool bPassable = newTileReference.IsWalkingPassable &&
+            bool bPassable = newTileReference.IsWalking_Passable &&
                 !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index && !State.TheTimeOfDay.IsDayLight)
                 && !State.TheVirtualMap.IsNPCTile(newPos);
 

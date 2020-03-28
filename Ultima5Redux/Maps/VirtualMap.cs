@@ -328,7 +328,7 @@ namespace Ultima5Redux
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
             bool bStaircaseWalkable = bNoStaircases ? !_tileReferences.IsStaircase(tileReference.Index) : true; 
-            bool bIsWalkable = tileReference.IsWalkingPassable && bStaircaseWalkable;
+            bool bIsWalkable = tileReference.IsWalking_Passable && bStaircaseWalkable;
 
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
             return (!bIsNpcTile && bIsWalkable && !bIsAvatarTile);
