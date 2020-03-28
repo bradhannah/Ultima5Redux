@@ -11,28 +11,28 @@ namespace Ultima5Redux
         /// <summary>
         /// A random number generator - capable of seeding in future
         /// </summary>
-        private Random _ran = new Random();
+        private readonly Random _ran = new Random();
 
         /// <summary>
         /// Game State raw data
         /// </summary>
-        private DataChunks<DataChunkName> _dataChunks;
+        private readonly DataChunks<DataChunkName> _dataChunks;
 
-        private DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
+        private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
 
-        private DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
+        private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
         /// <summary>
         /// 2D array of flag indicating if an NPC is met [mastermap][npc#]
         /// </summary>
-        private bool[][] _npcIsMetArray;
+        private readonly bool[][] _npcIsMetArray;
 
         /// <summary>
         /// 2D array of flag indicating if an NPC is dead [mastermap][npc#]
         /// </summary>
-        private bool[][] _npcIsDeadArray;
+        private readonly bool[][] _npcIsDeadArray;
 
-        private DataOvlReference _dataRef;
+        private readonly DataOvlReference _dataRef;
 
         /// <summary>
         /// All player character records
