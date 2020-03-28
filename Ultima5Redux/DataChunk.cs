@@ -13,23 +13,23 @@ namespace Ultima5Redux
         /// <summary>
         /// A Dictionary that maps the DataChunkName to the specific location
         /// </summary>
-        private Dictionary<T, DataChunk> chunkMap = new Dictionary<T, DataChunk>();
+        private Dictionary<T, DataChunk> _chunkMap = new Dictionary<T, DataChunk>();
 
         /// <summary>
         /// The default name to give unlabelled data chunks
         /// </summary>
-        private T unusedValue;
+        private T _unusedValue;
 
         /// <summary>
         /// Full list of data chunks
         /// </summary>
-        private List<DataChunk> dataChunks;
+        private List<DataChunk> _dataChunks;
 
         /// <summary>
         /// Byte list of file contets
         /// </summary>
-        public List<byte> FileByteList { get { return fileByteList; } }
-        private List<byte> fileByteList;
+        public List<byte> FileByteList { get { return _fileByteList; } }
+        private List<byte> _fileByteList;
 
         /// <summary>
         /// Construct a collection of DataChunks 
@@ -38,9 +38,9 @@ namespace Ultima5Redux
         /// <param name="unusedValue">The value to automatically assign all un-named data objects</param>
         public DataChunks(string chunkFile, T unusedValue)
         {
-            dataChunks = new List<DataChunk>();
-            this.unusedValue = unusedValue;
-            fileByteList = Utils.GetFileAsByteList(chunkFile);
+            _dataChunks = new List<DataChunk>();
+            this._unusedValue = unusedValue;
+            _fileByteList = Utils.GetFileAsByteList(chunkFile);
         }
 
         #region Public Methods
@@ -51,7 +51,7 @@ namespace Ultima5Redux
         public void AddDataChunk(DataChunk chunk)
         {
             //dataChunks.Add(chunk);
-            AddDataChunk(chunk, unusedValue);
+            AddDataChunk(chunk, _unusedValue);
         }
 
         /// <summary>
@@ -62,12 +62,12 @@ namespace Ultima5Redux
         public void AddDataChunk(DataChunk chunk, T dataChunkName)
         {
             // all data chunks get added to the chunk list
-            dataChunks.Add(chunk);
+            _dataChunks.Add(chunk);
 
             // if the datachunk is not classified as unused then add it to the chunk map for quick reference
-            if (!dataChunkName.Equals(unusedValue))
+            if (!dataChunkName.Equals(_unusedValue))
             {
-                chunkMap.Add(dataChunkName, chunk);
+                _chunkMap.Add(dataChunkName, chunk);
             }
         }
 
@@ -90,9 +90,9 @@ namespace Ultima5Redux
             AddDataChunk(chunk);
 
             // if the datachunk is not classified as unused then add it to the chunk map for quick reference
-            if (!dataChunkName.Equals(unusedValue))
+            if (!dataChunkName.Equals(_unusedValue))
             {
-                chunkMap.Add(dataChunkName, chunk);
+                _chunkMap.Add(dataChunkName, chunk);
             }
             return chunk;
         }
@@ -108,7 +108,7 @@ namespace Ultima5Redux
         /// <param name="addToValue">the byte value to add (or subtract) from each byte read</param>
         public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength, byte addToValue)
         {
-            return AddDataChunk(dataFormat, description, offset, dataLength, addToValue, unusedValue);
+            return AddDataChunk(dataFormat, description, offset, dataLength, addToValue, _unusedValue);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Ultima5Redux
         /// <param name="dataLength">the length of the data in bytes</param>
         public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset, int dataLength)
         {
-            return AddDataChunk(dataFormat, description, offset, dataLength, 0x00, unusedValue);
+            return AddDataChunk(dataFormat, description, offset, dataLength, 0x00, _unusedValue);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Ultima5Redux
         /// <returns>the datachunk</returns>
         public DataChunk GetDataChunk(T dataChunkName)
         {
-            return chunkMap[dataChunkName];
+            return _chunkMap[dataChunkName];
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public DataChunk GetDataChunk(int index)
         {
-            return dataChunks[index];
+            return _dataChunks[index];
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Ultima5Redux
         /// </summary>
         public void PrintEverything()
         {
-            foreach (DataChunk chunk in dataChunks)
+            foreach (DataChunk chunk in _dataChunks)
             {
                 System.Console.WriteLine("**** " + chunk.Description);
                 chunk.PrintChunk();
@@ -172,13 +172,13 @@ namespace Ultima5Redux
         /// <summary>
         /// Are we running in debug mode?
         /// </summary>
-        private const bool isDebug = false;
+        private const bool IS_DEBUG = false;
 
         /// <summary>
         /// A link to the actual Full RawData 
         /// used in StringListFromIndexes - but private so no one accessess it directly
         /// </summary>
-        private List<byte> fullRawData;
+        private List<byte> _fullRawData;
         #endregion
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Ultima5Redux
             ValueModifier = addToValue;
             if (dataFormat == DataFormatType.StringListFromIndexes || dataFormat == DataFormatType.UINT16List)
             {
-                fullRawData = rawData;
+                _fullRawData = rawData;
             }
         }
 
@@ -275,12 +275,12 @@ namespace Ultima5Redux
                     break;
                 case DataFormatType.UINT16:
                     {
-                        UInt16 word = GetChunkAsUINT16List()[0];
+                        UInt16 word = GetChunkAsUint16List()[0];
                         System.Console.WriteLine("Word: " + word.ToString("X"));
                         break;
                     }
                 case DataFormatType.UINT16List:
-                    foreach (UInt16 word in GetChunkAsUINT16List())
+                    foreach (UInt16 word in GetChunkAsUint16List())
                     {
                         System.Console.WriteLine("Word: " + word.ToString("X"));
                     }
@@ -293,18 +293,18 @@ namespace Ultima5Redux
 
         public List<string> GetAsStringListFromIndexes()
         {
-            return DataChunk.GetAsStringListFromIndexes(GetChunkAsUINT16List(), fullRawData);
+            return DataChunk.GetAsStringListFromIndexes(GetChunkAsUint16List(), _fullRawData);
         }
 
         static private List<string> GetAsStringListFromIndexes(List<ushort> indexList, List<byte> rawByteList)
         {
             List<string> strList = new List<string>(indexList.Count);
-            const int MAX_STR_LENGTH = 20;
+            const int maxStrLength = 20;
 
             foreach (ushort index in indexList)
             {
                 // we grab the strings from the fullRawData because it is the entire file
-                strList.Add(DataChunk.CreateDataChunk(DataFormatType.SimpleString, String.Empty, rawByteList, index, MAX_STR_LENGTH).GetChunkAsString());
+                strList.Add(DataChunk.CreateDataChunk(DataFormatType.SimpleString, String.Empty, rawByteList, index, maxStrLength).GetChunkAsString());
             }
 
             return strList;
@@ -361,7 +361,7 @@ namespace Ultima5Redux
             RawData[0] = data;
         }
         
-        public void SetChunkAsUINT16(UInt16 data)
+        public void SetChunkAsUint16(UInt16 data)
         {
             RawData[0] = (byte)(data & 0xFF);
             RawData[1] = (byte)((data >> 8) & 0xFF);
@@ -376,7 +376,7 @@ namespace Ultima5Redux
         /// Returns the data as a single UINT16. It uses little endian convention.
         /// </summary>
         /// <returns>UINT16s</returns>
-        public UInt16 GetChunkAsUINT16()
+        public UInt16 GetChunkAsUint16()
         {
             UInt16 data = ((UInt16)(RawData[0] | (((UInt16)RawData[1]) << 8)));
             return data;
@@ -387,7 +387,7 @@ namespace Ultima5Redux
         /// Note: this will add/subtract using the addToValue
         /// </summary>
         /// <returns>list of UINT16s</returns>
-        public List<UInt16> GetChunkAsUINT16List()
+        public List<UInt16> GetChunkAsUint16List()
         {
             List<UInt16> data = Utils.CreateOffsetList(RawData, FileOffset, DataLength);
             for (int i = 0; i < data.Count; i++)

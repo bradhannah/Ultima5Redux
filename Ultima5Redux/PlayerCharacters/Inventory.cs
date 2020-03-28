@@ -9,7 +9,7 @@ namespace Ultima5Redux
 {
     public class Inventory
     {
-        private List<byte> gameStateByteArray;
+        private List<byte> _gameStateByteArray;
 
         public LordBritishArtifacts Artifacts { get; }
         public ShadowlordShards Shards { get; }
@@ -33,22 +33,22 @@ namespace Ultima5Redux
 
         private void SetInventoryQuantity(InventoryThings thing, byte nThings)
         {
-            gameStateByteArray[(int)thing] = nThings;
+            _gameStateByteArray[(int)thing] = nThings;
         }
 
         private byte GetInventoryQuantity(InventoryThings thing)
         {
-            return gameStateByteArray[(int)thing];
+            return _gameStateByteArray[(int)thing];
         }
 
         private void SetInventoryBool(InventoryThings thing, bool bBool)
         {
-            gameStateByteArray[(int)thing] = BoolToByte(bBool);
+            _gameStateByteArray[(int)thing] = BoolToByte(bBool);
         }
 
         public bool GetInventoryBool(InventoryThings thing)
         {
-            return DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "", gameStateByteArray, (int)thing, sizeof(byte)).GetChunkAsByte() > 0;
+            return DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "", _gameStateByteArray, (int)thing, sizeof(byte)).GetChunkAsByte() > 0;
         }
 
         public bool Grapple 
@@ -68,7 +68,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="equipment"></param>
         /// <returns></returns>
-        private int GetAttack(DataOvlReference.EQUIPMENT equipment)
+        private int GetAttack(DataOvlReference.Equipment equipment)
         {
             if (TheWeapons.GetWeaponFromEquipment(equipment) != null)
             {
@@ -86,7 +86,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="equipment"></param>
         /// <returns></returns>
-        private int GetDefense(DataOvlReference.EQUIPMENT equipment)
+        private int GetDefense(DataOvlReference.Equipment equipment)
         {
             if (TheWeapons.GetWeaponFromEquipment(equipment) != null)
             {
@@ -127,7 +127,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="equipment">type of combat equipment</param>
         /// <returns>combat item object</returns>
-        public CombatItem GetItemFromEquipment(DataOvlReference.EQUIPMENT equipment)
+        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment)
         {
             foreach (CombatItem item in ReadyItems)
             {
@@ -142,7 +142,7 @@ namespace Ultima5Redux
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,  
             MoonPhaseReferences moonPhaseReferences, Moongates moongates)
         {
-            this.gameStateByteArray = gameStateByteArray;
+            this._gameStateByteArray = gameStateByteArray;
 
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
             DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));

@@ -26,8 +26,8 @@ namespace Ultima5Redux
 
 
         #region Private Fields
-        private int Tile1;
-        private int Tile2;
+        private int _tile1;
+        private int _tile2;
         #endregion
 
         #region Public Properties
@@ -45,10 +45,10 @@ namespace Ultima5Redux
         {
             Debug.Assert(stateBytes.Length == 0x8);
             //
-            Tile1 = stateBytes[0] + 0x100;
-            Tile2 = stateBytes[1] + 0x100;
-            Tile1Ref = tileReferences.GetTileReference(Tile1);
-            Tile2Ref = tileReferences.GetTileReference(Tile2);
+            _tile1 = stateBytes[0] + 0x100;
+            _tile2 = stateBytes[1] + 0x100;
+            Tile1Ref = tileReferences.GetTileReference(_tile1);
+            Tile2Ref = tileReferences.GetTileReference(_tile2);
 
             X = stateBytes[2];
             Y = stateBytes[3];

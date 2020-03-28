@@ -21,11 +21,11 @@ namespace Ultima5Redux
         /// <summary>
         /// Raw file
         /// </summary>
-        static private List<byte> lookByteArray = new List<byte>();
+        static private List<byte> _lookByteArray = new List<byte>();
         /// <summary>
         /// List of all offsets into the lookByteArray
         /// </summary>
-        static private List<int> lookOffsets = new List<int>(TOTAL_LOOKS);
+        static private List<int> _lookOffsets = new List<int>(TOTAL_LOOKS);
 
         /// <summary>
         /// Loads the "Look" descriptions
@@ -33,12 +33,12 @@ namespace Ultima5Redux
         /// <param name="u5directory">directory of data files</param>
         public Look(string u5directory)
         {
-            lookByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.LOOK2_DAT));
+            _lookByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.LOOK2_DAT));
 
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < (TOTAL_LOOKS * 2); i+=2)
             {
-                lookOffsets.Add((int)(lookByteArray[i] | (((uint)lookByteArray[i+1]) << 8)));
+                _lookOffsets.Add((int)(_lookByteArray[i] | (((uint)_lookByteArray[i+1]) << 8)));
             }
         }
 
@@ -50,11 +50,11 @@ namespace Ultima5Redux
         public string GetLookDescription(int tileNumber)
         {
             string description = "";
-            int lookOffset = lookOffsets[tileNumber];
+            int lookOffset = _lookOffsets[tileNumber];
 
             byte curCharByte;
             // loop until a zero byte is found indicating end of string
-            while ( (curCharByte = lookByteArray[lookOffset]) != 0)
+            while ( (curCharByte = _lookByteArray[lookOffset]) != 0)
             {
                 // cast to (char) to ensure the string understands it not a number
                 description += (char)curCharByte;

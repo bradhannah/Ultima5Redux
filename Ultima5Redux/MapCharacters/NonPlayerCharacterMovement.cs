@@ -18,15 +18,15 @@ namespace Ultima5Redux
             // we totally ignore the first entry, since it's bad stuff
             if (nDialogIndex == 0) return;
 
-            this.movementInstructionDataChunk = movementInstructionDataChunk;
-            this.movementOffsetDataChunk = movementOffsetDataChunk;
-            this.nDialogIndex = nDialogIndex;
+            this._movementInstructionDataChunk = movementInstructionDataChunk;
+            this._movementOffsetDataChunk = movementOffsetDataChunk;
+            this._nDialogIndex = nDialogIndex;
             
             // todo: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
-            nOffset = movementOffsetDataChunk.GetChunkAsUINT16List() [nDialogIndex];
+            _nOffset = movementOffsetDataChunk.GetChunkAsUint16List() [nDialogIndex];
 
             // if it has the value of 0xFFFF then it indicates there are currently no instructions
-            if (nOffset == 0xFFFF) return;
+            if (_nOffset == 0xFFFF) return;
 
             // calculate the offset
             int nOffsetIndex = (nDialogIndex) * (MAX_COMMAND_LIST_ENTRIES * MAX_MOVEMENT_COMMAND_SIZE);
@@ -35,13 +35,13 @@ namespace Ultima5Redux
             List<byte> rawData = movementInstructionDataChunk.GetAsByteList();
 
             // gets a smaller version of it - much easier to keep track of
-            loadedData = rawData.GetRange(nOffsetIndex, MAX_COMMAND_LIST_ENTRIES * 2);
+            _loadedData = rawData.GetRange(nOffsetIndex, MAX_COMMAND_LIST_ENTRIES * 2);
 
-            int nIndex = nOffset;
+            int nIndex = _nOffset;
             for (int i = 0; i < MAX_COMMAND_LIST_ENTRIES; i++)
             {
-                byte nIterations = loadedData[nIndex];
-                MovementCommandDirection direction = (MovementCommandDirection)loadedData[nIndex + 1];
+                byte nIterations = _loadedData[nIndex];
+                MovementCommandDirection direction = (MovementCommandDirection)_loadedData[nIndex + 1];
 
                 // if we have hit 0xFF then there is nothing else in the list and we can just return
                 if (nIterations == 0xFF || nIterations == 0) return;
@@ -123,23 +123,23 @@ namespace Ultima5Redux
         /// <summary>
         /// DataChunk of current map characters movement list
         /// </summary>
-        private DataChunk movementInstructionDataChunk;
+        private DataChunk _movementInstructionDataChunk;
         /// <summary>
         /// DataChunk of current map characters offset into movement list
         /// </summary>
-        private DataChunk movementOffsetDataChunk;
+        private DataChunk _movementOffsetDataChunk;
         /// <summary>
         /// Dialog index of the map character
         /// </summary>
-        private int nDialogIndex;
+        private int _nDialogIndex;
         /// <summary>
         /// The data that was loaded into the list initially (primarily for debug)
         /// </summary>
-        private List<byte> loadedData = new List<byte>();
+        private List<byte> _loadedData = new List<byte>();
         /// <summary>
         /// the offset into the movement list
         /// </summary>
-        private UInt16 nOffset;
+        private UInt16 _nOffset;
         /// <summary>
         /// Maximum number of movement commands per map character
         /// </summary>
@@ -151,7 +151,7 @@ namespace Ultima5Redux
         /// <summary>
         /// all movements 
         /// </summary>
-        private Queue<MovementCommand> movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
+        private Queue<MovementCommand> _movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
         #endregion
 
         #region Public enums
@@ -168,7 +168,7 @@ namespace Ultima5Redux
         /// <param name="movementCommand"></param>
         public void AddNewMovementInstruction(MovementCommand movementCommand)
         {
-            movementQueue.Enqueue(movementCommand);
+            _movementQueue.Enqueue(movementCommand);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Ultima5Redux
         /// </summary>
         public void ClearMovements()
         {
-            movementQueue.Clear();
+            _movementQueue.Clear();
         }
 
 
@@ -186,12 +186,12 @@ namespace Ultima5Redux
         /// <returns>true if there are commands available</returns>
         public bool IsNextCommandAvailable()
         {
-            if (movementQueue.Count > 0)
+            if (_movementQueue.Count > 0)
             {
-                Debug.Assert(movementQueue.Peek().Iterations > 0,
+                Debug.Assert(_movementQueue.Peek().Iterations > 0,
                     "You have no iterations left on your movement command but it's still in the queue");
             }
-            return movementQueue.Count > 0;
+            return _movementQueue.Count > 0;
         }
 
 
@@ -201,23 +201,23 @@ namespace Ultima5Redux
         /// <returns></returns>
         public MovementCommandDirection GetNextMovementCommandDirection(bool bPeek = false)
         {
-            if (movementQueue.Count <= 0) { throw new Ultima5ReduxException("You have requested to GetNextMovementCommand but there are non left."); }
-            MovementCommandDirection direction = movementQueue.Peek().Direction;
+            if (_movementQueue.Count <= 0) { throw new Ultima5ReduxException("You have requested to GetNextMovementCommand but there are non left."); }
+            MovementCommandDirection direction = _movementQueue.Peek().Direction;
             
             // calculate how many you will have left after you 
-            int nRemaining = movementQueue.Peek().Iterations - 1;
+            int nRemaining = _movementQueue.Peek().Iterations - 1;
             
             Debug.Assert(nRemaining >= 0);
 
             if (nRemaining == 0 && !bPeek)
             {
                 // we are done with it, so let's toss it
-                movementQueue.Dequeue();
+                _movementQueue.Dequeue();
             }
             else if (!bPeek)
             {
                 // we have more moves, but we are going to spend one 
-                int nRemainingMovements = movementQueue.Peek().SpendSingleMovement();
+                int nRemainingMovements = _movementQueue.Peek().SpendSingleMovement();
             }
 
             return direction;
@@ -229,8 +229,8 @@ namespace Ultima5Redux
         /// <returns></returns>
         public override string ToString()
         {
-            if (this.movementQueue.Count == 0) return "Empty";
-            return "First: " + movementQueue.Peek().Direction.ToString() + " for " + movementQueue.Peek().Iterations + " times";
+            if (this._movementQueue.Count == 0) return "Empty";
+            return "First: " + _movementQueue.Peek().Direction.ToString() + " for " + _movementQueue.Peek().Iterations + " times";
         }
         #endregion
     }

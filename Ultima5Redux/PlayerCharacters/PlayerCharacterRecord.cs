@@ -105,35 +105,35 @@ namespace Ultima5Redux
             Stats.Strength = rawRecordByteList[(int)CharacterRecordOffsets.Strength];
             Stats.Dexterity = rawRecordByteList[(int)CharacterRecordOffsets.Dexterity];
             Stats.Intelligence = rawRecordByteList[(int)CharacterRecordOffsets.Intelligence];
-            Stats.CurrentMP = rawRecordByteList[(int)CharacterRecordOffsets.CurrentMP];
-            Stats.CurrentHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Current hit points", rawRecordByteList, (int)CharacterRecordOffsets.CurrentHP, sizeof(UInt16)).GetChunkAsUINT16List()[0];
-            Stats.MaximumHP = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.MaximimumHP, sizeof(UInt16)).GetChunkAsUINT16List()[0];
-            Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.ExperiencePoints, sizeof(UInt16)).GetChunkAsUINT16List()[0];
+            Stats.CurrentMp = rawRecordByteList[(int)CharacterRecordOffsets.CurrentMP];
+            Stats.CurrentHp = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Current hit points", rawRecordByteList, (int)CharacterRecordOffsets.CurrentHP, sizeof(UInt16)).GetChunkAsUint16List()[0];
+            Stats.MaximumHp = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.MaximimumHP, sizeof(UInt16)).GetChunkAsUint16List()[0];
+            Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.ExperiencePoints, sizeof(UInt16)).GetChunkAsUint16List()[0];
             Stats.Level = rawRecordByteList[(int)CharacterRecordOffsets.Level];
 
             // this approach is necessary because I have found circumstances where shields and weapons were swapped in the save file
             // I couldn't guarantee that other items wouldn't do the same so instead we allow each of the equipment save
             // slots can be "whatever" in "whatever" order. When I save them back to disk, I will save them in the correct order
             // Also confirmed that Ultima 5 can handle these equipment saves out of order as well
-            List<DataOvlReference.EQUIPMENT> allEquipment = new List<DataOvlReference.EQUIPMENT>(6);
-            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet]);
-            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor]);
-            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon]);
-            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield]);
-            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring]);
-            allEquipment.Add((DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet]);
+            List<DataOvlReference.Equipment> allEquipment = new List<DataOvlReference.Equipment>(6);
+            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Helmet]);
+            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Armor]);
+            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Weapon]);
+            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Shield]);
+            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Ring]);
+            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Amulet]);
 
-            Equipped.Helmet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
-            Equipped.Armor = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
-            Equipped.LeftHand = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
-            Equipped.RightHand = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
-            Equipped.Ring = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
-            Equipped.Amulet = (DataOvlReference.EQUIPMENT)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
+            Equipped.Helmet = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
+            Equipped.Armor = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
+            Equipped.LeftHand = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
+            Equipped.RightHand = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Shield];
+            Equipped.Ring = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Ring];
+            Equipped.Amulet = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Amulet];
 
             // sometimes U5 swaps the shield and weapon, so we are going to be careful and just swap them back
-            if ((int)Equipped.LeftHand <= (int)DataOvlReference.EQUIPMENT.JewelShield && (int)Equipped.LeftHand >= (int)DataOvlReference.EQUIPMENT.Dagger)
+            if ((int)Equipped.LeftHand <= (int)DataOvlReference.Equipment.JewelShield && (int)Equipped.LeftHand >= (int)DataOvlReference.Equipment.Dagger)
             {
-                DataOvlReference.EQUIPMENT shieldEquip = Equipped.RightHand;
+                DataOvlReference.Equipment shieldEquip = Equipped.RightHand;
                 Equipped.RightHand = Equipped.LeftHand;
                 Equipped.LeftHand = shieldEquip;
             }
@@ -147,27 +147,27 @@ namespace Ultima5Redux
 
         public class CharacterEquipped
         {
-            public bool IsEquipped(DataOvlReference.EQUIPMENT equipment)
+            public bool IsEquipped(DataOvlReference.Equipment equipment)
             {
                 return (Helmet == equipment || Armor == equipment || LeftHand == equipment || RightHand == equipment || Ring == equipment || Amulet == equipment);
             }
 
             public CharacterEquipped()
             {
-                Helmet = DataOvlReference.EQUIPMENT.Nothing;
-                Armor = DataOvlReference.EQUIPMENT.Nothing;
-                LeftHand = DataOvlReference.EQUIPMENT.Nothing;
-                RightHand = DataOvlReference.EQUIPMENT.Nothing;
-                Ring = DataOvlReference.EQUIPMENT.Nothing;
-                Amulet = DataOvlReference.EQUIPMENT.Nothing;
+                Helmet = DataOvlReference.Equipment.Nothing;
+                Armor = DataOvlReference.Equipment.Nothing;
+                LeftHand = DataOvlReference.Equipment.Nothing;
+                RightHand = DataOvlReference.Equipment.Nothing;
+                Ring = DataOvlReference.Equipment.Nothing;
+                Amulet = DataOvlReference.Equipment.Nothing;
             }
 
-            public DataOvlReference.EQUIPMENT Helmet { get; set; }
-            public DataOvlReference.EQUIPMENT Armor { get; set; }
-            public DataOvlReference.EQUIPMENT LeftHand { get; set; }
-            public DataOvlReference.EQUIPMENT RightHand { get; set; }
-            public DataOvlReference.EQUIPMENT Ring { get; set; }
-            public DataOvlReference.EQUIPMENT Amulet { get; set; }
+            public DataOvlReference.Equipment Helmet { get; set; }
+            public DataOvlReference.Equipment Armor { get; set; }
+            public DataOvlReference.Equipment LeftHand { get; set; }
+            public DataOvlReference.Equipment RightHand { get; set; }
+            public DataOvlReference.Equipment Ring { get; set; }
+            public DataOvlReference.Equipment Amulet { get; set; }
         }
 
 
@@ -176,9 +176,9 @@ namespace Ultima5Redux
             public uint Strength { get; set; }
             public uint Dexterity { get; set; }
             public uint Intelligence { get; set; }
-            public uint CurrentMP { get; set; }
-            public UInt16 CurrentHP { get; set; }
-            public uint MaximumHP { get; set; }
+            public uint CurrentMp { get; set; }
+            public UInt16 CurrentHp { get; set; }
+            public uint MaximumHp { get; set; }
             public uint ExperiencePoints { get; set; }
             public uint Level { get; set; }
         }

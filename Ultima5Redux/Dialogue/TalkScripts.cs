@@ -17,14 +17,14 @@ namespace Ultima5Redux
         /// <summary>
         /// do I print Debug output to the Console
         /// </summary>
-        private bool isDebug = false;
+        private bool _isDebug = false;
 
 
         /// <summary>
         /// the mapping of NPC # to file .tlk file offset
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-        protected internal unsafe struct NPC_TalkOffset
+        protected internal unsafe struct NPCTalkOffset
         {
             public ushort npcIndex;
             public ushort fileOffset;
@@ -33,13 +33,13 @@ namespace Ultima5Redux
         /// <summary>
         /// Dictionary that refers to the raw bytes for each NPC based on Map master file and NPC index
         /// </summary>
-        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> talkRefs =
+        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> _talkRefs =
             new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>(sizeof(SmallMapReferences.SingleMapReference.SmallMapMasterFiles));
 
         /// <summary>
         /// Dictionary that refers to the fully interpreted TalkScripts for each NPC based on Master map file and NPC index
         /// </summary>
-        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> talkScriptRefs = 
+        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> _talkScriptRefs = 
             new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>();
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Ultima5Redux
         private const byte END_OF_SCRIPTLINE_BYTE = 0x00;
 
         // all of the compressed words that are referenced in the .tlk files
-        private CompressedWordReference compressedWordRef;
+        private CompressedWordReference _compressedWordRef;
 
         /// <summary>
         /// Build the talk scripts
@@ -62,7 +62,7 @@ namespace Ultima5Redux
         public TalkScripts(string u5Directory, DataOvlReference dataRef)
         {
             // save the compressed words, we're gonna need them
-            this.compressedWordRef = new CompressedWordReference(dataRef);
+            this._compressedWordRef = new CompressedWordReference(dataRef);
 
             // just a lazy array that is easier to enumerate than the enum
             SmallMapReferences.SingleMapReference.SmallMapMasterFiles[] smallMapRefs =
@@ -80,13 +80,13 @@ namespace Ultima5Redux
                 InitalizeTalkScriptsRaw(u5Directory, mapRef);
                 
                 // initialize and allocate the appropriately sized list of TalkScript(s)
-                talkScriptRefs.Add(mapRef, new Dictionary<int, TalkScript>(talkRefs[mapRef].Count));
+                _talkScriptRefs.Add(mapRef, new Dictionary<int, TalkScript>(_talkRefs[mapRef].Count));
 
                 // for each of the NPCs in the particular map, initialize the individual NPC talk script
-                foreach (int key in talkRefs[mapRef].Keys)
+                foreach (int key in _talkRefs[mapRef].Keys)
                 {
-                    talkScriptRefs[mapRef][key] = InitializeTalkScriptFromRaw(mapRef, key);
-                    if (isDebug) Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + key.ToString());
+                    _talkScriptRefs[mapRef][key] = InitializeTalkScriptFromRaw(mapRef, key);
+                    if (_isDebug) Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + key.ToString());
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace Ultima5Redux
         {
             if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC))
             { return null; }
-            return (talkScriptRefs[smallMapRef][nNPC]);
+            return (_talkScriptRefs[smallMapRef][nNPC]);
         }
 
         /// <summary>
@@ -120,30 +120,30 @@ namespace Ultima5Redux
 
             // keep track of the NPC to file offset mappings
             //List<NPC_TalkOffset> npcOffsets;
-            Dictionary<int, NPC_TalkOffset> npcOffsets;
+            Dictionary<int, NPCTalkOffset> npcOffsets;
 
             // the first word in the talk file tells you how many characters are referenced in script
             int nEntries = Utils.LittleEndianConversion(talkByteList[0], talkByteList[1]);
 
             //talkRefs.Add(mapMaster, new List<byte[]>(nEntries));
-            talkRefs.Add(mapMaster, new Dictionary<int, byte[]>(nEntries));
+            _talkRefs.Add(mapMaster, new Dictionary<int, byte[]>(nEntries));
 
             // a list of all the offsets
             //npcOffsets = new List<NPC_TalkOffset>(nEntries);
-            npcOffsets = new Dictionary<int, NPC_TalkOffset>(nEntries);
+            npcOffsets = new Dictionary<int, NPCTalkOffset>(nEntries);
 
             unsafe
             {
                 // you are in a single file right now
-                for (int i = 0; i < (nEntries * sizeof(NPC_TalkOffset)); i += sizeof(NPC_TalkOffset))
+                for (int i = 0; i < (nEntries * sizeof(NPCTalkOffset)); i += sizeof(NPCTalkOffset))
                 {
                     // add 2 because we know we are starting at an offset
                     unsafe {
-                        NPC_TalkOffset talkOffset = (NPC_TalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPC_TalkOffset));
+                        NPCTalkOffset talkOffset = (NPCTalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPCTalkOffset));
                         npcOffsets[talkOffset.npcIndex] = talkOffset;
 
                         // OMG I'm tired.. figure out why this isn't printing properly....
-                        if (isDebug) Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
+                        if (_isDebug) Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
                     }
                 }
                 // you are in a single file right now
@@ -173,7 +173,7 @@ namespace Ultima5Redux
                     // copy only the bytes from the offset
                     talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int)chunkLength);
                     // Add the raw bytes to the specific Map+NPC#
-                    talkRefs[mapMaster].Add(key, chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
+                    _talkRefs[mapMaster].Add(key, chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace Ultima5Redux
             bool writingSingleCharacters = false;   // are we currently writing a single character at a time?
             string buildAWord = string.Empty;       // the word we are currently building if we are writingSingleCharacters=true
 
-            foreach (byte byteWord in talkRefs[smallMapRef][index])
+            foreach (byte byteWord in _talkRefs[smallMapRef][index])
             {
                 // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
                 // bh: Sept 21, 2019 - had to add a disgusting hack to account for what appears to be broken
@@ -255,9 +255,9 @@ namespace Ultima5Redux
                         buildAWord += " "; }
 
                     // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
-                    if (compressedWordRef.IsTalkingWord((int)tempByte))
+                    if (_compressedWordRef.IsTalkingWord((int)tempByte))
                     {
-                        string talkingWord = compressedWordRef.GetTalkingWord((int)tempByte);
+                        string talkingWord = _compressedWordRef.GetTalkingWord((int)tempByte);
                         useCompressedWord = true;
                         buildAWord += talkingWord;
                     }

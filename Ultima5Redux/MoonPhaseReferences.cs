@@ -8,23 +8,23 @@ namespace Ultima5Redux
         /// <summary>
         /// DataChunk that describes the moon phases and which moongate gets into town by town
         /// </summary>
-        private readonly DataChunk moonPhaseChunk;
+        private readonly DataChunk _moonPhaseChunk;
         /// <summary>
         /// Standard offset for insetting moon and suns into plan
         /// </summary>
-        private const int nOffsetAdjust = 0x30; 
+        private const int N_OFFSET_ADJUST = 0x30; 
         /// <summary>
         /// Angle of the Trammel moon
         /// </summary>
-        private const double dTrammelAngle = (16 / 24d) * 360d - 90d;
+        private const double D_TRAMMEL_ANGLE = (16 / 24d) * 360d - 90d;
         /// <summary>
         /// Angle of the Felucca moon
         /// </summary>
-        private const double dFeluccaAngle = (8 / 24d) * 360d - 90d;
+        private const double D_FELUCCA_ANGLE = (8 / 24d) * 360d - 90d;
         /// <summary>
         /// Angle of the Sun
         /// </summary>
-        private const double dSunAngle = 270; 
+        private const double D_SUN_ANGLE = 270; 
         
         public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
 
@@ -41,7 +41,7 @@ namespace Ultima5Redux
         /// <param name="dataOvlReference"></param>
         public MoonPhaseReferences(DataOvlReference dataOvlReference)
         {
-            this.moonPhaseChunk = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.MOON_PHASES);
+            this._moonPhaseChunk = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.MOON_PHASES);
         }
 
         /// <summary>
@@ -76,14 +76,14 @@ namespace Ultima5Redux
             // the value stored is an offset and needs to be adjusted to a zero based index
             int getAdjustedValue(int nValue)
             {
-                return nValue - nOffsetAdjust;
+                return nValue - N_OFFSET_ADJUST;
             }
             
             // we don't have a moon phase in the day time
             if (timeOfDay.IsDayLight) return MoonPhases.NoMoon;
 
-            if (timeOfDay.Hour <= 4) return (MoonPhases)getAdjustedValue(moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2]);
-            if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23) return (MoonPhases)getAdjustedValue(moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2 + 1]);
+            if (timeOfDay.Hour <= 4) return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2]);
+            if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23) return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2 + 1]);
             
             throw new Ultima5ReduxException("We have asked for a moongate phase but did not met the criteria. "+timeOfDay);
         }
@@ -133,7 +133,7 @@ namespace Ultima5Redux
         /// <param name="dDiameter">the diameter of the square space</param>
         /// <param name="dOffset">an offset to inset into the circle</param>
         /// <returns></returns>
-        private Point2DFloat getSunMoonPosition(double dAngle, double dDiameter, double dOffset)
+        private Point2DFloat GetSunMoonPosition(double dAngle, double dDiameter, double dOffset)
         {
             //const double dOffset = 35;
             dAngle %= dDiameter;
@@ -156,11 +156,11 @@ namespace Ultima5Redux
             switch (moonAndSun)
             {
                 case MoonsAndSun.Trammel:
-                    return (getSunMoonPosition(dTrammelAngle, dDiameter, dOffset));
+                    return (GetSunMoonPosition(D_TRAMMEL_ANGLE, dDiameter, dOffset));
                 case MoonsAndSun.Felucca:
-                    return (getSunMoonPosition(dFeluccaAngle, dDiameter, dOffset));
+                    return (GetSunMoonPosition(D_FELUCCA_ANGLE, dDiameter, dOffset));
                 case MoonsAndSun.Sun:
-                    return (getSunMoonPosition(dSunAngle, dDiameter, dOffset));
+                    return (GetSunMoonPosition(D_SUN_ANGLE, dDiameter, dOffset));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(moonAndSun), moonAndSun, null);
             }

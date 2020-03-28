@@ -94,8 +94,8 @@ namespace Ultima5Redux
 
         public ushort Year
         {
-            get => _currentYearDataChunk.GetChunkAsUINT16();
-            set => _currentYearDataChunk.SetChunkAsUINT16(value);
+            get => _currentYearDataChunk.GetChunkAsUint16();
+            set => _currentYearDataChunk.SetChunkAsUint16(value);
         }
 
         public byte Month

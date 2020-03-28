@@ -326,7 +326,7 @@ namespace Ultima5Redux
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
             bool bStaircaseWalkable = bNoStaircases ? !_tileReferences.IsStaircase(tileReference.Index) : true; 
-            bool bIsWalkable = tileReference.IsWalking_Passable && bStaircaseWalkable;
+            bool bIsWalkable = tileReference.IsWalkingPassable && bStaircaseWalkable;
 
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
             return (!bIsNpcTile && bIsWalkable && !bIsAvatarTile);
@@ -548,7 +548,7 @@ namespace Ultima5Redux
                 }
             }
 
-            NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType aiType = mapCharacter.NPCRef.Schedule.GetCharacterAITypeByTime(_timeOfDay);
+            NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType aiType = mapCharacter.NPCRef.Schedule.GetCharacterAiTypeByTime(_timeOfDay);
 
             // is the character is in their prescribed location?
             if (mapCharacter.CurrentCharacterPosition == npcXy)
@@ -556,24 +556,24 @@ namespace Ultima5Redux
                 // test all the possibilities, special calculations for all of them
                 switch (aiType)
                 {
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Fixed:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Fixed:
                         // do nothing, they are where they are supposed to be 
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.DrudgeWorthThing:
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Wander:
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(mapCharacter, 2);
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.BigWander:
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(mapCharacter, 4);
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ChildRunAway:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.MerchantThing:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.MerchantThing:
                         // don't think they move....?
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ExtortOrAttackOrFollow:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         break;
                     default:
@@ -584,17 +584,17 @@ namespace Ultima5Redux
             {
                 switch (aiType)
                 {
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.MerchantThing:
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Fixed:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.MerchantThing:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
                         BuildPath(mapCharacter, npcXy.XY);
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.DrudgeWorthThing:
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander:
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.BigWander:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Wander:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.BigWander:
                         // different wanders have different different radius'
                         int nWanderTiles =
-                            aiType == NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.Wander ? 2 : 4;
+                            aiType == NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Wander ? 2 : 4;
                         // we check to see how many moves it would take to get to their destination, if it takes
                         // more than the allotted amount then we first build a path to the destination
                         // note: because you are technically within X tiles doesn't mean you can access it
@@ -610,10 +610,10 @@ namespace Ultima5Redux
                             BuildPath(mapCharacter, npcXy.XY);
                         }
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ChildRunAway:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         // if the avatar is close by then move away from him, otherwise return to original path, one move at a time
                         break;
-                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AIType.ExtortOrAttackOrFollow:
+                    case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         break;
                     default:

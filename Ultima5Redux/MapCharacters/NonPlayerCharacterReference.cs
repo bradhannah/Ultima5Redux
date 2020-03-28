@@ -12,7 +12,7 @@ namespace Ultima5Redux
     {
 
         #region Private Variables
-        private GameState gameStateRef;
+        private GameState _gameStateRef;
         #endregion
 
         #region Constants, Sructures and Enums
@@ -20,7 +20,7 @@ namespace Ultima5Redux
         /// Original structure
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public unsafe struct NPC_Schedule
+        public unsafe struct NPCSchedule
         {
             public fixed byte AI_types[3];
             public fixed byte x_coordinates[3];
@@ -137,7 +137,7 @@ namespace Ultima5Redux
         /// </summary>
         //public SmallMapReferences.SingleMapReference MapReference { get; }
         public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
-        public byte MapLocationID { get { return (byte)(MapLocation - 1); } }
+        public byte MapLocationId { get { return (byte)(MapLocation - 1); } }
 
         /// <summary>
         /// What type of NPC are they? 
@@ -206,7 +206,7 @@ namespace Ultima5Redux
                 // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
                 // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)
 
-                if (gameStateRef.NpcHasMetAvatar(this))
+                if (_gameStateRef.NpcHasMetAvatar(this))
                 {
                     return true;
                 }
@@ -222,7 +222,7 @@ namespace Ultima5Redux
             }
             set
             {
-                gameStateRef.SetNpcHasMetAvatar(this, value);
+                _gameStateRef.SetNpcHasMetAvatar(this, value);
             }
         }
         #endregion
@@ -237,7 +237,7 @@ namespace Ultima5Redux
         /// <param name="dialogNumber">dialog number referencing data OVL</param>
         /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
         /// <param name="talkScript">their conversation script</param>
-        public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location, GameState gameStateRef, NPC_Schedule sched,
+        public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location, GameState gameStateRef, NPCSchedule sched,
             byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript, int nKeySprite)
         {
             Schedule = new NonPlayerCharacterSchedule(sched);
@@ -249,7 +249,7 @@ namespace Ultima5Redux
             DialogNumber = dialogNumber;
             Script = talkScript;
             DialogIndex = dialogIndex;
-            this.gameStateRef = gameStateRef;
+            this._gameStateRef = gameStateRef;
 
 
             // no schedule? I guess you're not real
@@ -277,7 +277,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="sched">daily schedule</param>
         /// <returns></returns>
-        static private bool IsEmptySched(NonPlayerCharacterReference.NPC_Schedule sched)
+        static private bool IsEmptySched(NonPlayerCharacterReference.NPCSchedule sched)
         {
             unsafe
             {

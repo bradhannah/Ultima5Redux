@@ -141,29 +141,29 @@ namespace Ultima5Redux
 
         public string GetLocationName(SmallMapReferences.SingleMapReference.Location location)
         {
-            Func<DataOvlReference.LOCATION_STRINGS, string> getLocationNameStr = delegate (DataOvlReference.LOCATION_STRINGS index)
+            Func<DataOvlReference.LocationStrings, string> getLocationNameStr = delegate (DataOvlReference.LocationStrings index)
             {
                 return _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.LOCATION_NAMES, (int)index);
             };
 
             // filthy way to convert our more commonly used Location enum to the less used LOCATION_STRINGS
             // they didn't even bother having them all match, and then decided to leave some out
-            DataOvlReference.LOCATION_STRINGS newLocStrEnum = (DataOvlReference.LOCATION_STRINGS) Enum.Parse(typeof(DataOvlReference.LOCATION_STRINGS), location.ToString());
+            DataOvlReference.LocationStrings newLocStrEnum = (DataOvlReference.LocationStrings) Enum.Parse(typeof(DataOvlReference.LocationStrings), location.ToString());
 
             // if the DataOVL didn't provide a name, then we are forced to set our own... :(
             if ((int)newLocStrEnum < 0)
             {
                 switch (newLocStrEnum)
                 {
-                    case DataOvlReference.LOCATION_STRINGS.Suteks_Hut:
+                    case DataOvlReference.LocationStrings.Suteks_Hut:
                         return "SUTEK'S HUT";
-                    case DataOvlReference.LOCATION_STRINGS.SinVraals_Hut:
+                    case DataOvlReference.LocationStrings.SinVraals_Hut:
                         return "SIN VRAAL'S HUT";
-                    case DataOvlReference.LOCATION_STRINGS.Grendels_Hut:
+                    case DataOvlReference.LocationStrings.Grendels_Hut:
                         return "GRENDAL'S HUT";
-                    case DataOvlReference.LOCATION_STRINGS.Lord_Britishs_Castle:
+                    case DataOvlReference.LocationStrings.Lord_Britishs_Castle:
                         return "LORD BRITISH'S CASTLE";
-                    case DataOvlReference.LOCATION_STRINGS.Palace_of_Blackthorn:
+                    case DataOvlReference.LocationStrings.Palace_of_Blackthorn:
                         return "PALACE OF BLACKTHORN";
                     default:
                         throw new Ultima5ReduxException("Ummm asked for a location name and wasn't on the guest list.");
@@ -178,7 +178,7 @@ namespace Ultima5Redux
         public string GetLocationTypeStr(SmallMapReferences.SingleMapReference.Location location)
         {
             // anon function for quick lookup of strings
-            Func<DataOvlReference.WORLD_STRINGS, string> getTypePlaceStr = delegate (DataOvlReference.WORLD_STRINGS index)
+            Func<DataOvlReference.WorldStrings, string> getTypePlaceStr = delegate (DataOvlReference.WorldStrings index)
             {
                 return _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.WORLD, (int)index);
             };
@@ -186,17 +186,17 @@ namespace Ultima5Redux
             switch (location)
             {
                 case SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_CASTLE_LB);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_CASTLE_LB);
                 case SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_PALACE_B);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_PALACE_B);
                 case SmallMapReferences.SingleMapReference.Location.East_Britanny:
                 case SmallMapReferences.SingleMapReference.Location.West_Britanny:
                 case SmallMapReferences.SingleMapReference.Location.North_Britanny:
                 case SmallMapReferences.SingleMapReference.Location.Paws:
                 case SmallMapReferences.SingleMapReference.Location.Cove:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_VILLAGE);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_VILLAGE);
                 case SmallMapReferences.SingleMapReference.Location.Buccaneers_Den:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_KEEP);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_KEEP);
                 case SmallMapReferences.SingleMapReference.Location.Moonglow:
                 case SmallMapReferences.SingleMapReference.Location.Britain:
                 case SmallMapReferences.SingleMapReference.Location.Jhelom:
@@ -205,20 +205,20 @@ namespace Ultima5Redux
                 case SmallMapReferences.SingleMapReference.Location.Trinsic:
                 case SmallMapReferences.SingleMapReference.Location.Skara_Brae:
                 case SmallMapReferences.SingleMapReference.Location.New_Magincia:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_TOWNE);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_TOWNE);
                 case SmallMapReferences.SingleMapReference.Location.Fogsbane:
                 case SmallMapReferences.SingleMapReference.Location.Stormcrow:
                 case SmallMapReferences.SingleMapReference.Location.Waveguide:
                 case SmallMapReferences.SingleMapReference.Location.Greyhaven:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_LIGHTHOUSE);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_LIGHTHOUSE);
                 case SmallMapReferences.SingleMapReference.Location.Iolos_Hut:
                 //case Location.spektran
                 case SmallMapReferences.SingleMapReference.Location.Suteks_Hut:
                 case SmallMapReferences.SingleMapReference.Location.SinVraals_Hut:
                 case SmallMapReferences.SingleMapReference.Location.Grendels_Hut:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_HUT);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_HUT);
                 case SmallMapReferences.SingleMapReference.Location.Ararat:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_RUINS);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_RUINS);
                 case SmallMapReferences.SingleMapReference.Location.Bordermarch:
                 case SmallMapReferences.SingleMapReference.Location.Farthing:
                 case SmallMapReferences.SingleMapReference.Location.Windemere:
@@ -226,7 +226,7 @@ namespace Ultima5Redux
                 case SmallMapReferences.SingleMapReference.Location.Lycaeum:
                 case SmallMapReferences.SingleMapReference.Location.Empath_Abbey:
                 case SmallMapReferences.SingleMapReference.Location.Serpents_Hold:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_KEEP);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_KEEP);
                 case SmallMapReferences.SingleMapReference.Location.Deceit:
                 case SmallMapReferences.SingleMapReference.Location.Despise:
                 case SmallMapReferences.SingleMapReference.Location.Destard:
@@ -235,7 +235,7 @@ namespace Ultima5Redux
                 case SmallMapReferences.SingleMapReference.Location.Shame:
                 case SmallMapReferences.SingleMapReference.Location.Hythloth:
                 case SmallMapReferences.SingleMapReference.Location.Doom:
-                    return getTypePlaceStr(DataOvlReference.WORLD_STRINGS.to_enter_DUNGEON);
+                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_DUNGEON);
             }
             return "";
         }
@@ -276,7 +276,7 @@ namespace Ultima5Redux
             DataChunk locationNameOffsetChunk = _dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAME_INDEXES);
 
             // get the offsets 
-            List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUINT16List();
+            List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUint16List();
             _locationNames = new List<string>(locationOffsets.Count+1);
 
             // I happen to know that the underworld and overworld is [0], so let's add a placeholder

@@ -26,7 +26,7 @@ namespace Ultima5Redux
             }
         }
 
-        public bool IsEquipmentEquipped(DataOvlReference.EQUIPMENT equipment)
+        public bool IsEquipmentEquipped(DataOvlReference.Equipment equipment)
         {
             foreach (PlayerCharacterRecord record in Records)
             {

@@ -22,7 +22,7 @@ namespace Ultima5Redux
         /// <summary>
         /// String references for Ultima 5
         /// </summary>
-        private readonly U5StringRef u5StringRef;
+        private readonly U5StringRef _u5StringRef;
 
         /// <summary>
         /// Number of tile references
@@ -36,7 +36,7 @@ namespace Ultima5Redux
         /// <param name="u5StringRef"></param>
         public TileReferences(U5StringRef u5StringRef)
         {
-            this.u5StringRef = u5StringRef;
+            this._u5StringRef = u5StringRef;
             TileReferenceDictionary = TileReferences.Load();
 
             for (int i = 0; i < TileReferenceDictionary.Count; i++)
@@ -325,9 +325,9 @@ namespace Ultima5Redux
                     // this is normal speed
                     return String.Empty;
                 case 6:
-                    return u5StringRef.GetString(DataOvlReference.WORLD_STRINGS.SLOW_PROG);
+                    return _u5StringRef.GetString(DataOvlReference.WorldStrings.SLOW_PROG);
                 case 8:
-                    return u5StringRef.GetString(DataOvlReference.WORLD_STRINGS.VERY_SLOW);
+                    return _u5StringRef.GetString(DataOvlReference.WorldStrings.VERY_SLOW);
                 default:
                     throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
             }

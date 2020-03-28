@@ -182,10 +182,10 @@ namespace Ultima5Redux
             /// <param name="sqa">ScriptQuestionAnswer object to add</param>
             public void Add (ScriptQuestionAnswer sqa)
             {
-                if (sqa.questions == null)
+                if (sqa.Questions == null)
                     return;
 
-                foreach (string question in sqa.questions)
+                foreach (string question in sqa.Questions)
                 {
                     if (!QuestionAnswers.Keys.Contains(question.Trim()))
                     {
@@ -207,7 +207,7 @@ namespace Ultima5Redux
                     seenAnswers.Add(sqa, true);
 
                     bool first = true;
-                    foreach (string question in sqa.questions.ToArray())
+                    foreach (string question in sqa.Questions.ToArray())
                     {
                         if (first) { first = false; Console.Write(@"Questions: " + question); }
                         else { Console.Write(@" <OR> " + question); }
@@ -226,11 +226,11 @@ namespace Ultima5Redux
         {
             public ScriptLine Answer { get; }
 
-            public List<string> questions { get; }
+            public List<string> Questions { get; }
 
             public ScriptQuestionAnswer(List<string> questions, ScriptLine answer)
             {
-                this.questions = questions;
+                this.Questions = questions;
                 this.Answer = answer;
             }
         }
@@ -255,11 +255,11 @@ namespace Ultima5Redux
                     // the boys at Origin must have had some very specific rules for dealing with newlines and
                     // double quotes
                     char[] trimChars = new[] { '"' };
-                    return str.Trim(trimChars);
+                    return _str.Trim(trimChars);
                 }
                 set
                 {
-                    str = value;
+                    _str = value;
                 }
                 
             }
@@ -272,7 +272,7 @@ namespace Ultima5Redux
 
             public int ItemAdditionalData { get; set; } = 0;
 
-            private string str = string.Empty;
+            private string _str = string.Empty;
 
             public static bool IsQuestion(string str)
             {
@@ -322,7 +322,7 @@ namespace Ultima5Redux
             public ScriptItem(TalkCommand command, string str)
             {
                 Command = command;
-                this.str = str;
+                this._str = str;
             }
         }
 
@@ -343,7 +343,7 @@ namespace Ultima5Redux
             /// <summary>
             /// a list of all associated ScriptItems, in a particular order
             /// </summary>
-            protected List<ScriptItem> scriptItems = new List<ScriptItem>();
+            protected List<ScriptItem> ScriptItems = new List<ScriptItem>();
             #endregion
 
             #region Public Properties
@@ -373,7 +373,7 @@ namespace Ultima5Redux
             /// Return the number of current script items
             /// </summary>
             /// <returns>the number of script items</returns>
-            public int NumberOfScriptItems => scriptItems.Count;
+            public int NumberOfScriptItems => ScriptItems.Count;
             #endregion
 
             #region Public Methods
@@ -385,7 +385,7 @@ namespace Ultima5Redux
             {
                 string scriptLine = string.Empty;
 
-                foreach (ScriptItem item in this.scriptItems)
+                foreach (ScriptItem item in this.ScriptItems)
                 {
                     if (item.Command == TalkCommand.PlainString)
                     {
@@ -427,12 +427,12 @@ namespace Ultima5Redux
             /// <param name="scriptItem"></param>
             public void AddScriptItem(ScriptItem scriptItem)
             {
-                scriptItems.Add(scriptItem);
+                ScriptItems.Add(scriptItem);
             }
 
             public void InsertScriptItemAtFront(ScriptItem scriptItem)
             {
-                scriptItems.Insert(0, scriptItem);
+                ScriptItems.Insert(0, scriptItem);
             }
 
             public void EncloseInQuotes()
@@ -454,8 +454,8 @@ namespace Ultima5Redux
             /// <returns></returns>
             public ScriptItem GetScriptItem(int index)
             {
-                Debug.Assert(scriptItems[index] != null);
-                return scriptItems[index];
+                Debug.Assert(ScriptItems[index] != null);
+                return ScriptItems[index];
             }
 
             /// <summary>
@@ -571,9 +571,9 @@ namespace Ultima5Redux
             /// <returns>true if it's present, false if it isn't</returns>
             public bool ContainsCommand(TalkCommand command)
             {
-                for (int nItem = 0; nItem < scriptItems.Count; nItem++)
+                for (int nItem = 0; nItem < ScriptItems.Count; nItem++)
                 {
-                    if (scriptItems[nItem].Command == command)
+                    if (ScriptItems[nItem].Command == command)
                         return true;
                 }
                 return false;
@@ -631,7 +631,7 @@ namespace Ultima5Redux
         /// <summary>
         /// the end Index for the default script lines (ie. name, job etc.)
         /// </summary>
-        private const int endBaseIndexes = (int)TalkConstants.Bye; 
+        private const int END_BASE_INDEXES = (int)TalkConstants.Bye; 
 
         #endregion
 
@@ -639,37 +639,37 @@ namespace Ultima5Redux
         /// <summary>
         ///  All of the ScriptLines
         /// </summary>
-        private List<ScriptLine> scriptLines = new List<ScriptLine>();
+        private List<ScriptLine> _scriptLines = new List<ScriptLine>();
 
         /// <summary>
         /// Script talk labels contain all the labels, their q&a and default responses
         /// </summary>
-        private ScriptTalkLabels scriptTalkLabels = new ScriptTalkLabels();
+        private ScriptTalkLabels _scriptTalkLabels = new ScriptTalkLabels();
 
         /// <summary>
         /// Non label specific q&a 
         /// </summary>
-        private ScriptQuestionAnswers scriptQuestionAnswers = new ScriptQuestionAnswers();
+        private ScriptQuestionAnswers _scriptQuestionAnswers = new ScriptQuestionAnswers();
 
         // tracking the current script line
-        private ScriptLine currentScriptLine = new ScriptLine();
+        private ScriptLine _currentScriptLine = new ScriptLine();
         #endregion
 
         #region Public Properties
         /// <summary>
         /// All associated labels with the Script
         /// </summary>
-        protected internal ScriptTalkLabels TalkLabels => scriptTalkLabels;
+        protected internal ScriptTalkLabels TalkLabels => _scriptTalkLabels;
 
         /// <summary>
         /// All associated questions and answers for the Script
         /// </summary>
-        protected internal ScriptQuestionAnswers QuestionAnswers => scriptQuestionAnswers;
+        protected internal ScriptQuestionAnswers QuestionAnswers => _scriptQuestionAnswers;
 
         /// <summary>
         /// The number of scriptlines in the Script
         /// </summary>
-        public int NumberOfScriptLines => scriptLines.Count;
+        public int NumberOfScriptLines => _scriptLines.Count;
         #endregion
 
         #region Protected Internal Methods
@@ -678,8 +678,8 @@ namespace Ultima5Redux
         /// </summary>
         protected internal void NextLine()
         {
-            currentScriptLine = new ScriptLine();
-            scriptLines.Add(currentScriptLine);
+            _currentScriptLine = new ScriptLine();
+            _scriptLines.Add(_currentScriptLine);
         }
         #endregion
 
@@ -691,7 +691,7 @@ namespace Ultima5Redux
         {
             // let's add it immediately instead of waiting for someone to commit it
             // note; this will fail if the currentScriptLine is not a reference - but I'm pretty sure it is
-            scriptLines.Add(currentScriptLine);
+            _scriptLines.Add(_currentScriptLine);
         }
   
         /// <summary>
@@ -700,7 +700,7 @@ namespace Ultima5Redux
         public void InitScript()
         {
             // we keep track of the index into the ScriptLines all the way through the entire method
-            int nIndex = endBaseIndexes + 1;
+            int nIndex = END_BASE_INDEXES + 1;
 
             // have we encountered a label yet?
 
@@ -711,17 +711,17 @@ namespace Ultima5Redux
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
             List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name");
             //scriptLines[(int)TalkConstants.Name].InsertScriptItemAtFront(new ScriptItem(TalkCommand.PlainString, "My name is "));
-            scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, scriptLines[(int)TalkConstants.Name]));
+            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, _scriptLines[(int)TalkConstants.Name]));
             List<string> jobQuestion = new List<string>(1); jobQuestion.Add("job"); jobQuestion.Add("work");
-            scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, scriptLines[(int)TalkConstants.Job]));
+            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, _scriptLines[(int)TalkConstants.Job]));
             List<string> byeQuestion = new List<string>(1); byeQuestion.Add("bye");
-            scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, scriptLines[(int)TalkConstants.Bye]));
+            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, _scriptLines[(int)TalkConstants.Bye]));
 
             // repeat through the question/answer components until we hit a label - then we know to move onto the label section
             do
             {
                 List<string> currQuestions = new List<string>();
-                ScriptLine line = scriptLines[nIndex];
+                ScriptLine line = _scriptLines[nIndex];
 
                 // if we just hit a label, then it's time to jump out of this loop and move onto the label reading loop
                 if (line.GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
@@ -735,29 +735,29 @@ namespace Ultima5Redux
 
                 // dumb little thing - there are some scripts that have the same keyword multiple times
                 // the game favours the one it sees first (see "Camile" in West Brittany as an example)
-                if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
                     currQuestions.Add(question);
 
                 // if we peek ahead and the next command is an <or> then we will just skip it and continue to add to the questions list
-                while (scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
+                while (_scriptLines[nIndex + 1].ContainsCommand(TalkCommand.Or))
                 {
                     nIndex += 2;
-                    line = scriptLines[nIndex];
+                    line = _scriptLines[nIndex];
                     question = line.GetScriptItem(0).Str;
                     // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
-                    if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                    if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
                     {
                         currQuestions.Add(question);
                     }
                 }
 
-                ScriptLine nextLine = scriptLines[nIndex + 1];
-                scriptQuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
+                ScriptLine nextLine = _scriptLines[nIndex + 1];
+                _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
                 nIndex+=2;
             } while (labelEncountered == false);
 
             // a little hack - it's easy to end the conversation if it always ends with the end conversation tag
-            scriptLines[(int)TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndCoversation));
+            _scriptLines[(int)TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndCoversation));
 
             // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
             int count = 0;
@@ -766,7 +766,7 @@ namespace Ultima5Redux
                 // this is technically a loop, but it should never actually loop. Kind of dumb, but fragile 
                 Debug.Assert(count++ == 0);
 
-                ScriptLine line = scriptLines[nIndex];
+                ScriptLine line = _scriptLines[nIndex];
                 ScriptLine nextLine;
 
                 // if there are two script items, and those two script items identify an end of label section then let's break out
@@ -775,7 +775,7 @@ namespace Ultima5Redux
                 {
                     // all done. we either had no labels or reached the end of them
                     // assert that we are on the last line of the script
-                    Debug.Assert(nIndex == scriptLines.Count - 1);
+                    Debug.Assert(nIndex == _scriptLines.Count - 1);
                     break;
                 }
 
@@ -797,7 +797,7 @@ namespace Ultima5Redux
                     //        Console.WriteLine("AH");
                     //}
 
-                    line = scriptLines[nIndex];
+                    line = _scriptLines[nIndex];
 
                     // let's make sure there are actually labels to look at
                     if (line.IsEndOfLabelSection)
@@ -810,10 +810,10 @@ namespace Ultima5Redux
                     ScriptTalkLabel scriptTalkLabel = new ScriptTalkLabel(line.GetScriptItem(1).LabelNum, line);
 
                     // save the new label to the label collection
-                    scriptTalkLabels.AddLabel(scriptTalkLabel);
+                    _scriptTalkLabels.AddLabel(scriptTalkLabel);
 
                     // it's a single line only, so we skip this tom foolery below
-                    if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
+                    if (_scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
                     {
                         // do nothing, the ScriptTalkLabel will simply have no DefaultAnswer indicating that only the primary label line is read
 
@@ -822,11 +822,11 @@ namespace Ultima5Redux
                     }
 
                     // with a single answer below the label, we will always use the default answer
-                    ScriptLine defaultAnswer = scriptLines[++nIndex];
+                    ScriptLine defaultAnswer = _scriptLines[++nIndex];
                     scriptTalkLabel.DefaultAnswers.Add(defaultAnswer);
 
                     // it's a default only answer, and no additional line of dialog, then we skip this tom foolery below 
-                    if (scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
+                    if (_scriptLines[nIndex + 1].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
                     {
                         nIndex++;
                         continue;
@@ -839,34 +839,34 @@ namespace Ultima5Redux
 
                         List<string> currQuestions = new List<string>();
                         // if the next line is an <or> then process the <or> 
-                        if (scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
+                        if (_scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
                         {
-                            while (scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
+                            while (_scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
                             {
-                                line = scriptLines[nIndex + 1];
+                                line = _scriptLines[nIndex + 1];
                                 Debug.Assert(line.IsQuestion);
                                 question = line.GetScriptItem(0).Str;
                                 // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
-                                if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                                if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
                                 {
                                     currQuestions.Add(question);
                                 }
                                 nIndex += 2;
                             }
-                            line = scriptLines[++nIndex];
+                            line = _scriptLines[++nIndex];
                             Debug.Assert(line.IsQuestion);
                             question = line.GetScriptItem(0).Str;
                             // just in case they try to add the same question twice - this is kind of a bug in the data since the game just favours the first question it sees
-                            if (!scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
+                            if (!_scriptQuestionAnswers.QuestionAnswers.ContainsKey(question))
                             {
                                 currQuestions.Add(question);
                             }
                         }
                         // is this a question that the player would ask an NPC?
-                        else if (scriptLines[nIndex + 1].GetScriptItem(0).IsQuestion())
+                        else if (_scriptLines[nIndex + 1].GetScriptItem(0).IsQuestion())
                         {
                             // get the Avater's response line
-                            line = scriptLines[++nIndex];
+                            line = _scriptLines[++nIndex];
 
                             question = line.GetScriptItem(0).Str;
                             Debug.Assert(ScriptItem.IsQuestion(question));
@@ -876,24 +876,24 @@ namespace Ultima5Redux
                         /// that dasterdly LB has put an extra response line in....
                         else //if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length > 4)
                         {
-                            line = scriptLines[++nIndex];
+                            line = _scriptLines[++nIndex];
                             Debug.Assert(!line.IsQuestion);
                             scriptTalkLabel.DefaultAnswers.Add(line);
                             nIndex++;
                             // let's make double sure that we only have a single additional line of text 
-                            Debug.Assert(scriptLines[nIndex].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition);
+                            Debug.Assert(_scriptLines[nIndex].GetScriptItem(0).Command == TalkCommand.StartLabelDefinition);
 
-                            nextLine = scriptLines[nIndex];
+                            nextLine = _scriptLines[nIndex];
                             continue;
                         }
 
                         // get your answer and store it
-                        ScriptLine npcResponse = scriptLines[++nIndex];
+                        ScriptLine npcResponse = _scriptLines[++nIndex];
                         // we are ready to create a Q&A object and add it the label specific Q&A script
                         scriptTalkLabel.AddScriptQuestionAnswer(new ScriptQuestionAnswer(currQuestions, npcResponse));
 
                         // we are at the end of the label section of the file, so we are done.
-                        nextLine = scriptLines[++nIndex];
+                        nextLine = _scriptLines[++nIndex];
 
                         // does the next line indicate end of all of the label sections, then let's get out of this loop
                         if (nextLine.IsEndOfLabelSection)
@@ -916,7 +916,7 @@ namespace Ultima5Redux
 
                 nIndex++;
             // while we haven't read every last line, then let's keep reading
-            } while (nIndex < (scriptLines.Count - 1));
+            } while (nIndex < (_scriptLines.Count - 1));
         }
         #endregion
 
@@ -929,7 +929,7 @@ namespace Ultima5Redux
         /// <returns>The corresponding single ScriptLine</returns>
         protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
         {
-            return (scriptLines[(int)talkConst]);
+            return (_scriptLines[(int)talkConst]);
         }
 
         /// <summary>
@@ -939,7 +939,7 @@ namespace Ultima5Redux
         /// <returns>The requested ScriptLine</returns>
         protected internal ScriptLine GetScriptLine(int index)
         {
-            return (scriptLines[index]);
+            return (_scriptLines[index]);
         }
 
 
@@ -950,7 +950,7 @@ namespace Ultima5Redux
         /// <returns>The corresponding script line</returns>
         protected internal ScriptLine GetScriptLineLabel(int nLabel)
         {
-            return scriptLines[GetScriptLineLabelIndex(nLabel)];
+            return _scriptLines[GetScriptLineLabelIndex(nLabel)];
         }
 
         /// <summary>
@@ -961,7 +961,7 @@ namespace Ultima5Redux
         public int GetScriptLineLabelIndex(int nLabel)
         {
             int nCount = 0;
-            foreach (ScriptLine line in scriptLines)
+            foreach (ScriptLine line in _scriptLines)
             {
                 if (line.NumberOfScriptItems<= 1) { nCount++; continue; };
 
@@ -991,7 +991,7 @@ namespace Ultima5Redux
 
             if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
             {
-                currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
+                _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
                 //System.Console.Write("<" + (talkCommand.ToString() + " " + nLabel + ">"));
             }
             else 
@@ -1009,7 +1009,7 @@ namespace Ultima5Redux
         {
             //System.Console.Write("<" + (talkCommand.ToString() + ">"));
 
-            currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
+            _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
         }
 
         /// <summary>
@@ -1022,11 +1022,11 @@ namespace Ultima5Redux
         {
             if (talkCommand == TalkCommand.PlainString)
             {
-                currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, talkStr));
+                _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, talkStr));
             }
             else
             {
-                currentScriptLine.AddScriptItem(new ScriptItem(talkCommand));
+                _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand));
             }
         }
 
@@ -1043,11 +1043,11 @@ namespace Ultima5Redux
             Console.WriteLine("Bye: " + this.GetScriptLine(TalkConstants.Bye).ToString());
             Console.WriteLine("");
 
-            scriptQuestionAnswers.Print();
+            _scriptQuestionAnswers.Print();
             Console.WriteLine("");
 
             // enumerate the labels and print their scripts
-            foreach (ScriptTalkLabel label in this.scriptTalkLabels.Labels)
+            foreach (ScriptTalkLabel label in this._scriptTalkLabels.Labels)
             {
                 Console.WriteLine("Label #: " + label.LabelNum.ToString());
                 Console.WriteLine("Initial Line: " + label.InitialLine);
@@ -1068,7 +1068,7 @@ namespace Ultima5Redux
         /// </summary>
         public void PrintScript()
         {
-            foreach (ScriptLine line in scriptLines)
+            foreach (ScriptLine line in _scriptLines)
             {
                 for (int nItem = 0; nItem < line.NumberOfScriptItems; nItem++)
                 {

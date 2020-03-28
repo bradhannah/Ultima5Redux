@@ -20,13 +20,13 @@ namespace Ultima5Redux
         [DataMember]
         public string Description;
         [DataMember]
-        public bool IsWalking_Passable; 
+        public bool IsWalkingPassable; 
         [DataMember]
-        public bool IsBoat_Passable;
+        public bool IsBoatPassable;
         [DataMember]
-        public bool IsSkiff_Passable;
+        public bool IsSkiffPassable;
         [DataMember]
-        public bool IsCarpet_Passable;
+        public bool IsCarpetPassable;
         [DataMember]
         public bool IsOpenable;
         [DataMember]
@@ -60,11 +60,11 @@ namespace Ultima5Redux
             return this.Name;
         }
 
-        public bool IsNPCCapableSpace => (this.IsWalking_Passable || this.IsOpenable);
+        public bool IsNPCCapableSpace => (this.IsWalkingPassable || this.IsOpenable);
 
 
-        public bool IsSolidSpriteButNotDoor => (!this.IsWalking_Passable && !this.IsOpenable);
+        public bool IsSolidSpriteButNotDoor => (!this.IsWalkingPassable && !this.IsOpenable);
 
-        public bool IsSolidSprite => (!IsWalking_Passable);
+        public bool IsSolidSprite => (!IsWalkingPassable);
     }
 }

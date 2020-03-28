@@ -75,7 +75,7 @@ namespace Ultima5Redux
                     TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[x][y]);
 
                     bool bIsWalkable =
-                        currentTile.IsWalking_Passable || currentTile.Index ==
+                        currentTile.IsWalkingPassable || currentTile.Index ==
                                                        spriteTileReferences.GetTileReferenceByName("RegularDoor").Index
                                                        || currentTile.Index == spriteTileReferences
                                                            .GetTileReferenceByName("RegularDoorView").Index

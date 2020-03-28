@@ -11,28 +11,28 @@ namespace Ultima5Redux
         /// <summary>
         /// A random number generator - capable of seeding in future
         /// </summary>
-        private Random ran = new Random();
+        private Random _ran = new Random();
 
         /// <summary>
         /// Game State raw data
         /// </summary>
-        private DataChunks<DataChunkName> dataChunks;
+        private DataChunks<DataChunkName> _dataChunks;
 
-        private DataChunks<OverlayChunkName> overworldOverlayDataChunks;
+        private DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
 
-        private DataChunks<OverlayChunkName> underworldOverlayDataChunks;
+        private DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
         /// <summary>
         /// 2D array of flag indicating if an NPC is met [mastermap][npc#]
         /// </summary>
-        private bool[][] npcIsMetArray;
+        private bool[][] _npcIsMetArray;
 
         /// <summary>
         /// 2D array of flag indicating if an NPC is dead [mastermap][npc#]
         /// </summary>
-        private bool[][] npcIsDeadArray;
+        private bool[][] _npcIsDeadArray;
 
-        private DataOvlReference dataRef;
+        private DataOvlReference _dataRef;
 
         /// <summary>
         /// All player character records
@@ -41,13 +41,13 @@ namespace Ultima5Redux
         #endregion
 
         #region Internal Properties for direct save memory access
-        internal DataChunk CharacterAnimationStatesDataChunk { get { return dataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES); } }
-        internal DataChunk CharacterStatesDataChunk { get { return dataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES); } }
-        internal DataChunk NonPlayerCharacterMovementLists { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS); } }
-        internal DataChunk NonPlayerCharacterMovementOffsets { get { return dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS); } }
-        internal DataChunk NonPlayerCharacterKeySprites { get { return dataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES); } }
-        internal DataChunk OverworldOverlayDataChunks { get { return overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
-        internal DataChunk UnderworldOverlayDataChunks { get { return underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
+        internal DataChunk CharacterAnimationStatesDataChunk { get { return _dataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES); } }
+        internal DataChunk CharacterStatesDataChunk { get { return _dataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES); } }
+        internal DataChunk NonPlayerCharacterMovementLists { get { return _dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS); } }
+        internal DataChunk NonPlayerCharacterMovementOffsets { get { return _dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS); } }
+        internal DataChunk NonPlayerCharacterKeySprites { get { return _dataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES); } }
+        internal DataChunk OverworldOverlayDataChunks { get { return _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
+        internal DataChunk UnderworldOverlayDataChunks { get { return _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
         #endregion
 
         #region Public Properties
@@ -67,8 +67,8 @@ namespace Ultima5Redux
         /// </summary>
         public byte Gems
         {
-            get => dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
-            set => dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
+            get => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
+            set => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace Ultima5Redux
         /// </summary>
         public byte Torches
         {
-            get => dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
-            set => dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
+            get => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
+            set => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
         }
 
         public bool IsTorchLit => TorchTurnsLeft > 0;
@@ -87,8 +87,8 @@ namespace Ultima5Redux
         /// </summary>
         public byte TorchTurnsLeft
         {
-            get => dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
-            set => dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).SetChunkAsByte(value);
+            get => _dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
+            set => _dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).SetChunkAsByte(value);
         }
 
         /// <summary>
@@ -96,29 +96,29 @@ namespace Ultima5Redux
         /// </summary>
         public byte Keys
         {
-            get => dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
-            set => dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
+            get => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
+            set => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
         }
 
         /// <summary>
         /// Current location
         /// </summary>
-        public SmallMapReferences.SingleMapReference.Location Location => (SmallMapReferences.SingleMapReference.Location)dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
+        public SmallMapReferences.SingleMapReference.Location Location => (SmallMapReferences.SingleMapReference.Location)_dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
 
         /// <summary>
         /// Current floor
         /// </summary>
-        public int Floor => dataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
+        public int Floor => _dataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
 
         /// <summary>
         /// Saved X location of Avatar
         /// </summary>
-        public int X => dataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
+        public int X => _dataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
 
         /// <summary>
         /// Saved Y location of Avatar
         /// </summary>
-        public int Y => dataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
+        public int Y => _dataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
 
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace Ultima5Redux
         /// </summary>
         public UInt16 Gold
         {
-            get => dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUINT16();
-            set => dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).SetChunkAsUINT16(value);
+            get => _dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUint16();
+            set => _dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).SetChunkAsUint16(value);
         }
 
         /// <summary>
@@ -143,8 +143,8 @@ namespace Ultima5Redux
         /// </summary>
         public UInt16 Food
         {
-            get => dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUINT16();
-            set => dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).SetChunkAsUINT16(value);
+            get => _dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUint16();
+            set => _dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).SetChunkAsUint16(value);
         }
 
         /// <summary>
@@ -222,15 +222,15 @@ namespace Ultima5Redux
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
         /// <param name="nonPlayerCharacters"></param>
-        /// <param name="TileReferences"></param>
+        /// <param name="tileReferences"></param>
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMapLocationReferences largeMapLocationReferenceses, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
-            TileReferences TileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
+            TileReferences tileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
         {
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferenceses, overworldMap, underworldMap,
-                nonPlayerCharacters, TileReferences, state, npcRefs, TheTimeOfDay, TheMoongates);
+                nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates);
         }
 
         /// <summary>
@@ -239,103 +239,103 @@ namespace Ultima5Redux
         /// <param name="u5Directory">Directory of the game State files</param>
         public GameState(string u5Directory, DataOvlReference dataOvlRef)
         {
-            dataRef = dataOvlRef;
+            _dataRef = dataOvlRef;
 
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
-            dataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
+            _dataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
 
             List<byte> gameStateByteArray;
             gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
             // import all character records
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20 * 16, 0x00, DataChunkName.CHARACTER_RECORDS);
-            DataChunk rawCharacterRecords = dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20 * 16, 0x00, DataChunkName.CHARACTER_RECORDS);
+            DataChunk rawCharacterRecords = _dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
             CharacterRecords = new PlayerCharacterRecords(rawCharacterRecords.GetAsByteList());
 
 
             // player location
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party Location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Z Coordinate of Party [10]", 0x2EF, 0x01, 0x00, DataChunkName.Z_COORD);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "X Coordinate of Party", 0x2F0, 0x01, 0x00, DataChunkName.X_COORD);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Y Coordinate of Party", 0x2F1, 0x01, 0x00, DataChunkName.Y_COORD);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party Location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Z Coordinate of Party [10]", 0x2EF, 0x01, 0x00, DataChunkName.Z_COORD);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "X Coordinate of Party", 0x2F0, 0x01, 0x00, DataChunkName.X_COORD);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Y Coordinate of Party", 0x2F1, 0x01, 0x00, DataChunkName.Y_COORD);
 
 
             // quantities of standard items
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00, DataChunkName.FOOD_QUANTITY);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Gold Quantity", 0x204, 0x02, 0x00, DataChunkName.GOLD_QUANTITY);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00, DataChunkName.KEYS_QUANTITY);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01, 0x00, DataChunkName.TORCHES_TURNS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00, DataChunkName.FOOD_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Gold Quantity", 0x204, 0x02, 0x00, DataChunkName.GOLD_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00, DataChunkName.KEYS_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01, 0x00, DataChunkName.TORCHES_TURNS);
             
             // moonstones and moongates
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0-0xFF Moonstone X Coordinates (valid only if buried)", 0x28A, 0x08, 0x00, DataChunkName.MOONSTONE_X_COORDS);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0-0xFF Moonstone Y Coordinates (valid only if buried)", 0x292, 0x08, 0x00, DataChunkName.MOONSTONE_Y_COORDS);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=buried,0xFF=Inventory Moonstone Flags", 0x29A, 0x08, 0x00, DataChunkName.MOONSTONE_BURIED);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=Britannia,0xFF=Underworld Moonstone Z Coordinates (valid only if buried)", 0x2A2, 0x08, 0x00, DataChunkName.MOONSTONE_Z_COORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0-0xFF Moonstone X Coordinates (valid only if buried)", 0x28A, 0x08, 0x00, DataChunkName.MOONSTONE_X_COORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0-0xFF Moonstone Y Coordinates (valid only if buried)", 0x292, 0x08, 0x00, DataChunkName.MOONSTONE_Y_COORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=buried,0xFF=Inventory Moonstone Flags", 0x29A, 0x08, 0x00, DataChunkName.MOONSTONE_BURIED);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=Britannia,0xFF=Underworld Moonstone Z Coordinates (valid only if buried)", 0x2A2, 0x08, 0x00, DataChunkName.MOONSTONE_Z_COORDS);
             
             // time and date
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Current Year", 0x2CE, 0x02, 0x00, DataChunkName.CURRENT_YEAR);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Month", 0x2D7, 0x01, 0x00, DataChunkName.CURRENT_MONTH);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Day", 0x2D8, 0x01, 0x00, DataChunkName.CURRENT_DAY);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2D9, 0x01, 0x00, DataChunkName.CURRENT_HOUR);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Current Year", 0x2CE, 0x02, 0x00, DataChunkName.CURRENT_YEAR);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Month", 0x2D7, 0x01, 0x00, DataChunkName.CURRENT_MONTH);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Day", 0x2D8, 0x01, 0x00, DataChunkName.CURRENT_DAY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2D9, 0x01, 0x00, DataChunkName.CURRENT_HOUR);
             // 0x2DA is copy of 2D9 for some reason
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Minute", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Minute", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
 
 
             //dataChunks.AddDataChunk()
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Number of Party Members", 0x2B5, 0x1, 0x00, DataChunkName.N_PEOPLE_PARTY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Number of Party Members", 0x2B5, 0x1, 0x00, DataChunkName.N_PEOPLE_PARTY);
 
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Type Map", 0x5B4, 0x20, 0x00, DataChunkName.NPC_TYPES);
-            List<byte> chunks = dataChunks.GetDataChunk(DataChunkName.NPC_TYPES).GetAsByteList();
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Type Map", 0x5B4, 0x20, 0x00, DataChunkName.NPC_TYPES);
+            List<byte> chunks = _dataChunks.GetDataChunk(DataChunkName.NPC_TYPES).GetAsByteList();
 
             // get the NPCs movement list - 0x20 NPCs, with 0x10 movement commands each, consisting of 0x1 direction byte + 0x1 repetitions
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Movement List", 0xBB8, 0x20 * 0x10 * (sizeof(byte) * 2), 0x00, DataChunkName.NPC_MOVEMENT_LISTS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Movement List", 0xBB8, 0x20 * 0x10 * (sizeof(byte) * 2), 0x00, DataChunkName.NPC_MOVEMENT_LISTS);
             // bajh: Jan 12 2020, moved from BB8 to BBA to test a theory that it actually begins a few bytes after the original documentation indicates
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Movement List", 0xBBA, 0x20 * 0x10 * (sizeof(byte) * 2), 0x00, DataChunkName.NPC_MOVEMENT_LISTS);
             // get the offsets to the current movement instructions of the NPCs
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "NPC Movement Offset Lists", 0xFB8, 0x20 * (sizeof(byte) * 2), 0x00, DataChunkName.NPC_MOVEMENT_OFFSETS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "NPC Movement Offset Lists", 0xFB8, 0x20 * (sizeof(byte) * 2), 0x00, DataChunkName.NPC_MOVEMENT_OFFSETS);
 
             // we will need to add 0x100 for now, but cannot because it's read in as a bytelist
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Sprite (by smallmap)", 0xFF8, 0x20, 0x00, DataChunkName.NPC_SPRITE_INDEXES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Sprite (by smallmap)", 0xFF8, 0x20, 0x00, DataChunkName.NPC_SPRITE_INDEXES);
 
             // Initialize the table to determine if an NPC is dead
-            List<bool> npcAlive = dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();
-            npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
+            List<bool> npcAlive = _dataChunks.GetDataChunk(DataChunkName.NPC_ISALIVE_TABLE).GetAsBitmapBoolList();
+            _npcIsDeadArray = Utils.ListTo2DArray<bool>(npcAlive, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
             // Initialize a table to determine if an NPC has been met
-            List<bool> npcMet = dataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
+            List<bool> npcMet = _dataChunks.GetDataChunk(DataChunkName.NPC_ISMET_TABLE).GetAsBitmapBoolList();
             // these will map directly to the towns and the NPC dialog #
-            npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
+            _npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_ANIMATION_STATES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_ANIMATION_STATES);
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
-            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Character States - including xyz", 0x9B8, 0x200, 0x00, DataChunkName.CHARACTER_STATES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Character States - including xyz", 0x9B8, 0x200, 0x00, DataChunkName.CHARACTER_STATES);
 
             // load the overworld and underworld overlays
             string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
             string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
 
-            overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(overworldOverlayPath, OverlayChunkName.Unused);
-            underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(underworldOverlayPath, OverlayChunkName.Unused);
+            _overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(overworldOverlayPath, OverlayChunkName.Unused);
+            _underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(underworldOverlayPath, OverlayChunkName.Unused);
 
-            overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
-            underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
             TheMoongates = new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS), GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS), 
                 GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
             
-            TheTimeOfDay = new TimeOfDay(dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR), dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
-                dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
+            TheTimeOfDay = new TimeOfDay(_dataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR), _dataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
+                _dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), _dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
+                _dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
             
             // import the players invetry
-            PlayerInventory = new Inventory(gameStateByteArray, dataRef, new MoonPhaseReferences(dataRef), TheMoongates);
+            PlayerInventory = new Inventory(gameStateByteArray, _dataRef, new MoonPhaseReferences(_dataRef), TheMoongates);
         }
         #endregion
 
@@ -345,7 +345,7 @@ namespace Ultima5Redux
         
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
-            return dataChunks.GetDataChunk(dataChunkName);
+            return _dataChunks.GetDataChunk(dataChunkName);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Ultima5Redux
         public bool OneInXOdds(int howMany)
         {
             // if ran%howMany is zero then we beat the odds
-            int nextRan = ran.Next();
+            int nextRan = _ran.Next();
             return ((nextRan % howMany) == 0);
         }
 
@@ -377,7 +377,7 @@ namespace Ultima5Redux
         {
             // the array isDead becasue LB stores 0=alive, 1=dead
             // I think it's easier to evaluate if they are alive
-            return npcIsDeadArray[npc.MapLocationID][npc.DialogIndex] == false;
+            return _npcIsDeadArray[npc.MapLocationId][npc.DialogIndex] == false;
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace Ultima5Redux
         /// <param name="npc"></param>
         public void SetMetNPC(NonPlayerCharacterReference npc)
         {
-            npcIsMetArray[npc.MapLocationID][npc.DialogIndex] = true;
+            _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = true;
         }
 
         /// <summary>
@@ -465,7 +465,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public bool NpcHasMetAvatar(NonPlayerCharacterReference npc)
         {
-            return npcIsMetArray[npc.MapLocationID][npc.DialogIndex];
+            return _npcIsMetArray[npc.MapLocationId][npc.DialogIndex];
         }
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace Ultima5Redux
         /// <param name="npc"></param>
         public void SetNpcHasMetAvatar(NonPlayerCharacterReference npc, bool hasMet)
         {
-            npcIsMetArray[npc.MapLocationID][npc.DialogIndex] = hasMet;
+            _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = hasMet;
         }
 
         #endregion

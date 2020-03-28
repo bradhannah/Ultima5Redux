@@ -7,7 +7,7 @@ namespace Ultima5Redux
     {
         public class NonPlayerCharacterSchedule
         {
-            public enum AIType { Fixed = 0, Wander = 1, BigWander = 2, ChildRunAway = 3, MerchantThing = 4, ExtortOrAttackOrFollow = 6, DrudgeWorthThing = 7 }
+            public enum AiType { Fixed = 0, Wander = 1, BigWander = 2, ChildRunAway = 3, MerchantThing = 4, ExtortOrAttackOrFollow = 6, DrudgeWorthThing = 7 }
 
             /// <summary>
             /// Get the index of the scheduled based on the specified time of day
@@ -123,11 +123,11 @@ namespace Ultima5Redux
                 return nLargestIndex;
             }
 
-            public AIType GetCharacterAITypeByTime(TimeOfDay timeOfDay)
+            public AiType GetCharacterAiTypeByTime(TimeOfDay timeOfDay)
             {
                 int nIndex = GetScheduleIndex(timeOfDay);
 
-                return (AIType)AITypeList[nIndex];
+                return (AiType)_aiTypeList[nIndex];
             }
 
             /// <summary>
@@ -189,7 +189,7 @@ namespace Ultima5Redux
             /// <summary>
             /// TODO: Need to figure out what these AI types actually mean
             /// </summary>
-            private List<byte> AITypeList = new List<byte>();
+            private List<byte> _aiTypeList = new List<byte>();
             /// <summary>
             /// 3D Coordinates including floor number
             /// </summary>
@@ -204,7 +204,7 @@ namespace Ultima5Redux
             /// This is easier to consume than the structure
             /// </summary>
             /// <param name="sched"></param>
-            public NonPlayerCharacterSchedule(NPC_Schedule sched)
+            public NonPlayerCharacterSchedule(NPCSchedule sched)
             {
                 Coords = new List<Point3D>();
                 Times = new List<byte>();
@@ -213,7 +213,7 @@ namespace Ultima5Redux
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        AITypeList.Add(sched.AI_types[i]);
+                        _aiTypeList.Add(sched.AI_types[i]);
                         Coords.Add(new Point3D(sched.x_coordinates[i], sched.y_coordinates[i], sched.z_coordinates[i]));
                         if (sched.z_coordinates[i] != 0) { System.Console.Write(""); }
                     }

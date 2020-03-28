@@ -9,9 +9,9 @@ namespace Ultima5Redux
 {
     class CompressedWordReference
     {
-        private SomeStrings CompressedWords;
+        private SomeStrings _compressedWords;
 
-        private Dictionary<int, byte> compressWordLookupMap;
+        private Dictionary<int, byte> _compressWordLookupMap;
 
         /// <summary>
         /// Adds a byte offset lookup.
@@ -25,7 +25,7 @@ namespace Ultima5Redux
             Debug.Assert(indexStop <= 255);
             for (int i = indexStart; i <= indexStop; i++)
             {
-                compressWordLookupMap.Add((byte)i, (byte)(i + offset));
+                _compressWordLookupMap.Add((byte)i, (byte)(i + offset));
             }
         }
 
@@ -35,11 +35,11 @@ namespace Ultima5Redux
         /// <param name="dataRef"></param>
         public CompressedWordReference(DataOvlReference dataRef)
         {
-            CompressedWords = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TALK_COMPRESSED_WORDS).GetChunkAsStringList();
-            CompressedWords.PrintSomeStrings();
+            _compressedWords = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TALK_COMPRESSED_WORDS).GetChunkAsStringList();
+            _compressedWords.PrintSomeStrings();
 
             // we are creating a lookup map because the indexes are not concurrent
-            compressWordLookupMap = new Dictionary<int, byte>(CompressedWords.Strs.Count);
+            _compressWordLookupMap = new Dictionary<int, byte>(_compressedWords.Strs.Count);
 
             // this is kind of gross, but these define the index gaps in the lookup table
             // I have no idea why there are gaps, but alas, this works around them
@@ -59,12 +59,12 @@ namespace Ultima5Redux
         {
             // Note: I originally wrote this just to catch the exceptions, but it was SUPER SLOW, so I hopefully smartened it up
             // is the index in the range that we can even lookup?
-            if (index > (compressWordLookupMap.Keys.Max() - compressWordLookupMap.Keys.Min()))
+            if (index > (_compressWordLookupMap.Keys.Max() - _compressWordLookupMap.Keys.Min()))
             {
                 return false;
             }
             // if the index is in range, then does the key exist?
-            if (!compressWordLookupMap.ContainsKey(index))
+            if (!_compressWordLookupMap.ContainsKey(index))
             {
                 return false;
             }
@@ -82,7 +82,7 @@ namespace Ultima5Redux
         {
             try
             {
-                return (CompressedWords.Strs[compressWordLookupMap[index]]);
+                return (_compressedWords.Strs[_compressWordLookupMap[index]]);
             } catch (System.Collections.Generic.KeyNotFoundException)
             {
                 throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " + index);

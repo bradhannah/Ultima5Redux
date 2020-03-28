@@ -9,15 +9,15 @@ namespace U5ConversationSimulator
 {
     class Program
     {
-        static World world;
+        static World _world;
   
         static void Main(string[] args)
         {
-            world = new World("C:\\games\\ultima_5_late\\britain");
+            _world = new World("C:\\games\\ultima_5_late\\britain");
 
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
-                world.State.TheVirtualMap.LoadSmallMap(world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), world.State.CharacterRecords, false);
+                _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), _world.State.CharacterRecords, false);
             }
             
             
@@ -26,7 +26,7 @@ namespace U5ConversationSimulator
             //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle);
             //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Britain);
 
-            Conversation convo = new Conversation(world.NpcRef.NPCs[292], world.State, world.DataOvlRef); // justin
+            Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(EnqueuedScriptItem);
@@ -37,7 +37,7 @@ namespace U5ConversationSimulator
             int i = 1000;
             while (i > 0)
             {
-                world.AdvanceTime(2);
+                _world.AdvanceTime(2);
                 i--;
             }
         }
@@ -52,12 +52,12 @@ namespace U5ConversationSimulator
                     Console.Write(item.Str);
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
-                    Console.Write(conversation.GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOUR_INTEREST));
+                    Console.Write(conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));
                     userResponse = Console.ReadLine();
                     conversation.AddUserResponse(userResponse);
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
-                    Console.Write(conversation.GetConversationStr(DataOvlReference.CHUNK__PHRASES_CONVERSATION.YOU_RESPOND));
+                    Console.Write(conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_RESPOND));
                     userResponse = Console.ReadLine();
                     conversation.AddUserResponse(userResponse);
                     break;
@@ -78,14 +78,14 @@ namespace U5ConversationSimulator
                     //
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    world.State.AddMemberToParty(conversation.Npc);
+                    _world.State.AddMemberToParty(conversation.Npc);
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //
-                    world.State.Karma -= 1;
+                    _world.State.Karma -= 1;
                     break;
                 case TalkScript.TalkCommand.KarmaPlusOne:
-                    world.State.Karma += 1;
+                    _world.State.Karma += 1;
                     break;
                 case TalkScript.TalkCommand.KeyWait:
                     Console.Write("...");

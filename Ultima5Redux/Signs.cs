@@ -193,24 +193,24 @@ namespace Ultima5Redux
         /// <summary>
         /// Raw sign file
         /// </summary>
-        private List<byte> signsByteArray = new List<byte>();
+        private List<byte> _signsByteArray = new List<byte>();
         /// <summary>
         /// List of all sign offsets in file
         /// </summary>
-        private List<int> signsOffsets = new List<int>(TOTAL_SIGNS);
+        private List<int> _signsOffsets = new List<int>(TOTAL_SIGNS);
         /// <summary>
         /// List of all assembled signs
         /// </summary>
-        private List<Sign> signList = new List<Sign>(TOTAL_SIGNS);
+        private List<Sign> _signList = new List<Sign>(TOTAL_SIGNS);
 
         public Sign GetSign(int nSign)
         {
-            return signList[nSign];
+            return _signList[nSign];
         }
 
         public Sign GetSign(SmallMapReferences.SingleMapReference.Location location, int x, int y)
         {
-            foreach (Sign sign in signList)
+            foreach (Sign sign in _signList)
             {
                 if (sign.X == x && sign.Y == y && sign.Location == location)
                 {
@@ -240,7 +240,7 @@ namespace Ultima5Redux
     
         public int GetNumberOfSigns()
         {
-            return this.signList.Count;
+            return this._signList.Count;
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace Ultima5Redux
         /// <param name="u5directory">directory of data files</param>
         public Signs(string u5directory)
         {
-            signsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.SIGNS_DAT));
+            _signsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.SIGNS_DAT));
 
             int nIndex = TOTAL_SIGNS * 2;
             // we are ignoring the "offsets" which are likely used to help optimize the lookup 
@@ -258,7 +258,7 @@ namespace Ultima5Redux
             // TODO: optimize storage to improve lookup spped
             do
             {
-                string rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4, 0xFF);
+                string rawSignTxt = Utils.BytesToStringNullTerm(_signsByteArray, nIndex + 4, 0xFF);
                 int nRawSignTxtLength = rawSignTxt.Length;
                 
                 // there are often two "warning signs" in the main virtue townes. Only one of the signs text is actually 
@@ -266,22 +266,22 @@ namespace Ultima5Redux
                 // it instead
                 if (rawSignTxt.Trim() == String.Empty) { 
                     int nNextSignAdjust = rawSignTxt.Length + 1 + 4; 
-                    rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4 + nNextSignAdjust, 0xFF); 
+                    rawSignTxt = Utils.BytesToStringNullTerm(_signsByteArray, nIndex + 4 + nNextSignAdjust, 0xFF); 
                 }
 
-                signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location)signsByteArray[nIndex],
-                    signsByteArray[nIndex + 1],
-                    signsByteArray[nIndex + 2],
-                    signsByteArray[nIndex + 3],
+                _signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location)_signsByteArray[nIndex],
+                    _signsByteArray[nIndex + 1],
+                    _signsByteArray[nIndex + 2],
+                    _signsByteArray[nIndex + 3],
                     rawSignTxt, nIndex) );
                 nIndex += nRawSignTxtLength + 1 + 4; // we hop over the string plus it's null byte plus the four bytes for definition
             // while we don't encounter four zero bytes in a row, which is eseentially the end of the file
-            } while (!(signsByteArray[nIndex] == 0 && signsByteArray[nIndex+1] == 0 && signsByteArray[nIndex+2] == 0 && signsByteArray[nIndex+3] == 0));
+            } while (!(_signsByteArray[nIndex] == 0 && _signsByteArray[nIndex+1] == 0 && _signsByteArray[nIndex+2] == 0 && _signsByteArray[nIndex+3] == 0));
 
             // there are some signs that are not included in the signs.dat file, so we manually pont to them and add them to our sign list
             List<byte> dataovlSignsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.DATA_OVL));
             List<byte> shSign = DataChunk.CreateDataChunk(DataChunk.DataFormatType.ByteList, "SH Sign of Eight Laws", dataovlSignsByteArray, 0x743a, 0x66).GetAsByteList();
-            signList.Add(new Sign(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0, 15, 19, shSign.ToArray(), 0x743a));
+            _signList.Add(new Sign(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0, 15, 19, shSign.ToArray(), 0x743a));
         }
     }
 }

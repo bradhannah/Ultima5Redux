@@ -13,16 +13,16 @@ namespace Ultima5Redux
             int nIndex = 0;
             foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
             {
-                AddReagent(reagent, (DataOvlReference.REAGENT_STRINGS)nIndex++);
+                AddReagent(reagent, (DataOvlReference.ReagentStrings)nIndex++);
             }
         }
 
-        private void AddReagent(Reagent.ReagentTypeEnum reagentType, DataOvlReference.REAGENT_STRINGS reagentStrRef )
+        private void AddReagent(Reagent.ReagentTypeEnum reagentType, DataOvlReference.ReagentStrings reagentStrRef )
         {
             Reagent reagent = new Reagent(reagentType,
-             gameStateByteArray[(int)reagentType],
-             dataOvlRef.StringReferences.GetString(reagentStrRef),
-             dataOvlRef.StringReferences.GetString(reagentStrRef));
+             GameStateByteArray[(int)reagentType],
+             DataOvlRef.StringReferences.GetString(reagentStrRef),
+             DataOvlRef.StringReferences.GetString(reagentStrRef));
             Items[reagentType] = reagent;
         }
 

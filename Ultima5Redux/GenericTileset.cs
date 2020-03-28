@@ -11,75 +11,75 @@ namespace Ultima5Redux
     public class GenericTileset
     {
         
-        byte[] tilesetByteArray;
+        byte[] _tilesetByteArray;
         public GenericTileset(string fileNameAndPath)
         {
-            tilesetByteArray = File.ReadAllBytes(fileNameAndPath);
+            _tilesetByteArray = File.ReadAllBytes(fileNameAndPath);
 
             Initialize(fileNameAndPath);
         }
 
-        private void WriteBitmapRGB(int R, int G, int B)
+        private void WriteBitmapRgb(int r, int g, int b)
         {
 
         }
         
         private void Initialize(string fileNameAndPath)
         {
-            foreach (byte singleByte in tilesetByteArray)
+            foreach (byte singleByte in _tilesetByteArray)
             {
                 switch (singleByte)
                 {
                     case 0://white
-                        WriteBitmapRGB(0, 0, 0);
+                        WriteBitmapRgb(0, 0, 0);
                         break;
                     case 1://dark blue
-                        WriteBitmapRGB(160, 0, 0);
+                        WriteBitmapRgb(160, 0, 0);
                         break;
                     case 2://dark green
-                        WriteBitmapRGB(0, 160, 0);
+                        WriteBitmapRgb(0, 160, 0);
                         break;
                     case 3://blue green
-                        WriteBitmapRGB(160, 160, 0);
+                        WriteBitmapRgb(160, 160, 0);
                         break;
                     case 4://maroon
-                        WriteBitmapRGB(0, 0, 160);
+                        WriteBitmapRgb(0, 0, 160);
                         break;
                     case 5://dark purple
-                        WriteBitmapRGB(160, 0, 160);
+                        WriteBitmapRgb(160, 0, 160);
                         break;
                     case 6://brown
-                        WriteBitmapRGB(0, 80, 160);
+                        WriteBitmapRgb(0, 80, 160);
                         break;
                     case 7://light grey
-                        WriteBitmapRGB(160, 160, 160);
+                        WriteBitmapRgb(160, 160, 160);
                         break;
                     case 8://dark grey
-                        WriteBitmapRGB(80, 80, 80);
+                        WriteBitmapRgb(80, 80, 80);
                         break;
                     case 9://blue
-                        WriteBitmapRGB(255, 0, 0);
+                        WriteBitmapRgb(255, 0, 0);
                         break;
                     case 10://light green
-                        WriteBitmapRGB(80, 255, 80);
+                        WriteBitmapRgb(80, 255, 80);
                         break;
                     case 11://light blue
-                        WriteBitmapRGB(255, 255, 80);
+                        WriteBitmapRgb(255, 255, 80);
                         break;
                     case 12://light red
-                        WriteBitmapRGB(80, 80, 255);
+                        WriteBitmapRgb(80, 80, 255);
                         break;
                     case 13://light purple
-                        WriteBitmapRGB(255, 80, 255);
+                        WriteBitmapRgb(255, 80, 255);
                         break;
                     case 14://yellow
-                        WriteBitmapRGB(80, 255, 255);
+                        WriteBitmapRgb(80, 255, 255);
                         break;
                     case 15://black
-                        WriteBitmapRGB(255, 255, 255);
+                        WriteBitmapRgb(255, 255, 255);
                         break;
                     default:
-                        WriteBitmapRGB(255, 255, 255);
+                        WriteBitmapRgb(255, 255, 255);
                         //printf("Got code %d that I wasn't expecting\n", pic);
 
                         break;

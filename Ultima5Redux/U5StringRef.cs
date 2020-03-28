@@ -12,42 +12,42 @@ namespace Ultima5Redux
     /// </summary>
     public class U5StringRef
     {
-        private DataOvlReference dataRef;
+        private DataOvlReference _dataRef;
         public U5StringRef(DataOvlReference dataRef)
         {
-            this.dataRef = dataRef;
-            strMap = new Dictionary<Type, SomeStrings>();
+            this._dataRef = dataRef;
+            _strMap = new Dictionary<Type, SomeStrings>();
             SomeStrings strs = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TRAVEL).GetChunkAsStringList();
 
-            strMap.Add(typeof(DataOvlReference.CHUNK__PHRASES_CONVERSATION), dataRef.GetDataChunk(DataOvlReference.DataChunkName.PHRASES_CONVERSATION).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.TRAVEL_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.TRAVEL).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.LOCATION_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAMES).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.WORLD_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORLD).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.CHIT_CHAT_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.CHIT_CHAT).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.KEYPRESS_COMMANDS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.KEYPRESS_COMMANDS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.VISION1_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.VISION1).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.VISION2_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.VISION2).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.OPENING_THINGS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.OPENING_THINGS_STUFF).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.KLIMBING_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.KLIMBING).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.GET_THINGS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.GET_THINGS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.WEAR_USE_ITEM_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WEAR_USE_ITEM).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SHARDS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHARDS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SHADOWLORD_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORDS_OF_POWER).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.POTIONS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.POTIONS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SPELL_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPELLS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SPECIAL_ITEM_NAMES2_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES2).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.LONG_ARMOUR_STRING), dataRef.GetDataChunk(DataOvlReference.DataChunkName.LONG_ARMOUR).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SHORT_ARMOUR_STRING), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHORT_ARMOUR).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.EQUIPPING_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIPPING).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.ZSTATS_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.ZSTATS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.SLEEP_TRANSPORT_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SLEEP_TRANSPORT).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.REAGENT_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENTS).GetChunkAsStringList());
-            strMap.Add(typeof(DataOvlReference.EXCLAIM_STRINGS), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EXCLAIMS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ChunkPhrasesConversation), dataRef.GetDataChunk(DataOvlReference.DataChunkName.PHRASES_CONVERSATION).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.TravelStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.TRAVEL).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.LocationStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAMES).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.WorldStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORLD).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ChitChatStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.CHIT_CHAT).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.KeypressCommandsStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.KEYPRESS_COMMANDS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.Vision1Strings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.VISION1).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.Vision2Strings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.VISION2).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.OpeningThingsStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.OPENING_THINGS_STUFF).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.KlimbingStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.KLIMBING).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.GetThingsStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.GET_THINGS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.SpecialItemNamesStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.WearUseItemStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WEAR_USE_ITEM).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShardsStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHARDS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShadowlordStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORDS_OF_POWER).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.PotionsStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.POTIONS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.SpellStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPELLS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.SpecialItemNames2Strings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SPECIAL_ITEM_NAMES2).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.LongArmourString), dataRef.GetDataChunk(DataOvlReference.DataChunkName.LONG_ARMOUR).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShortArmourString), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHORT_ARMOUR).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.EquippingStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIPPING).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ZstatsStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.ZSTATS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.SleepTransportStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SLEEP_TRANSPORT).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ReagentStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENTS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ExclaimStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EXCLAIMS).GetChunkAsStringList());
             
         }
 
-        private Dictionary<Type, SomeStrings> strMap;
+        private Dictionary<Type, SomeStrings> _strMap;
 
         /// <summary>
         /// Returns a string based on an enumeration
@@ -57,9 +57,9 @@ namespace Ultima5Redux
         /// <returns></returns>
         public string GetString(object strObj) 
         {
-            Debug.Assert(strMap.ContainsKey(strObj.GetType()));
+            Debug.Assert(_strMap.ContainsKey(strObj.GetType()));
 
-            return strMap[strObj.GetType()].Strs[(int)strObj];
+            return _strMap[strObj.GetType()].Strs[(int)strObj];
         }
   
     }

@@ -31,15 +31,15 @@ namespace Ultima5Redux
         /// <summary>
         /// All buried positions
         /// </summary>
-        private readonly List<Point3D> moongatePositions = new List<Point3D>(TOTAL_MOONSTONES);
+        private readonly List<Point3D> _moongatePositions = new List<Point3D>(TOTAL_MOONSTONES);
         /// <summary>
         /// Are moonstones buried?
         /// </summary>
-        private readonly List<bool> moonstonesBuried = new List<bool>(TOTAL_MOONSTONES);
+        private readonly List<bool> _moonstonesBuried = new List<bool>(TOTAL_MOONSTONES);
         /// <summary>
         /// Dictionary of all locations and if they are buried 
         /// </summary>
-        private readonly Dictionary<Point3D, bool> moongateBuriedAtPositionDictionary = new Dictionary<Point3D, bool>(TOTAL_MOONSTONES);
+        private readonly Dictionary<Point3D, bool> _moongateBuriedAtPositionDictionary = new Dictionary<Point3D, bool>(TOTAL_MOONSTONES);
         
         /// <summary>
         /// Gets the position of an indexed moongate (in order from the save file)
@@ -48,7 +48,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public Point3D GetMoongatePosition(int nMoongateIndex)
         {
-            return moongatePositions[nMoongateIndex];
+            return _moongatePositions[nMoongateIndex];
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Ultima5Redux
         public bool IsMoonstoneBuried(int nMoonstoneIndex)
         {
             Debug.Assert(nMoonstoneIndex >= 0 && nMoonstoneIndex < TOTAL_MOONSTONES);
-            return moonstonesBuried[nMoonstoneIndex];
+            return _moonstonesBuried[nMoonstoneIndex];
         }
 
         /// <summary>
@@ -69,36 +69,36 @@ namespace Ultima5Redux
         /// <returns>true if one is buried</returns>
         public bool IsMoonstoneBuried(Point3D position)
         {
-            if (!moongateBuriedAtPositionDictionary.ContainsKey(position)) return false;
-            return moongateBuriedAtPositionDictionary[position];
+            if (!_moongateBuriedAtPositionDictionary.ContainsKey(position)) return false;
+            return _moongateBuriedAtPositionDictionary[position];
         }
         
         /// <summary>
         /// Constructor. Built with DataChunk references from save file
         /// </summary>
-        /// <param name="XPos"></param>
-        /// <param name="YPos"></param>
-        /// <param name="BuriedFlags"></param>
-        /// <param name="ZPos"></param>
-        public Moongates(DataChunk XPos, DataChunk YPos, DataChunk BuriedFlags, DataChunk ZPos)
+        /// <param name="xPos"></param>
+        /// <param name="yPos"></param>
+        /// <param name="buriedFlags"></param>
+        /// <param name="zPos"></param>
+        public Moongates(DataChunk xPos, DataChunk yPos, DataChunk buriedFlags, DataChunk zPos)
         {
             // save datachunks for saving later
             this.XPos = XPos;
             this.YPos = YPos;
-            this.BuriedFlags = BuriedFlags;
+            this.BuriedFlags = buriedFlags;
             this.ZPos = ZPos;
             List<byte> xPos = XPos.GetAsByteList();
             List<byte> yPos = YPos.GetAsByteList();
             List<byte> zPos = ZPos.GetAsByteList();
-            List<byte> buried = BuriedFlags.GetAsByteList();
+            List<byte> buried = buriedFlags.GetAsByteList();
             Debug.Assert(xPos.Count == TOTAL_MOONSTONES && yPos.Count == TOTAL_MOONSTONES && zPos.Count == TOTAL_MOONSTONES && buried.Count == TOTAL_MOONSTONES);
             
             for (int i = 0; i < TOTAL_MOONSTONES; i++)
             {
                 Point3D moongatePos = new Point3D(xPos[i], yPos[i], zPos[i]);
-                moongatePositions.Add(moongatePos);
-                moonstonesBuried.Add(buried[i] == 0);
-                moongateBuriedAtPositionDictionary.Add(moongatePositions[i],moonstonesBuried[i]);
+                _moongatePositions.Add(moongatePos);
+                _moonstonesBuried.Add(buried[i] == 0);
+                _moongateBuriedAtPositionDictionary.Add(_moongatePositions[i],_moonstonesBuried[i]);
             }
         }
     }

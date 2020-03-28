@@ -10,16 +10,16 @@ namespace Ultima5Redux
     {
         private const int MAX_CHARACTER_STATES = 0x20;
 
-        private List<MapCharacterState> characterStates = new List<MapCharacterState>(MAX_CHARACTER_STATES);
+        private List<MapCharacterState> _characterStates = new List<MapCharacterState>(MAX_CHARACTER_STATES);
 
         public MapCharacterState GetCharacterState(int nIndex)
         {
-            return characterStates[nIndex];
+            return _characterStates[nIndex];
         }
 
         public MapCharacterState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {
-            foreach (MapCharacterState characterState in characterStates)
+            foreach (MapCharacterState characterState in _characterStates)
             {
                 if (characterState.TheCharacterPosition.X == xy.X && characterState.TheCharacterPosition.Y == xy.Y && characterState.TheCharacterPosition.Floor == nFloor)
                     return characterState;
@@ -31,11 +31,11 @@ namespace Ultima5Redux
         {
             DataChunk dataChunk = charStatesDataChunk;
 
-            List<UInt16> characterStateBytes = dataChunk.GetChunkAsUINT16List();
+            List<UInt16> characterStateBytes = dataChunk.GetChunkAsUint16List();
 
             for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {
-                characterStates.Add(new MapCharacterState(tileReferences, 
+                _characterStates.Add(new MapCharacterState(tileReferences, 
                     characterStateBytes.GetRange(nIndex * MapCharacterAnimationState.NBYTES, MapCharacterAnimationState.NBYTES).ToArray(), nIndex));
             }
         }

@@ -16,7 +16,7 @@ namespace Raw16ToBMP
     static class BitmapWriter
     {
   
-    static public Dictionary<byte, Color> GetEGAPalette()
+    static public Dictionary<byte, Color> GetEgaPalette()
         {
             Dictionary<byte, Color> palette=new Dictionary<byte, Color>();
             palette.Add(0, Color.Black);
@@ -59,7 +59,7 @@ namespace Raw16ToBMP
                 //IntPtr pNative = bmpData.Scan0;
                 //Marshal.Copy(imageData, 0, pNative, imageData.Length-1);
 
-                Dictionary<byte, Color> egaPalette = GetEGAPalette();
+                Dictionary<byte, Color> egaPalette = GetEgaPalette();
 
                 bmp.UnlockBits(bmpData);
 
@@ -134,11 +134,11 @@ namespace Raw16ToBMP
  
         static void CreateScreen()
         {
-            const int INDEX_SIZE = 0x32;
+            const int indexSize = 0x32;
             byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
             //byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
 
-            byte[] positionArray = new byte[INDEX_SIZE];
+            byte[] positionArray = new byte[indexSize];
             for (int i = 0; i < positionArray.Length; i++)
             {
                 positionArray[i] = fileArray[i];
@@ -151,7 +151,7 @@ namespace Raw16ToBMP
             int byteIndex = 0;
             for (int bmpIndex = 0; byteIndex < nForcedWidth * nForcedHeigh; bmpIndex += 2, byteIndex += 1)
             {
-                flameGraphic[byteIndex] = fileArray[byteIndex + INDEX_SIZE];
+                flameGraphic[byteIndex] = fileArray[byteIndex + indexSize];
             }
 
 
@@ -243,7 +243,7 @@ namespace Raw16ToBMP
             UltimaScreen();
             FireScreen();
 
-            PbvCompressorLZW lzw = new PbvCompressorLZW();
+            PbvCompressorLzw lzw = new PbvCompressorLzw();
             lzw.Decompress("C:\\games\\ultima_5\\temp\\ultima.16", "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp2");
         }
     }

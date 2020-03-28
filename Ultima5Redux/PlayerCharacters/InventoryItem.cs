@@ -102,8 +102,8 @@ namespace Ultima5Redux
 
         public static ItemTypeEnum GetItemOffset(ItemTypeSpriteEnum itemTypeSpriteEnum)
         {
-            ItemTypeEnum ItemType = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), itemTypeSpriteEnum.ToString());
-            return ItemType;
+            ItemTypeEnum itemType = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), itemTypeSpriteEnum.ToString());
+            return itemType;
         }
 
         public SpecialItem(ItemTypeSpriteEnum itemType, int quantity, string longName, string shortName) : 
@@ -122,7 +122,7 @@ namespace Ultima5Redux
      
         public override bool HideQuantity => false;
 
-        public Amulet(AmuletEnum amuletType, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
+        public Amulet(AmuletEnum amuletType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
             : base(equipment, dataOvlRef, gameStateByteArray, (int)amuletType, AMULET_SPRITE)
         {
             AmuletType = amuletType;
@@ -139,7 +139,7 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
-        public Ring(RingEnum ringType, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
+        public Ring(RingEnum ringType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
                  : base(equipment, dataOvlRef, gameStateByteArray, (int)ringType, RING_SPRITE)
         {
             RingType = ringType;
@@ -155,7 +155,7 @@ namespace Ultima5Redux
         private const int HELM_SPRITE = 265;
 
         public override bool HideQuantity => false;
-        public Helm(HelmEnum helmType, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
+        public Helm(HelmEnum helmType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
                         : base(equipment, dataOvlRef, gameStateByteArray, (int)helmType, HELM_SPRITE)
         {
             HelmType = helmType;
@@ -177,7 +177,7 @@ namespace Ultima5Redux
 
         public override bool HideQuantity => false;
 
-        public ChestArmour(ChestArmourEnum chestArmourType, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
+        public ChestArmour(ChestArmourEnum chestArmourType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
           : base(equipment, dataOvlRef, gameStateByteArray, (int)chestArmourType, CHEST_ARMOUR_SPRITE)
         {
             ChestArmourType = chestArmourType;
@@ -197,7 +197,7 @@ namespace Ultima5Redux
         
         private const int SHIELD_SPRITE = 262;
  
-        public Shield(ShieldTypeEnum shieldType, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
+        public Shield(ShieldTypeEnum shieldType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
             : base(equipment, dataOvlRef, gameStateByteArray, (int)shieldType, SHIELD_SPRITE)
         {
             ShieldType = shieldType;
@@ -239,22 +239,22 @@ namespace Ultima5Redux
         public override bool HideQuantity => false;
 
 
-        public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.EQUIPMENT equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
+        public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
             : base (equipment, dataOvlRef, gameStateByteArray, (int)weapon, (int)sprite)
         {
-            IsAmmo = equipment == DataOvlReference.EQUIPMENT.Quarrels || equipment == DataOvlReference.EQUIPMENT.Arrows;
-            IsTwoHanded = equipment == DataOvlReference.EQUIPMENT.TwoHAxe || equipment == DataOvlReference.EQUIPMENT.TwoHSword ||
-                equipment == DataOvlReference.EQUIPMENT.TwoHHammer || equipment == DataOvlReference.EQUIPMENT.Bow || equipment == DataOvlReference.EQUIPMENT.MagicBow ||
-                equipment == DataOvlReference.EQUIPMENT.Crossbow || equipment == DataOvlReference.EQUIPMENT.Halberd || equipment == DataOvlReference.EQUIPMENT.FlamingOil;
-            IsShield = equipment == DataOvlReference.EQUIPMENT.SmallShield || equipment == DataOvlReference.EQUIPMENT.LargeShield ||
-                equipment == DataOvlReference.EQUIPMENT.SpikedShield || equipment == DataOvlReference.EQUIPMENT.MagicShield || 
-                equipment == DataOvlReference.EQUIPMENT.JewelShield;
+            IsAmmo = equipment == DataOvlReference.Equipment.Quarrels || equipment == DataOvlReference.Equipment.Arrows;
+            IsTwoHanded = equipment == DataOvlReference.Equipment.TwoHAxe || equipment == DataOvlReference.Equipment.TwoHSword ||
+                equipment == DataOvlReference.Equipment.TwoHHammer || equipment == DataOvlReference.Equipment.Bow || equipment == DataOvlReference.Equipment.MagicBow ||
+                equipment == DataOvlReference.Equipment.Crossbow || equipment == DataOvlReference.Equipment.Halberd || equipment == DataOvlReference.Equipment.FlamingOil;
+            IsShield = equipment == DataOvlReference.Equipment.SmallShield || equipment == DataOvlReference.Equipment.LargeShield ||
+                equipment == DataOvlReference.Equipment.SpikedShield || equipment == DataOvlReference.Equipment.MagicShield || 
+                equipment == DataOvlReference.Equipment.JewelShield;
         }
     }
 
     abstract public class Armour : CombatItem
     {
-        public Armour(DataOvlReference.EQUIPMENT specificEquipment, DataOvlReference dataOvlRef, List<byte> gameStateByteRef, int nOffset, int nSpriteNum) 
+        public Armour(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef, List<byte> gameStateByteRef, int nOffset, int nSpriteNum) 
             : base (specificEquipment, dataOvlRef, gameStateByteRef, nOffset, nSpriteNum)
         {
 
@@ -268,7 +268,7 @@ namespace Ultima5Redux
 
     abstract public class CombatItem : InventoryItem
     {
-        public DataOvlReference.EQUIPMENT SpecificEquipment;
+        public DataOvlReference.Equipment SpecificEquipment;
 
         static public int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
@@ -322,7 +322,7 @@ namespace Ultima5Redux
         //       CombatItem.GetDefense(dataOvlRef, (int) equipment),equipment));
         
             // CombatItem.GetAttack(dataOvlRef, (int)specificEquipment), CombatItem.GetDefense(dataOvlRef, (int)specificEquipment)
-        public CombatItem(DataOvlReference.EQUIPMENT specificEquipment, DataOvlReference dataOvlRef, List<byte> gameStateRef, int nOffset, int nSpriteNum) 
+        public CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef, List<byte> gameStateRef, int nOffset, int nSpriteNum) 
             : base (gameStateRef[nOffset], CombatItem.GetEquipmentString(dataOvlRef, (int)specificEquipment), 
                   CombatItem.GetEquipmentString(dataOvlRef, (int)specificEquipment), nSpriteNum)
         {

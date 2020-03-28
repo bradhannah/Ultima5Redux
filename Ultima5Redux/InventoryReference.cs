@@ -19,15 +19,15 @@ namespace Ultima5Redux
         /// <summary>
         /// All inventory references separated by item types
         /// </summary>
-        private readonly Dictionary<string, List<InventoryReference>> invRefsDictionary;
+        private readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
         /// <summary>
         /// All keywords that will be highlighted specifically for reagents 
         /// </summary>
-        private readonly List<string> reagentKeywordHighlightList;
+        private readonly List<string> _reagentKeywordHighlightList;
         /// <summary>
         /// All keywords that will be highlighted specifically for spells 
         /// </summary>
-        private readonly List<string> spellKeywordHighlightList;
+        private readonly List<string> _spellKeywordHighlightList;
         
         /// <summary>
         /// reagents are highlighted green
@@ -50,7 +50,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public List<InventoryReference> GetInventoryReferenceList(InventoryReferenceType inventoryReferenceType)
         {
-            return (invRefsDictionary[inventoryReferenceType.ToString()]);
+            return (_invRefsDictionary[inventoryReferenceType.ToString()]);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Ultima5Redux
             string finalDescription = description;
             
             // highlight all reagents
-            foreach (string highlightKeyword in reagentKeywordHighlightList)
+            foreach (string highlightKeyword in _reagentKeywordHighlightList)
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
                 
@@ -75,7 +75,7 @@ namespace Ultima5Redux
                                                                                  + upperCaseStr + "</color>");
             }
             // highlight all spell names
-            foreach (string highlightKeyword in spellKeywordHighlightList)
+            foreach (string highlightKeyword in _spellKeywordHighlightList)
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
                 
@@ -112,14 +112,14 @@ namespace Ultima5Redux
         /// </summary>
         public InventoryReferences()
         {
-            invRefsDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<InventoryReference>>>(Ultima5Redux.Properties.Resources.InventoryDetails);
+            _invRefsDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<InventoryReference>>>(Ultima5Redux.Properties.Resources.InventoryDetails);
              
              // we initialize the highlight text list
-             reagentKeywordHighlightList = new List<string>();
-             spellKeywordHighlightList = new List<string>();
+             _reagentKeywordHighlightList = new List<string>();
+             _spellKeywordHighlightList = new List<string>();
 
-             List<InventoryReference> reagentInvRefs = invRefsDictionary["Reagent"];
-             List<InventoryReference> spellInvRefs = invRefsDictionary["Spell"];
+             List<InventoryReference> reagentInvRefs = _invRefsDictionary["Reagent"];
+             List<InventoryReference> spellInvRefs = _invRefsDictionary["Spell"];
              
              // build reagent highlight table
              foreach (InventoryReference invRef in reagentInvRefs)
@@ -128,7 +128,7 @@ namespace Ultima5Redux
                  
                  foreach (string highlightWord in invRef.ItemNameHighLights)
                  {
-                     reagentKeywordHighlightList.Add(highlightWord);
+                     _reagentKeywordHighlightList.Add(highlightWord);
                  }
              }
              //build spell name highlight table
@@ -137,7 +137,7 @@ namespace Ultima5Redux
                  if (invRef.ItemNameHighLights.Length == 0) continue;
                  foreach (string highlightWord in invRef.ItemNameHighLights)
                  {
-                     spellKeywordHighlightList.Add(highlightWord);
+                     _spellKeywordHighlightList.Add(highlightWord);
                  }
              }
              
