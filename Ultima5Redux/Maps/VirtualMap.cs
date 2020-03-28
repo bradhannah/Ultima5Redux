@@ -13,7 +13,7 @@ namespace Ultima5Redux
     {
         #region Private fields
         private NonPlayerCharacterReferences _npcRefs;
-        private GameState _state;
+        private readonly GameState _state;
         /// <summary>
         /// Reference to towne/keep etc locations on the large map
         /// </summary>
@@ -30,6 +30,11 @@ namespace Ultima5Redux
         /// Both underworld and overworld maps
         /// </summary>
         private readonly Dictionary<LargeMap.Maps, LargeMap> _largeMaps = new Dictionary<LargeMap.Maps, LargeMap>(2);
+
+        /// <summary>
+        /// Exposed searched or loot items 
+        /// </summary>
+        private Queue<InventoryItem>[][] _exposedSearchItems;
         /// <summary>
         /// References to all tiles
         /// </summary>
@@ -45,12 +50,12 @@ namespace Ultima5Redux
         /// <summary>
         /// Current time of day
         /// </summary>
-        private TimeOfDay _timeOfDay;
+        private readonly TimeOfDay _timeOfDay;
 
         /// <summary>
         /// Details of where the moongates are
         /// </summary>
-        private Moongates _moongates;
+        private readonly Moongates _moongates;
 
         /// <summary>
         /// All overriden tiles
@@ -140,6 +145,7 @@ namespace Ultima5Redux
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         /// <param name="timeOfDay"></param>
+        /// <param name="moongates"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapLocationReferences largeMapLocationReferenceses,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
             GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates)
@@ -174,7 +180,10 @@ namespace Ultima5Redux
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
+            
             _overrideMap = Utils.Init2DArray<int>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
+            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryItem>>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
+            
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
@@ -204,11 +213,12 @@ namespace Ultima5Redux
             }
 
             _overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
+            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryItem>>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
+            
             IsLargeMap = true;
             LargeMapOverUnder = map;
 
             TheMapCharacters.SetCurrentMapType(null, map, _timeOfDay, null, true);
-
         }
         #endregion
 
@@ -1126,6 +1136,29 @@ namespace Ultima5Redux
             if (IsLargeMap) return false;
             return (GetNPCOnTile(xy) != null);
         }
+
+        public bool ContainsSearchableThings(Point2D xy)
+        {
+            // moonstone check
+            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Once you have confirmed that there is something searchable with ContainsSearchableThings, you
+        /// will need to "stir them up", which means they become visible to the user on the map and
+        /// made available for "getting" from the virtual map
+        /// </summary>
+        /// <param name="xy"></param>
+        public void StirUpTileSearch(Point2D xy)
+        {
+            
+        }
+        
 
         public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
         {

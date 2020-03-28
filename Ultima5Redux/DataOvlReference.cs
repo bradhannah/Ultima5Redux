@@ -43,7 +43,7 @@ namespace Ultima5Redux
             WORLD,
             CHIT_CHAT,
             KEYPRESS_COMMANDS,
-            VISION1,
+            //VISION1,
             VISION2,
             OPENING_THINGS_STUFF,
             KLIMBING,
@@ -362,9 +362,49 @@ namespace Ultima5Redux
 
         public enum SpecialItemNames2Strings { SPYGLASS, HMS_CAPE_PLAN, SEXTANT, POCKET_WATCH, BLACK_BADGE, WOODEN_BOX }
 
-        public enum Vision1Strings { DEATH_VISION = 0, STRANGE_VISION }
-        public enum Vision2Strings {THOU_DOST_SEE, YOU_SEE_DARKNESS, YOU_SEE }
+        //public enum Vision1Strings { DEATH_VISION = 0, STRANGE_VISION }
 
+        public enum Vision2Strings
+        {
+            DEATH_VISION, STRANGE_VISION, THOU_DOST_SEE, NEWLINE, YOU_SEE_DARKNESS, YOU_SEE_COLON_DARKNESS_DOT_N, YOU_SEE_COLON_N,
+            A_SLEEP_FIELD_DOT_N, A_POISON_GAS_FIELD_DOT_N, A_WALL_OF_FIRE_DOT_N, AN_ELECTRIC_FIELD_DOT_N, AN_ENERGY_FIELD_DOT_N,
+            A_DRIPPING_STALACTITE_DOT_N, A_CAVED_IN_PASSAGE_DOT_N, AN_UNFORTUNATE_SOFTWARE_PIRATE_DOT_N, A_LESS_FORTUNATE_ADVENTURER_DOT_N,
+            A_PASSAGE_DOT_N, AN_UP_LADDER_DOT, A_DOWN_LADDER_DOT_N, A_LADDER_DOT_N, A_WOODEN_CHEST_DOT_N, A_FOUNTAIN_DOT_N, A_PIT_DOT_N,
+            AN_OPEN_CHEST_DOT_N, AN_ENERGY_FIELD_DOT_N_2, NOTHING_OF_NOTE_DOT_N, A_HEAVY_DOOR_DOT_N, A_WALL_DOT_N, SPEC_WALL_ERR_DOT_N,
+            A_WALL_DOT_N_2, A_HEAVY_DOOR_DOT_N_2, A_HEAVY_DOOR_DOT_N_3 
+        }
+  
+        // [0] = {string} "Death vision!\n"
+        // [1] = {string} "Strange vision!\n"
+        // [2] = {string} "\nThou dost see\n"
+        // [3] = {string} "\n"
+        // [4] = {string} "You see:\ndarkness.\n"
+        // [5] = {string} "You see:\n"
+        // [6] = {string} "A sleep field.\n"
+        // [7] = {string} "A poison gas field.\n"
+        // [8] = {string} "A wall of fire.\n"
+        // [9] = {string} "An electric field.\n"
+        // [10] = {string} "An energy field.\n"
+        // [11] = {string} "a dripping stalactite.\n"
+        // [12] = {string} "a caved in passage.\n"
+        // [13] = {string} "an unfortunate software pirate.\n"
+        // [14] = {string} "a less fortunate adventurer.\n"
+        // [15] = {string} "a passage.\n"
+        // [16] = {string} "an up ladder.\n"
+        // [17] = {string} "a down ladder.\n"
+        // [18] = {string} "a ladder.\n"
+        // [19] = {string} "a wooden chest.\n"
+        // [20] = {string} "a fountain.\n"
+        // [21] = {string} "a pit.\n"
+        // [22] = {string} "an open chest.\n"
+        // [23] = {string} "an energy field.\n"
+        // [24] = {string} "nothing of note.\n"
+        // [25] = {string} "a heavy door.\n"
+        // [26] = {string} "a wall.\n"
+        // [27] = {string} "SPEC WALL ERR.\n"
+        // [28] = {string} "a wall.\n"
+        // [29] = {string} "a heavy door.\n"
+        // [30] = {string} "a heavy door.\n"
         public enum KlimbingStrings { WITH_WHAT = 0 , ON_FOOT , IMPASSABLE, NOT_CLIMABLE, FELL}
 
         public enum KeypressCommandsStrings { BUFFER_O = 0, BUFFER_FF, BUFFER_N, SHEETS_IN_IRONS, PASS, BOARD, CAST_DOT, D_WHAT, ENTER_WHAT, FIRE, GET, HOLE_UP, ONLY_IN_BED,
@@ -472,7 +512,7 @@ namespace Ultima5Redux
             _dataChunks = new DataChunks<DataChunkName>(dataOvlFileAndPath, DataChunkName.Unused);
 
             //dataOvlByteArray = Utils.GetFileAsByteList(dataOvlFileAndPath);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unkown", 0x00, 0x18);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x00, 0x18);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.FixedString, "Licence for the MS-Runtime", 0x18, 0x38);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Long Armour strings (13 of them)", 0x52, 0xA6, 0, DataChunkName.LONG_ARMOUR);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Weapon strings (10 of them)", 0xF8, 0x81);
@@ -520,7 +560,7 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Attack Range values", 0x1674, 0x37, 0x00, DataChunkName.ATTACK_RANGE_VALUES);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Spell Attack Range values", 0x16ad, 0x37, 0x00, DataChunkName.SPELL_ATTACK_RANGE);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Addtional Weapon/Armour strings", 0x175c, 0xa9, 0x10);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional Weapon/Armour strings", 0x175c, 0xa9, 0x10);
             DataChunk strEquipIndexes = _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "String indexes for all equipment (except scrolls) (add 0x10 to index)", 
                 0x1806, 0x2F*2+2, 0x10, DataChunkName.EQUIP_INDEXES);
 
@@ -548,7 +588,7 @@ namespace Ultima5Redux
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Virtue and mantra index (add + 0x10)", 0x1f5e, 0x20, 0x10);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x1f7e, 0x33b);
-            /// extended stuff "old list"
+            // extended stuff "old list"
             //flags that define the special abilities of
             //             monsters during combat; 32 bits per monster
             //             0x0020 = undead (affected by An Xen Corp)
@@ -569,7 +609,7 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".DAT file names (4 files)", 0x2636, 0x2b);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2661, 0x9);
 
-            /// the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
+            // the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings (some unknown in the middle)", 0x266a, 0x269);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Travel Related Strings", 0x266a, 0xE1, 0x00, DataChunkName.TRAVEL); // tweaked
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2750, 0x28); // tweaked
@@ -577,7 +617,7 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x27E7, 0x0C); // tweaked
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings(some unknown in the middle)", 0x27F3, 0xE0); // tweaked
 
-            /// the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
+            // the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x28d3, 0x83);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Sailing, Interface and World related strings", 0x2956, 0x278, 0x00, DataChunkName.WORLD);
 
@@ -646,9 +686,7 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "scancodes", 0x541E, 0x8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "internal codes", 0x5426, 0x8);
 
-
-
-            /// begin bajh manual review
+            // begin bajh manual review
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x4e96, 0x263);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x50F9, 0x377);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x5470, 0x71);
@@ -681,8 +719,11 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Look2.dat (x2)", 0x7384, 0x14);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs?", 0x7398, 0x15e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs.dat (x2)", 0x74f6, 0x14);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22, 0x00, DataChunkName.VISION1);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x752c, 0x1e4, 0x00, DataChunkName.VISION2);
+//            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22, 0x00, DataChunkName.VISION1);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x750A, 0x205, 0x00, DataChunkName.VISION2);
+            someStrings = GetDataChunk(DataChunkName.VISION2).GetChunkAsStringList();
+
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Drinking Strings", 0x76ef, 0x71);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Level up apparition strings", 0x7760, 0x94);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Karma.dat (x2)", 0x77f4, 0x14);
@@ -702,11 +743,11 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "endmsg.dat", 0x849e, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "random texts", 0x84aa, 0x74);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "finding/searching for things strings ", 0x851e, 0x442);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "wher you found something (ie. In the wall) ", 0x8960, 0xe4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "where you found something (ie. In the wall) ", 0x8960, 0xe4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "strings about unlocking or finding doors", 0x8a44, 0x1b3, 0x00, DataChunkName.OPENING_THINGS_STUFF);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "potion colours", 0x8bfa, 0x34);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "scroll shortfroms", 0x8c2e, 0x20);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "scroll shortforms", 0x8c2e, 0x20);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "more found things!", 0x8c4e, 0x236, 0x00, DataChunkName.GET_THINGS);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "getting things string!", 0x8c4e, 0x238);
@@ -740,7 +781,6 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Strings related to intro", 0xa020, 0x5a);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character creation related strings", 0xa07a, 0xa6);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Responses to key presses", 0xa120, 0x2a0, 0x00, DataChunkName.KEYPRESS_COMMANDS);
-             someStrings = GetDataChunk(DataChunkName.KEYPRESS_COMMANDS).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Anti piracy messages", 0xa3c0, 0x170);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Nil", 0xA530, 0x1820);

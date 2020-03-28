@@ -45,7 +45,7 @@ namespace Ultima5Redux
 
         }
 
-        static public T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
+        public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
         {
             T[][] theArray = new T[numberOfRows][];
             for (int i = 0; i < numberOfRows; i++)
@@ -55,7 +55,7 @@ namespace Ultima5Redux
             return theArray;
         }
 
-        static public T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
+        public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
         {
             T[][] theArray = new T[numberOfRows][];
             for (int i = 0; i < numberOfRows; i++)

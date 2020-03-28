@@ -449,8 +449,12 @@ namespace Ultima5Redux
         /// <returns>the output string to write to console</returns>
         public string TryToSearch(Point2D xy, out bool bWasSuccessful)
         {
-            bWasSuccessful = false;
+            bWasSuccessful = State.TheVirtualMap.ContainsSearchableThings(xy);
 
+            if (!bWasSuccessful) return DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N);
+            
+            
+            
             return string.Empty;
         }
         
@@ -617,7 +621,6 @@ namespace Ultima5Redux
                 (State.TheVirtualMap.CurrentPosition.Y == (0) && direction == VirtualMap.Direction.Up) ||
                 (State.TheVirtualMap.CurrentPosition.X == (nTilesPerMapCol - 1) && direction == VirtualMap.Direction.Right) ||
                 (State.TheVirtualMap.CurrentPosition.X == (0) && direction == VirtualMap.Direction.Left)))
-
             {
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space

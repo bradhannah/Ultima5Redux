@@ -74,6 +74,12 @@ namespace Ultima5Redux
             if (!_moongateBuriedAtPositionDictionary.ContainsKey(position)) return false;
             return _moongateBuriedAtPositionDictionary[position];
         }
+
+        public bool IsMoonstoneBuried(Point2D position, LargeMap.Maps map)
+        {
+            return IsMoonstoneBuried(new Point3D(position.X, position.Y, map==LargeMap.Maps.Overworld?0:0xFF));
+        }
+        
         
         /// <summary>
         /// Constructor. Built with DataChunk references from save file
