@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ultima5Redux
 {
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     public class Moongates
     {
         /// <summary>
@@ -83,19 +85,19 @@ namespace Ultima5Redux
         public Moongates(DataChunk xPos, DataChunk yPos, DataChunk buriedFlags, DataChunk zPos)
         {
             // save datachunks for saving later
-            this.XPos = XPos;
-            this.YPos = YPos;
+            this.XPos = xPos;
+            this.YPos = yPos;
             this.BuriedFlags = buriedFlags;
-            this.ZPos = ZPos;
-            List<byte> xPos = XPos.GetAsByteList();
-            List<byte> yPos = YPos.GetAsByteList();
-            List<byte> zPos = ZPos.GetAsByteList();
+            this.ZPos = zPos;
+            List<byte> xPositions = xPos.GetAsByteList();
+            List<byte> yPositions = yPos.GetAsByteList();
+            List<byte> zPositions = zPos.GetAsByteList();
             List<byte> buried = buriedFlags.GetAsByteList();
-            Debug.Assert(xPos.Count == TOTAL_MOONSTONES && yPos.Count == TOTAL_MOONSTONES && zPos.Count == TOTAL_MOONSTONES && buried.Count == TOTAL_MOONSTONES);
+            Debug.Assert(xPositions.Count == TOTAL_MOONSTONES && yPositions.Count == TOTAL_MOONSTONES && zPositions.Count == TOTAL_MOONSTONES && buried.Count == TOTAL_MOONSTONES);
             
             for (int i = 0; i < TOTAL_MOONSTONES; i++)
             {
-                Point3D moongatePos = new Point3D(xPos[i], yPos[i], zPos[i]);
+                Point3D moongatePos = new Point3D(xPositions[i], yPositions[i], zPositions[i]);
                 _moongatePositions.Add(moongatePos);
                 _moonstonesBuried.Add(buried[i] == 0);
                 _moongateBuriedAtPositionDictionary.Add(_moongatePositions[i],_moonstonesBuried[i]);
