@@ -27,6 +27,7 @@ namespace Ultima5Redux.External
                     return -1;
             }
         }
+
         public bool Walkable { get; }
 
         public Node(Vector2 pos, bool walkable, float weight = 1)
@@ -104,7 +105,7 @@ namespace Ultima5Redux.External
             return path;
         }
 		
-        private IEnumerable<Node> GetAdjacentNodes(Node n)
+        private List<Node> GetAdjacentNodes(Node n)
         {
             List<Node> temp = new List<Node>();
 
