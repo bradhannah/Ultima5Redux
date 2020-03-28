@@ -60,6 +60,12 @@ namespace Ultima5Redux
         public TimeOfDay TheTimeOfDay { get; }
 
         public Moongates TheMoongates { get; }
+
+        public byte ActivePlayerNumber
+        {
+            get => _dataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
+            set => _dataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).SetChunkAsByte(value);
+        }
         
         /// <summary>
         /// Total number of Gems
@@ -207,7 +213,8 @@ namespace Ultima5Redux
             MOONSTONE_X_COORDS, 
             MOONSTONE_Y_COORDS, 
             MOONSTONE_BURIED,
-            MOONSTONE_Z_COORDS
+            MOONSTONE_Z_COORDS,
+            ACTIVE_CHARACTER
         };
         #endregion
 
@@ -274,6 +281,9 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0-0xFF Moonstone Y Coordinates (valid only if buried)", 0x292, 0x08, 0x00, DataChunkName.MOONSTONE_Y_COORDS);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=buried,0xFF=Inventory Moonstone Flags", 0x29A, 0x08, 0x00, DataChunkName.MOONSTONE_BURIED);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "0=Britannia,0xFF=Underworld Moonstone Z Coordinates (valid only if buried)", 0x2A2, 0x08, 0x00, DataChunkName.MOONSTONE_Z_COORDS);
+
+            // misc
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Active Character - 0-5,0xFF=None", 0x2D5, 0x01, 0x00, DataChunkName.ACTIVE_CHARACTER);
             
             // time and date
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Current Year", 0x2CE, 0x02, 0x00, DataChunkName.CURRENT_YEAR);
@@ -340,9 +350,6 @@ namespace Ultima5Redux
         #endregion
 
         #region Public Methods
-
-   
-        
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return _dataChunks.GetDataChunk(dataChunkName);

@@ -28,7 +28,7 @@ namespace Ultima5Redux.External
             }
         }
 
-        public bool Walkable { get; }
+        public bool Walkable; //{ get; set; }
 
         public Node(Vector2 pos, bool walkable, float weight = 1)
         {

@@ -191,6 +191,11 @@ namespace Ultima5Redux
             return (State.TheMoongates.IsMoonstoneBuried(currentPos));
         }
         
+        /// <summary>
+        /// Gets the teleport location of the moongate the avatar is presently on
+        /// Avatar MUST be on a moongate teleport location
+        /// </summary>
+        /// <returns>the coordinates</returns>
         public Point3D GetMoongateTeleportLocation()
         {
             Debug.Assert(State.TheVirtualMap.IsLargeMap);
@@ -201,6 +206,10 @@ namespace Ultima5Redux
             return State.TheMoongates.GetMoongatePosition((int)MoonPhaseRefs.GetMoonGateMoonPhase(State.TheTimeOfDay));
         }        
         
+        /// <summary>
+        /// Gets the angle of the 360 rotation of all moons where Sun is 0degrees (straight up) at 12pm Noon
+        /// </summary>
+        /// <returns>0-359 degrees</returns>
         public float GetMoonAngle()
         {
             return MoonPhaseRefs.GetMoonAngle(State.TheTimeOfDay);
@@ -229,7 +238,7 @@ namespace Ultima5Redux
             else if (SpriteTileReferences.IsSign(tileReference.Index))
             {
                 specialLookCommand = SpecialLookCommand.Sign;
-                return String.Empty;
+                return string.Empty;
             }
             else if (SpriteTileReferences.GetTileNumberByName("Clock1") == tileReference.Index)
             {
@@ -385,7 +394,6 @@ namespace Ultima5Redux
         /// <returns></returns>
         public string TryToKlimb(Point2D xy, out KlimbResult klimbResult)
         {
-            //Point2D klimbTilePos = GetAdustedPos(CurrentVirtualMap.CurrentPosition, keyCode);
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
             if (State.TheVirtualMap.IsLargeMap)
@@ -393,13 +401,15 @@ namespace Ultima5Redux
                 // is it even klimbable?
                 if (tileReference.IsKlimable)
                 {
-                    if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("SmallMountains"))
+                    if (tileReference.Index != SpriteTileReferences.GetTileNumberByName("SmallMountains"))
                     {
-                        State.GrapplingFall();
-                        klimbResult = KlimbResult.SuccessFell;
-                        return DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.FELL);
+                        throw new Ultima5ReduxException(
+                            "I am not personal aware of what on earth you would be klimbing that is not already stated in the following logic...");
                     }
-                    throw new Ultima5ReduxException("I am not personal aware of what on earth you would be klimbing that is not already stated in the following logic...");
+
+                    State.GrapplingFall();
+                    klimbResult = KlimbResult.SuccessFell;
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.FELL);
                 }
                 // is it tall mountains? we can't klimb those
                 else if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("TallMountains"))
@@ -420,7 +430,7 @@ namespace Ultima5Redux
                 {
                     // ie. a fence
                     klimbResult = KlimbResult.Success;
-                    return String.Empty;
+                    return string.Empty;
                 }
                 else
                 {
@@ -432,17 +442,28 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        /// Try to search an area and see if you find anything!
+        /// </summary>
+        /// <param name="xy">location to search</param>
+        /// <param name="bWasSuccessful">result if it was successful, true if you found one or more things</param>
+        /// <returns>the output string to write to console</returns>
+        public string TryToSearch(Point2D xy, out bool bWasSuccessful)
+        {
+            bWasSuccessful = false;
+
+            return string.Empty;
+        }
+        
+        /// <summary>
         /// Try to jimmy the door with a given character
         /// </summary>
         /// <param name="xy">position of the door</param>
         /// <param name="record">character who will attempt to open it</param>
-        /// <param name="bWasSuccesful">was it a successful jimmy?</param>
-        /// <returns></returns>
-        public string TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record, out bool bWasSuccesful)
+        /// <param name="bWasSuccessful">was it a successful jimmy?</param>
+        /// <returns>the output string to write to console</returns>
+        public string TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record, out bool bWasSuccessful)
         {
-            bWasSuccesful = false;
-            //Point2D doorPos = GetAdustedPos(CurrentVirtualMap.CurrentPosition, keyCode);
-            //int doorTileSprite = GetTileNumber(doorPos.X, doorPos.Y);
+            bWasSuccessful = false;
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
             bool isDoorInDirection = tileReference.IsOpenable;
 
@@ -469,7 +490,7 @@ namespace Ultima5Redux
                     State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
                 }
                 //ReassignSprites();
-                bWasSuccesful = true;
+                bWasSuccessful = true;
 
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.KEY_BROKE));
             }
@@ -494,7 +515,7 @@ namespace Ultima5Redux
                     State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
                 }
                 //ReassignSprites();
-                bWasSuccesful = true;
+                bWasSuccessful = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.UNLOCKED));
             }
             else
