@@ -32,8 +32,6 @@ namespace Ultima5Redux
         /// </summary>
         private readonly bool[][] _npcIsDeadArray;
 
-        private readonly DataOvlReference _dataRef;
-
         /// <summary>
         /// All player character records
         /// </summary>
@@ -41,13 +39,14 @@ namespace Ultima5Redux
         #endregion
 
         #region Internal Properties for direct save memory access
-        internal DataChunk CharacterAnimationStatesDataChunk { get { return _dataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES); } }
-        internal DataChunk CharacterStatesDataChunk { get { return _dataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES); } }
-        internal DataChunk NonPlayerCharacterMovementLists { get { return _dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS); } }
-        internal DataChunk NonPlayerCharacterMovementOffsets { get { return _dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS); } }
-        internal DataChunk NonPlayerCharacterKeySprites { get { return _dataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES); } }
-        internal DataChunk OverworldOverlayDataChunks { get { return _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
-        internal DataChunk UnderworldOverlayDataChunks { get { return _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES); } }
+        internal DataChunk CharacterAnimationStatesDataChunk => _dataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
+        internal DataChunk CharacterStatesDataChunk => _dataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
+        internal DataChunk NonPlayerCharacterMovementLists => _dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS);
+        internal DataChunk NonPlayerCharacterMovementOffsets => _dataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
+        internal DataChunk NonPlayerCharacterKeySprites => _dataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
+        internal DataChunk OverworldOverlayDataChunks => _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
+        internal DataChunk UnderworldOverlayDataChunks => _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
+
         #endregion
 
         #region Public Properties
@@ -132,7 +131,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Players total gold
         /// </summary>
-        public UInt16 Gold
+        public ushort Gold
         {
             get => _dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUint16();
             set => _dataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).SetChunkAsUint16(value);
@@ -141,7 +140,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Players total food
         /// </summary>
-        public UInt16 Food
+        public ushort Food
         {
             get => _dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUint16();
             set => _dataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).SetChunkAsUint16(value);
@@ -168,7 +167,8 @@ namespace Ultima5Redux
         #endregion
 
         #region Enumerations
-        public enum OverlayChunkName
+
+        private enum OverlayChunkName
         {
             Unused,
             CHARACTER_ANIMATION_STATES
@@ -218,7 +218,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="smallMapReferences"></param>
         /// <param name="smallMaps"></param>
-        /// <param name="largeMapLocationReferenceses"></param>
+        /// <param name="largeMapLocationReferences"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
         /// <param name="nonPlayerCharacters"></param>
@@ -226,10 +226,10 @@ namespace Ultima5Redux
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapLocationReferences largeMapLocationReferenceses, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
+            LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
             TileReferences tileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
         {
-            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferenceses, overworldMap, underworldMap,
+            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferences, overworldMap, underworldMap,
                 nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates);
         }
 
@@ -237,16 +237,16 @@ namespace Ultima5Redux
         /// Construct the GameState
         /// </summary>
         /// <param name="u5Directory">Directory of the game State files</param>
+        /// <param name="dataOvlRef"></param>
         public GameState(string u5Directory, DataOvlReference dataOvlRef)
         {
-            _dataRef = dataOvlRef;
+            DataOvlReference dataRef = dataOvlRef;
 
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
             _dataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
 
-            List<byte> gameStateByteArray;
-            gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
+            List<byte> gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
             // import all character records
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02, 0x20 * 16, 0x00, DataChunkName.CHARACTER_RECORDS);
@@ -334,8 +334,8 @@ namespace Ultima5Redux
                 _dataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), _dataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
                 _dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
             
-            // import the players invetry
-            PlayerInventory = new Inventory(gameStateByteArray, _dataRef, new MoonPhaseReferences(_dataRef), TheMoongates);
+            // import the players inventory
+            PlayerInventory = new Inventory(gameStateByteArray, dataRef, new MoonPhaseReferences(dataRef), TheMoongates);
         }
         #endregion
 
@@ -472,9 +472,10 @@ namespace Ultima5Redux
         /// DEBUG FUNCTION
         /// </summary>
         /// <param name="npc"></param>
-        public void SetNpcHasMetAvatar(NonPlayerCharacterReference npc, bool hasMet)
+        /// <param name="bHasMet"></param>
+        public void SetNpcHasMetAvatar(NonPlayerCharacterReference npc, bool bHasMet)
         {
-            _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = hasMet;
+            _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = bHasMet;
         }
 
         #endregion

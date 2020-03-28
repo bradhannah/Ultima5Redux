@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+using Ultima5Redux.External;
+
 // ReSharper disable IdentifierTypo
 
 namespace Ultima5Redux
@@ -760,7 +762,7 @@ namespace Ultima5Redux
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
         private int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy)
         {            
-            Stack<AStarSharp.Node> nodeStack = CurrentMap.Astar.FindPath(new System.Numerics.Vector2(currentXy.X, currentXy.Y),
+            Stack<Node> nodeStack = CurrentMap.AStar.FindPath(new System.Numerics.Vector2(currentXy.X, currentXy.Y),
             new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
             return nodeStack == null ? 0 : nodeStack.Count;
@@ -796,7 +798,7 @@ namespace Ultima5Redux
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<AStarSharp.Node> nodeStack = CurrentMap.Astar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
+            Stack<Node> nodeStack = CurrentMap.AStar.FindPath(new System.Numerics.Vector2(mapCharacter.CurrentCharacterPosition.XY.X, mapCharacter.CurrentCharacterPosition.XY.Y),
                 new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
             NonPlayerCharacterMovement.MovementCommandDirection prevDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
@@ -808,7 +810,7 @@ namespace Ultima5Redux
 
             int nInARow = 0;
             // builds the movement list that is compatible with the original U5 movement instruction queue stored in the state file
-            foreach (AStarSharp.Node node in nodeStack)
+            foreach (Node node in nodeStack)
             {
                 Point2D newPosition = vector2ToPoint2D(node.Position);
                 newDirection = getCommandDirection(prevPosition, newPosition);
