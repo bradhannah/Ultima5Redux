@@ -150,7 +150,7 @@ namespace Ultima5Redux
 
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef);
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef, InvRef);
 
             if (State.Location != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
             {
@@ -452,8 +452,11 @@ namespace Ultima5Redux
             bWasSuccessful = State.TheVirtualMap.ContainsSearchableThings(xy);
 
             if (!bWasSuccessful) return DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N);
-            
-            
+
+            // we search the tile and expose any items that may be on it
+            int nItems = State.TheVirtualMap.SearchAndExposeItems(xy);
+
+            return "EXPOSED A THING";
             
             return string.Empty;
         }

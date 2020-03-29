@@ -217,6 +217,22 @@ namespace Ultima5ReduxTesting
         }
 
         [Test]
+        public void Test_SearchForMoonstoneAndGet()
+        {
+            World world = new World(SaveDirectory);
+
+            Point2D moongatePosition = new Point2D(166, 19);
+            world.TryToSearch(moongatePosition, out bool bWasSuccessful);
+            
+            Debug.Assert(bWasSuccessful);
+
+            TileReference tileRef = world.State.TheVirtualMap.GetTileReference(moongatePosition);
+            Debug.Assert(tileRef.Index == 281);
+
+            int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
+        }
+        
+        [Test]
         public void Test_MoongateHunting()
         {
             World world = new World(SaveDirectory);

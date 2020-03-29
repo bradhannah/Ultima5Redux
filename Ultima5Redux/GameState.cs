@@ -219,6 +219,7 @@ namespace Ultima5Redux
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Initializes (one time) the virtual map component
         /// Must be initialized pretty much after everything else has been loaded into memory
@@ -232,12 +233,13 @@ namespace Ultima5Redux
         /// <param name="tileReferences"></param>
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
+        /// <param name="inventoryReferences"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
-            TileReferences tileReferences, GameState state, NonPlayerCharacterReferences npcRefs)
+            TileReferences tileReferences, GameState state, NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences)
         {
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferences, overworldMap, underworldMap,
-                nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates);
+                nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, inventoryReferences);
         }
 
         /// <summary>

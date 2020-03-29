@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
 using Ultima5Redux.External;
@@ -34,7 +35,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Exposed searched or loot items 
         /// </summary>
-        private Queue<InventoryItem>[][] _exposedSearchItems;
+        private Queue<InventoryReference>[][] _exposedSearchItems;
         /// <summary>
         /// References to all tiles
         /// </summary>
@@ -56,6 +57,8 @@ namespace Ultima5Redux
         /// Details of where the moongates are
         /// </summary>
         private readonly Moongates _moongates;
+
+        private readonly InventoryReferences _inventoryReferences;
 
         /// <summary>
         /// All overriden tiles
@@ -146,20 +149,22 @@ namespace Ultima5Redux
         /// <param name="npcRefs"></param>
         /// <param name="timeOfDay"></param>
         /// <param name="moongates"></param>
+        /// <param name="inventoryReferences"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapLocationReferences largeMapLocationReferenceses,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
-            GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates)
+            GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates, InventoryReferences inventoryReferences)
         {
-            this.SmallMapRefs = smallMapReferences;
-            this._smallMaps = smallMaps;
-            this._nonPlayerCharacters = nonPlayerCharacters;
-            this._largeMapLocationReferenceses = largeMapLocationReferenceses;
-            this._tileReferences = tileReferences;
-            this._state = state;
-            this._npcRefs = npcRefs;
-            this._timeOfDay = timeOfDay;
-            this._moongates = moongates;
-            this._overridenTiles = new TileOverrides();
+            SmallMapRefs = smallMapReferences;
+            _smallMaps = smallMaps;
+            _nonPlayerCharacters = nonPlayerCharacters;
+            _largeMapLocationReferenceses = largeMapLocationReferenceses;
+            _tileReferences = tileReferences;
+            _state = state;
+            _npcRefs = npcRefs;
+            _timeOfDay = timeOfDay;
+            _moongates = moongates;
+            _inventoryReferences = inventoryReferences;
+            _overridenTiles = new TileOverrides();
             
             //this.characterStates = characterStates;
             _largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
@@ -182,7 +187,7 @@ namespace Ultima5Redux
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
             
             _overrideMap = Utils.Init2DArray<int>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
-            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryItem>>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
+            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryReference>>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
             
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
@@ -213,7 +218,7 @@ namespace Ultima5Redux
             }
 
             _overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
-            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryItem>>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
+            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryReference>>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
             
             IsLargeMap = true;
             LargeMapOverUnder = map;
@@ -223,19 +228,30 @@ namespace Ultima5Redux
         #endregion
 
         #region Tile references and character positioning
+
         /// <summary>
         /// Gets a tile reference from the given coordinate
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        /// <param name="bIgnoreExposed"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(int x, int y)
+        public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false)
         {
+            // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
+            if (!bIgnoreExposed)
+            {
+                InventoryReference exposedInventoryReference = _exposedSearchItems[x][y]?.Peek() ?? null;
+                if (exposedInventoryReference != null)
+                {
+                    // we get the top most exposed item and only show it
+                    return _tileReferences.GetTileReference(exposedInventoryReference.ItemSpriteExposed);
+                }
+            }
+
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
-            // if (IsLargeMap && !timeOfDay.IsDayLight &&
-            //     moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF)))
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
-            if (IsLargeMap && //!timeOfDay.IsDayLight &&
+            if (IsLargeMap && 
                     _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF)))
             {
                 return _tileReferences.GetTileReferenceByName("Moongate");
@@ -274,6 +290,26 @@ namespace Ultima5Redux
             return GetTileReference(xy.X, xy.Y);
         }
 
+        internal int SearchAndExposeItems(Point2D xy)
+        {
+            // check for moonstones
+            // moonstone check
+            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder))
+            {
+                InventoryReference invRef = _inventoryReferences.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item, "Moonstone");
+
+                if (_exposedSearchItems[xy.X][xy.Y] == null)
+                {
+                    _exposedSearchItems[xy.X][xy.Y] = new Queue<InventoryReference>();
+                }
+                _exposedSearchItems[xy.X][xy.Y].Enqueue(invRef);
+                
+                return 1;
+            }
+
+            return 0;
+        }
+        
         /// <summary>
         /// Sets an override for the current tile which will be favoured over the static map tile
         /// </summary>
@@ -323,10 +359,12 @@ namespace Ultima5Redux
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Is the particular tile eligable to be moved onto
         /// </summary>
         /// <param name="xy"></param>
+        /// <param name="bNoStaircases"></param>
         /// <returns>true if you can move onto the tile</returns>
         private bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases)
         {
@@ -351,7 +389,6 @@ namespace Ultima5Redux
         /// <param name="scheduledPosition">the place they are supposed to be</param>
         /// <param name="nMaxDistance">max distance they can travel from that position</param>
         /// <param name="bNoStaircases"></param>
-        /// <param name="bIncludeNone"></param>
         /// <returns></returns>
         private List<NonPlayerCharacterMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition, Point2D scheduledPosition, 
             int nMaxDistance, bool bNoStaircases)
@@ -513,9 +550,10 @@ namespace Ultima5Redux
                     
 
                     // sloppy, but fine for now
-                    CharacterPosition characterPosition = new CharacterPosition();
-                    characterPosition.XY = stairsAndLadderLocations[0];
-                    characterPosition.Floor = nMapCurrentFloor;
+                    CharacterPosition characterPosition = new CharacterPosition
+                    {
+                        XY = stairsAndLadderLocations[0], Floor = nMapCurrentFloor
+                    };
                     mapCharacter.Move(characterPosition);
                     return;
 
@@ -775,7 +813,7 @@ namespace Ultima5Redux
             Stack<Node> nodeStack = CurrentMap.AStar.FindPath(new System.Numerics.Vector2(currentXy.X, currentXy.Y),
             new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
-            return nodeStack == null ? 0 : nodeStack.Count;
+            return nodeStack?.Count ?? 0;
         }
         
         /// <summary>
@@ -1191,6 +1229,15 @@ namespace Ultima5Redux
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
             }
             
+            // if has exposed search then we evaluate and see if it is actually a normal tile underneath
+            int nExposedCount = _exposedSearchItems[xy.X][xy.Y]?.Count ?? 0; 
+            if (nExposedCount > 0)
+            {
+                // there are exposed items on this tile
+                TileReference tileRef = GetTileReference(xy.X, xy.Y, true);
+                if (tileRef.FlatTileSubstitionIndex == -3)
+                    return tileRef.Index;
+            }
 
             for (int i = -1; i <= 1; i++)
             {

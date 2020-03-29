@@ -157,6 +157,8 @@ namespace Ultima5Redux
         [JsonProperty]
         public string ItemSprite { get; set; }
         [JsonProperty]
+        public int ItemSpriteExposed { get; set; }
+        [JsonProperty]
         public string ItemDescription { get; set; }
         [JsonProperty]
         public string ItemDescriptionAttribution { get; set; }
