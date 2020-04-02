@@ -19,6 +19,10 @@ namespace Ultima5Redux
 
         public virtual string ShortName { get; }
 
+        public virtual string FindDescription { get; }  
+        
+        public InventoryReference InvRef { get; protected set; }
+
         public int SpriteNum { get; }
 
         public string QuantityString
@@ -30,12 +34,18 @@ namespace Ultima5Redux
             }
         }
 
-        public InventoryItem(int quantity, string longName, string shortName, int spriteNum)
+        public InventoryItem(int quantity, string longName, string shortName, int spriteNum) : this (quantity, longName, shortName, "", spriteNum)
+        {
+            
+        }
+
+        public InventoryItem(int quantity, string longName, string shortName, string findDescription, int spriteNum)
         {
             this.Quantity = quantity;
             this.LongName = longName;
             this.ShortName = shortName;
             this.SpriteNum = spriteNum;
+            this.FindDescription = findDescription;
         }
     }
 
@@ -44,14 +54,15 @@ namespace Ultima5Redux
         public MoonPhaseReferences.MoonPhases Phase { get; }
         private readonly Moongates _moongates;
 
-        public Moonstone(MoonPhaseReferences.MoonPhases phase, string longName, string shortName, Moongates moongates) 
-            : base(0, longName, shortName, MOONSTONE_SPRITE)
+        public Moonstone(MoonPhaseReferences.MoonPhases phase, string longName, string shortName, string findDescription, Moongates moongates, InventoryReference invRef) 
+            : base(0, longName, shortName, findDescription, MOONSTONE_SPRITE)
         {
             Phase = phase;
             _moongates = moongates;
+            InvRef = invRef;
         }
 
-        private const int MOONSTONE_SPRITE = 220;
+        private const int MOONSTONE_SPRITE = 281;
         
         // we will hold onto this enum for later when we assign custom sprites
         //public enum ItemTypeEnum { NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter, CrescentWaning, NoMoon }

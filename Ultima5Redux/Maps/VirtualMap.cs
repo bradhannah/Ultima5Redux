@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Net;
 using System.Numerics;
 using Ultima5Redux.External;
 
@@ -35,7 +37,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Exposed searched or loot items 
         /// </summary>
-        private Queue<InventoryReference>[][] _exposedSearchItems;
+        private Queue<InventoryItem>[][] _exposedSearchItems;
         /// <summary>
         /// References to all tiles
         /// </summary>
@@ -187,7 +189,7 @@ namespace Ultima5Redux
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
             
             _overrideMap = Utils.Init2DArray<int>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
-            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryReference>>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
+            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryItem>>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
             
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
@@ -218,7 +220,7 @@ namespace Ultima5Redux
             }
 
             _overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
-            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryReference>>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
+            _exposedSearchItems = Utils.Init2DArray<Queue<InventoryItem>>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
             
             IsLargeMap = true;
             LargeMapOverUnder = map;
@@ -229,6 +231,11 @@ namespace Ultima5Redux
 
         #region Tile references and character positioning
 
+        public IEnumerable<InventoryItem> GetExposedInventoryItems(Point2D xy)
+        {
+            return _exposedSearchItems[xy.X][xy.Y];
+        }
+
         /// <summary>
         /// Gets a tile reference from the given coordinate
         /// </summary>
@@ -236,22 +243,25 @@ namespace Ultima5Redux
         /// <param name="y"></param>
         /// <param name="bIgnoreExposed"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false)
+        public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
         {
             // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
             if (!bIgnoreExposed)
             {
-                InventoryReference exposedInventoryReference = _exposedSearchItems[x][y]?.Peek() ?? null;
-                if (exposedInventoryReference != null)
+                InventoryItem exposedInventoryReference;
+                if (_exposedSearchItems[x][y] != null)
                 {
-                    // we get the top most exposed item and only show it
-                    return _tileReferences.GetTileReference(exposedInventoryReference.ItemSpriteExposed);
+                    if (_exposedSearchItems[x][y].Count > 0)
+                    {
+                        // we get the top most exposed item and only show it
+                        return _tileReferences.GetTileReference(_exposedSearchItems[x][y].Peek().SpriteNum);
+                    }
                 }
             }
 
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
-            if (IsLargeMap && 
+            if (!bIgnoreMoongate && IsLargeMap && 
                     _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF)))
             {
                 return _tileReferences.GetTileReferenceByName("Moongate");
@@ -294,20 +304,37 @@ namespace Ultima5Redux
         {
             // check for moonstones
             // moonstone check
-            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder))
+            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder) && _timeOfDay.IsDayLight)
             {
-                InventoryReference invRef = _inventoryReferences.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item, "Moonstone");
-
+                //InventoryReference invRef = _inventoryReferences.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item, "Moonstone");
+                InventoryItem invItem =
+                    _state.PlayerInventory.TheMoonstones.Items[
+                        _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder)];
                 if (_exposedSearchItems[xy.X][xy.Y] == null)
                 {
-                    _exposedSearchItems[xy.X][xy.Y] = new Queue<InventoryReference>();
+                    _exposedSearchItems[xy.X][xy.Y] = new Queue<InventoryItem>();
                 }
-                _exposedSearchItems[xy.X][xy.Y].Enqueue(invRef);
+                _exposedSearchItems[xy.X][xy.Y].Enqueue(invItem);
                 
                 return 1;
             }
 
             return 0;
+        }
+
+        internal bool IsAnyExposedItems(Point2D xy)
+        {
+            if (_exposedSearchItems[xy.X][xy.Y] == null) return false;
+            return (_exposedSearchItems[xy.X][xy.Y].Count > 0);
+        }
+        
+        internal InventoryItem DequeuExposedItem(Point2D xy)
+        {
+            if (IsAnyExposedItems(xy))
+            {
+                return _exposedSearchItems[xy.X][xy.Y].Dequeue();
+            }
+            throw new Ultima5ReduxException("Tried to deque an item at "+xy+" but there is no item on it");
         }
         
         /// <summary>
@@ -1234,8 +1261,8 @@ namespace Ultima5Redux
             if (nExposedCount > 0)
             {
                 // there are exposed items on this tile
-                TileReference tileRef = GetTileReference(xy.X, xy.Y, true);
-                if (tileRef.FlatTileSubstitionIndex == -3)
+                TileReference tileRef = GetTileReference(xy.X, xy.Y, bIgnoreExposed: true, bIgnoreMoongate: true);
+                if (tileRef.FlatTileSubstitionIndex != -2)
                     return tileRef.Index;
             }
 

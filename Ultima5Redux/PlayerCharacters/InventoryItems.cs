@@ -394,7 +394,7 @@ namespace Ultima5Redux
         
         
         
-        public Moonstones(DataOvlReference dataOvlRef, MoonPhaseReferences moonPhaseReferences, Moongates moongates) 
+        public Moonstones(DataOvlReference dataOvlRef, MoonPhaseReferences moonPhaseReferences, Moongates moongates, InventoryReferences invRefs) 
             : base(dataOvlRef, null)
         {
             _moongates = moongates;
@@ -406,10 +406,13 @@ namespace Ultima5Redux
             {
                 // there is no "no moon" moonstone
                 if (phase == MoonPhaseReferences.MoonPhases.NoMoon) continue;
-                Items[phase]= new Moonstone(phase,
+                Items[phase] = new Moonstone(phase,
                     dataOvlRef.StringReferences.GetString(DataOvlReference.ZstatsStrings.MOONSTONE_SPACE).TrimEnd(),
                     dataOvlRef.StringReferences.GetString(DataOvlReference.ZstatsStrings.MOONSTONE_SPACE).TrimEnd(),
-                    moongates);
+                    dataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N)
+                        .TrimEnd(),
+                    moongates, null);
+                //invRefs.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item, phase.ToString()));
             }
         }
 

@@ -261,6 +261,12 @@ namespace Ultima5Redux
         /// <returns>the output string</returns>
         public string GetAThing(Point2D xy, out bool bGotAThing)
         {
+            string thouDostFind(string thingYouFound)
+            {
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.N_THOU_DOST_FIND_N)
+                 + thingYouFound;
+            }
+            
             bGotAThing = false;
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
@@ -271,6 +277,14 @@ namespace Ultima5Redux
                 State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);//PickUpThing(xy);
                 bGotAThing = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED));
+            }
+            else if (State.TheVirtualMap.IsAnyExposedItems(xy))
+            {
+                bGotAThing = true;
+                InventoryItem invItem = State.TheVirtualMap.DequeuExposedItem(xy);
+
+                return thouDostFind(invItem.FindDescription);
+                //
             }
             return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.NOTHING_TO_GET);
         }
@@ -456,9 +470,15 @@ namespace Ultima5Redux
             // we search the tile and expose any items that may be on it
             int nItems = State.TheVirtualMap.SearchAndExposeItems(xy);
 
-            return "EXPOSED A THING";
-            
-            return string.Empty;
+            // it could be a moongate, with a stone, but wrong time of day
+            if (nItems == 0) { return DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N); }
+
+            string searchResultStr = DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.N_THOU_DOST_FIND_N).TrimStart();
+            foreach (InventoryItem invRef in State.TheVirtualMap.GetExposedInventoryItems(xy))
+            {
+                searchResultStr += invRef.FindDescription + "\n";
+            }
+            return searchResultStr;
         }
         
         /// <summary>

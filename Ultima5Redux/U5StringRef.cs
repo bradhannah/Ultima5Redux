@@ -17,7 +17,7 @@ namespace Ultima5Redux
         {
             this._dataRef = dataRef;
             _strMap = new Dictionary<Type, SomeStrings>();
-            SomeStrings strs = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TRAVEL).GetChunkAsStringList();
+            //SomeStrings strs = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TRAVEL).GetChunkAsStringList();
 
             _strMap.Add(typeof(DataOvlReference.ChunkPhrasesConversation), dataRef.GetDataChunk(DataOvlReference.DataChunkName.PHRASES_CONVERSATION).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.TravelStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.TRAVEL).GetChunkAsStringList());
@@ -44,6 +44,9 @@ namespace Ultima5Redux
             _strMap.Add(typeof(DataOvlReference.SleepTransportStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SLEEP_TRANSPORT).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ReagentStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENTS).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ExclaimStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EXCLAIMS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ThingsIFindStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.THINGS_I_FIND).GetChunkAsStringList());
+            
+            
             
         }
 

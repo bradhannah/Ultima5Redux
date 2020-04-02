@@ -73,7 +73,8 @@ namespace Ultima5Redux
             SLEEP_TRANSPORT,
             REAGENTS,
             EXCLAIMS,
-            MOON_PHASES
+            MOON_PHASES,
+            THINGS_I_FIND
         };
 
         public enum Equipment
@@ -366,7 +367,7 @@ namespace Ultima5Redux
 
         public enum Vision2Strings
         {
-            DEATH_VISION, STRANGE_VISION, THOU_DOST_SEE, NEWLINE, YOU_SEE_DARKNESS, YOU_SEE_COLON_DARKNESS_DOT_N, YOU_SEE_COLON_N,
+            DEATH_VISION, STRANGE_VISION, THOU_DOST_SEE, NEWLINE, YOU_SEE_COLON_DARKNESS_DOT_N, YOU_SEE_COLON_N,
             A_SLEEP_FIELD_DOT_N, A_POISON_GAS_FIELD_DOT_N, A_WALL_OF_FIRE_DOT_N, AN_ELECTRIC_FIELD_DOT_N, AN_ENERGY_FIELD_DOT_N,
             A_DRIPPING_STALACTITE_DOT_N, A_CAVED_IN_PASSAGE_DOT_N, AN_UNFORTUNATE_SOFTWARE_PIRATE_DOT_N, A_LESS_FORTUNATE_ADVENTURER_DOT_N,
             A_PASSAGE_DOT_N, AN_UP_LADDER_DOT, A_DOWN_LADDER_DOT_N, A_LADDER_DOT_N, A_WOODEN_CHEST_DOT_N, A_FOUNTAIN_DOT_N, A_PIT_DOT_N,
@@ -449,7 +450,90 @@ namespace Ultima5Redux
             ONLY_AT_NIGHT_BANG, POSITION_COLON, WATCH_N_N_THE_POCKET_W_READS, SPACE_PM, SPACE_AM, BADGE_N_N, BADGE_WORN_BANG_N, BOX_N_HOW_N, FAILED_BANG_N, 
             SPACE_OF_LORD_BRITISH_DOT_N};
 
+        public enum ThingsIFindStrings
+        {
+            A_CHEST_BANG_N, A_SACK_OF_GOLD_BANG_N, A_POTION_BANG_N, A_SCROLL_BANG_N, A_WEAPON_BANG_N, A_SHIELD_BANG_N,
+            A_RING_OF_KEYS_BANG_N, A_GEM_BANG_N, A_HELM_BANG_N, A_RING_BANG_N, SOME_ARMOUR_BANG_N, AN_AMULET_BANG_N,
+            SOME_TORCHES_BANG_N, SOME_FOOD_BANG_N, A_STRANGE_ROCK_BANG_N, A_ROTTING_BODY_BANG_N, NOTHING_OF_NOTE_BANG_N, 
+            PLAGUE_BANG_N, NOTHING_BANG_N, WORMS_BANG_N, GUTS_BANG_N, A_BLOOD_PULP_BANG_N, FOOD_BANG_N, GOLD_BANG_N, 
+            NO_TRAP_BANG_N, A_SIMPLE_TRAP_BANG_N, A_COMPLEX_TRAP_BANG_N, A_TRAP_BANG_N, A_STRANGE_ROCK_BANG_N_2, 
+            MANDRAKE_ROOT_BANG_N, MANDRAKE_ROOT_BANG_N_2, NIGHTSHADE_BANG_N, SPACE_SPRIGS_OF_N, NEWLINE, NOTHING_OF_NOTE_BANG_N_2,
+            N_YOU_FIND_COLON_N_DARKNESS_DOT_N, YOU_FIND_COLON_N, NOTHING_OF_NOTE_DOT_N, NOTHING_HIDDEN_ON_THE_LADDER_DOT_N,
+            NOT_TRAP_N, A_SIMPLE_TRAP_N, A_COMPLEX_TRAP_N, A_TRAP_N, NOTHING_HIDDEN_ON_THE_FOUNTAIN_DOT_N,
+            NOTHING_HIDDEN_N_IN_THE_PIT_DOT_N, A_PIT_BANG_N, A_BOMB_TRAP_BANG_N, NOTHING_OF_NOTE_DOT_N_2, 
+            TREASURE_BANG_N, A_SLEEP_FIELD_DOT_N, A_POISON_GAS_FIELD_DOT_N, A_WALL_OF_FIRE_DOT_N, AN_ELECTRIC_FIELD_DOT_N,
+            AN_ENERGY_FIELD_DOT_N, THIS_TILE_IS_IMPOSSIBLE_DOT_N, NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_2, NOTHING_HIDDEN_ON_THE_WALL_DOT_N,
+            NOTHING_IN_THE_CAVED_IN_PASSAGE_DOT_N, NOTHING_OF_THE_STALACTITE_DOT_N, NOTHING_HIDDEN_ON_THE_SKELETON_DOT_N,
+            IT_CRUMBLES_AWAY_DOT_N, A_HIDDEN_DOOR_BANG_N, NOTHING_HIDDEN_ON_THE_DOOR_DOT_N_3, N_THOU_DOST_FIND_N,
+            N_THOU_DOST_FIND_N_2
+        }
 
+// [0] = {string} "a chest!\n"
+// [1] = {string} "a sack of gold!\n"
+// [2] = {string} "a potion!\n"
+// [3] = {string} "a scroll!\n"
+// [4] = {string} "a weapon!\n"
+// [5] = {string} "a shield!\n"
+// [6] = {string} "a ring of keys!\n"
+// [7] = {string} "a gem!\n"
+// [8] = {string} "a helm!\n"
+// [9] = {string} "a ring!\n"
+// [10] = {string} "some armour!\n"
+// [11] = {string} "an amulet!\n"
+// [12] = {string} "some torches!\n"
+// [13] = {string} "some food!\n"
+// [14] = {string} "a strange rock!\n"
+// [15] = {string} "a rotting body!\n"
+// [16] = {string} "a moldy corpse!\n"
+// [17] = {string} "Nothing of note.\n"
+// [18] = {string} "Plague!\n"
+// [19] = {string} "nothing!\n"
+// [20] = {string} "worms!\n"
+// [21] = {string} "guts!\n"
+// [22] = {string} "a bloody pulp!\n"
+// [23] = {string} "food!\n"
+// [24] = {string} "gold!\n"
+// [25] = {string} "no trap!\n"
+// [26] = {string} "a simple trap!\n"
+// [27] = {string} "a complex trap!\n"
+// [28] = {string} "a trap!\n"
+// [29] = {string} "a strange rock!\n"
+// [30] = {string} "mandrake root!"
+// [31] = {string} "mandrake root!"
+// [32] = {string} "nightshade!"
+// [33] = {string} " sprigs of\n"
+// [34] = {string} "\n"
+// [35] = {string} "nothing of note.\n"
+// [36] = {string} "\nYou find:\ndarkness.\n"
+// [37] = {string} "You find:\n"
+// [38] = {string} "Nothing of note.\n"
+// [39] = {string} "Nothing hidden on the ladder.\n"
+// [40] = {string} "No trap\n"
+// [41] = {string} "A simple trap\n"
+// [42] = {string} "A complex trap\n"
+// [43] = {string} "A trap\n"
+// [44] = {string} "Nothing hidden on the fountain.\n"
+// [45] = {string} "Nothing hidden\nin the pit.\n"
+// [46] = {string} "A pit!\n"
+// [47] = {string} "A bomb trap!\n"
+// [48] = {string} "Nothing of note.\n"
+// [49] = {string} "Treasure!\n"
+// [50] = {string} "A sleep field.\n"
+// [51] = {string} "A poison gas field.\n"
+// [52] = {string} "A wall of fire.\n"
+// [53] = {string} "An electric field.\n"
+// [54] = {string} "An energy field.\n"
+// [55] = {string} "This tile is impossible.\n"
+// [56] = {string} "Nothing hidden on the door.\n"
+// [57] = {string} "Nothing hidden on the wall.\n"
+// [58] = {string} "Nothing in the caved in passage.\n"
+// [59] = {string} "Nothing on the stalactite.\n"
+// [60] = {string} "Nothing hidden on the skeleton.\n"
+// [61] = {string} "It crumbles away.\n"
+// [62] = {string} "A hidden door!\n"
+// [63] = {string} "Nothing hidden on the door.\n"
+// [64] = {string} "\nThou dost find\n"
+// [65] = {string} "\nThou dost find\n"
 
         /// <summary>
         /// Conversational phrase indexes
@@ -742,7 +826,9 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "miscmaps.dat", 0x8490, 0xe);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "endmsg.dat", 0x849e, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "random texts", 0x84aa, 0x74);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "finding/searching for things strings ", 0x851e, 0x442);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "finding/searching for things strings ", 0x851e, 0x442, 0, DataChunkName.THINGS_I_FIND);
+            SomeStrings someStrings2 = GetDataChunk(DataChunkName.THINGS_I_FIND).GetChunkAsStringList();
+
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "where you found something (ie. In the wall) ", 0x8960, 0xe4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "strings about unlocking or finding doors", 0x8a44, 0x1b3, 0x00, DataChunkName.OPENING_THINGS_STUFF);
 
@@ -770,7 +856,6 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "save game strings", 0x9668, 0x21);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "OOL and SAV files", 0x968a, 0x32);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory and Stats strings", 0x96BC, 0x12B, 0, DataChunkName.ZSTATS);
-            SomeStrings someStrings2 = GetDataChunk(DataChunkName.ZSTATS).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory warnings", 0x97EA, 0x1c5, 0, DataChunkName.EQUIPPING);
 

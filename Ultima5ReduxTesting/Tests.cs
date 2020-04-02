@@ -226,10 +226,16 @@ namespace Ultima5ReduxTesting
             
             Debug.Assert(bWasSuccessful);
 
+            world.State.TheTimeOfDay.Hour = 12;
+
             TileReference tileRef = world.State.TheVirtualMap.GetTileReference(moongatePosition);
             Debug.Assert(tileRef.Index == 281);
 
             int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
+
+            world.GetAThing(moongatePosition, out bWasSuccessful);
+            world.GetAThing(moongatePosition, out bWasSuccessful);
+            
         }
         
         [Test]
