@@ -295,6 +295,32 @@ namespace Ultima5ReduxTesting
                 p3d = world.GetMoongateTeleportLocation();
             }
         }
+
+        [Test]
+        public void Test_TestCorrectMoons()
+        {
+            World world = new World(SaveDirectory);
+            
+            MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(world.DataOvlRef);
+            
+            TimeOfDay tod = new TimeOfDay(world.State.GetDataChunk(GameState.DataChunkName.CURRENT_YEAR),
+                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MONTH),
+                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_DAY),
+                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_HOUR),
+                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MINUTE)); 
+
+            // tod.Day = 2;
+            // tod.Hour = 4;
+            tod.Day = 25;
+            tod.Hour = 4;
+
+            MoonPhaseReferences.MoonPhases trammelPhase =
+                moonPhaseReferences.GetMoonPhasesByTimeOfDay(tod, MoonPhaseReferences.MoonsAndSun.Trammel);
+            MoonPhaseReferences.MoonPhases feluccaPhase =
+                moonPhaseReferences.GetMoonPhasesByTimeOfDay(tod, MoonPhaseReferences.MoonsAndSun.Felucca);
+            Debug.Assert(trammelPhase == MoonPhaseReferences.MoonPhases.GibbousWaning);
+            Debug.Assert(feluccaPhase == MoonPhaseReferences.MoonPhases.LastQuarter);
+        }
         
         [Test]
         public void Test_MoonPhaseReference()

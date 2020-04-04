@@ -26,6 +26,7 @@ namespace Ultima5Redux
         /// </summary>
         private const double D_SUN_ANGLE = 270; 
         
+        //public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
         public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
 
         public enum TimeOfDayPhases { Daytime, Nighttime, Sunrise, Sunset }
@@ -65,6 +66,27 @@ namespace Ultima5Redux
             return (GetTimeOfDayPhase(tod) != TimeOfDayPhases.Daytime);
         }
 
+        public MoonPhases GetMoonPhasesByTimeOfDay(TimeOfDay timeOfDay, MoonsAndSun moonsAndSun)
+        {
+            // the value stored is an offset and needs to be adjusted to a zero based index
+            int getAdjustedValue(int nValue)
+            {
+                return nValue - N_OFFSET_ADJUST;
+            }
+
+            switch (moonsAndSun)
+            {
+                case MoonsAndSun.Felucca:
+                    return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2]);
+                case MoonsAndSun.Trammel:
+                    return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2 + 1]);
+                case MoonsAndSun.Sun:
+                    return MoonPhases.NoMoon;
+                default:
+                    throw new Ultima5ReduxException("We have asked for a moon phase but did not met the criteria. "+timeOfDay);
+            }
+        }
+        
         /// <summary>
         /// Gets moonphase that i will be used by a moongate based on current time of day
         /// </summary>
@@ -74,16 +96,17 @@ namespace Ultima5Redux
         public MoonPhases GetMoonGateMoonPhase(TimeOfDay timeOfDay)
         {
             // the value stored is an offset and needs to be adjusted to a zero based index
-            int getAdjustedValue(int nValue)
-            {
-                return nValue - N_OFFSET_ADJUST;
-            }
+            // int getAdjustedValue(int nValue)
+            // {
+            //     return nValue - N_OFFSET_ADJUST;
+            // }
             
             // we don't have a moon phase in the day time
             if (timeOfDay.IsDayLight) return MoonPhases.NoMoon;
 
-            if (timeOfDay.Hour <= 4) return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2]);
-            if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23) return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2 + 1]);
+            if (timeOfDay.Hour <= 4) return GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun.Felucca);//return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2]);
+            if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23)
+                return GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun.Trammel); //return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2 + 1]);
             
             throw new Ultima5ReduxException("We have asked for a moongate phase but did not met the criteria. "+timeOfDay);
         }
