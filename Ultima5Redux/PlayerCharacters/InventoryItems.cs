@@ -392,8 +392,6 @@ namespace Ultima5Redux
         private Moongates _moongates;
         private MoonPhaseReferences _moonPhaseReferences;
         
-        
-        
         public Moonstones(DataOvlReference dataOvlRef, MoonPhaseReferences moonPhaseReferences, Moongates moongates, InventoryReferences invRefs) 
             : base(dataOvlRef, null)
         {
@@ -401,7 +399,6 @@ namespace Ultima5Redux
             _moonPhaseReferences = moonPhaseReferences;
             
             // go through each of the moon phases one by one and create a moonstone
-            //foreach (Spell.SpellWords spell in Enum.GetValues(typeof(Spell.SpellWords)))
             foreach (MoonPhaseReferences.MoonPhases phase in Enum.GetValues(typeof(MoonPhaseReferences.MoonPhases)))
             {
                 // there is no "no moon" moonstone
@@ -410,13 +407,12 @@ namespace Ultima5Redux
                     dataOvlRef.StringReferences.GetString(DataOvlReference.ZstatsStrings.MOONSTONE_SPACE).TrimEnd(),
                     dataOvlRef.StringReferences.GetString(DataOvlReference.ZstatsStrings.MOONSTONE_SPACE).TrimEnd(),
                     dataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N)
-                        .TrimEnd(),
-                    moongates, null);
+                        .TrimEnd(), moongates, null);
                 //invRefs.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item, phase.ToString()));
             }
         }
 
-        public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; } = 
+        public sealed override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; } = 
             new Dictionary<MoonPhaseReferences.MoonPhases, Moonstone>();
     }
     

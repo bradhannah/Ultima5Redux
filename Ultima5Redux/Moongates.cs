@@ -54,6 +54,29 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        /// Sets the buried status of a Moonstone 
+        /// </summary>
+        /// <param name="nMoonstoneIndex"></param>
+        /// <param name="bBuried"></param>
+        public void SetMoonstoneBuried(int nMoonstoneIndex, bool bBuried)
+        {
+            _moonstonesBuried[nMoonstoneIndex] = bBuried;
+            _moongateBuriedAtPositionDictionary[GetMoongatePosition(nMoonstoneIndex)] = bBuried;
+        }
+
+        public void SetMoonstoneBuried(int nMoonstoneIndex, bool bBuried, Point3D xyz)
+        {
+            Debug.Assert(xyz.Z == 0 || xyz.Z == 0xFF);
+            // we need to remove the old position reference, and add in a new one
+            _moongateBuriedAtPositionDictionary.Remove(GetMoongatePosition(nMoonstoneIndex));
+            _moongateBuriedAtPositionDictionary.Add(xyz, bBuried);
+            // this one we can just update since it is a zero based index
+            _moongatePositions[nMoonstoneIndex] = xyz;
+            // set the moonstone to the appropriate buried sate
+            SetMoonstoneBuried(nMoonstoneIndex, bBuried);
+        }
+        
+        /// <summary>
         /// Is the moonstone buried, indexed moongate (in order from the save file)
         /// </summary>
         /// <param name="nMoonstoneIndex"></param>

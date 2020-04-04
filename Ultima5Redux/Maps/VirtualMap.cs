@@ -242,13 +242,14 @@ namespace Ultima5Redux
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="bIgnoreExposed"></param>
+        /// <param name="bIgnoreMoongate"></param>
         /// <returns></returns>
         public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
         {
             // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
             if (!bIgnoreExposed)
             {
-                InventoryItem exposedInventoryReference;
+                //InventoryItem exposedInventoryReference;
                 if (_exposedSearchItems[x][y] != null)
                 {
                     if (_exposedSearchItems[x][y].Count > 0)
@@ -306,10 +307,9 @@ namespace Ultima5Redux
             // moonstone check
             if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder) && _timeOfDay.IsDayLight)
             {
-                //InventoryReference invRef = _inventoryReferences.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item, "Moonstone");
                 InventoryItem invItem =
-                    _state.PlayerInventory.TheMoonstones.Items[
-                        _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder)];
+                    _state.PlayerInventory.TheMoonstones.
+                        Items[_moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder)];
                 if (_exposedSearchItems[xy.X][xy.Y] == null)
                 {
                     _exposedSearchItems[xy.X][xy.Y] = new Queue<InventoryItem>();
@@ -335,6 +335,22 @@ namespace Ultima5Redux
                 return _exposedSearchItems[xy.X][xy.Y].Dequeue();
             }
             throw new Ultima5ReduxException("Tried to deque an item at "+xy+" but there is no item on it");
+        }
+        
+        /// <summary>
+        /// Gets the Avatar's current position in 3D spaces
+        /// </summary>
+        /// <returns></returns>
+        public Point3D GetCurrent3DPosition()
+        {
+            if (LargeMapOverUnder == LargeMap.Maps.Small)
+            {
+                return new Point3D(CurrentPosition.X, 
+                    CurrentPosition.Y, CurrentSmallMap.MapFloor);                
+            }
+
+            return new Point3D(CurrentPosition.X, 
+                CurrentPosition.Y,LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
         }
         
         /// <summary>

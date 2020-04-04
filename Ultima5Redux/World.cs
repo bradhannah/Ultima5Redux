@@ -175,7 +175,6 @@ namespace Ultima5Redux
             State.TheVirtualMap.MoveNPCs();
         }
 
-
         /// <summary>
         /// Determines if the current tile the Avatar is on, is an ACTIVE moongate
         /// </summary>
@@ -185,10 +184,7 @@ namespace Ultima5Redux
             if (!State.TheVirtualMap.IsLargeMap) return false;
             if (State.TheTimeOfDay.IsDayLight) return false;
 
-            Point3D currentPos = new Point3D(State.TheVirtualMap.CurrentPosition.X, 
-                State.TheVirtualMap.CurrentPosition.Y,State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
-
-            return (State.TheMoongates.IsMoonstoneBuried(currentPos));
+            return (State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.GetCurrent3DPosition()));
         }
         
         /// <summary>
@@ -252,6 +248,12 @@ namespace Ultima5Redux
                     + " " + (LookRef.GetLookDescription(tileReference.Index).TrimStart()));
             }
         }
+        
+        private string ThouDostFind(string thingYouFound)
+        {
+            return DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.N_THOU_DOST_FIND_N)
+                   + thingYouFound;
+        }
 
         /// <summary>
         /// Gets a thing from the world, adding it the inventory and providing output for console
@@ -259,17 +261,14 @@ namespace Ultima5Redux
         /// <param name="xy">where is the thing?</param>
         /// <param name="bGotAThing">did I get a thing?</param>
         /// <returns>the output string</returns>
-        public string GetAThing(Point2D xy, out bool bGotAThing)
+        public string TryToGetAThing(Point2D xy, out bool bGotAThing, out InventoryItem inventoryItem)
         {
-            string thouDostFind(string thingYouFound)
-            {
-                return DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.N_THOU_DOST_FIND_N)
-                 + thingYouFound;
-            }
-            
             bGotAThing = false;
+            inventoryItem = null;
+            
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
+            // wall sconces - BORROWED!
             if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
                 tileReference.Index == SpriteTileReferences.GetTileNumberByName("RightSconce"))
             {
@@ -278,12 +277,15 @@ namespace Ultima5Redux
                 bGotAThing = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED));
             }
+            // are there any exposed items (generic call)
             else if (State.TheVirtualMap.IsAnyExposedItems(xy))
             {
                 bGotAThing = true;
                 InventoryItem invItem = State.TheVirtualMap.DequeuExposedItem(xy);
-
-                return thouDostFind(invItem.FindDescription);
+                inventoryItem = invItem;
+                invItem.Quantity++;
+                
+                return ThouDostFind(invItem.FindDescription);
                 //
             }
             return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.NOTHING_TO_GET);
@@ -463,22 +465,31 @@ namespace Ultima5Redux
         /// <returns>the output string to write to console</returns>
         public string TryToSearch(Point2D xy, out bool bWasSuccessful)
         {
-            bWasSuccessful = State.TheVirtualMap.ContainsSearchableThings(xy);
+            bWasSuccessful = false;
 
-            if (!bWasSuccessful) return DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N);
-
+            // if there is something exposed already OR there is nothing found 
+            if (State.TheVirtualMap.IsAnyExposedItems(xy) || !State.TheVirtualMap.ContainsSearchableThings(xy))
+            {
+                return ThouDostFind(DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N));
+            }
+            
             // we search the tile and expose any items that may be on it
             int nItems = State.TheVirtualMap.SearchAndExposeItems(xy);
 
             // it could be a moongate, with a stone, but wrong time of day
-            if (nItems == 0) { return DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N); }
+            if (nItems == 0)
+            {
+                return ThouDostFind(
+                    DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N));
+            }
 
-            string searchResultStr = DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.N_THOU_DOST_FIND_N).TrimStart();
+            string searchResultStr = string.Empty;
+            bWasSuccessful = true;
             foreach (InventoryItem invRef in State.TheVirtualMap.GetExposedInventoryItems(xy))
             {
                 searchResultStr += invRef.FindDescription + "\n";
             }
-            return searchResultStr;
+            return ThouDostFind(searchResultStr);
         }
         
         /// <summary>
@@ -795,6 +806,142 @@ namespace Ultima5Redux
                 bWasSuccessful = false;
                 return enterWhatStr;
             }
+        }
+
+        private string UseSpecialItem(SpecialItem spcItem)
+        {
+            switch (spcItem.ItemType)
+            {
+                case SpecialItem.ItemTypeSpriteEnum.Carpet:
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.CARPET_BANG);
+                case SpecialItem.ItemTypeSpriteEnum.Grapple:
+                    return ("Grapple\n\nYou need to K-limb with it!");
+                case SpecialItem.ItemTypeSpriteEnum.Spyglass:
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.SPYGLASS_N_N);
+                case SpecialItem.ItemTypeSpriteEnum.HMSCape:
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.PLANS_N_N);
+                case SpecialItem.ItemTypeSpriteEnum.PocketWatch:
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                        .WATCH_N_N_THE_POCKET_W_READS) + " " + State.TheTimeOfDay.FormattedTime;
+                case SpecialItem.ItemTypeSpriteEnum.BlackBadge:
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.BADGE_N_N);
+                case SpecialItem.ItemTypeSpriteEnum.WoodenBox:
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.BOX_N_HOW_N);
+                case SpecialItem.ItemTypeSpriteEnum.Sextant:
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.SEXTANT_N_N);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private string UseLordBritishArtifactItem(LordBritishArtifact lordBritishArtifact)
+        {
+            switch (lordBritishArtifact.Artifact)
+            {
+                case LordBritishArtifact.ArtifactType.Amulet:
+                    return (DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.AMULET_N_N) +
+                            "\n" +
+                            DataOvlRef.StringReferences.GetString(
+                                DataOvlReference.WearUseItemStrings.WEARING_AMULET) + "\n" +
+                            DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                                .SPACE_OF_LORD_BRITISH_DOT_N));
+                case LordBritishArtifact.ArtifactType.Crown:
+                    return (DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.CROWN_N_N) +
+                            "\n" +
+                            DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                                .DON_THE_CROWN) + "\n" +
+                            DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                                .SPACE_OF_LORD_BRITISH_DOT_N));
+                case LordBritishArtifact.ArtifactType.Sceptre:
+                    return (DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.SCEPTRE_N_N) +
+                            "\n" +
+                            DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                                .WIELD_SCEPTRE) + "\n" +
+                            DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                                .SPACE_OF_LORD_BRITISH_DOT_N));
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private string UseShadowLordShard(ShadowlordShard shadowlordShard)
+        {
+            string thouHolds(string shard)
+            {
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
+                    .GEM_SHARD_THOU_HOLD_EVIL_SHARD) + "\n" + shard;
+            }
+
+            switch (shadowlordShard.Shard)
+            {
+                case ShadowlordShard.ShardType.Falsehood:
+                    return thouHolds(DataOvlRef.StringReferences.GetString((DataOvlReference.ShadowlordStrings.FALSEHOOD_DOT)));
+                case ShadowlordShard.ShardType.Hatred:
+                    return thouHolds(DataOvlRef.StringReferences.GetString((DataOvlReference.ShadowlordStrings.HATRED_DOT)));
+                case ShadowlordShard.ShardType.Cowardice:
+                    return thouHolds(DataOvlRef.StringReferences.GetString((DataOvlReference.ShadowlordStrings.COWARDICE_DOT)));
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private string UseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried)
+        {
+            bool isAllowedToBuryMoongate()
+            {
+                if (State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Small) return false;
+                if (State.TheVirtualMap.IsAnyExposedItems(State.TheVirtualMap.CurrentPosition)) return false;
+                TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
+
+                return (SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index));
+            }
+
+            bMoonstoneBuried = false;
+
+            if (!isAllowedToBuryMoongate())
+            {
+                return DataOvlRef.StringReferences.GetString((DataOvlReference.ExclaimStrings.MOONSTONE_SPACE)) +
+                       DataOvlRef.StringReferences.GetString((DataOvlReference
+                           .ExclaimStrings.CANNOT_BE_BURIED_HERE_BANG_N));
+            }
+            
+            State.TheMoongates.SetMoonstoneBuried(moonstone.MoongateIndex, true, State.TheVirtualMap.GetCurrent3DPosition());
+            bMoonstoneBuried = true;
+            
+            return DataOvlRef.StringReferences.GetString((DataOvlReference.ExclaimStrings.MOONSTONE_SPACE)) +
+                                                         DataOvlRef.StringReferences.GetString((DataOvlReference
+                                                             .ExclaimStrings.BURIED_BANG_N));
+        }
+
+        public string TryToUseAnInventoryItem(InventoryItem item, out bool bAbleToUseItem)
+        {
+            bAbleToUseItem = false;
+            if (item.GetType() == typeof(SpecialItem))
+            {
+                return UseSpecialItem((SpecialItem) item);
+            }
+            else if (item.GetType() == typeof(Potion))
+            {
+                return ("Potion\n\nPoof!");
+            }
+            else if (item.GetType() == typeof(Scroll))
+            {
+                return ("Scroll\n\nAllaKazam!");
+            }
+            else if (item.GetType() == typeof(LordBritishArtifact))
+            {
+                return UseLordBritishArtifactItem((LordBritishArtifact) item);
+            }
+            else if (item.GetType() == typeof(ShadowlordShard))
+            {
+                return UseShadowLordShard((ShadowlordShard) item);
+            }
+            else if (item.GetType() == typeof(Moonstone))
+            {
+                return UseMoonstone((Moonstone) item, out bAbleToUseItem);
+            }
+
+            throw new Exception("You are trying to use an item that can't be used: " + item.LongName);
         }
 
         #endregion

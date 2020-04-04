@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Ultima5Redux;
 using System.Collections.Generic;
 using System.Media;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Ultima5ReduxTesting
@@ -217,24 +218,60 @@ namespace Ultima5ReduxTesting
         }
 
         [Test]
+        public void Test_GetAndUseMoonstone()
+        {
+            World world = new World(SaveDirectory);
+
+            world.State.TheTimeOfDay.Hour = 12;
+
+            Point2D moongatePosition = new Point2D(166, 19);
+            world.State.TheVirtualMap.CurrentPosition = moongatePosition;
+            // first search should find moonstone
+            world.TryToSearch(moongatePosition, out bool bWasSuccessful);
+            Debug.Assert(bWasSuccessful);
+
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item);
+            Debug.Assert(bWasSuccessful);
+            Debug.Assert(item != null);
+            Debug.Assert(item.GetType() == typeof(Moonstone));
+
+            string useStr = world.TryToUseAnInventoryItem(item, out bWasSuccessful);
+            Debug.Assert(bWasSuccessful);
+        }
+        
+            
+        
+        [Test]
         public void Test_SearchForMoonstoneAndGet()
         {
             World world = new World(SaveDirectory);
 
-            Point2D moongatePosition = new Point2D(166, 19);
-            world.TryToSearch(moongatePosition, out bool bWasSuccessful);
-            
-            Debug.Assert(bWasSuccessful);
-
             world.State.TheTimeOfDay.Hour = 12;
+
+            Point2D moongatePosition = new Point2D(166, 19);
+            // first search should find moonstone
+            world.TryToSearch(moongatePosition, out bool bWasSuccessful);
+            Debug.Assert(bWasSuccessful);
+            // second search should be empty
+            world.TryToSearch(moongatePosition, out bWasSuccessful);
+            Debug.Assert(!bWasSuccessful);
+
 
             TileReference tileRef = world.State.TheVirtualMap.GetTileReference(moongatePosition);
             Debug.Assert(tileRef.Index == 281);
 
             int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
 
-            world.GetAThing(moongatePosition, out bWasSuccessful);
-            world.GetAThing(moongatePosition, out bWasSuccessful);
+            // can't get it twice!
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item);
+            Debug.Assert(bWasSuccessful);
+            Debug.Assert(item != null);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out item);
+            Debug.Assert(!bWasSuccessful);
+            Debug.Assert(item == null);
+            
+            world.TryToSearch(moongatePosition, out bWasSuccessful);
+            Debug.Assert(!bWasSuccessful);
             
         }
         

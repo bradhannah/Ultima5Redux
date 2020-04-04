@@ -99,6 +99,18 @@ namespace Ultima5Redux
             bool bIsPath = GetTileReference(nSprite).Name.Contains("Path");
             return bIsPath;
         }
+
+        /// <summary>
+        /// Can you typically bury a moonstone on the tile type?
+        /// </summary>
+        /// <param name="nSprite"></param>
+        /// <returns>true if you can normally bury a moonstone</returns>
+        public bool IsMoonstoneBuriable(int nSprite)
+        {
+            TileReference tileRef = GetTileReference(nSprite); 
+            return (tileRef.Name == "Grass" || tileRef.Name == "Swamp" || tileRef.Name == "Desert1"
+                       || tileRef.Name.Contains("Forest")) ;
+        }
         
         /// <summary>
         /// Is the sprite any of the door sprites (lock, unlocked, with a view, magic)
