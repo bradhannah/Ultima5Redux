@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Data
 {
     /// <summary>
     /// A collection of Datachunks
@@ -235,7 +234,7 @@ namespace Ultima5Redux
         /// <param name="offset">the offset to start in the rawData that represents the chunk</param>
         /// <param name="dataLength">the length of the data from the offset that represents the chunk</param>
         /// <returns>a new DataChunk object</returns>
-        static public DataChunk CreateDataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength)
+        public static DataChunk CreateDataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength)
         {
             DataChunk dataChunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
             return dataChunk;
@@ -296,7 +295,7 @@ namespace Ultima5Redux
             return DataChunk.GetAsStringListFromIndexes(GetChunkAsUint16List(), _fullRawData);
         }
 
-        static private List<string> GetAsStringListFromIndexes(List<ushort> indexList, List<byte> rawByteList)
+        private static List<string> GetAsStringListFromIndexes(List<ushort> indexList, List<byte> rawByteList)
         {
             List<string> strList = new List<string>(indexList.Count);
             const int maxStrLength = 20;

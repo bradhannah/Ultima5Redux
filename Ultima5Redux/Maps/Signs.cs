@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+using Ultima5Redux.Data;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Maps
 {
     public class Signs
     {
@@ -275,7 +275,7 @@ namespace Ultima5Redux
                     _signsByteArray[nIndex + 3],
                     rawSignTxt, nIndex) );
                 nIndex += nRawSignTxtLength + 1 + 4; // we hop over the string plus it's null byte plus the four bytes for definition
-            // while we don't encounter four zero bytes in a row, which is eseentially the end of the file
+            // while we don't encounter four zero bytes in a row, which is essentially the end of the file
             } while (!(_signsByteArray[nIndex] == 0 && _signsByteArray[nIndex+1] == 0 && _signsByteArray[nIndex+2] == 0 && _signsByteArray[nIndex+3] == 0));
 
             // there are some signs that are not included in the signs.dat file, so we manually pont to them and add them to our sign list

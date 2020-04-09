@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Maps
 {
     /// <summary>
     /// Provides look descriptions for tiles
@@ -21,11 +17,11 @@ namespace Ultima5Redux
         /// <summary>
         /// Raw file
         /// </summary>
-        static private List<byte> _lookByteArray = new List<byte>();
+        private static List<byte> _lookByteArray = new List<byte>();
         /// <summary>
         /// List of all offsets into the lookByteArray
         /// </summary>
-        static private List<int> _lookOffsets = new List<int>(TOTAL_LOOKS);
+        private static readonly List<int> _lookOffsets = new List<int>(TOTAL_LOOKS);
 
         /// <summary>
         /// Loads the "Look" descriptions

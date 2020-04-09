@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Data
 {
     /// <summary>
     /// A shortcut class that allows you to put in the STRING enum without the DataChunkName when looking up original U5 strings

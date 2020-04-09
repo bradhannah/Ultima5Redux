@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Data
 {
     /// <summary>
     /// A class that simplifies importing of byte arrays into a list of strings

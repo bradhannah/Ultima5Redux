@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices;
+using Ultima5Redux.Data;
 
 namespace Ultima5Redux
 {

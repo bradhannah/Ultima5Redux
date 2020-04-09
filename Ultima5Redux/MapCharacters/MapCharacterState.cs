@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {

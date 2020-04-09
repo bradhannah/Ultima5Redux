@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {

@@ -90,15 +90,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataChunk.cs" />
+    <Compile Include="Data\DataOvlReference.cs" />
+    <Compile Include="Data\SomeStrings.cs" />
+    <Compile Include="Data\U5StringRef.cs" />
+    <Compile Include="DayNightMoon\TimeOfDay.cs" />
     <Compile Include="External\AStarSharp.cs" />
-    <Compile Include="InventoryReference.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
+    <Compile Include="Maps\GenericTileset.cs" />
+    <Compile Include="Maps\Look.cs" />
+    <Compile Include="Maps\Signs.cs" />
     <Compile Include="Maps\TileOverrides.cs" />
-    <Compile Include="Moongates.cs" />
-    <Compile Include="MoonPhaseReferences.cs" />
+    <Compile Include="DayNightMoon\Moongates.cs" />
+    <Compile Include="DayNightMoon\MoonPhaseReferences.cs" />
+    <Compile Include="Maps\TileReference.cs" />
+    <Compile Include="Maps\TileReferences.cs" />
+    <Compile Include="PlayerCharacters\InventoryReference.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecord.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecords.cs" />
     <Compile Include="MapCharacters\MapCharacterAnimationState.cs" />
@@ -126,28 +136,18 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="TileReference.cs" />
-    <Compile Include="GenericTileset.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Dialogue\Conversation.cs" />
     <Compile Include="Dialogue\CompressedWordReference.cs" />
     <Compile Include="Maps\SingleMapReference.cs" />
-    <Compile Include="SomeStrings.cs" />
     <Compile Include="Dialogue\TalkScript.cs" />
     <Compile Include="Dialogue\TalkScripts.cs" />
-    <Compile Include="DataChunk.cs" />
-    <Compile Include="DataOvlReference.cs" />
     <Compile Include="Point3D.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterReferences.cs" />
-    <Compile Include="Signs.cs" />
-    <Compile Include="Look.cs" />
     <Compile Include="Maps\CombatMap.cs" />
     <Compile Include="Maps\CombatMapReference.cs" />
     <Compile Include="Maps\SmallMapReference.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="TileReferences.cs" />
-    <Compile Include="TimeOfDay.cs" />
-    <Compile Include="U5StringRef.cs" />
     <Compile Include="Ultima5ReduxException.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Maps\SmallMap.cs" />
@@ -159,8 +159,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Data\TileData.csv" />
-    <EmbeddedResource Include="Data\TileData.json">
+    <None Include="DataFiles\TileData.csv" />
+    <EmbeddedResource Include="DataFiles\TileData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -189,15 +189,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Credits.txt" />
-    <EmbeddedResource Include="Data\InventoryDetails.json">
+    <Content Include="DataFiles\Credits.txt" />
+    <EmbeddedResource Include="DataFiles\InventoryDetails.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="Data\DataConversion\tileData.py" />
-    <Content Include="Data\InventoryDetails.csv" />
-    <Content Include="Data\InventoryDetailsCSV.csv" />
-    <Content Include="Data\TileOverrides.csv" />
-    <EmbeddedResource Include="Data\TileOverrides.json" />
+    <Content Include="DataFiles\DataConversion\tileData.py" />
+    <Content Include="DataFiles\InventoryDetails.csv" />
+    <Content Include="DataFiles\InventoryDetailsCSV.csv" />
+    <Content Include="DataFiles\TileOverrides.csv" />
+    <EmbeddedResource Include="DataFiles\TileOverrides.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

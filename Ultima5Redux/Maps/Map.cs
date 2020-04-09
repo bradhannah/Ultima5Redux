@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using Ultima5Redux.External;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {
-    abstract public class Map
+    public abstract class Map
     {
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
         
@@ -120,7 +121,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="tile"></param>
         /// <returns></returns>
-        static public char GetMapLetter(byte tile)
+        public static char GetMapLetter(byte tile)
         {
             switch (tile)
             {
@@ -193,7 +194,7 @@ namespace Ultima5Redux
         /// <param name="yOffset">where to start the top left origin (column) </param>
         /// <param name="xTilesToPrint">how many tiles to print vertically</param>
         /// <param name="yTilesToPrint">how many tiles to print horizontally</param>
-        static public void PrintMapSection(byte[][] map, int xOffset, int yOffset, int xTilesToPrint, int yTilesToPrint)
+        public static void PrintMapSection(byte[][] map, int xOffset, int yOffset, int xTilesToPrint, int yTilesToPrint)
         {
             for (int curRow = yOffset; curRow < yTilesToPrint + yOffset; curRow++)
             {

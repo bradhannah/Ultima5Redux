@@ -55,7 +55,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="dialogType">The dialog type that yu want to compare</param>
         /// <returns></returns>
-        static public bool IsSpecialDialogType(NPCDialogTypeEnum dialogType)
+        public static bool IsSpecialDialogType(NPCDialogTypeEnum dialogType)
         {
             foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[])Enum.GetValues(typeof(NPCDialogTypeEnum)))
             {
@@ -277,7 +277,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="sched">daily schedule</param>
         /// <returns></returns>
-        static private bool IsEmptySched(NonPlayerCharacterReference.NPCSchedule sched)
+        private static bool IsEmptySched(NonPlayerCharacterReference.NPCSchedule sched)
         {
             unsafe
             {

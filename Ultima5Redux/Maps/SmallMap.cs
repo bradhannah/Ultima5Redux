@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography.Xml;
+using Ultima5Redux.Maps;
 
 
 namespace Ultima5Redux

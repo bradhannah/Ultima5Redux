@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Diagnostics;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {
@@ -87,7 +88,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="byteList">the raw data</param>
         /// <returns>2D byte map</returns>
-        static private byte[][] ReadCombatBytesIntoByteArray (List<byte> byteList)
+        private static byte[][] ReadCombatBytesIntoByteArray (List<byte> byteList)
         {
             byte[][] combatMap = Utils.Init2DByteArray(MAX_Y_ROWS, MAX_X_COLS);
 

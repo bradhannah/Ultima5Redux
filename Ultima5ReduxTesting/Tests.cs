@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Media;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5ReduxTesting
 {

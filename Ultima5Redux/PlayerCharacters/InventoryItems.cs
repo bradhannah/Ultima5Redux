@@ -5,6 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ultima5Redux.Data;
+using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux
 {
@@ -323,7 +326,7 @@ namespace Ultima5Redux
             {"Zu","Sleep"}
         };
 
-        static public string GetLiteralTranslation(string syllable)
+        public static string GetLiteralTranslation(string syllable)
         {
             return (_literalTranslationDictionary[_ti.ToTitleCase(syllable)]);
         }

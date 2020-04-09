@@ -3,6 +3,7 @@ using Ultima5Redux;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Ultima5Redux.Data;
 
 
 namespace U5ConversationSimulator
@@ -42,7 +43,7 @@ namespace U5ConversationSimulator
             }
         }
 
-        static private void EnqueuedScriptItem(Conversation conversation)
+        private static void EnqueuedScriptItem(Conversation conversation)
         {
             TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
             string userResponse;

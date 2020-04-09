@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Net;
 using System.Numerics;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
+using Ultima5Redux.PlayerCharacters;
 
 // ReSharper disable IdentifierTypo
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Maps
 {
     public class VirtualMap
     {

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using Ultima5Redux.Data;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.DayNightMoon
 {
     public class MoonPhaseReferences
     {

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
+using Ultima5Redux.Data;
 
 namespace Ultima5Redux
 { 
@@ -168,7 +169,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="scriptLines">the script line to process</param>
         /// <param name="nTalkLineIndex">where we are in the conversation - it really only cares if you are on the first line of conversation</param>
-        async private Task ProcessMultipleLines(List<TalkScript.SplitScriptLine> scriptLines, int nTalkLineIndex)
+        private async Task ProcessMultipleLines(List<TalkScript.SplitScriptLine> scriptLines, int nTalkLineIndex)
         {
             // how many items shall we skip? if == -1, then don't skip
             int skipCounter = -1;
@@ -229,7 +230,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="scriptLine">the script line</param>
         /// <returns>a skip instruction for the proceeding lines</returns>
-        async private Task ProcessLine(TalkScript.ScriptLine scriptLine)
+        private async Task ProcessLine(TalkScript.ScriptLine scriptLine)
         {
             await ProcessLine(scriptLine, -1, -1);
         }
@@ -244,7 +245,7 @@ namespace Ultima5Redux
         /// <param name="nTalkLineIndex"></param>
         /// <param name="nSplitLine"></param>
         /// <returns></returns>
-        async private Task ProcessLine(TalkScript.ScriptLine scriptLine, int nTalkLineIndex, int nSplitLine)
+        private async Task ProcessLine(TalkScript.ScriptLine scriptLine, int nTalkLineIndex, int nSplitLine)
         {
             // if they already know the avatar then they aren't going to ask again
             if (scriptLine.ContainsCommand(TalkScript.TalkCommand.AskName) && Npc.KnowTheAvatar)
@@ -438,7 +439,7 @@ namespace Ultima5Redux
         /// Begins the conversation with the NPC. 
         /// Method will block for input if required.
         /// </summary>
-        async public Task BeginConversation()
+        public async Task BeginConversation()
         {
             if (this.EnqueuedScriptItemCallback == null)
             {

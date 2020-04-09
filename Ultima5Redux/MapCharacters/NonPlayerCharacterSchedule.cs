@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Ultima5Redux.DayNightMoon;
+
 //using static Ultima5Redux.NonPlayerCharacterReferences;
 
 namespace Ultima5Redux

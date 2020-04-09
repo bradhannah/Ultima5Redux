@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using Ultima5Redux.Data;
 
 namespace Ultima5Redux
 {
@@ -134,7 +135,7 @@ namespace Ultima5Redux
             return _smallMapBasementDictionary[location];
         }
 
-        static public Point2D GetStartingXYByLocation(SmallMapReferences.SingleMapReference.Location location)
+        public static Point2D GetStartingXYByLocation(SmallMapReferences.SingleMapReference.Location location)
         {
             return new Point2D(32 / 2 - 1, 30);
         }

@@ -24,12 +24,12 @@ namespace Ultima5Redux
         //    return byteArray;
         //}
 
-        static public byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
+        public static byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
         {
             return Init2DArray<byte>(numberOfRows, numberOfCols);
         }
 
-        static public List<List<T>> Init2DList<T>(int numberOfRows, int numberOfCols)
+        public static List<List<T>> Init2DList<T>(int numberOfRows, int numberOfCols)
         {
             List<List<T>> rowList = new List<List<T>>(numberOfRows);
 
@@ -69,7 +69,7 @@ namespace Ultima5Redux
             return theArray;
         }
 
-        static public bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols)
+        public static bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols)
         {
             return Init2DArray<bool>(numberOfRows, numberOfCols);
         }
@@ -82,7 +82,7 @@ namespace Ultima5Redux
         //    return byteArray;
         //}
 
-        static public T[][] TransposeArray<T>(T[][] ts)
+        public static T[][] TransposeArray<T>(T[][] ts)
         {
             // makes some assumptions, like each row has an equal number of elements
             T[][] transArray = Utils.Init2DArray<T>(ts[0].Length, ts.Length);
@@ -93,13 +93,12 @@ namespace Ultima5Redux
 
             return transArray;            
         }
-        static public T[][] ListTo2DArray<T>(List<T> theList, short splitEveryN, int offset, int length)
+        public static T[][] ListTo2DArray<T>(List<T> theList, short splitEveryN, int offset, int length)
         {
             int listCount = theList.Count;
 
             // TODO: add safety code to make sure there is no remainer when dividing listCount/splitEveryN
-            int remainder = 0;
-            Math.DivRem(listCount, splitEveryN, out remainder);
+            Math.DivRem(listCount, splitEveryN, out int remainder);
 
             if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
 
@@ -122,7 +121,7 @@ namespace Ultima5Redux
         /// <param name="offset">byte position to start in list</param>
         /// <param name="length">number of bytes to copy from list to 2d array</param>
         /// <returns></returns>
-        static public byte[][] ByteListTo2DArray(List<byte> byteList, short splitEveryN, int offset, int length)
+        public static byte[][] ByteListTo2DArray(List<byte> byteList, short splitEveryN, int offset, int length)
         {
             int listCount = byteList.Count;
 
@@ -151,7 +150,7 @@ namespace Ultima5Redux
         /// <param name="offset">byte offset to start at</param>
         /// <param name="length">number of bytes to read, use -1 to indicate to read until EOF</param>
         /// <returns></returns>
-        static public List<byte> GetFileAsByteList(string filename, int offset, int length)
+        public static List<byte> GetFileAsByteList(string filename, int offset, int length)
         {
             FileStream readFile = File.OpenRead(filename);
 
@@ -173,7 +172,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="filename">filename of the binary file</param>
         /// <returns>a list of bytes</returns>
-        static public List<byte> GetFileAsByteList(string filename)
+        public static List<byte> GetFileAsByteList(string filename)
         {
             return (GetFileAsByteList(filename, 0, -1));
     
@@ -185,7 +184,7 @@ namespace Ultima5Redux
         /// <param name="biteArray">the array to read from</param>
         /// <param name="offset">the offset to start at</param>
         /// <returns></returns>
-        static public string BytesToStringNullTerm(List<byte> byteArray, int offset, int length)
+        public static string BytesToStringNullTerm(List<byte> byteArray, int offset, int length)
         {
             byte curCharByte;
             string str = "";
@@ -202,7 +201,7 @@ namespace Ultima5Redux
             return str;
         }
 
-        static public string BytesToStringFixedWidth(List<byte> byteArray, int offset, int length)
+        public static string BytesToStringFixedWidth(List<byte> byteArray, int offset, int length)
         {
             string str = string.Empty;
             for (int i=0; i < length; i++)
@@ -212,7 +211,7 @@ namespace Ultima5Redux
             return str;
         }
 
-        static public List<UInt16> CreateOffsetList(byte[] byteArray, int offset, int length)
+        public static List<UInt16> CreateOffsetList(byte[] byteArray, int offset, int length)
         {
             List<UInt16> offsetArray = new List<UInt16>();
 
@@ -233,7 +232,7 @@ namespace Ultima5Redux
         /// <param name="offset">initial offset (typically 0)</param>
         /// <param name="length">number of bytes to read</param>
         /// <returns>a list of offsets</returns>
-        static public List<int> CreateOffsetList (string filename, int offset, int length)
+        public static List<int> CreateOffsetList (string filename, int offset, int length)
         {
             List<byte> byteArray = Utils.GetFileAsByteList(filename);
 
@@ -255,7 +254,7 @@ namespace Ultima5Redux
         /// <param name="fs"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        static public object ReadStruct(FileStream fs, Type t)
+        public static object ReadStruct(FileStream fs, Type t)
         {
             byte[] buffer =
                 new byte[Marshal.SizeOf(t)];
@@ -279,7 +278,7 @@ namespace Ultima5Redux
         /// <param name="byteArray"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        static public object ReadStruct(List<byte> byteArray, int fileOffset, Type t)
+        public static object ReadStruct(List<byte> byteArray, int fileOffset, Type t)
         {
             byte[] buffer = new byte[Marshal.SizeOf(t)];
             byteArray.CopyTo(fileOffset, buffer, 0, Marshal.SizeOf(t));
@@ -290,7 +289,7 @@ namespace Ultima5Redux
             return temp;
         }
 
-        static public int LittleEndianConversion (byte a, byte b)
+        public static int LittleEndianConversion (byte a, byte b)
         {
              return ((int)(a| (((int)b) << 8)));
         }

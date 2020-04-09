@@ -1,4 +1,5 @@
 ﻿using System;
+using Ultima5Redux.Data;
 
 namespace Ultima5Redux
 {

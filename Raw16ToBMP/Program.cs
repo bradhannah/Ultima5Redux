@@ -16,7 +16,7 @@ namespace Raw16ToBMP
     static class BitmapWriter
     {
   
-    static public Dictionary<byte, Color> GetEgaPalette()
+    public static Dictionary<byte, Color> GetEgaPalette()
         {
             Dictionary<byte, Color> palette=new Dictionary<byte, Color>();
             palette.Add(0, Color.Black);
@@ -194,7 +194,7 @@ namespace Raw16ToBMP
         }
 
 
-        static public void Export(string uncompFilename, string bmpFilename, int nGraphicWidth, int nGraphicHeight, int nOffset)
+        public static void Export(string uncompFilename, string bmpFilename, int nGraphicWidth, int nGraphicHeight, int nOffset)
         {
             //const int INDEX_SIZE = 0x32;
             byte[] fileArray = File.ReadAllBytes(uncompFilename);

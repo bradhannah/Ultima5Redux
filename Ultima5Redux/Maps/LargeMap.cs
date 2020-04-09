@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux 
 {
@@ -63,7 +64,7 @@ namespace Ultima5Redux
         /// <param name="overlayFilename">If present, the special overlay file for Britannia</param>
         /// <param name="ignoreOverlay">Do we ignore the overlay?</param>
         /// <returns></returns>
-        static private byte[][] BuildGenericMap(String mapDatFilename, String overlayFilename, bool ignoreOverlay)
+        private static byte[][] BuildGenericMap(String mapDatFilename, String overlayFilename, bool ignoreOverlay)
         {
             List<byte> theChunksSerial = Utils.GetFileAsByteList(mapDatFilename);
 

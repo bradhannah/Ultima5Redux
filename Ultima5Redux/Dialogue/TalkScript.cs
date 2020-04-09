@@ -587,7 +587,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="command">the command to evaluate</param>
         /// <returns>true if it is a string command only</returns>
-        static public bool IsStringOnlyCommand (TalkCommand command)
+        public static bool IsStringOnlyCommand (TalkCommand command)
         {
             if (command == TalkCommand.PlainString || command == TalkCommand.AvatarsName || command == TalkCommand.NewLine || command == TalkCommand.Rune)
                 return true;

@@ -3,6 +3,10 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Configuration;
 using System.Resources;
+using Ultima5Redux.Data;
+using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux
 {

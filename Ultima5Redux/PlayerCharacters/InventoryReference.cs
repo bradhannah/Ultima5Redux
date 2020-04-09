@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Ultima5Redux;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.PlayerCharacters
 {
     /// <summary>
     /// Collection of all inventory meta data such as descriptions

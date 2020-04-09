@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Maps
 {
     [DataContract]
     [SuppressMessage("ReSharper", "InconsistentNaming")]

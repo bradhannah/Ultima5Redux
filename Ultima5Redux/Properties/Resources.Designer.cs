@@ -65,13 +65,16 @@ namespace Ultima5Redux.Properties {
         ///   &quot;Reagent&quot;: [
         ///      {
         ///         &quot;ItemName&quot;: &quot;SulfurAsh&quot;,
+        ///         &quot;ItemNameHighlight&quot;: &quot;sulphurous ash,ash&quot;,
         ///         &quot;ItemSprite&quot;: &quot;SulfurAsh.2d&quot;,
-        ///         &quot;ItemDescription&quot;: &quot;&lt;i&gt;\&quot;Common material left by volcanic action, ash is an excellent source of energy in magical mixtures.\&quot;&lt;/i&gt;\n&lt;align=right&gt;- The Book of Lore (Ultima V)&lt;/align&gt;&quot;
+        ///         &quot;ItemSpriteExposed&quot;: 0,
+        ///         &quot;ItemDescription&quot;: &quot;Common material left by volcanic action, ash is an excellent source of energy in magical mixtures.&quot;,
+        ///         &quot;ItemDescriptionAttribution&quot;: &quot;The Book of Lore (Ultima V)&quot;
         ///      },
         ///      {
         ///         &quot;ItemName&quot;: &quot;Ginseng&quot;,
-        ///         &quot;ItemSprite&quot;: &quot;Ginseng.2d&quot;,
-        ///         &quot;ItemDescription&quot;: &quot;&lt;i&gt;\&quot;Ancient reagent used extensively in healing.\&quot;&lt;/i&gt;\n&lt;align=right&gt;- The Book of Lore (Ultima [rest of string was truncated]&quot;;.
+        ///         &quot;ItemNameHighlight&quot;: &quot;ginseng&quot;,
+        ///         &quot;ItemSprite&quot;: &quot;Gi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InventoryDetails {
             get {
@@ -118,28 +121,26 @@ namespace Ultima5Redux.Properties {
         ///      &quot;Comment&quot;: &quot;Iolos hut&quot;
         ///    }
         ///  ],
-        ///  &quot;3&quot;: [
+        ///  &quot;2&quot;: [
         ///    {
         ///      &quot;X&quot;: 13,
-        ///      &quot;Y&quot;: 12,
+        ///      &quot;Y&quot;: 19,
         ///      &quot;Z&quot;: 0,
-        ///      &quot;SpriteNum&quot;: 5,
-        ///      &quot;SpriteName&quot;: &quot;Grass&quot;,
-        ///      &quot;Comment&quot;: &quot;Jhelom&quot;
+        ///      &quot;SpriteNum&quot;: 48,
+        ///      &quot;SpriteName&quot;: &quot;OutsidePath1&quot;,
+        ///      &quot;Comment&quot;: &quot;Britain lamps&quot;
         ///    },
         ///    {
         ///      &quot;X&quot;: 17,
-        ///      &quot;Y&quot;: 12,
+        ///      &quot;Y&quot;: 19,
         ///      &quot;Z&quot;: 0,
-        ///      &quot;SpriteNum&quot;: 5,
-        ///      &quot;SpriteName&quot;: &quot;Grass&quot;,
-        ///      &quot;Comment&quot;: &quot;Jhelom&quot;
+        ///      &quot;SpriteNum&quot;: 48,
+        ///      &quot;SpriteName&quot;: &quot;OutsidePath1&quot;,
+        ///      &quot;Comment&quot;: &quot;Britain lamps&quot;
         ///    },
         ///    {
         ///      &quot;X&quot;: 17,
-        ///      &quot;Y&quot;: 12,
-        ///      &quot;Z&quot;: 1,
-        ///  [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TileOverrides {
             get {
