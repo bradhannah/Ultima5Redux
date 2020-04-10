@@ -7,6 +7,8 @@ using System.Media;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.Dialogue;
+using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
@@ -351,6 +353,23 @@ namespace Ultima5ReduxTesting
                     Assert.True(fMoonAngle >= 0 && fMoonAngle < 360);
                 }
             }
+        }
+
+        [Test]
+        public void Test_TalkToSmith()
+        {
+            World world = new World(SaveDirectory);
+            List<NonPlayerCharacterReference> iolosHutRefs =
+                world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Iolos_Hut);
+
+            NonPlayerCharacterReference smithTheHorseRef = iolosHutRefs[4];
+
+            world.CreateConversationAndBegin(smithTheHorseRef,  new Conversation.EnqueuedScriptItem(OnUpdateOfEnqueuedScriptItem));
+        }
+
+        private void OnUpdateOfEnqueuedScriptItem(Conversation conversation)
+        {
+            
         }
     }
 }
