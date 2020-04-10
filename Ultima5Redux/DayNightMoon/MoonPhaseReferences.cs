@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.DayNightMoon
 {

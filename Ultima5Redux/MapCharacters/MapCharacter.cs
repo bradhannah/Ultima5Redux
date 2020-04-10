@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ultima5Redux.DayNightMoon;
+﻿using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.MapCharacters
 {
     public class MapCharacter
     {

@@ -1,7 +1,6 @@
-﻿using System;
-using Ultima5Redux.Data;
+﻿using Ultima5Redux.Data;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Maps
 {
     public partial class SmallMapReferences
     {

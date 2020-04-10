@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.DayNightMoon
 {

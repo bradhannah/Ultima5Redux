@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using static Ultima5Redux.GameState;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.PlayerCharacters
 {
     public class Inventory
     {

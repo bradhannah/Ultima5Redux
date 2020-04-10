@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
+using Ultima5Redux.MapCharacters;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.PlayerCharacters
 {
     public class PlayerCharacterRecords
     {

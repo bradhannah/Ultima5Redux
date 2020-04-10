@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Ultima5Redux.Maps;
 
-namespace Ultima5Redux 
+namespace Ultima5Redux.Maps 
 {
     public class LargeMap : Map
     {

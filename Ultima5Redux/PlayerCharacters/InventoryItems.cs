@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.PlayerCharacters
 {
     public abstract class InventoryItems <TEnumType, T>
     {

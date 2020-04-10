@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Ultima5Redux.Data;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Dialogue
 {
     class CompressedWordReference
     {

@@ -10,7 +10,7 @@
     <AssemblyName>Ultima5Redux</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -201,7 +201,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-  <PostBuildEvent>copy $(TargetPath) "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+    <PostBuildEvent>copy $(TargetPath) "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
 copy $(TargetDir)\*.pdb "C:\Users\hannah\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"</PostBuildEvent>
   </PropertyGroup>
 </Project>

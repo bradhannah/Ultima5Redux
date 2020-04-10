@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
+using System.Threading.Tasks;
 using Ultima5Redux.Data;
+using Ultima5Redux.MapCharacters;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Dialogue
 { 
     /// <summary>
     /// A conversation with an NPC.

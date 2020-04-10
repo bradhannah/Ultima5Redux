@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 using System.IO;
-using System.Diagnostics;
+using System.Runtime.InteropServices;
+using Ultima5Redux.Dialogue;
+using Ultima5Redux.Maps;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.MapCharacters
 {
     public class NonPlayerCharacterReferences
     {

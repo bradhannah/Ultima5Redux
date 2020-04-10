@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 

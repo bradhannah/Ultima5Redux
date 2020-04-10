@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ultima5Redux
+﻿namespace Ultima5Redux.MapCharacters
 {
     /// <summary>
     /// Tracks the postion of any character on the screen

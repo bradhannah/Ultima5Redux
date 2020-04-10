@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
+using Ultima5Redux.Dialogue;
+using Ultima5Redux.Maps;
+
 //using static Ultima5Redux.NonPlayerCharacterReferences;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.MapCharacters
 {
     /// <summary>
     /// A single non player character (NPC)

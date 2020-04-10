@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Ultima5Redux.Maps;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.MapCharacters
 {
     //    http://wiki.ultimacodex.com/wiki/Ultima_V_Internal_Formats#SAVED.GAM
     //    Monster Format

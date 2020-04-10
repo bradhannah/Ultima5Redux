@@ -5,6 +5,8 @@ using System.Net.Configuration;
 using System.Resources;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.Dialogue;
+using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 

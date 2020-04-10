@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.MapCharacters
 {
     /// <summary>
     /// Based on original U5 data structure

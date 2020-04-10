@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.PlayerCharacters
 {
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]

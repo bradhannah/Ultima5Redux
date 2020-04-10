@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ultima5Redux
+﻿namespace Ultima5Redux.MapCharacters
 {
     public partial class NonPlayerCharacterMovement
     {

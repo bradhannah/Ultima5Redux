@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Ultima5Redux.Properties;
+using Ultima5Redux.MapCharacters;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.Maps
 {
     public class TileOverrides
     {
