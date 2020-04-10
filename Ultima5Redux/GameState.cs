@@ -162,7 +162,8 @@ namespace Ultima5Redux
         /// </summary>
         public bool HasGrapple
         {
-            get; private set;
+            get => _dataChunks.GetDataChunk(DataChunkName.GRAPPLE).GetChunkAsByte()!=0x00;
+            set => _dataChunks.GetDataChunk(DataChunkName.GRAPPLE).SetChunkAsByte((byte)(value?0x01:0x00));
         }
 
         /// <summary>
@@ -219,7 +220,8 @@ namespace Ultima5Redux
             MOONSTONE_Y_COORDS, 
             MOONSTONE_BURIED,
             MOONSTONE_Z_COORDS,
-            ACTIVE_CHARACTER
+            ACTIVE_CHARACTER,
+            GRAPPLE
         };
         #endregion
 
@@ -281,6 +283,8 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00, DataChunkName.KEYS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Grapple", 0x209, 0x01, 0x00, DataChunkName.GRAPPLE);
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01, 0x00, DataChunkName.TORCHES_TURNS);
             
             // moonstones and moongates

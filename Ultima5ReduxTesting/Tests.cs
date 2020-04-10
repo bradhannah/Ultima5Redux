@@ -23,7 +23,8 @@ namespace Ultima5ReduxTesting
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return @"/Users/bradhannah/games/u5/Gold";
-                return @"C:\games\ultima_5\Gold";
+                return @"C:\games\ultima_5_late\Britain";
+                //return @"C:\games\ultima_5\Gold";
             }
             
         }
@@ -370,6 +371,17 @@ namespace Ultima5ReduxTesting
         private void OnUpdateOfEnqueuedScriptItem(Conversation conversation)
         {
             
+        }
+
+        [Test]
+        public void Test_KlimbMountain()
+        {
+            World world = new World(SaveDirectory);
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+            world.State.TheVirtualMap.CurrentPosition = new Point2D(166,21);
+            world.TryToKlimb(out World.KlimbResult klimbResult);
+            Debug.Assert(klimbResult == World.KlimbResult.RequiresDirection);
         }
     }
 }

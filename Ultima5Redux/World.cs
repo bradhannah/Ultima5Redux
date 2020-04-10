@@ -226,6 +226,7 @@ namespace Ultima5Redux
         /// <returns>String to output to user</returns>
         public string Look(Point2D xy, out SpecialLookCommand specialLookCommand)
         {
+            PassTime();
             specialLookCommand = SpecialLookCommand.None;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
@@ -269,6 +270,7 @@ namespace Ultima5Redux
         /// <returns>the output string</returns>
         public string TryToGetAThing(Point2D xy, out bool bGotAThing, out InventoryItem inventoryItem)
         {
+            PassTime();
             bGotAThing = false;
             inventoryItem = null;
             
@@ -330,6 +332,7 @@ namespace Ultima5Redux
         /// <returns>the string to output to the user</returns>
         public string PushAThing(Point2D avatarXy, VirtualMap.Direction direction, out bool bPushedAThing)
         {
+            PassTime();
             bPushedAThing = false;
             Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(avatarXy, direction);
 
@@ -376,13 +379,41 @@ namespace Ultima5Redux
             return DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N);
         }
         
+        
         /// <summary>
         /// Climbs the ladder on the current tile that the Avatar occupies
         /// </summary>
-        public string KlimbLadder()
+        public string TryToKlimb(out KlimbResult klimbResult)
         {
+            string getKlimbOutput(string output = "")
+            {
+                if (output == "") return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.KLIMB);
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.KLIMB) + output;
+            }
+            
+            TileReference curTileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
+            
+            // if it's a large map, we either klimb with the grapple or don't klimb at all
+            if (State.TheVirtualMap.IsLargeMap)
+            {
+                if (State.HasGrapple) // we don't have a grapple, so we can't klimb
+                {
+                    klimbResult = KlimbResult.RequiresDirection;
+                    return getKlimbOutput();
+                }
+                klimbResult = KlimbResult.CantKlimb;
+                return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.WITH_WHAT));
+            }
+                
+            // we can't klimb on the current tile, so we need to pick a direction
+            if (!SpriteTileReferences.IsLadder(curTileRef.Index) && !SpriteTileReferences.IsGrate(curTileRef.Index))
+            {
+                klimbResult = KlimbResult.RequiresDirection;
+                return getKlimbOutput();
+            }
+            
             SmallMapReferences.SingleMapReference.Location location = State.TheVirtualMap.CurrentSingleMapReference.MapLocation;
-            int nCurrentFloor = State.TheVirtualMap.CurrentSingleMapReference.Floor; //currentSingleSmallMapReferences.Floor;
+            int nCurrentFloor = State.TheVirtualMap.CurrentSingleMapReference.Floor; 
             bool hasBasement = State.TheVirtualMap.SmallMapRefs.HasBasement(location);
             int nTotalFloors = State.TheVirtualMap.SmallMapRefs.GetNumberOfFloors(location);
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
@@ -393,7 +424,8 @@ namespace Ultima5Redux
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
                     State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1), State.CharacterRecords, false);
-                    return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN);
+                    klimbResult = KlimbResult.Success;
+                    return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN));
                 }
             }
             else if (SpriteTileReferences.IsLadderUp(tileReference.Index))
@@ -401,21 +433,25 @@ namespace Ultima5Redux
                 if (nCurrentFloor + 1 < nTopFloor)
                 {
                     State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1), State.CharacterRecords, false);
-                    return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP);
+                    klimbResult = KlimbResult.Success;
+                    return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
                 }
             }
-            return string.Empty;
+
+            klimbResult = KlimbResult.RequiresDirection;
+            return getKlimbOutput();
         }
 
-        public enum KlimbResult { Success, SuccessFell, CantKlimb }
+        public enum KlimbResult { Success, SuccessFell, CantKlimb, RequiresDirection }
         /// <summary>
         /// Try to klimb the given tile - typically called after you select a direction
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="klimbResult"></param>
         /// <returns></returns>
-        public string TryToKlimb(Point2D xy, out KlimbResult klimbResult)
+        public string TryToKlimbInDirection(Point2D xy, out KlimbResult klimbResult)
         {
+            PassTime();
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
             if (State.TheVirtualMap.IsLargeMap)
@@ -471,6 +507,7 @@ namespace Ultima5Redux
         /// <returns>the output string to write to console</returns>
         public string TryToSearch(Point2D xy, out bool bWasSuccessful)
         {
+            PassTime();
             bWasSuccessful = false;
 
             // if there is something exposed already OR there is nothing found 
@@ -507,6 +544,7 @@ namespace Ultima5Redux
         /// <returns>the output string to write to console</returns>
         public string TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record, out bool bWasSuccessful)
         {
+            PassTime();
             bWasSuccessful = false;
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
             bool isDoorInDirection = tileReference.IsOpenable;
@@ -558,7 +596,6 @@ namespace Ultima5Redux
                 {
                     State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
                 }
-                //ReassignSprites();
                 bWasSuccessful = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.UNLOCKED));
             }
@@ -574,7 +611,7 @@ namespace Ultima5Redux
         /// <param name="xy">position of door</param>
         /// <param name="bWasSuccessful">was the door opening successful?</param>
         /// <returns>the output string to write to console</returns>
-        public string OpenDoor(Point2D xy, out bool bWasSuccessful)
+        public string TryToOpenDoor(Point2D xy, out bool bWasSuccessful)
         {
             bWasSuccessful = false;
 
@@ -605,7 +642,7 @@ namespace Ultima5Redux
         public enum TryToMoveResult { Moved, Blocked, OfferToExitScreen, UsedStairs, Fell }
 
         /// <summary>
-        /// Gets a +/- 1 x/y adjustement based on the current position and given direction
+        /// Gets a +/- 1 x/y adjustment based on the current position and given direction
         /// </summary>
         /// <param name="direction">direction to go</param>
         /// <param name="xAdjust">output X adjustment</param>
@@ -762,13 +799,19 @@ namespace Ultima5Redux
             }
         }
 
+        public void PassTime()
+        {
+            AdvanceTime(2); //State.TheVirtualMap.GetTileReferenceOnCurrentTile().SpeedFactor);
+        }
+
         /// <summary>
         /// Ignites a torch, if available and set the number of turns for the torch to be burnt out
         /// </summary>
         /// <returns></returns>
         public string IgniteTorch()
         {
-            const byte nDefaultNumberOfTurnsForTorch = 0xF0;
+            PassTime();
+            const byte nDefaultNumberOfTurnsForTorch = 100;
             // if there are no torches then report back and make no change
             if (State.Torches <= 0) return DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.NONE_OWNED_BANG_N);
 
@@ -788,6 +831,7 @@ namespace Ultima5Redux
         /// <returns>output string</returns>
         public string EnterBuilding(Point2D xy, out bool bWasSuccessful)
         {
+            PassTime();
             bool isOnBuilding = LargeMapRef.IsMapXYEnterable(State.TheVirtualMap.CurrentPosition);
 
             if (isOnBuilding)
@@ -921,6 +965,7 @@ namespace Ultima5Redux
 
         public string TryToUseAnInventoryItem(InventoryItem item, out bool bAbleToUseItem)
         {
+            PassTime();
             bAbleToUseItem = false;
             if (item.GetType() == typeof(SpecialItem))
             {
@@ -960,6 +1005,7 @@ namespace Ultima5Redux
         /// <returns>A conversation object to be used to follow along with the conversation</returns>
         public Conversation CreateConversationAndBegin(NonPlayerCharacterReference npc, Conversation.EnqueuedScriptItem enqueuedScriptItem)
         {
+            PassTime();
             CurrentConversation = new Conversation(npc, State, DataOvlRef);
 
             CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
