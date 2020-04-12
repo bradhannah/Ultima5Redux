@@ -207,9 +207,7 @@ namespace Ultima5Redux.Maps
             int nFloor = map == LargeMap.Maps.Overworld ? 0 : -1;
             switch (map)
             {
-                case LargeMap.Maps.Underworld: 
-                    CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
-                    break;
+                case LargeMap.Maps.Underworld:
                 case LargeMap.Maps.Overworld:
                     CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
                     break;

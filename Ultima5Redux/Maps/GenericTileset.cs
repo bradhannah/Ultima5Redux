@@ -6,8 +6,7 @@ namespace Ultima5Redux.Maps
 {
     public class GenericTileset
     {
-        
-        byte[] _tilesetByteArray;
+        private readonly byte[] _tilesetByteArray;
         public GenericTileset(string fileNameAndPath)
         {
             _tilesetByteArray = File.ReadAllBytes(fileNameAndPath);

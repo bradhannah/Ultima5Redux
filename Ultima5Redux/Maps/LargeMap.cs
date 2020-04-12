@@ -44,8 +44,11 @@ namespace Ultima5Redux.Maps
                     TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.UNDER_DAT), "", true);
                     //xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, -1));
                     break;
+                case Maps.Small:
+                    throw new Ultima5ReduxException("tried to create a largemap with the .Small map enum");
+                    break;
             }
-            
+
         }
 
         public void PrintMap()

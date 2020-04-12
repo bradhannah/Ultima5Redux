@@ -163,6 +163,8 @@ namespace Ultima5Redux.Maps
                         return FileConstants.KEEP_TLK;
                     case SmallMapMasterFiles.Towne:
                         return FileConstants.TOWNE_TLK;
+                    case SmallMapMasterFiles.Dungeon:
+                        break;
                 }
                 throw new Ultima5ReduxException("Couldn't map NPC filename");
             }
@@ -184,6 +186,8 @@ namespace Ultima5Redux.Maps
                         return FileConstants.KEEP_NPC;
                     case SmallMapMasterFiles.Towne:
                         return FileConstants.TOWNE_NPC;
+                    case SmallMapMasterFiles.Dungeon:
+                        break;
                 }
                 throw new Ultima5ReduxException("Couldn't map NPC filename");
             }
@@ -243,6 +247,10 @@ namespace Ultima5Redux.Maps
                     case Location.Hythloth:
                     case Location.Doom:
                         return SmallMapMasterFiles.Dungeon;
+                    case Location.Britannia_Underworld:
+                        break;
+                    case Location.Combat_resting_shrine:
+                        break;
                 }
                 throw new Ultima5ReduxException("EH?");
             }

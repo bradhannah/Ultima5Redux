@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
@@ -40,7 +41,8 @@ namespace Ultima5Redux.MapCharacters
             InnKeeper = 0x88, MagicSeller = 0x85, GuildMaster = 0x86, Unknown = 0xFF
             // unknowns may be crown and sandlewood box
         };
-        public enum NPCKeySpriteEnum
+
+        private enum NPCKeySpriteEnum
         {
             Custom = -1, Guard = 368, Merchant = 340, Healer = 320,
             UnknownX86 = 368, Bard = 324, Fighter = 328, Towny = 336, BardPlaying = 348, Jester = 344, Child = 360, Beggar = 364,
@@ -230,15 +232,18 @@ namespace Ultima5Redux.MapCharacters
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Construct an NPC
         /// </summary>
-        /// <param name="mapRef">Which map are they on?</param>
+        /// <param name="gameStateRef"></param>
         /// <param name="sched">daily schedule</param>
         /// <param name="npcType">type of NPC they are</param>
         /// <param name="dialogNumber">dialog number referencing data OVL</param>
         /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
         /// <param name="talkScript">their conversation script</param>
+        /// <param name="location"></param>
+        /// <param name="nKeySprite"></param>
         public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location, GameState gameStateRef, NPCSchedule sched,
             byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript, int nKeySprite)
         {
@@ -255,35 +260,24 @@ namespace Ultima5Redux.MapCharacters
 
 
             // no schedule? I guess you're not real
-            if (!IsEmptySched(sched))
+            if (!IsEmptySchedule(sched))
             {
-                System.Console.WriteLine(location.ToString() + "     NPC Number: " + this.DialogNumber + " in " + location.ToString());
+                Debug.WriteLine(location.ToString() + "     NPC Number: " + this.DialogNumber + " in " + location.ToString());
             }
         }
         #endregion
 
         #region Private Methods
         /// <summary>
-        /// Gets the appropriate schedule index based on the current time
-        /// </summary>
-        /// <returns></returns>
-        //internal int GetScheduleIndex()
-        //{
-        //    return 1;
-        //}
-
-
-
-        /// <summary>
         /// Does the NPC have an empty schedule? If so, then they aren't actually an NPC
         /// </summary>
-        /// <param name="sched">daily schedule</param>
+        /// <param name="schedule">daily schedule</param>
         /// <returns></returns>
-        private static bool IsEmptySched(NonPlayerCharacterReference.NPCSchedule sched)
+        private static bool IsEmptySchedule(NonPlayerCharacterReference.NPCSchedule schedule)
         {
             unsafe
             {
-                if (sched.times[0] == 0 && sched.times[1] == 0 && sched.times[2] == 0 && sched.times[3] == 0 && sched.times[4] == 0)
+                if (schedule.times[0] == 0 && schedule.times[1] == 0 && schedule.times[2] == 0 && schedule.times[3] == 0 && schedule.times[4] == 0)
                     return true;
             }
             return false;

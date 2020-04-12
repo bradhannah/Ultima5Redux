@@ -331,12 +331,11 @@ namespace Ultima5Redux.Maps
                 case -1:
                     throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
                 case 2:
+                    return string.Empty;
                 case 4:
                     // this is normal speed
-                    return String.Empty;
-                case 6:
                     return _u5StringRef.GetString(DataOvlReference.WorldStrings.SLOW_PROG);
-                case 8:
+                case 6:
                     return _u5StringRef.GetString(DataOvlReference.WorldStrings.VERY_SLOW);
                 default:
                     throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());

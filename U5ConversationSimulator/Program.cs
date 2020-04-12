@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Ultima5Redux.Data;
 using Ultima5Redux.Dialogue;
+using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 
 
@@ -20,16 +21,21 @@ namespace U5ConversationSimulator
 
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
-                _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), _world.State.CharacterRecords, false);
+                //_world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), _world.State.CharacterRecords, false);
             }
             
+            _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0), _world.State.CharacterRecords, false);
             
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
             //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle);
             //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Britain);
 
-            Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
+            //Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
+            List<NonPlayerCharacterReference> minocNpcRef =
+                _world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
+            Conversation convo = new Conversation(minocNpcRef[9], _world.State, _world.DataOvlRef); // delwyn
+            
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
             Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(EnqueuedScriptItem);
@@ -38,11 +44,11 @@ namespace U5ConversationSimulator
             
             convo.BeginConversation();
             int i = 1000;
-            while (i > 0)
-            {
-                _world.AdvanceTime(2);
-                i--;
-            }
+            // while (i > 0)
+            // {
+            //     _world.AdvanceTime(2);
+            //     i--;
+            // }
         }
 
         private static void EnqueuedScriptItem(Conversation conversation)

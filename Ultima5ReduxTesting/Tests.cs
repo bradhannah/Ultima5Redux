@@ -383,5 +383,96 @@ namespace Ultima5ReduxTesting
             world.TryToKlimb(out World.KlimbResult klimbResult);
             Debug.Assert(klimbResult == World.KlimbResult.RequiresDirection);
         }
+        
+        [Test]
+        public void Test_MoveALittle()
+        {
+            World world = new World(SaveDirectory);
+
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+            world.State.TheVirtualMap.CurrentPosition = new Point2D(166,21);
+
+            world.TryToMove(VirtualMap.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
+        }
+        
+        [Test]
+        public void Test_TalkToDelwyn()
+        {
+            World world = new World(SaveDirectory);
+            List<NonPlayerCharacterReference> minocNpcRef =
+                world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
+
+            NonPlayerCharacterReference delwynRef = minocNpcRef[9];
+
+            Conversation convo = world.CreateConversationAndBegin(delwynRef,  new Conversation.EnqueuedScriptItem(OnUpdateOfEnqueuedScriptItemHandleDelwyn));
+            convo.BeginConversation();
+        }
+        
+        private void OnUpdateOfEnqueuedScriptItemHandleDelwyn(Conversation conversation)
+        {
+                 TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
+                 string userResponse;
+                 switch (item.Command)
+                 {
+                     case TalkScript.TalkCommand.PlainString:
+                         Debug.WriteLine(item.Str);
+                         break;
+                     case TalkScript.TalkCommand.AvatarsName:
+                         break;
+                     case TalkScript.TalkCommand.EndCoversation:
+                         break;
+                     case TalkScript.TalkCommand.Pause:
+                         break;
+                     case TalkScript.TalkCommand.JoinParty:
+                         break;
+                     case TalkScript.TalkCommand.Gold:
+                         break;
+                     case TalkScript.TalkCommand.Change:
+                         break;
+                     case TalkScript.TalkCommand.Or:
+                         break;
+                     case TalkScript.TalkCommand.AskName:
+                         break;
+                     case TalkScript.TalkCommand.KarmaPlusOne:
+                         break;
+                     case TalkScript.TalkCommand.KarmaMinusOne:
+                         break;
+                     case TalkScript.TalkCommand.CallGuards:
+                         break;
+                     case TalkScript.TalkCommand.IfElseKnowsName:
+                         break;
+                     case TalkScript.TalkCommand.NewLine:
+                         break;
+                     case TalkScript.TalkCommand.Rune:
+                         break;
+                     case TalkScript.TalkCommand.KeyWait:
+                         break;
+                     case TalkScript.TalkCommand.StartLabelDefinition:
+                         break;
+                     case TalkScript.TalkCommand.StartNewSection:
+                         break;
+                     case TalkScript.TalkCommand.Unknown_Enter:
+                         break;
+                     case TalkScript.TalkCommand.GotoLabel:
+                         break;
+                     case TalkScript.TalkCommand.DefineLabel:
+                         break;
+                     case TalkScript.TalkCommand.DoNothingSection:
+                         break;
+                     case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
+                         userResponse = "yes";
+                         conversation.AddUserResponse(userResponse);
+                         break;
+                     case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
+                         //Console.Write(conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));
+                         break;
+                     case TalkScript.TalkCommand.UserInputNotRecognized:
+                         break;
+                     default:
+                         throw new ArgumentOutOfRangeException();
+                 }
+        }
+
+
     }
 }

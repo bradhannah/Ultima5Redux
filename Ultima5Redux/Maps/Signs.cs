@@ -58,7 +58,7 @@ namespace Ultima5Redux.Maps
             public void PrintSign()      
             {
                 int remainder = 0;
-                Math.DivRem(SignText.Length, CHARS_PER_LINE, out remainder);
+                _ = Math.DivRem(SignText.Length, CHARS_PER_LINE, out remainder);
                 int lines = remainder == 0 ? SignText.Length / CHARS_PER_LINE : (SignText.Length / CHARS_PER_LINE) + 1;
                 for (int i = 0; i < lines;  i++)
                 {

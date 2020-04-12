@@ -775,18 +775,8 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.IsLargeMap)
             {
                 AdvanceTime(SpriteTileReferences.GetMinuteIncrement(newTileReference.Index));
-
-                string strMovement = String.Empty;
-                // we don't want to lookup slow moving strings if we are moving freely over all tiles
-                if (!bFreeMove)
-                {
-                    strMovement = SpriteTileReferences.GetSlowMovementString(newTileReference.Index);
-                }
-                if (strMovement != String.Empty)
-                {
-                }
                 tryToMoveResult = TryToMoveResult.Moved;
-                return strMovement;
+                return SpriteTileReferences.GetSlowMovementString(newTileReference.Index);;
             }
             else
             {

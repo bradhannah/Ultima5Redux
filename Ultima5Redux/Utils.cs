@@ -98,7 +98,7 @@ namespace Ultima5Redux
             int listCount = theList.Count;
 
             // TODO: add safety code to make sure there is no remainer when dividing listCount/splitEveryN
-            Math.DivRem(listCount, splitEveryN, out int remainder);
+            _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
             if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
 
@@ -127,7 +127,7 @@ namespace Ultima5Redux
 
             // TODO: add safety code to make sure there is no remainer when dividing listCount/splitEveryN
             int remainder = 0;
-            Math.DivRem(listCount, splitEveryN, out remainder);
+            _ = Math.DivRem(listCount, splitEveryN, out remainder);
 
             if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
 

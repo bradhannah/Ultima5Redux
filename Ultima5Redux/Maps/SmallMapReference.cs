@@ -191,8 +191,6 @@ namespace Ultima5Redux.Maps
                 case SmallMapReferences.SingleMapReference.Location.Paws:
                 case SmallMapReferences.SingleMapReference.Location.Cove:
                     return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_VILLAGE);
-                case SmallMapReferences.SingleMapReference.Location.Buccaneers_Den:
-                    return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_KEEP);
                 case SmallMapReferences.SingleMapReference.Location.Moonglow:
                 case SmallMapReferences.SingleMapReference.Location.Britain:
                 case SmallMapReferences.SingleMapReference.Location.Jhelom:
@@ -222,6 +220,7 @@ namespace Ultima5Redux.Maps
                 case SmallMapReferences.SingleMapReference.Location.Lycaeum:
                 case SmallMapReferences.SingleMapReference.Location.Empath_Abbey:
                 case SmallMapReferences.SingleMapReference.Location.Serpents_Hold:
+                case SmallMapReferences.SingleMapReference.Location.Buccaneers_Den:
                     return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_KEEP);
                 case SmallMapReferences.SingleMapReference.Location.Deceit:
                 case SmallMapReferences.SingleMapReference.Location.Despise:
@@ -232,6 +231,10 @@ namespace Ultima5Redux.Maps
                 case SmallMapReferences.SingleMapReference.Location.Hythloth:
                 case SmallMapReferences.SingleMapReference.Location.Doom:
                     return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_DUNGEON);
+                case SingleMapReference.Location.Britannia_Underworld:
+                    break;
+                case SingleMapReference.Location.Combat_resting_shrine:
+                    break;
             }
             return "";
         }

@@ -191,7 +191,7 @@ namespace Ultima5Redux.MapCharacters
             /// <summary>
             /// TODO: Need to figure out what these AI types actually mean
             /// </summary>
-            private List<byte> _aiTypeList = new List<byte>();
+            private readonly List<byte> _aiTypeList = new List<byte>();
             /// <summary>
             /// 3D Coordinates including floor number
             /// </summary>
@@ -205,8 +205,8 @@ namespace Ultima5Redux.MapCharacters
             /// Creates an NPC Schedule object 
             /// This is easier to consume than the structure
             /// </summary>
-            /// <param name="sched"></param>
-            public NonPlayerCharacterSchedule(NPCSchedule sched)
+            /// <param name="schedule"></param>
+            public NonPlayerCharacterSchedule(NPCSchedule schedule)
             {
                 Coords = new List<Point3D>();
                 Times = new List<byte>();
@@ -215,14 +215,14 @@ namespace Ultima5Redux.MapCharacters
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        _aiTypeList.Add(sched.AI_types[i]);
-                        Coords.Add(new Point3D(sched.x_coordinates[i], sched.y_coordinates[i], sched.z_coordinates[i]));
-                        if (sched.z_coordinates[i] != 0) { System.Console.Write(""); }
+                        _aiTypeList.Add(schedule.AI_types[i]);
+                        Coords.Add(new Point3D(schedule.x_coordinates[i], schedule.y_coordinates[i], schedule.z_coordinates[i]));
+                        if (schedule.z_coordinates[i] != 0) { System.Console.Write(""); }
                     }
                     // argh, I can't get the size dynamically of the arrays
                     for (int i = 0; i < 4; i++)
                     {
-                        Times.Add(sched.times[i]);
+                        Times.Add(schedule.times[i]);
                     }
                 }
             }

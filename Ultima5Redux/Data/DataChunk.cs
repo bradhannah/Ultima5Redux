@@ -12,23 +12,23 @@ namespace Ultima5Redux.Data
         /// <summary>
         /// A Dictionary that maps the DataChunkName to the specific location
         /// </summary>
-        private Dictionary<T, DataChunk> _chunkMap = new Dictionary<T, DataChunk>();
+        private readonly Dictionary<T, DataChunk> _chunkMap = new Dictionary<T, DataChunk>();
 
         /// <summary>
         /// The default name to give unlabelled data chunks
         /// </summary>
-        private T _unusedValue;
+        private readonly T _unusedValue;
 
         /// <summary>
         /// Full list of data chunks
         /// </summary>
-        private List<DataChunk> _dataChunks;
+        private readonly List<DataChunk> _dataChunks;
 
         /// <summary>
-        /// Byte list of file contets
+        /// Byte list of file contents
         /// </summary>
         public List<byte> FileByteList { get { return _fileByteList; } }
-        private List<byte> _fileByteList;
+        private readonly List<byte> _fileByteList;
 
         /// <summary>
         /// Construct a collection of DataChunks 
@@ -72,7 +72,7 @@ namespace Ultima5Redux.Data
 
         /// <summary>
         /// Add a generic data chunk, providing a name for easier access
-        /// Additional functonality for adding/subtracting value 
+        /// Additional functionality for adding/subtracting value 
         /// </summary>
         /// <param name="dataFormat">the expected format of the data</param>
         /// <param name="description">a brief written description of what the data is</param>
@@ -98,7 +98,7 @@ namespace Ultima5Redux.Data
 
         /// <summary>
         /// Add a new generic data chunk (un-named)
-        /// Additional functonality for adding/subtracting value 
+        /// Additional functionality for adding/subtracting value 
         /// </summary>
         /// <param name="dataFormat">the expected format of the data</param>
         /// <param name="description">a brief written description of what the data is</param>

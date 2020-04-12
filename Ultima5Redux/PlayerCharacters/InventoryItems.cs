@@ -390,7 +390,7 @@ namespace Ultima5Redux.PlayerCharacters
         private Moongates _moongates;
         private MoonPhaseReferences _moonPhaseReferences;
         
-        public Moonstones(DataOvlReference dataOvlRef, MoonPhaseReferences moonPhaseReferences, Moongates moongates, InventoryReferences invRefs) 
+        public Moonstones(DataOvlReference dataOvlRef, MoonPhaseReferences moonPhaseReferences, Moongates moongates) 
             : base(dataOvlRef, null)
         {
             _moongates = moongates;

@@ -141,8 +141,8 @@ namespace Ultima5Redux.PlayerCharacters
         {
             this._gameStateByteArray = gameStateByteArray;
 
-            DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
-            DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
+            _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
+            _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
 
             ProtectiveArmour = new Armours(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(ProtectiveArmour.GenericItemList);
@@ -175,7 +175,7 @@ namespace Ultima5Redux.PlayerCharacters
             MagicSpells = new Spells(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(MagicSpells.GenericItemList);
 
-            TheMoonstones = new Moonstones(dataOvlRef, moonPhaseReferences, moongates, null);
+            TheMoonstones = new Moonstones(dataOvlRef, moonPhaseReferences, moongates);
             AllItems.AddRange(TheMoonstones.GenericItemList);
             UseItems.AddRange(TheMoonstones.GenericItemList);
         }
