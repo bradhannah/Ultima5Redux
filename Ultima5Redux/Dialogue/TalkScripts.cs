@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -196,6 +197,8 @@ namespace Ultima5Redux.Dialogue
             bool writingSingleCharacters = false;   // are we currently writing a single character at a time?
             string buildAWord = string.Empty;       // the word we are currently building if we are writingSingleCharacters=true
 
+            int nGoldCharsLeft = 0;
+            
             foreach (byte byteWord in _talkRefs[smallMapRef][index])
             {
                 // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
@@ -216,9 +219,9 @@ namespace Ultima5Redux.Dialogue
 
                 byte tempByte = (byte)((int)byteWord); // this is the byte that we will manipulate, leaving the byteWord in tact
                 bool usePhraseLookup = false;   // did we do a phrase lookup (else we are typing single letters)
-                bool useCompressedWord = false; // did we succesfully use a compressed word?
+                bool useCompressedWord = false; // did we successfully use a compressed word?
 
-                // if it's one of the bytes that requires a subraction of 0x80 (128)
+                // if it's one of the bytes that requires a subtraction of 0x80 (128)
                 if (byteWord >= 165 && byteWord <= 218) { tempByte -= TALK_OFFSET_ADJUST; }
                 else if (byteWord >= 225 && byteWord <= 250) { tempByte -= TALK_OFFSET_ADJUST; }
                 else if (byteWord >= 160 && byteWord <= 161) { tempByte -= TALK_OFFSET_ADJUST; }
@@ -243,6 +246,11 @@ namespace Ultima5Redux.Dialogue
                     }
                     //Console.Write((char)tempByte);
                     buildAWord += (char)tempByte;
+                    if (nGoldCharsLeft > 0 && --nGoldCharsLeft == 0)
+                    {
+                        talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, buildAWord);
+                        buildAWord = string.Empty;
+                    }
                     // Debug code to help track down an NPCs question or response
                     //if (buildAWord.Contains("to give unto charity")) { Console.Write(""); }
                 }
@@ -296,6 +304,12 @@ namespace Ultima5Redux.Dialogue
                         {
                             // this is just a standard special command, so let's add it
                             talkScript.AddTalkCommand((TalkScript.TalkCommand)tempByte, string.Empty);
+                            if ((TalkScript.TalkCommand) tempByte == TalkScript.TalkCommand.Gold)
+                            {
+                                // here are always three extra characters after the gold, but only for gold
+                                // so we make sure we only capture the next 3 characters
+                                nGoldCharsLeft = 3;
+                            }
                         }
                     }
                     // we just used a compressed word which means we need to insert a space afterwards

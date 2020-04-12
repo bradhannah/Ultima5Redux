@@ -66,7 +66,7 @@ namespace Ultima5Redux.Dialogue
             /// </summary>
             public List<ScriptLine> DefaultAnswers { get; set; }
             /// <summary>
-            /// The label reference nunber
+            /// The label reference number
             /// </summary>
             public int LabelNum { get;  }
 
@@ -102,7 +102,8 @@ namespace Ultima5Redux.Dialogue
                 }
                 else
                 {
-                    DefaultAnswers = DefaultAnswers;
+                    //DefaultAnswers = DefaultAnswers;
+                    DefaultAnswers = defaultAnswers;
                 }
                 LabelNum = labelNum;
             }
@@ -514,16 +515,18 @@ namespace Ultima5Redux.Dialogue
                     {
                         // advance to next section
                         nSection++;
-                        // add a stump section
-                        lines.Add(new SplitScriptLine());
                         
                         // the next three characters are a 3 digit string that describes how much gold we are giving the NPC
                         item.ItemAdditionalData = int.Parse(GetScriptItem(i + 1).Str.Substring(0,3));
+
+                        // add a stump section
+                        //lines.Add(new SplitScriptLine());
+
                         // let's remove the three character digits from the next string 
                         GetScriptItem(i + 1).Str = GetScriptItem(i + 1).Str.Remove(0, 3);
                         
-                        // add the item as-is to the new section
-                        lines[nSection].AddScriptItem(item);
+                        // // add the item as-is to the new section
+                        // lines[nSection].AddScriptItem(item);
                         
                         i++;
                         forceSplitNext = true;
@@ -865,7 +868,7 @@ namespace Ultima5Redux.Dialogue
                         // is this a question that the player would ask an NPC?
                         else if (_scriptLines[nIndex + 1].GetScriptItem(0).IsQuestion())
                         {
-                            // get the Avater's response line
+                            // get the Avatar's response line
                             line = _scriptLines[++nIndex];
 
                             question = line.GetScriptItem(0).Str;
@@ -873,7 +876,7 @@ namespace Ultima5Redux.Dialogue
                             currQuestions.Add(question);
                         }
                         // the NPC has tricked me - this is a second line of dialog for the given 
-                        /// that dasterdly LB has put an extra response line in....
+                        // that dastardly LB has put an extra response line in....
                         else //if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length > 4)
                         {
                             line = _scriptLines[++nIndex];
@@ -909,7 +912,7 @@ namespace Ultima5Redux.Dialogue
                             continue;
                         }
        
-                    // while we know the next line is not a new label or end of label, then let's keep reading by moving to our next loop
+                        // while we know the next line is not a new label or end of label, then let's keep reading by moving to our next loop
                     } while (nextLine.GetScriptItem(0).Command != TalkCommand.StartLabelDefinition);
                     // while we haven't encountered an end of label section 
                 } while (!nextCommandDefaultMessage);
