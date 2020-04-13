@@ -103,7 +103,7 @@ namespace Ultima5Redux.Dialogue
         /// Simple converter that takes in a ScriptItem and returns a string
         /// </summary>
         /// <param name="item">item to process</param>
-        /// <returns>string equivelant of the scriptitem</returns>
+        /// <returns>string equivalent of the ScriptItem</returns>
         private string TextProcessItem(TalkScript.ScriptItem item)
         {
             switch (item.Command)

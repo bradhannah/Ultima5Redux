@@ -1003,6 +1003,15 @@ namespace Ultima5Redux
             return CurrentConversation;
         }
 
+        public void FinishConversation()
+        {
+            if (CurrentConversation != null)
+            {
+                throw new Ultima5ReduxException("Can't close a conversation if haven't got one open!");
+            }
+            //CurrentConversation.
+        }
+
         #region Test Procedures
         /// <summary>
         /// Constructor only used for testing

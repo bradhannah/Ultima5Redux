@@ -406,12 +406,25 @@ namespace Ultima5ReduxTesting
 
             Conversation convo = world.CreateConversationAndBegin(delwynRef,  new Conversation.EnqueuedScriptItem(OnUpdateOfEnqueuedScriptItemHandleDelwyn));
             convo.BeginConversation();
+            convo.AddUserResponse("yes");
+            convo.AddUserResponse("yes");
+            convo.AddUserResponse("yes");
+            convo.AddUserResponse("bye");
+            
+            //convo.EnqueuedScriptItemCallback -= OnUpdateOfEnqueuedScriptItemHandleDelwyn;
+            
+            Conversation convo2 = world.CreateConversationAndBegin(delwynRef,  new Conversation.EnqueuedScriptItem(OnUpdateOfEnqueuedScriptItemHandleDelwyn));
+            convo2.BeginConversation();
+            convo2.AddUserResponse("yes");
+            convo2.AddUserResponse("yes");
+            convo2.AddUserResponse("yes");
+            convo2.AddUserResponse("bye");
         }
         
         private void OnUpdateOfEnqueuedScriptItemHandleDelwyn(Conversation conversation)
         {
                  TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
-                 string userResponse;
+                 //string userResponse;
                  switch (item.Command)
                  {
                      case TalkScript.TalkCommand.PlainString:
@@ -460,8 +473,8 @@ namespace Ultima5ReduxTesting
                      case TalkScript.TalkCommand.DoNothingSection:
                          break;
                      case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
-                         userResponse = "yes";
-                         conversation.AddUserResponse(userResponse);
+                         // userResponse = "yes";
+                         // conversation.AddUserResponse(userResponse);
                          break;
                      case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
                          //Console.Write(conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));

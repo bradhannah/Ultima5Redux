@@ -519,15 +519,6 @@ namespace Ultima5Redux.Dialogue
                         // the next three characters are a 3 digit string that describes how much gold we are giving the NPC
                         item.ItemAdditionalData = int.Parse(GetScriptItem(i + 1).Str.Substring(0,3));
 
-                        // add a stump section
-                        //lines.Add(new SplitScriptLine());
-
-                        // let's remove the three character digits from the next string 
-                        GetScriptItem(i + 1).Str = GetScriptItem(i + 1).Str.Remove(0, 3);
-                        
-                        // // add the item as-is to the new section
-                        // lines[nSection].AddScriptItem(item);
-                        
                         i++;
                         forceSplitNext = true;
                     }
