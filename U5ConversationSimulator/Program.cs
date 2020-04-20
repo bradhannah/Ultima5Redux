@@ -43,7 +43,7 @@ namespace U5ConversationSimulator
             
             
             convo.BeginConversation();
-            int i = 1000;
+            //int i = 1000;
             // while (i > 0)
             // {
             //     _world.AdvanceTime(2);

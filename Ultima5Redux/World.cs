@@ -226,34 +226,38 @@ namespace Ultima5Redux
         /// <returns>String to output to user</returns>
         public string Look(Point2D xy, out SpecialLookCommand specialLookCommand)
         {
-            PassTime();
             specialLookCommand = SpecialLookCommand.None;
+            string retStr;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
             // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
             if (State.TheVirtualMap.IsNPCTile(xy))
             {
                 MapCharacter mapCharacter = State.TheVirtualMap.GetNPCOnTile(xy);
-                return DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
+                retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
                 + " " + (LookRef.GetLookDescription(mapCharacter.NPCRef.NPCKeySprite).Trim());
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (SpriteTileReferences.IsSign(tileReference.Index))
             {
                 specialLookCommand = SpecialLookCommand.Sign;
-                return string.Empty;
+                retStr = string.Empty;
             }
             else if (SpriteTileReferences.GetTileNumberByName("Clock1") == tileReference.Index)
             {
-                return (DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                   + " " + (LookRef.GetLookDescription(tileReference.Index).TrimStart()
-                   + State.TheTimeOfDay.FormattedTime));
+                retStr = (DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
+                          + " " + (LookRef.GetLookDescription(tileReference.Index).TrimStart()
+                                   + State.TheTimeOfDay.FormattedTime));
             }
             else // lets see what we've got here!
             {
-                return (DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                    + " " + (LookRef.GetLookDescription(tileReference.Index).TrimStart()));
+                retStr = (DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
+                          + " " + (LookRef.GetLookDescription(tileReference.Index).TrimStart()));
             }
+
+            // pass time at the end to make sure moving characters are accounted for
+            PassTime();
+            return retStr;
         }
         
         private string ThouDostFind(string thingYouFound)
@@ -270,7 +274,6 @@ namespace Ultima5Redux
         /// <returns>the output string</returns>
         public string TryToGetAThing(Point2D xy, out bool bGotAThing, out InventoryItem inventoryItem)
         {
-            PassTime();
             bGotAThing = false;
             inventoryItem = null;
             
@@ -296,6 +299,9 @@ namespace Ultima5Redux
                 return ThouDostFind(invItem.FindDescription);
                 //
             }
+            
+            PassTime();
+
             return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.NOTHING_TO_GET);
         }
 
@@ -332,7 +338,6 @@ namespace Ultima5Redux
         /// <returns>the string to output to the user</returns>
         public string PushAThing(Point2D avatarXy, VirtualMap.Direction direction, out bool bPushedAThing)
         {
-            PassTime();
             bPushedAThing = false;
             Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(avatarXy, direction);
 
@@ -376,6 +381,9 @@ namespace Ultima5Redux
             
             // move the avatar to the new spot
             State.TheVirtualMap.CurrentPosition = adjustedPos.Copy();
+
+            PassTime();
+
             return DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N);
         }
         
@@ -451,9 +459,8 @@ namespace Ultima5Redux
         /// <returns></returns>
         public string TryToKlimbInDirection(Point2D xy, out KlimbResult klimbResult)
         {
-            PassTime();
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
-
+            string retStr;
             if (State.TheVirtualMap.IsLargeMap)
             {
                 // is it even klimbable?
@@ -467,19 +474,19 @@ namespace Ultima5Redux
 
                     State.GrapplingFall();
                     klimbResult = KlimbResult.SuccessFell;
-                    return DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.FELL);
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.FELL);
                 }
                 // is it tall mountains? we can't klimb those
                 else if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("TallMountains"))
                 {
                     klimbResult = KlimbResult.CantKlimb;
-                    return DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.IMPASSABLE);
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.IMPASSABLE);
                 }
                 // there is no chance of klimbing the thing
                 else
                 {
                     klimbResult = KlimbResult.CantKlimb;
-                    return DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.NOT_CLIMABLE);
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.NOT_CLIMABLE);
                 }
             }
             else // it's a small map
@@ -488,15 +495,16 @@ namespace Ultima5Redux
                 {
                     // ie. a fence
                     klimbResult = KlimbResult.Success;
-                    return string.Empty;
+                    retStr = string.Empty;
                 }
                 else
                 {
                     klimbResult = KlimbResult.CantKlimb;
-                    return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT);
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT);
                 }
             }
-
+            PassTime();
+            return retStr;
         }
 
         /// <summary>
@@ -544,65 +552,75 @@ namespace Ultima5Redux
         /// <returns>the output string to write to console</returns>
         public string TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record, out bool bWasSuccessful)
         {
-            PassTime();
             bWasSuccessful = false;
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+            string retStr;
+            
             bool isDoorInDirection = tileReference.IsOpenable;
 
             if (!isDoorInDirection)
             {
-                return (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.NO_LOCK));
-            }
-
-            bool bIsDoorMagical = SpriteTileReferences.IsDoorMagical(tileReference.Index);
-            bool bIsDoorLocked = SpriteTileReferences.IsDoorLocked(tileReference.Index);
-
-            if (bIsDoorMagical)
-            {
-                // we use up a key
-                State.Keys--;
-
-                // for now we will also just open the door so we can get around - will address when we have spells
-                if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
-                {
-                    State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("RegularDoorView"), xy);
-                }
-                else
-                {
-                    State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
-                }
-                //ReassignSprites();
-                bWasSuccessful = true;
-
-                return (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.KEY_BROKE));
-            }
-            if (bIsDoorLocked)
-            {
-                // we use up a key
-                State.Keys--;
-
-                // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
-
-                // bh: open player selection dialog here
-                //record.
-
-                // bh: assume it's me for now
-
-                if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
-                {
-                    State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("RegularDoorView"), xy);
-                }
-                else
-                {
-                    State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
-                }
-                bWasSuccessful = true;
-                return (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.UNLOCKED));
+                retStr = (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.NO_LOCK));
             }
             else
             {
-                return (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.NO_LOCK));
+                bool bIsDoorMagical = SpriteTileReferences.IsDoorMagical(tileReference.Index);
+                bool bIsDoorLocked = SpriteTileReferences.IsDoorLocked(tileReference.Index);
+
+                if (bIsDoorMagical)
+                {
+                    // we use up a key
+                    State.Keys--;
+
+                    // for now we will also just open the door so we can get around - will address when we have spells
+                    if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
+                    {
+                        State.TheVirtualMap.SetOverridingTileReferece(
+                            SpriteTileReferences.GetTileReferenceByName("RegularDoorView"), xy);
+                    }
+                    else
+                    {
+                        State.TheVirtualMap.SetOverridingTileReferece(
+                            SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
+                    }
+
+                    bWasSuccessful = true;
+
+                    retStr =  (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.KEY_BROKE));
+                } else if (bIsDoorLocked)
+                {
+                    // we use up a key
+                    State.Keys--;
+
+                    // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
+
+                    // bh: open player selection dialog here
+                    //record.
+
+                    // bh: assume it's me for now
+
+                    if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
+                    {
+                        State.TheVirtualMap.SetOverridingTileReferece(
+                            SpriteTileReferences.GetTileReferenceByName("RegularDoorView"), xy);
+                    }
+                    else
+                    {
+                        State.TheVirtualMap.SetOverridingTileReferece(
+                            SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
+                    }
+
+                    bWasSuccessful = true;
+                    retStr =  (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.UNLOCKED));
+                }
+                else
+                {
+                    retStr =  (DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.NO_LOCK));
+                }
             }
+
+            PassTime();
+            return retStr;
         }
 
         /// <summary>
@@ -821,9 +839,8 @@ namespace Ultima5Redux
         /// <returns>output string</returns>
         public string EnterBuilding(Point2D xy, out bool bWasSuccessful)
         {
-            PassTime();
             bool isOnBuilding = LargeMapRef.IsMapXYEnterable(State.TheVirtualMap.CurrentPosition);
-
+            string retStr;
             if (isOnBuilding)
             {
                 SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(State.TheVirtualMap.CurrentPosition);
@@ -832,20 +849,20 @@ namespace Ultima5Redux
                 // set us to the front of the building
                 State.TheVirtualMap.CurrentPosition = SmallMapReferences.GetStartingXYByLocation(location);
 
-                string returnStr =
+                retStr =
                     (DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE)
                     + SmallMapRef.GetLocationTypeStr(location)) + "\n" +
                     SmallMapRef.GetLocationName(location);
                 bWasSuccessful = true;
-                return returnStr;
             }
             else
             {
-                string enterWhatStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE)
-                    + DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT);
+                retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE)
+                         + DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT);
                 bWasSuccessful = false;
-                return enterWhatStr;
             }
+            PassTime();
+            return retStr;
         }
 
         private string UseSpecialItem(SpecialItem spcItem)
@@ -955,34 +972,39 @@ namespace Ultima5Redux
 
         public string TryToUseAnInventoryItem(InventoryItem item, out bool bAbleToUseItem)
         {
-            PassTime();
             bAbleToUseItem = false;
+            string retStr;
             if (item.GetType() == typeof(SpecialItem))
             {
-                return UseSpecialItem((SpecialItem) item);
+                retStr = UseSpecialItem((SpecialItem) item);
             }
             else if (item.GetType() == typeof(Potion))
             {
-                return ("Potion\n\nPoof!");
+                retStr = ("Potion\n\nPoof!");
             }
             else if (item.GetType() == typeof(Scroll))
             {
-                return ("Scroll\n\nAllaKazam!");
+                retStr = ("Scroll\n\nAllaKazam!");
             }
             else if (item.GetType() == typeof(LordBritishArtifact))
             {
-                return UseLordBritishArtifactItem((LordBritishArtifact) item);
+                retStr = UseLordBritishArtifactItem((LordBritishArtifact) item);
             }
             else if (item.GetType() == typeof(ShadowlordShard))
             {
-                return UseShadowLordShard((ShadowlordShard) item);
+                retStr = UseShadowLordShard((ShadowlordShard) item);
             }
             else if (item.GetType() == typeof(Moonstone))
             {
-                return UseMoonstone((Moonstone) item, out bAbleToUseItem);
+                retStr = UseMoonstone((Moonstone) item, out bAbleToUseItem);
+            }
+            else
+            {
+                throw new Exception("You are trying to use an item that can't be used: " + item.LongName);
             }
 
-            throw new Exception("You are trying to use an item that can't be used: " + item.LongName);
+            PassTime();
+            return retStr;
         }
 
         #endregion
@@ -995,11 +1017,11 @@ namespace Ultima5Redux
         /// <returns>A conversation object to be used to follow along with the conversation</returns>
         public Conversation CreateConversationAndBegin(NonPlayerCharacterReference npc, Conversation.EnqueuedScriptItem enqueuedScriptItem)
         {
-            PassTime();
             CurrentConversation = new Conversation(npc, State, DataOvlRef);
 
             CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
 
+            PassTime();
             return CurrentConversation;
         }
 

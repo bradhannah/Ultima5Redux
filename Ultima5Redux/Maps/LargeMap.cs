@@ -46,7 +46,6 @@ namespace Ultima5Redux.Maps
                     break;
                 case Maps.Small:
                     throw new Ultima5ReduxException("tried to create a largemap with the .Small map enum");
-                    break;
             }
 
         }
