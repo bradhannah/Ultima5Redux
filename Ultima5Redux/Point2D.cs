@@ -41,10 +41,10 @@ namespace Ultima5Redux
         public bool Equals(Point2DFloat other)
         {
             if (other == null) return false;
-            if (X != other.X)
+            if (Math.Abs(X - other.X) > 0.0000001f)
                 return false;
 
-            return Y == other.Y;
+            return Math.Abs(Y - other.Y) < 0.0000001f;
         }
 
         public override string ToString()

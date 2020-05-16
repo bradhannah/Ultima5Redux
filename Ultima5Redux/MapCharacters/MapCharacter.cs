@@ -1,4 +1,5 @@
-﻿using Ultima5Redux.DayNightMoon;
+﻿using System.Diagnostics;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapCharacters
@@ -99,6 +100,7 @@ namespace Ultima5Redux.MapCharacters
         /// <param name="mapCharacterState"></param>
         /// <param name="nonPlayerCharacterMovement"></param>
         /// <param name="timeOfDay"></param>
+        /// <param name="playerCharacterRecords"></param>
         public MapCharacter(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, MapCharacterState mapCharacterState,
             NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords)
         {
@@ -109,12 +111,13 @@ namespace Ultima5Redux.MapCharacters
             PlayerCharacterRecord record = null;
             if (playerCharacterRecords != null)
             {
+                Debug.Assert(npcRef != null);
                 record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
             }
 
-            IsInParty = record==null?false:record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty;
+            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty;
 
-            CurrentCharacterPosition.Floor = CharacterState == null? 0: CharacterState.TheCharacterPosition.Floor;
+            CurrentCharacterPosition.Floor = CharacterState?.TheCharacterPosition.Floor ?? 0;
             
             if (CharacterState == null)
             {

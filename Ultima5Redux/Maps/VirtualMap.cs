@@ -126,6 +126,9 @@ namespace Ultima5Redux.Maps
         /// Are we currently on a large map?
         /// </summary>
         public bool IsLargeMap { get; private set; } = false;
+
+        public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1; 
+
         /// <summary>
         /// If we are on a large map - then are we on overworld or underworld
         /// </summary>

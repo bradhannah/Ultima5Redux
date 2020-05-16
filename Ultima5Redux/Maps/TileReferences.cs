@@ -327,9 +327,6 @@ namespace Ultima5Redux.Maps
             TileReference tileRef = GetTileReference(nSprite);
             switch (tileRef.SpeedFactor)
             {
-                case 1:
-                case -1:
-                    throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
                 case 2:
                     return string.Empty;
                 case 4:
@@ -337,10 +334,13 @@ namespace Ultima5Redux.Maps
                     return _u5StringRef.GetString(DataOvlReference.WorldStrings.SLOW_PROG);
                 case 6:
                     return _u5StringRef.GetString(DataOvlReference.WorldStrings.VERY_SLOW);
+                case 1:
+                case -1:
                 default:
-                    throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
+                    //throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
+                    return "Untrodden Land";
+                    // throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
             }
-
         }
 
         /// <summary>

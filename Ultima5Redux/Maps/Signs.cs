@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -234,7 +235,9 @@ namespace Ultima5Redux.Maps
         public Sign CopySign(SmallMapReferences.SingleMapReference.Location location, int x, int y, int newX, int newY)
         {
             Sign origSign = GetSign(location, x, y);
-            return new Sign(origSign.Location, origSign.Floor, newX, newY, origSign.RawSignText, origSign.Offset);
+            Sign newSign = new Sign(origSign.Location, origSign.Floor, newX, newY, origSign.RawSignText, origSign.Offset);
+            Debug.Assert(newSign != null);
+            return newSign;
         }
 
     

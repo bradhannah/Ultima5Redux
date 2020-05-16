@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 
@@ -67,15 +68,12 @@ namespace Ultima5Redux.PlayerCharacters
         /// <returns></returns>
         private int GetAttack(DataOvlReference.Equipment equipment)
         {
-            if (TheWeapons.GetWeaponFromEquipment(equipment) != null)
+            Weapon weapon = TheWeapons.GetWeaponFromEquipment(equipment);
+            if (weapon != null)
             {
-                return TheWeapons.GetWeaponFromEquipment(equipment).AttackStat;
+                return weapon.AttackStat;
             }
-            if (ProtectiveArmour.GetArmourFromEquipment(equipment) != null)
-            {
-                return (ProtectiveArmour.GetArmourFromEquipment(equipment).AttackStat);
-            }
-            return 0;
+            return ProtectiveArmour.GetArmourFromEquipment(equipment) != null ? ProtectiveArmour.GetArmourFromEquipment(equipment).AttackStat : 0;
         }
 
         /// <summary>

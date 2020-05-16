@@ -703,12 +703,11 @@ namespace Ultima5Redux.Dialogue
             string question;
             
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
-            List<string> nameQuestion = new List<string>(1); nameQuestion.Add("name");
-            //scriptLines[(int)TalkConstants.Name].InsertScriptItemAtFront(new ScriptItem(TalkCommand.PlainString, "My name is "));
+            List<string> nameQuestion = new List<string>(1) { "name" }; 
             _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, _scriptLines[(int)TalkConstants.Name]));
-            List<string> jobQuestion = new List<string>(1); jobQuestion.Add("job"); jobQuestion.Add("work");
+            List<string> jobQuestion = new List<string>(2) {"job", "work"};
             _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, _scriptLines[(int)TalkConstants.Job]));
-            List<string> byeQuestion = new List<string>(1); byeQuestion.Add("bye");
+            List<string> byeQuestion = new List<string>(1) {"bye"};
             _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, _scriptLines[(int)TalkConstants.Bye]));
 
             // repeat through the question/answer components until we hit a label - then we know to move onto the label section
@@ -748,7 +747,7 @@ namespace Ultima5Redux.Dialogue
                 ScriptLine nextLine = _scriptLines[nIndex + 1];
                 _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(currQuestions, nextLine));
                 nIndex+=2;
-            } while (labelEncountered == false);
+            } while (true);
 
             // a little hack - it's easy to end the conversation if it always ends with the end conversation tag
             _scriptLines[(int)TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndCoversation));

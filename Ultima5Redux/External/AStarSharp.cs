@@ -21,7 +21,7 @@ namespace Ultima5Redux.External
         {
             get
             {
-                if (DistanceToTarget != -1 && Cost != -1)
+                if (Math.Abs(DistanceToTarget - (-1)) > 0.001f && Math.Abs(Cost - (-1)) > 0.001f)
                     return DistanceToTarget + Cost;
                 else
                     return -1;

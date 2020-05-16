@@ -175,7 +175,7 @@ namespace Ultima5Redux.Dialogue
             for (int i = 0; i < scriptLines.Count; i++)
             {
                 // if we still have some counts on the skipCounter, then decrement and skip 
-                if (skipCounter != -1 && skipCounter == 0)
+                if (skipCounter == 0)
                 {
                     --skipCounter;
                     continue;
