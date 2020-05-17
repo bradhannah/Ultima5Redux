@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Ultima5Redux
 {
@@ -27,10 +28,7 @@ namespace Ultima5Redux
         
         public override bool Equals(object obj)
         {
-            if (!(obj is Point2DFloat))
-                return false;
-
-            return Equals((Point2DFloat)obj);
+            return obj is Point2DFloat && Equals((Point2DFloat)obj);
         }
 
         public override int GetHashCode()
@@ -102,10 +100,7 @@ namespace Ultima5Redux
         
         public override bool Equals(object obj)
         {
-            if (!(obj is Point2D))
-                return false;
-
-            return Equals((Point2D)obj);
+            return obj is Point2D point2D && Equals(point2D);
         }
 
         public bool Equals(Point2D other)

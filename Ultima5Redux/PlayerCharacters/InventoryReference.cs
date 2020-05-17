@@ -136,10 +136,8 @@ namespace Ultima5Redux.PlayerCharacters
              }
              
         }
-
     }
 
- 
     /// <summary>
     /// Specific inventory item reference
     /// </summary>
