@@ -468,7 +468,7 @@ namespace Ultima5Redux.Dialogue
                 // if we do not have any conversation left, then we will prompt for questions
                 ///// NO DIALOG LEFT - USER RESPONDS
                 ///// This will result in processable conversation, so it will just fall through
-                while (nConversationIndex >= _conversationOrder.Count && !ConversationEnded)
+                while (nConversationIndex >= _conversationOrder.Count)
                 {
                     EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_UserInterest));
                     // we wait patiently for the user to respond

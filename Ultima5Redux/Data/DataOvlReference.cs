@@ -800,7 +800,7 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs.dat (x2)", 0x74f6, 0x14);
 //            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22, 0x00, DataChunkName.VISION1);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x750A, 0x205, 0x00, DataChunkName.VISION2);
-            someStrings = GetDataChunk(DataChunkName.VISION2).GetChunkAsStringList();
+            //someStrings = GetDataChunk(DataChunkName.VISION2).GetChunkAsStringList();
 
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Drinking Strings", 0x76ef, 0x71);

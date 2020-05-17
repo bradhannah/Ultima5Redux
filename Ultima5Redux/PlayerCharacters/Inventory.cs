@@ -73,7 +73,9 @@ namespace Ultima5Redux.PlayerCharacters
             {
                 return weapon.AttackStat;
             }
-            return ProtectiveArmour.GetArmourFromEquipment(equipment) != null ? ProtectiveArmour.GetArmourFromEquipment(equipment).AttackStat : 0;
+
+            Armour armour = ProtectiveArmour.GetArmourFromEquipment(equipment);
+            return armour?.AttackStat ?? 0;
         }
 
         /// <summary>
@@ -83,19 +85,18 @@ namespace Ultima5Redux.PlayerCharacters
         /// <returns></returns>
         private int GetDefense(DataOvlReference.Equipment equipment)
         {
-            if (TheWeapons.GetWeaponFromEquipment(equipment) != null)
+            Weapon weapon = TheWeapons.GetWeaponFromEquipment(equipment);
+            if (weapon != null)
             {
-                return TheWeapons.GetWeaponFromEquipment(equipment).AttackStat;
+                return weapon.AttackStat;
             }
-            if (ProtectiveArmour.GetArmourFromEquipment(equipment) != null)
-            {
-                return (ProtectiveArmour.GetArmourFromEquipment(equipment).DefendStat);
-            }
-            return 0;
+
+            Armour armour = ProtectiveArmour.GetArmourFromEquipment(equipment);
+            return armour?.DefendStat ?? 0;
         }
 
         /// <summary>
-        /// Gets the characters total attack if left and right hand both attacked succesfully
+        /// Gets the characters total attack if left and right hand both attacked successfully
         /// </summary>
         /// <param name="record">Character record</param>
         /// <returns>amount of total damage</returns>

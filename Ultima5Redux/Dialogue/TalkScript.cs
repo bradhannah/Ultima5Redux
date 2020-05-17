@@ -550,6 +550,7 @@ namespace Ultima5Redux.Dialogue
                             nSection++;
                             lines.Add(new SplitScriptLine());
                         }
+                        if (nSection < 0) { throw new Ultima5ReduxException("Section number fell below zero in conversation."); }
                         lines[nSection].AddScriptItem(item);
                     }
                     first = false;

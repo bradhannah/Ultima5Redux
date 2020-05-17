@@ -234,8 +234,12 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.IsNPCTile(xy))
             {
                 MapCharacter mapCharacter = State.TheVirtualMap.GetNPCOnTile(xy);
+                if (mapCharacter == null)
+                {
+                    throw new Ultima5ReduxException("Tried to look up NPC, but couldn't find the map character");
+                }
                 retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                + " " + (LookRef.GetLookDescription(mapCharacter.NPCRef.NPCKeySprite).Trim());
+                    + " " + (LookRef.GetLookDescription(mapCharacter.NPCRef.NPCKeySprite).Trim());
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (SpriteTileReferences.IsSign(tileReference.Index))

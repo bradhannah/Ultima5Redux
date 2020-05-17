@@ -463,6 +463,10 @@ namespace Ultima5Redux
         public void AddMemberToParty(NonPlayerCharacterReference npc)
         {
             PlayerCharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
+            if (record == null)
+            {
+                throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
+            }
             record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InParty;
         }
 

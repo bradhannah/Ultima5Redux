@@ -69,11 +69,9 @@ namespace Ultima5Redux.MapCharacters
         public void SetCurrentMapType(SmallMapReferences.SingleMapReference singleMapReference, LargeMap.Maps largeMap, TimeOfDay timeOfDay, 
             PlayerCharacterRecords playerCharacterRecords, bool bLoadFromDisk)
         {
-            //List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
-            
             _currentMapType = largeMap;
 
-            // I may need make an additional save of state before wiping these mapcharacters out
+            // I may need make an additional save of state before wiping these MapCharacters out
             Characters.Clear();
 
             switch (largeMap)
@@ -93,20 +91,10 @@ namespace Ultima5Redux.MapCharacters
             {
                 for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
                 {
-                    // the animations are out of order - so we use this reference to track it down
-                    //NonPlayerCharacterReference npcRef = null;//bIsLargeMap ? null : npcCurrentMapRefs[i];
-
-                    MapCharacterAnimationState charAnimState = null;
-
-                    //MapCharacterState mapCharState = null;
-                    //NonPlayerCharacterMovement charMovement = null;
-                    charAnimState = CurrentAnimationState.GetCharacterState(i);
+                    MapCharacterAnimationState charAnimState = CurrentAnimationState.GetCharacterState(i);
 
                     Characters.Add(new MapCharacter(null, charAnimState, null, null, timeOfDay, playerCharacterRecords));
                 }
-                //Debug.Assert(charAnimState.X == mapCharState.X);
-                //Debug.Assert(charAnimState.Y == mapCharState.Y);
-                //Debug.Assert(charAnimState.Floor == mapCharState.Floor);
             }
         }
 
