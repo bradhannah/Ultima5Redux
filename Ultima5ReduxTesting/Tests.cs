@@ -501,23 +501,13 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             string purchaseStr = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(8, 100);
-        }
-        
-        // [Test]
-        // public void Test_Falling()
-        // {
-        //     World world = new World(SaveDirectory);
-        //
-        //     world.State.TheVirtualMap.LoadSmallMap(
-        //         world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Stonegate, 0),
-        //         world.State.CharacterRecords, false);
-        //
-        //     world.State.TheVirtualMap.CurrentPosition = new Point2D(15,17);
-        //     
-        //     string response = world.TryToMove(VirtualMap.Direction.Up, false, false, out World.TryToMoveResult result);
-        //     
-        //     
-        // }
 
-}
+            for (int i = 0; i < 10; i++)
+            {
+                string pissedOff = world.ShoppeKeeperDialogue.GetPissedOffShoppeKeeperGoodbyeResponse();
+                string happy = world.ShoppeKeeperDialogue.GetHappyShoppeKeeperGoodbyeResponse();
+                string selling = world.ShoppeKeeperDialogue.GetEquipmentSellingOutput(100, "Big THING");
+            }
+        }
+     }
 }
