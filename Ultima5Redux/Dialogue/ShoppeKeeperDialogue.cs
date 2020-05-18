@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Dialogue
@@ -15,6 +17,8 @@ namespace Ultima5Redux.Dialogue
         
         private readonly List<string> _merchantStrings = new List<string>();
 
+        
+        
         /// <summary>
         /// Construct using the on disk references
         /// </summary>
@@ -47,6 +51,52 @@ namespace Ultima5Redux.Dialogue
                 _merchantStrings.Add(convertedStr);
             }
         }
+
+        private string GetMerchantStringWithNoSubstitution(int nIndex)
+        {
+            return _merchantStrings[nIndex];
+        }
+
+        private int CountReplacementVariables(int nDialogueIndex)
+        {
+            int freq = Regex.Matches(GetMerchantString(nDialogueIndex), @"[\%\&\$\#\@\*\^]").Count;
+            return freq;
+            // character == '%' || character == '&' || character == '$' || character == '#' || character == '@'
+            //        || character == '*' || character == '^';
+        }
         
+        /// <summary>
+        /// Gets the merchant string with full variable replacement 
+        /// </summary>
+        /// <param name="nDialogueIndex">index into un-replaced strings</param>
+        /// <param name="nGold">how many gold to fill in</param>
+        /// <returns>a complete string with full replacements</returns>
+        private string GetMerchantString(int nDialogueIndex, int nGold = -1)
+        {
+            // % is gold
+            // & is current piece of equipment
+            // # current business (maybe with apostrophe s)
+            // $ merchants name
+            // @ barkeeps food/drink etc
+            // * location of thing
+            // ^ quantity of thing (ie. reagent)
+            
+            string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
+            StringBuilder sb = new StringBuilder(merchantStr);
+            if (nGold > 0)
+            {
+                sb.Replace("%", nGold.ToString());
+            }
+
+            return sb.ToString();
+        }
+        
+        public string GetEquipmentBuyingOutput(int nDialogueIndex, int nGold)
+        {
+            Debug.Assert(nDialogueIndex >= 8 && nDialogueIndex <= 48);
+            Debug.Assert(CountReplacementVariables(nDialogueIndex) == 1);
+            
+            return GetMerchantString(nDialogueIndex, nGold:nGold);
+        }
     }
 }

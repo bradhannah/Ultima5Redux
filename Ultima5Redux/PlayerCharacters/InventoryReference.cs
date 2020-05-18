@@ -156,7 +156,8 @@ namespace Ultima5Redux.PlayerCharacters
         public string ItemDescriptionAttribution { get; set; }
         [JsonProperty]
         public string ItemNameHighlight { private get; set; }
-
+        [JsonProperty]
+        public int MerchantIndex { get; private set; }
         public string[] ItemNameHighLights => ItemNameHighlight.Length == 0 ? new string[0] : ItemNameHighlight.Split(',');
 
         /// <summary>

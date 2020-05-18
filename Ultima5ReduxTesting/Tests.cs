@@ -495,6 +495,14 @@ namespace Ultima5ReduxTesting
             }
         }
 
+        [Test]
+        public void Test_BasicMerchantDialog()
+        {
+            World world = new World(SaveDirectory);
+
+            string purchaseStr = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(8, 100);
+        }
+        
         // [Test]
         // public void Test_Falling()
         // {
