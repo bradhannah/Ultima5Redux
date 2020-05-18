@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Dialogue
 {
-    class CompressedWordReference
+    public class CompressedWordReference
     {
-        private SomeStrings _compressedWords;
+        private readonly SomeStrings _compressedWords;
 
-        private Dictionary<int, byte> _compressWordLookupMap;
+        private readonly Dictionary<int, byte> _compressWordLookupMap;
 
         /// <summary>
         /// Adds a byte offset lookup.
@@ -53,6 +54,11 @@ namespace Ultima5Redux.Dialogue
             AddByteLookupMapping(76, 129, i);
         }
 
+        /// <summary>
+        /// Is there a talking word at the given index?
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public bool IsTalkingWord(int index)
         {
             // Note: I originally wrote this just to catch the exceptions, but it was SUPER SLOW, so I hopefully smartened it up
@@ -62,12 +68,7 @@ namespace Ultima5Redux.Dialogue
                 return false;
             }
             // if the index is in range, then does the key exist?
-            if (!_compressWordLookupMap.ContainsKey(index))
-            {
-                return false;
-            }
-
-            return true;
+            return _compressWordLookupMap.ContainsKey(index);
         }
 
         /// <summary>
@@ -92,9 +93,116 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
+        /// Is it expected punctuation (not replacement characters though)
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns>true if it is acceptable</returns>
+        private bool IsAcceptablePunctuation(char character)
+        {
+            return character == ' ' || character == '"' || character == '!' || character == ',' || character == '\''
+                || character == '.' ||  character == '-' || character == '?' || character == '\n' || character == ';';
+        }
+
+        private bool IsReplacementCharacter(char character)
+        {
+            // % is gold
+            // & is current piece of equipment
+            // # current business (maybe with apostrophe s)
+            // $ merchants name
+            // @ barkeeps food/drink etc
+            // * location of thing
+            // ^ quantity of thing (ie. reagent)
+            return character == '%' || character == '&' || character == '$' || character == '#' || character == '@'
+                || character == '*' || character == '^';
+        }
+
+        /// <summary>
+        /// Is this an expected letter or digit in the string
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns>true if it is acceptable</returns>
+        private bool IsAcceptableLettersOrDigits(char character)
+        {
+            return (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z') ||
+                   (character >= '0' && character <= '9');
+        }
+        
+        /// <summary>
+        /// when you must adjust the offset into the compressed word lookup, subtract this
+        /// </summary>
+        private const int TALK_OFFSET_ADJUST = 0x80;
+
+        /// <summary>
+        /// Replaces all compressed word symbols from the shopkeepers dialogue
+        /// <remarks>this leaves the variable replacement symbols in tact</remarks>
+        /// </summary>
+        /// <param name="rawString">raw string from shoppes.dat</param>
+        /// <returns>full string with all compressed words expanded</returns>
+        /// <exception cref="NoTalkingWordException"></exception>
+        public string ReplaceRawMerchantStringsWithCompressedWords(string rawString)
+        {
+            string buildAWord = string.Empty;
+            bool bUseCompressedWord = false;
+
+            foreach (byte byteWord in rawString)
+            {
+                byte tempByte = byteWord;
+
+                bool bUsePhraseLookup = false;
+                if (!(IsAcceptablePunctuation((char)byteWord) || IsAcceptableLettersOrDigits((char)byteWord) || IsReplacementCharacter((char)byteWord)))
+                {
+                    bUsePhraseLookup = true;
+                    tempByte -= TALK_OFFSET_ADJUST;
+                }
+                else
+                {
+                    bUsePhraseLookup = false;
+                }
+
+                if (bUsePhraseLookup)
+                {
+                    // if we were previously writing single characters, but have moved onto lookups, then we add a space, and reset it
+                    buildAWord += " ";
+
+                    // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
+                    if (IsTalkingWord((int) tempByte + 1))
+                    {
+                        string talkingWord = GetTalkingWord((int) tempByte + 1);
+                        bUseCompressedWord = true;
+                        buildAWord += talkingWord;
+                    }
+                    else
+                    {
+                        //Console.WriteLine("test");
+                        throw new NoTalkingWordException("Shoppe keeper has uncertain instruction +" + tempByte);
+                    }
+                }
+                else
+                {
+                    // if we were writing single characters then we need insert a space before we start
+                    if (bUseCompressedWord)
+                    {
+                        buildAWord += " ";
+                        // I'm writing single characters, we will keep track so that when we hit the end we can insert a space
+                        bUseCompressedWord = false;
+                    }
+
+                    // this signifies the end of the printing (sample code enters a newline)
+                    if ((char) tempByte == '@')
+                    {
+                        continue;
+                    }
+
+                    buildAWord += (char) tempByte;
+                }
+            }
+            return buildAWord;
+        }
+
+        /// <summary>
         /// Couldn't find a talking word at the indicated index
         /// </summary>
-        public class NoTalkingWordException: Ultima5ReduxException
+        private class NoTalkingWordException: Ultima5ReduxException
         {
             public NoTalkingWordException(string message) :base(message)
             {

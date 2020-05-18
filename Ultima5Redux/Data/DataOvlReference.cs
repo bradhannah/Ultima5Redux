@@ -14,7 +14,7 @@ namespace Ultima5Redux.Data
         /// <summary>
         /// All the data chunks
         /// </summary>
-        private DataChunks<DataChunkName> _dataChunks;
+        private readonly DataChunks<DataChunkName> _dataChunks;
         #endregion
 
         #region Public Properties
@@ -69,7 +69,9 @@ namespace Ultima5Redux.Data
             REAGENTS,
             EXCLAIMS,
             MOON_PHASES,
-            THINGS_I_FIND
+            THINGS_I_FIND,
+            STORE_NAMES,
+            MERCHANT_NAMES
         };
 
         public enum Equipment
@@ -623,15 +625,16 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue names (8 of them)", 0xb98, 0x48);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue mantras (8 of them)", 0xbe0, 0x1e);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Store names", 0xbfe, 0x2fc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character names", 0xefa, 0x152);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Store names", 0xbfe, 0x2fc, 0, DataChunkName.STORE_NAMES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Merchant Character names", 0xefa, 0x152, 0, DataChunkName.MERCHANT_NAMES);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e, 0, DataChunkName.TALK_COMPRESSED_WORDS);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e);
 
+            SomeStrings stores = _dataChunks.GetDataChunk(DataChunkName.STORE_NAMES).GetChunkAsStringList();
+            SomeStrings merchantNames =_dataChunks.GetDataChunk(DataChunkName.MERCHANT_NAMES).GetChunkAsStringList();
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
-
-
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Attack values", 0x160C, 0x37, 0x00, DataChunkName.ATTACK_VALUES);
             // excludes extended items such as ankh and spells

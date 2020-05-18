@@ -10,6 +10,8 @@ namespace Ultima5Redux
     {
         public const string DATA_OVL = "data.ovl";
 
+        public const string SHOPPE_DAT = "shoppe.dat";
+        
         public const string SAVED_GAM = "saved.gam";
         public const string INIT_GAM = "init.gam";
         public const string BRIT_OOL = "brit.ool";

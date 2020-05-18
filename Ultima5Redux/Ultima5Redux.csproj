@@ -95,6 +95,7 @@
     <Compile Include="Data\SomeStrings.cs" />
     <Compile Include="Data\U5StringRef.cs" />
     <Compile Include="DayNightMoon\TimeOfDay.cs" />
+    <Compile Include="Dialogue\ShoppeKeeperDialogue.cs" />
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
@@ -221,6 +222,7 @@
     <Content Include="DataFiles\DataConversion\tileData.py" />
     <Content Include="DataFiles\InventoryDetails.csv" />
     <Content Include="DataFiles\InventoryDetailsCSV.csv" />
+    <Content Include="DataFiles\MerchantStrings.csv" />
     <Content Include="DataFiles\TileOverrides.csv" />
     <EmbeddedResource Include="DataFiles\TileOverrides.json" />
   </ItemGroup>

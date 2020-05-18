@@ -19,14 +19,14 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         /// do I print Debug output to the Console
         /// </summary>
-        private bool _isDebug = false;
+        private readonly bool _bIsDebug = false;
 
 
         /// <summary>
         /// the mapping of NPC # to file .tlk file offset
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-        protected internal unsafe struct NPCTalkOffset
+        private unsafe struct NPCTalkOffset
         {
             public ushort npcIndex;
             public ushort fileOffset;
@@ -35,13 +35,13 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         /// Dictionary that refers to the raw bytes for each NPC based on Map master file and NPC index
         /// </summary>
-        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> _talkRefs =
+        private readonly Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>> _talkRefs =
             new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>(sizeof(SmallMapReferences.SingleMapReference.SmallMapMasterFiles));
 
         /// <summary>
         /// Dictionary that refers to the fully interpreted TalkScripts for each NPC based on Master map file and NPC index
         /// </summary>
-        private Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> _talkScriptRefs = 
+        private readonly Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>> _talkScriptRefs = 
             new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>();
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Ultima5Redux.Dialogue
         private const byte END_OF_SCRIPTLINE_BYTE = 0x00;
 
         // all of the compressed words that are referenced in the .tlk files
-        private CompressedWordReference _compressedWordRef;
+        private readonly CompressedWordReference _compressedWordRef;
 
         /// <summary>
         /// Build the talk scripts
@@ -79,7 +79,7 @@ namespace Ultima5Redux.Dialogue
             foreach (SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapRef in smallMapRefs)
             {
                 // initialize the raw component of the talk scripts
-                InitalizeTalkScriptsRaw(u5Directory, mapRef);
+                InitializeTalkScriptsRaw(u5Directory, mapRef);
                 
                 // initialize and allocate the appropriately sized list of TalkScript(s)
                 _talkScriptRefs.Add(mapRef, new Dictionary<int, TalkScript>(_talkRefs[mapRef].Count));
@@ -88,7 +88,7 @@ namespace Ultima5Redux.Dialogue
                 foreach (int key in _talkRefs[mapRef].Keys)
                 {
                     _talkScriptRefs[mapRef][key] = InitializeTalkScriptFromRaw(mapRef, key);
-                    if (_isDebug) Console.WriteLine("TalkScript in " + mapRef.ToString() + " with #" + key.ToString());
+                    if (_bIsDebug) Console.WriteLine(@"TalkScript in " + mapRef.ToString() + @" with #" + key.ToString());
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         /// <param name="u5Directory">directory of Ultima 5 data files</param>
         /// <param name="mapMaster">the small map reference (helps pick *.tlk file)</param>
-        private void InitalizeTalkScriptsRaw(string u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster)
+        private void InitializeTalkScriptsRaw(string u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster)
         {
             // example NPC 1 at Castle in Lord British's castle
             // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
@@ -122,7 +122,6 @@ namespace Ultima5Redux.Dialogue
 
             // keep track of the NPC to file offset mappings
             //List<NPC_TalkOffset> npcOffsets;
-            Dictionary<int, NPCTalkOffset> npcOffsets;
 
             // the first word in the talk file tells you how many characters are referenced in script
             int nEntries = Utils.LittleEndianConversion(talkByteList[0], talkByteList[1]);
@@ -132,7 +131,7 @@ namespace Ultima5Redux.Dialogue
 
             // a list of all the offsets
             //npcOffsets = new List<NPC_TalkOffset>(nEntries);
-            npcOffsets = new Dictionary<int, NPCTalkOffset>(nEntries);
+            Dictionary<int, NPCTalkOffset> npcOffsets = new Dictionary<int, NPCTalkOffset>(nEntries);
 
             unsafe
             {
@@ -145,7 +144,7 @@ namespace Ultima5Redux.Dialogue
                         npcOffsets[talkOffset.npcIndex] = talkOffset;
 
                         // OMG I'm tired.. figure out why this isn't printing properly....
-                        if (_isDebug) Console.WriteLine("NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + " at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + " in file " + talkFilename);
+                        if (_bIsDebug) Console.WriteLine(@"NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + @" at offset " + npcOffsets[talkOffset.npcIndex].fileOffset + @" in file " + talkFilename);
                     }
                 }
                 // you are in a single file right now
@@ -182,7 +181,7 @@ namespace Ultima5Redux.Dialogue
 
 
         /// <summary>
-        /// Intializes an individual TalkingScript using the raw data created from InitalizeTalkScriptsRaw
+        /// Intializes an individual TalkingScript using the raw data created from InitializeTalkScriptsRaw
         /// <remark>May God have mercy on my soul if I ever need to debug or troubleshoot this again.</remark>
         /// </summary>
         /// <param name="smallMapRef">the small map reference</param>
