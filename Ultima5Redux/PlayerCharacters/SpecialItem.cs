@@ -13,6 +13,8 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        public override bool IsSellable => false;
+
         public enum ItemTypeEnum
         {
             Carpet = 0x20A, Grapple = 0x209, Spyglass = 0x214, HMSCape = 0x215, PocketWatch = 0, BlackBadge = 0x218,

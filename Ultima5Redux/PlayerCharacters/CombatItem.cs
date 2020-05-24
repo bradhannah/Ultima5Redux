@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Ultima5Redux.PlayerCharacters
 {
     public abstract class CombatItem : InventoryItem
     {
-        public DataOvlReference.Equipment SpecificEquipment;
+        public readonly DataOvlReference.Equipment SpecificEquipment;
 
         public static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
@@ -39,8 +41,7 @@ namespace Ultima5Redux.PlayerCharacters
         public static string GetEquipmentString(DataOvlReference dataOvlRef, int nString)
         {
             List<string> equipmentNames = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIP_INDEXES).GetAsStringListFromIndexes();
-            if (nString == 0xFF) return " ";
-            return equipmentNames[nString];
+            return nString == 0xFF ? " " : equipmentNames[nString];
         }
 
         public int RequiredStrength { get; }
@@ -59,7 +60,7 @@ namespace Ultima5Redux.PlayerCharacters
         //       CombatItem.GetDefense(dataOvlRef, (int) equipment),equipment));
         
         // CombatItem.GetAttack(dataOvlRef, (int)specificEquipment), CombatItem.GetDefense(dataOvlRef, (int)specificEquipment)
-        public CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef, List<byte> gameStateRef, int nOffset, int nSpriteNum) 
+        protected CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef, IReadOnlyList<byte> gameStateRef, int nOffset, int nSpriteNum) 
             : base (gameStateRef[nOffset], CombatItem.GetEquipmentString(dataOvlRef, (int)specificEquipment), 
                 CombatItem.GetEquipmentString(dataOvlRef, (int)specificEquipment), nSpriteNum)
         {
@@ -67,6 +68,14 @@ namespace Ultima5Redux.PlayerCharacters
             DefendStat = GetDefense(dataOvlRef, (int)specificEquipment);
             RequiredStrength = GetRequiredStrength(dataOvlRef, (int)specificEquipment);
             this.SpecificEquipment = specificEquipment;
+            InitializePrices(dataOvlRef);
         }
+        
+        private void InitializePrices(DataOvlReference dataOvlRef)
+        {
+            BasePrice = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIPMENT_BASE_PRICE).GetChunkAsUint16List()[
+                (int) SpecificEquipment];
+        }
+
     }
 }

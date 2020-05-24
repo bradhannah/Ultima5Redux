@@ -18,6 +18,30 @@ namespace Ultima5Redux.PlayerCharacters
         
         public InventoryReference InvRef { get; protected set; }
 
+        public virtual bool IsSellable => BasePrice > 0;
+
+        public virtual int BasePrice { get; protected set; } = 0;
+
+        public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records)
+        {
+            if (!IsSellable) return 0;
+
+            // we add 3% of the value per dex point below 33, and subtract 3% for each point above 33
+            const int nBaseDex = 33;
+            int nAdjustedPrice = (int) (BasePrice + (0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity)));
+            return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
+        }
+
+        public virtual int GetAdjustedSellPrice(PlayerCharacterRecords records)
+        {
+            if (!IsSellable) return 0;
+            
+            // we subtract 3% of the value for every dexterity point below 33, and add 3% for each point above it
+            const int nBaseDex = 33;
+            int nAdjustedPrice = (int)(BasePrice - (0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity)));
+            return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
+        }
+
         public int SpriteNum { get; }
 
         public string QuantityString

@@ -7,7 +7,7 @@ namespace Ultima5Redux.PlayerCharacters
 {
     public class Inventory
     {
-        private List<byte> _gameStateByteArray;
+        private readonly List<byte> _gameStateByteArray;
 
         public LordBritishArtifacts Artifacts { get; }
         public ShadowlordShards Shards { get; }
@@ -24,7 +24,7 @@ namespace Ultima5Redux.PlayerCharacters
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
-        private byte BoolToByte(bool bBool)
+        private static byte BoolToByte(bool bBool)
         {
             return bBool ? (byte)1 : (byte)0;
         }

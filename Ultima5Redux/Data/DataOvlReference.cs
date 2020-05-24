@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
@@ -71,7 +72,12 @@ namespace Ultima5Redux.Data
             MOON_PHASES,
             THINGS_I_FIND,
             STORE_NAMES,
-            MERCHANT_NAMES
+            MERCHANT_NAMES,
+            //ARMOUR_ACCESSORY_BASE_PRICES,
+            //ARMOUR_BASE_PRICES,
+            //WEAPON_BASE_PRICES,
+            EQUIPMENT_BASE_PRICE,
+            WEAPONS_SOLD_BY_MERCHANTS
         };
 
         public enum Equipment
@@ -716,12 +722,23 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random filenames, texts and unknown", 0x3986, 0xaf);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0x7d);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour accessory base prices", 0x3a92, 0x10);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3aa2, 0x2);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour base prices", 0x3aa4, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Weapon base prices", 0x3ab2, 0x2e);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3ae0, 0x2);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	", 0x3af2, 0x48);
+            // ARMOUR_ACCESSORY_BASE_PRICES,
+            // ARMOUR_BASE_PRICES,
+            // WEAPON_BASE_PRICES,
+            // WEAPONS_SOLD_BY_MERCHANTS
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "All equipment base prices", 0x3a92, 0x60, 0, DataChunkName.EQUIPMENT_BASE_PRICE); 
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3aa2, 0x2);
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour base prices", 0x3aa4, 0xc, 0, DataChunkName.ARMOUR_BASE_PRICES);
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Weapon base prices", 0x3ab2, 0x2e, 0, DataChunkName.WEAPON_BASE_PRICES);
+            //List<UInt16> weaponprices =
+              //  _dataChunks.GetDataChunk(DataChunkName.WEAPON_BASE_PRICES).GetChunkAsUint16List();
+            
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3ae0, 0x2);
+            
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
+                "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	",
+                0x3af2, 0x48, 0, DataChunkName.WEAPONS_SOLD_BY_MERCHANTS);
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3b3a, 0x38);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Innkeeper welcome text index into SHOPPE.DAT (+0x0, 2 bytes for each index)", 0x3b72, 0x8);
             // this section contains information about hidden, non-regenerating objects (e.g. the magic axe in the dead tree in Jhelom); there are

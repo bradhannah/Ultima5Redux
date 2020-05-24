@@ -9,6 +9,8 @@
         public Spell.SpellWords ScrollSpell { get; }
 
         public override bool HideQuantity { get; } = false;
+        public override bool IsSellable => false;
+        public override int BasePrice => 0;
 
         public Scroll(Spell.SpellWords spell, int quantity, string longName, string shortName) : base(quantity, longName, shortName, SCROLL_SPRITE)
         {

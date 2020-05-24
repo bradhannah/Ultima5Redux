@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Ultima5Redux.PlayerCharacters
 {
@@ -21,7 +23,7 @@ namespace Ultima5Redux.PlayerCharacters
             SwordofChaos = 261, MagicBow = 261, SilverSword = 261, MagicAxe = 261, 
             GlassSword = 261, JeweledSword = 261, MysticSword = 261
         }
-
+        
         public WeaponTypeEnum WeaponType { get; }
 
         public bool IsAmmo { get; }
@@ -31,9 +33,8 @@ namespace Ultima5Redux.PlayerCharacters
         public bool IsShield { get; }
 
         public override bool HideQuantity => false;
-
-
-        public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
+        
+        public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, IReadOnlyList<byte> gameStateByteArray)
             : base (equipment, dataOvlRef, gameStateByteArray, (int)weapon, (int)sprite)
         {
             IsAmmo = equipment == DataOvlReference.Equipment.Quarrels || equipment == DataOvlReference.Equipment.Arrows;
@@ -44,5 +45,7 @@ namespace Ultima5Redux.PlayerCharacters
                        equipment == DataOvlReference.Equipment.SpikedShield || equipment == DataOvlReference.Equipment.MagicShield || 
                        equipment == DataOvlReference.Equipment.JewelShield;
         }
+
+      
     }
 }

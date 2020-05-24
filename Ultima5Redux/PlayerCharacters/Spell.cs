@@ -7,6 +7,7 @@ namespace Ultima5Redux.PlayerCharacters
     {
         private const int SPRITE_NUM = 260;
         public override bool HideQuantity { get; } = false;
+        public override bool IsSellable => false;
 
         public SpellWords SpellIncantation { get; }
 

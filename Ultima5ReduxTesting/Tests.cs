@@ -509,5 +509,18 @@ namespace Ultima5ReduxTesting
                 string selling = world.ShoppeKeeperDialogue.GetEquipmentSellingOutput(100, "Big THING");
             }
         }
+
+        [Test]
+        public void Test_AdjustedMerchantPrices()
+        {
+            World world = new World(SaveDirectory);
+
+            int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
+                .GetAdjustedBuyPrice(world.State.CharacterRecords);
+            int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
+                .GetAdjustedSellPrice(world.State.CharacterRecords);
+            Debug.Assert(nCrossbowBuy > 0);
+            Debug.Assert(nCrossbowSell > 0);
+        }
      }
 }

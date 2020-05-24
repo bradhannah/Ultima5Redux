@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters
@@ -44,13 +45,13 @@ namespace Ultima5Redux.PlayerCharacters
         {
             get
             {
-                List<InventoryItem> itemList = new List<InventoryItem>();
-                foreach (Helm helm in Helms) { itemList.Add(helm); }
-                //foreach (Shield shield in Shields) { itemList.Add(shield); }
-                foreach (ChestArmour chestArmour in ChestArmours) { itemList.Add(chestArmour); }
-                foreach (Amulet amulet in Amulets) { itemList.Add(amulet); }
-                foreach (Ring ring in Rings) { itemList.Add(ring); }
+                List<InventoryItem> itemList = Helms.Cast<InventoryItem>().ToList();
+                itemList.AddRange(ChestArmours.Cast<InventoryItem>());
+                itemList.AddRange(Amulets.Cast<InventoryItem>());
+                itemList.AddRange(Rings.Cast<InventoryItem>());
                 return itemList;
+                //foreach (Shield shield in Shields) { itemList.Add(shield); }
+                //foreach (Amulet amulet in Amulets) { itemList.Add(amulet); }
             }
         }
 

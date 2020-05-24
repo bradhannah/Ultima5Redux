@@ -9,6 +9,8 @@
         }
 
         public override bool HideQuantity => false;
+        public override bool IsSellable => false;
+        public override int BasePrice => 0;
         public ReagentTypeEnum ReagentType { get; }
 
         //0x2AA 1 0-99 Sulfur Ash
