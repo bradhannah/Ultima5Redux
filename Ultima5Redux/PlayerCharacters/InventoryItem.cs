@@ -28,7 +28,7 @@ namespace Ultima5Redux.PlayerCharacters
 
             // we add 3% of the value per dex point below 33, and subtract 3% for each point above 33
             const int nBaseDex = 33;
-            int nAdjustedPrice = (int) (BasePrice + (0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity)));
+            int nAdjustedPrice = (int) (BasePrice + (BasePrice * 0.03f * (nBaseDex - (int)records.AvatarRecord.Stats.Dexterity)));
             return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
         }
 
@@ -38,7 +38,7 @@ namespace Ultima5Redux.PlayerCharacters
             
             // we subtract 3% of the value for every dexterity point below 33, and add 3% for each point above it
             const int nBaseDex = 33;
-            int nAdjustedPrice = (int)(BasePrice - (0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity)));
+            int nAdjustedPrice = (int)(BasePrice - (BasePrice * 0.03f * (nBaseDex - (int)records.AvatarRecord.Stats.Dexterity)));
             return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
         }
 
