@@ -745,7 +745,7 @@ namespace Ultima5Redux.Data
             // only 0x71 such objects; the last entry in each table is 0
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object type (tile - 0x100) (item)", 0x3E88, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object quality (e.g. potion type, number of gems) (item)", 0x3EFA, 0x72);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party Location\") (item)", 0x3F6C, 0x72);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party _location\") (item)", 0x3F6C, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "level (item)", 0x3FDE, 0x72);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (item)", 0x4050, 0x72);

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ultima5Redux.Data;
+using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.Dialogue
@@ -17,7 +18,7 @@ namespace Ultima5Redux.Dialogue
         private readonly DataChunks<ShoppeKeeperChunkNames> _dataChunks;
         private readonly List<string> _merchantStrings = new List<string>();
         private readonly Random _random = new Random();
-        private readonly ShoppeKeeperReference _shoppeKeeperReference;
+        private readonly ShoppeKeeperReferences _shoppeKeeperReferences;
         
         private const int PISSED_OFF_START = 0;
         private const int PISSED_OFF_STOP = 3;
@@ -29,7 +30,8 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="dataOvlReference"></param>
-        public ShoppeKeeperDialogue(string u5Directory, DataOvlReference dataOvlReference)
+        /// <param name="npcReferences"></param>
+        public ShoppeKeeperDialogue(string u5Directory, DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcReferences)
         {
             _dataOvlReference = dataOvlReference;
             string shoppeKeeperDataFilePath = Path.Combine(u5Directory, FileConstants.SHOPPE_DAT);
@@ -40,7 +42,7 @@ namespace Ultima5Redux.Dialogue
             
             BuildConversationTable(dataOvlReference);
             
-            _shoppeKeeperReference = new ShoppeKeeperReference(dataOvlReference);
+            _shoppeKeeperReferences = new ShoppeKeeperReferences(dataOvlReference, npcReferences);
         }
 
         /// <summary>

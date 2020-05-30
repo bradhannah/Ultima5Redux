@@ -23,7 +23,7 @@ namespace Ultima5Redux.Maps
                 SmallMap smallMap = new SmallMap(u5Directory, mapRef, spriteTileReferences, tileOverrides);
                 _smallMaps.Add(smallMap);
 
-                // we make a map that allows us to map the Location and Floor number to the small map with 
+                // we make a map that allows us to map the _location and Floor number to the small map with 
                 // details such as the grid
                 if (!_mapLocationDictionary.ContainsKey(mapRef.MapLocation))
                 {

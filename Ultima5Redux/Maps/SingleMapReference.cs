@@ -224,7 +224,7 @@ namespace Ultima5Redux.Maps
                     case Location.Waveguide:
                     case Location.Greyhaven:
                     case Location.Iolos_Hut:
-                    //case Location.spektran
+                    //case _location.spektran
                     case Location.Suteks_Hut:
                     case Location.SinVraals_Hut:
                     case Location.Grendels_Hut:
@@ -275,7 +275,7 @@ namespace Ultima5Redux.Maps
                     case SmallMapMasterFiles.Dungeon:
                         return "NOFILE";
                 }
-                throw new Ultima5ReduxException("Bad Location");
+                throw new Ultima5ReduxException("Bad _location");
             }
             #endregion
         }

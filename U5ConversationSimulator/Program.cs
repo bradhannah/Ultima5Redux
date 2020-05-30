@@ -21,15 +21,15 @@ namespace U5ConversationSimulator
 
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
-                //_world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0), _world.State.CharacterRecords, false);
+                //_world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britain, 0), _world.State.CharacterRecords, false);
             }
             
             _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0), _world.State.CharacterRecords, false);
             
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
-            //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle);
-            //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Britain);
+            //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference._location.Lord_Britishs_Castle);
+            //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference._location.Britain);
 
             //Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
             List<NonPlayerCharacterReference> minocNpcRef =

@@ -1,140 +1,186 @@
 ﻿{
   "0": {
-    "Location": "Britain"
+    "Location": "Britain",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "1": {
-    "Location": "Jhelom"
+    "Location": "Jhelom",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "2": {
-    "Location": "Yew"
+    "Location": "Yew",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "3": {
-    "Location": "Minoc"
+    "Location": "Minoc",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "4": {
-    "Location": "Trinsic"
+    "Location": "Trinsic",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "5": {
-    "Location": "Lord_Britishs_Castle"
+    "Location": "Lord_Britishs_Castle",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "6": {
-    "Location": "Buccaneers_Den"
+    "Location": "Buccaneers_Den",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "7": {
-    "Location": "Bordermarch"
+    "Location": "Bordermarch",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "8": {
-    "Location": "Buccaneers_Den"
+    "Location": "Serpents_Hold",
+    "ShoppeKeeperType": "Blacksmith"
   },
   "9": {
-    "Location": "Moonglow"
+    "Location": "Moonglow",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "10": {
-    "Location": "Britain"
+    "Location": "Britain",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "11": {
-    "Location": "Jhelom"
+    "Location": "Jhelom",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "12": {
-    "Location": "Yew"
+    "Location": "Yew",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "13": {
-    "Location": "New_Magincia"
+    "Location": "New_Magincia",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "14": {
-    "Location": "West_Britanny"
+    "Location": "West_Britanny",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "15": {
-    "Location": "Paws"
+    "Location": "Paws",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "16": {
-    "Location": "Buccaneers_Den"
+    "Location": "Buccaneers_Den",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "17": {
-    "Location": "Lycaeum"
+    "Location": "Lycaeum",
+    "ShoppeKeeperType": "Barkeeper"
   },
   "18": {
-    "Location": "Trinsic"
+    "Location": "Trinsic",
+    "ShoppeKeeperType": "HorseSeller"
   },
   "19": {
-    "Location": "Paws"
+    "Location": "Paws",
+    "ShoppeKeeperType": "HorseSeller"
   },
   "20": {
-    "Location": "North_Britanny"
+    "Location": "North_Britanny",
+    "ShoppeKeeperType": "HorseSeller"
   },
   "21": {
-    "Location": "Jhelom"
+    "Location": "Jhelom",
+    "ShoppeKeeperType": "ShipSeller"
   },
   "22": {
-    "Location": "Minoc"
+    "Location": "Minoc",
+    "ShoppeKeeperType": "ShipSeller"
   },
   "23": {
-    "Location": "East_Britanny"
+    "Location": "East_Britanny",
+    "ShoppeKeeperType": "ShipSeller"
   },
   "24": {
-    "Location": "Buccaneers_Den"
+    "Location": "Buccaneers_Den",
+    "ShoppeKeeperType": "ShipSeller"
   },
   "25": {
-    "Location": "Moonglow"
+    "Location": "Moonglow",
+    "ShoppeKeeperType": "MagicSeller"
   },
   "26": {
-    "Location": "Yew"
+    "Location": "Yew",
+    "ShoppeKeeperType": "MagicSeller"
   },
   "27": {
-    "Location": "Skara_Brae"
+    "Location": "Skara_Brae",
+    "ShoppeKeeperType": "MagicSeller"
   },
   "28": {
-    "Location": "Cove"
+    "Location": "Cove",
+    "ShoppeKeeperType": "MagicSeller"
   },
   "29": {
-    "Location": "Lycaeum"
+    "Location": "Lycaeum",
+    "ShoppeKeeperType": "MagicSeller"
   },
   "30": {
-    "Location": "New_Magincia"
+    "Location": "New_Magincia",
+    "ShoppeKeeperType": "GuildMaster"
   },
   "31": {
-    "Location": "Paws"
+    "Location": "Paws",
+    "ShoppeKeeperType": "GuildMaster"
   },
   "32": {
-    "Location": "Buccaneers_Den"
+    "Location": "Buccaneers_Den",
+    "ShoppeKeeperType": "GuildMaster"
   },
   "33": {
-    "Location": "Minoc"
+    "Location": "Minoc",
+    "ShoppeKeeperType": "Healer"
   },
   "34": {
-    "Location": "Trinsic"
+    "Location": "Trinsic",
+    "ShoppeKeeperType": "Healer"
   },
   "35": {
-    "Location": "Skara_Brae"
+    "Location": "Skara_Brae",
+    "ShoppeKeeperType": "Healer"
   },
   "36": {
-    "Location": "East_Britanny"
+    "Location": "East_Britanny",
+    "ShoppeKeeperType": "Healer"
   },
   "37": {
-    "Location": "Cove"
+    "Location": "Cove",
+    "ShoppeKeeperType": "Healer"
   },
   "38": {
-    "Location": "Lycaeum"
+    "Location": "Lycaeum",
+    "ShoppeKeeperType": "Healer"
   },
   "39": {
-    "Location": "Empath_Abbey"
+    "Location": "Empath_Abbey",
+    "ShoppeKeeperType": "Healer"
   },
   "40": {
-    "Location": "Britain"
+    "Location": "Britain",
+    "ShoppeKeeperType": "InnKeeper"
   },
   "41": {
-    "Location": "Jhelom"
+    "Location": "Jhelom",
+    "ShoppeKeeperType": "InnKeeper"
   },
   "42": {
-    "Location": "Skara_Brae"
+    "Location": "Skara_Brae",
+    "ShoppeKeeperType": "InnKeeper"
   },
   "43": {
-    "Location": "North_Britanny"
+    "Location": "North_Britanny",
+    "ShoppeKeeperType": "InnKeeper"
   },
   "44": {
-    "Location": "Paws"
+    "Location": "Paws",
+    "ShoppeKeeperType": "InnKeeper"
   },
   "45": {
-    "Location": "Buccaneers_Den"
+    "Location": "Buccaneers_Den",
+    "ShoppeKeeperType": "InnKeeper"
   }
 }

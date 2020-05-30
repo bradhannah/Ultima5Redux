@@ -103,7 +103,7 @@
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
     <Compile Include="Maps\GenericTileset.cs" />
     <Compile Include="Maps\Look.cs" />
-    <Compile Include="Maps\ShoppeKeeperReference.cs" />
+    <Compile Include="Maps\ShoppeKeeperReferences.cs" />
     <Compile Include="Maps\Signs.cs" />
     <Compile Include="Maps\TileOverrides.cs" />
     <Compile Include="DayNightMoon\Moongates.cs" />
