@@ -103,6 +103,7 @@
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
     <Compile Include="Maps\GenericTileset.cs" />
     <Compile Include="Maps\Look.cs" />
+    <Compile Include="Maps\ShoppeKeeperReference.cs" />
     <Compile Include="Maps\Signs.cs" />
     <Compile Include="Maps\TileOverrides.cs" />
     <Compile Include="DayNightMoon\Moongates.cs" />
@@ -223,6 +224,10 @@
     <Content Include="DataFiles\InventoryDetails.csv" />
     <Content Include="DataFiles\InventoryDetailsCSV.csv" />
     <Content Include="DataFiles\MerchantStrings.csv" />
+    <Content Include="DataFiles\ShoppeKeeperMap.csv" />
+    <EmbeddedResource Include="DataFiles\ShoppeKeeperMap.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="DataFiles\TileOverrides.csv" />
     <EmbeddedResource Include="DataFiles\TileOverrides.json" />
   </ItemGroup>

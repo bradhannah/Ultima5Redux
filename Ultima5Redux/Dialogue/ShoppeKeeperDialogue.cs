@@ -5,16 +5,19 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.Dialogue
 {
     public class ShoppeKeeperDialogue
     {
-        
+        private readonly DataOvlReference _dataOvlReference;
+
         private enum ShoppeKeeperChunkNames { Unused, AllData }
         private readonly DataChunks<ShoppeKeeperChunkNames> _dataChunks;
         private readonly List<string> _merchantStrings = new List<string>();
         private readonly Random _random = new Random();
+        private readonly ShoppeKeeperReference _shoppeKeeperReference;
         
         private const int PISSED_OFF_START = 0;
         private const int PISSED_OFF_STOP = 3;
@@ -28,6 +31,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="dataOvlReference"></param>
         public ShoppeKeeperDialogue(string u5Directory, DataOvlReference dataOvlReference)
         {
+            _dataOvlReference = dataOvlReference;
             string shoppeKeeperDataFilePath = Path.Combine(u5Directory, FileConstants.SHOPPE_DAT);
             
             _dataChunks = new DataChunks<ShoppeKeeperChunkNames>(shoppeKeeperDataFilePath, ShoppeKeeperChunkNames.Unused);
@@ -35,6 +39,8 @@ namespace Ultima5Redux.Dialogue
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "All Shoppe Keeper Conversations", 0x00, 0x2797, 0, ShoppeKeeperChunkNames.AllData);
             
             BuildConversationTable(dataOvlReference);
+            
+            _shoppeKeeperReference = new ShoppeKeeperReference(dataOvlReference);
         }
 
         /// <summary>
@@ -171,7 +177,19 @@ namespace Ultima5Redux.Dialogue
         {
             return GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP);
         }
+
+        private string GetShoppeNameByLocation(SmallMapReferences.SingleMapReference.Location location)
+        {
+            //_dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES).GetChunkAsStringList().
+            return "";
+        }
         
+        public string GetBlacksmithHelloResponse(SmallMapReferences.SingleMapReference.Location location)
+        {
+            
+            string response = @"Good afternoon, and welcome to " ;
+            return response;
+        }
         
     }
 }

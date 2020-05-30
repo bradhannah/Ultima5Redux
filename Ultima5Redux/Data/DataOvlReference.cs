@@ -72,7 +72,7 @@ namespace Ultima5Redux.Data
             MOON_PHASES,
             THINGS_I_FIND,
             STORE_NAMES,
-            MERCHANT_NAMES,
+            SHOPPE_KEEPER_NAMES,
             //ARMOUR_ACCESSORY_BASE_PRICES,
             //ARMOUR_BASE_PRICES,
             //WEAPON_BASE_PRICES,
@@ -632,12 +632,12 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue names (8 of them)", 0xb98, 0x48);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue mantras (8 of them)", 0xbe0, 0x1e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Store names", 0xbfe, 0x2fc, 0, DataChunkName.STORE_NAMES);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Merchant Character names", 0xefa, 0x152, 0, DataChunkName.MERCHANT_NAMES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Merchant Character names", 0xefa, 0x152, 0, DataChunkName.SHOPPE_KEEPER_NAMES);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e, 0, DataChunkName.TALK_COMPRESSED_WORDS);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e);
 
             SomeStrings stores = _dataChunks.GetDataChunk(DataChunkName.STORE_NAMES).GetChunkAsStringList();
-            SomeStrings merchantNames =_dataChunks.GetDataChunk(DataChunkName.MERCHANT_NAMES).GetChunkAsStringList();
+            SomeStrings merchantNames =_dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_NAMES).GetChunkAsStringList();
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
