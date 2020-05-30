@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.MapCharacters;
@@ -10,54 +8,12 @@ namespace Ultima5Redux.Maps
 {
     public class ShoppeKeeperReferences
     {
-
-        [DataContract]
-        public class ShoppeKeeperReference
-        {
-            [DataMember(Name="Location")] 
-            private string _locationStr;
-            
-            [DataMember(Name = "ShoppeKeeperType")]
-            private string _shoppeKeeperType;
-
-            public string ShoppeKeeperName { get; set; }
-            public string ShoppeName { get; set; }
-
-            public SmallMapReferences.SingleMapReference.Location ShoppeKeeperLocation
-            {
-                get
-                {
-                    bool bSuccess = Enum.TryParse(this._locationStr, 
-                        out SmallMapReferences.SingleMapReference.Location npcLocation);
-                    if (!bSuccess)
-                    {
-                        throw new Ultima5ReduxException("Asked for an NPC "+this._locationStr+" type but the type didn't exist");
-                    }
-
-                    return npcLocation;
-                }
-            }
-
-            public NonPlayerCharacterReference.NPCDialogTypeEnum TheShoppeKeeperType
-            {
-                get
-                {
-                    bool bSuccess = Enum.TryParse(this._shoppeKeeperType, 
-                        out NonPlayerCharacterReference.NPCDialogTypeEnum npcDialogTypeEnum);
-                    if (!bSuccess)
-                    {
-                        throw new Ultima5ReduxException("Asked for an NPC "+this._shoppeKeeperType+" type but the type didn't exist");
-                    }
-
-                    return npcDialogTypeEnum;
-                }
-            }
-            
-            public NonPlayerCharacterReference NpcRef { get; set; }
-        }
-        
         private readonly Dictionary<string, ShoppeKeeperReference> _shoppeKeepers = new Dictionary<string, ShoppeKeeperReference>();
         private readonly Dictionary<int, ShoppeKeeperReference> _shoppeKeepersByIndex;
+
+        private readonly Dictionary<SmallMapReferences.SingleMapReference.Location,
+                Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>>
+            _shoppeKeepersByLocationAndType = new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>>();
         private readonly DataOvlReference _dataOvlReference;
 
         public ShoppeKeeperReferences(DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcReferences)
@@ -77,7 +33,7 @@ namespace Ultima5Redux.Maps
             shoppeKeeperNames.Remove(@"Simplon");
             
             Debug.Assert(shoppeNames.Count == shoppeKeeperNames.Count, "Must be same number of shoppe keepers to shoppes");
-            
+
             for (int i = 0; i < shoppeNames.Count; i++)
             {
                 // create a new shoppe keeper object then add it to the list
@@ -91,10 +47,33 @@ namespace Ultima5Redux.Maps
 
                 shoppeKeeper.NpcRef = npcRefs[0];
                 _shoppeKeepers.Add(shoppeKeeperName, shoppeKeeper);
-            }
 
+                // we keep track of the location + type for easier world access to shoppe keeper reference
+                if (!_shoppeKeepersByLocationAndType.ContainsKey(shoppeKeeper.ShoppeKeeperLocation))
+                {
+                    _shoppeKeepersByLocationAndType.Add(shoppeKeeper.ShoppeKeeperLocation, new Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>());
+                }
+
+                _shoppeKeepersByLocationAndType[shoppeKeeper.ShoppeKeeperLocation]
+                    .Add(shoppeKeeper.TheShoppeKeeperType, shoppeKeeper);
+            }
         }
 
+        public ShoppeKeeperReference GetShoppeKeeperReference(SmallMapReferences.SingleMapReference.Location location,
+            NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+        {
+            if (!_shoppeKeepersByLocationAndType.ContainsKey(location))
+            {
+                throw new Ultima5ReduxException("You asked for "+location+" and it wasn't in the _shoppeKeepersByLocationAndType");
+            }
+
+            if (!_shoppeKeepersByLocationAndType[location].ContainsKey(npcType))
+            {
+                throw new Ultima5ReduxException("You asked for "+npcType+" in "+location+" and it wasn't in the _shoppeKeepersByLocationAndType");
+            }
+            return _shoppeKeepersByLocationAndType[location][npcType];
+        }
+        
         private static Dictionary<int, ShoppeKeeperReference> LoadShoppeKeepersByIndex()
         {
             Dictionary<int, ShoppeKeeperReference> result = JsonConvert.DeserializeObject<Dictionary<int, ShoppeKeeperReference>>(Properties.Resources.ShoppeKeeperMap);

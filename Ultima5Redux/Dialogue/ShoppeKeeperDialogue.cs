@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ultima5Redux.Data;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 
@@ -180,16 +181,26 @@ namespace Ultima5Redux.Dialogue
             return GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP);
         }
 
-        private string GetShoppeNameByLocation(SmallMapReferences.SingleMapReference.Location location)
+        private string GetShoppeNameByLocation(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
         {
             //_dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES).GetChunkAsStringList().
             return "";
         }
-        
-        public string GetBlacksmithHelloResponse(SmallMapReferences.SingleMapReference.Location location)
+
+        private string GetTimeOfDayName(TimeOfDay tod)
         {
+            if (tod.Hour > 5 && tod.Hour < 12) return "morning";
+            if (tod.Hour >= 12 && tod.Hour < 6) return "afternoon";
+            return "evening";
+        }
+        
+        public string GetHelloResponse(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType, TimeOfDay tod)
+        {
+            ShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
             
-            string response = @"Good afternoon, and welcome to " ;
+            
+            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +shoppeKeeper.ShoppeName + @"!\n\n" + 
+                              shoppeKeeper.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
             return response;
         }
         

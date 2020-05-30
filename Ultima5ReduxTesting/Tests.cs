@@ -508,6 +508,10 @@ namespace Ultima5ReduxTesting
                 string happy = world.ShoppeKeeperDialogue.GetHappyShoppeKeeperGoodbyeResponse();
                 string selling = world.ShoppeKeeperDialogue.GetEquipmentSellingOutput(100, "Big THING");
             }
+            string hello = world.ShoppeKeeperDialogue.GetHelloResponse(
+                SmallMapReferences.SingleMapReference.Location.Bordermarch,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith,
+                world.State.TheTimeOfDay);
         }
 
         [Test]
