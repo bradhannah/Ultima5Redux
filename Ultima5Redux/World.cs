@@ -20,7 +20,7 @@ namespace Ultima5Redux
         /// Ultima 5 data and save files directory 
         /// </summary>
         private readonly string _u5Directory;
-        private CombatMapReference _combatMapRef = new CombatMapReference();
+        private readonly CombatMapReference _combatMapRef = new CombatMapReference();
         private readonly TileOverrides _tileOverrides = new TileOverrides();
         #endregion
         
@@ -96,6 +96,8 @@ namespace Ultima5Redux
         /// </summary>
         public Conversation CurrentConversation { get; private set; }
 
+        public ShoppeKeeperDialogue ShoppeKeeperDialogue { get; private set; }
+
         public MoonPhaseReferences MoonPhaseRefs { get; private set; }
         #endregion
         
@@ -124,7 +126,6 @@ namespace Ultima5Redux
             // build the underworld map
             UnderworldMap = new LargeMap(_u5Directory, LargeMap.Maps.Underworld, _tileOverrides);
 
-
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
             InvRef = new InventoryReferences();
@@ -144,17 +145,18 @@ namespace Ultima5Redux
             }
 
             // build a "look" table for all tiles
-            LookRef = new Look(ultima5Directory);
+            LookRef = new Look(_u5Directory);
 
             // build the sign tables
-            SignRef = new Signs(ultima5Directory);
+            SignRef = new Signs(_u5Directory);
 
             TalkScriptsRef = new TalkScripts(_u5Directory, DataOvlRef);
 
             // build the NPC tables
-            NpcRef = new NonPlayerCharacterReferences(ultima5Directory, SmallMapRef, TalkScriptsRef, State);
+            NpcRef = new NonPlayerCharacterReferences(_u5Directory, SmallMapRef, TalkScriptsRef, State);
 
-
+            ShoppeKeeperDialogue = new ShoppeKeeperDialogue(_u5Directory, DataOvlRef, NpcRef);
+            
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef, InvRef);
 
@@ -234,8 +236,12 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.IsNPCTile(xy))
             {
                 MapCharacter mapCharacter = State.TheVirtualMap.GetNPCOnTile(xy);
+                if (mapCharacter == null)
+                {
+                    throw new Ultima5ReduxException("Tried to look up NPC, but couldn't find the map character");
+                }
                 retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                + " " + (LookRef.GetLookDescription(mapCharacter.NPCRef.NPCKeySprite).Trim());
+                    + " " + (LookRef.GetLookDescription(mapCharacter.NPCRef.NPCKeySprite).Trim());
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (SpriteTileReferences.IsSign(tileReference.Index))

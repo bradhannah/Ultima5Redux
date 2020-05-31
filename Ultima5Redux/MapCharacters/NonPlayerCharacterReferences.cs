@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
@@ -29,7 +31,28 @@ namespace Ultima5Redux.MapCharacters
             return _locationToNPCsDictionary[location];
         }
 
-        //public NonPlayerCharacterReference GetNonPlayerCharacter(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
+        public NonPlayerCharacterReference GetNonPlayerCharacterByName(string name)
+        {
+            return _npcByNameDictionary[name];
+        }
+
+        /// <summary>
+        /// Finds all NPCs at a certain location and certain type
+        /// Best used for shoppe keepers
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="npcType"></param>
+        /// <returns>NPC Reference</returns>
+        public List<NonPlayerCharacterReference> GetNonPlayerCharacterByLocationAndNPCType(
+            SmallMapReferences.SingleMapReference.Location location,
+            NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+        {
+            List<NonPlayerCharacterReference> npcRefs = GetNonPlayerCharactersByLocation(location);
+
+            return npcRefs.Where(npcRef => npcRef.NPCType == npcType).ToList();
+        }
+        
+        //public NonPlayerCharacterReference GetNonPlayerCharacter(SmallMapReferences.SingleMapReference._location location, Point2D xy, int nFloor)
         //{
         //    foreach (NonPlayerCharacterReference npc in GetNonPlayerCharactersByLocation(location))
         //    {
@@ -46,9 +69,11 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// All of the NPCs
         /// </summary>
-        private List<NonPlayerCharacterReference> _npcs = new List<NonPlayerCharacterReference>();
-        private Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterReference>> _locationToNPCsDictionary
+        private readonly List<NonPlayerCharacterReference> _npcs = new List<NonPlayerCharacterReference>();
+        private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterReference>> _locationToNPCsDictionary
             = new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterReference>>();
+
+        private readonly Dictionary<string, NonPlayerCharacterReference> _npcByNameDictionary = new Dictionary<string, NonPlayerCharacterReference>();
         #endregion
 
         #region Constants, Enums
@@ -98,12 +123,15 @@ namespace Ultima5Redux.MapCharacters
         #endregion
 
         #region Initialization and Constructor routines
+
         /// <summary>
         /// Initialize NPCs from a particular small map master file set
         /// </summary>
         /// <param name="u5Directory">Directory with Ultima 5</param>
         /// <param name="mapMaster">The master map from which to load</param>
         /// <param name="smallMapRef">Small map reference to help link NPCs to a map</param>
+        /// <param name="talkScriptsRef"></param>
+        /// <param name="gameStateRef"></param>
         private void InitializeNPCs(string u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReferences smallMapRef, 
             TalkScripts talkScriptsRef, GameState gameStateRef)
         {
@@ -133,8 +161,8 @@ namespace Ultima5Redux.MapCharacters
                 // start at the town offset, incremenet by an NPC record each time, for 32 loops
                 for (int offset = townOffset; count < NPCS_PER_TOWN; offset += ScheduleOffsetSize, count++)
                 {
-                    NonPlayerCharacterReference.NPCSchedule sched = (NonPlayerCharacterReference.NPCSchedule)Utils.ReadStruct(npcData, offset, typeof(NonPlayerCharacterReference.NPCSchedule));
-                    schedules.Add(sched);
+                    NonPlayerCharacterReference.NPCSchedule schedule = (NonPlayerCharacterReference.NPCSchedule)Utils.ReadStruct(npcData, offset, typeof(NonPlayerCharacterReference.NPCSchedule));
+                    schedules.Add(schedule);
                 }
                 // bajh: just shoot me if I ever have to write this again - why on earth did LB write all of his data in different formats! 
                 // these are single byte, so we can capture them just by jumping to their offsets
@@ -161,6 +189,13 @@ namespace Ultima5Redux.MapCharacters
                     { 
                         _locationToNPCsDictionary.Add(singleMapRef.MapLocation, new List<NonPlayerCharacterReference>());  
                     }
+
+                    if (npc.Name != string.Empty && !npc.Name.StartsWith("..."))
+                    {
+                        // merchants do not have names recorded :(
+                        _npcByNameDictionary.Add(npc.Name, npc);
+                    }
+
                     _locationToNPCsDictionary[singleMapRef.MapLocation].Add(npc);
                 }
             }
@@ -171,7 +206,8 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         /// <param name="u5Directory">the directory with Ultima 5 data files</param>
         /// <param name="smallMapRef">The small map reference</param>
-        /// <param name="talkScriptsRe">Talk script references</param>
+        /// <param name="talkScriptsRef"></param>
+        /// <param name="gameStateRef"></param>
         public NonPlayerCharacterReferences(string u5Directory, SmallMapReferences smallMapRef, TalkScripts talkScriptsRef, GameState gameStateRef)
         {
             InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef, talkScriptsRef, gameStateRef);

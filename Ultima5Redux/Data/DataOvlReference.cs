@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
@@ -14,7 +15,7 @@ namespace Ultima5Redux.Data
         /// <summary>
         /// All the data chunks
         /// </summary>
-        private DataChunks<DataChunkName> _dataChunks;
+        private readonly DataChunks<DataChunkName> _dataChunks;
         #endregion
 
         #region Public Properties
@@ -69,7 +70,14 @@ namespace Ultima5Redux.Data
             REAGENTS,
             EXCLAIMS,
             MOON_PHASES,
-            THINGS_I_FIND
+            THINGS_I_FIND,
+            STORE_NAMES,
+            SHOPPE_KEEPER_NAMES,
+            //ARMOUR_ACCESSORY_BASE_PRICES,
+            //ARMOUR_BASE_PRICES,
+            //WEAPON_BASE_PRICES,
+            EQUIPMENT_BASE_PRICE,
+            WEAPONS_SOLD_BY_MERCHANTS
         };
 
         public enum Equipment
@@ -623,15 +631,16 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue names (8 of them)", 0xb98, 0x48);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue mantras (8 of them)", 0xbe0, 0x1e);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Store names", 0xbfe, 0x2fc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character names", 0xefa, 0x152);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Store names", 0xbfe, 0x2fc, 0, DataChunkName.STORE_NAMES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Merchant Character names", 0xefa, 0x152, 0, DataChunkName.SHOPPE_KEEPER_NAMES);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e, 0, DataChunkName.TALK_COMPRESSED_WORDS);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e);
 
+            SomeStrings stores = _dataChunks.GetDataChunk(DataChunkName.STORE_NAMES).GetChunkAsStringList();
+            SomeStrings merchantNames =_dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_NAMES).GetChunkAsStringList();
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
-
-
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Attack values", 0x160C, 0x37, 0x00, DataChunkName.ATTACK_VALUES);
             // excludes extended items such as ankh and spells
@@ -713,19 +722,30 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random filenames, texts and unknown", 0x3986, 0xaf);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0x7d);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour accessory base prices", 0x3a92, 0x10);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3aa2, 0x2);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour base prices", 0x3aa4, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Weapon base prices", 0x3ab2, 0x2e);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3ae0, 0x2);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	", 0x3af2, 0x48);
+            // ARMOUR_ACCESSORY_BASE_PRICES,
+            // ARMOUR_BASE_PRICES,
+            // WEAPON_BASE_PRICES,
+            // WEAPONS_SOLD_BY_MERCHANTS
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "All equipment base prices", 0x3a92, 0x60, 0, DataChunkName.EQUIPMENT_BASE_PRICE); 
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3aa2, 0x2);
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour base prices", 0x3aa4, 0xc, 0, DataChunkName.ARMOUR_BASE_PRICES);
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Weapon base prices", 0x3ab2, 0x2e, 0, DataChunkName.WEAPON_BASE_PRICES);
+            //List<UInt16> weaponprices =
+              //  _dataChunks.GetDataChunk(DataChunkName.WEAPON_BASE_PRICES).GetChunkAsUint16List();
+            
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3ae0, 0x2);
+            
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
+                "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	",
+                0x3af2, 0x48, 0, DataChunkName.WEAPONS_SOLD_BY_MERCHANTS);
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3b3a, 0x38);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Innkeeper welcome text index into SHOPPE.DAT (+0x0, 2 bytes for each index)", 0x3b72, 0x8);
             // this section contains information about hidden, non-regenerating objects (e.g. the magic axe in the dead tree in Jhelom); there are
             // only 0x71 such objects; the last entry in each table is 0
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object type (tile - 0x100) (item)", 0x3E88, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object quality (e.g. potion type, number of gems) (item)", 0x3EFA, 0x72);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party Location\") (item)", 0x3F6C, 0x72);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party _location\") (item)", 0x3F6C, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "level (item)", 0x3FDE, 0x72);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (item)", 0x4050, 0x72);
@@ -800,7 +820,7 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs.dat (x2)", 0x74f6, 0x14);
 //            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22, 0x00, DataChunkName.VISION1);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x750A, 0x205, 0x00, DataChunkName.VISION2);
-            someStrings = GetDataChunk(DataChunkName.VISION2).GetChunkAsStringList();
+            //someStrings = GetDataChunk(DataChunkName.VISION2).GetChunkAsStringList();
 
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Drinking Strings", 0x76ef, 0x71);

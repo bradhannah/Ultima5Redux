@@ -15,6 +15,7 @@ namespace Ultima5Redux.PlayerCharacters
         private const byte CHARACTER_OFFSET = 0x20;
         public const int MAX_PARTY_MEMBERS = 6;
 
+        public PlayerCharacterRecord AvatarRecord => Records[0];
 
         public PlayerCharacterRecords(List<byte> rawByteList)
         {

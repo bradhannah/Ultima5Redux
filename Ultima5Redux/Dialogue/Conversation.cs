@@ -30,23 +30,23 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         /// The script of the conversation
         /// </summary>
-        private TalkScript _script;
+        private readonly TalkScript _script;
         /// <summary>
         /// Data.OVL reference used for grabbing predefined conversation strings
         /// </summary>
-        private DataOvlReference _dataOvlRef;
+        private readonly DataOvlReference _dataOvlRef;
         /// <summary>
         /// Game State used for determining if Avatar has met the NPC
         /// </summary>
-        private GameState _gameStateRef;
+        private readonly GameState _gameStateRef;
         /// <summary>
         /// The output buffer storing all outputs that will be read by outer program
         /// </summary>
-        private Queue<TalkScript.ScriptItem> _outputBufferQueue = new Queue<TalkScript.ScriptItem>();
+        private readonly Queue<TalkScript.ScriptItem> _outputBufferQueue = new Queue<TalkScript.ScriptItem>();
         /// <summary>
         /// The users responses to promptings from the outputBufferQueue
         /// </summary>
-        private Queue<string> _responseQueue = new Queue<string>();
+        private readonly Queue<string> _responseQueue = new Queue<string>();
         /// <summary>
         /// Are we currently in rune mode? if so, I expect that TextProcessItem will be translating text to runic
         /// </summary>
@@ -54,11 +54,11 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         /// a list of conversation indexes that refer to the particular conversationOrderScriptLines[] we are on
         /// </summary>
-        private List<int> _conversationOrder = new List<int>();
+        private readonly List<int> _conversationOrder = new List<int>();
         /// <summary>
-        /// All of the scriptlines that we are capable of processing for the NPC
+        /// All of the ScriptLines that we are capable of processing for the NPC
         /// </summary>
-        private List<TalkScript.ScriptLine> _conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
+        private readonly List<TalkScript.ScriptLine> _conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
 
         private SkipInstruction _currentSkipInstruction = SkipInstruction.DontSkip;
         #endregion
@@ -77,7 +77,7 @@ namespace Ultima5Redux.Dialogue
 
         #region Constants and Enums
         /// <summary>
-        /// Instructs the calling method how to handle proceeding talkscript lookups
+        /// Instructs the calling method how to handle proceeding TalkScript lookups
         /// </summary>
         private enum SkipInstruction { DontSkip = 0, SkipNext, SkipAfterNext, SkipToLabel };
         #endregion
@@ -116,8 +116,7 @@ namespace Ultima5Redux.Dialogue
                     return item.Str;
                 case TalkScript.TalkCommand.Rune:
                     _runeMode = !_runeMode;
-                    if (_runeMode) return " ";
-                    return string.Empty;
+                    return _runeMode ? " " : string.Empty;
                 default:
                     throw new Ultima5ReduxException("Passed in an unsupported TalkCommand: " + item.Command.ToString() + " to the TextProcessItem method");
             }
@@ -152,7 +151,7 @@ namespace Ultima5Redux.Dialogue
         /// Add a ScriptItem to the output buffer that will be consumed by the outside process (ie. World)
         /// </summary>
         /// <param name="output">ScripItem to add to queue</param>
-        private void EnqueToOutputBuffer(TalkScript.ScriptItem output)
+        private void EnqueueToOutputBuffer(TalkScript.ScriptItem output)
         {
             lock (((ICollection)_outputBufferQueue).SyncRoot)
             {
@@ -167,7 +166,7 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         /// <param name="scriptLines">the script line to process</param>
         /// <param name="nTalkLineIndex">where we are in the conversation - it really only cares if you are on the first line of conversation</param>
-        private async Task ProcessMultipleLines(List<TalkScript.SplitScriptLine> scriptLines, int nTalkLineIndex)
+        private async Task ProcessMultipleLines(IReadOnlyList<TalkScript.SplitScriptLine> scriptLines, int nTalkLineIndex)
         {
             // how many items shall we skip? if == -1, then don't skip
             int skipCounter = -1;
@@ -262,7 +261,7 @@ namespace Ultima5Redux.Dialogue
                 // we must describe what we "see"
                 if (nTalkLineIndex == (int)TalkScript.TalkConstants.Description && nSplitLine == 0 && nItem == 0)
                 {
-                    EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_SEE)+" "));
+                    EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_SEE)+" "));
                 }
 
                 switch (item.Command)
@@ -284,11 +283,11 @@ namespace Ultima5Redux.Dialogue
                     case TalkScript.TalkCommand.AvatarsName:
                         // we should already know if they know the avatars name....
                         Debug.Assert(Npc.KnowTheAvatar);
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.AskName:
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.WHATS_YOUR_NAME)));
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.WHATS_YOUR_NAME)));
+                        EnqueueToOutputBuffer(item);
                         // we actually wait in the function for the user to respond
                         await AwaitResponse();
                         string avatarNameResponse = GetResponse();
@@ -297,19 +296,19 @@ namespace Ultima5Redux.Dialogue
                         {
                             // i met them
                             _gameStateRef.SetMetNPC(Npc);
-                            EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.PLEASURE)));
+                            EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.PLEASURE)));
                             break;
                         }
                         else
                         {
-                            EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.IF_SAY_SO)));
+                            EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.IF_SAY_SO)));
                         }
                         break;
                     case TalkScript.TalkCommand.CallGuards:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.Change:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.DefineLabel:
                         // if I find a goto label, then i expect I have no further conversation lines left
@@ -321,50 +320,50 @@ namespace Ultima5Redux.Dialogue
                         return;
                         //return SkipInstruction.SkipToLabel;
                     case TalkScript.TalkCommand.EndCoversation:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         ConversationEnded = true;
                         break;
                     case TalkScript.TalkCommand.Gold:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.JoinParty:
                         if (_gameStateRef.IsFullParty())
                         {
                             string noJoinResponse = GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_1) +
                                 GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_2);
-                            EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, noJoinResponse));
+                            EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, noJoinResponse));
                             //"Thou hast no room for me in thy party! Seek me again if one of thy members doth leave thee.\n"));
                         }
                         else
                         {
-                            EnqueToOutputBuffer(item);
+                            EnqueueToOutputBuffer(item);
                             ConversationEnded = true;
                         }
                         break;
                     case TalkScript.TalkCommand.KarmaMinusOne:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.KarmaPlusOne:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.KeyWait:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.NewLine:
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.Pause:
-                        EnqueToOutputBuffer(item);
+                        EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.PlainString:
                         // we put it through the processor to change the text around if we are wrapped in a rune tag
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.Rune:
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.UserInputNotRecognized:
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANNOT_HELP) + "\n"));
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANNOT_HELP) + "\n"));
                         break;
                     case TalkScript.TalkCommand.Unknown_Enter:
                         break;
@@ -378,6 +377,12 @@ namespace Ultima5Redux.Dialogue
                     case TalkScript.TalkCommand.Or:
                     case TalkScript.TalkCommand.StartNewSection:
                         throw new Ultima5ReduxException("We should never see the <OR> or <A2> code in conversation");
+                    case TalkScript.TalkCommand.GotoLabel:
+                        break;
+                    case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
+                        break;
+                    case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
+                        break;
                     default:
                         throw new Ultima5ReduxException("Received TalkCommand I wasn't expecting during conversation");
 
@@ -444,10 +449,10 @@ namespace Ultima5Redux.Dialogue
                 throw new Ultima5ReduxException("Called BeginConversation without declaring a EnqueuedScriptItemCallback.");
             }
 
-            System.Console.WriteLine("---- PRE-CONVERSATION SCRIPT -----");
+            System.Console.WriteLine(@"---- PRE-CONVERSATION SCRIPT -----");
             _script.PrintComprehensiveScript();
 
-            System.Console.WriteLine("---- STARTING CONVERSATION -----");
+            System.Console.WriteLine(@"---- STARTING CONVERSATION -----");
 
             // when a new section comes up, we can add it and then proceed to the next line by adding it
             // this is perpetual as long as there is more to see
@@ -456,7 +461,7 @@ namespace Ultima5Redux.Dialogue
             _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Description));
             _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Greeting));
 
-            // some of these operatoins can be expensive, so let's call them once and store instead
+            // some of these operations can be expensive, so let's call them once and store instead
             bool npcKnowsAvatar = Npc.KnowTheAvatar;
 
             // the index into conversationOrder
@@ -468,9 +473,9 @@ namespace Ultima5Redux.Dialogue
                 // if we do not have any conversation left, then we will prompt for questions
                 ///// NO DIALOG LEFT - USER RESPONDS
                 ///// This will result in processable conversation, so it will just fall through
-                while (nConversationIndex >= _conversationOrder.Count && !ConversationEnded)
+                while (nConversationIndex >= _conversationOrder.Count)
                 {
-                    EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_UserInterest));
+                    EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_UserInterest));
                     // we wait patiently for the user to respond
 
                     await AwaitResponse();
@@ -513,8 +518,7 @@ namespace Ultima5Redux.Dialogue
                 int nTalkLineIndex = _conversationOrder[nConversationIndex];
 
                 // the current ScriptLine
-                TalkScript.ScriptLine currentLine;
-                currentLine = _script.GetScriptLine(_conversationOrder[nConversationIndex]);
+                TalkScript.ScriptLine currentLine = _script.GetScriptLine(_conversationOrder[nConversationIndex]);
                 // Split the line into sections. This greatly simplifies the proceeding loops.
                 List<TalkScript.SplitScriptLine> splitLines = currentLine.SplitIntoSections();
 
@@ -523,7 +527,7 @@ namespace Ultima5Redux.Dialogue
                 // curentSplitLine = current section of the currentLine
                 Debug.Assert(splitLines.Count > 0);
 
-                /// If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
+                // If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
                 // OR if the Name line contains an IfElseKnowsName (#Eb)
                 if ((!npcKnowsAvatar && _conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting) &&
@@ -531,22 +535,22 @@ namespace Ultima5Redux.Dialogue
                                  _script.GetScriptLine(TalkScript.TalkConstants.Name).ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
                 {
                     // randomly add an introduction of the Avatar since they haven't met him
-                    if (_gameStateRef.OneInXOdds(2) || true)
+                    if (_gameStateRef.OneInXOdds(2))// || true)
                     {
                         // okay, tell them who you are
-                        EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\nI am called " + Npc.Name));
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\nI am called " + Npc.Name));
                     }
                 }
 
                 // if in label && next line include <AvatarName>, then skip label
-                const int startingIndexForLabel = 0;
+                const int StartingIndexForLabel = 0;
 
                 ///// IT'S A LABEL
                 // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
-                if (splitLines[startingIndexForLabel].IsLabelDefinition())
+                if (splitLines[StartingIndexForLabel].IsLabelDefinition())
                 {
-                    Debug.Assert(splitLines[startingIndexForLabel].NumberOfScriptItems== 2, "If it is a label definition, then it must have only 2 items defined in it");
-                    int nLabel = splitLines[startingIndexForLabel].GetScriptItem(1).LabelNum;
+                    Debug.Assert(splitLines[StartingIndexForLabel].NumberOfScriptItems== 2, "If it is a label definition, then it must have only 2 items defined in it");
+                    int nLabel = splitLines[StartingIndexForLabel].GetScriptItem(1).LabelNum;
                     Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS-1, "Label number must be between 0 and 9");
                     
                     // get the label object
@@ -565,7 +569,7 @@ namespace Ultima5Redux.Dialogue
                     // definition
                     await ProcessMultipleLines(scriptLabel.InitialLine.SplitIntoSections(), nTalkLineIndex);
 
-                    string userResponse = string.Empty;
+                    string userResponse;
                     if (scriptLabel.ContainsQuestions())
                     {
                         int nTimes = 0;
@@ -574,12 +578,12 @@ namespace Ultima5Redux.Dialogue
                             // need to figure out if we are going to ask a question...
                             if (nTimes++ == 0)
                             {
-                                EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
+                                EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
                             }
                             else
                             {
-                                EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.WHAT_YOU_SAY)));//"What didst thou say?"));
-                                EnqueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
+                                EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.WHAT_YOU_SAY)));//"What didst thou say?"));
+                                EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
                             }
                             // we wait patiently for the user to respond
 

@@ -271,7 +271,7 @@ namespace Ultima5Redux
 
 
             // player location
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party Location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party _location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Z Coordinate of Party [10]", 0x2EF, 0x01, 0x00, DataChunkName.Z_COORD);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "X Coordinate of Party", 0x2F0, 0x01, 0x00, DataChunkName.X_COORD);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Y Coordinate of Party", 0x2F1, 0x01, 0x00, DataChunkName.Y_COORD);
@@ -463,6 +463,10 @@ namespace Ultima5Redux
         public void AddMemberToParty(NonPlayerCharacterReference npc)
         {
             PlayerCharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
+            if (record == null)
+            {
+                throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
+            }
             record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InParty;
         }
 

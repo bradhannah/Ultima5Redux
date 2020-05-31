@@ -235,6 +235,10 @@ namespace Ultima5Redux.Maps
         public Sign CopySign(SmallMapReferences.SingleMapReference.Location location, int x, int y, int newX, int newY)
         {
             Sign origSign = GetSign(location, x, y);
+            if (origSign == null)
+            {
+                throw new Ultima5ReduxException("Original sign was not instantiated.");
+            }
             Sign newSign = new Sign(origSign.Location, origSign.Floor, newX, newY, origSign.RawSignText, origSign.Offset);
             Debug.Assert(newSign != null);
             return newSign;
@@ -258,7 +262,7 @@ namespace Ultima5Redux.Maps
             // we are ignoring the "offsets" which are likely used to help optimize the lookup 
             // on older hardware, instead we will just be lazy and search for them by cycling
             // through the whole list
-            // TODO: optimize storage to improve lookup spped
+            // TODO: optimize storage to improve lookup speed
             do
             {
                 string rawSignTxt = Utils.BytesToStringNullTerm(_signsByteArray, nIndex + 4, 0xFF);

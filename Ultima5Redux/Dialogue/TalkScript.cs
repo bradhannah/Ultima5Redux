@@ -550,6 +550,7 @@ namespace Ultima5Redux.Dialogue
                             nSection++;
                             lines.Add(new SplitScriptLine());
                         }
+                        if (nSection < 0) { throw new Ultima5ReduxException("Section number fell below zero in conversation."); }
                         lines[nSection].AddScriptItem(item);
                     }
                     first = false;
@@ -698,7 +699,7 @@ namespace Ultima5Redux.Dialogue
 
             // have we encountered a label yet?
 
-            bool labelEncountered = false;
+            //bool labelEncountered = false;
 
             string question;
             
@@ -719,7 +720,7 @@ namespace Ultima5Redux.Dialogue
                 // if we just hit a label, then it's time to jump out of this loop and move onto the label reading loop
                 if (line.GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
                 {
-                    labelEncountered = true;
+                    //labelEncountered = true;
                     break;
                 }
 

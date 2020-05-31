@@ -44,12 +44,12 @@ namespace Ultima5Redux.Maps
 
             public enum Location {
                 Britannia_Underworld = 0x00,
-                Moonglow, Britain, Jhelom, Yew, Minoc, Trinsic, Skara_Brae, New_Magincia, // Town
-                Fogsbane, Stormcrow, Greyhaven, Waveguide, Iolos_Hut, Suteks_Hut, SinVraals_Hut, Grendels_Hut, // Dwelling
-                Lord_Britishs_Castle, Palace_of_Blackthorn, West_Britanny, North_Britanny, East_Britanny, Paws, Cove, // Castle
-                Buccaneers_Den, Ararat, Bordermarch, Farthing, Windemere, Stonegate, Lycaeum, Empath_Abbey, Serpents_Hold, // Keep
-                Deceit, Despise, Destard, Wrong, Covetous, Shame, Hythloth, Doom, // Dungeons
-                Combat_resting_shrine 
+                Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6, Skara_Brae = 7, New_Magincia = 8, // Town
+                Fogsbane = 9, Stormcrow = 10, Greyhaven = 11, Waveguide = 12, Iolos_Hut = 13, Suteks_Hut = 14, SinVraals_Hut = 15, Grendels_Hut = 16, // Dwelling
+                Lord_Britishs_Castle = 17, Palace_of_Blackthorn = 18, West_Britanny = 19, North_Britanny = 20, East_Britanny = 21, Paws = 22, Cove = 23, // Castle
+                Buccaneers_Den = 24, Ararat = 25, Bordermarch = 26, Farthing = 27, Windemere = 28, Stonegate = 29, Lycaeum = 30, Empath_Abbey = 31, Serpents_Hold = 32, // Keep
+                Deceit = 33, Despise = 34, Destard = 35, Wrong = 36, Covetous = 37, Shame = 38, Hythloth = 39, Doom = 40, // Dungeons
+                Combat_resting_shrine = 41
             }
 
             /// <summary>
@@ -224,7 +224,7 @@ namespace Ultima5Redux.Maps
                     case Location.Waveguide:
                     case Location.Greyhaven:
                     case Location.Iolos_Hut:
-                    //case Location.spektran
+                    //case _location.spektran
                     case Location.Suteks_Hut:
                     case Location.SinVraals_Hut:
                     case Location.Grendels_Hut:
@@ -275,7 +275,7 @@ namespace Ultima5Redux.Maps
                     case SmallMapMasterFiles.Dungeon:
                         return "NOFILE";
                 }
-                throw new Ultima5ReduxException("Bad Location");
+                throw new Ultima5ReduxException("Bad _location");
             }
             #endregion
         }

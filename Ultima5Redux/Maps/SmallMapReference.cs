@@ -142,7 +142,7 @@ namespace Ultima5Redux.Maps
                 return _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.LOCATION_NAMES, (int)index);
             };
 
-            // filthy way to convert our more commonly used Location enum to the less used LOCATION_STRINGS
+            // filthy way to convert our more commonly used _location enum to the less used LOCATION_STRINGS
             // they didn't even bother having them all match, and then decided to leave some out
             DataOvlReference.LocationStrings newLocStrEnum = (DataOvlReference.LocationStrings) Enum.Parse(typeof(DataOvlReference.LocationStrings), location.ToString());
 
@@ -206,7 +206,7 @@ namespace Ultima5Redux.Maps
                 case SmallMapReferences.SingleMapReference.Location.Greyhaven:
                     return getTypePlaceStr(DataOvlReference.WorldStrings.to_enter_LIGHTHOUSE);
                 case SmallMapReferences.SingleMapReference.Location.Iolos_Hut:
-                //case Location.spektran
+                //case _location.spektran
                 case SmallMapReferences.SingleMapReference.Location.Suteks_Hut:
                 case SmallMapReferences.SingleMapReference.Location.SinVraals_Hut:
                 case SmallMapReferences.SingleMapReference.Location.Grendels_Hut:
@@ -266,7 +266,7 @@ namespace Ultima5Redux.Maps
                     return mapRef; 
                 }
             }
-            throw new Ultima5ReduxException("Location was not found!");
+            throw new Ultima5ReduxException("_location was not found!");
         }
 
         public void InitializeLocationNames ()

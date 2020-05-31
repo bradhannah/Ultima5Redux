@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters
 {
@@ -14,6 +16,14 @@ namespace Ultima5Redux.PlayerCharacters
         /// All inventory references separated by item types
         /// </summary>
         private readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
+        /// <summary>
+        /// All inventory references with respective equipment enums
+        /// </summary>
+        private readonly Dictionary<DataOvlReference.Equipment, InventoryReference> _invRefsByEquipment;
+        /// <summary>
+        /// a full list of all inventory references
+        /// </summary>
+        private readonly List<InventoryReference> _invRefs;
         /// <summary>
         /// All keywords that will be highlighted specifically for reagents 
         /// </summary>
@@ -101,6 +111,15 @@ namespace Ultima5Redux.PlayerCharacters
             throw new Ultima5ReduxException("Asked for an inventory reference : " + invItem + " but it doesn't exist");
         }
 
+        public InventoryReference GetInventoryReference(DataOvlReference.Equipment equipment)
+        {
+            if (!_invRefsByEquipment.ContainsKey(equipment))
+            {
+                throw new Ultima5ReduxException("You requested an equipment item that doesn't exist in the dictionary: "+(int)equipment);
+            }
+            return _invRefsByEquipment[equipment];
+        }
+
         /// <summary>
         /// Constructor builds reference tables from embedded resources
         /// </summary>
@@ -111,13 +130,23 @@ namespace Ultima5Redux.PlayerCharacters
              // we initialize the highlight text list
              _reagentKeywordHighlightList = new List<string>();
              _spellKeywordHighlightList = new List<string>();
-
-             List<InventoryReference> reagentInvRefs = _invRefsDictionary["Reagent"];
-             List<InventoryReference> spellInvRefs = _invRefsDictionary["Spell"];
+             
+             _invRefs = new List<InventoryReference>();
+             
+             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Armament))
+             {
+                 _invRefs.Add(invRef);
+             }
+             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Item))
+             {
+                 _invRefs.Add(invRef);
+             }
              
              // build reagent highlight table
-             foreach (InventoryReference invRef in reagentInvRefs)
+             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Reagent))//reagentInvRefs)
              {
+                 _invRefs.Add(invRef);
+                 
                  if (invRef.ItemNameHighLights.Length == 0) continue;
                  
                  foreach (string highlightWord in invRef.ItemNameHighLights)
@@ -126,8 +155,10 @@ namespace Ultima5Redux.PlayerCharacters
                  }
              }
              //build spell name highlight table
-             foreach (InventoryReference invRef in spellInvRefs)
+             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Spell))//spellInvRefs)
              {
+                 _invRefs.Add(invRef);
+
                  if (invRef.ItemNameHighLights.Length == 0) continue;
                  foreach (string highlightWord in invRef.ItemNameHighLights)
                  {
@@ -135,11 +166,18 @@ namespace Ultima5Redux.PlayerCharacters
                  }
              }
              
+             _invRefsByEquipment= new Dictionary<DataOvlReference.Equipment, InventoryReference>();
+             foreach (InventoryReference invRef in _invRefs)
+             {
+                 DataOvlReference.Equipment equipment = invRef.GetAsEquipment();
+                 if (Enum.IsDefined(typeof(DataOvlReference.Equipment), equipment))
+                 {
+                     _invRefsByEquipment.Add(equipment, invRef);
+                 }
+             }
         }
-
     }
 
- 
     /// <summary>
     /// Specific inventory item reference
     /// </summary>
@@ -158,9 +196,24 @@ namespace Ultima5Redux.PlayerCharacters
         public string ItemDescriptionAttribution { get; set; }
         [JsonProperty]
         public string ItemNameHighlight { private get; set; }
-
+        [JsonProperty]
+        public int MerchantIndex { get; private set; }
         public string[] ItemNameHighLights => ItemNameHighlight.Length == 0 ? new string[0] : ItemNameHighlight.Split(',');
 
+        /// <summary>
+        /// Gets the Equipment equivalent if one exists
+        /// </summary>
+        /// <returns>Equipment enum OR (-1) if non is found</returns>
+        public DataOvlReference.Equipment GetAsEquipment() 
+        {
+            bool bWasValid = Enum.TryParse<DataOvlReference.Equipment>(ItemName, out DataOvlReference.Equipment itemEquipment);
+            if (bWasValid)
+            {
+                return itemEquipment;
+            }
+            return (DataOvlReference.Equipment)(-1);
+        }
+        
         /// <summary>
         /// Gets a formatted description including the attribution of the quoted material
         /// </summary>

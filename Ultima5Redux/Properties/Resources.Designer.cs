@@ -84,6 +84,50 @@ namespace Ultima5Redux.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///  &quot;0&quot;: {
+        ///    &quot;_location&quot;: &quot;Britain&quot;
+        ///  },
+        ///  &quot;1&quot;: {
+        ///    &quot;_location&quot;: &quot;Jhelom&quot;
+        ///  },
+        ///  &quot;2&quot;: {
+        ///    &quot;_location&quot;: &quot;Yew&quot;
+        ///  },
+        ///  &quot;3&quot;: {
+        ///    &quot;_location&quot;: &quot;Minoc&quot;
+        ///  },
+        ///  &quot;4&quot;: {
+        ///    &quot;_location&quot;: &quot;Trinsic&quot;
+        ///  },
+        ///  &quot;5&quot;: {
+        ///    &quot;_location&quot;: &quot;Lord_Britishs_Castle&quot;
+        ///  },
+        ///  &quot;6&quot;: {
+        ///    &quot;_location&quot;: &quot;Buccaneers_Den&quot;
+        ///  },
+        ///  &quot;7&quot;: {
+        ///    &quot;_location&quot;: &quot;Bordermarch&quot;
+        ///  },
+        ///  &quot;8&quot;: {
+        ///    &quot;_location&quot;: &quot;Buccaneers_Den&quot;
+        ///  },
+        ///  &quot;9&quot;: {
+        ///    &quot;_location&quot;: &quot;Moonglow&quot;
+        ///  },
+        ///  &quot;10&quot;: {
+        ///    &quot;_location&quot;: &quot;Britain&quot;
+        ///  },
+        ///  &quot;11&quot;: {
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ShoppeKeeperMap {
+            get {
+                return ResourceManager.GetString("ShoppeKeeperMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;0&quot;: {
         ///      &quot;Name&quot;: &quot;Explosion&quot;,
         ///      &quot;Description&quot;: &quot;&quot;,

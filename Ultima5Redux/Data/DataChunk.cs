@@ -27,8 +27,7 @@ namespace Ultima5Redux.Data
         /// <summary>
         /// Byte list of file contents
         /// </summary>
-        public List<byte> FileByteList { get { return _fileByteList; } }
-        private readonly List<byte> _fileByteList;
+        public List<byte> FileByteList { get; }
 
         /// <summary>
         /// Construct a collection of DataChunks 
@@ -39,7 +38,7 @@ namespace Ultima5Redux.Data
         {
             _dataChunks = new List<DataChunk>();
             this._unusedValue = unusedValue;
-            _fileByteList = Utils.GetFileAsByteList(chunkFile);
+            FileByteList = Utils.GetFileAsByteList(chunkFile);
         }
 
         #region Public Methods
@@ -47,7 +46,7 @@ namespace Ultima5Redux.Data
         /// Add a chunk to the list
         /// </summary>
         /// <param name="chunk">datachunk</param>
-        public void AddDataChunk(DataChunk chunk)
+        private void AddDataChunk(DataChunk chunk)
         {
             //dataChunks.Add(chunk);
             AddDataChunk(chunk, _unusedValue);
@@ -58,7 +57,7 @@ namespace Ultima5Redux.Data
         /// </summary>
         /// <param name="chunk">Chunk to add</param>
         /// <param name="dataChunkName">Name/Description of the chunk for retrieval</param>
-        public void AddDataChunk(DataChunk chunk, T dataChunkName)
+        private void AddDataChunk(DataChunk chunk, T dataChunkName)
         {
             // all data chunks get added to the chunk list
             _dataChunks.Add(chunk);
@@ -150,7 +149,7 @@ namespace Ultima5Redux.Data
         {
             foreach (DataChunk chunk in _dataChunks)
             {
-                System.Console.WriteLine("**** " + chunk.Description);
+                System.Console.WriteLine(@"**** " + chunk.Description);
                 chunk.PrintChunk();
             }
         }
@@ -252,7 +251,7 @@ namespace Ultima5Redux.Data
                 case DataFormatType.StringListFromIndexes:
                    
                 case DataFormatType.Bitmap:
-                    System.Console.WriteLine("BITMAP");
+                    System.Console.WriteLine(@"BITMAP");
                     break;
                 case DataFormatType.FixedString:
                 case DataFormatType.SimpleString:
@@ -275,18 +274,20 @@ namespace Ultima5Redux.Data
                 case DataFormatType.UINT16:
                     {
                         UInt16 word = GetChunkAsUint16List()[0];
-                        System.Console.WriteLine("Word: " + word.ToString("X"));
+                        System.Console.WriteLine(@"Word: " + word.ToString("X"));
                         break;
                     }
                 case DataFormatType.UINT16List:
                     foreach (UInt16 word in GetChunkAsUint16List())
                     {
-                        System.Console.WriteLine("Word: " + word.ToString("X"));
+                        System.Console.WriteLine(@"Word: " + word.ToString("X"));
                     }
                     break;
                 case DataFormatType.Unknown:
-                    System.Console.WriteLine("Unknown");
+                    System.Console.WriteLine(@"Unknown");
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -295,7 +296,7 @@ namespace Ultima5Redux.Data
             return DataChunk.GetAsStringListFromIndexes(GetChunkAsUint16List(), _fullRawData);
         }
 
-        private static List<string> GetAsStringListFromIndexes(List<ushort> indexList, List<byte> rawByteList)
+        private static List<string> GetAsStringListFromIndexes(IReadOnlyCollection<ushort> indexList, List<byte> rawByteList)
         {
             List<string> strList = new List<string>(indexList.Count);
             const int maxStrLength = 20;
@@ -315,7 +316,7 @@ namespace Ultima5Redux.Data
         /// <returns>A list of the extracted boolean values</returns>
         public List<bool> GetAsBitmapBoolList()
         {
-            // this is essetially the number 1, but we use this to show that we are ANDing on the final bit
+            // this is essentially the number 1, but we use this to show that we are ANDing on the final bit
             byte shiftBit = 0b000_0001;
 
             List<bool> boolList = new List<bool>(this.DataLength * BITS_PER_BYTE);
@@ -348,7 +349,6 @@ namespace Ultima5Redux.Data
             for (int i = 0; i < DataLength; i++)
             {
                 byte rawData = RawData[i];
-                //data[i] =  (byte)(rawData + ValueModifier);
                 data.Add((byte)(rawData + ValueModifier));
             }
 
