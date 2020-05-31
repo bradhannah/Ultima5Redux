@@ -204,5 +204,6 @@ namespace Ultima5Redux.Dialogue
             return response;
         }
         
+        
     }
 }
