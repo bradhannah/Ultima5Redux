@@ -114,15 +114,20 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         /// Gets merchant response to asking to buy a piece of equipment
         /// </summary>
-        /// <param name="nDialogueIndex">index into dialogue array</param>
+        /// <param name="nEquipmentIndex">index into dialogue array</param>
         /// <param name="nGold">how much gold will it cost?</param>
         /// <returns>the complete response string</returns>
-        public string GetEquipmentBuyingOutput(int nDialogueIndex, int nGold)
+        private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold)
         {
-            Debug.Assert(nDialogueIndex >= 8 && nDialogueIndex <= 48);
-            Debug.Assert(CountReplacementVariables(nDialogueIndex) == 1);
+            Debug.Assert(nEquipmentIndex >= 8 && nEquipmentIndex <= 48);
+            Debug.Assert(CountReplacementVariables(nEquipmentIndex) == 1);
             
-            return GetMerchantString(nDialogueIndex, nGold:nGold);
+            return GetMerchantString(nEquipmentIndex, nGold:nGold);
+        }
+
+        public string GetEquipmentBuyingOutput(DataOvlReference.Equipment equipment, int nGold)
+        {
+            return GetEquipmentBuyingOutput((int) equipment, nGold);
         }
 
         /// <summary>
@@ -198,8 +203,7 @@ namespace Ultima5Redux.Dialogue
         {
             ShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
             
-            
-            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +shoppeKeeper.ShoppeName + @"!\n\n" + 
+            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +shoppeKeeper.ShoppeName + "!\n\n" + 
                               shoppeKeeper.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
             return response;
         }

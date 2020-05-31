@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Media;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.MapCharacters;
@@ -500,7 +501,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
 
-            string purchaseStr = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(8, 100);
+            string purchaseStr = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
 
             for (int i = 0; i < 10; i++)
             {
