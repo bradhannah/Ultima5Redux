@@ -8,6 +8,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.Dialogue
 {
@@ -18,6 +19,7 @@ namespace Ultima5Redux.Dialogue
         private enum ShoppeKeeperChunkNames { Unused, AllData }
         private readonly DataChunks<ShoppeKeeperChunkNames> _dataChunks;
         private readonly List<string> _merchantStrings = new List<string>();
+        private readonly Dictionary<int, int> _equipmentMapToMerchantStrings = new Dictionary<int, int>();
         private readonly Random _random = new Random();
         private readonly ShoppeKeeperReferences _shoppeKeeperReferences;
         
@@ -32,7 +34,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="u5Directory"></param>
         /// <param name="dataOvlReference"></param>
         /// <param name="npcReferences"></param>
-        public ShoppeKeeperDialogue(string u5Directory, DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcReferences)
+        public ShoppeKeeperDialogue(string u5Directory, DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcReferences, Inventory inventory)
         {
             _dataOvlReference = dataOvlReference;
             string shoppeKeeperDataFilePath = Path.Combine(u5Directory, FileConstants.SHOPPE_DAT);
@@ -44,6 +46,25 @@ namespace Ultima5Redux.Dialogue
             BuildConversationTable(dataOvlReference);
             
             _shoppeKeeperReferences = new ShoppeKeeperReferences(dataOvlReference, npcReferences);
+
+            // go through each of the pieces of equipment in order to build a map of equipment index
+            // -> merchant string list
+            int nEquipmentCounter = 0;
+            foreach (DataOvlReference.Equipment equipment in Enum.GetValues((typeof(DataOvlReference.Equipment))))
+            {
+                // we only look at equipment up to SpikedCollars
+                if ((int) equipment > (int) DataOvlReference.Equipment.SpikedCollar) continue;
+                
+                const int nEquipmentOffset = 8;
+
+                CombatItem item = inventory.GetItemFromEquipment(equipment);
+                if (item.BasePrice > 0)
+                {
+                    // add an equipment offset because equipment strings don't start at zero in the merchant strings
+                    _equipmentMapToMerchantStrings.Add((int) equipment, nEquipmentCounter + nEquipmentOffset);
+                    nEquipmentCounter++;
+                }
+            }
         }
 
         /// <summary>
@@ -86,7 +107,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="nGold">how many gold to fill in</param>
         /// <param name="equipmentName"></param>
         /// <returns>a complete string with full replacements</returns>
-        private string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "")
+        private string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", bool bUseRichText = true)
         {
             // % is gold
             // & is current piece of equipment
@@ -96,38 +117,42 @@ namespace Ultima5Redux.Dialogue
             // * location of thing
             // ^ quantity of thing (ie. reagent)
             
+            const string HIGHLIGHT_COLOR = "<color=#00CC00>";
+            const string REGULAR_COLOR = "<color=#FFFFFF>";
+
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             StringBuilder sb = new StringBuilder(merchantStr);
             if (nGold > 0)
             {
-                sb.Replace("%", nGold.ToString());
+                sb.Replace("%", HIGHLIGHT_COLOR+nGold.ToString()+REGULAR_COLOR);
             }
 
             if (equipmentName != "")
             {
-                sb.Replace("&", equipmentName);
+                sb.Replace("&", HIGHLIGHT_COLOR+equipmentName.ToString()+REGULAR_COLOR);
             }
 
             return sb.ToString();
         }
-        
+
         /// <summary>
         /// Gets merchant response to asking to buy a piece of equipment
         /// </summary>
         /// <param name="nEquipmentIndex">index into dialogue array</param>
         /// <param name="nGold">how much gold will it cost?</param>
+        /// <param name="bUseRichText"></param>
         /// <returns>the complete response string</returns>
-        private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold)
+        private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold, bool bUseRichText)
         {
-            Debug.Assert(nEquipmentIndex >= 8 && nEquipmentIndex <= 48);
-            Debug.Assert(CountReplacementVariables(nEquipmentIndex) == 1);
-            
-            return GetMerchantString(nEquipmentIndex, nGold:nGold);
+            int nDialogueIndex = _equipmentMapToMerchantStrings[nEquipmentIndex];
+            Debug.Assert(nEquipmentIndex >= 0 && nEquipmentIndex <= (int)DataOvlReference.Equipment.SpikedCollar);
+            Debug.Assert(CountReplacementVariables(nDialogueIndex) == 1);
+            return GetMerchantString(nDialogueIndex, nGold:nGold);
         }
 
-        public string GetEquipmentBuyingOutput(DataOvlReference.Equipment equipment, int nGold)
+        public string GetEquipmentBuyingOutput(DataOvlReference.Equipment equipment, int nGold, bool bUseRichText = true)
         {
-            return GetEquipmentBuyingOutput((int) equipment, nGold);
+            return GetEquipmentBuyingOutput((int) equipment, nGold, bUseRichText);
         }
 
         /// <summary>

@@ -501,6 +501,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
 
+            string purchaseStr2 = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
             string purchaseStr = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
 
             for (int i = 0; i < 10; i++)
@@ -508,6 +509,8 @@ namespace Ultima5ReduxTesting
                 string pissedOff = world.ShoppeKeeperDialogue.GetPissedOffShoppeKeeperGoodbyeResponse();
                 string happy = world.ShoppeKeeperDialogue.GetHappyShoppeKeeperGoodbyeResponse();
                 string selling = world.ShoppeKeeperDialogue.GetEquipmentSellingOutput(100, "Big THING");
+                string buying =
+                    world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
             string hello = world.ShoppeKeeperDialogue.GetHelloResponse(
                 SmallMapReferences.SingleMapReference.Location.Bordermarch,
