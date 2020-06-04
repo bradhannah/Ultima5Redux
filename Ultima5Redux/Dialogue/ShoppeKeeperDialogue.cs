@@ -211,6 +211,16 @@ namespace Ultima5Redux.Dialogue
             return GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP);
         }
 
+        public string GetThanksAfterPurchaseResponse()
+        {
+            return "Thank thee kindly!";
+        }
+
+        public string GetPissedOffNotBuyingResponse()
+        {
+            return "Stop wasting my time!";
+        }
+        
         private string GetShoppeNameByLocation(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
         {
             //_dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES).GetChunkAsStringList().
