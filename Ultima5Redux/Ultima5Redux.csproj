@@ -95,12 +95,13 @@
     <Compile Include="Data\SomeStrings.cs" />
     <Compile Include="Data\U5StringRef.cs" />
     <Compile Include="DayNightMoon\TimeOfDay.cs" />
-    <Compile Include="Dialogue\ShoppeKeeperDialogue.cs" />
+    <Compile Include="Dialogue\ShoppeKeeperDialogueReference.cs" />
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
+    <Compile Include="MapCharacters\ShoppeKeeper.cs" />
     <Compile Include="Maps\GenericTileset.cs" />
     <Compile Include="Maps\Look.cs" />
     <Compile Include="Maps\ShoppeKeeperReference.cs" />

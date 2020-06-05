@@ -500,19 +500,21 @@ namespace Ultima5ReduxTesting
         public void Test_BasicMerchantDialog()
         {
             World world = new World(SaveDirectory);
-
-            string purchaseStr2 = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
-            string purchaseStr = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
+            BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Britain,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith) as BlackSmith;
+            
+            string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
+            string purchaseStr = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
 
             for (int i = 0; i < 10; i++)
             {
-                string pissedOff = world.ShoppeKeeperDialogue.GetPissedOffShoppeKeeperGoodbyeResponse();
-                string happy = world.ShoppeKeeperDialogue.GetHappyShoppeKeeperGoodbyeResponse();
-                string selling = world.ShoppeKeeperDialogue.GetEquipmentSellingOutput(100, "Big THING");
+                string pissedOff = world.ShoppeKeeperDialogueReference.GetPissedOffShoppeKeeperGoodbyeResponse();
+                string happy = world.ShoppeKeeperDialogueReference.GetHappyShoppeKeeperGoodbyeResponse();
+                string selling = blacksmith.GetEquipmentSellingOutput(100, "Big THING");
                 string buying =
-                    world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
+                    blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
-            string hello = world.ShoppeKeeperDialogue.GetHelloResponse(
+            string hello = world.ShoppeKeeperDialogueReference.GetHelloResponse(
                 SmallMapReferences.SingleMapReference.Location.Bordermarch,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith,
                 world.State.TheTimeOfDay);

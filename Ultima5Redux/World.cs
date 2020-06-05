@@ -96,7 +96,7 @@ namespace Ultima5Redux
         /// </summary>
         public Conversation CurrentConversation { get; private set; }
 
-        public ShoppeKeeperDialogue ShoppeKeeperDialogue { get; private set; }
+        public ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; private set; }
 
         public MoonPhaseReferences MoonPhaseRefs { get; private set; }
         #endregion
@@ -155,7 +155,7 @@ namespace Ultima5Redux
             // build the NPC tables
             NpcRef = new NonPlayerCharacterReferences(_u5Directory, SmallMapRef, TalkScriptsRef, State);
 
-            ShoppeKeeperDialogue = new ShoppeKeeperDialogue(_u5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
+            ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(_u5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
             
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef, InvRef);
