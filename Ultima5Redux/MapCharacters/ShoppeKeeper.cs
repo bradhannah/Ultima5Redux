@@ -29,11 +29,11 @@ namespace Ultima5Redux.MapCharacters
         protected ShoppeKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference shoppeKeeperReference)
         {
             _shoppeKeeperDialogueReference = shoppeKeeperDialogueReference;
-            _shoppeKeeperReference = shoppeKeeperReference;
+            ShoppeKeeperReference = shoppeKeeperReference;
         }
         
         protected readonly ShoppeKeeperDialogueReference _shoppeKeeperDialogueReference;
-        protected readonly ShoppeKeeperReference _shoppeKeeperReference;
+        public readonly ShoppeKeeperReference ShoppeKeeperReference;
 
         private const int PISSED_OFF_START = 0;
         private const int PISSED_OFF_STOP = 3;
@@ -49,12 +49,12 @@ namespace Ultima5Redux.MapCharacters
             return "evening";
         }
         
-        public string GetHelloResponse(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType, TimeOfDay tod)
+        public string GetHelloResponse(TimeOfDay tod)
         {
             //Maps.ShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
             
-            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +_shoppeKeeperReference.ShoppeName + "!\n\n" + 
-                              _shoppeKeeperReference.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
+            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +ShoppeKeeperReference.ShoppeName + "!\n\n" + 
+                              ShoppeKeeperReference.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
             return response;
         }
         

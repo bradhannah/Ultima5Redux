@@ -514,10 +514,7 @@ namespace Ultima5ReduxTesting
                 string buying =
                     blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
-            string hello = blacksmith.GetHelloResponse(
-                SmallMapReferences.SingleMapReference.Location.Bordermarch,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith,
-                world.State.TheTimeOfDay);
+            string hello = blacksmith.GetHelloResponse(world.State.TheTimeOfDay);
         }
 
         [Test]
