@@ -508,13 +508,13 @@ namespace Ultima5ReduxTesting
 
             for (int i = 0; i < 10; i++)
             {
-                string pissedOff = world.ShoppeKeeperDialogueReference.GetPissedOffShoppeKeeperGoodbyeResponse();
-                string happy = world.ShoppeKeeperDialogueReference.GetHappyShoppeKeeperGoodbyeResponse();
+                string pissedOff = blacksmith.GetPissedOffShoppeKeeperGoodbyeResponse();
+                string happy = blacksmith.GetHappyShoppeKeeperGoodbyeResponse();
                 string selling = blacksmith.GetEquipmentSellingOutput(100, "Big THING");
                 string buying =
                     blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
-            string hello = world.ShoppeKeeperDialogueReference.GetHelloResponse(
+            string hello = blacksmith.GetHelloResponse(
                 SmallMapReferences.SingleMapReference.Location.Bordermarch,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith,
                 world.State.TheTimeOfDay);

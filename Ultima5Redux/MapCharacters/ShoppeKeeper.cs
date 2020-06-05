@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
@@ -12,6 +13,7 @@ namespace Ultima5Redux.MapCharacters
     {
         public enum DialogueType { None, OkGoodbye, BuyBlacksmith, SellBlacksmith }
 
+        
         public string ButtonName { get; }
         public DialogueType DialogueOption { get; }
 
@@ -24,19 +26,65 @@ namespace Ultima5Redux.MapCharacters
     
     public abstract class ShoppeKeeper
     {
-        protected ShoppeKeeper(ShoppeKeeperDialogueReference shoppeKeeperReference, SmallMapReferences.SingleMapReference.Location location,
-            NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+        protected ShoppeKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference shoppeKeeperReference)
         {
-            _shoppeKeeperDialogueReference = shoppeKeeperReference;
-            _location = location;
-            _npcType = npcType;
+            _shoppeKeeperDialogueReference = shoppeKeeperDialogueReference;
+            _shoppeKeeperReference = shoppeKeeperReference;
         }
         
         protected readonly ShoppeKeeperDialogueReference _shoppeKeeperDialogueReference;
-        protected readonly SmallMapReferences.SingleMapReference.Location _location;
-        protected readonly NonPlayerCharacterReference.NPCDialogTypeEnum _npcType;
+        protected readonly ShoppeKeeperReference _shoppeKeeperReference;
+
+        private const int PISSED_OFF_START = 0;
+        private const int PISSED_OFF_STOP = 3;
+        private const int HAPPY_START = 4;
+        private const int HAPPY_STOP = 7;
 
         public abstract List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
+        
+        private string GetTimeOfDayName(TimeOfDay tod)
+        {
+            if (tod.Hour > 5 && tod.Hour < 12) return "morning";
+            if (tod.Hour >= 12 && tod.Hour < 6) return "afternoon";
+            return "evening";
+        }
+        
+        public string GetHelloResponse(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType, TimeOfDay tod)
+        {
+            //Maps.ShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
+            
+            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +_shoppeKeeperReference.ShoppeName + "!\n\n" + 
+                              _shoppeKeeperReference.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
+            return response;
+        }
+        
+        /// <summary>
+        /// Get a random response when the shoppekeeper gets pissed off at you
+        /// </summary>
+        /// <returns></returns>
+        public string GetPissedOffShoppeKeeperGoodbyeResponse()
+        {
+            return _shoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP);
+        }
+
+        /// <summary>
+        /// Get a random response when the shoppekeeper is happy as you leave
+        /// </summary>
+        /// <returns></returns>
+        public string GetHappyShoppeKeeperGoodbyeResponse()
+        {
+            return _shoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP);
+        }
+
+        public string GetThanksAfterPurchaseResponse()
+        {
+            return "Thank thee kindly!";
+        }
+
+        public string GetPissedOffNotBuyingResponse()
+        {
+            return "Stop wasting my time!";
+        }        
     }
 
     public class BlackSmith : ShoppeKeeper
@@ -49,9 +97,8 @@ namespace Ultima5Redux.MapCharacters
 
         private readonly Dictionary<int, int> _equipmentMapToMerchantStrings = new Dictionary<int, int>();
         
-        public BlackSmith(ShoppeKeeperDialogueReference shoppeKeeperReference, Inventory inventory,
-            SmallMapReferences.SingleMapReference.Location location, 
-            NonPlayerCharacterReference.NPCDialogTypeEnum npcType) : base(shoppeKeeperReference, location, npcType)
+        public BlackSmith(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
+            ShoppeKeeperReference shoppeKeeperReferences) : base(shoppeKeeperDialogueReference, shoppeKeeperReferences)
         {
             // go through each of the pieces of equipment in order to build a map of equipment index
             // -> merchant string list

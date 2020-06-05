@@ -23,10 +23,6 @@ namespace Ultima5Redux.Dialogue
         private readonly ShoppeKeeperReferences _shoppeKeeperReferences;
         private readonly Inventory _inventory;
         
-        private const int PISSED_OFF_START = 0;
-        private const int PISSED_OFF_STOP = 3;
-        private const int HAPPY_START = 4;
-        private const int HAPPY_STOP = 7;
 
         /// <summary>
         /// Construct using the on disk references
@@ -124,60 +120,16 @@ namespace Ultima5Redux.Dialogue
         /// <param name="nMin"></param>
         /// <param name="nMax"></param>
         /// <returns></returns>
-        private string GetRandomMerchantStringFromRange(int nMin, int nMax)
+        internal string GetRandomMerchantStringFromRange(int nMin, int nMax)
         {
             return _merchantStrings[GetRandomIndexFromRange(nMin, nMax)];
         }
         
-        /// <summary>
-        /// Get a random response when the shoppekeeper gets pissed off at you
-        /// </summary>
-        /// <returns></returns>
-        public string GetPissedOffShoppeKeeperGoodbyeResponse()
-        {
-            return GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP);
-        }
-
-        /// <summary>
-        /// Get a random response when the shoppekeeper is happy as you leave
-        /// </summary>
-        /// <returns></returns>
-        public string GetHappyShoppeKeeperGoodbyeResponse()
-        {
-            return GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP);
-        }
-
-        public string GetThanksAfterPurchaseResponse()
-        {
-            return "Thank thee kindly!";
-        }
-
-        public string GetPissedOffNotBuyingResponse()
-        {
-            return "Stop wasting my time!";
-        }
-        
-        private string GetShoppeNameByLocation(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
-        {
-            //_dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES).GetChunkAsStringList().
-            return "";
-        }
-
-        private string GetTimeOfDayName(TimeOfDay tod)
-        {
-            if (tod.Hour > 5 && tod.Hour < 12) return "morning";
-            if (tod.Hour >= 12 && tod.Hour < 6) return "afternoon";
-            return "evening";
-        }
-        
-        public string GetHelloResponse(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType, TimeOfDay tod)
-        {
-            ShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
-            
-            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +shoppeKeeper.ShoppeName + "!\n\n" + 
-                              shoppeKeeper.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
-            return response;
-        }
+        // private string GetShoppeNameByLocation(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+        // {
+        //     //_dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES).GetChunkAsStringList().
+        //     return "";
+        // }
         
         /// <summary>
         /// Returns a random integer between two integers
@@ -198,8 +150,8 @@ namespace Ultima5Redux.Dialogue
             switch (npcType)
             {
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith:
-                    return new BlackSmith(this, _inventory, location, npcType);
-                    break;
+                    return new BlackSmith(this, _inventory,
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType));
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper:
                     break;
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.HorseSeller:

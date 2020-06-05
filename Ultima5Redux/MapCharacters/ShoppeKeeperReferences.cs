@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.Maps
+namespace Ultima5Redux.MapCharacters
 {
     public class ShoppeKeeperReferences
     {
