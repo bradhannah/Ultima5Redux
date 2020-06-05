@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapCharacters
@@ -19,6 +21,19 @@ namespace Ultima5Redux.MapCharacters
         public string ShoppeKeeperName { get; set; }
         public string ShoppeName { get; set; }
 
+        public DataOvlReference TheDataOvlReference { private get; set; }
+        
+        public List<DataOvlReference.Equipment> EquipmentForSaleList
+        {
+            get;
+            set;
+            // get
+            // {
+            //     List<DataOvlReference.Equipment> equipmentList = new List<DataOvlReference.Equipment>();
+            //     
+            // }
+        } 
+        
         public SmallMapReferences.SingleMapReference.Location ShoppeKeeperLocation
         {
             get

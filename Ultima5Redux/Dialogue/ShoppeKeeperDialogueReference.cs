@@ -151,7 +151,7 @@ namespace Ultima5Redux.Dialogue
             {
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith:
                     return new BlackSmith(this, _inventory,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType));
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper:
                     break;
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.HorseSeller:

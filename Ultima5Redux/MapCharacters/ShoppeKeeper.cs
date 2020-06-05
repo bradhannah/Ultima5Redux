@@ -89,6 +89,8 @@ namespace Ultima5Redux.MapCharacters
 
     public class BlackSmith : ShoppeKeeper
     {
+        private readonly DataOvlReference _dataOvlReference;
+
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
@@ -98,8 +100,9 @@ namespace Ultima5Redux.MapCharacters
         private readonly Dictionary<int, int> _equipmentMapToMerchantStrings = new Dictionary<int, int>();
         
         public BlackSmith(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
-            ShoppeKeeperReference shoppeKeeperReferences) : base(shoppeKeeperDialogueReference, shoppeKeeperReferences)
+            ShoppeKeeperReference shoppeKeeperReferences, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, shoppeKeeperReferences)
         {
+            _dataOvlReference = dataOvlReference;
             // go through each of the pieces of equipment in order to build a map of equipment index
             // -> merchant string list
             int nEquipmentCounter = 0;
@@ -116,6 +119,8 @@ namespace Ultima5Redux.MapCharacters
                 _equipmentMapToMerchantStrings.Add((int) equipment, nEquipmentCounter + nEquipmentOffset);
                 nEquipmentCounter++;
             }
+            
+            
         }
         
         /// <summary>

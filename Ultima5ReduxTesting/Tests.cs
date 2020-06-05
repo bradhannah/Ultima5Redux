@@ -500,7 +500,7 @@ namespace Ultima5ReduxTesting
         public void Test_BasicMerchantDialog()
         {
             World world = new World(SaveDirectory);
-            BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Britain,
+            BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Minoc,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith) as BlackSmith;
             
             string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
