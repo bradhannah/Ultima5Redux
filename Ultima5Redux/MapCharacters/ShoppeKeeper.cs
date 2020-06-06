@@ -26,14 +26,16 @@ namespace Ultima5Redux.MapCharacters
     
     public abstract class ShoppeKeeper
     {
-        protected ShoppeKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference shoppeKeeperReference)
+        protected ShoppeKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference shoppeKeeperReference, DataOvlReference dataOvlReference)
         {
             _shoppeKeeperDialogueReference = shoppeKeeperDialogueReference;
+            _dataOvlReference = dataOvlReference;
             ShoppeKeeperReference = shoppeKeeperReference;
         }
         
         protected readonly ShoppeKeeperDialogueReference _shoppeKeeperDialogueReference;
         public readonly ShoppeKeeperReference ShoppeKeeperReference;
+        DataOvlReference _dataOvlReference;
 
         private const int PISSED_OFF_START = 0;
         private const int PISSED_OFF_STOP = 3;
@@ -84,13 +86,31 @@ namespace Ultima5Redux.MapCharacters
         public string GetPissedOffNotBuyingResponse()
         {
             return "Stop wasting my time!";
-        }        
+        }
+
+        public string GetPissedOffNotEnoughMoney()
+        {
+            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
+        }
+
+        public string GetDoYouWantToBuy()
+        {
+            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
+        }
+
+        private string GetRandomStringFromChoices(DataOvlReference.DataChunkName chunkName)
+        {
+            List<string> responses = _dataOvlReference.GetDataChunk(chunkName)
+                .GetChunkAsStringList().Strs;
+
+            return responses[_shoppeKeeperDialogueReference.GetRandomIndexFromRange(0, responses.Count)];
+        }
+        
+        
     }
 
     public class BlackSmith : ShoppeKeeper
     {
-        private readonly DataOvlReference _dataOvlReference;
-
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
@@ -100,9 +120,8 @@ namespace Ultima5Redux.MapCharacters
         private readonly Dictionary<int, int> _equipmentMapToMerchantStrings = new Dictionary<int, int>();
         
         public BlackSmith(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
-            ShoppeKeeperReference shoppeKeeperReferences, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, shoppeKeeperReferences)
+            ShoppeKeeperReference shoppeKeeperReferences, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, shoppeKeeperReferences, dataOvlReference)
         {
-            _dataOvlReference = dataOvlReference;
             // go through each of the pieces of equipment in order to build a map of equipment index
             // -> merchant string list
             int nEquipmentCounter = 0;

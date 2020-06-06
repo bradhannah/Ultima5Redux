@@ -77,7 +77,9 @@ namespace Ultima5Redux.Data
             //ARMOUR_BASE_PRICES,
             //WEAPON_BASE_PRICES,
             EQUIPMENT_BASE_PRICE,
-            WEAPONS_SOLD_BY_MERCHANTS
+            WEAPONS_SOLD_BY_MERCHANTS,
+            SHOPPE_KEEPER_NOT_ENOUGH_MONEY,
+            SHOPPE_KEEPER_DO_YOU_WANT
         };
 
         public enum Equipment
@@ -833,6 +835,9 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Magic shop strings", 0x785c, 0x1be);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7a1a, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Armour/weapon shop strings", 0x7a26, 0x4e4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - do you want to buy?", 0x7ac6, 0x4E, 0, DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - not enough money", 0x7b14, 0x59, 0, DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
+                        
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7f0a, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Healer shop strings", 0x7f16, 0x2f8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);
