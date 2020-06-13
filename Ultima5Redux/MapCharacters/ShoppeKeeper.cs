@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
-using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapCharacters
 {
@@ -26,16 +23,16 @@ namespace Ultima5Redux.MapCharacters
     
     public abstract class ShoppeKeeper
     {
-        protected ShoppeKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference shoppeKeeperReference, DataOvlReference dataOvlReference)
+        protected ShoppeKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference)
         {
             _shoppeKeeperDialogueReference = shoppeKeeperDialogueReference;
             _dataOvlReference = dataOvlReference;
-            ShoppeKeeperReference = shoppeKeeperReference;
+            TheShoppeKeeperReference = theShoppeKeeperReference;
         }
         
         protected readonly ShoppeKeeperDialogueReference _shoppeKeeperDialogueReference;
-        public readonly ShoppeKeeperReference ShoppeKeeperReference;
-        DataOvlReference _dataOvlReference;
+        public readonly ShoppeKeeperReference TheShoppeKeeperReference;
+        protected DataOvlReference _dataOvlReference;
 
         private const int PISSED_OFF_START = 0;
         private const int PISSED_OFF_STOP = 3;
@@ -53,12 +50,15 @@ namespace Ultima5Redux.MapCharacters
         
         public string GetHelloResponse(TimeOfDay tod)
         {
-            //Maps.ShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
+            //Maps.TheShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
             
-            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +ShoppeKeeperReference.ShoppeName + "!\n\n" + 
-                              ShoppeKeeperReference.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
+            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +TheShoppeKeeperReference.ShoppeName + "!\n\n" + 
+                              TheShoppeKeeperReference.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
             return response;
         }
+
+
+        
         
         /// <summary>
         /// Get a random response when the shoppekeeper gets pissed off at you
@@ -98,81 +98,12 @@ namespace Ultima5Redux.MapCharacters
             return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
         }
 
-        private string GetRandomStringFromChoices(DataOvlReference.DataChunkName chunkName)
+        protected string GetRandomStringFromChoices(DataOvlReference.DataChunkName chunkName)
         {
             List<string> responses = _dataOvlReference.GetDataChunk(chunkName)
                 .GetChunkAsStringList().Strs;
 
             return responses[_shoppeKeeperDialogueReference.GetRandomIndexFromRange(0, responses.Count)];
-        }
-        
-        
-    }
-
-    public class BlackSmith : ShoppeKeeper
-    {
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>()
-        {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
-            new ShoppeKeeperOption("Sell", ShoppeKeeperOption.DialogueType.SellBlacksmith)
-        };
-
-        private readonly Dictionary<int, int> _equipmentMapToMerchantStrings = new Dictionary<int, int>();
-        
-        public BlackSmith(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
-            ShoppeKeeperReference shoppeKeeperReferences, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, shoppeKeeperReferences, dataOvlReference)
-        {
-            // go through each of the pieces of equipment in order to build a map of equipment index
-            // -> merchant string list
-            int nEquipmentCounter = 0;
-            foreach (DataOvlReference.Equipment equipment in Enum.GetValues((typeof(DataOvlReference.Equipment))))
-            {
-                // we only look at equipment up to SpikedCollars
-                if ((int) equipment > (int) DataOvlReference.Equipment.SpikedCollar) continue;
-                
-                const int nEquipmentOffset = 8;
-
-                CombatItem item = inventory.GetItemFromEquipment(equipment);
-                if (item.BasePrice <= 0) continue;
-                // add an equipment offset because equipment strings don't start at zero in the merchant strings
-                _equipmentMapToMerchantStrings.Add((int) equipment, nEquipmentCounter + nEquipmentOffset);
-                nEquipmentCounter++;
-            }
-            
-            
-        }
-        
-        /// <summary>
-        /// Gets merchant response to asking to buy a piece of equipment
-        /// </summary>
-        /// <param name="nEquipmentIndex">index into dialogue array</param>
-        /// <param name="nGold">how much gold will it cost?</param>
-        /// <param name="bUseRichText"></param>
-        /// <returns>the complete response string</returns>
-        private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold, bool bUseRichText)
-        {
-            int nDialogueIndex = _equipmentMapToMerchantStrings[nEquipmentIndex];
-            Debug.Assert(nEquipmentIndex >= 0 && nEquipmentIndex <= (int)DataOvlReference.Equipment.SpikedCollar);
-            Debug.Assert(_shoppeKeeperDialogueReference.CountReplacementVariables(nDialogueIndex) == 1);
-            return _shoppeKeeperDialogueReference.GetMerchantString(nDialogueIndex, nGold:nGold);
-        }
-
-        public string GetEquipmentBuyingOutput(DataOvlReference.Equipment equipment, int nGold, bool bUseRichText = true)
-        {
-            return GetEquipmentBuyingOutput((int) equipment, nGold, bUseRichText);
-        }
-
-        /// <summary>
-        /// Gets the response string when vendor is trying to sell a particular piece of equipment
-        /// </summary>
-        /// <param name="nGold">how much to charge?</param>
-        /// <param name="equipmentName">the name of the equipment</param>
-        /// <returns>the complete response string</returns>
-        public string GetEquipmentSellingOutput(int nGold, string equipmentName)
-        {
-            int sellStringIndex = _shoppeKeeperDialogueReference.GetRandomIndexFromRange(49, 56);
-            
-            return _shoppeKeeperDialogueReference.GetMerchantString(sellStringIndex, nGold: nGold, equipmentName: equipmentName);
         }
     }
 }

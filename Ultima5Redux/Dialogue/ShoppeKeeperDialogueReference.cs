@@ -58,7 +58,7 @@ namespace Ultima5Redux.Dialogue
             foreach (string rawShoppeString in rawShoppeStrings)
             {
                 string convertedStr = compressedWordReference.ReplaceRawMerchantStringsWithCompressedWords(rawShoppeString);
-                Console.WriteLine((i++) + ","+"\""+convertedStr.Replace('\n', '_').Replace('"', '+')+"\"");
+                Console.WriteLine((i++) + @","+@""""+convertedStr.Replace('\n', '_').Replace('"', '+')+@"""");
                 _merchantStrings.Add(convertedStr);
             }
         }
@@ -86,7 +86,20 @@ namespace Ultima5Redux.Dialogue
         /// <param name="nGold">how many gold to fill in</param>
         /// <param name="equipmentName"></param>
         /// <returns>a complete string with full replacements</returns>
-        internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", bool bUseRichText = true)
+        internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", bool bUseRichText = true, string shoppeKeeperName = "")
+        {
+            string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
+            return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName);
+        }
+        
+        /// <summary>
+        /// Gets the merchant string with full variable replacement 
+        /// </summary>
+        /// <param name="dialogue">string to do variable replacement on</param>
+        /// <param name="nGold">how many gold to fill in</param>
+        /// <param name="equipmentName"></param>
+        /// <returns>a complete string with full replacements</returns>
+        internal string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", bool bUseRichText = true, string shoppeKeeperName = "")
         {
             // % is gold
             // & is current piece of equipment
@@ -96,19 +109,21 @@ namespace Ultima5Redux.Dialogue
             // * location of thing
             // ^ quantity of thing (ie. reagent)
             
-            const string HIGHLIGHT_COLOR = "<color=#00CC00>";
-            const string REGULAR_COLOR = "<color=#FFFFFF>";
+            const string HighlightColor = "<color=#00CC00>";
+            const string RegularColor = "<color=#FFFFFF>";
 
-            string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
-            StringBuilder sb = new StringBuilder(merchantStr);
+            StringBuilder sb = new StringBuilder(dialogue);
             if (nGold > 0)
             {
-                sb.Replace("%", HIGHLIGHT_COLOR+nGold.ToString()+REGULAR_COLOR);
+                sb.Replace("%", HighlightColor+nGold.ToString()+RegularColor);
             }
-
             if (equipmentName != "")
             {
-                sb.Replace("&", HIGHLIGHT_COLOR+equipmentName.ToString()+REGULAR_COLOR);
+                sb.Replace("&", HighlightColor+equipmentName.ToString()+RegularColor);
+            }
+            if (shoppeKeeperName != "")
+            {
+                sb.Replace("$", shoppeKeeperName);
             }
 
             return sb.ToString();

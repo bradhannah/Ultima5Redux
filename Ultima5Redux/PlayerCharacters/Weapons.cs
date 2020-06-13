@@ -3,7 +3,7 @@ using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public class Weapons : InventoryItems<Weapon.WeaponTypeEnum, Weapon>
+    public class Weapons : CombatItems<Weapon.WeaponTypeEnum, Weapon>
     {
         public override Dictionary<Weapon.WeaponTypeEnum, Weapon> Items { get; } = new Dictionary<Weapon.WeaponTypeEnum, Weapon>();
         private List<string> _equipmentNames;

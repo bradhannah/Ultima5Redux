@@ -38,7 +38,7 @@ namespace Ultima5Redux.MapCharacters
             for (int i = 0; i < shoppeNames.Count; i++)
             {
                 // create a new shoppe keeper object then add it to the list
-                ShoppeKeeperReference shoppeKeeper = _shoppeKeepersByIndex[i];//new ShoppeKeeperReference();
+                ShoppeKeeperReference shoppeKeeper = _shoppeKeepersByIndex[i];//new TheShoppeKeeperReference();
                 string shoppeKeeperName = shoppeKeeperNames[i];
                 shoppeKeeper.ShoppeName = shoppeNames[i];
                 shoppeKeeper.ShoppeKeeperName = shoppeKeeperName;

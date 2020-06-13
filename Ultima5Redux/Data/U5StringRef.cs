@@ -42,9 +42,7 @@ namespace Ultima5Redux.Data
             _strMap.Add(typeof(DataOvlReference.ReagentStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENTS).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ExclaimStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EXCLAIMS).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ThingsIFindStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.THINGS_I_FIND).GetChunkAsStringList());
-            
-            
-            
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperSellingStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_SELLING).GetChunkAsStringList());
         }
 
         private Dictionary<Type, SomeStrings> _strMap;

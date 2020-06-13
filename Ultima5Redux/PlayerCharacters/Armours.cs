@@ -4,7 +4,7 @@ using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public class Armours : InventoryItems<Armours.ArmourTypeEnum, List<Armour>>
+    public class Armours : CombatItems<Armours.ArmourTypeEnum, List<Armour>>
     {
         //public List<Shield> Shields = new List<Shield>();
         public readonly List<ChestArmour> ChestArmours = new List<ChestArmour>();

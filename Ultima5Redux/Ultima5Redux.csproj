@@ -97,6 +97,7 @@
     <Compile Include="DayNightMoon\TimeOfDay.cs" />
     <Compile Include="Dialogue\ShoppeKeeperDialogueReference.cs" />
     <Compile Include="External\AStarSharp.cs" />
+    <Compile Include="MapCharacters\BlackSmith.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="PlayerCharacters\Armours.cs" />
     <Compile Include="PlayerCharacters\ChestArmour.cs" />
     <Compile Include="PlayerCharacters\CombatItem.cs" />
+    <Compile Include="PlayerCharacters\CombatItems.cs" />
     <Compile Include="PlayerCharacters\Helm.cs" />
     <Compile Include="PlayerCharacters\InventoryReference.cs" />
     <Compile Include="PlayerCharacters\LordBritishArtifact.cs" />

@@ -79,7 +79,9 @@ namespace Ultima5Redux.Data
             EQUIPMENT_BASE_PRICE,
             WEAPONS_SOLD_BY_MERCHANTS,
             SHOPPE_KEEPER_NOT_ENOUGH_MONEY,
-            SHOPPE_KEEPER_DO_YOU_WANT
+            SHOPPE_KEEPER_DO_YOU_WANT,
+            SHOPPE_KEEPER_WHATS_FOR_SALE,
+            SHOPPE_KEEPER_SELLING
         };
 
         public enum Equipment
@@ -540,6 +542,8 @@ namespace Ultima5Redux.Data
 // [64] = {string} "\nThou dost find\n"
 // [65] = {string} "\nThou dost find\n"
 
+        public enum ShoppeKeeperSellingStrings { DONT_DEAL_AMMO_GROWL_NAME, N_N, N_NDEAL_Q, NO, YES_DONE_SAYS_NAME, I_CANNOT_BUY_FROM_THEE_NAME }
+
         /// <summary>
         /// Conversational phrase indexes
         /// </summary>
@@ -837,7 +841,9 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Armour/weapon shop strings", 0x7a26, 0x4e4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - do you want to buy?", 0x7ac6, 0x4E, 0, DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - not enough money", 0x7b14, 0x59, 0, DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
-                        
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various selling strings", 0x7d44, 0x7f, 0, DataChunkName.SHOPPE_KEEPER_SELLING);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - what have you got for sale", 0x7dc4, 0x7F, 0, DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
+            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_SELLING).GetChunkAsStringList();
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7f0a, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Healer shop strings", 0x7f16, 0x2f8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);
