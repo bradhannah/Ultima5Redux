@@ -4,7 +4,7 @@ using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public class Armours : InventoryItems<Armours.ArmourTypeEnum, List<Armour>>
+    public class Armours : CombatItems<Armours.ArmourTypeEnum, List<Armour>>
     {
         //public List<Shield> Shields = new List<Shield>();
         public readonly List<ChestArmour> ChestArmours = new List<ChestArmour>();
@@ -113,6 +113,7 @@ namespace Ultima5Redux.PlayerCharacters
         private void InitializeChestArmour()
         {
             AddChestArmour(ChestArmour.ChestArmourEnum.ClothArmour, DataOvlReference.Equipment.ClothArmour);
+            AddChestArmour(ChestArmour.ChestArmourEnum.LeatherArmour, DataOvlReference.Equipment.LeatherArmour);
             AddChestArmour(ChestArmour.ChestArmourEnum.Ringmail, DataOvlReference.Equipment.Ringmail);
             AddChestArmour(ChestArmour.ChestArmourEnum.ScaleMail, DataOvlReference.Equipment.ScaleMail);
             AddChestArmour(ChestArmour.ChestArmourEnum.ChainMail, DataOvlReference.Equipment.ChainMail);

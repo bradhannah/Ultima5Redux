@@ -9,6 +9,8 @@ namespace Ultima5Redux.PlayerCharacters
     {
         public readonly DataOvlReference.Equipment SpecificEquipment;
 
+        public virtual bool CanSell => BasePrice > 0;
+
         public static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
             List<byte> attackValueList = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList();

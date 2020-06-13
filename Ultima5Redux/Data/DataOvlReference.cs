@@ -77,66 +77,70 @@ namespace Ultima5Redux.Data
             //ARMOUR_BASE_PRICES,
             //WEAPON_BASE_PRICES,
             EQUIPMENT_BASE_PRICE,
-            WEAPONS_SOLD_BY_MERCHANTS
+            WEAPONS_SOLD_BY_MERCHANTS,
+            SHOPPE_KEEPER_NOT_ENOUGH_MONEY,
+            SHOPPE_KEEPER_DO_YOU_WANT,
+            SHOPPE_KEEPER_WHATS_FOR_SALE,
+            SHOPPE_KEEPER_SELLING
         };
 
         public enum Equipment
         {
-            LeatherHelm,
-            ChainCoif,
-            IronHelm,
-            SpikedHelm,
-            SmallShield,
-            LargeShield,
-            SpikedShield,
-            MagicShield,
-            JewelShield,
-            ClothArmour,
-            LeatherArmour,
-            Ringmail,
-            ScaleMail,
-            ChainMail,
-            PlateMail,
-            MysticArmour,
-            Dagger,
-            Sling,
-            Club,
-            FlamingOil,
-            MainGauche,
-            Spear,
-            ThrowingAxe,
-            ShortSword,
-            Mace,
-            MorningStar,
-            Bow,
-            Arrows,
-            Crossbow,
-            Quarrels,
-            LongSword,
-            TwoHHammer,
-            TwoHAxe,
-            TwoHSword,
-            Halberd,
-            SwordofChaos,
-            MagicBow,
-            SilverSword,
-            MagicAxe,
-            GlassSword,
-            JeweledSword,
-            MysticSword,
-            RingInvis,
-            RingProtection,
-            RingRegen,
-            Amuletofturning,
-            SpikedCollar,
-            Ankh,
-            FlamPor,
-            VasFlam,
-            InCorp,
-            UusNox,
-            UusZu,
-            UusFlam,
-            UusSanct,
+            LeatherHelm = 0,
+            ChainCoif = 1,
+            IronHelm = 2,
+            SpikedHelm = 3,
+            SmallShield = 4,
+            LargeShield = 5,
+            SpikedShield = 6,
+            MagicShield = 7,
+            JewelShield = 8,
+            ClothArmour = 9,
+            LeatherArmour = 10,
+            Ringmail = 11,
+            ScaleMail = 12,
+            ChainMail = 13,
+            PlateMail = 14,
+            MysticArmour = 15,
+            Dagger = 16,
+            Sling = 17,
+            Club = 18,
+            FlamingOil = 19,
+            MainGauche = 20,
+            Spear = 21,
+            ThrowingAxe = 22,
+            ShortSword = 23,
+            Mace = 24,
+            MorningStar = 25,
+            Bow = 26,
+            Arrows = 27,
+            Crossbow = 28,
+            Quarrels = 29,
+            LongSword = 30,
+            TwoHHammer = 31,
+            TwoHAxe = 32,
+            TwoHSword = 33,
+            Halberd = 34,
+            SwordofChaos = 35,
+            MagicBow = 36,
+            SilverSword = 37,
+            MagicAxe = 38,
+            GlassSword = 39,
+            JeweledSword = 40,
+            MysticSword = 41,
+            RingInvis = 42,
+            RingProtection = 43,
+            RingRegen = 44,
+            Amuletofturning = 45,
+            SpikedCollar = 46,
+            Ankh = 47,
+            FlamPor = 48,
+            VasFlam = 49,
+            InCorp = 50,
+            UusNox = 51,
+            UusZu = 52,
+            UusFlam = 53,
+            UusSanct = 54,
             Nothing = 0xFF
         }
 
@@ -538,6 +542,8 @@ namespace Ultima5Redux.Data
 // [64] = {string} "\nThou dost find\n"
 // [65] = {string} "\nThou dost find\n"
 
+        public enum ShoppeKeeperSellingStrings { DONT_DEAL_AMMO_GROWL_NAME, N_N, N_NDEAL_Q, NO, YES_DONE_SAYS_NAME, I_CANNOT_BUY_FROM_THEE_NAME }
+
         /// <summary>
         /// Conversational phrase indexes
         /// </summary>
@@ -833,6 +839,11 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Magic shop strings", 0x785c, 0x1be);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7a1a, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Armour/weapon shop strings", 0x7a26, 0x4e4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - do you want to buy?", 0x7ac6, 0x4E, 0, DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - not enough money", 0x7b14, 0x59, 0, DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various selling strings", 0x7d44, 0x7f, 0, DataChunkName.SHOPPE_KEEPER_SELLING);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - what have you got for sale", 0x7dc4, 0x7F, 0, DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
+            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_SELLING).GetChunkAsStringList();
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7f0a, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Healer shop strings", 0x7f16, 0x2f8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);

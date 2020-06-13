@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.Maps
+namespace Ultima5Redux.MapCharacters
 {
     public class ShoppeKeeperReferences
     {
@@ -22,7 +23,7 @@ namespace Ultima5Redux.Maps
             
             // we load a list of all shoppe keeper locations which we unfortunately had to map 
             // ourselves because it appears most shoppe keeper data is in the code (OVL) files
-            _shoppeKeepersByIndex = ShoppeKeeperReferences.LoadShoppeKeepersByIndex();
+            _shoppeKeepersByIndex = ShoppeKeeperReferences.LoadShoppeKeepersByIndex(_dataOvlReference);
             
             List<string> shoppeNames = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES)
                 .GetChunkAsStringList().Strs;
@@ -37,7 +38,7 @@ namespace Ultima5Redux.Maps
             for (int i = 0; i < shoppeNames.Count; i++)
             {
                 // create a new shoppe keeper object then add it to the list
-                ShoppeKeeperReference shoppeKeeper = _shoppeKeepersByIndex[i];//new ShoppeKeeperReference();
+                ShoppeKeeperReference shoppeKeeper = _shoppeKeepersByIndex[i];//new TheShoppeKeeperReference();
                 string shoppeKeeperName = shoppeKeeperNames[i];
                 shoppeKeeper.ShoppeName = shoppeNames[i];
                 shoppeKeeper.ShoppeKeeperName = shoppeKeeperName;
@@ -56,9 +57,29 @@ namespace Ultima5Redux.Maps
 
                 _shoppeKeepersByLocationAndType[shoppeKeeper.ShoppeKeeperLocation]
                     .Add(shoppeKeeper.TheShoppeKeeperType, shoppeKeeper);
+                
+                // if it's a blacksmith then we load their items for sale
+                if (shoppeKeeper.NpcRef.NPCType == NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith)
+                {
+                    shoppeKeeper.EquipmentForSaleList = GetEquipmentList(i);
+                }
             }
         }
 
+        private List<DataOvlReference.Equipment> GetEquipmentList(int nTown)
+        {
+            if (nTown > 9) return new List<DataOvlReference.Equipment>();
+            
+            List<byte> equipmentByteList = _dataOvlReference
+                .GetDataChunk(DataOvlReference.DataChunkName.WEAPONS_SOLD_BY_MERCHANTS).GetAsByteList();
+            const int nMaxItemsPerTown = 8;
+            int nStartIndex = nTown * nMaxItemsPerTown;
+
+            List<byte> equipmentByteListForTown = equipmentByteList.GetRange(nStartIndex,  nMaxItemsPerTown);
+
+            return equipmentByteListForTown.Select(b => (DataOvlReference.Equipment) b).ToList();
+        }
+        
         public ShoppeKeeperReference GetShoppeKeeperReference(SmallMapReferences.SingleMapReference.Location location,
             NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
         {
@@ -74,10 +95,13 @@ namespace Ultima5Redux.Maps
             return _shoppeKeepersByLocationAndType[location][npcType];
         }
         
-        private static Dictionary<int, ShoppeKeeperReference> LoadShoppeKeepersByIndex()
+        private static Dictionary<int, ShoppeKeeperReference> LoadShoppeKeepersByIndex(DataOvlReference dataOvlReference)
         {
             Dictionary<int, ShoppeKeeperReference> result = JsonConvert.DeserializeObject<Dictionary<int, ShoppeKeeperReference>>(Properties.Resources.ShoppeKeeperMap);
-            
+            foreach (ShoppeKeeperReference shoppeKeeperReference in result.Values)
+            {
+                shoppeKeeperReference.TheDataOvlReference = dataOvlReference;
+            }
             return result;
         }
         

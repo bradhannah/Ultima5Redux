@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Media;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.MapCharacters;
@@ -499,19 +500,21 @@ namespace Ultima5ReduxTesting
         public void Test_BasicMerchantDialog()
         {
             World world = new World(SaveDirectory);
-
-            string purchaseStr = world.ShoppeKeeperDialogue.GetEquipmentBuyingOutput(8, 100);
+            BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Minoc,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith) as BlackSmith;
+            
+            string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
+            string purchaseStr = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
 
             for (int i = 0; i < 10; i++)
             {
-                string pissedOff = world.ShoppeKeeperDialogue.GetPissedOffShoppeKeeperGoodbyeResponse();
-                string happy = world.ShoppeKeeperDialogue.GetHappyShoppeKeeperGoodbyeResponse();
-                string selling = world.ShoppeKeeperDialogue.GetEquipmentSellingOutput(100, "Big THING");
+                string pissedOff = blacksmith.GetPissedOffShoppeKeeperGoodbyeResponse();
+                string happy = blacksmith.GetHappyShoppeKeeperGoodbyeResponse();
+                string selling = blacksmith.GetEquipmentSellingOutput(100, "Big THING");
+                string buying =
+                    blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
-            string hello = world.ShoppeKeeperDialogue.GetHelloResponse(
-                SmallMapReferences.SingleMapReference.Location.Bordermarch,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith,
-                world.State.TheTimeOfDay);
+            string hello = blacksmith.GetHelloResponse(world.State.TheTimeOfDay);
         }
 
         [Test]

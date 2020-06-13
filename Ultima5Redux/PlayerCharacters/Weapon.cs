@@ -32,6 +32,8 @@ namespace Ultima5Redux.PlayerCharacters
 
         public bool IsShield { get; }
 
+        public override bool CanSell => BasePrice > 0 || IsAmmo;
+
         public override bool HideQuantity => false;
         
         public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, IReadOnlyList<byte> gameStateByteArray)

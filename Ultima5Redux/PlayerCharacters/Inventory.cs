@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Ultima5Redux.PlayerCharacters
 {
@@ -22,6 +23,7 @@ namespace Ultima5Redux.PlayerCharacters
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
+        public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
         private static byte BoolToByte(bool bBool)
@@ -146,9 +148,11 @@ namespace Ultima5Redux.PlayerCharacters
             ProtectiveArmour = new Armours(dataOvlRef, gameStateByteArray);
             AllItems.AddRange(ProtectiveArmour.GenericItemList);
             ReadyItems.AddRange(ProtectiveArmour.GenericItemList);
+            CombatItems.AddRange(ProtectiveArmour.AllCombatItems);
 
             TheWeapons = new Weapons(dataOvlRef, gameStateByteArray);
             ReadyItems.AddRange(TheWeapons.GenericItemList);
+            CombatItems.AddRange(TheWeapons.AllCombatItems);
 
             MagicScrolls = new Scrolls(dataOvlRef, gameStateByteArray);
             UseItems.AddRange(MagicScrolls.GenericItemList);
