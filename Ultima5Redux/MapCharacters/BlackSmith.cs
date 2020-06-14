@@ -86,9 +86,10 @@ namespace Ultima5Redux.MapCharacters
         
         public string GetDoneResponse()
         {
-            return _shoppeKeeperDialogueReference.GetMerchantString(
+            string doneResponse = _shoppeKeeperDialogueReference.GetMerchantString(
                 _dataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperSellingStrings
-                    .YES_DONE_SAYS_NAME), shoppeKeeperName:TheShoppeKeeperReference.ShoppeKeeperName);
+                    .YES_DONE_SAYS_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+            return doneResponse.Replace("!\"\n", "\"! ");
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Ultima5Redux.MapCharacters
     {
         public enum DialogueType { None, OkGoodbye, BuyBlacksmith, SellBlacksmith }
 
-        
         public string ButtonName { get; }
         public DialogueType DialogueOption { get; }
 
@@ -34,6 +33,9 @@ namespace Ultima5Redux.MapCharacters
         public readonly ShoppeKeeperReference TheShoppeKeeperReference;
         protected DataOvlReference _dataOvlReference;
 
+        private readonly Dictionary<DataOvlReference.DataChunkName, int> _previousRandomSelectionByChunk =
+            new Dictionary<DataOvlReference.DataChunkName, int>();
+
         private const int PISSED_OFF_START = 0;
         private const int PISSED_OFF_STOP = 3;
         private const int HAPPY_START = 4;
@@ -56,8 +58,6 @@ namespace Ultima5Redux.MapCharacters
                               TheShoppeKeeperReference.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
             return response;
         }
-
-
         
         
         /// <summary>
@@ -103,7 +103,23 @@ namespace Ultima5Redux.MapCharacters
             List<string> responses = _dataOvlReference.GetDataChunk(chunkName)
                 .GetChunkAsStringList().Strs;
 
-            return responses[_shoppeKeeperDialogueReference.GetRandomIndexFromRange(0, responses.Count)];
+            // if this hasn't been access before, then lets add a chunk to make sure we don't repeat the same thing 
+            // twice in a row
+            if (!_previousRandomSelectionByChunk.ContainsKey(chunkName))
+            {
+                _previousRandomSelectionByChunk.Add(chunkName, -1);
+            }
+
+            int nResponseIndex = _shoppeKeeperDialogueReference.GetRandomIndexFromRange(0, responses.Count);
+            
+            // if this response is the same as the last response, then we add one and make sure it is still in bounds 
+            // by modding it 
+            if (nResponseIndex == _previousRandomSelectionByChunk[chunkName])
+                nResponseIndex = (nResponseIndex + 1) % responses.Count;
+
+            _previousRandomSelectionByChunk[chunkName] = nResponseIndex;
+            
+            return responses[nResponseIndex];
         }
     }
 }
