@@ -65,37 +65,37 @@ namespace Ultima5Redux.MapCharacters
 
         #region Static Methods
 
-        internal static Point2D GetAdjustedPos(Point2D xy,
-            VirtualMap.Direction direction)
+        internal static Point2D GetAdjustedPos(Point2D xy, VirtualMap.Direction direction)
         {
-            NonPlayerCharacterMovement.MovementCommandDirection getDirection(VirtualMap.Direction vmapDirection)
-            {
-                switch(vmapDirection)
-                {
-                    case VirtualMap.Direction.Right:
-                        return MovementCommandDirection.East;
-                    case VirtualMap.Direction.Up:
-                        return MovementCommandDirection.North;
-                    case VirtualMap.Direction.Left:
-                        return MovementCommandDirection.West;
-                    case VirtualMap.Direction.Down:
-                        return MovementCommandDirection.South;
-                    case VirtualMap.Direction.None:
-                    default:
-                        throw new Ultima5ReduxException("Cannot convert "+vmapDirection+" to MovementCommandDirection");
-                }
-            }
-
-            return NonPlayerCharacterMovement.GetAdjustedPos(xy, getDirection(direction));
+            return NonPlayerCharacterMovement.GetAdjustedPos(xy, GetDirection(direction));
         }
-        
+
+        private static MovementCommandDirection GetDirection(VirtualMap.Direction vmapDirection)
+        {
+            switch (vmapDirection)
+            {
+                case VirtualMap.Direction.Right:
+                    return MovementCommandDirection.East;
+                case VirtualMap.Direction.Up:
+                    return MovementCommandDirection.North;
+                case VirtualMap.Direction.Left:
+                    return MovementCommandDirection.West;
+                case VirtualMap.Direction.Down:
+                    return MovementCommandDirection.South;
+                case VirtualMap.Direction.None:
+                default:
+                    throw new Ultima5ReduxException("Cannot convert " + vmapDirection + " to MovementCommandDirection");
+            }
+        }
+
         /// <summary>
         /// Provides an adjust xy coordinate based on a given direction
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        internal static Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterMovement.MovementCommandDirection direction)
+        internal static Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterMovement.MovementCommandDirection direction,
+            int nSpaces = 1)
         {
             Point2D adjustedPos = new Point2D(xy.X, xy.Y);
 
@@ -105,16 +105,16 @@ namespace Ultima5Redux.MapCharacters
                     // no movement
                     break;
                 case MovementCommandDirection.East:
-                    adjustedPos.X += 1;
+                    adjustedPos.X += nSpaces;
                     break;
                 case MovementCommandDirection.North:
-                    adjustedPos.Y -= 1;
+                    adjustedPos.Y -= nSpaces;
                     break;
                 case MovementCommandDirection.West:
-                    adjustedPos.X -= 1;
+                    adjustedPos.X -= nSpaces;
                     break;
                 case MovementCommandDirection.South:
-                    adjustedPos.Y += 1;
+                    adjustedPos.Y += nSpaces;
                     break;
             }
             return adjustedPos;

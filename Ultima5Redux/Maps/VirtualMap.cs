@@ -49,7 +49,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         /// Current position of player character (avatar)
         /// </summary>
-        private Point2D _currentPosition = new Point2D(0, 0);
+        private readonly Point2D _currentPosition = new Point2D(0, 0);
         /// <summary>
         /// Current time of day
         /// </summary>
@@ -250,7 +250,6 @@ namespace Ultima5Redux.Maps
             // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
             if (!bIgnoreExposed)
             {
-                //InventoryItem exposedInventoryReference;
                 if (_exposedSearchItems[x][y] != null)
                 {
                     if (_exposedSearchItems[x][y].Count > 0)
@@ -385,6 +384,28 @@ namespace Ultima5Redux.Maps
             CurrentPosition = xy;
         }
 
+        
+        
+        /// <summary>
+        /// Gets the NPC you want to talk to in the given direction
+        /// If you are in front of a table then you can talk over top of it too
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns>the NPC mapcharacter or null if non are found</returns>
+        public MapCharacter GetNPCToTalkTo(NonPlayerCharacterMovement.MovementCommandDirection direction)
+        {
+            Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(_currentPosition, direction, 1);
+            MapCharacter npc = GetNPCOnTile(adjustedPosition);
+            if (npc != null) return npc;
+
+            if (!GetTileReference(adjustedPosition).IsTalkOverable)
+                return null;
+            
+            Point2D adjustedPosition2Away = NonPlayerCharacterMovement.GetAdjustedPos(_currentPosition, direction, 2);
+            return GetNPCOnTile(adjustedPosition2Away);
+        }
+        
+        
         /// <summary>
         /// If an NPC is on a tile, then it will get them
         /// assumes it's on the same floor
@@ -400,6 +421,7 @@ namespace Ultima5Redux.Maps
             
             return mapCharacter;
         }
+
         #endregion
 
         #region Private Methods
@@ -440,35 +462,36 @@ namespace Ultima5Redux.Maps
             List<NonPlayerCharacterMovement.MovementCommandDirection> directionList = new List<NonPlayerCharacterMovement.MovementCommandDirection>();
 
             // gets an adjusted position OR returns null if the position is not valid
-            Point2D getAdjustedPos(NonPlayerCharacterMovement.MovementCommandDirection direction)
-            {
-                Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(characterPosition, direction);
-
-                // always include none
-                if (direction == NonPlayerCharacterMovement.MovementCommandDirection.None) return adjustedPosition;
-
-                if (adjustedPosition.X < 0 || adjustedPosition.X >= CurrentMap.TheMap.Length ||
-                    adjustedPosition.Y < 0 || adjustedPosition.Y >= CurrentMap.TheMap[0].Length) return null;
-                
-                // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
-                if (IsTileFreeToTravel(adjustedPosition, bNoStaircases) && scheduledPosition.WithinN(adjustedPosition, nMaxDistance))
-                {
-                    return adjustedPosition;
-                }
-                return null;
-            }
 
             foreach (NonPlayerCharacterMovement.MovementCommandDirection direction in Enum.GetValues(typeof(NonPlayerCharacterMovement.MovementCommandDirection)))
             {
                 // we may be asked to avoid including .None in the list
                 if (direction == NonPlayerCharacterMovement.MovementCommandDirection.None) continue;
                 
-                Point2D adjustedPos = getAdjustedPos(direction);
+                Point2D adjustedPos = GetPositionIfUserCanMove(direction, characterPosition, bNoStaircases, scheduledPosition, nMaxDistance);
                 // if adjustedPos == null then the particular direction was not allowed for one reason or another
                 if (adjustedPos != null) { directionList.Add(direction); }
             }
 
             return directionList;
+        }
+
+        private Point2D GetPositionIfUserCanMove(NonPlayerCharacterMovement.MovementCommandDirection direction, Point2D characterPosition, bool bNoStaircases, Point2D scheduledPosition, int nMaxDistance)
+        {
+            Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(characterPosition, direction);
+
+            // always include none
+            if (direction == NonPlayerCharacterMovement.MovementCommandDirection.None) return adjustedPosition;
+
+            if (adjustedPosition.X < 0 || adjustedPosition.X >= CurrentMap.TheMap.Length || adjustedPosition.Y < 0 || adjustedPosition.Y >= CurrentMap.TheMap[0].Length) return null;
+
+            // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
+            if (IsTileFreeToTravel(adjustedPosition, bNoStaircases) && scheduledPosition.WithinN(adjustedPosition, nMaxDistance))
+            {
+                return adjustedPosition;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -1313,6 +1336,5 @@ namespace Ultima5Redux.Maps
             return nMostTile == -1 ? 5 : nMostTile;
         }
         #endregion
-
     }
 }
