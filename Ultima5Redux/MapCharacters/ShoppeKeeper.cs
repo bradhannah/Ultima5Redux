@@ -42,7 +42,9 @@ namespace Ultima5Redux.MapCharacters
         private const int HAPPY_STOP = 7;
 
         public abstract List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
-        
+
+        //public abstract string GetWeHaveResponse();
+
         private string GetTimeOfDayName(TimeOfDay tod)
         {
             if (tod.Hour > 5 && tod.Hour < 12) return "morning";
@@ -50,12 +52,10 @@ namespace Ultima5Redux.MapCharacters
             return "evening";
         }
         
-        public string GetHelloResponse(TimeOfDay tod)
+        public virtual string GetHelloResponse(TimeOfDay tod)
         {
-            //Maps.TheShoppeKeeperReference shoppeKeeper = _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType);
-            
-            string response = @"Good "+GetTimeOfDayName(tod)+", and welcome to " +TheShoppeKeeperReference.ShoppeName + "!\n\n" + 
-                              TheShoppeKeeperReference.ShoppeKeeperName + " says, \"Greetings traveller! Wish ye to Buy, or hast thou wares to Sell?\"";
+            string response = @"Good " + GetTimeOfDayName(tod) + ", and welcome to " +
+                              TheShoppeKeeperReference.ShoppeName + "!"; 
             return response;
         }
         

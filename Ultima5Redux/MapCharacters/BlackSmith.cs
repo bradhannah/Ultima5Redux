@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.PlayerCharacters;
 // ReSharper disable UnusedMember.Global
@@ -38,7 +39,36 @@ namespace Ultima5Redux.MapCharacters
                 nEquipmentCounter++;
             }
         }
+
+        public override string GetHelloResponse(TimeOfDay tod)
+        {
+            string helloStr = base.GetHelloResponse(tod) + "\n\n" + TheShoppeKeeperReference.ShoppeKeeperName + " says \"" +
+                              GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);           
+            return helloStr;
+        }
+
+        // public override string GetWeHaveResponse()
+        // {
+        //     return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE).Replace(":"," ")+"many great things!";
+        // }
+
+        public string GetYouCanBuy()
+        {
+            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM).Trim() + " "
+                + GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
+        }
         
+        
+        public string GetWhichItemToSell()
+        {
+            return "Which item wouldst thou like to sell?";
+        }
+        
+        public string GetWhichWouldYouSee()
+        {
+            return "Which would ye see?";
+        }
+
         /// <summary>
         /// Gets merchant response to asking to buy a piece of equipment
         /// </summary>
