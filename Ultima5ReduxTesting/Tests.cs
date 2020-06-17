@@ -515,6 +515,7 @@ namespace Ultima5ReduxTesting
                     blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
             string hello = blacksmith.GetHelloResponse(world.State.TheTimeOfDay);
+            blacksmith.GetEquipmentForSaleList();
         }
 
         [Test]

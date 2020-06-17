@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
@@ -11,6 +12,8 @@ namespace Ultima5Redux.MapCharacters
 {
     public class BlackSmith : ShoppeKeeper
     {
+        private readonly Inventory _inventory;
+
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
@@ -22,6 +25,7 @@ namespace Ultima5Redux.MapCharacters
         public BlackSmith(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
             ShoppeKeeperReference theShoppeKeeperReferences, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReferences, dataOvlReference)
         {
+            _inventory = inventory;
             // go through each of the pieces of equipment in order to build a map of equipment index
             // -> merchant string list
             int nEquipmentCounter = 0;
@@ -47,6 +51,19 @@ namespace Ultima5Redux.MapCharacters
             return helloStr;
         }
 
+        public string GetEquipmentForSaleList()
+        {
+            StringBuilder sb = new StringBuilder();
+            char itemChar = 'a';
+            foreach (DataOvlReference.Equipment equipment in TheShoppeKeeperReference.EquipmentForSaleList)
+            {
+                sb.Append((itemChar++) + "..." +  _inventory.GetItemFromEquipment(equipment).LongName + "\n");
+            }
+
+            return sb.ToString().Trim();
+        }
+        
+        
         // public override string GetWeHaveResponse()
         // {
         //     return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE).Replace(":"," ")+"many great things!";
