@@ -23,6 +23,8 @@ namespace Ultima5Redux.Dialogue
         private readonly ShoppeKeeperReferences _shoppeKeeperReferences;
         private readonly Inventory _inventory;
         
+        private readonly Dictionary<int, int> _previousRandomSelectionByMin =
+            new Dictionary<int, int>();
 
         /// <summary>
         /// Construct using the on disk references
@@ -137,14 +139,29 @@ namespace Ultima5Redux.Dialogue
         /// <returns></returns>
         internal string GetRandomMerchantStringFromRange(int nMin, int nMax)
         {
-            return _merchantStrings[GetRandomIndexFromRange(nMin, nMax)];
+            // if this hasn't been access before, then lets add a chunk to make sure we don't repeat the same thing 
+            // twice in a row
+            if (!_previousRandomSelectionByMin.ContainsKey(nMin))
+            {
+                _previousRandomSelectionByMin.Add(nMin, -1);
+            }
+
+            Debug.Assert(nMin < nMax);
+            int nTotalResponses = nMax - nMin;
+            
+            int nResponseIndex = GetRandomIndexFromRange(nMin, nMax);
+            
+            // if this response is the same as the last response, then we add one and make sure it is still in bounds 
+            // by modding it 
+            if (nResponseIndex == _previousRandomSelectionByMin[nMin])
+            {
+                nResponseIndex =
+                    nMin + ((nResponseIndex + 1) % nTotalResponses); 
+            }
+
+            _previousRandomSelectionByMin[nMin] = nResponseIndex;
+            return _merchantStrings[nResponseIndex];
         }
-        
-        // private string GetShoppeNameByLocation(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
-        // {
-        //     //_dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES).GetChunkAsStringList().
-        //     return "";
-        // }
         
         /// <summary>
         /// Returns a random integer between two integers
@@ -160,6 +177,13 @@ namespace Ultima5Redux.Dialogue
             return _random.Next(nDiff) + nMin;
         }
 
+        /// <summary>
+        /// Gets a shoppekeeper based on location and NPC type
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="npcType"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">couldn't find the shoppe keeper at that particular location</exception>
         public ShoppeKeeper GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
         {
             switch (npcType)

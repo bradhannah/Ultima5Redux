@@ -81,7 +81,10 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_NOT_ENOUGH_MONEY,
             SHOPPE_KEEPER_DO_YOU_WANT,
             SHOPPE_KEEPER_WHATS_FOR_SALE,
-            SHOPPE_KEEPER_SELLING
+            SHOPPE_KEEPER_SELLING,
+            SHOPPE_KEEPER_BLACKSMITH_WE_HAVE,
+            SHOPPE_KEEPER_BLACKSMITH_HELLO,
+            SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM
         };
 
         public enum Equipment
@@ -542,6 +545,31 @@ namespace Ultima5Redux.Data
 // [64] = {string} "\nThou dost find\n"
 // [65] = {string} "\nThou dost find\n"
 
+        public enum ShoppeKeeperBlacksmithHello
+        {
+            HAIL_FRIEND_BANG_BUY_OR_SELL_Q, GREETINGS_TRAVELLER_BUY_OR_SELL_Q, 
+        }
+
+        public enum ShoppeKeeperBlacksmithWeHave
+        {
+            WE_HAVE_COLON, WE_STOCK_COLON, THOU_CANST_BUY_COLON , WEVE_GOT_COLON
+        }
+ 
+        public enum ShoppeKeeperBlacksmithPositiveExclamation
+        {
+            VERY_GOOD_BANG_N, EXCELLENT_BANG_N, FINE_FINE_BANG_N, BUT_OF_COURSE_BANG_N, 
+        }
+        // [0] = {string} "Hail, friend! Wouldst thou Buy or Sell?"
+        // [1] = {string} "Greetings, traveller! Wish ye to Buy, or hast thou wares to Sell?"
+        // [2] = {string} "Very good!\n"
+        // [3] = {string} "Excellent!\n"
+        // [4] = {string} "Fine, fine!\n"
+        // [5] = {string} "But of course!\n"
+        // [6] = {string} "We have:"
+        // [7] = {string} "We stock:"
+        // [8] = {string} "Thou canst buy:"
+        // [9] = {string} "We've got:"
+
         public enum ShoppeKeeperSellingStrings { DONT_DEAL_AMMO_GROWL_NAME, N_N, N_NDEAL_Q, NO, YES_DONE_SAYS_NAME, I_CANNOT_BUY_FROM_THEE_NAME }
 
         /// <summary>
@@ -843,9 +871,13 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - not enough money", 0x7b14, 0x59, 0, DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various selling strings", 0x7d44, 0x7f, 0, DataChunkName.SHOPPE_KEEPER_SELLING);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - what have you got for sale", 0x7dc4, 0x7F, 0, DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
-            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_SELLING).GetChunkAsStringList();
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7f0a, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Healer shop strings", 0x7f16, 0x2f8);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith hello strings", 0x7F58, 0x6A, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith positive exclamation strings", 0x7FC2, 0x36, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith 'we have' strings", 0x7FF8, 0x30, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
+            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO).GetChunkAsStringList();
+                        
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Numbers as strings (ie. twelfth)", 0x8216, 0x17c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "End of game strings", 0x8392, 0xfe);

@@ -18,7 +18,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "1": {
       "Name": "Water1",
@@ -39,7 +40,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "2": {
       "Name": "Water2",
@@ -60,7 +62,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "3": {
       "Name": "WaterCoast",
@@ -81,7 +84,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "4": {
       "Name": "Swamp",
@@ -102,7 +106,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "5": {
       "Name": "Grass",
@@ -123,7 +128,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "6": {
       "Name": "Forest1",
@@ -144,7 +150,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "7": {
       "Name": "Desert1",
@@ -165,7 +172,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "8": {
       "Name": "Forest2",
@@ -186,7 +194,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "9": {
       "Name": "Forest3",
@@ -207,7 +216,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "10": {
       "Name": "Forest4",
@@ -228,7 +238,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "11": {
       "Name": "Hills1",
@@ -249,7 +260,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "12": {
       "Name": "SmallMountains",
@@ -270,7 +282,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "13": {
       "Name": "TallMountains",
@@ -291,7 +304,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "14": {
       "Name": "LeftHills2",
@@ -312,7 +326,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "15": {
       "Name": "RightHills2",
@@ -333,7 +348,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "16": {
       "Name": "Hut",
@@ -354,7 +370,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "17": {
       "Name": "Codex",
@@ -375,7 +392,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "18": {
       "Name": "Keep",
@@ -396,7 +414,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "19": {
       "Name": "Village",
@@ -417,7 +436,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "20": {
       "Name": "SmallCastle",
@@ -438,7 +458,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "21": {
       "Name": "LargeCastle",
@@ -459,7 +480,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "22": {
       "Name": "CaveEntrance",
@@ -480,7 +502,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "23": {
       "Name": "MineEntrance",
@@ -501,7 +524,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "24": {
       "Name": "DoomEntrance",
@@ -522,7 +546,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "25": {
       "Name": "Shrine",
@@ -543,7 +568,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "26": {
       "Name": "BrokenShrine",
@@ -564,7 +590,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "27": {
       "Name": "Lighthouse",
@@ -585,7 +612,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "28": {
       "Name": "Oasis",
@@ -606,7 +634,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "29": {
       "Name": "Bridge",
@@ -627,7 +656,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "30": {
       "Name": "LeftDesert2",
@@ -648,7 +678,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "31": {
       "Name": "RightDesert2",
@@ -669,7 +700,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "32": {
       "Name": "Path1",
@@ -690,7 +722,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "33": {
       "Name": "Path2",
@@ -711,7 +744,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "34": {
       "Name": "Path3",
@@ -732,7 +766,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "35": {
       "Name": "Path4",
@@ -753,7 +788,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "36": {
       "Name": "Path5",
@@ -774,7 +810,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "37": {
       "Name": "Path6",
@@ -795,7 +832,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "38": {
       "Name": "Path7",
@@ -816,7 +854,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "39": {
       "Name": "Roof1",
@@ -837,7 +876,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "40": {
       "Name": "Roof2",
@@ -858,7 +898,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "41": {
       "Name": "CrystalBall",
@@ -879,7 +920,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "42": {
       "Name": "LighthouseLight",
@@ -900,7 +942,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "43": {
       "Name": "DeadTree",
@@ -921,7 +964,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "44": {
       "Name": "PlowedField",
@@ -942,7 +986,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "45": {
       "Name": "WheatInField",
@@ -963,7 +1008,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "46": {
       "Name": "Tree",
@@ -984,7 +1030,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "47": {
       "Name": "Cactus",
@@ -1005,7 +1052,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "48": {
       "Name": "OutsidePath1",
@@ -1026,7 +1074,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "49": {
       "Name": "OutsidePath2",
@@ -1047,7 +1096,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "50": {
       "Name": "OutsidePath3",
@@ -1068,7 +1118,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "51": {
       "Name": "OutsidePath4",
@@ -1089,7 +1140,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "52": {
       "Name": "OutsideWaterCoast1",
@@ -1110,7 +1162,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "53": {
       "Name": "OutsideWaterCoast2",
@@ -1131,7 +1184,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "54": {
       "Name": "OutsideWaterCoast3",
@@ -1152,7 +1206,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "55": {
       "Name": "OutsideWaterCoast4",
@@ -1173,7 +1228,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "56": {
       "Name": "CastleGargoyle",
@@ -1194,7 +1250,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "57": {
       "Name": "EvilCastleEntrance",
@@ -1215,7 +1272,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "58": {
       "Name": "CastleBritian1",
@@ -1236,7 +1294,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": true,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "59": {
       "Name": "CastleBritian2",
@@ -1257,7 +1316,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": true,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "60": {
       "Name": "CastleBritian3",
@@ -1278,7 +1338,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": true,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "61": {
       "Name": "CastleBritian4",
@@ -1299,7 +1360,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": true,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "62": {
       "Name": "CastleBritianEntrace",
@@ -1320,7 +1382,8 @@
       "IsNPC": false,
       "IsBuilding": true,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "63": {
       "Name": "CastleBritian5",
@@ -1341,7 +1404,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": true,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "64": {
       "Name": "WoodFloor1",
@@ -1362,7 +1426,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "65": {
       "Name": "Lecturn",
@@ -1383,7 +1448,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "66": {
       "Name": "WoodFloorShipTie",
@@ -1404,7 +1470,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "67": {
       "Name": "WoodFloorShipEdge",
@@ -1425,7 +1492,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "68": {
       "Name": "BrickFloor",
@@ -1446,7 +1514,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "69": {
       "Name": "MetalFloor",
@@ -1467,7 +1536,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "70": {
       "Name": "DryStone",
@@ -1488,7 +1558,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "71": {
       "Name": "Dock",
@@ -1509,7 +1580,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "72": {
       "Name": "LeftWoodFloor2",
@@ -1530,7 +1602,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "73": {
       "Name": "RightWoodFloor2",
@@ -1551,7 +1624,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "74": {
       "Name": "StoneCrossWindow",
@@ -1572,7 +1646,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "75": {
       "Name": "StoneGlassWindow",
@@ -1593,7 +1668,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "76": {
       "Name": "SmallRockWall",
@@ -1614,7 +1690,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "77": {
       "Name": "LargeRockWall",
@@ -1635,7 +1712,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "78": {
       "Name": "StoneBrickWallSecret",
@@ -1656,7 +1734,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "79": {
       "Name": "StoneBrickWall",
@@ -1677,7 +1756,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "80": {
       "Name": "CastleParapet1",
@@ -1698,7 +1778,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "81": {
       "Name": "CastleParapet2",
@@ -1719,7 +1800,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "82": {
       "Name": "CastleParapet3",
@@ -1740,7 +1822,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "83": {
       "Name": "CastleParapet4",
@@ -1761,7 +1844,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "84": {
       "Name": "CastleParapet5",
@@ -1782,7 +1866,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "85": {
       "Name": "CastleParapet6",
@@ -1803,7 +1888,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "86": {
       "Name": "CastleParapet7",
@@ -1824,7 +1910,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "87": {
       "Name": "CastleParapet8",
@@ -1845,7 +1932,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "88": {
       "Name": "Anvil",
@@ -1866,7 +1954,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "89": {
       "Name": "Telescope",
@@ -1887,7 +1976,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "90": {
       "Name": "Bookcase",
@@ -1908,7 +1998,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "91": {
       "Name": "Plant",
@@ -1929,7 +2020,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "92": {
       "Name": "BookcaseLeft",
@@ -1950,7 +2042,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "93": {
       "Name": "BookcaseRight",
@@ -1971,7 +2064,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "94": {
       "Name": "CodexAngelLeft",
@@ -1992,7 +2086,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "95": {
       "Name": "CodexAngelRight",
@@ -2013,7 +2108,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "96": {
       "Name": "WaterStream1",
@@ -2034,7 +2130,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "97": {
       "Name": "WaterStream2",
@@ -2055,7 +2152,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "98": {
       "Name": "WaterStream3",
@@ -2076,7 +2174,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "99": {
       "Name": "WaterStream4",
@@ -2097,7 +2196,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "100": {
       "Name": "WaterStream5",
@@ -2118,7 +2218,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "101": {
       "Name": "WaterStream6",
@@ -2139,7 +2240,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "102": {
       "Name": "WaterStream7",
@@ -2160,7 +2262,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "103": {
       "Name": "WaterStream8",
@@ -2181,7 +2284,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "104": {
       "Name": "WaterStream9",
@@ -2202,7 +2306,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "105": {
       "Name": "WaterStream10",
@@ -2223,7 +2328,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "106": {
       "Name": "TrollBridgeHoriz",
@@ -2244,7 +2350,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "107": {
       "Name": "TrollBridgeVert",
@@ -2265,7 +2372,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "108": {
       "Name": "WaterStream11",
@@ -2286,7 +2394,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "109": {
       "Name": "WaterStream12",
@@ -2307,7 +2416,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "110": {
       "Name": "WaterStream13",
@@ -2328,7 +2438,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "111": {
       "Name": "WaterStream14",
@@ -2349,7 +2460,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "112": {
       "Name": "ShadowlordBoundary1",
@@ -2370,7 +2482,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "113": {
       "Name": "ShadowlordBoundary2",
@@ -2391,7 +2504,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "114": {
       "Name": "ShadowlordBoundary3",
@@ -2412,7 +2526,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "115": {
       "Name": "ShadowlordBoundary4",
@@ -2433,7 +2548,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "116": {
       "Name": "ShadowlordBoundary5",
@@ -2454,7 +2570,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "117": {
       "Name": "ShadowlordBoundary6",
@@ -2475,7 +2592,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "118": {
       "Name": "ShadowlordBoundary7",
@@ -2496,7 +2614,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "119": {
       "Name": "ShadowlordBoundary8",
@@ -2517,7 +2636,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "120": {
       "Name": "ShadowlordBoundary9",
@@ -2538,7 +2658,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "121": {
       "Name": "ShadowlordBoundary10",
@@ -2559,7 +2680,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "122": {
       "Name": "ShadowlordBoundary11",
@@ -2580,7 +2702,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "123": {
       "Name": "ShadowlordBoundary12",
@@ -2601,7 +2724,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "124": {
       "Name": "ShadowlordBoundary13",
@@ -2622,7 +2746,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "125": {
       "Name": "ShadowlordBoundary14",
@@ -2643,7 +2768,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "126": {
       "Name": "ShadowlordBoundary15",
@@ -2664,7 +2790,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "127": {
       "Name": "ShadowlordBoundary16",
@@ -2685,7 +2812,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "128": {
       "Name": "TortureChair1",
@@ -2706,7 +2834,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "129": {
       "Name": "TortureTable2",
@@ -2727,7 +2856,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "130": {
       "Name": "TortureTableWithBody1",
@@ -2748,7 +2878,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "131": {
       "Name": "TortureTableWithBody2",
@@ -2769,7 +2900,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "132": {
       "Name": "Stocks",
@@ -2790,7 +2922,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "133": {
       "Name": "Manacles",
@@ -2811,7 +2944,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "134": {
       "Name": "Grate",
@@ -2832,7 +2966,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "135": {
       "Name": "BrickWallArchway",
@@ -2853,7 +2988,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "136": {
       "Name": "CannonBalls",
@@ -2874,7 +3010,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "137": {
       "Name": "SimpleCross",
@@ -2895,7 +3032,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "138": {
       "Name": "StoneHeadstone",
@@ -2916,7 +3054,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "139": {
       "Name": "TortureChair",
@@ -2937,7 +3076,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "140": {
       "Name": "BrickFloorHole",
@@ -2958,7 +3098,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "141": {
       "Name": "Harpsichord",
@@ -2979,7 +3120,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "142": {
       "Name": "Guillotine",
@@ -3000,7 +3142,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "143": {
       "Name": "Lava",
@@ -3021,7 +3164,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "144": {
       "Name": "ChairBackForward",
@@ -3042,7 +3186,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "145": {
       "Name": "ChairBackLeft",
@@ -3063,7 +3208,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "146": {
       "Name": "ChairBackBack",
@@ -3084,7 +3230,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "147": {
       "Name": "ChairBackRight",
@@ -3105,7 +3252,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "148": {
       "Name": "TableLeft",
@@ -3126,7 +3274,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": true
    },
    "149": {
       "Name": "TableMiddle",
@@ -3147,7 +3296,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": true
    },
    "150": {
       "Name": "TableRight",
@@ -3168,7 +3318,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": true
    },
    "151": {
       "Name": "MagicLockDoor",
@@ -3189,7 +3340,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "152": {
       "Name": "MagicLockDoorWithView",
@@ -3210,7 +3362,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "153": {
       "Name": "Portcullis",
@@ -3231,7 +3384,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "154": {
       "Name": "TableFoodTop",
@@ -3252,7 +3406,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": true
    },
    "155": {
       "Name": "TableFoodBottom",
@@ -3273,7 +3428,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": true
    },
    "156": {
       "Name": "TableFoodBoth",
@@ -3294,7 +3450,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": true
    },
    "157": {
       "Name": "Mirror",
@@ -3315,7 +3472,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "158": {
       "Name": "MirrorAvatar",
@@ -3336,7 +3494,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "159": {
       "Name": "MirrorBroken",
@@ -3357,7 +3516,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "160": {
       "Name": "Sign",
@@ -3378,7 +3538,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "161": {
       "Name": "Well",
@@ -3399,7 +3560,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "162": {
       "Name": "Fence1",
@@ -3420,7 +3582,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "163": {
       "Name": "FireLogs",
@@ -3441,7 +3604,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "164": {
       "Name": "SmallSign",
@@ -3462,7 +3626,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "165": {
       "Name": "EndTable",
@@ -3483,7 +3648,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "166": {
       "Name": "Barrel",
@@ -3504,7 +3670,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "167": {
       "Name": "Cask",
@@ -3525,7 +3692,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "168": {
       "Name": "Vanity",
@@ -3546,7 +3714,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "169": {
       "Name": "WaterJugTable",
@@ -3567,7 +3736,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "170": {
       "Name": "Carpet",
@@ -3588,7 +3758,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "171": {
       "Name": "LeftBed",
@@ -3609,7 +3780,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "172": {
       "Name": "RightBed",
@@ -3630,7 +3802,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "173": {
       "Name": "Dresser",
@@ -3651,7 +3824,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "174": {
       "Name": "CoffeeTable",
@@ -3672,7 +3846,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "175": {
       "Name": "Box",
@@ -3693,7 +3868,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "176": {
       "Name": "RightSconce",
@@ -3714,7 +3890,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "177": {
       "Name": "LeftSconce",
@@ -3735,7 +3912,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "178": {
       "Name": "Brazier",
@@ -3756,7 +3934,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "179": {
       "Name": "CampFire",
@@ -3777,7 +3956,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "180": {
       "Name": "CannonUp",
@@ -3798,7 +3978,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "181": {
       "Name": "CannonDown",
@@ -3819,7 +4000,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "182": {
       "Name": "CannonRight",
@@ -3840,7 +4022,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "183": {
       "Name": "CannonLeft",
@@ -3861,7 +4044,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": true
+      "IsPushable": true,
+      "IsTalkOverable": false
    },
    "184": {
       "Name": "RegularDoor",
@@ -3882,7 +4066,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "185": {
       "Name": "LockedDoor",
@@ -3903,7 +4088,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "186": {
       "Name": "RegularDoorView",
@@ -3924,7 +4110,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "187": {
       "Name": "LockedDoorView",
@@ -3945,7 +4132,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "188": {
       "Name": "Fireplace",
@@ -3966,7 +4154,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "189": {
       "Name": "LampPost",
@@ -3987,7 +4176,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "190": {
       "Name": "CandleOnTable",
@@ -4008,7 +4198,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "191": {
       "Name": "CookStove",
@@ -4029,7 +4220,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "192": {
       "Name": "ScaryBlackThing1",
@@ -4050,7 +4242,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "193": {
       "Name": "ScaryBlackThing2",
@@ -4071,7 +4264,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "194": {
       "Name": "ScaryBlackThing3",
@@ -4092,7 +4286,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "195": {
       "Name": "ScaryBlackThingDead",
@@ -4113,7 +4308,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "196": {
       "Name": "StairsNorth",
@@ -4134,7 +4330,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "197": {
       "Name": "StairsEast",
@@ -4155,7 +4352,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "198": {
       "Name": "StairsSouth",
@@ -4176,7 +4374,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "199": {
       "Name": "StairsWest",
@@ -4197,7 +4396,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "200": {
       "Name": "LadderUp",
@@ -4218,7 +4418,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "201": {
       "Name": "LadderDown",
@@ -4239,7 +4440,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "202": {
       "Name": "FenceHoriz",
@@ -4260,7 +4462,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "203": {
       "Name": "FenceVert",
@@ -4281,7 +4484,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "204": {
       "Name": "Wtf1",
@@ -4302,7 +4506,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "205": {
       "Name": "Wtf2",
@@ -4323,7 +4528,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "206": {
       "Name": "Wtf3",
@@ -4344,7 +4550,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "207": {
       "Name": "Wtf4",
@@ -4365,7 +4572,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "208": {
       "Name": "CornerStructure1",
@@ -4386,7 +4594,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "209": {
       "Name": "CornerStructure2",
@@ -4407,7 +4616,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "210": {
       "Name": "CornerStructure3",
@@ -4428,7 +4638,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "211": {
       "Name": "CornerStructure4",
@@ -4449,7 +4660,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "212": {
       "Name": "Waterfall1",
@@ -4470,7 +4682,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "213": {
       "Name": "Waterfall2",
@@ -4491,7 +4704,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "214": {
       "Name": "Waterfall3",
@@ -4512,7 +4726,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "215": {
       "Name": "Waterfall4",
@@ -4533,7 +4748,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "216": {
       "Name": "Fountain1",
@@ -4554,7 +4770,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "217": {
       "Name": "Fountain2",
@@ -4575,7 +4792,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "218": {
       "Name": "Fountain3",
@@ -4596,7 +4814,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "219": {
       "Name": "Fountain4",
@@ -4617,7 +4836,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "220": {
       "Name": "Moongate",
@@ -4638,7 +4858,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "221": {
       "Name": "Desert3",
@@ -4659,7 +4880,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "222": {
       "Name": "BlueFlame",
@@ -4680,7 +4902,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "223": {
       "Name": "BlockEntrance",
@@ -4701,7 +4924,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "224": {
       "Name": "LargeSignBottom",
@@ -4722,7 +4946,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "225": {
       "Name": "LargeSignLeft",
@@ -4743,7 +4968,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "226": {
       "Name": "LargeSignRight",
@@ -4764,7 +4990,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "227": {
       "Name": "SignGrass",
@@ -4785,7 +5012,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "228": {
       "Name": "CornerWithWater1",
@@ -4806,7 +5034,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "229": {
       "Name": "CornerWithWater2",
@@ -4827,7 +5056,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "230": {
       "Name": "CornerWithWater3",
@@ -4848,7 +5078,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "231": {
       "Name": "CornerWithWater4",
@@ -4869,7 +5100,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "232": {
       "Name": "Hourglass1",
@@ -4890,7 +5122,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "233": {
       "Name": "Hourglass2",
@@ -4911,7 +5144,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "234": {
       "Name": "Hourglass3",
@@ -4932,7 +5166,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "235": {
       "Name": "Hourglass4",
@@ -4953,7 +5188,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "236": {
       "Name": "SnakeSign1",
@@ -4974,7 +5210,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "237": {
       "Name": "SnakeSign2",
@@ -4995,7 +5232,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "238": {
       "Name": "SnakeSign3",
@@ -5016,7 +5254,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "239": {
       "Name": "SnakeSign4",
@@ -5037,7 +5276,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "240": {
       "Name": "SignFood",
@@ -5058,7 +5298,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "241": {
       "Name": "SignCourt",
@@ -5079,7 +5320,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "242": {
       "Name": "SignArmourer",
@@ -5100,7 +5342,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "243": {
       "Name": "SignHealer",
@@ -5121,7 +5364,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "244": {
       "Name": "SignSmith",
@@ -5142,7 +5386,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "245": {
       "Name": "SignGuild",
@@ -5163,7 +5408,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "246": {
       "Name": "SignInn",
@@ -5184,7 +5430,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "247": {
       "Name": "SignMagic",
@@ -5205,7 +5452,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "248": {
       "Name": "SignWarning",
@@ -5226,7 +5474,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "249": {
       "Name": "SignShipwright",
@@ -5247,7 +5496,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "250": {
       "Name": "Clock1",
@@ -5268,7 +5518,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "251": {
       "Name": "Clock2",
@@ -5289,7 +5540,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "252": {
       "Name": "Bellows1",
@@ -5310,7 +5562,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "253": {
       "Name": "Bellows2",
@@ -5331,7 +5584,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "254": {
       "Name": "WhiteSquare",
@@ -5352,7 +5606,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "255": {
       "Name": "BlackSquare",
@@ -5373,7 +5628,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "256": {
       "Name": "StarPattern",
@@ -5394,7 +5650,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "257": {
       "Name": "Chest",
@@ -5415,7 +5672,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "258": {
       "Name": "ItemMoney",
@@ -5436,7 +5694,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "259": {
       "Name": "ItemPotion",
@@ -5457,7 +5716,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "260": {
       "Name": "ItemScroll",
@@ -5478,7 +5738,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "261": {
       "Name": "ItemWeapon",
@@ -5499,7 +5760,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "262": {
       "Name": "ItemShield",
@@ -5520,7 +5782,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "263": {
       "Name": "ItemKey",
@@ -5541,7 +5804,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "264": {
       "Name": "ItemGem",
@@ -5562,7 +5826,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "265": {
       "Name": "ItemHelm",
@@ -5583,7 +5848,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "266": {
       "Name": "ItemRing",
@@ -5604,7 +5870,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "267": {
       "Name": "ItemArmour",
@@ -5625,7 +5892,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "268": {
       "Name": "ItemAnkh",
@@ -5646,7 +5914,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "269": {
       "Name": "ItemTorch",
@@ -5667,7 +5936,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "270": {
       "Name": "ItemSandalwoodBox",
@@ -5688,7 +5958,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "271": {
       "Name": "ItemFood",
@@ -5709,7 +5980,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "272": {
       "Name": "HorseRight",
@@ -5730,7 +6002,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "273": {
       "Name": "HorseLeft",
@@ -5751,7 +6024,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "274": {
       "Name": "RidingHorseRight",
@@ -5772,7 +6046,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "275": {
       "Name": "RidingHorseLeft",
@@ -5793,7 +6068,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "276": {
       "Name": "RidingMagicCarpetRight",
@@ -5814,7 +6090,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "277": {
       "Name": "RidingMagicCarpetLeft",
@@ -5835,7 +6112,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "278": {
       "Name": "HolyFloorSymbol",
@@ -5856,7 +6134,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "279": {
       "Name": "KlimbLadderUp",
@@ -5877,7 +6156,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "280": {
       "Name": "KlimbLadderDown",
@@ -5898,7 +6178,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "281": {
       "Name": "Moon",
@@ -5919,7 +6200,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "282": {
       "Name": "SleepingInBed",
@@ -5940,7 +6222,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "283": {
       "Name": "Carpet2",
@@ -5961,7 +6244,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "284": {
       "Name": "BasicAvatar",
@@ -5982,7 +6266,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "285": {
       "Name": "Apparition",
@@ -6003,7 +6288,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "286": {
       "Name": "DeadBody",
@@ -6024,7 +6310,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "287": {
       "Name": "Splat",
@@ -6045,7 +6332,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "288": {
       "Name": "ShipSailsUp",
@@ -6066,7 +6354,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "289": {
       "Name": "ShipSailsRight",
@@ -6087,7 +6376,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "290": {
       "Name": "ShipSailsDown",
@@ -6108,7 +6398,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "291": {
       "Name": "ShipSailsLeft",
@@ -6129,7 +6420,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "292": {
       "Name": "ShipNoSailsUp",
@@ -6150,7 +6442,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "293": {
       "Name": "ShipNoSailsRight",
@@ -6171,7 +6464,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "294": {
       "Name": "ShipNoSailsDown",
@@ -6192,7 +6486,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "295": {
       "Name": "ShipNoSailsLeft",
@@ -6213,7 +6508,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "296": {
       "Name": "SkiffUp",
@@ -6234,7 +6530,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "297": {
       "Name": "SkiffRight",
@@ -6255,7 +6552,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "298": {
       "Name": "SkiffDown",
@@ -6276,7 +6574,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "299": {
       "Name": "SkiffLeft",
@@ -6297,7 +6596,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "300": {
       "Name": "PirateShipUp",
@@ -6318,7 +6618,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "301": {
       "Name": "PirateShipRight",
@@ -6339,7 +6640,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "302": {
       "Name": "PirateShipLeft",
@@ -6360,7 +6662,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "303": {
       "Name": "PirateShipDown",
@@ -6381,7 +6684,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "304": {
       "Name": "SitChairUp",
@@ -6402,7 +6706,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "305": {
       "Name": "SitChairRight",
@@ -6423,7 +6728,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "306": {
       "Name": "SitChairDown",
@@ -6444,7 +6750,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "307": {
       "Name": "SitChairLeft",
@@ -6465,7 +6772,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "308": {
       "Name": "SitChairDown1",
@@ -6486,7 +6794,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "309": {
       "Name": "SitChairDown2",
@@ -6507,7 +6816,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "310": {
       "Name": "SitChairDown3",
@@ -6528,7 +6838,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "311": {
       "Name": "SitChairDown4",
@@ -6549,7 +6860,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "312": {
       "Name": "SitChairUp1",
@@ -6570,7 +6882,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "313": {
       "Name": "SitChairUp2",
@@ -6591,7 +6904,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "314": {
       "Name": "SitChairUp3",
@@ -6612,7 +6926,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "315": {
       "Name": "SitChairUp4",
@@ -6633,7 +6948,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "316": {
       "Name": "LordBritishMirror1",
@@ -6654,7 +6970,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "317": {
       "Name": "LordBritishMirror2",
@@ -6675,7 +6992,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "318": {
       "Name": "LordBritishMirror3",
@@ -6696,7 +7014,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "319": {
       "Name": "LordBritishMirror4",
@@ -6717,7 +7036,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "320": {
       "Name": "Wizard1",
@@ -6738,7 +7058,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "321": {
       "Name": "Wizard2",
@@ -6759,7 +7080,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "322": {
       "Name": "Wizard3",
@@ -6780,7 +7102,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "323": {
       "Name": "Wizard4",
@@ -6801,7 +7124,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "324": {
       "Name": "Bard1",
@@ -6822,7 +7146,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "325": {
       "Name": "Bard2",
@@ -6843,7 +7168,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "326": {
       "Name": "Bard3",
@@ -6864,7 +7190,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "327": {
       "Name": "Bard4",
@@ -6885,7 +7212,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "328": {
       "Name": "Fighter1",
@@ -6906,7 +7234,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "329": {
       "Name": "Fighter2",
@@ -6927,7 +7256,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "330": {
       "Name": "Fighter3",
@@ -6948,7 +7278,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "331": {
       "Name": "Fighter4",
@@ -6969,7 +7300,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "332": {
       "Name": "Avatar1",
@@ -6990,7 +7322,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "333": {
       "Name": "Avatar2",
@@ -7011,7 +7344,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "334": {
       "Name": "Avatar3",
@@ -7032,7 +7366,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "335": {
       "Name": "Avatar4",
@@ -7053,7 +7388,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "336": {
       "Name": "TownsPerson1",
@@ -7074,7 +7410,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "337": {
       "Name": "TownsPerson2",
@@ -7095,7 +7432,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "338": {
       "Name": "TownsPerson3",
@@ -7116,7 +7454,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "339": {
       "Name": "TownsPerson4",
@@ -7137,7 +7476,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "340": {
       "Name": "Merchant1",
@@ -7158,7 +7498,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "341": {
       "Name": "Merchant2",
@@ -7179,7 +7520,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "342": {
       "Name": "Merchant3",
@@ -7200,7 +7542,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "343": {
       "Name": "Merchant4",
@@ -7221,7 +7564,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "344": {
       "Name": "Jester1",
@@ -7242,7 +7586,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "345": {
       "Name": "Jester2",
@@ -7263,7 +7608,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "346": {
       "Name": "Jester3",
@@ -7284,7 +7630,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "347": {
       "Name": "Jester4",
@@ -7305,7 +7652,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "348": {
       "Name": "BardPlaying1",
@@ -7326,7 +7674,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "349": {
       "Name": "BardPlaying2",
@@ -7347,7 +7696,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "350": {
       "Name": "BardPlaying3",
@@ -7368,7 +7718,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "351": {
       "Name": "BardPlaying4",
@@ -7389,7 +7740,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "352": {
       "Name": "PersonStocks1",
@@ -7410,7 +7762,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "353": {
       "Name": "PersonStocks2",
@@ -7431,7 +7784,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "354": {
       "Name": "PersonStocks3",
@@ -7452,7 +7806,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "355": {
       "Name": "PersonStocks4",
@@ -7473,7 +7828,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "356": {
       "Name": "WallPrisoner1",
@@ -7494,7 +7850,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "357": {
       "Name": "WallPrisoner2",
@@ -7515,7 +7872,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "358": {
       "Name": "WallPrisoner3",
@@ -7536,7 +7894,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "359": {
       "Name": "WallPrisoner4",
@@ -7557,7 +7916,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "360": {
       "Name": "Child1",
@@ -7578,7 +7938,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "361": {
       "Name": "Child2",
@@ -7599,7 +7960,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "362": {
       "Name": "Child3",
@@ -7620,7 +7982,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "363": {
       "Name": "Child4",
@@ -7641,7 +8004,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "364": {
       "Name": "Begger1",
@@ -7662,7 +8026,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "365": {
       "Name": "Begger2",
@@ -7683,7 +8048,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "366": {
       "Name": "Begger3",
@@ -7704,7 +8070,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "367": {
       "Name": "Begger4",
@@ -7725,7 +8092,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "368": {
       "Name": "Guard1",
@@ -7746,7 +8114,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "369": {
       "Name": "Guard2",
@@ -7767,7 +8136,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "370": {
       "Name": "Guard3",
@@ -7788,7 +8158,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "371": {
       "Name": "Guard4",
@@ -7809,7 +8180,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "372": {
       "Name": "Apparation1",
@@ -7830,7 +8202,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "373": {
       "Name": "Apparation2",
@@ -7851,7 +8224,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "374": {
       "Name": "Apparation3",
@@ -7872,7 +8246,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "375": {
       "Name": "Apparation4",
@@ -7893,7 +8268,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "376": {
       "Name": "Blackthorn1",
@@ -7914,7 +8290,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "377": {
       "Name": "Blackthorn2",
@@ -7935,7 +8312,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "378": {
       "Name": "Blackthorn3",
@@ -7956,7 +8334,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "379": {
       "Name": "Blackthorn4",
@@ -7977,7 +8356,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "380": {
       "Name": "LordBritish1",
@@ -7998,7 +8378,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "381": {
       "Name": "LordBritish2",
@@ -8019,7 +8400,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "382": {
       "Name": "LordBritish3",
@@ -8040,7 +8422,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "383": {
       "Name": "LordBritish4",
@@ -8061,7 +8444,8 @@
       "IsNPC": true,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "384": {
       "Name": "Seahorse1",
@@ -8082,7 +8466,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "385": {
       "Name": "Seahorse2",
@@ -8103,7 +8488,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "386": {
       "Name": "Seahorse3",
@@ -8124,7 +8510,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "387": {
       "Name": "Seahorse4",
@@ -8145,7 +8532,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "388": {
       "Name": "Squid1",
@@ -8166,7 +8554,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "389": {
       "Name": "Squid2",
@@ -8187,7 +8576,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "390": {
       "Name": "Squid3",
@@ -8208,7 +8598,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "391": {
       "Name": "Squid4",
@@ -8229,7 +8620,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "392": {
       "Name": "SeaSerpent1",
@@ -8250,7 +8642,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "393": {
       "Name": "SeaSerpent2",
@@ -8271,7 +8664,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "394": {
       "Name": "SeaSerpent3",
@@ -8292,7 +8686,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "395": {
       "Name": "SeaSerpent4",
@@ -8313,7 +8708,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "396": {
       "Name": "Shark1",
@@ -8334,7 +8730,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "397": {
       "Name": "Shark2",
@@ -8355,7 +8752,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "398": {
       "Name": "Shark3",
@@ -8376,7 +8774,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "399": {
       "Name": "Shark4",
@@ -8397,7 +8796,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "400": {
       "Name": "Rat1",
@@ -8418,7 +8818,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "401": {
       "Name": "Rat2",
@@ -8439,7 +8840,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "402": {
       "Name": "Rat3",
@@ -8460,7 +8862,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "403": {
       "Name": "Rat4",
@@ -8481,7 +8884,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "404": {
       "Name": "Bat1",
@@ -8502,7 +8906,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "405": {
       "Name": "Bat2",
@@ -8523,7 +8928,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "406": {
       "Name": "Bat3",
@@ -8544,7 +8950,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "407": {
       "Name": "Bat4",
@@ -8565,7 +8972,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "408": {
       "Name": "Spider1",
@@ -8586,7 +8994,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "409": {
       "Name": "Spider2",
@@ -8607,7 +9016,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "410": {
       "Name": "Spider3",
@@ -8628,7 +9038,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "411": {
       "Name": "Spider4",
@@ -8649,7 +9060,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "412": {
       "Name": "Ghost1",
@@ -8670,7 +9082,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "413": {
       "Name": "Ghost2",
@@ -8691,7 +9104,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "414": {
       "Name": "Ghost3",
@@ -8712,7 +9126,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "415": {
       "Name": "Ghost4",
@@ -8733,7 +9148,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "416": {
       "Name": "Slime1",
@@ -8754,7 +9170,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "417": {
       "Name": "Slime2",
@@ -8775,7 +9192,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "418": {
       "Name": "Slime3",
@@ -8796,7 +9214,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "419": {
       "Name": "Slime4",
@@ -8817,7 +9236,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "420": {
       "Name": "Gremlin1",
@@ -8838,7 +9258,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "421": {
       "Name": "Gremlin2",
@@ -8859,7 +9280,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "422": {
       "Name": "Gremlin3",
@@ -8880,7 +9302,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "423": {
       "Name": "Gremlin4",
@@ -8901,7 +9324,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "424": {
       "Name": "Mimic1",
@@ -8922,7 +9346,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "425": {
       "Name": "Mimic2",
@@ -8943,7 +9368,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "426": {
       "Name": "Mimic3",
@@ -8964,7 +9390,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "427": {
       "Name": "Mimic4",
@@ -8985,7 +9412,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "428": {
       "Name": "Reaper1",
@@ -9006,7 +9434,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "429": {
       "Name": "Reaper2",
@@ -9027,7 +9456,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "430": {
       "Name": "Reaper3",
@@ -9048,7 +9478,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "431": {
       "Name": "Reaper4",
@@ -9069,7 +9500,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "432": {
       "Name": "Gazer1",
@@ -9090,7 +9522,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "433": {
       "Name": "Gazer2",
@@ -9111,7 +9544,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "434": {
       "Name": "Gazer3",
@@ -9132,7 +9566,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "435": {
       "Name": "Gazer4",
@@ -9153,7 +9588,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "436": {
       "Name": "Shard",
@@ -9174,7 +9610,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "437": {
       "Name": "Crown",
@@ -9195,7 +9632,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "438": {
       "Name": "Sceptre",
@@ -9216,7 +9654,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "439": {
       "Name": "Amulet",
@@ -9237,7 +9676,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "440": {
       "Name": "StoneGargoyle1",
@@ -9258,7 +9698,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "441": {
       "Name": "StoneGargoyle2",
@@ -9279,7 +9720,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "442": {
       "Name": "StoneGargoyle3",
@@ -9300,7 +9742,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "443": {
       "Name": "StoneGargoyle4",
@@ -9321,7 +9764,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "444": {
       "Name": "InsectSwarm1",
@@ -9342,7 +9786,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "445": {
       "Name": "InsectSwarm2",
@@ -9363,7 +9808,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "446": {
       "Name": "InsectSwarm3",
@@ -9384,7 +9830,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "447": {
       "Name": "InsectSwarm4",
@@ -9405,7 +9852,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "448": {
       "Name": "Orc1",
@@ -9426,7 +9874,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "449": {
       "Name": "Orc2",
@@ -9447,7 +9896,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "450": {
       "Name": "Orc3",
@@ -9468,7 +9918,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "451": {
       "Name": "Orc4",
@@ -9489,7 +9940,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "452": {
       "Name": "Skeleton1",
@@ -9510,7 +9962,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "453": {
       "Name": "Skeleton2",
@@ -9531,7 +9984,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "454": {
       "Name": "Skeleton3",
@@ -9552,7 +10006,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "455": {
       "Name": "Skeleton4",
@@ -9573,7 +10028,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "456": {
       "Name": "Snake1",
@@ -9594,7 +10050,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "457": {
       "Name": "Snake2",
@@ -9615,7 +10072,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "458": {
       "Name": "Snake3",
@@ -9636,7 +10094,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "459": {
       "Name": "Snake4",
@@ -9657,7 +10116,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "460": {
       "Name": "Ettin1",
@@ -9678,7 +10138,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "461": {
       "Name": "Ettin2",
@@ -9699,7 +10160,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "462": {
       "Name": "Ettin3",
@@ -9720,7 +10182,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "463": {
       "Name": "Ettin4",
@@ -9741,7 +10204,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "464": {
       "Name": "Headless1",
@@ -9762,7 +10226,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "465": {
       "Name": "Headless2",
@@ -9783,7 +10248,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "466": {
       "Name": "Headless3",
@@ -9804,7 +10270,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "467": {
       "Name": "Headless4",
@@ -9825,7 +10292,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "468": {
       "Name": "Wisp1",
@@ -9846,7 +10314,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "469": {
       "Name": "Wisp2",
@@ -9867,7 +10336,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "470": {
       "Name": "Wisp3",
@@ -9888,7 +10358,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "471": {
       "Name": "Wisp4",
@@ -9909,7 +10380,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "472": {
       "Name": "Daemon1",
@@ -9930,7 +10402,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "473": {
       "Name": "Daemon2",
@@ -9951,7 +10424,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "474": {
       "Name": "Daemon3",
@@ -9972,7 +10446,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "475": {
       "Name": "Daemon4",
@@ -9993,7 +10468,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "476": {
       "Name": "Dragon1",
@@ -10014,7 +10490,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "477": {
       "Name": "Dragon2",
@@ -10035,7 +10512,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "478": {
       "Name": "Dragon3",
@@ -10056,7 +10534,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "479": {
       "Name": "Dragon4",
@@ -10077,7 +10556,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "480": {
       "Name": "SandTrap1",
@@ -10098,7 +10578,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "481": {
       "Name": "SandTrap2",
@@ -10119,7 +10600,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "482": {
       "Name": "SandTrap3",
@@ -10140,7 +10622,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "483": {
       "Name": "SandTrap4",
@@ -10161,7 +10644,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "484": {
       "Name": "Troll1",
@@ -10182,7 +10666,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "485": {
       "Name": "Troll2",
@@ -10203,7 +10688,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "486": {
       "Name": "Troll3",
@@ -10224,7 +10710,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "487": {
       "Name": "Troll4",
@@ -10245,7 +10732,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "488": {
       "Name": "PoisonField",
@@ -10266,7 +10754,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "489": {
       "Name": "MagicField",
@@ -10287,7 +10776,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "490": {
       "Name": "FireField",
@@ -10308,7 +10798,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "491": {
       "Name": "ColdField",
@@ -10329,7 +10820,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "492": {
       "Name": "Whirpool1",
@@ -10350,7 +10842,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "493": {
       "Name": "Whirpool2",
@@ -10371,7 +10864,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "494": {
       "Name": "Whirpool3",
@@ -10392,7 +10886,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "495": {
       "Name": "Whirpool4",
@@ -10413,7 +10908,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "496": {
       "Name": "MongBat1",
@@ -10434,7 +10930,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "497": {
       "Name": "MongBat2",
@@ -10455,7 +10952,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "498": {
       "Name": "MongBat3",
@@ -10476,7 +10974,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "499": {
       "Name": "MongBat4",
@@ -10497,7 +10996,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "500": {
       "Name": "Corpser1",
@@ -10518,7 +11018,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "501": {
       "Name": "Corpser2",
@@ -10539,7 +11040,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "502": {
       "Name": "Corpser3",
@@ -10560,7 +11062,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "503": {
       "Name": "Corpser4",
@@ -10581,7 +11084,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "504": {
       "Name": "RotWork1",
@@ -10602,7 +11106,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "505": {
       "Name": "RotWork2",
@@ -10623,7 +11128,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "506": {
       "Name": "RotWork3",
@@ -10644,7 +11150,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "507": {
       "Name": "RotWork4",
@@ -10665,7 +11172,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "508": {
       "Name": "ShadowLord1",
@@ -10686,7 +11194,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "509": {
       "Name": "ShadowLord2",
@@ -10707,7 +11216,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "510": {
       "Name": "ShadowLord3",
@@ -10728,7 +11238,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "511": {
       "Name": "ShadowLord4",
@@ -10749,7 +11260,8 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    },
    "512": {
       "Name": "BrickWallArchwayWithPortcullis",
@@ -10770,6 +11282,7 @@
       "IsNPC": false,
       "IsBuilding": false,
       "DontDraw": false,
-      "IsPushable": false
+      "IsPushable": false,
+      "IsTalkOverable": false
    }
 }

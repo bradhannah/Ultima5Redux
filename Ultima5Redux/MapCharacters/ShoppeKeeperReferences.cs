@@ -76,8 +76,11 @@ namespace Ultima5Redux.MapCharacters
             int nStartIndex = nTown * nMaxItemsPerTown;
 
             List<byte> equipmentByteListForTown = equipmentByteList.GetRange(nStartIndex,  nMaxItemsPerTown);
+            List<DataOvlReference.Equipment> equipmentList = equipmentByteListForTown
+                .Select(b => (DataOvlReference.Equipment) b).ToList();
 
-            return equipmentByteListForTown.Select(b => (DataOvlReference.Equipment) b).ToList();
+            equipmentList.Remove(DataOvlReference.Equipment.Nothing);
+            return equipmentList;
         }
         
         public ShoppeKeeperReference GetShoppeKeeperReference(SmallMapReferences.SingleMapReference.Location location,

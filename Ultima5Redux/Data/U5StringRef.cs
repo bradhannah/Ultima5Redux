@@ -43,6 +43,11 @@ namespace Ultima5Redux.Data
             _strMap.Add(typeof(DataOvlReference.ExclaimStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.EXCLAIMS).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ThingsIFindStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.THINGS_I_FIND).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperSellingStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_SELLING).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithPositiveExclamation), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithHello), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithWeHave), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE).GetChunkAsStringList());
+            
+            
         }
 
         private Dictionary<Type, SomeStrings> _strMap;

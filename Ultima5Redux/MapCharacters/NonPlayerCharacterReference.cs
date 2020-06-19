@@ -86,28 +86,20 @@ namespace Ultima5Redux.MapCharacters
         {
             get
             {
-                if (Script != null)
-                {
-                    return Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                if (Script == null) return string.Empty;
+
+                return Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
             }
         }
 
         /// <summary>
         /// friendlier version of name in case they are a profession and not named
         /// </summary>
-        public string FriendlyName
-        {
-            get
-            {
-                return (Name == "" ? NPCType.ToString() : Name);
-            }
-        }
+        public string FriendlyName => (Name == "" ? NPCType.ToString() : Name);
 
+        public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.Custom &&
+                                      NPCType != NPCDialogTypeEnum.Guard &&
+                                      NPCType != NPCDialogTypeEnum.Unknown;
 
         /// <summary>
         /// The daily schedule of the NPC
@@ -141,7 +133,7 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         //public SmallMapReferences.SingleMapReference MapReference { get; }
         public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
-        public byte MapLocationId { get { return (byte)(MapLocation - 1); } }
+        public byte MapLocationId => (byte)(MapLocation - 1);
 
         /// <summary>
         /// What type of NPC are they? 
@@ -168,7 +160,7 @@ namespace Ultima5Redux.MapCharacters
         private int _npcKeySprite;
         public int NPCKeySprite
         {
-            set { _npcKeySprite = value; }
+            private set => _npcKeySprite = value;
             get
             {
                 {
@@ -224,10 +216,7 @@ namespace Ultima5Redux.MapCharacters
                 }
                 return true;
             }
-            set
-            {
-                _gameStateRef.SetNpcHasMetAvatar(this, value);
-            }
+            set => _gameStateRef.SetNpcHasMetAvatar(this, value);
         }
         #endregion
 

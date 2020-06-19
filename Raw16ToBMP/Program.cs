@@ -132,6 +132,43 @@ namespace Raw16ToBMP
     class Program
     {
  
+        static void CreateMon0()
+        {
+            const int nDefaultOffset = 0x00;
+            //const int nPixelWidth = 12 * 2;
+            const int nPixelWidth = 12;
+            //const int nBytesWidth = nPixelWidth / 2;
+            const int nPixelHeight = 50;
+            const int nStartIndex = 0x1D + 2;//(320 / 2) * 61 + 0x1A;
+            //const int nOffsetPerFire = nBytesWidth * nPixelHeight + nDefaultOffset;
+
+            Export("C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.uncomp", "C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.bmp",
+                nPixelWidth, nPixelHeight, nStartIndex + nDefaultOffset);
+            
+            // const int indexSize = 0x32;
+            // byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.uncomp");
+            // //byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
+            //
+            // byte[] positionArray = new byte[indexSize];
+            // for (int i = 0; i < positionArray.Length; i++)
+            // {
+            //     positionArray[i] = fileArray[i];
+            // }
+            //
+            // int nForcedWidth = 12;// * 2;
+            // int nForcedHeight = 50;
+            // byte[] flameGraphic = new byte[nForcedWidth * nForcedHeight];//positionArray[2] * positionArray[3]];
+            //
+            // int byteIndex = 0;
+            // for (int bmpIndex = 0; byteIndex < nForcedWidth * nForcedHeight; bmpIndex += 2, byteIndex += 1)
+            // {
+            //     flameGraphic[byteIndex] = fileArray[byteIndex + indexSize];
+            // }
+            //
+            //
+            // BitmapWriter.Write16BitmapFile("C:\\games\\ultima_5\\temp\\dec_res\\mon1.16.bmp", nForcedWidth, nForcedHeight, flameGraphic);
+            //positionArray[2], positionArray[3], fileArray);
+        }
         static void CreateScreen()
         {
             const int indexSize = 0x32;
@@ -239,6 +276,7 @@ namespace Raw16ToBMP
 
         static void Main(string[] args)
         {
+            CreateMon0();
             StartScreen();
             UltimaScreen();
             FireScreen();
