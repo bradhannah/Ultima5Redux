@@ -177,6 +177,7 @@ namespace Ultima5Redux.MapCharacters
             string doneResponse = ShoppeKeeperDialogueReference.GetMerchantString(
                 DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperSellingStrings
                     .YES_DONE_SAYS_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+            doneResponse = doneResponse.Replace("Yes", "").TrimStart();
             return doneResponse.Replace("!\"\n", "\"! ");
         }
     }

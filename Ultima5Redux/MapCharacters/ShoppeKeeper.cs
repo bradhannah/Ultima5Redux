@@ -48,8 +48,9 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         public abstract List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
 
+        public ShoppeKeeperReference TheShoppeKeeperReference { get; private set; }
+        
         protected readonly ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference;
-        protected readonly ShoppeKeeperReference TheShoppeKeeperReference;
         protected readonly DataOvlReference DataOvlReference;
 
         /// <summary>

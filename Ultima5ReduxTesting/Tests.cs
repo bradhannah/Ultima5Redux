@@ -516,6 +516,7 @@ namespace Ultima5ReduxTesting
             }
             string hello = blacksmith.GetHelloResponse(world.State.TheTimeOfDay);
             blacksmith.GetEquipmentForSaleList();
+            _ = blacksmith.GetDoneResponse();
         }
 
         [Test]
