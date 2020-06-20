@@ -202,6 +202,8 @@ namespace Ultima5Redux.Dialogue
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper:
                     break;
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller:
+                    return new MagicSeller(this, _inventory,
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                     break;
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster:
                     break;

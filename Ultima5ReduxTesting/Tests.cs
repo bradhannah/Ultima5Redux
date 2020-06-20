@@ -497,7 +497,7 @@ namespace Ultima5ReduxTesting
         }
 
         [Test]
-        public void Test_BasicMerchantDialog()
+        public void Test_BasicBlackSmithDialogue()
         {
             World world = new World(SaveDirectory);
             BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Minoc,
@@ -517,6 +517,14 @@ namespace Ultima5ReduxTesting
             string hello = blacksmith.GetHelloResponse(world.State.TheTimeOfDay);
             blacksmith.GetEquipmentForSaleList();
             _ = blacksmith.GetDoneResponse();
+        }
+
+        [Test]
+        public void Test_BasicMagicSellerDialogue()
+        {
+            World world = new World(SaveDirectory);
+            ShoppeKeeper magicSeller = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Cove,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller);
         }
 
         [Test]

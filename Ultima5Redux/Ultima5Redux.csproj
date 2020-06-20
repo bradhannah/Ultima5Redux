@@ -99,6 +99,7 @@
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="MapCharacters\BlackSmith.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
+    <Compile Include="MapCharacters\MagicSeller.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
