@@ -57,13 +57,14 @@ namespace Ultima5Redux.MapCharacters
         /// Get blacksmiths typical hello response
         /// </summary>
         /// <param name="tod"></param>
+        /// <param name="shoppeKeeperName"></param>
+        /// <param name="shoppeName"></param>
         /// <returns></returns>
-        public override string GetHelloResponse(TimeOfDay tod)
+        public override string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "")
         {
             string helloStr = base.GetHelloResponse(tod) + "\n\n" + TheShoppeKeeperReference.ShoppeKeeperName + " says \"" +
                               GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);           
-            return helloStr;
-        }
+            return helloStr;        }
 
         /// <summary>
         /// Gets the listing of all equipment the blacksmith sells

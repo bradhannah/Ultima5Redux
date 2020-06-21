@@ -27,11 +27,6 @@ namespace Ultima5Redux.MapCharacters
         {
             get;
             set;
-            // get
-            // {
-            //     List<DataOvlReference.Equipment> equipmentList = new List<DataOvlReference.Equipment>();
-            //     
-            // }
         } 
         
         public SmallMapReferences.SingleMapReference.Location ShoppeKeeperLocation

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.PlayerCharacters;
 
@@ -19,5 +20,12 @@ namespace Ultima5Redux.MapCharacters
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
         };
+
+        public override string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "")
+        {
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
+            return "\""+ShoppeKeeperDialogueReference.GetMerchantString(nIndex, shoppeKeeperName: shoppeKeeperName,
+                shoppeName: shoppeName);
+        }
     }
 }

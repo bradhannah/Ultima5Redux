@@ -87,21 +87,30 @@ namespace Ultima5Redux.Dialogue
         /// <param name="nDialogueIndex">index into un-replaced strings</param>
         /// <param name="nGold">how many gold to fill in</param>
         /// <param name="equipmentName"></param>
+        /// <param name="bUseRichText"></param>
+        /// <param name="shoppeKeeperName"></param>
+        /// <param name="shoppeName"></param>
         /// <returns>a complete string with full replacements</returns>
-        internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", bool bUseRichText = true, string shoppeKeeperName = "")
+        internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", 
+            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "")
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
-            return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName);
+            return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
+                shoppeName);
         }
-        
+
         /// <summary>
         /// Gets the merchant string with full variable replacement 
         /// </summary>
         /// <param name="dialogue">string to do variable replacement on</param>
         /// <param name="nGold">how many gold to fill in</param>
         /// <param name="equipmentName"></param>
+        /// <param name="bUseRichText"></param>
+        /// <param name="shoppeKeeperName"></param>
+        /// <param name="shoppeName"></param>
         /// <returns>a complete string with full replacements</returns>
-        internal string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", bool bUseRichText = true, string shoppeKeeperName = "")
+        internal string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", 
+            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "")
         {
             // % is gold
             // & is current piece of equipment
@@ -128,16 +137,15 @@ namespace Ultima5Redux.Dialogue
                 sb.Replace("$", shoppeKeeperName);
             }
 
+            if (shoppeName != "")
+            {
+                sb.Replace("#", shoppeName);
+            }
+
             return sb.ToString();
         }
-        
-        /// <summary>
-        /// Returns an unsubstituted merchant string from within a particular range
-        /// </summary>
-        /// <param name="nMin"></param>
-        /// <param name="nMax"></param>
-        /// <returns></returns>
-        internal string GetRandomMerchantStringFromRange(int nMin, int nMax)
+
+        internal int GetRandomMerchantStringIndexFromRange(int nMin, int nMax)
         {
             // if this hasn't been access before, then lets add a chunk to make sure we don't repeat the same thing 
             // twice in a row
@@ -160,7 +168,18 @@ namespace Ultima5Redux.Dialogue
             }
 
             _previousRandomSelectionByMin[nMin] = nResponseIndex;
-            return _merchantStrings[nResponseIndex];
+            return nResponseIndex;
+        }
+        
+        /// <summary>
+        /// Returns an unsubstituted merchant string from within a particular range
+        /// </summary>
+        /// <param name="nMin"></param>
+        /// <param name="nMax"></param>
+        /// <returns></returns>
+        internal string GetRandomMerchantStringFromRange(int nMin, int nMax)
+        {
+            return _merchantStrings[GetRandomMerchantStringIndexFromRange(nMin, nMax)];
         }
         
         /// <summary>
@@ -204,7 +223,6 @@ namespace Ultima5Redux.Dialogue
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller:
                     return new MagicSeller(this, _inventory,
                         _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
-                    break;
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster:
                     break;
                 default:

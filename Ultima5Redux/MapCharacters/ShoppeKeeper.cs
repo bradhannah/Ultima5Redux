@@ -86,8 +86,9 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         /// <param name="tod"></param>
         /// <returns></returns>
-        public virtual string GetHelloResponse(TimeOfDay tod)
+        public virtual string GetHelloResponse(TimeOfDay tod = null)
         {
+            if (tod == null) throw new Ultima5ReduxException("can't pass null TOD to blacksmith");
             // todo: convert to data.ovl @ 0x8028
             string response = @"Good " + GetTimeOfDayName(tod) + ", and welcome to " +
                               TheShoppeKeeperReference.ShoppeName + "!"; 
@@ -178,5 +179,7 @@ namespace Ultima5Redux.MapCharacters
             
             return responses[nResponseIndex];
         }
+
+        public abstract string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "");
     }
 }
