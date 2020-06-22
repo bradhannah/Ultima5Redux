@@ -27,5 +27,18 @@ namespace Ultima5Redux.MapCharacters
             return "\""+ShoppeKeeperDialogueReference.GetMerchantString(nIndex, shoppeKeeperName: shoppeKeeperName,
                 shoppeName: shoppeName);
         }
+
+        public override string GetWhichWouldYouSee()
+        {
+            string retStr= ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
+                DataOvlReference.ShoppeKeeperGeneralStrings
+                    .YES_N_N_FINE_BANG_WE_SELL_COLON), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+            retStr = retStr.Replace("\n\n", "\n");
+            retStr = retStr.TrimEnd();
+            return retStr;
+            // [2] = {string} "Yes\n\n"Fine! We sell:\n\n"
+
+            //return "Fine! We sell:";
+        }
     }
 }

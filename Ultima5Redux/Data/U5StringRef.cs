@@ -46,11 +46,10 @@ namespace Ultima5Redux.Data
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithPositiveExclamation), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithHello), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithWeHave), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE).GetChunkAsStringList());
-            
-            
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperGeneralStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_GENERAL).GetChunkAsStringList());
         }
 
-        private Dictionary<Type, SomeStrings> _strMap;
+        private readonly Dictionary<Type, SomeStrings> _strMap;
 
         /// <summary>
         /// Returns a string based on an enumeration

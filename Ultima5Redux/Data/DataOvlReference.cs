@@ -84,7 +84,8 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_SELLING,
             SHOPPE_KEEPER_BLACKSMITH_WE_HAVE,
             SHOPPE_KEEPER_BLACKSMITH_HELLO,
-            SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM
+            SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM,
+            SHOPPE_KEEPER_GENERAL
         };
 
         public enum Equipment
@@ -578,6 +579,25 @@ namespace Ultima5Redux.Data
         public enum ChunkPhrasesConversation { CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
             YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F, YOU_SEE = 0x11, I_AM_CALLED = 0x12 };
 
+        public enum ShoppeKeeperGeneralStrings
+        {
+            DOT_DOT_DOT, N_THY_INTEREST_Q_QUOTE, YES_N_N_FINE_BANG_WE_SELL_COLON, NO, THE_STABLES_ARE_CLOSED_DOT_N, 
+            YES_N_N, N_N_DEAL_Q_QUOTE, NO_2, YES_BANG, N_N_QUOTE_THOU_COULDST_NOT_AFFORD_TO,
+            FEED_IT_BANG_QUOTE_N_YELLS_SK_N, NO_3
+        }
+
+        // [0] = {string} "..."
+        // [1] = {string} "\nThy interest?" "
+        // [2] = {string} "Yes\n\n"Fine! We sell:\n\n"
+        // [3] = {string} "No"
+        // [4] = {string} "The stables are closed.\n"
+        // [5] = {string} "Yes\n\n""
+        // [6] = {string} "\n\nDeal?" "
+        // [7] = {string} "No"
+        // [8] = {string} "Yes!"
+        // [9] = {string} "\n\n"Thou couldst not afford to "
+        // [10] = {string} "feed it!"\nyells $.\n"
+        // [11] = {string} "No"
         #endregion
 
         #region Public Methods
@@ -866,7 +886,8 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7850, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Magic shop strings", 0x785c, 0x1be);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7a1a, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Armour/weapon shop strings", 0x7a26, 0x4e4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - ", 0x7a26, 0xa0, 0x00, DataChunkName.SHOPPE_KEEPER_GENERAL);
+            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_GENERAL).GetChunkAsStringList();
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - do you want to buy?", 0x7ac6, 0x4E, 0, DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - not enough money", 0x7b14, 0x59, 0, DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various selling strings", 0x7d44, 0x7f, 0, DataChunkName.SHOPPE_KEEPER_SELLING);
@@ -876,7 +897,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith hello strings", 0x7F58, 0x6A, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith positive exclamation strings", 0x7FC2, 0x36, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith 'we have' strings", 0x7FF8, 0x30, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
-            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO).GetChunkAsStringList();
                         
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Numbers as strings (ie. twelfth)", 0x8216, 0x17c);

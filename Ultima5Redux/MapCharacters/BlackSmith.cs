@@ -106,7 +106,7 @@ namespace Ultima5Redux.MapCharacters
         /// Blacksmith asks what you would like to see (to buy) 
         /// </summary>
         /// <returns></returns>
-        public string GetWhichWouldYouSee()
+        public override string GetWhichWouldYouSee()
         {
             return "Which would ye see?";
         }

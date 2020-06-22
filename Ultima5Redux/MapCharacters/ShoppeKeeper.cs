@@ -181,5 +181,6 @@ namespace Ultima5Redux.MapCharacters
         }
 
         public abstract string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "");
+        public abstract string GetWhichWouldYouSee();
     }
 }
