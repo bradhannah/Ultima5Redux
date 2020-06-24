@@ -59,18 +59,20 @@ namespace Ultima5Redux.MapCharacters
         /// <param name="tod"></param>
         /// <param name="shoppeKeeperName"></param>
         /// <param name="shoppeName"></param>
+        /// <param name="shoppeKeeperReference"></param>
         /// <returns></returns>
-        public override string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "")
+        public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null) 
         {
             string helloStr = base.GetHelloResponse(tod) + "\n\n" + TheShoppeKeeperReference.ShoppeKeeperName + " says \"" +
                               GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);           
-            return helloStr;        }
+            return helloStr;        
+        }
 
         /// <summary>
         /// Gets the listing of all equipment the blacksmith sells
         /// </summary>
         /// <returns></returns>
-        public string GetEquipmentForSaleList()
+        public override string GetForSaleList()
         {
             StringBuilder sb = new StringBuilder();
             char itemChar = 'a';

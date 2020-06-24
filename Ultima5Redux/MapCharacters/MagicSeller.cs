@@ -21,11 +21,15 @@ namespace Ultima5Redux.MapCharacters
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
         };
 
-        public override string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "")
+//        public override string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "")
+        public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null)
         {
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
-            return "\""+ShoppeKeeperDialogueReference.GetMerchantString(nIndex, shoppeKeeperName: shoppeKeeperName,
-                shoppeName: shoppeName);
+            if (shoppeKeeperReference != null)
+                return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                    shoppeKeeperName: shoppeKeeperReference.ShoppeKeeperName,
+                    shoppeName: shoppeKeeperReference.ShoppeName);
+            throw new Ultima5ReduxException("Can't get a hello response without a ShoppeKeeperReference");
         }
 
         public override string GetWhichWouldYouSee()
@@ -33,12 +37,14 @@ namespace Ultima5Redux.MapCharacters
             string retStr= ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
                 DataOvlReference.ShoppeKeeperGeneralStrings
                     .YES_N_N_FINE_BANG_WE_SELL_COLON), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
-            retStr = retStr.Replace("\n\n", "\n");
-            retStr = retStr.TrimEnd();
+            retStr = retStr.Replace("Yes", "");
+            retStr = retStr.Replace("\n\n", "\n").TrimEnd();
             return retStr;
-            // [2] = {string} "Yes\n\n"Fine! We sell:\n\n"
+        }
 
-            //return "Fine! We sell:";
+        public override string GetForSaleList()
+        {
+            return "";
         }
     }
 }

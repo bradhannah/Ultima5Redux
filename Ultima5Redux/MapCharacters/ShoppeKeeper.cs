@@ -180,7 +180,10 @@ namespace Ultima5Redux.MapCharacters
             return responses[nResponseIndex];
         }
 
-        public abstract string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "");
+        public abstract string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null); 
+            //string shoppeKeeperName = "", string shoppeName = "");
         public abstract string GetWhichWouldYouSee();
+        public abstract string GetForSaleList();
+
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -49,19 +51,7 @@ namespace Ultima5Redux.PlayerCharacters
         public int RequiredStrength { get; }
         public int AttackStat { get; }
         public int DefendStat { get; }
-        //public CombatItem(int quantity, string longName, string shortName, int nSpriteNum, int attackStat, int defendStat, DataOvlReference.EQUIPMENT specificEquipment)
-        //    : base(quantity, longName, shortName, nSpriteNum)
-        //{
-        //    attackStat = AttackStat;
-        //    defendStat = DefendStat;
-        //    this.SpecificEquipment = specificEquipment;
-        //}
-        //    ChestArmours.Add(new ChestArmour(chestArmour, gameStateByteArray[(int)chestArmour],
-        //equipmentNames[(int)equipment], equipmentNames[(int)equipment],
-        //       CombatItem.GetAttack(dataOvlRef, (int) equipment),
-        //       CombatItem.GetDefense(dataOvlRef, (int) equipment),equipment));
         
-        // CombatItem.GetAttack(dataOvlRef, (int)specificEquipment), CombatItem.GetDefense(dataOvlRef, (int)specificEquipment)
         protected CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef, IReadOnlyList<byte> gameStateRef, int nOffset, int nSpriteNum) 
             : base (gameStateRef[nOffset], CombatItem.GetEquipmentString(dataOvlRef, (int)specificEquipment), 
                 CombatItem.GetEquipmentString(dataOvlRef, (int)specificEquipment), nSpriteNum)
@@ -78,6 +68,27 @@ namespace Ultima5Redux.PlayerCharacters
             BasePrice = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIPMENT_BASE_PRICE).GetChunkAsUint16List()[
                 (int) SpecificEquipment];
         }
+        
+        public override int GetAdjustedBuyPrice(PlayerCharacterRecords records, SmallMapReferences.SingleMapReference.Location location)
+        {
+            if (!IsSellable) return 0;
+
+            // we add 3% of the value per dex point below 33, and subtract 3% for each point above 33
+            const int nBaseDex = 33;
+            int nAdjustedPrice = (int) (BasePrice + (BasePrice * 0.03f * (nBaseDex - (int)records.AvatarRecord.Stats.Dexterity)));
+            return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
+        }
+        
+        public override int GetAdjustedSellPrice(PlayerCharacterRecords records, SmallMapReferences.SingleMapReference.Location location)
+        {
+            if (!IsSellable) return 0;
+            
+            // we subtract 3% of the value for every dexterity point below 33, and add 3% for each point above it
+            const int nBaseDex = 33;
+            int nAdjustedPrice = (int)(BasePrice - (BasePrice * 0.03f * (nBaseDex - (int)records.AvatarRecord.Stats.Dexterity)));
+            return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
+        }
+
 
     }
 }

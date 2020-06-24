@@ -515,7 +515,7 @@ namespace Ultima5ReduxTesting
                     blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
             string hello = blacksmith.GetHelloResponse(world.State.TheTimeOfDay);
-            blacksmith.GetEquipmentForSaleList();
+            blacksmith.GetForSaleList();
             _ = blacksmith.GetDoneResponse();
         }
 
@@ -533,9 +533,9 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedBuyPrice(world.State.CharacterRecords);
+                .GetAdjustedBuyPrice(world.State.CharacterRecords, world.State.Location);
             int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedSellPrice(world.State.CharacterRecords);
+                .GetAdjustedSellPrice(world.State.CharacterRecords, world.State.Location);
             Debug.Assert(nCrossbowBuy > 0);
             Debug.Assert(nCrossbowSell > 0);
         }
