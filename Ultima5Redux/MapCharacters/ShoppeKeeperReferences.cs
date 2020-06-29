@@ -63,6 +63,10 @@ namespace Ultima5Redux.MapCharacters
                 {
                     shoppeKeeper.EquipmentForSaleList = GetEquipmentList(i);
                 }
+                else if (shoppeKeeper.NpcRef.NPCType == NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller)
+                {
+                    //shoppeKeeper.InventoryItemsForSale
+                }
             }
         }
 
@@ -103,7 +107,6 @@ namespace Ultima5Redux.MapCharacters
             Dictionary<int, ShoppeKeeperReference> result = JsonConvert.DeserializeObject<Dictionary<int, ShoppeKeeperReference>>(Properties.Resources.ShoppeKeeperMap);
             foreach (ShoppeKeeperReference shoppeKeeperReference in result.Values)
             {
-                shoppeKeeperReference.TheDataOvlReference = dataOvlReference;
             }
             return result;
         }

@@ -21,8 +21,6 @@ namespace Ultima5Redux.MapCharacters
         public string ShoppeKeeperName { get; set; }
         public string ShoppeName { get; set; }
 
-        public DataOvlReference TheDataOvlReference { private get; set; }
-        
         public List<DataOvlReference.Equipment> EquipmentForSaleList
         {
             get;

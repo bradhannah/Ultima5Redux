@@ -138,7 +138,7 @@ namespace Ultima5Redux.PlayerCharacters
         }
 
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,  
-            MoonPhaseReferences moonPhaseReferences, Moongates moongates)
+            MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state)
         {
             this._gameStateByteArray = gameStateByteArray;
 
@@ -172,7 +172,7 @@ namespace Ultima5Redux.PlayerCharacters
             AllItems.AddRange(Shards.GenericItemList);
             UseItems.AddRange(Shards.GenericItemList);
 
-            SpellReagents = new Reagents(dataOvlRef, gameStateByteArray);
+            SpellReagents = new Reagents(dataOvlRef, gameStateByteArray, state);
             AllItems.AddRange(SpellReagents.GenericItemList);
 
             MagicSpells = new Spells(dataOvlRef, gameStateByteArray);

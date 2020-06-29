@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.PlayerCharacters
@@ -17,78 +18,31 @@ namespace Ultima5Redux.PlayerCharacters
                 Quantity = quantity;
             }
         }
+
+        private readonly List<SmallMapReferences.SingleMapReference.Location> _reagentShoppeKeeperLocations;
         
         private const int REAGENT_SPRITE = 259;
-        public Reagent(ReagentTypeEnum reagentType, int quantity, string longName, string shortName) : base(quantity, longName, shortName, REAGENT_SPRITE)
+        public Reagent(ReagentTypeEnum reagentType, int quantity, string longName, string shortName, 
+            DataOvlReference dataOvlRef, GameState state, List<SmallMapReferences.SingleMapReference.Location> reagentShoppeKeeperLocations) : base(quantity, longName, shortName, REAGENT_SPRITE)
         {
+            // capture the game state so we know the users Karma for cost calculations
+            _state = state;
+            _reagentShoppeKeeperLocations = reagentShoppeKeeperLocations;
             ReagentType = reagentType;
+            _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>();
 
-            switch (reagentType)
+            List<byte> prices = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_BASE_PRICES)
+                .GetAsByteList();
+            List<byte> quantities = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES).GetAsByteList();
+            
+            for (int nIndex = 0; nIndex < _reagentShoppeKeeperLocations.Count; nIndex++)
             {
-                case ReagentTypeEnum.SulfurAsh:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Yew, new ReagentPriceAndQuantity(24, 12)},
-                        {SmallMapReferences.SingleMapReference.Location.Skara_Brae, new ReagentPriceAndQuantity(28, 14)},
-                    };
-                    break;
-                case ReagentTypeEnum.Ginseng:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Yew, new ReagentPriceAndQuantity(32, 8)},
-                        {SmallMapReferences.SingleMapReference.Location.Skara_Brae, new ReagentPriceAndQuantity(32, 8)},
-                        {SmallMapReferences.SingleMapReference.Location.Moonglow, new ReagentPriceAndQuantity(40, 10)},
-                    };
-                    break;
-                case ReagentTypeEnum.Garlic:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Yew, new ReagentPriceAndQuantity(32, 8)},
-                        {SmallMapReferences.SingleMapReference.Location.Moonglow, new ReagentPriceAndQuantity(36, 6)},
-                    };
-                    break;
-                case ReagentTypeEnum.SpiderSilk:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Yew, new ReagentPriceAndQuantity(16, 2)},
-                        {SmallMapReferences.SingleMapReference.Location.Cove, new ReagentPriceAndQuantity(12, 2)},
-                        {SmallMapReferences.SingleMapReference.Location.Moonglow, new ReagentPriceAndQuantity(24, 4)},
-                    };
-                    break;
-                case ReagentTypeEnum.BloodMoss:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Yew, new ReagentPriceAndQuantity(40, 4)},
-                        {SmallMapReferences.SingleMapReference.Location.Skara_Brae, new ReagentPriceAndQuantity(60, 6)},
-                        {SmallMapReferences.SingleMapReference.Location.Cove, new ReagentPriceAndQuantity(16, 2)},
-                        {SmallMapReferences.SingleMapReference.Location.Lycaeum, new ReagentPriceAndQuantity(100, 4)},
-                    };
-                    break;
-                case ReagentTypeEnum.BlackPearl:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Skara_Brae, new ReagentPriceAndQuantity(36, 6)},
-                        {SmallMapReferences.SingleMapReference.Location.Cove, new ReagentPriceAndQuantity(16, 2)},
-                    };
-                    break;
-                case ReagentTypeEnum.NightShade:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Cove, new ReagentPriceAndQuantity(20, 1)},
-                        {SmallMapReferences.SingleMapReference.Location.Moonglow, new ReagentPriceAndQuantity(24, 1)},
-                        {SmallMapReferences.SingleMapReference.Location.Lycaeum, new ReagentPriceAndQuantity(60, 1)},
-                    };
-                    break;
-                case ReagentTypeEnum.MandrakeRoot:
-                    _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>()
-                    {
-                        {SmallMapReferences.SingleMapReference.Location.Cove, new ReagentPriceAndQuantity(30, 1)},
-                        {SmallMapReferences.SingleMapReference.Location.Moonglow, new ReagentPriceAndQuantity(25, 1)},
-                        {SmallMapReferences.SingleMapReference.Location.Lycaeum, new ReagentPriceAndQuantity(80, 1)},
-                    };
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(reagentType), reagentType, null);
+                SmallMapReferences.SingleMapReference.Location location = _reagentShoppeKeeperLocations[nIndex];
+                if (quantities[nIndex] > 0)
+                {
+                    _reagentPriceAndQuantities.Add(location,
+                        new ReagentPriceAndQuantity(prices[nIndex], quantities[nIndex]));
+                }
             }
         }
 
@@ -110,14 +64,18 @@ namespace Ultima5Redux.PlayerCharacters
 
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>
             _reagentPriceAndQuantities;
-        
+
+        private readonly GameState _state;
         
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records, SmallMapReferences.SingleMapReference.Location location)
         {
             if (!_reagentPriceAndQuantities.ContainsKey(location))
                 throw new Ultima5ReduxException("Requested reagent "+ this.LongName + " from " + location + " which is not sold here");
 
-            return _reagentPriceAndQuantities[location].Price;
+            // A big thank you to Markus Brenner (@minstrel_dragon) for digging in and figuring out the Karma calculation
+            // price = Base Price * (1 + (100 - Karma) / 100)
+            int nAdjustedPrice = (_reagentPriceAndQuantities[location].Price * (1 + (100 - (int)_state.Karma) / 100)); 
+            return nAdjustedPrice;
         }
 
         public override int GetQuantityForSale(SmallMapReferences.SingleMapReference.Location location)
@@ -127,5 +85,11 @@ namespace Ultima5Redux.PlayerCharacters
 
             return _reagentPriceAndQuantities[location].Quantity;
         }
+
+        public bool IsReagentForSale(SmallMapReferences.SingleMapReference.Location location)
+        {
+            return _reagentPriceAndQuantities.ContainsKey(location);
+        }
+
     }
 }

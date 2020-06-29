@@ -356,7 +356,7 @@ namespace Ultima5Redux
                 _dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
             
             // import the players inventory
-            PlayerInventory = new Inventory(gameStateByteArray, dataRef, new MoonPhaseReferences(dataRef), TheMoongates);
+            PlayerInventory = new Inventory(gameStateByteArray, dataRef, new MoonPhaseReferences(dataRef), TheMoongates, this);
         }
         #endregion
 

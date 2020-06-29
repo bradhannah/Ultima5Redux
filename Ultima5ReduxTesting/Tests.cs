@@ -525,6 +525,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
             ShoppeKeeper magicSeller = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Cove,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller);
+            ((MagicSeller) magicSeller).GetReagentsForSale(); //SmallMapReferences.SingleMapReference.Location.Cove);
         }
 
         [Test]

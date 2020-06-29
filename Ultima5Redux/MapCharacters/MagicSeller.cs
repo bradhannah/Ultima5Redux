@@ -2,6 +2,7 @@
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
+using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapCharacters
@@ -45,6 +46,12 @@ namespace Ultima5Redux.MapCharacters
         public override string GetForSaleList()
         {
             return "";
+        }
+
+        public List<Reagent> GetReagentsForSale()//SmallMapReferences.SingleMapReference.Location location)
+        {
+            return _inventory.SpellReagents.GetReagentsForSale(this.TheShoppeKeeperReference
+                .ShoppeKeeperLocation); //location);
         }
     }
 }

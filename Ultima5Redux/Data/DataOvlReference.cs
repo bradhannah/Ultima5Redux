@@ -85,7 +85,9 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_BLACKSMITH_WE_HAVE,
             SHOPPE_KEEPER_BLACKSMITH_HELLO,
             SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM,
-            SHOPPE_KEEPER_GENERAL
+            SHOPPE_KEEPER_GENERAL,
+            REAGENT_QUANTITES,
+            REAGENT_BASE_PRICES
         };
 
         public enum Equipment
@@ -776,18 +778,12 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random filenames, texts and unknown", 0x3986, 0xaf);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0x7d);
 
-            // ARMOUR_ACCESSORY_BASE_PRICES,
-            // ARMOUR_BASE_PRICES,
-            // WEAPON_BASE_PRICES,
-            // WEAPONS_SOLD_BY_MERCHANTS
+            // Another big thank you to Markus Brenner (@minstrel_dragon) for providing the "actual" base prices that 
+            // helped track down the meaning and location of the reagent data
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Reagent base prices", 0x3a42, 0x28, 0, DataChunkName.REAGENT_BASE_PRICES); 
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Reagent quantities", 0x3a6a, 0x28, 0, DataChunkName.REAGENT_QUANTITES); 
+
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "All equipment base prices", 0x3a92, 0x60, 0, DataChunkName.EQUIPMENT_BASE_PRICE); 
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3aa2, 0x2);
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour base prices", 0x3aa4, 0xc, 0, DataChunkName.ARMOUR_BASE_PRICES);
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Weapon base prices", 0x3ab2, 0x2e, 0, DataChunkName.WEAPON_BASE_PRICES);
-            //List<UInt16> weaponprices =
-              //  _dataChunks.GetDataChunk(DataChunkName.WEAPON_BASE_PRICES).GetChunkAsUint16List();
-            
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3ae0, 0x2);
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
                 "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	",
