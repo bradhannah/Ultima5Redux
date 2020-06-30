@@ -34,10 +34,12 @@ namespace Ultima5Redux.PlayerCharacters
             List<byte> prices = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_BASE_PRICES)
                 .GetAsByteList();
             List<byte> quantities = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES).GetAsByteList();
-            
-            for (int nIndex = 0; nIndex < _reagentShoppeKeeperLocations.Count; nIndex++)
+            int nOffset = (int) ReagentType - (int)ReagentTypeEnum.SulfurAsh;
+            int nReagents = Enum.GetNames(typeof(ReagentTypeEnum)).Length;
+            for (int i = 0; i < _reagentShoppeKeeperLocations.Count; i++)
             {
-                SmallMapReferences.SingleMapReference.Location location = _reagentShoppeKeeperLocations[nIndex];
+                int nIndex = (i * nReagents) + nOffset; 
+                SmallMapReferences.SingleMapReference.Location location = _reagentShoppeKeeperLocations[i];
                 if (quantities[nIndex] > 0)
                 {
                     _reagentPriceAndQuantities.Add(location,

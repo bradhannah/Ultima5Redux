@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
@@ -19,7 +20,7 @@ namespace Ultima5Redux.MapCharacters
 
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>()
         {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
+            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyMagicSeller),
         };
 
 //        public override string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "")
@@ -45,7 +46,15 @@ namespace Ultima5Redux.MapCharacters
 
         public override string GetForSaleList()
         {
-            return "";
+            List<Reagent> reagents = GetReagentsForSale();
+            
+            StringBuilder sb = new StringBuilder();
+            char itemChar = 'a';
+            foreach (Reagent reagent in reagents)
+            {
+                sb.Append((itemChar++) + "..." +  reagent.LongName + "\n");
+            }
+            return sb.ToString().TrimEnd();
         }
 
         public List<Reagent> GetReagentsForSale()//SmallMapReferences.SingleMapReference.Location location)
@@ -53,5 +62,6 @@ namespace Ultima5Redux.MapCharacters
             return _inventory.SpellReagents.GetReagentsForSale(this.TheShoppeKeeperReference
                 .ShoppeKeeperLocation); //location);
         }
+        
     }
 }

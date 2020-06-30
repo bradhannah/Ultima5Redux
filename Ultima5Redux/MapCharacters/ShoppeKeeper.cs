@@ -114,6 +114,12 @@ namespace Ultima5Redux.MapCharacters
             return ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP);
         }
 
+        public string GetThyInterest()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
+                .N_THY_INTEREST_Q_QUOTE);
+        }
+        
         /// <summary>
         /// Gets a common response after a purchase
         /// </summary>

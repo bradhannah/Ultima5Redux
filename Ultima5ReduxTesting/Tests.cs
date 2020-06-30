@@ -523,9 +523,15 @@ namespace Ultima5ReduxTesting
         public void Test_BasicMagicSellerDialogue()
         {
             World world = new World(SaveDirectory);
-            ShoppeKeeper magicSeller = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Cove,
+            MagicSeller magicSeller = (MagicSeller)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Cove,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller);
-            ((MagicSeller) magicSeller).GetReagentsForSale(); //SmallMapReferences.SingleMapReference.Location.Cove);
+            //( magicSeller). //SmallMapReferences.SingleMapReference.Location.Cove);
+            List<Reagent> reagents = magicSeller.GetReagentsForSale();
+
+            int price1 = reagents[0].GetAdjustedBuyPrice(world.State.CharacterRecords,
+                SmallMapReferences.SingleMapReference.Location.Cove);
+            int price2 = reagents[1].GetAdjustedBuyPrice(world.State.CharacterRecords,
+                SmallMapReferences.SingleMapReference.Location.Cove);
         }
 
         [Test]
