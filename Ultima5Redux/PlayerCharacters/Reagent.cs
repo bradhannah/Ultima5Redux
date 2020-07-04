@@ -64,6 +64,11 @@ namespace Ultima5Redux.PlayerCharacters
         public enum ReagentTypeEnum { SulfurAsh = 0x2AA , Ginseng = 0x2AB, Garlic = 0x2AC, SpiderSilk = 0x2AD, BloodMoss = 0x2AE, BlackPearl = 0x2AF, 
             NightShade = 0x2B0, MandrakeRoot = 0x2B1 };
 
+        public override int Quantity {
+            get => base.Quantity;
+            set => base.Quantity = value > 99 ? 99: value;
+        }
+
         /// <summary>
         /// Standard index/order of reagents in data files
         /// </summary>

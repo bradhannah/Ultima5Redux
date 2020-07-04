@@ -127,7 +127,7 @@ namespace Ultima5Redux.Dialogue
             // * location of thing
             // ^ quantity of thing (ie. reagent)
             const string HighlightColor = "<color=#00CC00>";
-            const string RegularColor = "<color=#FFFFFF>";
+            //const string RegularColor = "<color=#FFFFFF>";
             const string QuantityColor = "<color=#00ffffff>";
             const string CloseColor = "</color>";
 

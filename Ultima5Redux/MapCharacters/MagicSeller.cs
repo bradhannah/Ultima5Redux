@@ -85,7 +85,7 @@ namespace Ultima5Redux.MapCharacters
             int nPrice = reagent.GetAdjustedBuyPrice(null, TheShoppeKeeperReference.NpcRef.MapLocation);
             int nQuantity = reagent.GetQuantityForSale(TheShoppeKeeperReference.NpcRef.MapLocation);
             Debug.Assert(nQuantity > 0);
-            return ShoppeKeeperDialogueReference.GetMerchantString(nStartReagentBuyStrings + nIndex,
+            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nStartReagentBuyStrings + nIndex,
                 nQuantity:nQuantity, nGold:nPrice) + "\n" +
                    DataOvlReference.StringReferences.
                        GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
