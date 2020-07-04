@@ -47,6 +47,10 @@ namespace Ultima5Redux.Data
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithHello), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithWeHave), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperGeneralStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_GENERAL).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperInnkeeperStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_INNKEEPER).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperInnkeeper2Strings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_INNKEEPER_2).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperReagentStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_REAGENTS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperGeneral2Strings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_GENERAL_2).GetChunkAsStringList());
         }
 
         private readonly Dictionary<Type, SomeStrings> _strMap;

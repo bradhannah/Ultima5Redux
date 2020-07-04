@@ -68,18 +68,6 @@ namespace Ultima5Redux.MapCharacters
         private const int PISSED_OFF_STOP = 3;
         private const int HAPPY_START = 4;
         private const int HAPPY_STOP = 7;
-
-        /// <summary>
-        /// Gets a string describing the current time of day
-        /// </summary>
-        /// <param name="tod"></param>
-        /// <returns></returns>
-        private string GetTimeOfDayName(TimeOfDay tod)
-        {
-            if (tod.Hour > 5 && tod.Hour < 12) return "morning";
-            if (tod.Hour >= 12 && tod.Hour < 6) return "afternoon";
-            return "evening";
-        }
         
         /// <summary>
         /// Gets a standard hello response based on current time of day 
@@ -90,7 +78,7 @@ namespace Ultima5Redux.MapCharacters
         {
             if (tod == null) throw new Ultima5ReduxException("can't pass null TOD to blacksmith");
             // todo: convert to data.ovl @ 0x8028
-            string response = @"Good " + GetTimeOfDayName(tod) + ", and welcome to " +
+            string response = @"Good " + tod.TimeOfDayName + ", and welcome to " +
                               TheShoppeKeeperReference.ShoppeName + "!"; 
             return response;
         }
@@ -124,7 +112,7 @@ namespace Ultima5Redux.MapCharacters
         /// Gets a common response after a purchase
         /// </summary>
         /// <returns></returns>
-        public string GetThanksAfterPurchaseResponse()
+        public virtual string GetThanksAfterPurchaseResponse()
         {
             return "Thank thee kindly!";
         }
@@ -142,7 +130,7 @@ namespace Ultima5Redux.MapCharacters
         /// Gets a pissed off response when you don't have enough to buy the thing you tried to buy
         /// </summary>
         /// <returns></returns>
-        public string GetPissedOffNotEnoughMoney()
+        public virtual string GetPissedOffNotEnoughMoney()
         {
             return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
         }

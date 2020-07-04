@@ -24,6 +24,21 @@ namespace Ultima5Redux.DayNightMoon
         private int _nTotalChangeTrackers = 0;
         
         /// <summary>
+        /// Gets a string describing the current time of day
+        /// </summary>
+        /// <param name="tod"></param>
+        /// <returns></returns>
+        public string TimeOfDayName
+        {
+            get
+            {
+                if (Hour > 5 && Hour < 12) return "morning";
+                if (Hour >= 12 && Hour < 6) return "afternoon";
+                return "evening";
+            }
+        }
+        
+        /// <summary>
         /// Constructor. Builds with datachunks from save game file
         /// </summary>
         /// <param name="currentYearDataChunk"></param>

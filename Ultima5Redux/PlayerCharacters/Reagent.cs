@@ -64,6 +64,11 @@ namespace Ultima5Redux.PlayerCharacters
         public enum ReagentTypeEnum { SulfurAsh = 0x2AA , Ginseng = 0x2AB, Garlic = 0x2AC, SpiderSilk = 0x2AD, BloodMoss = 0x2AE, BlackPearl = 0x2AF, 
             NightShade = 0x2B0, MandrakeRoot = 0x2B1 };
 
+        /// <summary>
+        /// Standard index/order of reagents in data files
+        /// </summary>
+        public int ReagentIndex => (int)ReagentType - (int)Reagent.ReagentTypeEnum.SulfurAsh;
+        
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>
             _reagentPriceAndQuantities;
 

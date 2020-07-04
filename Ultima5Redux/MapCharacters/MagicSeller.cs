@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
@@ -23,14 +24,15 @@ namespace Ultima5Redux.MapCharacters
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyMagicSeller),
         };
 
-//        public override string GetHelloResponse(TimeOfDay tod = null, string shoppeKeeperName = "", string shoppeName = "")
         public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null)
         {
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
             if (shoppeKeeperReference != null)
                 return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                    
                     shoppeKeeperName: shoppeKeeperReference.ShoppeKeeperName,
-                    shoppeName: shoppeKeeperReference.ShoppeName);
+                    shoppeName: shoppeKeeperReference.ShoppeName,
+                    tod: tod);
             throw new Ultima5ReduxException("Can't get a hello response without a ShoppeKeeperReference");
         }
 
@@ -62,6 +64,32 @@ namespace Ultima5Redux.MapCharacters
             return _inventory.SpellReagents.GetReagentsForSale(this.TheShoppeKeeperReference
                 .ShoppeKeeperLocation); //location);
         }
-        
+
+        public override string GetPissedOffNotEnoughMoney()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(147, shoppeKeeperName:TheShoppeKeeperReference.ShoppeKeeperName);
+        }
+
+        public override string GetThanksAfterPurchaseResponse()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N)
+                .TrimStart();
+        }
+
+        public string GetReagentBuyingOutput(Reagent reagent)
+        {
+            const int nStartReagentBuyStrings = 139;
+            // get the index 
+            int nIndex = reagent.ReagentIndex;
+
+            int nPrice = reagent.GetAdjustedBuyPrice(null, TheShoppeKeeperReference.NpcRef.MapLocation);
+            int nQuantity = reagent.GetQuantityForSale(TheShoppeKeeperReference.NpcRef.MapLocation);
+            Debug.Assert(nQuantity > 0);
+            return ShoppeKeeperDialogueReference.GetMerchantString(nStartReagentBuyStrings + nIndex,
+                nQuantity:nQuantity, nGold:nPrice) + "\n" +
+                   DataOvlReference.StringReferences.
+                       GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
+        }
+
     }
 }

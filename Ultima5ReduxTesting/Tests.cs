@@ -532,6 +532,14 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Cove);
             int price2 = reagents[1].GetAdjustedBuyPrice(world.State.CharacterRecords,
                 SmallMapReferences.SingleMapReference.Location.Cove);
+
+            string hello = magicSeller.GetHelloResponse(world.State.TheTimeOfDay, magicSeller.TheShoppeKeeperReference);
+            string buything = magicSeller.GetReagentBuyingOutput(reagents[0]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[1]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[2]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[3]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[4]);
+            
         }
 
         [Test]

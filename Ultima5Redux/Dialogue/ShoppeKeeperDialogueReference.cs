@@ -32,6 +32,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="u5Directory"></param>
         /// <param name="dataOvlReference"></param>
         /// <param name="npcReferences"></param>
+        /// <param name="inventory"></param>
         public ShoppeKeeperDialogueReference(string u5Directory, DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcReferences, Inventory inventory)
         {
             _dataOvlReference = dataOvlReference;
@@ -90,13 +91,16 @@ namespace Ultima5Redux.Dialogue
         /// <param name="bUseRichText"></param>
         /// <param name="shoppeKeeperName"></param>
         /// <param name="shoppeName"></param>
+        /// <param name="tod"></param>
+        /// <param name="nQuantity"></param>
         /// <returns>a complete string with full replacements</returns>
         internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", 
-            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "")
+            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null, 
+            int nQuantity = 0)
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
-                shoppeName);
+                shoppeName, tod, nQuantity);
         }
 
         /// <summary>
@@ -108,9 +112,12 @@ namespace Ultima5Redux.Dialogue
         /// <param name="bUseRichText"></param>
         /// <param name="shoppeKeeperName"></param>
         /// <param name="shoppeName"></param>
+        /// <param name="tod"></param>
+        /// <param name="nQuantity"></param>
         /// <returns>a complete string with full replacements</returns>
         internal string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", 
-            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "")
+            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null,
+            int nQuantity = 0)
         {
             // % is gold
             // & is current piece of equipment
@@ -119,27 +126,35 @@ namespace Ultima5Redux.Dialogue
             // @ barkeeps food/drink etc
             // * location of thing
             // ^ quantity of thing (ie. reagent)
-            
             const string HighlightColor = "<color=#00CC00>";
             const string RegularColor = "<color=#FFFFFF>";
+            const string QuantityColor = "<color=#00ffffff>";
+            const string CloseColor = "</color>";
 
             StringBuilder sb = new StringBuilder(dialogue);
-            if (nGold > 0)
+            if (nGold >= 0)
             {
-                sb.Replace("%", HighlightColor+nGold.ToString()+RegularColor);
+                sb.Replace("%", HighlightColor+nGold.ToString()+CloseColor);
             }
             if (equipmentName != "")
             {
-                sb.Replace("&", HighlightColor+equipmentName.ToString()+RegularColor);
+                sb.Replace("&", HighlightColor+equipmentName.ToString()+CloseColor);
             }
             if (shoppeKeeperName != "")
             {
                 sb.Replace("$", shoppeKeeperName);
             }
-
             if (shoppeName != "")
             {
                 sb.Replace("#", shoppeName);
+            }
+            if (tod != null)
+            {
+                sb.Replace("@", tod.TimeOfDayName);
+            }
+            if (nQuantity > 0)
+            {
+                sb.Replace("^", QuantityColor+nQuantity.ToString()+CloseColor);
             }
 
             return sb.ToString();
