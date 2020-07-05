@@ -68,6 +68,13 @@ namespace Ultima5Redux.MapCharacters
         private const int PISSED_OFF_STOP = 3;
         private const int HAPPY_START = 4;
         private const int HAPPY_STOP = 7;
+
+        public bool IsOnDuty(TimeOfDay tod)
+        {
+            // shoppe keepers are open during their 1 and 3 index into their schedule (0 based)
+            int nScheduleIndex = TheShoppeKeeperReference.NpcRef.Schedule.GetScheduleIndex(tod);
+            return nScheduleIndex == 1 || nScheduleIndex == 3;
+        }
         
         /// <summary>
         /// Gets a standard hello response based on current time of day 
@@ -82,7 +89,13 @@ namespace Ultima5Redux.MapCharacters
                               TheShoppeKeeperReference.ShoppeName + "!"; 
             return response;
         }
-        
+
+        public string GetComeLaterResponse()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                .MERCH_SEE_ME_AT_SHOP1) + DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                .MERCH_SEE_ME_AT_SHOP2);
+        }
         
         /// <summary>
         /// Get a random response when the shoppekeeper gets pissed off at you

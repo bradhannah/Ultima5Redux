@@ -16,7 +16,7 @@ namespace Ultima5Redux.MapCharacters
             /// </summary>
             /// <param name="timeOfDay"></param>
             /// <returns></returns>
-            private int GetScheduleIndex(TimeOfDay timeOfDay)
+            internal int GetScheduleIndex(TimeOfDay timeOfDay)
             {
                 int getIndex(int nOrigIndex)
                 {

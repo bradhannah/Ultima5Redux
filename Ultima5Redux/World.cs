@@ -277,6 +277,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="xy">where is the thing?</param>
         /// <param name="bGotAThing">did I get a thing?</param>
+        /// <param name="inventoryItem"></param>
         /// <returns>the output string</returns>
         public string TryToGetAThing(Point2D xy, out bool bGotAThing, out InventoryItem inventoryItem)
         {
@@ -1037,7 +1038,6 @@ namespace Ultima5Redux
             {
                 throw new Ultima5ReduxException("Can't close a conversation if haven't got one open!");
             }
-            //CurrentConversation.
         }
 
         #region Test Procedures

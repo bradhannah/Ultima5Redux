@@ -621,7 +621,7 @@ namespace Ultima5Redux.Maps
                     {
                         XY = stairsAndLadderLocations[0], Floor = nMapCurrentFloor
                     };
-                    mapCharacter.Move(characterPosition);
+                    mapCharacter.Move(characterPosition, _timeOfDay);
                     return;
 
                     // we now need to build a path to the best choice of ladder or stair
@@ -1020,7 +1020,7 @@ namespace Ultima5Redux.Maps
                     {
                         // pop the direction from the queue
                         direction = mapChar.Movement.GetNextMovementCommandDirection(false);
-                        mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor);
+                        mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor, _timeOfDay);
                         mapChar.MovementAttempts = 0;
                     }
                     else

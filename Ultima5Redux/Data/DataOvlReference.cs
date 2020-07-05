@@ -436,6 +436,24 @@ namespace Ultima5Redux.Data
             DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE, GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q,
             PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME, MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
         }
+        // [0] = {string} "\n\nDost thou pay?\n\n:"
+        // [1] = {string} "Yes\n"
+        // [2] = {string} "No!\n"
+        // [3] = {string} "A merchant says:\n"GET THAT HORSE OUT OF HERE!"\n"
+        // [4] = {string} "Thou wilt give\nhalf thy gold to\ncharity!"
+        // [5] = {string} "A guard demands\na "
+        // [6] = {string} " gp tribute\nto Blackthorn!"
+        // [7] = {string} "Give now the\npassword, bearer\nof the Badge!"
+        // [8] = {string} "\n\nYour response?\n"
+        // [9] = {string} "Pass, friend!"
+        // [10] = {string} "The guard offers\nno response!\n"
+        // [11] = {string} "No response!\n"
+        // [12] = {string} "Don't hurt me!\nPlease go away!"
+        // [13] = {string} "A merchant says:\n"Come see me at\nmy shoppe, "
+        // [14] = {string} "when\nit's open!"\n"
+        // [15] = {string} "\nNobody's here!\n"
+        // [16] = {string} "\n"Zzzzzz..."\n"
+        // [17] = {string} "\nNo response!\n"
 
         public enum LocationStrings
         {
@@ -1003,7 +1021,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - General 1", 0x7a26, 0xa0, 0x00, DataChunkName.SHOPPE_KEEPER_GENERAL);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - General 2 ", 0x785C, 0x168, 0x00, DataChunkName.SHOPPE_KEEPER_GENERAL_2);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Reagents Long Name ", 0x79C4, 0x55, 0x00, DataChunkName.SHOPPE_KEEPER_REAGENTS);
-            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_REAGENTS).GetChunkAsStringList();
                
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - do you want to buy?", 0x7ac6, 0x4E, 0, DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - not enough money", 0x7b14, 0x59, 0, DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
@@ -1040,6 +1057,8 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Mixing spells", 0x8f74, 0xbe);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Klimbing strings", 0x9026, 0x3A, 0x00, DataChunkName.KLIMBING);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "pay fine/bribe, merchant chat", 0x9062, 0x1b2, 0x00, DataChunkName.CHIT_CHAT);
+            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.CHIT_CHAT).GetChunkAsStringList();
+
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".tlk file list", 0x9216, 0x2e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Talking strings for ALL npcs", 0x9244, 0x1a);

@@ -4199,7 +4199,7 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": true
    },
    "191": {
       "Name": "CookStove",

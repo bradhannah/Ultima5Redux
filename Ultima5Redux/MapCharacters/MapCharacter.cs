@@ -27,6 +27,9 @@ namespace Ultima5Redux.MapCharacters
         /// How many iterations will I force the character to wander?
         /// </summary>
         internal int ForcedWandering { get; set; }
+        
+        public bool ArrivedAtLocation { get; private set; }
+        private int _scheduleIndex = -1;
         #endregion
 
         #region Public Properties
@@ -56,12 +59,9 @@ namespace Ultima5Redux.MapCharacters
 
                 // if they are in 0,0 then I am certain they are not real
                 if (CurrentCharacterPosition.X == 0 && CurrentCharacterPosition.Y == 0) return false;
-                
-                if (CharacterState != null)
-                {
-                    if (CharacterState.CharacterAnimationStateIndex == 0) return false;
-                    return CharacterState.Active;
-                }
+
+                if (CharacterState == null) return false;
+                if (CharacterState.CharacterAnimationStateIndex != 0) return CharacterState.Active;
                 return false;
             }
         }
@@ -82,7 +82,7 @@ namespace Ultima5Redux.MapCharacters
 
         #region Constructors
         /// <summary>
-        /// emtpy constructor if there is nothing in the map character slot
+        /// empty constructor if there is nothing in the map character slot
         /// </summary>
         public MapCharacter()
         {
@@ -128,7 +128,8 @@ namespace Ultima5Redux.MapCharacters
             }
             else
             {
-                CurrentCharacterPosition.XY = new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y);
+                Move(new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y), CurrentCharacterPosition.Floor , timeOfDay);
+                //CurrentCharacterPosition.XY = new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y);
             }
         }
         #endregion
@@ -137,14 +138,14 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// Moves the NPC to the appropriate floor and location based on the their expected location and position
         /// </summary>
-        internal void MoveNPCToDefaultScheduledPosition(TimeOfDay timeOfDay)
+        internal void MoveNPCToDefaultScheduledPosition(TimeOfDay tod)
         {
-            CharacterPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+            CharacterPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
 
-            Move(npcXy);
+            Move(npcXy, tod);
         }
 
         /// <summary>
@@ -152,19 +153,43 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
-        internal void Move(Point2D xy, int nFloor)
+        /// <param name="tod"></param>
+        internal void Move(Point2D xy, int nFloor, TimeOfDay tod)
         {
             CurrentCharacterPosition.XY = xy;
             CurrentCharacterPosition.Floor = nFloor;
+
+            UpdateScheduleTracking(tod);
+        }
+
+        private void UpdateScheduleTracking(TimeOfDay tod)
+        {
+            if (CurrentCharacterPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod))
+            {
+                ArrivedAtLocation = true;
+            }
+
+            int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
+            // it's the first time, so we don't reset the ArrivedAtLocation flag 
+            if (_scheduleIndex == -1)
+            {
+                _scheduleIndex = nCurrentScheduleIndex;
+            }
+            else if (_scheduleIndex != nCurrentScheduleIndex)
+            {
+                _scheduleIndex = nCurrentScheduleIndex;
+                ArrivedAtLocation = false;
+            }
         }
 
         /// <summary>
-        /// Move the character to a new positon
+        /// Move the character to a new position
         /// </summary>
         /// <param name="characterPosition"></param>
-        internal void Move(CharacterPosition characterPosition)
+        internal void Move(CharacterPosition characterPosition, TimeOfDay tod)
         {
             CurrentCharacterPosition = characterPosition;
+            UpdateScheduleTracking(tod);
         }
         #endregion
     }
