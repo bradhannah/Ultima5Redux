@@ -99,6 +99,7 @@
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="MapCharacters\BlackSmith.cs" />
     <Compile Include="MapCharacters\CharacterPosition.cs" />
+    <Compile Include="MapCharacters\GuildMaster.cs" />
     <Compile Include="MapCharacters\MagicSeller.cs" />
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
@@ -142,6 +143,8 @@
     <Compile Include="MapCharacters\NonPlayerCharacterReference.cs" />
     <Compile Include="PlayerCharacters\Potion.cs" />
     <Compile Include="PlayerCharacters\Potions.cs" />
+    <Compile Include="PlayerCharacters\Provision.cs" />
+    <Compile Include="PlayerCharacters\Provisions.cs" />
     <Compile Include="PlayerCharacters\Reagents.cs" />
     <Compile Include="PlayerCharacters\Ring.cs" />
     <Compile Include="PlayerCharacters\Scroll.cs" />

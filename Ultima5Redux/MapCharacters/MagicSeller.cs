@@ -29,7 +29,6 @@ namespace Ultima5Redux.MapCharacters
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
             if (shoppeKeeperReference != null)
                 return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                    
                     shoppeKeeperName: shoppeKeeperReference.ShoppeKeeperName,
                     shoppeName: shoppeKeeperReference.ShoppeName,
                     tod: tod);

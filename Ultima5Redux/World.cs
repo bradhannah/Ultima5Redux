@@ -290,7 +290,8 @@ namespace Ultima5Redux
             if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
                 tileReference.Index == SpriteTileReferences.GetTileNumberByName("RightSconce"))
             {
-                State.Torches++;
+                State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity++;
+                
                 State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);//PickUpThing(xy);
                 bGotAThing = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED));
@@ -577,7 +578,7 @@ namespace Ultima5Redux
                 if (bIsDoorMagical)
                 {
                     // we use up a key
-                    State.Keys--;
+                    State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys].Quantity--;
 
                     // for now we will also just open the door so we can get around - will address when we have spells
                     if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
@@ -597,7 +598,7 @@ namespace Ultima5Redux
                 } else if (bIsDoorLocked)
                 {
                     // we use up a key
-                    State.Keys--;
+                    State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys].Quantity--;
 
                     // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
 
@@ -828,9 +829,9 @@ namespace Ultima5Redux
             PassTime();
             const byte nDefaultNumberOfTurnsForTorch = 100;
             // if there are no torches then report back and make no change
-            if (State.Torches <= 0) return DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.NONE_OWNED_BANG_N);
+            if (State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity <= 0) return DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.NONE_OWNED_BANG_N);
 
-            State.Torches--;
+            State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity--;
             State.TorchTurnsLeft = nDefaultNumberOfTurnsForTorch;
             // this will trigger a re-read of time of day changes
             State.TheTimeOfDay.SetAllChangeTrackers();

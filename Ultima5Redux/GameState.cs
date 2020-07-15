@@ -66,6 +66,8 @@ namespace Ultima5Redux
 
         public Moongates TheMoongates { get; }
 
+        public DataChunks<DataChunkName> DataChunks => _dataChunks;
+
         public byte ActivePlayerNumber
         {
             get => _dataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
@@ -75,20 +77,20 @@ namespace Ultima5Redux
         /// <summary>
         /// Total number of Gems
         /// </summary>
-        public byte Gems
-        {
-            get => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
-            set => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
-        }
-
-        /// <summary>
-        /// Total nunmber of torches
-        /// </summary>
-        public byte Torches
-        {
-            get => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
-            set => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
-        }
+        // public byte Gems
+        // {
+        //     get => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
+        //     set => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
+        // }
+        //
+        // /// <summary>
+        // /// Total number of torches
+        // /// </summary>
+        // public byte Torches
+        // {
+        //     get => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
+        //     set => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
+        // }
 
         public bool IsTorchLit => TorchTurnsLeft > 0;
 
@@ -104,11 +106,11 @@ namespace Ultima5Redux
         /// <summary>
         /// Total number of regular keys
         /// </summary>
-        public byte Keys
-        {
-            get => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
-            set => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
-        }
+        // public byte Keys
+        // {
+        //     get => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
+        //     set => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
+        // }
 
         /// <summary>
         /// Current location
@@ -221,7 +223,8 @@ namespace Ultima5Redux
             MOONSTONE_BURIED,
             MOONSTONE_Z_COORDS,
             ACTIVE_CHARACTER,
-            GRAPPLE
+            GRAPPLE,
+            SKULL_KEYS_QUANTITY
         };
         #endregion
 
@@ -269,13 +272,11 @@ namespace Ultima5Redux
             DataChunk rawCharacterRecords = _dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
             CharacterRecords = new PlayerCharacterRecords(rawCharacterRecords.GetAsByteList());
 
-
             // player location
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party _location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Z Coordinate of Party [10]", 0x2EF, 0x01, 0x00, DataChunkName.Z_COORD);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "X Coordinate of Party", 0x2F0, 0x01, 0x00, DataChunkName.X_COORD);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Y Coordinate of Party", 0x2F1, 0x01, 0x00, DataChunkName.Y_COORD);
-
 
             // quantities of standard items
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00, DataChunkName.FOOD_QUANTITY);
@@ -283,6 +284,7 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00, DataChunkName.KEYS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x20B, 0x01, 0x00, DataChunkName.SKULL_KEYS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Grapple", 0x209, 0x01, 0x00, DataChunkName.GRAPPLE);
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01, 0x00, DataChunkName.TORCHES_TURNS);

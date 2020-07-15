@@ -24,6 +24,7 @@ namespace Ultima5Redux.PlayerCharacters
         public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
+        public Provisions TheProvisions { get; }  
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
         private static byte BoolToByte(bool bBool)
@@ -181,6 +182,9 @@ namespace Ultima5Redux.PlayerCharacters
             TheMoonstones = new Moonstones(dataOvlRef, moonPhaseReferences, moongates);
             AllItems.AddRange(TheMoonstones.GenericItemList);
             UseItems.AddRange(TheMoonstones.GenericItemList);
+            
+            TheProvisions = new Provisions(dataOvlRef, state);
+            
         }
 
     }

@@ -186,6 +186,7 @@ namespace Ultima5Redux.MapCharacters
         /// Move the character to a new position
         /// </summary>
         /// <param name="characterPosition"></param>
+        /// <param name="tod"></param>
         internal void Move(CharacterPosition characterPosition, TimeOfDay tod)
         {
             CurrentCharacterPosition = characterPosition;

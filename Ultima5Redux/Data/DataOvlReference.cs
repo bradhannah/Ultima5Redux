@@ -91,7 +91,9 @@ namespace Ultima5Redux.Data
             REAGENT_QUANTITES,
             REAGENT_BASE_PRICES,
             SHOPPE_KEEPER_GENERAL_2,
-            SHOPPE_KEEPER_REAGENTS
+            SHOPPE_KEEPER_REAGENTS,
+            SHOPPE_KEEPER_TOWNES_PROVISIONS,
+            SHOPPE_KEEPER_TOWNES_REAGENTS
         };
 
         public enum Equipment
@@ -886,6 +888,9 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinates of shrines", 0x1F86, 0x8);            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Arms seller's name index", 0x22da, 0x12);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x22ec, 0x20c);
+
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell reagents", 0x241a, 0x05, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell provisions", 0x242a, 0x03, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Indexes to the dialog text (add + 0x10) (see .TLK)", 0x24f8, 0x13e, 0x10);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".DAT file names (4 files)", 0x2636, 0x2b);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2661, 0x9);

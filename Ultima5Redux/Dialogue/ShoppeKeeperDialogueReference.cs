@@ -239,6 +239,8 @@ namespace Ultima5Redux.Dialogue
                     return new MagicSeller(this, _inventory,
                         _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster:
+                    return new GuildMaster(this, 
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(npcType), npcType, null);
