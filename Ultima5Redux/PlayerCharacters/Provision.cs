@@ -2,33 +2,62 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ultima5Redux.Data;
+using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.PlayerCharacters
 {
     public class Provision : InventoryItem
     {
-        private class ProvisionPriceAndQuantity
+        private static class ProvisionCostsAndQuantities
         {
-            public int Price { get; }
-            public int Quantity { get; }
-
-            public ProvisionPriceAndQuantity(int price, int quantity)
+            /// <summary>
+            /// the prices of provisions because I can't find it in the code!
+            /// </summary>
+            public static readonly int[,] Prices = new int[,] {
+                {
+                    320,400,22
+                }, {
+                    370,450,50
+                }, {
+                    380,510,24
+                }
+            };
+        
+            public static Dictionary<ProvisionTypeEnum, int> BundleQuantity = new Dictionary<ProvisionTypeEnum, int>()
             {
-                Price = price;
-                Quantity = quantity;
-            }
+                {ProvisionTypeEnum.Torches, 5}, {ProvisionTypeEnum.Keys, 3}, {ProvisionTypeEnum.Gems, 4}
+            };
+
+            // the order of the provisions in the _prices array
+            public static readonly Dictionary<ProvisionTypeEnum, int> ProvisionOrder = new Dictionary<ProvisionTypeEnum, int>()
+            {
+                {ProvisionTypeEnum.Keys, 0}, {ProvisionTypeEnum.Gems, 1}, {ProvisionTypeEnum.Torches, 2}
+            };  
         }
         
-        public enum ProvisionTypeEnum { Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B }
-        public enum ProvisionSpritesTypeEnum { Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263 }
+        public enum ProvisionTypeEnum
+        {
+            Torches = 0x208,
+            Gems = 0x207,
+            Keys = 0x206,
+            SkullKeys = 0x20B
+        }
 
-        private DataOvlReference _dataOvlReference;
-        private GameState _state; 
+        public enum ProvisionSpritesTypeEnum
+        {
+            Torches = 269,
+            Gems = 264,
+            Keys = 263,
+            SkullKeys = 263
+        }
+
+        private readonly DataOvlReference _dataOvlReference;
+        private readonly GameState _state;
         public ProvisionTypeEnum ProvisionType { get; private set; }
-        
-        public Provision(ProvisionTypeEnum provisionTypeEnum, string longName, string shortName, 
-            string findDescription, int spriteNum, DataOvlReference dataOvlRef, GameState state) 
+
+        public Provision(ProvisionTypeEnum provisionTypeEnum, string longName, string shortName,
+            string findDescription, int spriteNum, DataOvlReference dataOvlRef, GameState state)
             : base(0, longName, shortName, findDescription, spriteNum)
         {
             ProvisionType = provisionTypeEnum;
@@ -42,9 +71,14 @@ namespace Ultima5Redux.PlayerCharacters
             if (nBasePrice == -1)
                  throw new Ultima5ReduxException("Requested provision "+ this.LongName + " from " + location + " which is not sold here");
 
-            // A big thank you to Markus Brenner (@minstrel_dragon) for digging in and figuring out the Karma calculation
-            // price = Base Price * (1 + (100 - Karma) / 100)
-            int nAdjustedPrice = (nBasePrice * (1 + (100 - (int)_state.Karma) / 100)); 
+            // The 'base price' is what a character with a theoretical Intelligence of 0 would get. Every additional Intelligence point
+            // deducts 1.5% from the item's cost. The scale is reversed for selling, where every point increases gold received by 1.5%,
+            // up to a theoretical 66.6 Intelligence points. Therefore, only the 'base prices' need be listed here.
+            // Note that buying prices are rounded down, while selling prices are rounded up.
+            // http://infinitron.nullneuron.net/u5eco.html
+            int nAdjustedPrice = nBasePrice - 
+                                 ((int) _state.CharacterRecords.AvatarRecord.Stats.Intelligence * (int) (nBasePrice * 0.015f));
+                                  //* (1 + (100 - (int)_state.CharacterRecords.AvatarRecord.Stats.Intelligence) / 100)); 
             return nAdjustedPrice;
         }
 
@@ -92,16 +126,23 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        public int GetBundleQuantity()
+        {
+            return ProvisionCostsAndQuantities.BundleQuantity[ProvisionType];
+        }
+
         private int GetBasePrice(SmallMapReferences.SingleMapReference.Location location)
         {
+            int nIndex = 0;
             foreach (SmallMapReferences.SingleMapReference.Location potentialLocation in _dataOvlReference
-                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList().Cast<SmallMapReferences.SingleMapReference.Location>())
+                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
             {
                 if (potentialLocation == location)
                 {
-                    return 100;
                     // they sell it, now we find it
+                    return ProvisionCostsAndQuantities.Prices[nIndex, ProvisionCostsAndQuantities.ProvisionOrder[ProvisionType]];
                 }
+                nIndex++;
             }
 
             return -1;

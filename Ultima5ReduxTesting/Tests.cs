@@ -553,6 +553,13 @@ namespace Ultima5ReduxTesting
                 .GetAdjustedSellPrice(world.State.CharacterRecords, world.State.Location);
             Debug.Assert(nCrossbowBuy > 0);
             Debug.Assert(nCrossbowSell > 0);
+
+            int nKeysPrice = world.State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys]
+                .GetAdjustedBuyPrice(world.State.CharacterRecords,
+                    SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
+            GuildMaster guildMaster = (GuildMaster)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster);
+            string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
         }
      }
 }

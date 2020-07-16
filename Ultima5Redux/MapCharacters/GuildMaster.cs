@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapCharacters
 {
@@ -49,6 +51,23 @@ namespace Ultima5Redux.MapCharacters
                        .B_DOTS_GEMS_N)
                    + DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneral2Strings
                        .C_DOTS_TORCHES_N_N).Trim();
+        }
+
+        public string GetProvisionBuyOutput(Provision.ProvisionTypeEnum provision, int nGold)
+        {
+            switch (provision)
+            {
+                case Provision.ProvisionTypeEnum.Torches:
+                    return ShoppeKeeperDialogueReference.GetMerchantString(162, nGold: nGold); 
+                case Provision.ProvisionTypeEnum.Gems:
+                    return ShoppeKeeperDialogueReference.GetMerchantString(161, nGold: nGold); 
+                case Provision.ProvisionTypeEnum.Keys:
+                    return ShoppeKeeperDialogueReference.GetMerchantString(160, nGold: nGold); 
+                case Provision.ProvisionTypeEnum.SkullKeys:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(provision), provision, null);
+            }
+            
         }
     }
 }
