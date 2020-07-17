@@ -5,6 +5,9 @@ using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.PlayerCharacters
 {
+    /// <summary>
+    /// Instance represents a single reagent type
+    /// </summary>
     public class Reagent : InventoryItem
     {
         private class ReagentPriceAndQuantity
@@ -19,15 +22,22 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        private readonly List<SmallMapReferences.SingleMapReference.Location> _reagentShoppeKeeperLocations;
-        
         private const int REAGENT_SPRITE = 259;
+        /// <summary>
+        /// Create a reagent
+        /// </summary>
+        /// <param name="reagentType">The type of reagent</param>
+        /// <param name="quantity">how many the party has</param>
+        /// <param name="longName">long verbose name</param>
+        /// <param name="shortName">shortened version of the name</param>
+        /// <param name="dataOvlRef"></param>
+        /// <param name="state"></param>
         public Reagent(ReagentTypeEnum reagentType, int quantity, string longName, string shortName, 
-            DataOvlReference dataOvlRef, GameState state, List<SmallMapReferences.SingleMapReference.Location> reagentShoppeKeeperLocations) : base(quantity, longName, shortName, REAGENT_SPRITE)
+            DataOvlReference dataOvlRef, GameState state) : base(quantity, longName, shortName, REAGENT_SPRITE)
         {
             // capture the game state so we know the users Karma for cost calculations
             _state = state;
-            _reagentShoppeKeeperLocations = reagentShoppeKeeperLocations;
+            //List<SmallMapReferences.SingleMapReference.Location> reagentShoppeKeeperLocations1 = reagentShoppeKeeperLocations;
             ReagentType = reagentType;
             _reagentPriceAndQuantities = new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>();
 
@@ -36,10 +46,11 @@ namespace Ultima5Redux.PlayerCharacters
             List<byte> quantities = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES).GetAsByteList();
             int nOffset = (int) ReagentType - (int)ReagentTypeEnum.SulfurAsh;
             int nReagents = Enum.GetNames(typeof(ReagentTypeEnum)).Length;
-            for (int i = 0; i < _reagentShoppeKeeperLocations.Count; i++)
+            List<SmallMapReferences.SingleMapReference.Location> locations = GetLocations(dataOvlRef);
+            for (int i = 0; i < locations.Count; i++)
             {
                 int nIndex = (i * nReagents) + nOffset; 
-                SmallMapReferences.SingleMapReference.Location location = _reagentShoppeKeeperLocations[i];
+                SmallMapReferences.SingleMapReference.Location location = locations[i];
                 if (quantities[nIndex] > 0)
                 {
                     _reagentPriceAndQuantities.Add(location,
@@ -47,6 +58,26 @@ namespace Ultima5Redux.PlayerCharacters
                 }
             }
         }
+
+        /// <summary>
+        /// Get all locations that reagents are sold
+        /// </summary>
+        /// <param name="_dataOvlReference"></param>
+        /// <returns></returns>
+        private List<SmallMapReferences.SingleMapReference.Location> GetLocations(DataOvlReference _dataOvlReference)
+        {
+            List<SmallMapReferences.SingleMapReference.Location> locations =
+                new List<SmallMapReferences.SingleMapReference.Location>();
+
+            foreach (SmallMapReferences.SingleMapReference.Location location in 
+                _dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS).GetAsByteList())
+            {
+                locations.Add(location);
+            }
+
+            return locations;
+        }
+        
 
         public override bool HideQuantity => false;
         public override bool IsSellable => false;
@@ -79,6 +110,13 @@ namespace Ultima5Redux.PlayerCharacters
 
         private readonly GameState _state;
         
+        /// <summary>
+        /// Get the correct price adjust for the specific location and 
+        /// </summary>
+        /// <param name="records"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records, SmallMapReferences.SingleMapReference.Location location)
         {
             if (!_reagentPriceAndQuantities.ContainsKey(location))
@@ -90,6 +128,13 @@ namespace Ultima5Redux.PlayerCharacters
             return nAdjustedPrice;
         }
 
+        /// <summary>
+        /// Get bundle quantity based on location
+        /// Different merchants sell in different quantities
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
         public override int GetQuantityForSale(SmallMapReferences.SingleMapReference.Location location)
         {
             if (!_reagentPriceAndQuantities.ContainsKey(location))
@@ -98,6 +143,11 @@ namespace Ultima5Redux.PlayerCharacters
             return _reagentPriceAndQuantities[location].Quantity;
         }
 
+        /// <summary>
+        /// Does a particular location sell a particular reagent?
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public bool IsReagentForSale(SmallMapReferences.SingleMapReference.Location location)
         {
             return _reagentPriceAndQuantities.ContainsKey(location);

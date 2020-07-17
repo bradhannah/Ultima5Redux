@@ -5,21 +5,11 @@ using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.PlayerCharacters
 {
+    /// <summary>
+    /// All reagents collection
+    /// </summary>
     public class Reagents : InventoryItems<Reagent.ReagentTypeEnum, Reagent>
     {
-        /// <summary>
-        /// the exact locations and specific order of the shoppe keeper locations
-        /// </summary>
-        private readonly List<SmallMapReferences.SingleMapReference.Location> _reagentShoppeKeeperLocations =
-            new List<SmallMapReferences.SingleMapReference.Location>()
-            {
-                SmallMapReferences.SingleMapReference.Location.Moonglow,
-                SmallMapReferences.SingleMapReference.Location.Yew,
-                SmallMapReferences.SingleMapReference.Location.Skara_Brae,
-                SmallMapReferences.SingleMapReference.Location.Cove,
-                SmallMapReferences.SingleMapReference.Location.Lycaeum
-            };
-        
         public Reagents(DataOvlReference dataOvlRef, List<byte> gameStateByteArray, GameState state) : base(dataOvlRef, gameStateByteArray)
         {
             int nIndex = 0;
@@ -35,23 +25,12 @@ namespace Ultima5Redux.PlayerCharacters
             Reagent reagent = new Reagent(reagentType,
                 GameStateByteArray[(int)reagentType],
                 DataOvlRef.StringReferences.GetString(reagentStrRef),
-                DataOvlRef.StringReferences.GetString(reagentStrRef), dataOvlRef, state, 
-                _reagentShoppeKeeperLocations);
+                DataOvlRef.StringReferences.GetString(reagentStrRef), dataOvlRef, state);
             Items[reagentType] = reagent;
         }
 
-        public bool DoesLocationSellReagents(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return _reagentShoppeKeeperLocations.Contains(location);
-        }
-        
         public List<Reagent> GetReagentsForSale(SmallMapReferences.SingleMapReference.Location location)
         {
-            if (!DoesLocationSellReagents(location))
-            {
-                throw new Ultima5ReduxException("Asked for reagents in a location that doesn't sell them: "+location);
-            }
-
             List<Reagent> items = new List<Reagent>();
             foreach (Reagent reagent in Items.Values)
             {

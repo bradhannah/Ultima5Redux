@@ -56,6 +56,16 @@ namespace Ultima5Redux.PlayerCharacters
         private readonly GameState _state;
         public ProvisionTypeEnum ProvisionType { get; private set; }
 
+        /// <summary>
+        /// Creates a provision 
+        /// </summary>
+        /// <param name="provisionTypeEnum">what kind of provision</param>
+        /// <param name="longName"></param>
+        /// <param name="shortName"></param>
+        /// <param name="findDescription"></param>
+        /// <param name="spriteNum"></param>
+        /// <param name="dataOvlRef"></param>
+        /// <param name="state"></param>
         public Provision(ProvisionTypeEnum provisionTypeEnum, string longName, string shortName,
             string findDescription, int spriteNum, DataOvlReference dataOvlRef, GameState state)
             : base(0, longName, shortName, findDescription, spriteNum)
@@ -65,6 +75,13 @@ namespace Ultima5Redux.PlayerCharacters
             _state = state;
         }
 
+        /// <summary>
+        /// Gets the cost of the provision based on the avatar's intelligence rating 
+        /// </summary>
+        /// <param name="records"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records, SmallMapReferences.SingleMapReference.Location location)
         {
             int nBasePrice = GetBasePrice(location);
@@ -84,6 +101,10 @@ namespace Ultima5Redux.PlayerCharacters
 
         public override bool HideQuantity => false;
 
+        /// <summary>
+        /// Gets the parties current quantity of the specific provision
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public override int Quantity
         {
             get
@@ -126,11 +147,20 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        /// <summary>
+        /// Gets the bundle quantity for the current provision
+        /// </summary>
+        /// <returns></returns>
         public int GetBundleQuantity()
         {
             return ProvisionCostsAndQuantities.BundleQuantity[ProvisionType];
         }
 
+        /// <summary>
+        /// Gets the base price which is later adjusted based on intelligence
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns>Greater than zero if it is sold, otherwise returns -1</returns>
         private int GetBasePrice(SmallMapReferences.SingleMapReference.Location location)
         {
             int nIndex = 0;
