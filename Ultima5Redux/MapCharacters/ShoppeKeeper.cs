@@ -16,9 +16,9 @@ namespace Ultima5Redux.MapCharacters
     {
         public enum DialogueType
         {
-            None, OkGoodbye, BuyBlacksmith, SellBlacksmith, BuyMagicSeller, BuyShipwright,
-            BuyBarkeeper, BuyHealer, BuyGuildMaster, RestInnkeeper, GossipInnkeeper, 
-            DropOffPartyMemberInnkeeper
+           None, OkGoodbye, BuyBlacksmith, SellBlacksmith, BuyMagicSeller, BuyShipwright,
+             BuyBarkeeper, BuyHealer, BuyGuildMaster, RestInnkeeper, GossipInnkeeper, BuyHorses,
+             DropOffPartyMemberInnkeeper 
         }
 
         public string ButtonName { get; }

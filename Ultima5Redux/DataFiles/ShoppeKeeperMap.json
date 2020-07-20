@@ -85,19 +85,19 @@
   },
   "21": {
     "Location": "Jhelom",
-    "ShoppeKeeperType": "ShipSeller"
+    "ShoppeKeeperType": "Shipwright"
   },
   "22": {
     "Location": "Minoc",
-    "ShoppeKeeperType": "ShipSeller"
+    "ShoppeKeeperType": "Shipwright"
   },
   "23": {
     "Location": "East_Britanny",
-    "ShoppeKeeperType": "ShipSeller"
+    "ShoppeKeeperType": "Shipwright"
   },
   "24": {
     "Location": "Buccaneers_Den",
-    "ShoppeKeeperType": "ShipSeller"
+    "ShoppeKeeperType": "Shipwright"
   },
   "25": {
     "Location": "Moonglow",

@@ -20,10 +20,10 @@
 18,Trinsic,HorseSeller
 19,Paws,HorseSeller
 20,North_Britanny,HorseSeller
-21,Jhelom,ShipSeller
-22,Minoc,ShipSeller
-23,East_Britanny,ShipSeller
-24,Buccaneers_Den,ShipSeller
+21,Jhelom,Shipwright
+22,Minoc,Shipwright
+23,East_Britanny,Shipwright
+24,Buccaneers_Den,Shipwright
 25,Moonglow,MagicSeller
 26,Yew,MagicSeller
 27,Skara_Brae,MagicSeller

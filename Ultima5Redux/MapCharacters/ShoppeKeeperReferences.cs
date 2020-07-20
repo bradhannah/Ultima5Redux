@@ -111,7 +111,7 @@ namespace Ultima5Redux.MapCharacters
             return result;
         }
         
-        // Custom = -1, Guard = 0, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
+        // Custom = -1, Guard = 0, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87,
         // InnKeeper = 0x88, MagicSeller = 0x85, GuildMaster = 0x86, Unknown = 0xFF
         // [0] = {string} "Iolo's Bows"
         // [1] = {string} "Naughty Nomaan's"

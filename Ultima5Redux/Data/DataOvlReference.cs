@@ -93,7 +93,13 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_GENERAL_2,
             SHOPPE_KEEPER_REAGENTS,
             SHOPPE_KEEPER_TOWNES_PROVISIONS,
-            SHOPPE_KEEPER_TOWNES_REAGENTS
+            SHOPPE_KEEPER_TOWNES_REAGENTS,
+            SHOPPE_KEEPER_TOWNES_HEALING,
+            SHOPPE_KEEPER_TOWNES_TAVERN,
+            SHOPPE_KEEPER_TOWNES_INN,
+            SHOPPE_KEEPER_TOWNES_SHIPS,
+            SHOPPE_KEEPER_TOWNES_HORSES,
+            SHOPPE_KEEPER_HEALER
         };
 
         public enum Equipment
@@ -739,6 +745,39 @@ namespace Ultima5Redux.Data
         // [5] = {string} "Black Pearl"
         // [6] = {string} "Nightshade"
         // [7] = {string} "Mandrake"        
+
+        public enum ShoppeKeeperHealerStrings
+        {
+            N_N_DQ_WHO_NEEDS_MY_AID_Q_DQ, NO_ONE, FOR_GOLD_GOLD_DO_N_N_WILT_THO_N_PAY_Q_DQ, YES, NO, NO_2, YES_N_N,
+            DQ_WE_HAVE_POWERS_TO_CURE_HEAL_RESURRECT_DOT_DQ_N, SAYS_NAME_DOT_N_N_DQ_WHAT_IS_THE_NATURE_OF_THY_NEED_Q_DQ,
+            CURING, N_N, RECEIVE_NOW_THE_LIGHT_BANG_DQ, I_CAN_CURE_THY_POISONED_BODY, HEALING, N_N_2,
+            RECEIVE_NOW_THE_LIGHT_BANG_DQ_2, I_CAN_HEAL_THEE, RESURRECT, N_N_3, I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM,
+            THE_DEAD, NOTHING, N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N, AID_THEE_Q
+        }
+        // [22] = {string} "\n\n"Who needs my aid?" "
+        // [23] = {string} "No one"
+        // [24] = {string} "for % gold.\n\nWilt thou\npay?" "
+        // [25] = {string} "Yes"
+        // [26] = {string} "No"
+        // [27] = {string} "No"
+        // [28] = {string} "Yes\n\n"
+        // [29] = {string} ""We have powers to Cure, Heal, or Resurrect."\n"
+        // [30] = {string} "says $.\n\n"What is the nature of thy need?" "
+        // [31] = {string} "Curing"
+        // [32] = {string} "\n\n""
+        // [33] = {string} "Receive now the Light!""
+        // [34] = {string} "I can cure thy poisoned body "
+        // [35] = {string} "Healing"
+        // [36] = {string} "\n\n""
+        // [37] = {string} "Receive now the Light!""
+        // [38] = {string} "I can heal thee "
+        // [39] = {string} "Resurrect"
+        // [40] = {string} "\n\n""
+        // [41] = {string} "I can raise this unfortunate person from "
+        // [42] = {string} "the dead "
+        // [43] = {string} "Nothing"
+        // [44] = {string} "\n\n"Is there any other way in which I may\n"
+        // [45] = {string} "aid thee?" "        
         #endregion
 
         #region Public Methods
@@ -889,8 +928,13 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Arms seller's name index", 0x22da, 0x12);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x22ec, 0x20c);
 
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that have a tavern", 0x23ea, 0x09, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_TAVERN);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell horses", 0x23fa, 0x04, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_HORSES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell ships", 0x240a, 0x04, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_SHIPS);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell reagents", 0x241a, 0x05, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell provisions", 0x242a, 0x03, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell healing", 0x243a, 0x07, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_HEALING);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that have an inn", 0x244a, 0x06, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_INN);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Indexes to the dialog text (add + 0x10) (see .TLK)", 0x24f8, 0x13e, 0x10);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".DAT file names (4 files)", 0x2636, 0x2b);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2661, 0x9);
@@ -918,7 +962,7 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3664, 0x322);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Chunking information for Britannia's map, 0xFF the chunk only consists of tile 0x1, otherwise see BRIT.DAT", 0x3886, 0x100);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random filenames, texts and unknown", 0x3986, 0xaf);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0x7d);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0xd);
 
             // Another big thank you to Markus Brenner (@minstrel_dragon) for providing the "actual" base prices that 
             // helped track down the meaning and location of the reagent data
@@ -1032,7 +1076,9 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various selling strings", 0x7d44, 0x7f, 0, DataChunkName.SHOPPE_KEEPER_SELLING);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - what have you got for sale", 0x7dc4, 0x7F, 0, DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7f0a, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Healer shop strings", 0x7f16, 0x2f8);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Healer shop strings", 0x806C, 0x1a2, 0x00, DataChunkName.SHOPPE_KEEPER_HEALER);
+            SomeStrings someStrings2 = GetDataChunk(DataChunkName.SHOPPE_KEEPER_HEALER).GetChunkAsStringList();
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith hello strings", 0x7F58, 0x6A, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith positive exclamation strings", 0x7FC2, 0x36, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith 'we have' strings", 0x7FF8, 0x30, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
@@ -1048,7 +1094,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "endmsg.dat", 0x849e, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "random texts", 0x84aa, 0x74);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "finding/searching for things strings ", 0x851e, 0x442, 0, DataChunkName.THINGS_I_FIND);
-            SomeStrings someStrings2 = GetDataChunk(DataChunkName.THINGS_I_FIND).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "where you found something (ie. In the wall) ", 0x8960, 0xe4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "strings about unlocking or finding doors", 0x8a44, 0x1b3, 0x00, DataChunkName.OPENING_THINGS_STUFF);

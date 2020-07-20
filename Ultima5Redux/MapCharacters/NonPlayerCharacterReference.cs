@@ -37,7 +37,7 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         public enum NPCDialogTypeEnum
         {
-            Custom = -1, Guard = 0, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, ShipSeller = 0x84, Healer = 0x87,
+            Custom = -1, Guard = 0, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87,
             InnKeeper = 0x88, MagicSeller = 0x85, GuildMaster = 0x86, Unknown = 0xFF
             // unknowns may be crown and sandlewood box
         };
@@ -174,7 +174,7 @@ namespace Ultima5Redux.MapCharacters
                         case NPCDialogTypeEnum.Blacksmith:
                         case NPCDialogTypeEnum.Barkeeper:
                         case NPCDialogTypeEnum.HorseSeller:
-                        case NPCDialogTypeEnum.ShipSeller:
+                        case NPCDialogTypeEnum.Shipwright:
                         case NPCDialogTypeEnum.InnKeeper:
                         case NPCDialogTypeEnum.MagicSeller:
                         case NPCDialogTypeEnum.GuildMaster:

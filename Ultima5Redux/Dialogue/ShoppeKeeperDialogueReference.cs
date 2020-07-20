@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ultima5Redux.Data;
@@ -115,7 +116,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="tod"></param>
         /// <param name="nQuantity"></param>
         /// <returns>a complete string with full replacements</returns>
-        internal string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", 
+        internal static string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", 
             bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null,
             int nQuantity = 0)
         {
@@ -226,15 +227,20 @@ namespace Ultima5Redux.Dialogue
                     return new BlackSmith(this, _inventory,
                         _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper:
-                    break;
+                    return new BarKeeper(this, 
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.HorseSeller:
-                    break;
-                case NonPlayerCharacterReference.NPCDialogTypeEnum.ShipSeller:
-                    break;
+                    return new HorseSeller(this, 
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                case NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright:
+                    return new Shipwright(this, 
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Healer:
-                    break;
+                    return new Healer(this, 
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper:
-                    break;
+                    return new Innkeeper(this, 
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller:
                     return new MagicSeller(this, _inventory,
                         _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
@@ -245,8 +251,6 @@ namespace Ultima5Redux.Dialogue
                 default:
                     throw new ArgumentOutOfRangeException(nameof(npcType), npcType, null);
             }
-
-            return null;
         }
     }
 }
