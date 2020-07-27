@@ -520,6 +520,17 @@ namespace Ultima5ReduxTesting
         }
 
         [Test]
+        public void Test_BasicHealerDialogue()
+        {
+            World world = new World(SaveDirectory);
+            Healer healer = (Healer) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Cove,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Healer);
+
+            string nothing = healer.NoNeedForMyArt();
+        }
+        
+        [Test]
         public void Test_BasicMagicSellerDialogue()
         {
             World world = new World(SaveDirectory);

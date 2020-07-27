@@ -99,7 +99,8 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_TOWNES_INN,
             SHOPPE_KEEPER_TOWNES_SHIPS,
             SHOPPE_KEEPER_TOWNES_HORSES,
-            SHOPPE_KEEPER_HEALER
+            SHOPPE_KEEPER_HEALER,
+            SHOPPE_KEEPER_HEALER2
         };
 
         public enum Equipment
@@ -658,39 +659,40 @@ namespace Ultima5Redux.Data
         {
             ASKS_N_WHO_WILL_STAY_Q, NOBODY_N_N, N_N, THY_FRIEND, _WILL_NOT_LEAVE_THEE_BANG_N_N,
             DQ_THE_RATE_FOR_OUR_MOST_COMFORTABLE_ROOM_WILL_BE_, GLD_GOLD_PER_MONTH_DUE_AT_CHECKOUT_DOT,
-            N_WILT_THOU_TAKE_IT_Q_DQ, N_N_2, I_THANK_THEE_DQ_N_SAYS_NAME_DOT_N_N, N_N_ONE_MUST, FIRST_BE_LEFT_BEHIND_N_N,
-            N_N_NO_ONE_IS_HERE_FROM_PARTY_BANG_N_SAYS_NAME_DOT_N_N, N_N_DQ_WHO_WILL_N_CHECK_OUT_Q_DQ,
+            N_WILT_THOU_TAKE_IT_Q_DQ, N_N_2, I_THANK_THEE_DQ_N_SAYS_NAME_DOT_N_N, N_N_ONE_MUST_FIRST_BE_LEFT_BEHIND_BANG_N_N, 
+            N_N_DQ_NO_ONE_HERE_IS_FROM_THY_PARTY_BANG_DQ_N_SAYS_NAME_DOT_N_N, N_N_DQ_WHO_WILL_N_CHECK_OUT_Q_DQ,
             ___GUEST, __REGISTER_COLON_N_N, NO_ONE_N_N, N_N_DQ_THAT_WILL_BE_GLD_GOLD_PLEASE_DOT_DQ_N_N,
             THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N, I_HOPE_THOU_HAST_THY_STAY_ENJOYABLE_COMMA_N, SAYS_NAME_DOT_N_N,
             NO, YES, N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N, LEAVE_A_COMPANION_OR_TO_REST_FOR_NIGHT_Q_DQ,
             IS_THERE_N_ANYTHING_MORE_N_I_CAN_DO_FOR_N_THEE_Q_DQ 
         }
-
-        // [16] = {string} "asks,\n"Who will\nstay?" "
-        // [17] = {string} "Nobody\n\n"
-        // [18] = {string} "\n\n"
-        // [19] = {string} "Thy friend"
-        // [20] = {string} " will not leave thee!\n\n"
-        // [21] = {string} ""The rate for\nour most comfortable room will be "
-        // [22] = {string} "% gold per month, due at check-out."
-        // [23] = {string} "\nWilt thou take\nit?" "
-        // [24] = {string} "\n\n"
-        // [25] = {string} ""I thank thee."\nsays $.\n\n"
-        // [26] = {string} "\n\nOne must first be left behind!\n\n"
-        // [27] = {string} "\n\n"No one here is from thy party!"\nsays $.\n\n"
-        // [28] = {string} "\n\n"Who will\ncheck out?" "
-        // [29] = {string} "    GUEST"
-        // [30] = {string} "  REGISTER:\n\n"
-        // [31] = {string} "No one\n\n"
-        // [32] = {string} "\n\n"That will be % gold, please."\n\n""
-        // [33] = {string} "Thy friend has died, by the way."\n"
-        // [34] = {string} "I hope thou hast found thy stay enjoyable,"\n"
-        // [35] = {string} "says $.\n\n"
-        // [36] = {string} "No"
-        // [37] = {string} "Yes"
-        // [38] = {string} "\n\n$ asks,\n"Art thou here\nto Pick up or\n"
-        // [39] = {string} "Leave a\ncompanion, or\nto Rest for the\nnight?" "
-        // [40] = {string} ""Is there\nanything more\nI can do for\nthee?" "
+        
+        // [0] = {string} "$ asks,\n"Who will\nstay?" "
+        // [1] = {string} "Nobody\n\n"
+        // [2] = {string} "\n\n"
+        // [3] = {string} "Thy friend"
+        // [4] = {string} " will not leave thee!\n\n"
+        // [5] = {string} ""The rate for\nour most comfortable room will be "
+        // [6] = {string} "% gold per month, due at check-out."
+        // [7] = {string} "\nWilt thou take\nit?" "
+        // [8] = {string} "\n\n"
+        // [9] = {string} ""I thank thee."\nsays $.\n\n"
+        // [10] = {string} "\n\nOne must first be left behind!\n\n"
+        // [11] = {string} "\n\n"No one here is from thy party!"\nsays $.\n\n"
+        // [12] = {string} "\n\n"Who will\ncheck out?" "
+        // [13] = {string} "    GUEST"
+        // [14] = {string} "  REGISTER:\n\n"
+        // [15] = {string} "No one\n\n"
+        // [16] = {string} "\n\n"That will be % gold, please."\n\n""
+        // [17] = {string} "Thy friend has died, by the way."\n"
+        // [18] = {string} "I hope thou hast found thy stay enjoyable,"\n"
+        // [19] = {string} "says $.\n\n"
+        // [20] = {string} "No"
+        // [21] = {string} "Yes"
+        // [22] = {string} "\n\n$ asks,\n"Art thou here\nto Pick up or\n"
+        // [23] = {string} "Leave a\ncompanion, or\nto Rest for the\nnight?" "
+        // [24] = {string} ""Is there\nanything more\nI can do for\nthee?" "
+      
 
         public enum ShoppeKeeperGeneral2Strings
         {
@@ -777,7 +779,9 @@ namespace Ultima5Redux.Data
         // [42] = {string} "the dead "
         // [43] = {string} "Nothing"
         // [44] = {string} "\n\n"Is there any other way in which I may\n"
-        // [45] = {string} "aid thee?" "        
+        // [45] = {string} "aid thee?" "
+        
+        public enum ShoppeKeeperHealerStrings2 { DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME }
         #endregion
 
         #region Public Methods
@@ -1077,6 +1081,8 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - what have you got for sale", 0x7dc4, 0x7F, 0, DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7f0a, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Healer shop strings", 0x806C, 0x1a2, 0x00, DataChunkName.SHOPPE_KEEPER_HEALER);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Healer shop strings", 0x3D6C, 0x29, 0x00, DataChunkName.SHOPPE_KEEPER_HEALER2);
+            
             SomeStrings someStrings2 = GetDataChunk(DataChunkName.SHOPPE_KEEPER_HEALER).GetChunkAsStringList();
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith hello strings", 0x7F58, 0x6A, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
