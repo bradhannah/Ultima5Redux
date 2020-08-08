@@ -100,7 +100,10 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_TOWNES_SHIPS,
             SHOPPE_KEEPER_TOWNES_HORSES,
             SHOPPE_KEEPER_HEALER,
-            SHOPPE_KEEPER_HEALER2
+            SHOPPE_KEEPER_HEALER2,
+            HEALER_HEAL_PRICES,
+            HEALER_CURE_PRICES,
+            HEALER_RESURRECT_PRICES
         };
 
         public enum Equipment
@@ -979,10 +982,19 @@ namespace Ultima5Redux.Data
                 "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	",
                 0x3af2, 0x48, 0, DataChunkName.WEAPONS_SOLD_BY_MERCHANTS);
             
+            // Healer prices
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
+                "Heal Prices", 0x3d96, 0x08, 0, DataChunkName.HEALER_HEAL_PRICES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
+                "Cure Prices", 0x3d9e, 0x08, 0, DataChunkName.HEALER_CURE_PRICES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, 
+                "Resurrect Prices", 0x3da6, 0x10, 0, DataChunkName.HEALER_RESURRECT_PRICES); 
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3b3a, 0x38);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Innkeeper welcome text index into SHOPPE.DAT (+0x0, 2 bytes for each index)", 0x3b72, 0x8);
             // this section contains information about hidden, non-regenerating objects (e.g. the magic axe in the dead tree in Jhelom); there are
             // only 0x71 such objects; the last entry in each table is 0
+            //3db0
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object type (tile - 0x100) (item)", 0x3E88, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object quality (e.g. potion type, number of gems) (item)", 0x3EFA, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party _location\") (item)", 0x3F6C, 0x72);

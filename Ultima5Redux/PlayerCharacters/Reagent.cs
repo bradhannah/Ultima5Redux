@@ -46,7 +46,10 @@ namespace Ultima5Redux.PlayerCharacters
             List<byte> quantities = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES).GetAsByteList();
             int nOffset = (int) ReagentType - (int)ReagentTypeEnum.SulfurAsh;
             int nReagents = Enum.GetNames(typeof(ReagentTypeEnum)).Length;
+            
+            // Get the locations that reagents are sold at
             List<SmallMapReferences.SingleMapReference.Location> locations = GetLocations(dataOvlRef);
+            // cycle through each location and add reagents to location<->reagent map
             for (int i = 0; i < locations.Count; i++)
             {
                 int nIndex = (i * nReagents) + nOffset; 
@@ -62,15 +65,15 @@ namespace Ultima5Redux.PlayerCharacters
         /// <summary>
         /// Get all locations that reagents are sold
         /// </summary>
-        /// <param name="_dataOvlReference"></param>
+        /// <param name="dataOvlReference"></param>
         /// <returns></returns>
-        private List<SmallMapReferences.SingleMapReference.Location> GetLocations(DataOvlReference _dataOvlReference)
+        private List<SmallMapReferences.SingleMapReference.Location> GetLocations(DataOvlReference dataOvlReference)
         {
             List<SmallMapReferences.SingleMapReference.Location> locations =
                 new List<SmallMapReferences.SingleMapReference.Location>();
 
             foreach (SmallMapReferences.SingleMapReference.Location location in 
-                _dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS).GetAsByteList())
+                dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS).GetAsByteList())
             {
                 locations.Add(location);
             }

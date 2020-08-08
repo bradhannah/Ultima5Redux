@@ -14,7 +14,9 @@ namespace Ultima5Redux.PlayerCharacters
         //private enum CharacterInnOrParty { InParty = 0x00, HasntJoined = 0xFF, PermanentlyKilled = 0x7F };
         public enum CharacterGender { Male = 0x0B, Female = 0x0C };
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'};
+        
         public enum CharacterStatus { Good = 'G', Poisioned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D'};
+        
         // if your InnorParty value is included in the list, then it's clear - if not then they are at the location referenced by the number
         //public int TotalDefense
         //{
@@ -32,6 +34,7 @@ namespace Ultima5Redux.PlayerCharacters
         //        return 25;
         //    }
         //}
+        
         public enum CharacterPartyStatus { InParty = 0x00, HasntJoinedYet = 0xFF, KilledPermanently = 0x7F}; // otherwise it is at an inn at Settlement # in byte value
 
         private byte Unknown1 { get; set; }
@@ -39,23 +42,17 @@ namespace Ultima5Redux.PlayerCharacters
 
         private byte InnOrParty { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
         public CharacterGender Gender { get; set; }
         public CharacterClass Class { get; set; }
-        public CharacterStatus Status { get; set; }
         public CharacterPartyStatus PartyStatus
         {
-            get
-            {
-                return (CharacterPartyStatus)InnOrParty;
-            }
-            set
-            {
-                InnOrParty = (byte)value;
-            }
+            get => (CharacterPartyStatus)InnOrParty;
+            set => InnOrParty = (byte)value;
         }
-        public CharacterEquipped Equipped = new CharacterEquipped();
-        public CharacterStats Stats = new CharacterStats();
+        
+        public readonly CharacterEquipped Equipped = new CharacterEquipped();
+        public readonly CharacterStats Stats = new CharacterStats();
 
         private enum DataChunkName { Unused };
         //        offset length      purpose range
@@ -86,6 +83,28 @@ namespace Ultima5Redux.PlayerCharacters
         private enum CharacterRecordOffsets { Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D, Intelligence = 0x0E,
         CurrentMP = 0x0F, CurrentHP = 0x10, MaximimumHP = 0x12, ExperiencePoints = 0x14, Level = 0x16, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B, Shield  = 0x1C,
         Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F, Unknown1 = 0x17, Unknown2 = 0x18 };
+
+        public int Heal()
+        {
+            int nCurrentHp = Stats.CurrentHp;
+            Stats.CurrentHp = Stats.MaximumHp;
+            return Stats.MaximumHp - nCurrentHp;
+        }
+
+        public bool Cure()
+        {
+            if (Stats.Status != CharacterStatus.Poisioned) return false;
+            Stats.Status = CharacterStatus.Good;
+            return true;
+        }
+
+        public bool Resurrect()
+        {
+            if (Stats.Status != CharacterStatus.Dead) return false;
+            Stats.Status = CharacterStatus.Good;
+            Stats.CurrentHp = Stats.MaximumHp;
+            return true;
+        }
         
         /// <summary>
         /// Creates a character record from a raw record that begins at offset 0
@@ -99,7 +118,7 @@ namespace Ultima5Redux.PlayerCharacters
             Name = DataChunk.CreateDataChunk(DataChunk.DataFormatType.SimpleString, "Character Name", rawRecordByteList, (int)CharacterRecordOffsets.Name, 9).GetChunkAsString();
             Gender = (CharacterGender)rawRecordByteList[(int)CharacterRecordOffsets.Gender];                
             Class = (CharacterClass)rawRecordByteList[(int)CharacterRecordOffsets.Class];
-            Status = (CharacterStatus)rawRecordByteList[(int)CharacterRecordOffsets.Status];
+            Stats.Status = (CharacterStatus)rawRecordByteList[(int)CharacterRecordOffsets.Status];
             Stats.Strength = rawRecordByteList[(int)CharacterRecordOffsets.Strength];
             Stats.Dexterity = rawRecordByteList[(int)CharacterRecordOffsets.Dexterity];
             Stats.Intelligence = rawRecordByteList[(int)CharacterRecordOffsets.Intelligence];
@@ -171,14 +190,22 @@ namespace Ultima5Redux.PlayerCharacters
 
         public class CharacterStats
         {
-            public uint Strength { get; set; }
-            public uint Dexterity { get; set; }
-            public uint Intelligence { get; set; }
-            public uint CurrentMp { get; set; }
-            public UInt16 CurrentHp { get; set; }
-            public uint MaximumHp { get; set; }
-            public uint ExperiencePoints { get; set; }
-            public uint Level { get; set; }
+            private int _currentHp;
+            public int Strength { get; set; }
+            public int Dexterity { get; set; }
+            public int Intelligence { get; set; }
+            public int CurrentMp { get; set; }
+
+            public int CurrentHp
+            {
+                get => Status == CharacterStatus.Dead ? (int)0 : _currentHp;
+                set => _currentHp = value;
+            }
+
+            public int MaximumHp { get; set; }
+            public int ExperiencePoints { get; set; }
+            public int Level { get; set; }
+            public CharacterStatus Status { get; set; }
         }
 
     }

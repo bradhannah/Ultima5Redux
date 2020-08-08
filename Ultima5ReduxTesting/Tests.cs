@@ -527,7 +527,9 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Cove,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Healer);
 
-            string nothing = healer.NoNeedForMyArt();
+            _ = healer.NoNeedForMyArt();
+
+            int price = healer.GetPrice(Healer.RemedyTypes.Heal);
         }
         
         [Test]
@@ -571,6 +573,7 @@ namespace Ultima5ReduxTesting
             GuildMaster guildMaster = (GuildMaster)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster);
             string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
+            
         }
      }
 }

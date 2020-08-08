@@ -192,5 +192,25 @@ namespace Ultima5Redux.MapCharacters
         public abstract string GetWhichWouldYouSee();
         public abstract string GetForSaleList();
 
+        /// <summary>
+        /// Get all locations that reagents are sold
+        /// </summary>
+        /// <param name="dataOvlReference"></param>
+        /// <param name="chunkName"></param>
+        /// <returns></returns>
+        public static List<SmallMapReferences.SingleMapReference.Location> GetLocations(DataOvlReference dataOvlReference, DataOvlReference.DataChunkName chunkName)
+        {
+            List<SmallMapReferences.SingleMapReference.Location> locations =
+                new List<SmallMapReferences.SingleMapReference.Location>();
+
+            foreach (SmallMapReferences.SingleMapReference.Location location in 
+                dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
+            {
+                locations.Add(location);
+            }
+
+            return locations;
+        }
+
     }
 }

@@ -102,6 +102,7 @@
     <Compile Include="MapCharacters\CharacterPosition.cs" />
     <Compile Include="MapCharacters\GuildMaster.cs" />
     <Compile Include="MapCharacters\Healer.cs" />
+    <Compile Include="MapCharacters\HealerServices.cs" />
     <Compile Include="MapCharacters\HorseSeller.cs" />
     <Compile Include="MapCharacters\Innkeeper.cs" />
     <Compile Include="MapCharacters\MagicSeller.cs" />

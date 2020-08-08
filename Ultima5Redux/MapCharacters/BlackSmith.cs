@@ -57,8 +57,6 @@ namespace Ultima5Redux.MapCharacters
         /// Get blacksmiths typical hello response
         /// </summary>
         /// <param name="tod"></param>
-        /// <param name="shoppeKeeperName"></param>
-        /// <param name="shoppeName"></param>
         /// <param name="shoppeKeeperReference"></param>
         /// <returns></returns>
         public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null) 
