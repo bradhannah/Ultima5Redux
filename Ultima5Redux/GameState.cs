@@ -74,24 +74,6 @@ namespace Ultima5Redux
             set => _dataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).SetChunkAsByte(value);
         }
         
-        /// <summary>
-        /// Total number of Gems
-        /// </summary>
-        // public byte Gems
-        // {
-        //     get => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
-        //     set => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
-        // }
-        //
-        // /// <summary>
-        // /// Total number of torches
-        // /// </summary>
-        // public byte Torches
-        // {
-        //     get => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
-        //     set => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
-        // }
-
         public bool IsTorchLit => TorchTurnsLeft > 0;
 
         /// <summary>
@@ -102,15 +84,6 @@ namespace Ultima5Redux
             get => _dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
             set => _dataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).SetChunkAsByte(value);
         }
-
-        /// <summary>
-        /// Total number of regular keys
-        /// </summary>
-        // public byte Keys
-        // {
-        //     get => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
-        //     set => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
-        // }
 
         /// <summary>
         /// Current location
@@ -224,7 +197,8 @@ namespace Ultima5Redux
             MOONSTONE_Z_COORDS,
             ACTIVE_CHARACTER,
             GRAPPLE,
-            SKULL_KEYS_QUANTITY
+            SKULL_KEYS_QUANTITY,
+            MONSTERS_AND_STUFF_TABLE
         };
         #endregion
 
@@ -335,20 +309,25 @@ namespace Ultima5Redux
             _npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_ANIMATION_STATES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - Current Environment", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_ANIMATION_STATES);
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Character States - including xyz", 0x9B8, 0x200, 0x00, DataChunkName.CHARACTER_STATES);
 
             // load the overworld and underworld overlays
-            string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
-            string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
+            // they are stored in the saved.ool file - but also the brit.ool and under.ool file - not quite sure why it's stored in both...
+            // string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
+            // string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
+            string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
+            string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
 
             _overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(overworldOverlayPath, OverlayChunkName.Unused);
             _underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(underworldOverlayPath, OverlayChunkName.Unused);
 
-            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
-            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            // _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            // _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - Overworld", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - Underworld", 0x100, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
             TheMoongates = new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS), GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS), 
                 GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));

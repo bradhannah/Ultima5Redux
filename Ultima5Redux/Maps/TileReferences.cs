@@ -149,20 +149,14 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderUp(int nSprite)
-        {
-            return nSprite == GetTileNumberByName("LadderUp");
-        }
+        public bool IsLadderUp(int nSprite) => nSprite == GetTileNumberByName("LadderUp");
 
         /// <summary>
         /// Is the sprite a down ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderDown(int nSprite)
-        {
-            return nSprite == GetTileNumberByName("LadderDown");
-        }
+        public bool IsLadderDown(int nSprite) => nSprite == GetTileNumberByName("LadderDown");
 
         /// <summary>
         /// is the sprite an up or a down ladder?
@@ -282,6 +276,12 @@ namespace Ultima5Redux.Maps
               GetTileNumberByName("SmallSign") == nSprite ||
               GetTileNumberByName("SignWarning") == nSprite);
         }
+
+        public bool IsSkiff(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Skiff");
+
+        public bool IsFrigate(int nSprite) =>
+            GetTileReference(nSprite).Name.StartsWith("Ship")
+            || GetTileReference(nSprite).Name.StartsWith("Pirate");
 
         /// <summary>
         /// is it a door with a view window? locked or unlocked

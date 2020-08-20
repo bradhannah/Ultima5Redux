@@ -49,6 +49,7 @@ namespace Ultima5Redux.Maps
         public bool IsPushable;
         [DataMember]
         public bool IsTalkOverable;
+        [DataMember] public bool IsBoardable;
 
         public override string ToString()
         {

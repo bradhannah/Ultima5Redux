@@ -26,7 +26,8 @@
             set => _floor = value==0xFF?-1:value;
         }
 
-        public Point2D XY { get { return new Point2D(X, Y); } set { X = value.X; Y = value.Y; } }
+        public Point2D XY { get => new Point2D(X, Y);
+            set { X = value.X; Y = value.Y; } }
 
         public static bool operator !=(CharacterPosition pos1, CharacterPosition pos2)
         {

@@ -2,6 +2,9 @@
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
+using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.SeaFaringVessel;
 
 namespace Ultima5Redux.MapCharacters
 {
@@ -18,17 +21,32 @@ namespace Ultima5Redux.MapCharacters
         
         public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null)
         {
-            throw new System.NotImplementedException();
+            if (shoppeKeeperReference != null)
+                return ShoppeKeeperDialogueReference.GetMerchantString(ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(105,108),
+                    shoppeName: shoppeKeeperReference.ShoppeName,
+                    shoppeKeeperName: shoppeKeeperReference.ShoppeKeeperName,
+                    tod: tod);
+            throw new Ultima5ReduxException("Did not include shoppeKeeperReference in Hello response");
         }
 
         public override string GetWhichWouldYouSee()
         {
-            throw new System.NotImplementedException();
+            return ShoppeKeeperDialogueReference.GetMerchantString(119);
         }
 
         public override string GetForSaleList()
         {
             throw new System.NotImplementedException();
+        }
+
+        public string GetFrigateOffer(SmallMapReferences.SingleMapReference.Location location, PlayerCharacterRecords records)
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(117, nGold: Frigate.GetPrice(location, records));
+        }
+
+        public string GetSkiffOffer(SmallMapReferences.SingleMapReference.Location location, PlayerCharacterRecords records)
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(118, nGold: Skiff.GetPrice(location, records));
         }
     }
 }

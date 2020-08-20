@@ -16,6 +16,7 @@ namespace Ultima5Redux
         public const string INIT_GAM = "init.gam";
         public const string BRIT_OOL = "brit.ool";
         public const string UNDER_OOL = "under.ool";
+        public const string SAVED_OOL = "saved.ool";
 
         public const string BRIT_DAT = "brit.dat";
         public const string UNDER_DAT = "under.dat";

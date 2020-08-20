@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapCharacters
     {
         private const int MAX_CHARACTER_STATES = 0x20;
 
-        private List<MapCharacterState> _characterStates = new List<MapCharacterState>(MAX_CHARACTER_STATES);
+        private readonly List<MapCharacterState> _characterStates = new List<MapCharacterState>(MAX_CHARACTER_STATES);
 
         public MapCharacterState GetCharacterState(int nIndex)
         {

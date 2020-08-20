@@ -103,7 +103,9 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_HEALER2,
             HEALER_HEAL_PRICES,
             HEALER_CURE_PRICES,
-            HEALER_RESURRECT_PRICES
+            HEALER_RESURRECT_PRICES,
+            X_DOCKS,
+            Y_DOCKS
         };
 
         public enum Equipment
@@ -1021,13 +1023,13 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204, 0, DataChunkName.WEAR_USE_ITEM);
 
 
-            // dock coordinates (where puchased ships/skiffs are placed)
+            // dock coordinates (where purchased ships/skiffs are placed)
             // 0 = Jhelom
             // 1 = Minoc
             // 2 = East Brittany
             // 3 = Buccaneer's Den
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (dock)", 0x4D86, 0x4);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (dock)", 0x4D8A, 0x4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (dock)", 0x4D86, 0x4, 0x00, DataChunkName.X_DOCKS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (dock)", 0x4D8A, 0x4, 0x00, DataChunkName.Y_DOCKS);
 
             // scan code translation table:
             // when the player presses a key that produces one of the scan codes in

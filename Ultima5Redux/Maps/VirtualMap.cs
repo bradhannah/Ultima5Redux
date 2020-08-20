@@ -1005,56 +1005,56 @@ namespace Ultima5Redux.Maps
                 {
                     CalculateNextPath(mapChar, CurrentSingleMapReference.Floor);
                 }
-
-                // this NPC has a command in the buffer, so let's execute!
+                
+                // if this NPC has a command in the buffer, so let's execute!
+                if (!mapChar.Movement.IsNextCommandAvailable()) continue;
+                
                 // it's possible that CalculateNextPath came up empty for a variety of reasons, and that's okay
-                if (mapChar.Movement.IsNextCommandAvailable())
+                // peek and see what we have before we pop it off
+                NonPlayerCharacterMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommandDirection(true);
+                Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
+
+                // need to evaluate if I can even move to the next tile before actually popping out of the queue
+                bool bIsNpcOnSpace = IsNPCTile(adjustedPos);
+                TileReference adjustedTile = GetTileReference(adjustedPos);
+                if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
                 {
-                    // peek and see what we have before we pop it off
-                    NonPlayerCharacterMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommandDirection(true);
-                    Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
-                    // need to evaluate if I can even move to the next tile before actually popping out of the queue
-                    bool bIsNpcOnSpace = IsNPCTile(adjustedPos);
-                    TileReference adjustedTile = GetTileReference(adjustedPos);
-                    if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
-                    {
-                        // pop the direction from the queue
-                        direction = mapChar.Movement.GetNextMovementCommandDirection(false);
-                        mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor, _timeOfDay);
-                        mapChar.MovementAttempts = 0;
-                    }
-                    else
-                    {
-                        mapChar.MovementAttempts++;
-                    }
-
-                    if (mapChar.ForcedWandering > 0)
-                    {
-                        WanderWithinN(mapChar, 32, true);
-                        mapChar.ForcedWandering--;
-                        continue;
-                    }
-                    
-                    // if we have tried a few times and failed then we will recalculate
-                    // could have been a fixed NPC, stubborn Avatar or whatever
-                    if (mapChar.MovementAttempts <= 2) continue;
-
-                    // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
-                    // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
-                    // NPCs
-                    Debug.WriteLine(mapChar.NPCRef.FriendlyName + " got stuck after " + mapChar.MovementAttempts + " so we are going to find a new direction for them");
-                        
-                    mapChar.Movement.ClearMovements();
-                        
-                    // we are sick of waiting and will force a wander for a random number of turns to try to let the little
-                    // dummies figure it out on their own
-                    Random ran = new Random();
-                    int nTimes = ran.Next(0, 2) + 1;
-                    WanderWithinN(mapChar, 32, true);
-
-                    mapChar.ForcedWandering = nTimes;
+                    // pop the direction from the queue
+                    direction = mapChar.Movement.GetNextMovementCommandDirection(false);
+                    mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor, _timeOfDay);
                     mapChar.MovementAttempts = 0;
                 }
+                else
+                {
+                    mapChar.MovementAttempts++;
+                }
+
+                if (mapChar.ForcedWandering > 0)
+                {
+                    WanderWithinN(mapChar, 32, true);
+                    mapChar.ForcedWandering--;
+                    continue;
+                }
+                    
+                // if we have tried a few times and failed then we will recalculate
+                // could have been a fixed NPC, stubborn Avatar or whatever
+                if (mapChar.MovementAttempts <= 2) continue;
+
+                // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
+                // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
+                // NPCs
+                Debug.WriteLine(mapChar.NPCRef.FriendlyName + " got stuck after " + mapChar.MovementAttempts + " so we are going to find a new direction for them");
+                        
+                mapChar.Movement.ClearMovements();
+                        
+                // we are sick of waiting and will force a wander for a random number of turns to try to let the little
+                // dummies figure it out on their own
+                Random ran = new Random();
+                int nTimes = ran.Next(0, 2) + 1;
+                WanderWithinN(mapChar, 32, true);
+
+                mapChar.ForcedWandering = nTimes;
+                mapChar.MovementAttempts = 0;
             }
 
             return true;

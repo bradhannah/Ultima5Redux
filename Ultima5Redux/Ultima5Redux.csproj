@@ -121,13 +121,17 @@
     <Compile Include="DayNightMoon\MoonPhaseReferences.cs" />
     <Compile Include="Maps\TileReference.cs" />
     <Compile Include="Maps\TileReferences.cs" />
-    <Compile Include="PlayerCharacters\Amulet.cs" />
-    <Compile Include="PlayerCharacters\Armour.cs" />
-    <Compile Include="PlayerCharacters\Armours.cs" />
-    <Compile Include="PlayerCharacters\ChestArmour.cs" />
-    <Compile Include="PlayerCharacters\CombatItem.cs" />
-    <Compile Include="PlayerCharacters\CombatItems.cs" />
-    <Compile Include="PlayerCharacters\Helm.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Amulet.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Armour.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Armours.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\ChestArmour.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\CombatItem.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\CombatItems.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Helm.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Ring.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Shield.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Weapon.cs" />
+    <Compile Include="PlayerCharacters\CombatItems\Weapons.cs" />
     <Compile Include="PlayerCharacters\InventoryReference.cs" />
     <Compile Include="PlayerCharacters\LordBritishArtifact.cs" />
     <Compile Include="PlayerCharacters\LordBritishArtifacts.cs" />
@@ -152,18 +156,14 @@
     <Compile Include="PlayerCharacters\Provision.cs" />
     <Compile Include="PlayerCharacters\Provisions.cs" />
     <Compile Include="PlayerCharacters\Reagents.cs" />
-    <Compile Include="PlayerCharacters\Ring.cs" />
     <Compile Include="PlayerCharacters\Scroll.cs" />
     <Compile Include="PlayerCharacters\Scrolls.cs" />
     <Compile Include="PlayerCharacters\ShadowlordShard.cs" />
     <Compile Include="PlayerCharacters\ShadowlordShards.cs" />
-    <Compile Include="PlayerCharacters\Shield.cs" />
     <Compile Include="PlayerCharacters\SpecialItem.cs" />
     <Compile Include="PlayerCharacters\SpecialItems.cs" />
     <Compile Include="PlayerCharacters\Spell.cs" />
     <Compile Include="PlayerCharacters\Spells.cs" />
-    <Compile Include="PlayerCharacters\Weapon.cs" />
-    <Compile Include="PlayerCharacters\Weapons.cs" />
     <Compile Include="Point2D.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -195,6 +195,10 @@
     <Compile Include="Maps\LargeMap.cs" />
     <Compile Include="Maps\Map.cs" />
     <Compile Include="Maps\VirtualMap.cs" />
+    <Compile Include="Vehicles\SeaFaringVessel\Frigate.cs" />
+    <Compile Include="Vehicles\SeaFaringVessel\SeaFaringVessel.cs" />
+    <Compile Include="Vehicles\SeaFaringVessel\SeaFaringVesselReference.cs" />
+    <Compile Include="Vehicles\SeaFaringVessel\Skiff.cs" />
     <Compile Include="World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -244,6 +248,9 @@
     </EmbeddedResource>
     <Content Include="DataFiles\TileOverrides.csv" />
     <EmbeddedResource Include="DataFiles\TileOverrides.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Vehicles" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

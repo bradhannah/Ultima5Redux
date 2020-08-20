@@ -5,6 +5,10 @@ using Ultima5Redux.Maps;
 namespace Ultima5Redux.MapCharacters
 {
 
+    /// <summary>
+    /// Map character animation states
+    /// This is a generic application of it. The raw data must be passed in during construction.
+    /// </summary>
     public class MapCharacterAnimationStates
     {
         #region Public Enums
@@ -16,10 +20,10 @@ namespace Ultima5Redux.MapCharacters
         #endregion
 
         #region Private Fields
-        private List<MapCharacterAnimationState> _characterStates = new List<MapCharacterAnimationState>(MAX_CHARACTER_STATES);
+        private readonly List<MapCharacterAnimationState> _characterStates = new List<MapCharacterAnimationState>(MAX_CHARACTER_STATES);
 
-        private DataChunk _animationStatesDataChunk;
-        private TileReferences _tileReferences;
+        private readonly DataChunk _animationStatesDataChunk;
+        private readonly TileReferences _tileReferences;
         #endregion
 
         public MapCharacterAnimationStatesFiles MapCharacterAnimationStatesType { get; private set; }
@@ -44,7 +48,13 @@ namespace Ultima5Redux.MapCharacters
             return null;
         }
 
-        public void Load(MapCharacterAnimationStatesFiles mapCharacterAnimationStatesType, bool bLoadFromDisk)
+        /// <summary>
+        /// Load the character animation states
+        /// </summary>
+        /// <param name="mapCharacterAnimationStatesType"></param>
+        /// <param name="bLoadFromDisk"></param>
+        /// <param name="nOffset"></param>
+        public void Load(MapCharacterAnimationStatesFiles mapCharacterAnimationStatesType, bool bLoadFromDisk, int nOffset = 0x00)
         {
             MapCharacterAnimationStatesType = mapCharacterAnimationStatesType;
 
@@ -54,15 +64,17 @@ namespace Ultima5Redux.MapCharacters
 
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
-                _characterStates.Add(new MapCharacterAnimationState(_tileReferences, characterStateBytes.GetRange(i * MapCharacterAnimationState.NBYTES, MapCharacterAnimationState.NBYTES).ToArray()));
+                _characterStates.Add(new MapCharacterAnimationState(_tileReferences, 
+                    characterStateBytes.GetRange((i * MapCharacterAnimationState.NBYTES) + nOffset,
+                        MapCharacterAnimationState.NBYTES).ToArray()));
             }
         }
 
         public MapCharacterAnimationStates(DataChunk animationStatesDataChunk,
             TileReferences tileReferences)
         {
-            this._tileReferences = tileReferences;
-            this._animationStatesDataChunk = animationStatesDataChunk;
+            _tileReferences = tileReferences;
+            _animationStatesDataChunk = animationStatesDataChunk;
         }
 
     }

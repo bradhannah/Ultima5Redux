@@ -12,6 +12,7 @@ using Ultima5Redux.Dialogue;
 using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.SeaFaringVessel;
 
 namespace Ultima5ReduxTesting
 {
@@ -124,6 +125,8 @@ namespace Ultima5ReduxTesting
             Trace.Write("Starting ");
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+
+            List<SeaFaringVessel> vessels = world.State.TheVirtualMap.TheMapCharacters.GetAllSeaFaringVessels();
         }
 
         [Test]
@@ -573,7 +576,18 @@ namespace Ultima5ReduxTesting
             GuildMaster guildMaster = (GuildMaster)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster);
             string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
+        }
+        
+        [Test]
+        public void Test_ShipwrightDialogue()
+        {
             
+            World world = new World(SaveDirectory);
+            Shipwright shipwright = (Shipwright)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright);
+
+            string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay, shipwright.TheShoppeKeeperReference);
         }
      }
 }
