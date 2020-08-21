@@ -151,6 +151,22 @@ namespace Ultima5Redux
         /// </summary>
         public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
+        /// <summary>
+        /// Which map am I currently on?
+        /// </summary>
+        public LargeMap.Maps Map
+        {
+            get
+            {
+                if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                {
+                    return Floor == 0xFF ? LargeMap.Maps.Underworld : LargeMap.Maps.Overworld;
+                }
+
+                return LargeMap.Maps.Small;
+            }
+        }
+        
         #endregion
 
         #region Enumerations
@@ -218,12 +234,17 @@ namespace Ultima5Redux
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         /// <param name="inventoryReferences"></param>
+        /// <param name="initialMap"></param>
+        /// <param name="currentSmallMap"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
-            TileReferences tileReferences, GameState state, NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences)
+            LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap, 
+            NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences, GameState state, 
+            NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences)
         {
+
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferences, overworldMap, underworldMap,
-                nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, inventoryReferences);
+                nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, inventoryReferences,
+                CharacterRecords, LargeMap.Maps.Small, state.Location);
         }
 
         /// <summary>

@@ -155,10 +155,20 @@ namespace Ultima5Redux.Maps
         /// <param name="timeOfDay"></param>
         /// <param name="moongates"></param>
         /// <param name="inventoryReferences"></param>
+        /// <param name="playerCharacterRecords"></param>
+        /// <param name="initialMap"></param>
+        /// <param name="currentSmallMap"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapLocationReferences largeMapLocationReferenceses,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
-            GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates, InventoryReferences inventoryReferences)
+            GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates, InventoryReferences inventoryReferences,
+            PlayerCharacterRecords playerCharacterRecords, LargeMap.Maps initialMap, 
+            SmallMapReferences.SingleMapReference.Location currentSmallMap = SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
+            // let's make sure they are using the correct combination
+            Debug.Assert((initialMap == LargeMap.Maps.Small &&
+                          currentSmallMap != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                         || initialMap != LargeMap.Maps.Small);
+            
             SmallMapRefs = smallMapReferences;
             _smallMaps = smallMaps;
             _nonPlayerCharacters = nonPlayerCharacters;
@@ -175,18 +185,20 @@ namespace Ultima5Redux.Maps
             _largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             _largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
 
+            // load the characters for the very first time from disk
+            // subsequent loads may not have all the data stored on disk and will need to recalculate
             TheMapCharacters = new MapCharacters.MapCharacters(tileReferences, npcRefs,
-               state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
-               state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets);
+               state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, 
+               state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
+               state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets,
+               timeOfDay, playerCharacterRecords, initialMap, currentSmallMap);
         }
 
         /// <summary>
         /// Loads a small map based on the provided reference
         /// </summary>
         /// <param name="singleMapReference"></param>
-        /// <param name="playerCharacterRecords"></param>
-        /// <param name="bLoadFromDisk"></param>
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, PlayerCharacterRecords playerCharacterRecords, bool bLoadFromDisk)
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference)
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
@@ -197,8 +209,18 @@ namespace Ultima5Redux.Maps
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
-            TheMapCharacters.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small, _timeOfDay, playerCharacterRecords, bLoadFromDisk);
+            TheMapCharacters.SetCurrentMapType(singleMapReference.MapLocation, LargeMap.Maps.Small);
         }
+        // /// <summary>
+        // /// Loads a small map based on the provided reference
+        // /// Always initializes from scratch since the only time this would be loaded from
+        // /// disk is during initialization
+        // /// </summary>
+        // /// <param name="singleMapReference"></param>
+        // public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference)
+        // {
+        //     LoadSmallMap(singleMapReference);
+        // }
 
         /// <summary>
         /// Loads a large map -either overworld or underworld
@@ -226,7 +248,7 @@ namespace Ultima5Redux.Maps
             IsLargeMap = true;
             LargeMapOverUnder = map;
 
-            TheMapCharacters.SetCurrentMapType(null, map, _timeOfDay, null, true);
+            TheMapCharacters.SetCurrentMapType(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, map);
         }
         #endregion
 
@@ -1081,7 +1103,8 @@ namespace Ultima5Redux.Maps
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
             CurrentPosition = xy.Copy();
-            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), _state.CharacterRecords, false);
+            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, 
+                CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)));
         }
 
         #endregion

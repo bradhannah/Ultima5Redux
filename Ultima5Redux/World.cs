@@ -158,16 +158,17 @@ namespace Ultima5Redux
             ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(_u5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
             
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, NpcRef, SpriteTileReferences, State, NpcRef, InvRef);
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, 
+                NpcRef, SpriteTileReferences, State, NpcRef, InvRef);
 
-            if (State.Location != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-            {
-                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(State.Location, State.Floor), State.CharacterRecords, true);
-            }
-            else
-            {
-                State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
-            }
+            // if (State.Location != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+            // {
+            //     State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(State.Location, State.Floor), State.CharacterRecords, true);
+            // }
+            // else
+            // {
+            //     State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+            // }
 
         }
 
@@ -439,7 +440,7 @@ namespace Ultima5Redux
             {
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
-                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1), State.CharacterRecords, false);
+                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1));
                     klimbResult = KlimbResult.Success;
                     return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN));
                 }
@@ -448,7 +449,7 @@ namespace Ultima5Redux
             {
                 if (nCurrentFloor + 1 < nTopFloor)
                 {
-                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1), State.CharacterRecords, false);
+                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1));
                     klimbResult = KlimbResult.Success;
                     return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
                 }
@@ -853,7 +854,7 @@ namespace Ultima5Redux
             {
                 SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(State.TheVirtualMap.CurrentPosition);
                 //Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
-                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0), State.CharacterRecords, false);
+                State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0));
                 // set us to the front of the building
                 State.TheVirtualMap.CurrentPosition = SmallMapReferences.GetStartingXYByLocation(location);
 

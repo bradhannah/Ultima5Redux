@@ -40,8 +40,7 @@ namespace Ultima5ReduxTesting
             foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor), world.State.CharacterRecords,
-                    false);
+                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
             }
 
             Assert.True(true);
@@ -56,9 +55,7 @@ namespace Ultima5ReduxTesting
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae,
-                        0), world.State.CharacterRecords,
-                    false);
+                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
             }
             int i = (24 * (60 / 2));
             while (i > 0)
@@ -83,8 +80,7 @@ namespace Ultima5ReduxTesting
             {
                 Debug.WriteLine("***** Loading " + smr.MapLocation + " on floor " + smr.Floor);
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor), world.State.CharacterRecords,
-                    false);
+                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
 
                 int i = (24 * (60 / 2));
                 while (i > 0)
@@ -109,9 +105,7 @@ namespace Ultima5ReduxTesting
             Trace.Write("Starting ");
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1),
-                world.State.CharacterRecords,
-                false);
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1));
 
             world.State.TheVirtualMap.GuessTile(new Point2D(14, 7));
         }
@@ -160,9 +154,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0),
-                world.State.CharacterRecords,
-                false);
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0));
 
             string pushAThing = world.PushAThing(new Point2D(5, 7), VirtualMap.Direction.Down, out bool bWasPushed);
             Assert.False(bWasPushed);

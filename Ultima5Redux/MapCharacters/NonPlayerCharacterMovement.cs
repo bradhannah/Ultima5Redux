@@ -137,11 +137,11 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// The data that was loaded into the list initially (primarily for debug)
         /// </summary>
-        private List<byte> _loadedData = new List<byte>();
+        private readonly List<byte> _loadedData = new List<byte>();
         /// <summary>
         /// the offset into the movement list
         /// </summary>
-        private UInt16 _nOffset;
+        private readonly UInt16 _nOffset;
         /// <summary>
         /// Maximum number of movement commands per map character
         /// </summary>
@@ -153,7 +153,7 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// all movements 
         /// </summary>
-        private Queue<MovementCommand> _movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
+        private readonly Queue<MovementCommand> _movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
         #endregion
 
         #region Public enums
@@ -165,7 +165,7 @@ namespace Ultima5Redux.MapCharacters
 
         #region Public Methods
         /// <summary>
-        /// Adds a new movemenent instruction to the end of the queue
+        /// Adds a new movement instruction to the end of the queue
         /// </summary>
         /// <param name="movementCommand"></param>
         public void AddNewMovementInstruction(MovementCommand movementCommand)
@@ -232,7 +232,8 @@ namespace Ultima5Redux.MapCharacters
         public override string ToString()
         {
             if (this._movementQueue.Count == 0) return "Empty";
-            return "First: " + _movementQueue.Peek().Direction.ToString() + " for " + _movementQueue.Peek().Iterations + " times";
+            return "First: " + _movementQueue.Peek().Direction.ToString() + " for " + _movementQueue.Peek().Iterations +
+                   " times";
         }
         #endregion
     }

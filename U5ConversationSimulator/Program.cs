@@ -24,7 +24,7 @@ namespace U5ConversationSimulator
                 //_world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britain, 0), _world.State.CharacterRecords, false);
             }
             
-            _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0), _world.State.CharacterRecords, false);
+            _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
             
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
