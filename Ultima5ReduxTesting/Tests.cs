@@ -581,13 +581,17 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_ShipwrightDialogue()
         {
-            
             World world = new World(SaveDirectory);
             Shipwright shipwright = (Shipwright)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright);
 
             string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay, shipwright.TheShoppeKeeperReference);
+        }
+
+        public void Test_ShipInWorldState()
+        {
+            World world = new World(SaveDirectory);
         }
      }
 }

@@ -11,7 +11,7 @@ namespace Ultima5Redux.MapCharacters
     /// </summary>
     public class MapCharacterState
     {
-        #region Public Propeties
+        #region Public Properties
         public CharacterPosition TheCharacterPosition { get; } = new CharacterPosition();
         public int CharacterAnimationStateIndex { get; }
         public int NPCIndex { get; }

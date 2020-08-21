@@ -107,6 +107,7 @@ namespace Ultima5Redux.MapCharacters
             NPCRef = npcRef;
             AnimationState = mapCharacterAnimationState;
             CharacterState = mapCharacterState;
+            
             Movement = nonPlayerCharacterMovement;
             PlayerCharacterRecord record = null;
             if (playerCharacterRecords != null)

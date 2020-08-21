@@ -19,7 +19,6 @@ namespace Ultima5Redux.MapCharacters
     {
         public const int NBYTES = 0x8;
 
-
         #region Private Fields
         private int _tile1;
         private int _tile2;
