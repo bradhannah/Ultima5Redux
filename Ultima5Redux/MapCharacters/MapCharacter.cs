@@ -110,9 +110,9 @@ namespace Ultima5Redux.MapCharacters
             
             Movement = nonPlayerCharacterMovement;
             PlayerCharacterRecord record = null;
-            if (playerCharacterRecords != null)
+            if (playerCharacterRecords != null && npcRef != null)
             {
-                Debug.Assert(npcRef != null);
+                //Debug.Assert(npcRef != null);
                 record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
             }
 
@@ -129,6 +129,9 @@ namespace Ultima5Redux.MapCharacters
             }
             else
             {
+                // todo: temporary until I have monsters implemented
+                if (npcRef == null)
+                    return;
                 Move(new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y), CurrentCharacterPosition.Floor , timeOfDay);
                 //CurrentCharacterPosition.XY = new Point2D(CharacterState.TheCharacterPosition.X, CharacterState.TheCharacterPosition.Y);
             }

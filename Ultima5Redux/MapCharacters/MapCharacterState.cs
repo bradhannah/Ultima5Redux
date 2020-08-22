@@ -15,7 +15,7 @@ namespace Ultima5Redux.MapCharacters
         public CharacterPosition TheCharacterPosition { get; } = new CharacterPosition();
         public int CharacterAnimationStateIndex { get; }
         public int NPCIndex { get; }
-        TileReference TileRef { get; }
+        private TileReference TileRef { get; }
         public bool Active { get; }
         #endregion
 
@@ -38,6 +38,14 @@ namespace Ultima5Redux.MapCharacters
             Active = true;
         }
 
+        /// <summary>
+        /// Create a blank MapCharacterState indicating no character
+        /// </summary>
+        public MapCharacterState()
+        {
+            Active = false;
+        }
+        
         /// <summary>
         /// Build the character state from data retrieved from disk
         /// </summary>

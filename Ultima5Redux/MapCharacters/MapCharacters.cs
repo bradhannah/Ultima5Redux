@@ -29,7 +29,8 @@ namespace Ultima5Redux.MapCharacters
         private readonly MapCharacterAnimationStates _smallMapAnimationStates;
         private readonly MapCharacterAnimationStates _overworldAnimationState;
         private readonly MapCharacterAnimationStates _underworldAnimationState;
-        public List<NonPlayerCharacterReference> NonPlayerCharacterReferencesList { get; private set; }
+        //public List<NonPlayerCharacterReference> NonPlayerCharacterReferencesList { get; private set; }
+        private MapCharacterAnimationStates _currentMapCharacterAnimationStates;
 
 
         private MapCharacterAnimationStates CurrentAnimationState
@@ -113,7 +114,7 @@ namespace Ultima5Redux.MapCharacters
                     break;
                 case LargeMap.Maps.Overworld:
                 case LargeMap.Maps.Underworld:
-                    LoadLargeMap(initialMap);
+                    LoadLargeMap(initialMap, true);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
@@ -135,27 +136,14 @@ namespace Ultima5Redux.MapCharacters
                     LoadSmallMap(location, bLoadFromDisk);
                     return;
                 case LargeMap.Maps.Overworld:
-                    // we don't reload them because the over and underworld are only loaded at boot time
-                    break;
                 case LargeMap.Maps.Underworld:
+                    // we don't reload them because the over and underworld are only loaded at boot time
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
             }
-            //bool bIsLargeMap = mapType != LargeMap.Maps.Small;
-
-            // if it is a small map then we don't need to process
-            //if (!bIsLargeMap) return;
             
-            // map type is large (small already returned)
-            // set the default animation states
-            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
-            {
-                MapCharacterAnimationState charAnimState = CurrentAnimationState.GetCharacterState(i);
 
-                Characters.Add(new MapCharacter(null, charAnimState, null, 
-                    null, _timeOfDay, _playerCharacterRecords));
-            }
         }
 
         /// <summary>
@@ -192,29 +180,28 @@ namespace Ultima5Redux.MapCharacters
         /// such as movement as required.
         /// </summary>
         /// <param name="map"></param>
-        /// <returns></returns>
+        /// <param name="bInitialLoad"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private List<NonPlayerCharacterReference> LoadLargeMap(LargeMap.Maps map) 
+        private void LoadLargeMap(LargeMap.Maps map, bool bInitialLoad) 
         {
             Debug.Assert(map != LargeMap.Maps.Small);
-
-            List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
-
-            MapCharacterAnimationStates currentMapCharacterAnimationStates;
+            
+            Characters.Clear();
             
             // the over and underworld animation states are already loaded and can stick around
             switch (map)
             {
                 case LargeMap.Maps.Overworld:
-                    currentMapCharacterAnimationStates = _overworldAnimationState;
+                    _currentMapCharacterAnimationStates = _overworldAnimationState;
                     break;
                 case LargeMap.Maps.Underworld:
-                    currentMapCharacterAnimationStates = _underworldAnimationState;
+                    _currentMapCharacterAnimationStates = _underworldAnimationState;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
             }
             
+            // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
                 // the party is always at zero
@@ -224,30 +211,44 @@ namespace Ultima5Redux.MapCharacters
                     continue;
                 }
                 
-                //NonPlayerCharacterReference npcRef = npcCurrentMapRefs[i];
-                MapCharacterState mapCharState;
-                MapCharacterAnimationState charAnimState = null;
+                // if this is not the initial load of the map then we can trust character states and
+                // movements that are already loaded into memory
                 NonPlayerCharacterMovement charMovement = Movements.GetMovement(i);
+                if (!bInitialLoad)
+                {
+                    charMovement.ClearMovements();
+                }
+
+                // we have retrieved the _currentMapCharacterAnimationStates based on the map type,
+                // now just get the existing animation state which persists on disk for under, over and small maps
+                MapCharacterAnimationState charAnimState = _currentMapCharacterAnimationStates.GetCharacterState(i);
                 
+                // todo: will need to give it a position to start at, probably based on animation state
+                MapCharacterState mapCharState;
+                
+                // if it is the initial load then the loaded _charStates is the correct source of state
+                // otherwise we need to a create a brand new character state
+                if (bInitialLoad)
+                {
+                    mapCharState = _charStates.GetCharacterState(i);
+                }
+                else
+                {
+                    //if (charAnimState.)
+                    mapCharState = new MapCharacterState(_tileRefs, null, i, _timeOfDay);
+                }
 
-                charMovement.ClearMovements();
-                mapCharState = new MapCharacterState(_tileRefs, null, i, _timeOfDay);
-
+                // add the new character to our list of characters currently on the map
+                Characters.Add(new MapCharacter(null, charAnimState, mapCharState, 
+                    charMovement, _timeOfDay, _playerCharacterRecords));
             }
-
-            return npcCurrentMapRefs;
         }
-        
 
         /// <summary>
         /// Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        private List<NonPlayerCharacterReference> LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, 
-            bool bLoadFromDisk)
+        private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bLoadFromDisk)
         {
-            List<NonPlayerCharacterReference> npcCurrentMapRefs = null;
-
-            npcCurrentMapRefs = NPCRefs.GetNonPlayerCharactersByLocation(location);
             if (bLoadFromDisk)
             {
                 Debug.WriteLine("Loading character positions from disk...");
@@ -260,7 +261,7 @@ namespace Ultima5Redux.MapCharacters
                 Debug.WriteLine("Loading default character positions...");
             }
 
-            // load all available characters in
+            // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
                 if (i == 0)
@@ -268,7 +269,8 @@ namespace Ultima5Redux.MapCharacters
                     Characters.Add(new MapCharacter());
                     continue;
                 }
-
+                
+                List<NonPlayerCharacterReference> npcCurrentMapRefs = NPCRefs.GetNonPlayerCharactersByLocation(location);
                 NonPlayerCharacterReference npcRef = npcCurrentMapRefs[i];
                 MapCharacterState mapCharState;
                 MapCharacterAnimationState charAnimState = null;
@@ -294,7 +296,6 @@ namespace Ultima5Redux.MapCharacters
 
                 Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, _timeOfDay, _playerCharacterRecords));
             }
-            return npcCurrentMapRefs;
         }
 
         /// <summary>

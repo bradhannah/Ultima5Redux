@@ -22,8 +22,6 @@ namespace Ultima5Redux.Maps
                 Floor = floor;
                 FileOffset = fileOffset;
                 DataRef = dataRef;
-
-
             }
 
             public static SingleMapReference GetLargeMapSingleInstance(LargeMap.Maps map)

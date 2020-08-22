@@ -35,7 +35,8 @@ namespace Ultima5ReduxTesting
         public void AllSmallMapsLoadTest()
         {
 
-            World world = new World(SaveDirectory);
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
 
             foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {

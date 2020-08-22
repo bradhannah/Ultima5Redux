@@ -5,6 +5,11 @@ using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapCharacters
 {
+    /// <summary>
+    /// Describes all character states on a single map, be it overworld, underworld or a small map
+    /// only a single collection of MapCharacterStates can be saved at a time, so when switching between
+    /// small and large maps, the state will be lost
+    /// </summary>
     public class MapCharacterStates
     {
         private const int MAX_CHARACTER_STATES = 0x20;
@@ -37,6 +42,11 @@ namespace Ultima5Redux.MapCharacters
                 _characterStates.Add(new MapCharacterState(tileReferences, 
                     characterStateBytes.GetRange(nIndex * MapCharacterAnimationState.NBYTES, MapCharacterAnimationState.NBYTES).ToArray(), nIndex));
             }
+        }
+
+        public void EmptyState(int nIndex)
+        {
+            _characterStates[nIndex] = new MapCharacterState();
         }
 
 

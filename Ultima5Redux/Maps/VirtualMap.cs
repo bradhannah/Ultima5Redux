@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -157,19 +158,21 @@ namespace Ultima5Redux.Maps
         /// <param name="inventoryReferences"></param>
         /// <param name="playerCharacterRecords"></param>
         /// <param name="initialMap"></param>
-        /// <param name="currentSmallMap"></param>
+        /// <param name="currentSmallMapReference"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapLocationReferences largeMapLocationReferenceses,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
             GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates, InventoryReferences inventoryReferences,
             PlayerCharacterRecords playerCharacterRecords, LargeMap.Maps initialMap, 
-            SmallMapReferences.SingleMapReference.Location currentSmallMap = SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+            SmallMapReferences.SingleMapReference currentSmallMapReference)
         {
             // let's make sure they are using the correct combination
             Debug.Assert((initialMap == LargeMap.Maps.Small &&
-                          currentSmallMap != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                          currentSmallMapReference.MapLocation != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                          || initialMap != LargeMap.Maps.Small);
             
             SmallMapRefs = smallMapReferences;
+            
+            
             _smallMaps = smallMaps;
             _nonPlayerCharacters = nonPlayerCharacters;
             _largeMapLocationReferenceses = largeMapLocationReferenceses;
@@ -185,13 +188,29 @@ namespace Ultima5Redux.Maps
             _largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             _largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
 
+            SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation 
+                                                                    ?? SmallMapReferences.SingleMapReference.Location.Britannia_Underworld;
+            
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
             TheMapCharacters = new MapCharacters.MapCharacters(tileReferences, npcRefs,
                state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, 
                state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets,
-               timeOfDay, playerCharacterRecords, initialMap, currentSmallMap);
+               timeOfDay, playerCharacterRecords, initialMap, mapLocation);
+
+            switch (initialMap)
+            {
+                case LargeMap.Maps.Small:
+                    LoadSmallMap(currentSmallMapReference);
+                    break;
+                case LargeMap.Maps.Overworld:
+                case LargeMap.Maps.Underworld:
+                    LoadLargeMap(initialMap);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
+            }
         }
 
         /// <summary>
