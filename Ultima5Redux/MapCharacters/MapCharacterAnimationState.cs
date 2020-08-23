@@ -17,6 +17,7 @@ namespace Ultima5Redux.MapCharacters
 
     public class MapCharacterAnimationState
     {
+        private readonly byte[] _stateBytes;
         public const int NBYTES = 0x8;
 
         #region Private Fields
@@ -25,9 +26,9 @@ namespace Ultima5Redux.MapCharacters
         #endregion
 
         #region Public Properties
-        public byte X { get; }
-        public byte Y { get; }
-        public byte Floor { get; }
+        public byte X { get; set; }
+        public byte Y { get; set; }
+        public byte Floor { get; set; }
         public byte Depends1 { get; }
         public byte Depends2 { get; }
         public byte Depends3 { get; }
@@ -38,6 +39,7 @@ namespace Ultima5Redux.MapCharacters
         public MapCharacterAnimationState(TileReferences tileReferences, byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
+            _stateBytes = stateBytes;
             //
             _tile1 = stateBytes[0] + 0x100;
             _tile2 = stateBytes[1] + 0x100;
@@ -53,5 +55,26 @@ namespace Ultima5Redux.MapCharacters
         }
 
 
+        public MapCharacterAnimationState(TileReferences tileReferences, NonPlayerCharacterReference npcRef)
+        {
+        }
+
+        public MapCharacterAnimationState()
+        {
+            
+        }
+
+        public static MapCharacterAnimationState CreateAvatar(TileReferences tileReferences, CharacterPosition avatarPosition)
+        {
+            MapCharacterAnimationState theAvatar = new MapCharacterAnimationState();
+            TileReference avatarTileRef = tileReferences.GetTileReferenceByName("BasicAvatar");
+            theAvatar._tile1 = avatarTileRef.Index;
+            theAvatar._tile2 = avatarTileRef.Index;
+
+            theAvatar.X = (byte) avatarPosition.X;
+            theAvatar.Y = (byte) avatarPosition.Y;
+            theAvatar.Floor = (byte) avatarPosition.Floor;
+            return theAvatar;
+        }
     }
 }

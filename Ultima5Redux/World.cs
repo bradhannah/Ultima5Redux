@@ -704,7 +704,7 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Tries to move the avatar in a given direction - if succesful it will move him
+        /// Tries to move the avatar in a given direction - if successful it will move him
         /// </summary>
         /// <param name="direction">the direction you want to move</param>
         /// <param name="bKlimb">is the avatar K-limbing?</param>
@@ -848,7 +848,7 @@ namespace Ultima5Redux
         /// <returns>output string</returns>
         public string EnterBuilding(Point2D xy, out bool bWasSuccessful)
         {
-            bool isOnBuilding = LargeMapRef.IsMapXYEnterable(State.TheVirtualMap.CurrentPosition);
+            bool isOnBuilding = LargeMapRef.IsMapXYEnterable(xy);//State.TheVirtualMap.CurrentPosition);
             string retStr;
             if (isOnBuilding)
             {

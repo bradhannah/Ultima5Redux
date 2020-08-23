@@ -5,13 +5,13 @@ namespace Ultima5Redux.Maps
 {
     public class SmallMaps
     {
-        private List<SmallMap> _smallMaps = new List<SmallMap>();
+        private readonly List<SmallMap> _smallMaps = new List<SmallMap>();
 
-        private Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>> _mapLocationDictionary =
+        private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>> _mapLocationDictionary =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
 
         private SmallMapReferences _smallMapRef;
-        private TileReferences _spriteTileReferences;
+        private readonly TileReferences _spriteTileReferences;
 
         public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences spriteTileReferences, TileOverrides tileOverrides)
         {

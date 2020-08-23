@@ -37,7 +37,7 @@ namespace Ultima5ReduxTesting
 
             // World world = new World(SaveDirectory);
             World world = new World(@"C:\games\ultima_5_late\Britain");
-
+            _ = "";
             foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
@@ -586,5 +586,19 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
         }
+        
+        [Test]
+        public void EnterBuilding()
+        {
+
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+
+            Assert.True(true);
+        }
+
      }
 }

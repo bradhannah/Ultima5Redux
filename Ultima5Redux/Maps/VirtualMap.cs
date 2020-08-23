@@ -172,7 +172,6 @@ namespace Ultima5Redux.Maps
             
             SmallMapRefs = smallMapReferences;
             
-            
             _smallMaps = smallMaps;
             _nonPlayerCharacters = nonPlayerCharacters;
             _largeMapLocationReferenceses = largeMapLocationReferenceses;
@@ -230,17 +229,7 @@ namespace Ultima5Redux.Maps
 
             TheMapCharacters.SetCurrentMapType(singleMapReference.MapLocation, LargeMap.Maps.Small);
         }
-        // /// <summary>
-        // /// Loads a small map based on the provided reference
-        // /// Always initializes from scratch since the only time this would be loaded from
-        // /// disk is during initialization
-        // /// </summary>
-        // /// <param name="singleMapReference"></param>
-        // public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference)
-        // {
-        //     LoadSmallMap(singleMapReference);
-        // }
-
+      
         /// <summary>
         /// Loads a large map -either overworld or underworld
         /// </summary>
@@ -662,7 +651,7 @@ namespace Ultima5Redux.Maps
                     {
                         XY = stairsAndLadderLocations[0], Floor = nMapCurrentFloor
                     };
-                    mapCharacter.Move(characterPosition, _timeOfDay);
+                    mapCharacter.Move(characterPosition, _timeOfDay, false);
                     return;
 
                     // we now need to build a path to the best choice of ladder or stair
@@ -1057,7 +1046,7 @@ namespace Ultima5Redux.Maps
 
                 // need to evaluate if I can even move to the next tile before actually popping out of the queue
                 bool bIsNpcOnSpace = IsNPCTile(adjustedPos);
-                TileReference adjustedTile = GetTileReference(adjustedPos);
+                //TileReference adjustedTile = GetTileReference(adjustedPos);
                 if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
                 {
                     // pop the direction from the queue
@@ -1104,7 +1093,7 @@ namespace Ultima5Redux.Maps
 
         #region Public Actions Methods
         // Action methods are things that the Avatar may do that will affect things around him like
-        // getting a torch changes the tile underneath, openning a door may set a timer that closes it again
+        // getting a torch changes the tile underneath, opening a door may set a timer that closes it again
         // in a few turns
         //public void PickUpThing(Point2D xy)
         //{

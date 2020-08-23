@@ -15,9 +15,11 @@ namespace Ultima5Redux.MapCharacters
 
         public readonly List<MapCharacter> Characters = new List<MapCharacter>(MAX_MAP_CHARACTERS);
 
-        // load the animationstates once from disk, don't worry about again until you are saving to disk
-        // load the mapcharacterstates once from disk, don't worry abut again until you are saving to disk
+        // load the MapAnimationStates once from disk, don't worry about again until you are saving to disk
+        // load the MapCharacterStates once from disk, don't worry abut again until you are saving to disk
 
+        private readonly MapCharacterStates _charStates;
+        private LargeMap.Maps _currentMapType;
         /// <summary>
         /// static references to all NPCs in the world
         /// </summary>
@@ -29,6 +31,11 @@ namespace Ultima5Redux.MapCharacters
         private readonly MapCharacterAnimationStates _smallMapAnimationStates;
         private readonly MapCharacterAnimationStates _overworldAnimationState;
         private readonly MapCharacterAnimationStates _underworldAnimationState;
+
+        private readonly DataChunk _activeDataChunk;
+        private readonly DataChunk _overworldDataChunk;
+        private readonly DataChunk _underworldDataChunk;
+        
         //public List<NonPlayerCharacterReference> NonPlayerCharacterReferencesList { get; private set; }
         private MapCharacterAnimationStates _currentMapCharacterAnimationStates;
 
@@ -51,16 +58,13 @@ namespace Ultima5Redux.MapCharacters
                 throw new Ultima5ReduxException("Asked for a CurrentAnimationState that doesn't exist:" + _currentMapType.ToString());
             }
         }
-        private readonly MapCharacterStates _charStates;
-        
-        private LargeMap.Maps _currentMapType;
 
         /// <summary>
         /// Constructs the collection of all Map Characters in overworld, underworld and current towne
         /// </summary>
-        /// <param name="tileRefs"></param>
-        /// <param name="npcRefs"></param>
-        /// <param name="animationStatesDataChunk"></param>
+        /// <param name="tileRefs">Global tile references</param>
+        /// <param name="npcRefs">Global NPC references</param>
+        /// <param name="activeAnimationStatesDataChunk"></param>
         /// <param name="overworldAnimationStatesDataChunk"></param>
         /// <param name="underworldAnimationStatesDataChunk"></param>
         /// <param name="charStatesDataChunk"></param>
@@ -72,7 +76,7 @@ namespace Ultima5Redux.MapCharacters
         /// one CharacterState loaded in the save file at load time</param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
         public MapCharacters(TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, 
-            DataChunk animationStatesDataChunk, DataChunk overworldAnimationStatesDataChunk, 
+            DataChunk activeAnimationStatesDataChunk, DataChunk overworldAnimationStatesDataChunk, 
             DataChunk underworldAnimationStatesDataChunk, DataChunk charStatesDataChunk,
             DataChunk nonPlayerCharacterMovementLists, DataChunk nonPlayerCharacterMovementOffsets, 
             TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
@@ -87,16 +91,43 @@ namespace Ultima5Redux.MapCharacters
             _tileRefs = tileRefs;
             _timeOfDay = timeOfDay;
             _playerCharacterRecords = playerCharacterRecords;
-            
-            // small, overworld and underworld always have saved Animation states so we load them in at the beginning
-            _smallMapAnimationStates = new MapCharacterAnimationStates(animationStatesDataChunk, tileRefs);
 
-            // we always load the over and underworld from disk immediately, no need to reload as we will track it in memory 
-            // going forward
-            _overworldAnimationState = new MapCharacterAnimationStates(overworldAnimationStatesDataChunk, tileRefs);
+            _activeDataChunk = activeAnimationStatesDataChunk;
+            _overworldDataChunk = overworldAnimationStatesDataChunk;
+            _underworldDataChunk = underworldAnimationStatesDataChunk;
+
+            // if the small map is being loaded, then we pull from disk and load the over and underworld from
+            // saved.ool
+            if (initialMap == LargeMap.Maps.Small)
+            {
+                // small, overworld and underworld always have saved Animation states so we load them in at the beginning
+                _smallMapAnimationStates = new MapCharacterAnimationStates(_activeDataChunk, tileRefs);
+                _smallMapAnimationStates.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.SAVED_GAM, true);
+
+                // we always load the over and underworld from disk immediately, no need to reload as we will track it in memory 
+                // going forward
+                _overworldAnimationState = new MapCharacterAnimationStates(_overworldDataChunk, tileRefs);
+
+                _underworldAnimationState = new MapCharacterAnimationStates(_underworldDataChunk, tileRefs);
+            }
+            else 
+            {
+                // since it is a large map, the small map is empty because the state is lost as soon as you leave it
+                // and the selected large map is pulled directly from the active state (saved.gam @ 0x6b8)
+                _smallMapAnimationStates = null;
+
+                if (initialMap == LargeMap.Maps.Overworld)
+                {
+                    _overworldAnimationState = new MapCharacterAnimationStates(_activeDataChunk, tileRefs);
+                    _underworldAnimationState = new MapCharacterAnimationStates(_underworldDataChunk, tileRefs);
+                }
+                else
+                {
+                    _underworldAnimationState = new MapCharacterAnimationStates(_activeDataChunk, tileRefs);
+                    _overworldAnimationState = new MapCharacterAnimationStates(_overworldDataChunk, tileRefs);
+                }
+            }
             _overworldAnimationState.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.BRIT_OOL, true);
-
-            _underworldAnimationState = new MapCharacterAnimationStates(underworldAnimationStatesDataChunk, tileRefs);
             _underworldAnimationState.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.UNDER_OOL, true );
 
             // map character states pertain to whichever map was loaded from disk
@@ -121,15 +152,21 @@ namespace Ultima5Redux.MapCharacters
             }
         }
 
-
+        /// <summary>
+        /// Sets the current map type
+        /// Called internally to the class only since it has the bLoadFromDisk option
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="mapType"></param>
+        /// <param name="bLoadFromDisk"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void SetCurrentMapType(SmallMapReferences.SingleMapReference.Location location, LargeMap.Maps mapType,
             bool bLoadFromDisk)
         {
             _currentMapType = mapType;
 
             // I may need make an additional save of state before wiping these MapCharacters out
-            Characters.Clear();
-
+            
             switch (mapType)
             {
                 case LargeMap.Maps.Small:
@@ -137,13 +174,10 @@ namespace Ultima5Redux.MapCharacters
                     return;
                 case LargeMap.Maps.Overworld:
                 case LargeMap.Maps.Underworld:
-                    // we don't reload them because the over and underworld are only loaded at boot time
-                    break;
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
             }
-            
-
         }
 
         /// <summary>
@@ -151,7 +185,6 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         /// <param name="location"></param>
         /// <param name="mapType">Is it a small map, overworld or underworld</param>
-        /// <param name="bLoadFromDisk">should we load the data from disk or start fresh?</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetCurrentMapType(SmallMapReferences.SingleMapReference.Location location, LargeMap.Maps mapType) 
         {
@@ -207,49 +240,57 @@ namespace Ultima5Redux.MapCharacters
                 // the party is always at zero
                 if (i == 0)
                 {
-                    Characters.Add(new MapCharacter());
+                    MapCharacter theAvatar = new MapCharacter();
+                    Characters.Add(theAvatar);
                     continue;
                 }
                 
                 // if this is not the initial load of the map then we can trust character states and
                 // movements that are already loaded into memory
                 NonPlayerCharacterMovement charMovement = Movements.GetMovement(i);
-                if (!bInitialLoad)
-                {
-                    charMovement.ClearMovements();
-                }
+                // always clear movements because they are not stored in the data for a LargeMap because
+                // the monsters will recalculate every turn based on where the Avatar is 
+                charMovement.ClearMovements();
 
                 // we have retrieved the _currentMapCharacterAnimationStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
                 MapCharacterAnimationState charAnimState = _currentMapCharacterAnimationStates.GetCharacterState(i);
                 
+                // A MapCharacterState is not generated because LargeMaps do not track any details within the 
+                // MapCharacterState. Instead there will just be left overs of last execution.
+                
                 // todo: will need to give it a position to start at, probably based on animation state
-                MapCharacterState mapCharState;
+                // MapCharacterState mapCharState;
                 
                 // if it is the initial load then the loaded _charStates is the correct source of state
                 // otherwise we need to a create a brand new character state
-                if (bInitialLoad)
-                {
-                    mapCharState = _charStates.GetCharacterState(i);
-                }
-                else
-                {
-                    //if (charAnimState.)
-                    mapCharState = new MapCharacterState(_tileRefs, null, i, _timeOfDay);
-                }
+                // if (bInitialLoad)
+                // {
+                //     mapCharState = _charStates.GetCharacterState(i);
+                // }
+                // else
+                // {
+                //     //if (charAnimState.)
+                //     mapCharState = new MapCharacterState(_tileRefs, null, i, _timeOfDay);
+                // }
 
                 // add the new character to our list of characters currently on the map
-                Characters.Add(new MapCharacter(null, charAnimState, mapCharState, 
-                    charMovement, _timeOfDay, _playerCharacterRecords));
+                Characters.Add(new MapCharacter(null, charAnimState, null, charMovement,
+                    _timeOfDay, _playerCharacterRecords, bInitialLoad));
             }
         }
 
         /// <summary>
         /// Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bLoadFromDisk)
+        private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
         {
-            if (bLoadFromDisk)
+            // wipe all existing characters since they cannot exist beyond the load
+            Characters.Clear();
+            
+            // are we loading from disk? This should only be done on initial game load since state is immediately 
+            // lost when leaving
+            if (bInitialLoad)
             {
                 Debug.WriteLine("Loading character positions from disk...");
                 // we are loading the small animation from disk
@@ -259,42 +300,69 @@ namespace Ultima5Redux.MapCharacters
             else
             {
                 Debug.WriteLine("Loading default character positions...");
+                // if we aren't currently on a small map then we need to reassign the current large map to the correct
+                // datachunk because it would have otherwise been loaded from saved.gam the first time
+                // Note: yes, this is all very confusing - I am confused, but hopefully the abstraction layers
+                //       make it consumable
+                if (_currentMapType != LargeMap.Maps.Small)
+                {
+                    if (_currentMapType == LargeMap.Maps.Overworld)
+                    {
+                        _overworldAnimationState.ReassignNewDataChunk(_overworldDataChunk);
+                    }
+                    else
+                    {
+                        _underworldAnimationState.ReassignNewDataChunk(_underworldDataChunk);
+                    }
+                }
             }
+
+            // get all the NPC references for the current location
+            List<NonPlayerCharacterReference> npcCurrentMapRefs = NPCRefs.GetNonPlayerCharactersByLocation(location);
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
-                if (i == 0)
+                // if it is the first index, then it's the Avatar - but if it's the initial load
+                // then it will just load from disk, otherwise we need to create a stub
+                if (i == 0 && !bInitialLoad)
                 {
-                    Characters.Add(new MapCharacter());
+                    MapCharacter theAvatar = MapCharacter.CreateAvatar(_tileRefs, location);
+                    Characters.Add(theAvatar);
                     continue;
                 }
                 
-                List<NonPlayerCharacterReference> npcCurrentMapRefs = NPCRefs.GetNonPlayerCharactersByLocation(location);
+                // get the specific NPC reference 
                 NonPlayerCharacterReference npcRef = npcCurrentMapRefs[i];
-                MapCharacterState mapCharState;
+                // the mapCharacterState contains SmallMap NPC information (not applicable for LargeMap)
+                MapCharacterState mapCharacterState;
                 MapCharacterAnimationState charAnimState = null;
                 NonPlayerCharacterMovement charMovement = Movements.GetMovement(i);
 
-                if (bLoadFromDisk)
+                if (bInitialLoad)
                 {
                     // character states are only loaded when forced from disk and only on small maps
-                    mapCharState = _charStates.GetCharacterState(i);
+                    mapCharacterState = _charStates.GetCharacterState(i);
 
                     if (CurrentAnimationState.HasAnyAnimationStates())
                     {
                         charAnimState =
-                            CurrentAnimationState.GetCharacterState(mapCharState.CharacterAnimationStateIndex);
+                            CurrentAnimationState.GetCharacterState(mapCharacterState.CharacterAnimationStateIndex);
                     }
                 }
                 else
                 {
-                    // we keep the object because we may be required to save this to disk - but since we are leaving the map there is no need to save their movements
+                    // we keep the object because we may be required to save this to disk - but since we are
+                    // leaving the map there is no need to save their movements
                     charMovement.ClearMovements();
-                    mapCharState = new MapCharacterState(_tileRefs, npcRef, i, _timeOfDay);
+                    // set a default MapCharacterState based on the given NPC
+                    mapCharacterState = new MapCharacterState(_tileRefs, npcRef, i, _timeOfDay);
+                    // initialize a default MapCharacterAnimationState 
+                    charAnimState = new MapCharacterAnimationState(_tileRefs, npcRef);
                 }
 
-                Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharState, charMovement, _timeOfDay, _playerCharacterRecords));
+                Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharacterState, charMovement, 
+                    _timeOfDay, _playerCharacterRecords, bInitialLoad));
             }
         }
 

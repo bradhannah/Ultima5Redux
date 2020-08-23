@@ -1,7 +1,7 @@
 ﻿namespace Ultima5Redux.MapCharacters
 {
     /// <summary>
-    /// Tracks the postion of any character on the screen
+    /// Tracks the position of any character on the screen
     /// </summary>
     public class CharacterPosition
     {
