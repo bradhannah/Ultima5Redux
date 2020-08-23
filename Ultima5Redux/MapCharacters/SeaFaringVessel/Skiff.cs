@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux.SeaFaringVessel
+namespace Ultima5Redux.MapCharacters.SeaFaringVessel
 {
     public class Skiff : SeaFaringVessel
     {
@@ -21,8 +21,10 @@ namespace Ultima5Redux.SeaFaringVessel
             return GetAdjustedPrice(records, Prices[location]);
         }
 
-        // public Skiff(CharacterPosition position, VirtualMap.Direction direction) : base(position, direction)
-        // {
-        // }
+        public Skiff(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, 
+            bool bLoadedFromDisk) : base(mapUnitState, null,
+            mapUnitMovement, bLoadedFromDisk)
+        {
+        }
     }
 }

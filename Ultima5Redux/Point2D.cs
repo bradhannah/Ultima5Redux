@@ -72,7 +72,17 @@ namespace Ultima5Redux
             Y = y;
         }
     }
-        
+
+    // public class LockedPoint2D : Point2D
+    // {
+    //     public LockedPoint2D(int x, int y) : base(x, y)
+    //     {
+    //     }
+    //     
+    //     public override int X { get; }
+    //     public override int Y { get; }
+    //
+    // }
     
     public class Point2D
     {

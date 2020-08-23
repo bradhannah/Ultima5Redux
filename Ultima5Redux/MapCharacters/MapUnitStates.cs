@@ -15,14 +15,14 @@ namespace Ultima5Redux.MapCharacters
 
         private const int MAX_CHARACTER_STATES = 0x20;
 
-        private readonly List<MapCharacterAnimationState> _characterStates = new List<MapCharacterAnimationState>(MAX_CHARACTER_STATES);
+        private readonly List<MapUnitState> _characterStates = new List<MapUnitState>(MAX_CHARACTER_STATES);
 
         private DataChunk _animationStatesDataChunk;
         private readonly TileReferences _tileReferences;
 
         public MapCharacterAnimationStatesFiles MapCharacterAnimationStatesType { get; private set; }
 
-        public MapCharacterAnimationState GetCharacterState(int nIndex)
+        public MapUnitState GetCharacterState(int nIndex)
         {
             return _characterStates[nIndex];
         }
@@ -32,9 +32,9 @@ namespace Ultima5Redux.MapCharacters
             return _characterStates.Count > 0;
         }
 
-        public MapCharacterAnimationState GetCharacterStateByPosition(Point2D xy, int nFloor)
+        public MapUnitState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {
-            foreach (MapCharacterAnimationState characterState in _characterStates)
+            foreach (MapUnitState characterState in _characterStates)
             {
                 if (characterState.X == xy.X && characterState.Y == xy.Y && characterState.Floor == nFloor)
                     return characterState;
@@ -58,9 +58,9 @@ namespace Ultima5Redux.MapCharacters
 
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
-                _characterStates.Add(new MapCharacterAnimationState(_tileReferences, 
-                    characterStateBytes.GetRange((i * MapCharacterAnimationState.NBYTES) + nOffset,
-                        MapCharacterAnimationState.NBYTES).ToArray()));
+                _characterStates.Add(new MapUnitState(_tileReferences, 
+                    characterStateBytes.GetRange((i * MapUnitState.NBYTES) + nOffset,
+                        MapUnitState.NBYTES).ToArray()));
             }
         }
 

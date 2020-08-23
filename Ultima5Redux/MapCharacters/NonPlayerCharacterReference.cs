@@ -251,7 +251,7 @@ namespace Ultima5Redux.MapCharacters
             // no schedule? I guess you're not real
             if (!IsEmptySchedule(sched))
             {
-                Debug.WriteLine(location.ToString() + "     NPC Number: " + this.DialogNumber + " in " + location.ToString());
+                Debug.WriteLine(location + "     NPC Number: " + this.DialogNumber + " in " + location);
             }
         }
         #endregion

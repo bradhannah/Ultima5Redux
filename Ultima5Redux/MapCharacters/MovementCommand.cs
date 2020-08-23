@@ -1,6 +1,6 @@
 ﻿namespace Ultima5Redux.MapCharacters
 {
-    public partial class NonPlayerCharacterMovement
+    public partial class MapUnitMovement
     {
         public class MovementCommand
         {

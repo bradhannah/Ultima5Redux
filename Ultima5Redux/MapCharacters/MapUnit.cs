@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.MapCharacters;
 
 namespace Ultima5Redux.MapCharacters
 {
@@ -12,11 +13,12 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// All the movements for the map character
         /// </summary>
-        internal NonPlayerCharacterMovement Movement { get; }
+        internal MapUnitMovement Movement { get; }
+        
         /// <summary>
         /// the state of the animations
         /// </summary>
-        internal MapCharacterAnimationState AnimationState { get; private set; }
+        internal MapUnitState AnimationState { get; private set; }
 
         /// <summary>
         /// The location state of the character
@@ -32,7 +34,7 @@ namespace Ultima5Redux.MapCharacters
         {
             get => _characterPosition;
             //return new CharacterPosition(AnimationState.X, AnimationState.Y, AnimationState.Floor);
-            private set
+            set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 // this is a bit redundant but we have a backing field and also store the XY positions
@@ -103,7 +105,7 @@ namespace Ultima5Redux.MapCharacters
                 NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) + " with AI Mode: "+ 
                 NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
                 " <b>Movement Attempts</b>: "+ MovementAttempts + " " + 
-                this.Movement.ToString());
+                this.Movement);
             
             return debugLookStr;
         }
@@ -114,7 +116,7 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// empty constructor if there is nothing in the map character slot
         /// </summary>
-        public MapUnit()
+        private MapUnit()
         {
             NPCRef = null;
             AnimationState = null;
@@ -126,25 +128,25 @@ namespace Ultima5Redux.MapCharacters
         /// Builds a MpaCharacter from pre-instantiated objects - typically loaded from disk in advance
         /// </summary>
         /// <param name="npcRef"></param>
-        /// <param name="mapCharacterAnimationState"></param>
+        /// <param name="mapUnitState"></param>
         /// <param name="smallMapCharacterState"></param>
-        /// <param name="nonPlayerCharacterMovement"></param>
+        /// <param name="mapUnitMovement"></param>
         /// <param name="timeOfDay"></param>
         /// <param name="playerCharacterRecords"></param>
         /// <param name="bLoadedFromDisk"></param>
-        public MapUnit(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, SmallMapCharacterState smallMapCharacterState,
-            NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk)
+        public MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapCharacterState,
+            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk)
         {
             NPCRef = npcRef;
-            AnimationState = mapCharacterAnimationState;
+            AnimationState = mapUnitState;
             CharacterState = smallMapCharacterState;
-            Movement = nonPlayerCharacterMovement;
+            Movement = mapUnitMovement;
 
             PlayerCharacterRecord record = null;
 
             bool bLargeMap = CharacterState == null && npcRef == null;
             
-            Debug.Assert(playerCharacterRecords != null);
+            // Debug.Assert(playerCharacterRecords != null);
             Debug.Assert(AnimationState != null);
             Debug.Assert(Movement != null);
             
@@ -198,7 +200,7 @@ namespace Ultima5Redux.MapCharacters
         {
             MapUnit theAvatar = new MapUnit
             {
-                AnimationState = MapCharacterAnimationState.CreateAvatar(tileReferences,
+                AnimationState = MapUnitState.CreateAvatar(tileReferences,
                     SmallMapReferences.GetStartingXYZByLocation(location))
             };
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapCharacters;
 
 namespace Ultima5Redux.MapCharacters
 {
@@ -40,7 +41,7 @@ namespace Ultima5Redux.MapCharacters
             for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {
                 _characterStates.Add(new SmallMapCharacterState(tileReferences, 
-                    characterStateBytes.GetRange(nIndex * MapCharacterAnimationState.NBYTES, MapCharacterAnimationState.NBYTES).ToArray(), nIndex));
+                    characterStateBytes.GetRange(nIndex * MapUnitState.NBYTES, MapUnitState.NBYTES).ToArray(), nIndex));
             }
         }
 

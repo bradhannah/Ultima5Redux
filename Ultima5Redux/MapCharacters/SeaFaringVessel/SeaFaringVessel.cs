@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Ultima5Redux.MapCharacters;
+﻿using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux.SeaFaringVessel
+namespace Ultima5Redux.MapCharacters.SeaFaringVessel
 {
     public abstract class SeaFaringVessel : MapUnit
     {
@@ -23,5 +22,12 @@ namespace Ultima5Redux.SeaFaringVessel
          
       //   public CharacterPosition Position { get; set; }
          public VirtualMap.Direction Direction { get; set; }
+
+         protected SeaFaringVessel(MapUnitState mapUnitState, SmallMapCharacterState smallMapCharacterState,
+             MapUnitMovement mapUnitMovement, 
+             bool bLoadedFromDisk) : base(null, mapUnitState, smallMapCharacterState, mapUnitMovement,
+             null, null, bLoadedFromDisk)
+         {
+         }
     }
 }

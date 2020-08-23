@@ -13,7 +13,7 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// All available movement lists
         /// </summary>
-        private List<NonPlayerCharacterMovement> _movementList = new List<NonPlayerCharacterMovement>(MAX_PLAYERS);
+        private List<MapUnitMovement> _movementList = new List<MapUnitMovement>(MAX_PLAYERS);
         
         /// <summary>
         /// DataChunk of all loaded instructions (only needed during save and load)
@@ -30,7 +30,7 @@ namespace Ultima5Redux.MapCharacters
             this._movementOffsetDataChunk = movementOffsetDataChunk;
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
-                _movementList.Add(new NonPlayerCharacterMovement(i, movementInstructionDataChunk, movementOffsetDataChunk));
+                _movementList.Add(new MapUnitMovement(i, movementInstructionDataChunk, movementOffsetDataChunk));
             }
         }
 
@@ -39,7 +39,7 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         /// <param name="nIndex"></param>
         /// <returns></returns>
-        public NonPlayerCharacterMovement GetMovement(int nIndex)
+        public MapUnitMovement GetMovement(int nIndex)
         {
             return _movementList[nIndex];
         }

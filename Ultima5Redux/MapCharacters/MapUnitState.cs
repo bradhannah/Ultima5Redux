@@ -15,7 +15,7 @@ namespace Ultima5Redux.MapCharacters
     //6	1	depends on object type
     //7	1	depends on object type
 
-    public class MapCharacterAnimationState
+    public class MapUnitState
     {
         private readonly byte[] _stateBytes;
         public const int NBYTES = 0x8;
@@ -36,7 +36,7 @@ namespace Ultima5Redux.MapCharacters
         public TileReference Tile2Ref { get; }
         #endregion
 
-        public MapCharacterAnimationState(TileReferences tileReferences, byte[] stateBytes)
+        public MapUnitState(TileReferences tileReferences, byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
             _stateBytes = stateBytes;
@@ -55,18 +55,18 @@ namespace Ultima5Redux.MapCharacters
         }
 
 
-        public MapCharacterAnimationState(TileReferences tileReferences, NonPlayerCharacterReference npcRef)
+        public MapUnitState(TileReferences tileReferences, NonPlayerCharacterReference npcRef)
         {
         }
 
-        public MapCharacterAnimationState()
+        public MapUnitState()
         {
             
         }
 
-        public static MapCharacterAnimationState CreateAvatar(TileReferences tileReferences, CharacterPosition avatarPosition)
+        public static MapUnitState CreateAvatar(TileReferences tileReferences, CharacterPosition avatarPosition)
         {
-            MapCharacterAnimationState theAvatar = new MapCharacterAnimationState();
+            MapUnitState theAvatar = new MapUnitState();
             TileReference avatarTileRef = tileReferences.GetTileReferenceByName("BasicAvatar");
             theAvatar._tile1 = avatarTileRef.Index;
             theAvatar._tile2 = avatarTileRef.Index;

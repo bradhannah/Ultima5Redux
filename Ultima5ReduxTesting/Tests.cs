@@ -10,9 +10,9 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.MapCharacters;
+using Ultima5Redux.MapCharacters.SeaFaringVessel;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
-using Ultima5Redux.SeaFaringVessel;
 
 namespace Ultima5ReduxTesting
 {
@@ -177,14 +177,14 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
 
             for (int i = 0; i < 256; i++)
             {
                 world.TryToMove(VirtualMap.Direction.Up, false, true, out World.TryToMoveResult moveResult);
             }
 
-            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
 
             Assert.True(finalLocation == startLocation);
         }
@@ -196,7 +196,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
             for (int x = 0; x < 256; x++)
             {
                 for (int y = 0; y < 256; y++)
@@ -205,7 +205,7 @@ namespace Ultima5ReduxTesting
                 }
             }
 
-            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
 
             Assert.True(finalLocation == startLocation);
         }
@@ -234,7 +234,7 @@ namespace Ultima5ReduxTesting
             world.State.TheTimeOfDay.Hour = 12;
 
             Point2D moongatePosition = new Point2D(166, 19);
-            world.State.TheVirtualMap.CurrentPosition = moongatePosition;
+            world.State.TheVirtualMap.CurrentPosition.XY = moongatePosition;
             // first search should find moonstone
             world.TryToSearch(moongatePosition, out bool bWasSuccessful);
             Debug.Assert(bWasSuccessful);
@@ -291,7 +291,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-            world.State.TheVirtualMap.CurrentPosition = new Point2D(167, 22);
+            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(167, 22);
             bool bOnMoongate = world.IsAvatarOnActiveMoongate();
             world.State.TheTimeOfDay.Hour = 23;
             world.State.TheTimeOfDay.Day = 1;
@@ -383,7 +383,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
-            world.State.TheVirtualMap.CurrentPosition = new Point2D(166, 21);
+            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
             world.TryToKlimb(out World.KlimbResult klimbResult);
             Debug.Assert(klimbResult == World.KlimbResult.RequiresDirection);
         }
@@ -394,7 +394,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
-            world.State.TheVirtualMap.CurrentPosition = new Point2D(166, 21);
+            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
 
             world.TryToMove(VirtualMap.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
         }

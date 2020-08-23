@@ -6,16 +6,16 @@ using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapCharacters
 {
-    public partial class NonPlayerCharacterMovement
+    public partial class MapUnitMovement
     {
         #region Constructors
         /// <summary>
-        /// Construct a NonPlayerCharacterMovement 
+        /// Construct a MapUnitMovement 
         /// </summary>
         /// <param name="nDialogIndex">the index of an NPC</param>
         /// <param name="movementInstructionDataChunk">The full memory chunk of all movement instructions</param>
         /// <param name="movementOffsetDataChunk">the full memory chunk of the movement offsets</param>
-        public NonPlayerCharacterMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
+        public MapUnitMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
         {
             // we totally ignore the first entry, since it's bad stuff
             if (nDialogIndex == 0) return;
@@ -49,7 +49,7 @@ namespace Ultima5Redux.MapCharacters
                 if (nIterations == 0xFF || nIterations == 0) return;
 
                 if (!(direction == MovementCommandDirection.East || direction == MovementCommandDirection.West || direction == MovementCommandDirection.North
-                    || direction == MovementCommandDirection.South)) { throw new Ultima5ReduxException("a bad direction was set: " + direction.ToString()); }
+                    || direction == MovementCommandDirection.South)) { throw new Ultima5ReduxException("a bad direction was set: " + direction); }
 
 
                 // we have a proper movement instruction so let's add it to the queue
@@ -67,12 +67,12 @@ namespace Ultima5Redux.MapCharacters
 
         internal static Point2D GetAdjustedPos(Point2D xy, VirtualMap.Direction direction)
         {
-            return NonPlayerCharacterMovement.GetAdjustedPos(xy, GetDirection(direction));
+            return MapUnitMovement.GetAdjustedPos(xy, GetDirection(direction));
         }
 
-        private static MovementCommandDirection GetDirection(VirtualMap.Direction vmapDirection)
+        private static MovementCommandDirection GetDirection(VirtualMap.Direction virtualMapDirection)
         {
-            switch (vmapDirection)
+            switch (virtualMapDirection)
             {
                 case VirtualMap.Direction.Right:
                     return MovementCommandDirection.East;
@@ -84,7 +84,7 @@ namespace Ultima5Redux.MapCharacters
                     return MovementCommandDirection.South;
                 case VirtualMap.Direction.None:
                 default:
-                    throw new Ultima5ReduxException("Cannot convert " + vmapDirection + " to MovementCommandDirection");
+                    throw new Ultima5ReduxException($"Cannot convert {virtualMapDirection} to MovementCommandDirection");
             }
         }
 
@@ -93,8 +93,9 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="direction"></param>
+        /// <param name="nSpaces"></param>
         /// <returns></returns>
-        internal static Point2D GetAdjustedPos(Point2D xy, NonPlayerCharacterMovement.MovementCommandDirection direction,
+        internal static Point2D GetAdjustedPos(Point2D xy, MapUnitMovement.MovementCommandDirection direction,
             int nSpaces = 1)
         {
             Point2D adjustedPos = new Point2D(xy.X, xy.Y);
@@ -116,6 +117,8 @@ namespace Ultima5Redux.MapCharacters
                 case MovementCommandDirection.South:
                     adjustedPos.Y += nSpaces;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
             return adjustedPos;
         }
@@ -232,8 +235,7 @@ namespace Ultima5Redux.MapCharacters
         public override string ToString()
         {
             if (this._movementQueue.Count == 0) return "Empty";
-            return "First: " + _movementQueue.Peek().Direction.ToString() + " for " + _movementQueue.Peek().Iterations +
-                   " times";
+            return $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
         }
         #endregion
     }

@@ -153,7 +153,7 @@
     <Compile Include="Maps\LargeMapLocationReferences.cs" />
     <Compile Include="MapCharacters\MapUnit.cs" />
     <Compile Include="MapCharacters\MapUnits.cs" />
-    <Compile Include="MapCharacters\NonPlayerCharacterMovement.cs" />
+    <Compile Include="MapCharacters\MapUnitMovement.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterReference.cs" />
     <Compile Include="PlayerCharacters\Potion.cs" />
     <Compile Include="PlayerCharacters\Potions.cs" />

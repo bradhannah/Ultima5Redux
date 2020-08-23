@@ -348,7 +348,7 @@ namespace Ultima5Redux
         public string PushAThing(Point2D avatarXy, VirtualMap.Direction direction, out bool bPushedAThing)
         {
             bPushedAThing = false;
-            Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(avatarXy, direction);
+            Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(avatarXy, direction);
 
             TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
 
@@ -361,7 +361,7 @@ namespace Ultima5Redux
             bPushedAThing = true;
 
             // we get the thing one tile further than the thing to see if we have room to push it forward
-            Point2D oneMoreTileAdjusted = NonPlayerCharacterMovement.GetAdjustedPos(adjustedPos, direction);
+            Point2D oneMoreTileAdjusted = MapUnitMovement.GetAdjustedPos(adjustedPos, direction);
             TileReference oneMoreTileReference = State.TheVirtualMap.GetTileReference(oneMoreTileAdjusted);
             
             // if I'm sitting and the proceeding tile is an upright tile then I can't swap things 
@@ -389,7 +389,7 @@ namespace Ultima5Redux
             }
             
             // move the avatar to the new spot
-            State.TheVirtualMap.CurrentPosition = adjustedPos.Copy();
+            State.TheVirtualMap.CurrentPosition.XY = adjustedPos.Copy();
 
             PassTime();
 
@@ -435,7 +435,7 @@ namespace Ultima5Redux
             int nTotalFloors = State.TheVirtualMap.SmallMapRefs.GetNumberOfFloors(location);
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition);
+            TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
             if (SpriteTileReferences.IsLadderDown(tileReference.Index) || SpriteTileReferences.IsGrate(tileReference.Index)) 
             {
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
@@ -751,7 +751,7 @@ namespace Ultima5Redux
                 State.TheVirtualMap.UseStairs(newPos, true);
                 tryToMoveResult = TryToMoveResult.Fell;
                 // we need to evaluate in the game and let the game know that they should continue to fall
-                TileReference newTileRef = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition);
+                TileReference newTileRef = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
                 if (newTileRef.Index == SpriteTileReferences.GetTileNumberByName("BrickFloorHole"))
                 {
                     IsPendingFall = true;
@@ -794,7 +794,7 @@ namespace Ultima5Redux
             if (SpriteTileReferences.IsStaircase(newTileReference.Index))
             {
                 tryToMoveResult = TryToMoveResult.UsedStairs;
-                State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition);
+                State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
                 return string.Empty;
             }
 
@@ -852,11 +852,11 @@ namespace Ultima5Redux
             string retStr;
             if (isOnBuilding)
             {
-                SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(State.TheVirtualMap.CurrentPosition);
+                SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(xy);//State.TheVirtualMap.CurrentPosition);
                 //Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
                 State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0));
                 // set us to the front of the building
-                State.TheVirtualMap.CurrentPosition = SmallMapReferences.GetStartingXYByLocation(location);
+                State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation(location);
 
                 retStr =
                     (DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE)
@@ -956,7 +956,7 @@ namespace Ultima5Redux
             bool isAllowedToBuryMoongate()
             {
                 if (State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Small) return false;
-                if (State.TheVirtualMap.IsAnyExposedItems(State.TheVirtualMap.CurrentPosition)) return false;
+                if (State.TheVirtualMap.IsAnyExposedItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
                 TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
 
                 return (SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index));

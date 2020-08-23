@@ -76,21 +76,30 @@ namespace Ultima5Redux.Maps
         private enum LadderOrStairDirection { Up, Down };
 
 
-        #region Public Properties 
+        #region Public Properties
 
         /// <summary>
         /// Current position of player character (avatar)
         /// </summary>
-        public Point2D CurrentPosition
-        {
-            get => _currentPosition;
-            set
-            {
-                _currentPosition.X = value.X;
-                _currentPosition.Y = value.Y;
-            }
-        }
+        // public Point2D CurrentPosition
+        // {
+        //     get => _currentPosition;
+        //     set
+        //     {
+        //         _currentPosition.X = value.X;
+        //         _currentPosition.Y = value.Y;
+        //     }
+        // }
 
+        // public Point2D CurrentPosition
+        // {
+        //     get => CurrentPosition.XY;
+        //     set => CurrentPosition = new CharacterPosition(value.X, value.Y, CurrentPosition.Floor);
+        // }
+
+        public CharacterPosition CurrentPosition => TheMapUnits.CurrentAvatarPosition;
+
+        //set => TheMapUnits.CurrentAvatarPosition = value;
         /// <summary>
         /// Number of total columns for current map
         /// </summary>
@@ -135,7 +144,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public LargeMap.Maps LargeMapOverUnder { get; private set; } = (LargeMap.Maps)(-1);
 
-        public MapCharacters.MapUnits TheMapUnits { get; private set; }
+        public MapUnits TheMapUnits { get; private set; }
 
         #endregion
 
@@ -318,7 +327,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public TileReference GetTileReferenceOnCurrentTile()
         {
-            return GetTileReference(CurrentPosition);
+            return GetTileReference(CurrentPosition.XY);
         }
 
         /// <summary>
@@ -409,11 +418,10 @@ namespace Ultima5Redux.Maps
         /// Moves the player character to the specified coordinate
         /// </summary>
         /// <param name="xy"></param>
-        public void SetCharacterPosition(Point2D xy)
-        {
-            CurrentPosition = xy;
-        }
-
+        // internal void SetCharacterPosition(Point2D xy)
+        // {
+        //     CurrentPosition = new CharacterPosition(xy.X, xy.Y, CurrentPosition.Floor);
+        // }
         
         
         /// <summary>
@@ -422,16 +430,16 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="direction"></param>
         /// <returns>the NPC mapcharacter or null if non are found</returns>
-        public MapUnit GetNPCToTalkTo(NonPlayerCharacterMovement.MovementCommandDirection direction)
+        public MapUnit GetNPCToTalkTo(MapUnitMovement.MovementCommandDirection direction)
         {
-            Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(_currentPosition, direction, 1);
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(_currentPosition, direction, 1);
             MapUnit npc = GetNPCOnTile(adjustedPosition);
             if (npc != null) return npc;
 
             if (!GetTileReference(adjustedPosition).IsTalkOverable)
                 return null;
             
-            Point2D adjustedPosition2Away = NonPlayerCharacterMovement.GetAdjustedPos(_currentPosition, direction, 2);
+            Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(_currentPosition, direction, 2);
             return GetNPCOnTile(adjustedPosition2Away);
         }
         
@@ -466,7 +474,7 @@ namespace Ultima5Redux.Maps
         {
             if (xy.X < 0 || xy.Y < 0) return false;
 
-            bool bIsAvatarTile = CurrentPosition == xy;
+            bool bIsAvatarTile = CurrentPosition.XY == xy;
             bool bIsNpcTile = IsNPCTile(xy);
             TileReference tileReference = GetTileReference(xy);
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
@@ -486,17 +494,17 @@ namespace Ultima5Redux.Maps
         /// <param name="nMaxDistance">max distance they can travel from that position</param>
         /// <param name="bNoStaircases"></param>
         /// <returns></returns>
-        private List<NonPlayerCharacterMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition, Point2D scheduledPosition, 
+        private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition, Point2D scheduledPosition, 
             int nMaxDistance, bool bNoStaircases)
         {
-            List<NonPlayerCharacterMovement.MovementCommandDirection> directionList = new List<NonPlayerCharacterMovement.MovementCommandDirection>();
+            List<MapUnitMovement.MovementCommandDirection> directionList = new List<MapUnitMovement.MovementCommandDirection>();
 
             // gets an adjusted position OR returns null if the position is not valid
 
-            foreach (NonPlayerCharacterMovement.MovementCommandDirection direction in Enum.GetValues(typeof(NonPlayerCharacterMovement.MovementCommandDirection)))
+            foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(typeof(MapUnitMovement.MovementCommandDirection)))
             {
                 // we may be asked to avoid including .None in the list
-                if (direction == NonPlayerCharacterMovement.MovementCommandDirection.None) continue;
+                if (direction == MapUnitMovement.MovementCommandDirection.None) continue;
                 
                 Point2D adjustedPos = GetPositionIfUserCanMove(direction, characterPosition, bNoStaircases, scheduledPosition, nMaxDistance);
                 // if adjustedPos == null then the particular direction was not allowed for one reason or another
@@ -506,12 +514,12 @@ namespace Ultima5Redux.Maps
             return directionList;
         }
 
-        private Point2D GetPositionIfUserCanMove(NonPlayerCharacterMovement.MovementCommandDirection direction, Point2D characterPosition, bool bNoStaircases, Point2D scheduledPosition, int nMaxDistance)
+        private Point2D GetPositionIfUserCanMove(MapUnitMovement.MovementCommandDirection direction, Point2D characterPosition, bool bNoStaircases, Point2D scheduledPosition, int nMaxDistance)
         {
-            Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(characterPosition, direction);
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
 
             // always include none
-            if (direction == NonPlayerCharacterMovement.MovementCommandDirection.None) return adjustedPosition;
+            if (direction == MapUnitMovement.MovementCommandDirection.None) return adjustedPosition;
 
             if (adjustedPosition.X < 0 || adjustedPosition.X >= CurrentMap.TheMap.Length || adjustedPosition.Y < 0 || adjustedPosition.Y >= CurrentMap.TheMap[0].Length) return null;
 
@@ -533,23 +541,23 @@ namespace Ultima5Redux.Maps
         /// <param name="direction">OUT - the direction that the character should travel</param>
         /// <returns></returns>
         private Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition,
-            int nMaxDistance, out NonPlayerCharacterMovement.MovementCommandDirection direction)
+            int nMaxDistance, out MapUnitMovement.MovementCommandDirection direction)
         {
             Random ran = new Random();
-            List<NonPlayerCharacterMovement.MovementCommandDirection> possibleDirections =
+            List<MapUnitMovement.MovementCommandDirection> possibleDirections =
                 GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance, true);
 
             // if no directions are returned then we tell them not to move
             if (possibleDirections.Count == 0)
             {
-                direction = NonPlayerCharacterMovement.MovementCommandDirection.None;
+                direction = MapUnitMovement.MovementCommandDirection.None;
                 
                 return characterPosition.Copy();
             }
 
             direction = possibleDirections[ran.Next() % possibleDirections.Count];
 
-            Point2D adjustedPosition = NonPlayerCharacterMovement.GetAdjustedPos(characterPosition, direction);
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
 
             return adjustedPosition;
         }
@@ -573,17 +581,17 @@ namespace Ultima5Redux.Maps
             CharacterPosition scheduledPosition = mapUnit.NPCRef.Schedule.GetCharacterDefaultPositionByTime(_timeOfDay);
 
             // i could get the size dynamically, but that's a waste of CPU cycles
-            Point2D adjustedPosition = GetWanderCharacterPosition(characterPosition.XY, scheduledPosition.XY, nMaxDistance, out NonPlayerCharacterMovement.MovementCommandDirection direction);
+            Point2D adjustedPosition = GetWanderCharacterPosition(characterPosition.XY, scheduledPosition.XY, nMaxDistance, out MapUnitMovement.MovementCommandDirection direction);
 
             // check to see if the random direction is within the correct distance
-            if (direction != NonPlayerCharacterMovement.MovementCommandDirection.None && !scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
+            if (direction != MapUnitMovement.MovementCommandDirection.None && !scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
             {
                 throw new Ultima5ReduxException("GetWanderCharacterPosition has told us to go outside of our expected maximum area");
             }
             // can we even travel onto the tile?
             if (!IsTileFreeToTravel(adjustedPosition, true))
             {
-                if (direction != NonPlayerCharacterMovement.MovementCommandDirection.None)
+                if (direction != MapUnitMovement.MovementCommandDirection.None)
                 {
                     throw new Ultima5ReduxException("Was sent to a tile, but it isn't in free in WanderWithinN");
                 }
@@ -592,7 +600,7 @@ namespace Ultima5Redux.Maps
             }
 
             // add the single instruction to the queue
-            mapUnit.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(direction, 1));
+            mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(direction, 1));
         }
 
         /// <summary>
@@ -921,13 +929,13 @@ namespace Ultima5Redux.Maps
         /// <returns>returns true if a path was found, false if it wasn't</returns>
         private bool BuildPath(MapUnit mapUnit, Point2D targetXy)
         {
-            NonPlayerCharacterMovement.MovementCommandDirection getCommandDirection(Point2D fromXy, Point2D toXy)
+            MapUnitMovement.MovementCommandDirection getCommandDirection(Point2D fromXy, Point2D toXy)
             {
-                if (fromXy == toXy) return NonPlayerCharacterMovement.MovementCommandDirection.None;
-                if (fromXy.X < toXy.X) return NonPlayerCharacterMovement.MovementCommandDirection.East;
-                if (fromXy.Y < toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.South;
-                if (fromXy.X > toXy.X) return NonPlayerCharacterMovement.MovementCommandDirection.West;
-                if (fromXy.Y > toXy.Y) return NonPlayerCharacterMovement.MovementCommandDirection.North;
+                if (fromXy == toXy) return MapUnitMovement.MovementCommandDirection.None;
+                if (fromXy.X < toXy.X) return MapUnitMovement.MovementCommandDirection.East;
+                if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
+                if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
+                if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
                 throw new Ultima5ReduxException("For some reason we couldn't determine the path of the command direction in getCommandDirection");
             }
 
@@ -946,8 +954,8 @@ namespace Ultima5Redux.Maps
             Stack<Node> nodeStack = CurrentMap.AStar.FindPath(new System.Numerics.Vector2(mapUnit.CurrentCharacterPosition.XY.X, mapUnit.CurrentCharacterPosition.XY.Y),
                 new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
-            NonPlayerCharacterMovement.MovementCommandDirection prevDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
-            NonPlayerCharacterMovement.MovementCommandDirection newDirection = NonPlayerCharacterMovement.MovementCommandDirection.None;
+            MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
+            MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;
             Point2D prevPosition = mapUnit.CurrentCharacterPosition.XY;
 
             // temporary while I figure out why this happens
@@ -962,20 +970,20 @@ namespace Ultima5Redux.Maps
 
                 // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction
                 // that has N iterations (ie. move East 5 times)
-                if (prevDirection == newDirection || prevDirection == NonPlayerCharacterMovement.MovementCommandDirection.None)
+                if (prevDirection == newDirection || prevDirection == MapUnitMovement.MovementCommandDirection.None)
                 {
                     nInARow++;
                 }
                 else
                 {
                     // if the direction has changed then we add the previous direction and reset the concurrent counter
-                    mapUnit.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(prevDirection, nInARow));
+                    mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(prevDirection, nInARow));
                     nInARow = 1;
                 }
                 prevDirection = newDirection;
                 prevPosition = newPosition;
             }
-            if (nInARow > 0) { mapUnit.Movement.AddNewMovementInstruction(new NonPlayerCharacterMovement.MovementCommand(newDirection, nInARow)); }
+            if (nInARow > 0) { mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow)); }
             return true;
         }
 
@@ -1028,7 +1036,7 @@ namespace Ultima5Redux.Maps
             if (IsLargeMap) return false;
 
             // go through each of the NPCs on the map
-            foreach (MapUnit mapChar in TheMapUnits.Characters.Where(mapChar => mapChar.IsActive))
+            foreach (MapUnit mapChar in TheMapUnits.CurrentMapUnits.Where(mapChar => mapChar.IsActive))
             {
                 // if there is no next available movement then we gotta recalculate and see if they should move
                 if (!mapChar.Movement.IsNextCommandAvailable())
@@ -1041,8 +1049,8 @@ namespace Ultima5Redux.Maps
                 
                 // it's possible that CalculateNextPath came up empty for a variety of reasons, and that's okay
                 // peek and see what we have before we pop it off
-                NonPlayerCharacterMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommandDirection(true);
-                Point2D adjustedPos = NonPlayerCharacterMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
+                MapUnitMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommandDirection(true);
+                Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
 
                 // need to evaluate if I can even move to the next tile before actually popping out of the queue
                 bool bIsNpcOnSpace = IsNPCTile(adjustedPos);
@@ -1110,7 +1118,7 @@ namespace Ultima5Redux.Maps
         public void UseStairs(Point2D xy, bool bForceDown = false)
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
-            CurrentPosition = xy.Copy();
+            CurrentPosition.XY = xy.Copy();
             LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, 
                 CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)));
         }
@@ -1183,7 +1191,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsStairsGoingDown()
         {
-            return IsStairsGoingDown(CurrentPosition);
+            return IsStairsGoingDown(CurrentPosition.XY);
         }
 
         /// <summary>
@@ -1192,7 +1200,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsStairGoingUp()
         {
-            return IsStairGoingUp(CurrentPosition);
+            return IsStairGoingUp(CurrentPosition.XY);
         }
 
         /// <summary>
