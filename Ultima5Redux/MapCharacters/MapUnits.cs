@@ -9,16 +9,16 @@ using Ultima5Redux.SeaFaringVessel;
 
 namespace Ultima5Redux.MapCharacters
 {
-    public class MapCharacters
+    public class MapUnits
     {
         private const int MAX_MAP_CHARACTERS = 0x20;
 
-        public readonly List<MapCharacter> Characters = new List<MapCharacter>(MAX_MAP_CHARACTERS);
+        public readonly List<MapUnit> Characters = new List<MapUnit>(MAX_MAP_CHARACTERS);
 
         // load the MapAnimationStates once from disk, don't worry about again until you are saving to disk
-        // load the MapCharacterStates once from disk, don't worry abut again until you are saving to disk
+        // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
 
-        private readonly MapCharacterStates _charStates;
+        private readonly SmallMapCharacterStates _charStates;
         private LargeMap.Maps _currentMapType;
         /// <summary>
         /// static references to all NPCs in the world
@@ -28,19 +28,19 @@ namespace Ultima5Redux.MapCharacters
         private readonly TileReferences _tileRefs;
         private readonly TimeOfDay _timeOfDay;
         private readonly PlayerCharacterRecords _playerCharacterRecords;
-        private readonly MapCharacterAnimationStates _smallMapAnimationStates;
-        private readonly MapCharacterAnimationStates _overworldAnimationState;
-        private readonly MapCharacterAnimationStates _underworldAnimationState;
+        private readonly MapUnitStates _smallMapAnimationStates;
+        private readonly MapUnitStates _overworldAnimationState;
+        private readonly MapUnitStates _underworldAnimationState;
 
         private readonly DataChunk _activeDataChunk;
         private readonly DataChunk _overworldDataChunk;
         private readonly DataChunk _underworldDataChunk;
         
         //public List<NonPlayerCharacterReference> NonPlayerCharacterReferencesList { get; private set; }
-        private MapCharacterAnimationStates _currentMapCharacterAnimationStates;
+        private MapUnitStates _currentMapUnitStates;
 
 
-        private MapCharacterAnimationStates CurrentAnimationState
+        private MapUnitStates CurrentAnimationState
         {
             get
             {
@@ -75,7 +75,7 @@ namespace Ultima5Redux.MapCharacters
         /// <param name="initialMap">The initial map you are beginning on. It's important to know because there is only
         /// one CharacterState loaded in the save file at load time</param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
-        public MapCharacters(TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, 
+        public MapUnits(TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, 
             DataChunk activeAnimationStatesDataChunk, DataChunk overworldAnimationStatesDataChunk, 
             DataChunk underworldAnimationStatesDataChunk, DataChunk charStatesDataChunk,
             DataChunk nonPlayerCharacterMovementLists, DataChunk nonPlayerCharacterMovementOffsets, 
@@ -101,14 +101,14 @@ namespace Ultima5Redux.MapCharacters
             if (initialMap == LargeMap.Maps.Small)
             {
                 // small, overworld and underworld always have saved Animation states so we load them in at the beginning
-                _smallMapAnimationStates = new MapCharacterAnimationStates(_activeDataChunk, tileRefs);
-                _smallMapAnimationStates.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.SAVED_GAM, true);
+                _smallMapAnimationStates = new MapUnitStates(_activeDataChunk, tileRefs);
+                _smallMapAnimationStates.Load(MapUnitStates.MapCharacterAnimationStatesFiles.SAVED_GAM, true);
 
                 // we always load the over and underworld from disk immediately, no need to reload as we will track it in memory 
                 // going forward
-                _overworldAnimationState = new MapCharacterAnimationStates(_overworldDataChunk, tileRefs);
+                _overworldAnimationState = new MapUnitStates(_overworldDataChunk, tileRefs);
 
-                _underworldAnimationState = new MapCharacterAnimationStates(_underworldDataChunk, tileRefs);
+                _underworldAnimationState = new MapUnitStates(_underworldDataChunk, tileRefs);
             }
             else 
             {
@@ -118,20 +118,20 @@ namespace Ultima5Redux.MapCharacters
 
                 if (initialMap == LargeMap.Maps.Overworld)
                 {
-                    _overworldAnimationState = new MapCharacterAnimationStates(_activeDataChunk, tileRefs);
-                    _underworldAnimationState = new MapCharacterAnimationStates(_underworldDataChunk, tileRefs);
+                    _overworldAnimationState = new MapUnitStates(_activeDataChunk, tileRefs);
+                    _underworldAnimationState = new MapUnitStates(_underworldDataChunk, tileRefs);
                 }
                 else
                 {
-                    _underworldAnimationState = new MapCharacterAnimationStates(_activeDataChunk, tileRefs);
-                    _overworldAnimationState = new MapCharacterAnimationStates(_overworldDataChunk, tileRefs);
+                    _underworldAnimationState = new MapUnitStates(_activeDataChunk, tileRefs);
+                    _overworldAnimationState = new MapUnitStates(_overworldDataChunk, tileRefs);
                 }
             }
-            _overworldAnimationState.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.BRIT_OOL, true);
-            _underworldAnimationState.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.UNDER_OOL, true );
+            _overworldAnimationState.Load(MapUnitStates.MapCharacterAnimationStatesFiles.BRIT_OOL, true);
+            _underworldAnimationState.Load(MapUnitStates.MapCharacterAnimationStatesFiles.UNDER_OOL, true );
 
             // map character states pertain to whichever map was loaded from disk
-            _charStates = new MapCharacterStates(charStatesDataChunk, tileRefs);
+            _charStates = new SmallMapCharacterStates(charStatesDataChunk, tileRefs);
             
             // movements pertain to whichever map was loaded from disk
             Movements = new NonPlayerCharacterMovements(nonPlayerCharacterMovementLists, nonPlayerCharacterMovementOffsets);
@@ -165,7 +165,7 @@ namespace Ultima5Redux.MapCharacters
         {
             _currentMapType = mapType;
 
-            // I may need make an additional save of state before wiping these MapCharacters out
+            // I may need make an additional save of state before wiping these MapUnits out
             
             switch (mapType)
             {
@@ -181,7 +181,7 @@ namespace Ultima5Redux.MapCharacters
         }
 
         /// <summary>
-        /// Sets the current map that the MapCharacters represents
+        /// Sets the current map that the MapUnits represents
         /// </summary>
         /// <param name="location"></param>
         /// <param name="mapType">Is it a small map, overworld or underworld</param>
@@ -191,9 +191,9 @@ namespace Ultima5Redux.MapCharacters
             SetCurrentMapType(location, mapType, false);
         }
 
-        public MapCharacter GetMapCharacterByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
+        public MapUnit GetMapCharacterByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
         {
-            foreach (MapCharacter character in Characters)
+            foreach (MapUnit character in Characters)
             {
                 // sometimes characters are null because they don't exist - and that is OK
                 if (!character.IsActive) continue;
@@ -225,10 +225,10 @@ namespace Ultima5Redux.MapCharacters
             switch (map)
             {
                 case LargeMap.Maps.Overworld:
-                    _currentMapCharacterAnimationStates = _overworldAnimationState;
+                    _currentMapUnitStates = _overworldAnimationState;
                     break;
                 case LargeMap.Maps.Underworld:
-                    _currentMapCharacterAnimationStates = _underworldAnimationState;
+                    _currentMapUnitStates = _underworldAnimationState;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
@@ -240,7 +240,7 @@ namespace Ultima5Redux.MapCharacters
                 // the party is always at zero
                 if (i == 0)
                 {
-                    MapCharacter theAvatar = new MapCharacter();
+                    MapUnit theAvatar = new MapUnit();
                     Characters.Add(theAvatar);
                     continue;
                 }
@@ -252,15 +252,15 @@ namespace Ultima5Redux.MapCharacters
                 // the monsters will recalculate every turn based on where the Avatar is 
                 charMovement.ClearMovements();
 
-                // we have retrieved the _currentMapCharacterAnimationStates based on the map type,
+                // we have retrieved the _currentMapUnitStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
-                MapCharacterAnimationState charAnimState = _currentMapCharacterAnimationStates.GetCharacterState(i);
+                MapCharacterAnimationState charAnimState = _currentMapUnitStates.GetCharacterState(i);
                 
-                // A MapCharacterState is not generated because LargeMaps do not track any details within the 
-                // MapCharacterState. Instead there will just be left overs of last execution.
+                // A SmallMapCharacterState is not generated because LargeMaps do not track any details within the 
+                // SmallMapCharacterState. Instead there will just be left overs of last execution.
                 
                 // todo: will need to give it a position to start at, probably based on animation state
-                // MapCharacterState mapCharState;
+                // SmallMapCharacterState mapCharState;
                 
                 // if it is the initial load then the loaded _charStates is the correct source of state
                 // otherwise we need to a create a brand new character state
@@ -271,11 +271,11 @@ namespace Ultima5Redux.MapCharacters
                 // else
                 // {
                 //     //if (charAnimState.)
-                //     mapCharState = new MapCharacterState(_tileRefs, null, i, _timeOfDay);
+                //     mapCharState = new SmallMapCharacterState(_tileRefs, null, i, _timeOfDay);
                 // }
 
                 // add the new character to our list of characters currently on the map
-                Characters.Add(new MapCharacter(null, charAnimState, null, charMovement,
+                Characters.Add(new MapUnit(null, charAnimState, null, charMovement,
                     _timeOfDay, _playerCharacterRecords, bInitialLoad));
             }
         }
@@ -295,7 +295,7 @@ namespace Ultima5Redux.MapCharacters
                 Debug.WriteLine("Loading character positions from disk...");
                 // we are loading the small animation from disk
                 // this is only done if you save the game and reload within a towne
-                _smallMapAnimationStates.Load(MapCharacterAnimationStates.MapCharacterAnimationStatesFiles.SAVED_GAM, true);
+                _smallMapAnimationStates.Load(MapUnitStates.MapCharacterAnimationStatesFiles.SAVED_GAM, true);
             }
             else
             {
@@ -327,27 +327,27 @@ namespace Ultima5Redux.MapCharacters
                 // then it will just load from disk, otherwise we need to create a stub
                 if (i == 0 && !bInitialLoad)
                 {
-                    MapCharacter theAvatar = MapCharacter.CreateAvatar(_tileRefs, location);
+                    MapUnit theAvatar = MapUnit.CreateAvatar(_tileRefs, location);
                     Characters.Add(theAvatar);
                     continue;
                 }
                 
                 // get the specific NPC reference 
                 NonPlayerCharacterReference npcRef = npcCurrentMapRefs[i];
-                // the mapCharacterState contains SmallMap NPC information (not applicable for LargeMap)
-                MapCharacterState mapCharacterState;
+                // the smallMapCharacterState contains SmallMap NPC information (not applicable for LargeMap)
+                SmallMapCharacterState smallMapCharacterState;
                 MapCharacterAnimationState charAnimState = null;
                 NonPlayerCharacterMovement charMovement = Movements.GetMovement(i);
 
                 if (bInitialLoad)
                 {
                     // character states are only loaded when forced from disk and only on small maps
-                    mapCharacterState = _charStates.GetCharacterState(i);
+                    smallMapCharacterState = _charStates.GetCharacterState(i);
 
                     if (CurrentAnimationState.HasAnyAnimationStates())
                     {
                         charAnimState =
-                            CurrentAnimationState.GetCharacterState(mapCharacterState.CharacterAnimationStateIndex);
+                            CurrentAnimationState.GetCharacterState(smallMapCharacterState.CharacterAnimationStateIndex);
                     }
                 }
                 else
@@ -355,13 +355,13 @@ namespace Ultima5Redux.MapCharacters
                     // we keep the object because we may be required to save this to disk - but since we are
                     // leaving the map there is no need to save their movements
                     charMovement.ClearMovements();
-                    // set a default MapCharacterState based on the given NPC
-                    mapCharacterState = new MapCharacterState(_tileRefs, npcRef, i, _timeOfDay);
+                    // set a default SmallMapCharacterState based on the given NPC
+                    smallMapCharacterState = new SmallMapCharacterState(_tileRefs, npcRef, i, _timeOfDay);
                     // initialize a default MapCharacterAnimationState 
                     charAnimState = new MapCharacterAnimationState(_tileRefs, npcRef);
                 }
 
-                Characters.Add(new MapCharacter(npcRef, charAnimState, mapCharacterState, charMovement, 
+                Characters.Add(new MapUnit(npcRef, charAnimState, smallMapCharacterState, charMovement, 
                     _timeOfDay, _playerCharacterRecords, bInitialLoad));
             }
         }
@@ -374,21 +374,21 @@ namespace Ultima5Redux.MapCharacters
         {
             List<SeaFaringVessel.SeaFaringVessel> vessels = new List<SeaFaringVessel.SeaFaringVessel>();
 
-            foreach (MapCharacter character in Characters)
+            foreach (MapUnit character in Characters)
             {
                 if (!character.AnimationState.Tile1Ref.IsBoardable) continue;
                 
                 if (_tileRefs.IsFrigate(character.AnimationState.Tile1Ref.Index))
                 {
-                    Frigate frigate = new Frigate(character.CharacterState.TheCharacterPosition, 
-                        SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.AnimationState.Tile1Ref.Index));
-                    vessels.Add(frigate);
+                    // Frigate frigate = new Frigate(character.CharacterState.TheCharacterPosition, 
+                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.AnimationState.Tile1Ref.Index));
+                    // vessels.Add(frigate);
                 }
                 else if (_tileRefs.IsSkiff(character.AnimationState.Tile1Ref.Index))
                 {
-                    Skiff skiff = new Skiff(character.CharacterState.TheCharacterPosition, 
-                        SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.AnimationState.Tile1Ref.Index));
-                    vessels.Add(skiff);
+                    // Skiff skiff = new Skiff(character.CharacterState.TheCharacterPosition, 
+                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.AnimationState.Tile1Ref.Index));
+                    // vessels.Add(skiff);
                 }
             }
 

@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapCharacters
     /// Based on original U5 data structure
     /// tracks the position and state of the map character
     /// </summary>
-    public class MapCharacterState
+    public class SmallMapCharacterState
     {
         #region Public Properties
         public CharacterPosition TheCharacterPosition { get; } = new CharacterPosition();
@@ -28,7 +28,7 @@ namespace Ultima5Redux.MapCharacters
         /// <param name="npcRef"></param>
         /// <param name="nCharacterAnimationStateIndex"></param>
         /// <param name="timeOfDay"></param>
-        public MapCharacterState(TileReferences tileReferences, NonPlayerCharacterReference npcRef, int nCharacterAnimationStateIndex, TimeOfDay timeOfDay)
+        public SmallMapCharacterState(TileReferences tileReferences, NonPlayerCharacterReference npcRef, int nCharacterAnimationStateIndex, TimeOfDay timeOfDay)
         {
             NPCIndex = npcRef.DialogIndex;
             TileRef = tileReferences.GetTileReference(npcRef.NPCKeySprite);
@@ -39,9 +39,9 @@ namespace Ultima5Redux.MapCharacters
         }
 
         /// <summary>
-        /// Create a blank MapCharacterState indicating no character
+        /// Create a blank SmallMapCharacterState indicating no character
         /// </summary>
-        public MapCharacterState()
+        public SmallMapCharacterState()
         {
             Active = false;
         }
@@ -52,7 +52,7 @@ namespace Ultima5Redux.MapCharacters
         /// <param name="tileReferences"></param>
         /// <param name="stateUInts"></param>
         /// <param name="nNPCIndex"></param>
-        public MapCharacterState(TileReferences tileReferences, UInt16[] stateUInts, int nNPCIndex)
+        public SmallMapCharacterState(TileReferences tileReferences, UInt16[] stateUInts, int nNPCIndex)
         {
             Debug.Assert(stateUInts.Length == 0x8);
             NPCIndex = nNPCIndex;

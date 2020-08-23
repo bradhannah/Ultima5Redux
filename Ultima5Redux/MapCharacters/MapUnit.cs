@@ -6,7 +6,7 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapCharacters
 {
-    public class MapCharacter
+    public class MapUnit
     {
         #region Private and Internal Properties 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// The location state of the character
         /// </summary>
-        internal MapCharacterState CharacterState { get; }
+        internal SmallMapCharacterState CharacterState { get; }
 
         private readonly CharacterPosition _characterPosition = new CharacterPosition();
         
@@ -114,7 +114,7 @@ namespace Ultima5Redux.MapCharacters
         /// <summary>
         /// empty constructor if there is nothing in the map character slot
         /// </summary>
-        public MapCharacter()
+        public MapUnit()
         {
             NPCRef = null;
             AnimationState = null;
@@ -127,17 +127,17 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         /// <param name="npcRef"></param>
         /// <param name="mapCharacterAnimationState"></param>
-        /// <param name="mapCharacterState"></param>
+        /// <param name="smallMapCharacterState"></param>
         /// <param name="nonPlayerCharacterMovement"></param>
         /// <param name="timeOfDay"></param>
         /// <param name="playerCharacterRecords"></param>
         /// <param name="bLoadedFromDisk"></param>
-        public MapCharacter(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, MapCharacterState mapCharacterState,
+        public MapUnit(NonPlayerCharacterReference npcRef, MapCharacterAnimationState mapCharacterAnimationState, SmallMapCharacterState smallMapCharacterState,
             NonPlayerCharacterMovement nonPlayerCharacterMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk)
         {
             NPCRef = npcRef;
             AnimationState = mapCharacterAnimationState;
-            CharacterState = mapCharacterState;
+            CharacterState = smallMapCharacterState;
             Movement = nonPlayerCharacterMovement;
 
             PlayerCharacterRecord record = null;
@@ -187,16 +187,16 @@ namespace Ultima5Redux.MapCharacters
         }
 
         /// <summary>
-        /// Creates an Avatar MapCharacter at the default small map position
+        /// Creates an Avatar MapUnit at the default small map position
         /// Note: this should never need to be called from a LargeMap since the values persist on disk
         /// </summary>
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static MapCharacter CreateAvatar(TileReferences tileReferences, 
+        public static MapUnit CreateAvatar(TileReferences tileReferences, 
             SmallMapReferences.SingleMapReference.Location location)
         {
-            MapCharacter theAvatar = new MapCharacter
+            MapUnit theAvatar = new MapUnit
             {
                 AnimationState = MapCharacterAnimationState.CreateAvatar(tileReferences,
                     SmallMapReferences.GetStartingXYZByLocation(location))

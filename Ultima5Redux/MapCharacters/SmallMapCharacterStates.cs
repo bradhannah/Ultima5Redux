@@ -7,23 +7,23 @@ namespace Ultima5Redux.MapCharacters
 {
     /// <summary>
     /// Describes all character states on a single map, be it overworld, underworld or a small map
-    /// only a single collection of MapCharacterStates can be saved at a time, so when switching between
+    /// only a single collection of SmallMapCharacterStates can be saved at a time, so when switching between
     /// small and large maps, the state will be lost
     /// </summary>
-    public class MapCharacterStates
+    public class SmallMapCharacterStates
     {
         private const int MAX_CHARACTER_STATES = 0x20;
 
-        private readonly List<MapCharacterState> _characterStates = new List<MapCharacterState>(MAX_CHARACTER_STATES);
+        private readonly List<SmallMapCharacterState> _characterStates = new List<SmallMapCharacterState>(MAX_CHARACTER_STATES);
 
-        public MapCharacterState GetCharacterState(int nIndex)
+        public SmallMapCharacterState GetCharacterState(int nIndex)
         {
             return _characterStates[nIndex];
         }
 
-        public MapCharacterState GetCharacterStateByPosition(Point2D xy, int nFloor)
+        public SmallMapCharacterState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {
-            foreach (MapCharacterState characterState in _characterStates)
+            foreach (SmallMapCharacterState characterState in _characterStates)
             {
                 if (characterState.TheCharacterPosition.X == xy.X && characterState.TheCharacterPosition.Y == xy.Y && characterState.TheCharacterPosition.Floor == nFloor)
                     return characterState;
@@ -31,7 +31,7 @@ namespace Ultima5Redux.MapCharacters
             return null;
         }
 
-        public MapCharacterStates(DataChunk charStatesDataChunk, TileReferences tileReferences)
+        public SmallMapCharacterStates(DataChunk charStatesDataChunk, TileReferences tileReferences)
         {
             DataChunk dataChunk = charStatesDataChunk;
 
@@ -39,14 +39,14 @@ namespace Ultima5Redux.MapCharacters
 
             for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {
-                _characterStates.Add(new MapCharacterState(tileReferences, 
+                _characterStates.Add(new SmallMapCharacterState(tileReferences, 
                     characterStateBytes.GetRange(nIndex * MapCharacterAnimationState.NBYTES, MapCharacterAnimationState.NBYTES).ToArray(), nIndex));
             }
         }
 
         public void EmptyState(int nIndex)
         {
-            _characterStates[nIndex] = new MapCharacterState();
+            _characterStates[nIndex] = new SmallMapCharacterState();
         }
 
 

@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapCharacters
     /// Map character animation states
     /// This is a generic application of it. The raw data must be passed in during construction.
     /// </summary>
-    public class MapCharacterAnimationStates
+    public class MapUnitStates
     {
         public enum MapCharacterAnimationStatesFiles { SAVED_GAM, BRIT_OOL, UNDER_OOL };
 
@@ -64,7 +64,7 @@ namespace Ultima5Redux.MapCharacters
             }
         }
 
-        public MapCharacterAnimationStates(DataChunk animationStatesDataChunk, TileReferences tileReferences)
+        public MapUnitStates(DataChunk animationStatesDataChunk, TileReferences tileReferences)
         {
             _tileReferences = tileReferences;
             _animationStatesDataChunk = animationStatesDataChunk;

@@ -101,6 +101,10 @@
     <Compile Include="MapCharacters\MovementCommand.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovements.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterSchedule.cs" />
+    <Compile Include="MapCharacters\SeaFaringVessel\Frigate.cs" />
+    <Compile Include="MapCharacters\SeaFaringVessel\SeaFaringVessel.cs" />
+    <Compile Include="MapCharacters\SeaFaringVessel\SeaFaringVesselReference.cs" />
+    <Compile Include="MapCharacters\SeaFaringVessel\Skiff.cs" />
     <Compile Include="MapCharacters\ShoppeKeepers\BarKeeper.cs" />
     <Compile Include="MapCharacters\ShoppeKeepers\BlackSmith.cs" />
     <Compile Include="MapCharacters\ShoppeKeepers\GuildMaster.cs" />
@@ -139,16 +143,16 @@
     <Compile Include="PlayerCharacters\Moonstones.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecord.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecords.cs" />
-    <Compile Include="MapCharacters\MapCharacterAnimationState.cs" />
-    <Compile Include="MapCharacters\MapCharacterAnimationStates.cs" />
-    <Compile Include="MapCharacters\MapCharacterState.cs" />
-    <Compile Include="MapCharacters\MapCharacterStates.cs" />
+    <Compile Include="MapCharacters\MapUnitState.cs" />
+    <Compile Include="MapCharacters\MapUnitStates.cs" />
+    <Compile Include="MapCharacters\SmallMapCharacterState.cs" />
+    <Compile Include="MapCharacters\SmallMapCharacterStates.cs" />
     <Compile Include="PlayerCharacters\Inventory.cs" />
     <Compile Include="PlayerCharacters\InventoryItem.cs" />
     <Compile Include="PlayerCharacters\InventoryItems.cs" />
     <Compile Include="Maps\LargeMapLocationReferences.cs" />
-    <Compile Include="MapCharacters\MapCharacter.cs" />
-    <Compile Include="MapCharacters\MapCharacters.cs" />
+    <Compile Include="MapCharacters\MapUnit.cs" />
+    <Compile Include="MapCharacters\MapUnits.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterMovement.cs" />
     <Compile Include="MapCharacters\NonPlayerCharacterReference.cs" />
     <Compile Include="PlayerCharacters\Potion.cs" />
@@ -195,10 +199,6 @@
     <Compile Include="Maps\LargeMap.cs" />
     <Compile Include="Maps\Map.cs" />
     <Compile Include="Maps\VirtualMap.cs" />
-    <Compile Include="Vehicles\SeaFaringVessel\Frigate.cs" />
-    <Compile Include="Vehicles\SeaFaringVessel\SeaFaringVessel.cs" />
-    <Compile Include="Vehicles\SeaFaringVessel\SeaFaringVesselReference.cs" />
-    <Compile Include="Vehicles\SeaFaringVessel\Skiff.cs" />
     <Compile Include="World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
