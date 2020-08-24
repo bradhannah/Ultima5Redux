@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapCharacters
         /// static references to all NPCs in the world
         /// </summary>
         private NonPlayerCharacterReferences NPCRefs { get; }
-        private NonPlayerCharacterMovements Movements { get; }
+        private MapUnitMovements Movements { get; }
         private readonly TileReferences _tileRefs;
         private readonly TimeOfDay _timeOfDay;
         private readonly PlayerCharacterRecords _playerCharacterRecords;
@@ -39,6 +39,9 @@ namespace Ultima5Redux.MapCharacters
         //public List<NonPlayerCharacterReference> NonPlayerCharacterReferencesList { get; private set; }
         private MapUnitStates _currentMapUnitStates;
 
+        /// <summary>
+        /// The single source of truth for the Avatar's current position within the current map
+        /// </summary>
         internal CharacterPosition CurrentAvatarPosition
         {
             get => CurrentMapUnits[0].CurrentCharacterPosition;
@@ -139,7 +142,7 @@ namespace Ultima5Redux.MapCharacters
             _charStates = new SmallMapCharacterStates(charStatesDataChunk, tileRefs);
             
             // movements pertain to whichever map was loaded from disk
-            Movements = new NonPlayerCharacterMovements(nonPlayerCharacterMovementLists, nonPlayerCharacterMovementOffsets);
+            Movements = new MapUnitMovements(nonPlayerCharacterMovementLists, nonPlayerCharacterMovementOffsets);
             
             NPCRefs = npcRefs;
 

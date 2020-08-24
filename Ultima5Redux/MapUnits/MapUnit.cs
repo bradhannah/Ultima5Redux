@@ -33,12 +33,12 @@ namespace Ultima5Redux.MapCharacters
         internal CharacterPosition CurrentCharacterPosition
         {
             get => _characterPosition;
-            //return new CharacterPosition(AnimationState.X, AnimationState.Y, AnimationState.Floor);
             set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 // this is a bit redundant but we have a backing field and also store the XY positions
-                // in the AnimationState and CharacterState
+                // in the AnimationState and CharacterState, but we have to do this because the .XY
+                // of the CharacterPosition is often edited directly
                 _characterPosition.X = value.X;
                 _characterPosition.Y = value.Y;
                 _characterPosition.Floor = value.Floor;

@@ -6,14 +6,14 @@ namespace Ultima5Redux.MapCharacters
     /// <summary>
     /// Stores all movements of current NPC/monsters on current map
     /// </summary>
-    public class NonPlayerCharacterMovements
+    public class MapUnitMovements
     {
         private const int MAX_PLAYERS = 0x020;
 
         /// <summary>
         /// All available movement lists
         /// </summary>
-        private List<MapUnitMovement> _movementList = new List<MapUnitMovement>(MAX_PLAYERS);
+        private readonly List<MapUnitMovement> _movementList = new List<MapUnitMovement>(MAX_PLAYERS);
         
         /// <summary>
         /// DataChunk of all loaded instructions (only needed during save and load)
@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapCharacters
         /// </summary>
         private DataChunk _movementOffsetDataChunk;
 
-        public NonPlayerCharacterMovements(DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
+        public MapUnitMovements(DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
         {
             this._movementInstructionDataChunk = movementInstructionDataChunk;
             this._movementOffsetDataChunk = movementOffsetDataChunk;
