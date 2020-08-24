@@ -16,10 +16,11 @@ namespace Ultima5Redux.MapUnits
         // {
         // }
 
-        public Avatar(TileReferences tileReferences, CharacterPosition avatarPosition, SmallMapReferences.SingleMapReference.Location location) : base()
+        public Avatar(TileReferences tileReferences, MapUnitPosition avatarPosition, 
+            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement) : base()
         {
-            TheMapUnitState = MapUnitState.CreateAvatar(tileReferences,
-                SmallMapReferences.GetStartingXYZByLocation(location));
+            TheMapUnitState = MapUnitState.CreateAvatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location));
+            Movement = movement;
         }
 
         public override bool IsActive => true;

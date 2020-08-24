@@ -13,7 +13,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessel
              return (int) (nPrice - (nPrice * 0.015 * records.AvatarRecord.Stats.Intelligence));
          }
 
-        //  public SeaFaringVessel(CharacterPosition position, VirtualMap.Direction direction)
+        //  public SeaFaringVessel(MapUnitPosition position, VirtualMap.Direction direction)
         //  {
         // //     Position = position;
         //      Direction = direction;

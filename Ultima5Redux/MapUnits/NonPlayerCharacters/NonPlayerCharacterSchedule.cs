@@ -138,9 +138,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             /// </summary>
             /// <param name="timeOfDay"></param>
             /// <returns></returns>
-            public CharacterPosition GetCharacterPreviousPositionByTime(TimeOfDay timeOfDay)
+            public MapUnitPosition GetCharacterPreviousPositionByTime(TimeOfDay timeOfDay)
             {
-                CharacterPosition characterPosition = new CharacterPosition();
+                MapUnitPosition mapUnitPosition = new MapUnitPosition();
                 int nIndex = GetRawScheduleIndex(timeOfDay);
 
                 //return nOrigIndex == 3 ? 1 : nOrigIndex;
@@ -156,10 +156,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 else if (nIndex == 2) nIndex = 1;
                 else if (nIndex == 3) nIndex = 2;
 
-                characterPosition.Floor = GetFloor(nIndex);
-                characterPosition.XY = GetXY(nIndex);
+                mapUnitPosition.Floor = GetFloor(nIndex);
+                mapUnitPosition.XY = GetXY(nIndex);
 
-                return characterPosition;
+                return mapUnitPosition;
             }
 
             /// <summary>
@@ -167,15 +167,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             /// </summary>
             /// <param name="timeOfDay"></param>
             /// <returns></returns>
-            public CharacterPosition GetCharacterDefaultPositionByTime(TimeOfDay timeOfDay)
+            public MapUnitPosition GetCharacterDefaultPositionByTime(TimeOfDay timeOfDay)
             {
-                CharacterPosition characterPosition = new CharacterPosition();
+                MapUnitPosition mapUnitPosition = new MapUnitPosition();
                 int nIndex = GetScheduleIndex(timeOfDay);
 
-                characterPosition.Floor = GetFloor(nIndex);
-                characterPosition.XY = GetXY(nIndex);
+                mapUnitPosition.Floor = GetFloor(nIndex);
+                mapUnitPosition.XY = GetXY(nIndex);
 
-                return characterPosition;
+                return mapUnitPosition;
             }
 
             private Point2D GetXY(int nIndex)

@@ -96,10 +96,10 @@ namespace Ultima5Redux.Maps
         // public Point2D CurrentPosition
         // {
         //     get => CurrentPosition.XY;
-        //     set => CurrentPosition = new CharacterPosition(value.X, value.Y, CurrentPosition.Floor);
+        //     set => CurrentPosition = new MapUnitPosition(value.X, value.Y, CurrentPosition.Floor);
         // }
 
-        public CharacterPosition CurrentPosition => TheMapUnits.CurrentAvatarPosition;
+        public MapUnitPosition CurrentPosition => TheMapUnits.CurrentAvatarPosition;
 
         //set => TheMapUnits.CurrentAvatarPosition = value;
         /// <summary>
@@ -422,7 +422,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         // internal void SetCharacterPosition(Point2D xy)
         // {
-        //     CurrentPosition = new CharacterPosition(xy.X, xy.Y, CurrentPosition.Floor);
+        //     CurrentPosition = new MapUnitPosition(xy.X, xy.Y, CurrentPosition.Floor);
         // }
         
         
@@ -579,11 +579,11 @@ namespace Ultima5Redux.Maps
             int nRan = ran.Next(2);
             if (nRan == 0 && !bForceWander) return;
 
-            CharacterPosition characterPosition = mapUnit.CurrentCharacterPosition;
-            CharacterPosition scheduledPosition = mapUnit.NPCRef.Schedule.GetCharacterDefaultPositionByTime(_timeOfDay);
+            MapUnitPosition mapUnitPosition = mapUnit.MapUnitPosition;
+            MapUnitPosition scheduledPosition = mapUnit.NPCRef.Schedule.GetCharacterDefaultPositionByTime(_timeOfDay);
 
             // i could get the size dynamically, but that's a waste of CPU cycles
-            Point2D adjustedPosition = GetWanderCharacterPosition(characterPosition.XY, scheduledPosition.XY, nMaxDistance, out MapUnitMovement.MovementCommandDirection direction);
+            Point2D adjustedPosition = GetWanderCharacterPosition(mapUnitPosition.XY, scheduledPosition.XY, nMaxDistance, out MapUnitMovement.MovementCommandDirection direction);
 
             // check to see if the random direction is within the correct distance
             if (direction != MapUnitMovement.MovementCommandDirection.None && !scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
@@ -611,7 +611,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private void CalculateNextPath(MapUnit mapUnit, int nMapCurrentFloor)
         {
-            CharacterPosition npcXy = mapUnit.NPCRef.Schedule.GetCharacterDefaultPositionByTime(_timeOfDay);
+            MapUnitPosition npcXy = mapUnit.NPCRef.Schedule.GetCharacterDefaultPositionByTime(_timeOfDay);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
@@ -619,12 +619,12 @@ namespace Ultima5Redux.Maps
             // if the NPC is destined for the floor you are on, but are on a different floor, then they need to find a ladder or staircase
 
             // if the NPC is destined for a different floor then we watch to see if they are on stairs on a ladder
-            bool bDifferentFloor = npcXy.Floor != mapUnit.CurrentCharacterPosition.Floor;
+            bool bDifferentFloor = npcXy.Floor != mapUnit.MapUnitPosition.Floor;
             if (bDifferentFloor)
             {
                 // if the NPC is supposed to be on a different floor then the floor we are currently on
                 // and we they are already on that other floor - AND they are supposed be on our current floor
-                if (nMapCurrentFloor != mapUnit.CurrentCharacterPosition.Floor && nMapCurrentFloor != npcXy.Floor)
+                if (nMapCurrentFloor != mapUnit.MapUnitPosition.Floor && nMapCurrentFloor != npcXy.Floor)
                 {
                     return;
                 }
@@ -633,7 +633,7 @@ namespace Ultima5Redux.Maps
                 {
                     // we already know they aren't on this floor, so that is safe to assume
                     // so we find the closest and best ladder or stairs for them, make sure they are not occupied and send them down
-                    CharacterPosition npcPrevXy = mapUnit.NPCRef.Schedule.GetCharacterPreviousPositionByTime(_timeOfDay);
+                    MapUnitPosition npcPrevXy = mapUnit.NPCRef.Schedule.GetCharacterPreviousPositionByTime(_timeOfDay);
                     LadderOrStairDirection ladderOrStairDirection = nMapCurrentFloor > npcPrevXy.Floor ?
                         LadderOrStairDirection.Down : LadderOrStairDirection.Up;
 
@@ -657,11 +657,11 @@ namespace Ultima5Redux.Maps
                     
 
                     // sloppy, but fine for now
-                    CharacterPosition characterPosition = new CharacterPosition
+                    MapUnitPosition mapUnitPosition = new MapUnitPosition
                     {
                         XY = stairsAndLadderLocations[0], Floor = nMapCurrentFloor
                     };
-                    mapUnit.Move(characterPosition, _timeOfDay, false);
+                    mapUnit.Move(mapUnitPosition, _timeOfDay, false);
                     return;
 
                     // we now need to build a path to the best choice of ladder or stair
@@ -676,12 +676,12 @@ namespace Ultima5Redux.Maps
                 }
                 else // map character is destined for a higher or lower floor
                 {
-                    TileReference currentTileReference = GetTileReference(mapUnit.CurrentCharacterPosition.XY);
+                    TileReference currentTileReference = GetTileReference(mapUnit.MapUnitPosition.XY);
 
                     // if we are going to the next floor, then look for something that goes up, otherwise look for something that goes down
-                    LadderOrStairDirection ladderOrStairDirection = npcXy.Floor > mapUnit.CurrentCharacterPosition.Floor ?
+                    LadderOrStairDirection ladderOrStairDirection = npcXy.Floor > mapUnit.MapUnitPosition.Floor ?
                         LadderOrStairDirection.Up : LadderOrStairDirection.Down;
-                    bool bNpcShouldKlimb = CheckNPCAndKlimb(currentTileReference, ladderOrStairDirection, mapUnit.CurrentCharacterPosition.XY);
+                    bool bNpcShouldKlimb = CheckNPCAndKlimb(currentTileReference, ladderOrStairDirection, mapUnit.MapUnitPosition.XY);
                     if (bNpcShouldKlimb)
                     {
                         // teleport them and return immediately
@@ -693,7 +693,7 @@ namespace Ultima5Redux.Maps
                     // we now need to build a path to the best choice of ladder or stair
                     // the list returned will be prioritized based on vicinity
                     List<Point2D> stairsAndLadderLocations = getBestStairsAndLadderLocationBasedOnCurrentPosition(ladderOrStairDirection, 
-                        npcXy.XY, mapUnit.CurrentCharacterPosition.XY);
+                        npcXy.XY, mapUnit.MapUnitPosition.XY);
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
                         bool bPathBuilt = BuildPath(mapUnit, xy);
@@ -708,7 +708,7 @@ namespace Ultima5Redux.Maps
             NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType aiType = mapUnit.NPCRef.Schedule.GetCharacterAiTypeByTime(_timeOfDay);
 
             // is the character is in their prescribed location?
-            if (mapUnit.CurrentCharacterPosition == npcXy)
+            if (mapUnit.MapUnitPosition == npcXy)
             {
                 // test all the possibilities, special calculations for all of them
                 switch (aiType)
@@ -755,7 +755,7 @@ namespace Ultima5Redux.Maps
                         // we check to see how many moves it would take to get to their destination, if it takes
                         // more than the allotted amount then we first build a path to the destination
                         // note: because you are technically within X tiles doesn't mean you can access it
-                        int nMoves = GetTotalMovesToLocation(mapUnit.CurrentCharacterPosition.XY, npcXy.XY);
+                        int nMoves = GetTotalMovesToLocation(mapUnit.MapUnitPosition.XY, npcXy.XY);
                         // 
                         if (nMoves <= nWanderTiles)
                         {
@@ -946,19 +946,19 @@ namespace Ultima5Redux.Maps
                 return new Point2D((int)vector.X, (int)vector.Y);
             }
 
-            if (mapUnit.CurrentCharacterPosition.XY == targetXy)
+            if (mapUnit.MapUnitPosition.XY == targetXy)
             {
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name + " is already at " + targetXy.X.ToString() + "," + targetXy.Y); //+ "," + targetXy.Floor);
             }
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<Node> nodeStack = CurrentMap.AStar.FindPath(new System.Numerics.Vector2(mapUnit.CurrentCharacterPosition.XY.X, mapUnit.CurrentCharacterPosition.XY.Y),
+            Stack<Node> nodeStack = CurrentMap.AStar.FindPath(new System.Numerics.Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
                 new System.Numerics.Vector2(targetXy.X, targetXy.Y));
 
             MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
             MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;
-            Point2D prevPosition = mapUnit.CurrentCharacterPosition.XY;
+            Point2D prevPosition = mapUnit.MapUnitPosition.XY;
 
             // temporary while I figure out why this happens
             if (nodeStack == null) return false;
@@ -1035,24 +1035,24 @@ namespace Ultima5Redux.Maps
         internal bool MoveMapUnitsToNextMove()
         {
             // if not on small map - then no NPCs!
-            if (IsLargeMap) return false;
+            //if (IsLargeMap) return false;
 
             // go through each of the NPCs on the map
-            foreach (MapUnit mapChar in TheMapUnits.CurrentMapUnits.Where(mapChar => mapChar.IsActive))
+            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.Where(mapChar => mapChar.IsActive))
             {
                 // if there is no next available movement then we gotta recalculate and see if they should move
-                if (!mapChar.Movement.IsNextCommandAvailable())
+                if (!mapUnit.Movement.IsNextCommandAvailable())
                 {
-                    CalculateNextPath(mapChar, CurrentSingleMapReference.Floor);
+                    CalculateNextPath(mapUnit, CurrentSingleMapReference.Floor);
                 }
                 
                 // if this NPC has a command in the buffer, so let's execute!
-                if (!mapChar.Movement.IsNextCommandAvailable()) continue;
+                if (!mapUnit.Movement.IsNextCommandAvailable()) continue;
                 
                 // it's possible that CalculateNextPath came up empty for a variety of reasons, and that's okay
                 // peek and see what we have before we pop it off
-                MapUnitMovement.MovementCommandDirection direction = mapChar.Movement.GetNextMovementCommandDirection(true);
-                Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
+                MapUnitMovement.MovementCommandDirection direction = mapUnit.Movement.GetNextMovementCommandDirection(true);
+                Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(mapUnit.MapUnitPosition.XY, direction);
 
                 // need to evaluate if I can even move to the next tile before actually popping out of the queue
                 bool bIsNpcOnSpace = IsMapUnitOccupiedTile(adjustedPos);
@@ -1060,41 +1060,41 @@ namespace Ultima5Redux.Maps
                 if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
                 {
                     // pop the direction from the queue
-                    direction = mapChar.Movement.GetNextMovementCommandDirection(false);
-                    mapChar.Move(adjustedPos, mapChar.CurrentCharacterPosition.Floor, _timeOfDay);
-                    mapChar.MovementAttempts = 0;
+                    direction = mapUnit.Movement.GetNextMovementCommandDirection(false);
+                    mapUnit.Move(adjustedPos, mapUnit.MapUnitPosition.Floor, _timeOfDay);
+                    mapUnit.MovementAttempts = 0;
                 }
                 else
                 {
-                    mapChar.MovementAttempts++;
+                    mapUnit.MovementAttempts++;
                 }
 
-                if (mapChar.ForcedWandering > 0)
+                if (mapUnit.ForcedWandering > 0)
                 {
-                    WanderWithinN(mapChar, 32, true);
-                    mapChar.ForcedWandering--;
+                    WanderWithinN(mapUnit, 32, true);
+                    mapUnit.ForcedWandering--;
                     continue;
                 }
                     
                 // if we have tried a few times and failed then we will recalculate
                 // could have been a fixed NPC, stubborn Avatar or whatever
-                if (mapChar.MovementAttempts <= 2) continue;
+                if (mapUnit.MovementAttempts <= 2) continue;
 
                 // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
                 // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
                 // NPCs
-                Debug.WriteLine(mapChar.NPCRef.FriendlyName + " got stuck after " + mapChar.MovementAttempts + " so we are going to find a new direction for them");
+                Debug.WriteLine(mapUnit.NPCRef.FriendlyName + " got stuck after " + mapUnit.MovementAttempts + " so we are going to find a new direction for them");
                         
-                mapChar.Movement.ClearMovements();
+                mapUnit.Movement.ClearMovements();
                         
                 // we are sick of waiting and will force a wander for a random number of turns to try to let the little
                 // dummies figure it out on their own
                 Random ran = new Random();
                 int nTimes = ran.Next(0, 2) + 1;
-                WanderWithinN(mapChar, 32, true);
+                WanderWithinN(mapUnit, 32, true);
 
-                mapChar.ForcedWandering = nTimes;
-                mapChar.MovementAttempts = 0;
+                mapUnit.ForcedWandering = nTimes;
+                mapUnit.MovementAttempts = 0;
             }
 
             return true;
@@ -1329,7 +1329,7 @@ namespace Ultima5Redux.Maps
             // this method is much quicker because we only load the data once in the maps 
             if (!IsLargeMap && CurrentMap.IsXYOverride(xy))
             {
-                //Debug.WriteLine("Wanted to guess a tile but it was overriden: "+new CharacterPosition(xy.X,xy.Y,CurrentSingleMapReference.Floor));
+                //Debug.WriteLine("Wanted to guess a tile but it was overriden: "+new MapUnitPosition(xy.X,xy.Y,CurrentSingleMapReference.Floor));
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
             }
             else if (IsLargeMap && CurrentMap.IsXYOverride(xy))

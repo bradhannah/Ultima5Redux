@@ -25,7 +25,7 @@ namespace Ultima5Redux.MapUnits
         {
             foreach (SmallMapCharacterState characterState in _characterStates)
             {
-                if (characterState.TheCharacterPosition.X == xy.X && characterState.TheCharacterPosition.Y == xy.Y && characterState.TheCharacterPosition.Floor == nFloor)
+                if (characterState.TheMapUnitPosition.X == xy.X && characterState.TheMapUnitPosition.Y == xy.Y && characterState.TheMapUnitPosition.Floor == nFloor)
                     return characterState;
             }
             return null;

@@ -15,7 +15,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// All the movements for the map character
         /// </summary>
-        internal MapUnitMovement Movement { get; }
+        internal MapUnitMovement Movement { get; private protected set; }
         
         /// <summary>
         /// the state of the animations
@@ -27,7 +27,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         internal SmallMapCharacterState TheSmallMapCharacterState { get; }
 
-        private readonly CharacterPosition _characterPosition = new CharacterPosition();
+        private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
         
         /// <summary>
         /// Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
@@ -42,31 +42,30 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        
         /// <summary>
         /// The characters current position on the map
         /// </summary>
-        internal CharacterPosition CurrentCharacterPosition
+        internal MapUnitPosition MapUnitPosition
         {
-            get => _characterPosition;
+            get => _mapMapUnitPosition;
             set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 // this is a bit redundant but we have a backing field and also store the XY positions
                 // in the TheMapUnitState and TheSmallMapCharacterState, but we have to do this because the .XY
-                // of the CharacterPosition is often edited directly
-                _characterPosition.X = value.X;
-                _characterPosition.Y = value.Y;
-                _characterPosition.Floor = value.Floor;
+                // of the MapUnitPosition is often edited directly
+                _mapMapUnitPosition.X = value.X;
+                _mapMapUnitPosition.Y = value.Y;
+                _mapMapUnitPosition.Floor = value.Floor;
                 
                 TheMapUnitState.X = (byte) value.X;
                 TheMapUnitState.Y = (byte) value.Y;
                 TheMapUnitState.Floor = (byte) value.Floor;
 
                 if (TheSmallMapCharacterState == null) return;
-                TheSmallMapCharacterState.TheCharacterPosition.X = value.X;
-                TheSmallMapCharacterState.TheCharacterPosition.Y = value.Y;
-                TheSmallMapCharacterState.TheCharacterPosition.Floor = value.Floor;
+                TheSmallMapCharacterState.TheMapUnitPosition.X = value.X;
+                TheSmallMapCharacterState.TheMapUnitPosition.Y = value.Y;
+                TheSmallMapCharacterState.TheMapUnitPosition.Floor = value.Floor;
             }
         }
 
@@ -107,7 +106,7 @@ namespace Ultima5Redux.MapUnits
             if (NPCRef != null)
             {
                 return ("Name=" + NPCRef.FriendlyName
-                       + " " + CurrentCharacterPosition + " Scheduled to be at: " +
+                       + " " + MapUnitPosition + " Scheduled to be at: " +
                        NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
                        " with AI Mode: " +
                        NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
@@ -116,7 +115,7 @@ namespace Ultima5Redux.MapUnits
             }
             
             return ("MapUnit "+ KeyTileReference.Description  
-                    + " " + CurrentCharacterPosition + " Scheduled to be at: " 
+                    + " " + MapUnitPosition + " Scheduled to be at: " 
                     + " <b>Movement Attempts</b>: " + MovementAttempts + " "
                     + this.Movement);
         }
@@ -147,7 +146,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="bLoadedFromDisk"></param>
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
-        public MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
+        protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
             MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location)
         {
@@ -177,15 +176,15 @@ namespace Ultima5Redux.MapUnits
             IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty;
 
             // set the characters position 
-            CurrentCharacterPosition = new CharacterPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
+            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
             
-            //CurrentCharacterPosition.Floor = TheMapUnitState.Floor;
-            // CurrentCharacterPosition.Floor = TheSmallMapCharacterState?.TheCharacterPosition.Floor ?? 0;
+            //MapUnitPosition.Floor = TheMapUnitState.Floor;
+            // MapUnitPosition.Floor = TheSmallMapCharacterState?.TheMapUnitPosition.Floor ?? 0;
 
             // it's a large map so we follow different logic to determine the placement of the character
             if (bLargeMap)
             {
-                Move(CurrentCharacterPosition, null, true);
+                Move(MapUnitPosition, null, true);
             }
             else
             {
@@ -199,7 +198,7 @@ namespace Ultima5Redux.MapUnits
                 }
                 else
                 {
-                    Move(CurrentCharacterPosition, timeOfDay, false);
+                    Move(MapUnitPosition, timeOfDay, false);
                 }
             }
         }
@@ -210,12 +209,13 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
+        /// <param name="movement"></param>
         /// <returns></returns>
-        public static MapUnit CreateAvatar(TileReferences tileReferences,  
-            SmallMapReferences.SingleMapReference.Location location)
+        public static MapUnit CreateAvatar(TileReferences tileReferences, 
+            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement)
         {
             Avatar theAvatar = new Avatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location), 
-                location);
+                location, movement);
 
             return theAvatar;
         }
@@ -227,7 +227,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         internal void MoveNPCToDefaultScheduledPosition(TimeOfDay tod)
         {
-            CharacterPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod);
+            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
@@ -243,8 +243,8 @@ namespace Ultima5Redux.MapUnits
         /// <param name="tod"></param>
         internal void Move(Point2D xy, int nFloor, TimeOfDay tod)
         {
-            CurrentCharacterPosition.XY = xy;
-            CurrentCharacterPosition.Floor = nFloor;
+            MapUnitPosition.XY = xy;
+            MapUnitPosition.Floor = nFloor;
 
             UpdateScheduleTracking(tod);
         }
@@ -252,12 +252,12 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// Move the character to a new position
         /// </summary>
-        /// <param name="characterPosition"></param>
+        /// <param name="mapUnitPosition"></param>
         /// <param name="tod"></param>
         /// <param name="bIsLargeMap"></param>
-        internal void Move(CharacterPosition characterPosition, TimeOfDay tod, bool bIsLargeMap)
+        internal void Move(MapUnitPosition mapUnitPosition, TimeOfDay tod, bool bIsLargeMap)
         {
-            CurrentCharacterPosition = characterPosition;
+            MapUnitPosition = mapUnitPosition;
             if (!bIsLargeMap)
             {
                 UpdateScheduleTracking(tod);
@@ -266,7 +266,7 @@ namespace Ultima5Redux.MapUnits
 
         private void UpdateScheduleTracking(TimeOfDay tod)
         {
-            if (CurrentCharacterPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod))
+            if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod))
             {
                 ArrivedAtLocation = true;
             }

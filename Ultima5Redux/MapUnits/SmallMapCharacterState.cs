@@ -13,7 +13,7 @@ namespace Ultima5Redux.MapUnits
     public class SmallMapCharacterState
     {
         #region Public Properties
-        public CharacterPosition TheCharacterPosition { get; } = new CharacterPosition();
+        public MapUnitPosition TheMapUnitPosition { get; } = new MapUnitPosition();
         public int MapUnitAnimationStateIndex { get; }
         public int NPCIndex { get; }
         private TileReference TileRef { get; }
@@ -35,7 +35,7 @@ namespace Ultima5Redux.MapUnits
             TileRef = tileReferences.GetTileReference(npcRef.NPCKeySprite);
             MapUnitAnimationStateIndex = nMapUnitAnimationStateIndex;
             // if you are adding by hand then we can assume that the character is active
-            TheCharacterPosition = npcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+            TheMapUnitPosition = npcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
             Active = true;
         }
 
@@ -57,9 +57,9 @@ namespace Ultima5Redux.MapUnits
         {
             Debug.Assert(stateUInts.Length == 0x8);
             NPCIndex = nNPCIndex;
-            TheCharacterPosition.X = stateUInts[1];
-            TheCharacterPosition.Y = stateUInts[2];
-            TheCharacterPosition.Floor = stateUInts[3];
+            TheMapUnitPosition.X = stateUInts[1];
+            TheMapUnitPosition.Y = stateUInts[2];
+            TheMapUnitPosition.Floor = stateUInts[3];
             TileRef = tileReferences.GetTileReference(stateUInts[4]+0x100);
             MapUnitAnimationStateIndex = stateUInts[6];
             Active = stateUInts[7]>0;

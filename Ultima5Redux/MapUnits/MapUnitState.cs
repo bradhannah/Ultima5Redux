@@ -65,7 +65,7 @@ namespace Ultima5Redux.MapUnits
             
         }
 
-        public static MapUnitState CreateAvatar(TileReferences tileReferences, CharacterPosition avatarPosition)
+        public static MapUnitState CreateAvatar(TileReferences tileReferences, MapUnitPosition avatarPosition)
         {
             MapUnitState theAvatar = new MapUnitState();
             TileReference avatarTileRef = tileReferences.GetTileReferenceByName("BasicAvatar");

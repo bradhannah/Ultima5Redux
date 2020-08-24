@@ -98,7 +98,7 @@
     <Compile Include="Dialogue\ShoppeKeeperDialogueReference.cs" />
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="MapUnits\Avatar.cs" />
-    <Compile Include="MapUnits\CharacterPosition.cs" />
+    <Compile Include="MapUnits\MapUnitPosition.cs" />
     <Compile Include="MapUnits\EmptyMapUnit.cs" />
     <Compile Include="MapUnits\Monsters\Monster.cs" />
     <Compile Include="MapUnits\MovementCommand.cs" />

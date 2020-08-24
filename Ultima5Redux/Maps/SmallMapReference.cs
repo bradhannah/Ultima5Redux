@@ -146,10 +146,10 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static CharacterPosition GetStartingXYZByLocation(SmallMapReferences.SingleMapReference.Location location)
+        public static MapUnitPosition GetStartingXYZByLocation(SmallMapReferences.SingleMapReference.Location location)
         {
             Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
-            return new CharacterPosition(startingXY.X, startingXY.Y, 0);
+            return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
         }
 
         public string GetLocationName(SmallMapReferences.SingleMapReference.Location location)

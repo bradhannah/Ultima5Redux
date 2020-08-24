@@ -3,12 +3,12 @@
     /// <summary>
     /// Tracks the position of any character on the screen
     /// </summary>
-    public class CharacterPosition
+    public class MapUnitPosition
     {
-        public CharacterPosition()
+        public MapUnitPosition()
         {}
         
-        public CharacterPosition(int x, int y, int floor)
+        public MapUnitPosition(int x, int y, int floor)
         {
             X = x;
             Y = y;
@@ -29,11 +29,11 @@
         public Point2D XY { get => new Point2D(X, Y);
             set { X = value.X; Y = value.Y; } }
 
-        public static bool operator !=(CharacterPosition pos1, CharacterPosition pos2)
+        public static bool operator !=(MapUnitPosition pos1, MapUnitPosition pos2)
         {
             return !(pos1 == pos2);
         }
-        public static bool operator ==(CharacterPosition pos1, CharacterPosition pos2)
+        public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2)
         {
             if (object.ReferenceEquals(pos1, null))
             {
@@ -49,7 +49,7 @@
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            return obj is CharacterPosition position &&
+            return obj is MapUnitPosition position &&
                    X == position.X &&
                    Y == position.Y &&
                    Floor == position.Floor;

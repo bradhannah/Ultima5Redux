@@ -28,7 +28,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 if (IsInParty) return false;
 
                 // if they are in 0,0 then I am certain they are not real
-                if (CurrentCharacterPosition.X == 0 && CurrentCharacterPosition.Y == 0) return false;
+                if (MapUnitPosition.X == 0 && MapUnitPosition.Y == 0) return false;
 
                 // if there is a small map character state then we prefer to use it to determine if the 
                 // unit is active
