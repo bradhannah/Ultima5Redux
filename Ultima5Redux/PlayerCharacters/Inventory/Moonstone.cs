@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Ultima5Redux.DayNightMoon;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Moonstone : InventoryItem
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Ultima5Redux.Data;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters
 {

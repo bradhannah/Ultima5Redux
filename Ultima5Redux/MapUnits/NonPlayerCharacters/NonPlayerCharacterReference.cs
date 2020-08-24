@@ -6,7 +6,7 @@ using Ultima5Redux.Maps;
 
 //using static Ultima5Redux.NonPlayerCharacterReferences;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     /// <summary>
     /// A single non player character (NPC)

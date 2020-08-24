@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
-using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class GuildMaster : ShoppeKeeper
     {

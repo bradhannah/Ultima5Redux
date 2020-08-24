@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     /// <summary>
     /// Instance represents a single reagent type

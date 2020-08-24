@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public sealed class LordBritishArtifacts : InventoryItems <LordBritishArtifact.ArtifactType, LordBritishArtifact>
     {

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public abstract class CombatItem : InventoryItem
     {

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public abstract class CombatItems<TEnumType, T> : InventoryItems<TEnumType, T>
     {

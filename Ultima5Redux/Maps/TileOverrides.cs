@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.Maps
 {

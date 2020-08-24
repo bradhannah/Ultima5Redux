@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     /// <summary>
     /// Collection of all inventory meta data such as descriptions

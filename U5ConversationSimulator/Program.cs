@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Ultima5Redux.Data;
 using Ultima5Redux.Dialogue;
-using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
-
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace U5ConversationSimulator
 {

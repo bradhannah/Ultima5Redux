@@ -2,7 +2,7 @@
 using System.Linq;
 using Ultima5Redux.Data;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public abstract class InventoryItems <TEnumType, T>
     {

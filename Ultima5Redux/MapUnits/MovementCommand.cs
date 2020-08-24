@@ -1,4 +1,4 @@
-﻿namespace Ultima5Redux.MapCharacters
+﻿namespace Ultima5Redux.MapUnits
 {
     public partial class MapUnitMovement
     {

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Ultima5Redux.Data;
-using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Provision : InventoryItem
     {

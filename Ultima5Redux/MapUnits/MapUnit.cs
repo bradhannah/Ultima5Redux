@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
-using Ultima5Redux.MapCharacters;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits
 {
     public class MapUnit
     {

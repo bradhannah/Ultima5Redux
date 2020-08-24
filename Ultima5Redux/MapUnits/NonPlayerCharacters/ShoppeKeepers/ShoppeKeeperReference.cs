@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     /// <summary>
     /// Describes individual Shoppe Keepers

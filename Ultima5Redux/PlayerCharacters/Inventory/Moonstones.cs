@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Moonstones :  InventoryItems <MoonPhaseReferences.MoonPhases, Moonstone>
     {

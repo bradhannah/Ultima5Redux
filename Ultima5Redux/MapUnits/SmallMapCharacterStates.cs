@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapCharacters;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits
 {
     /// <summary>
     /// Describes all character states on a single map, be it overworld, underworld or a small map

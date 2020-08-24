@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits
 {
     //    http://wiki.ultimacodex.com/wiki/Ultima_V_Internal_Formats#SAVED.GAM
     //    Monster Format

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class ShoppeKeeperReferences
     {

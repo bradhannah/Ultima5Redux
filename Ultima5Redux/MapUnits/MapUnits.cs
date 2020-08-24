@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.MapCharacters.SeaFaringVessel;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.SeaFaringVessel;
 using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits
 {
     public class MapUnits
     {
@@ -276,7 +277,7 @@ namespace Ultima5Redux.MapCharacters
                 }
                 else
                 {
-                    newUnit = new MapUnit(null, charAnimState, null, charMovement,
+                    newUnit = new NonPlayerCharacter(null, charAnimState, null, charMovement,
                         _timeOfDay, _playerCharacterRecords, bInitialLoad);
                 }
                 

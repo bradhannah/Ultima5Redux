@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ultima5Redux.Data;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.Maps
 {

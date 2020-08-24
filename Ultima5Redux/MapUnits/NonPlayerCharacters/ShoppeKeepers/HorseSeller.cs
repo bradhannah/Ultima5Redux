@@ -3,7 +3,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class HorseSeller : ShoppeKeeper
     {

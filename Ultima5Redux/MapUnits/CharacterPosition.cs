@@ -1,4 +1,4 @@
-﻿namespace Ultima5Redux.MapCharacters
+﻿namespace Ultima5Redux.MapUnits
 {
     /// <summary>
     /// Tracks the position of any character on the screen

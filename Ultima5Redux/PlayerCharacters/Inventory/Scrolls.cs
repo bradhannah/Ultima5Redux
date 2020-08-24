@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Ultima5Redux.Data;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Scrolls : InventoryItems<Spell.SpellWords, Scroll>
     {

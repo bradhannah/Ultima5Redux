@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Ultima5Redux.Data;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.Dialogue
 { 

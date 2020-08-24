@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     /// <summary>
     /// Contains details and information on the services provided and the costs thereof

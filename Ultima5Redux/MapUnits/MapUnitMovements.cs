@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits
 {
     /// <summary>
     /// Stores all movements of current NPC/monsters on current map

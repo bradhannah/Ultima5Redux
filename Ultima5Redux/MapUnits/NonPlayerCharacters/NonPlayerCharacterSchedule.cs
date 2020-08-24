@@ -3,7 +3,7 @@ using Ultima5Redux.DayNightMoon;
 
 //using static Ultima5Redux.NonPlayerCharacterReferences;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     public partial class NonPlayerCharacterReference
     {

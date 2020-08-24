@@ -3,7 +3,7 @@ using Ultima5Redux.Maps;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]

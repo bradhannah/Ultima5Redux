@@ -1,6 +1,6 @@
 ﻿using Ultima5Redux.Maps;
 
-namespace Ultima5Redux.MapCharacters.SeaFaringVessel
+namespace Ultima5Redux.MapUnits.SeaFaringVessel
 {
     public static class SeaFaringVesselReference
     {

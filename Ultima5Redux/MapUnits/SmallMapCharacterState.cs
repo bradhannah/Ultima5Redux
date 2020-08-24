@@ -2,8 +2,9 @@
 using System.Diagnostics;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
-namespace Ultima5Redux.MapCharacters
+namespace Ultima5Redux.MapUnits
 {
     /// <summary>
     /// Based on original U5 data structure

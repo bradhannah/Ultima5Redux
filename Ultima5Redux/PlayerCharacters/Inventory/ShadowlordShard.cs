@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class ShadowlordShard : InventoryItem
     {

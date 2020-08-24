@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class Weapon : CombatItem
     {

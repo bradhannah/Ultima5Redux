@@ -6,8 +6,10 @@ using System.Linq;
 using System.Numerics;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
 // ReSharper disable IdentifierTypo
 
@@ -144,7 +146,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public LargeMap.Maps LargeMapOverUnder { get; private set; } = (LargeMap.Maps)(-1);
 
-        public MapUnits TheMapUnits { get; private set; }
+        public MapUnits.MapUnits TheMapUnits { get; private set; }
 
         #endregion
 
@@ -201,7 +203,7 @@ namespace Ultima5Redux.Maps
             
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
-            TheMapUnits = new MapCharacters.MapUnits(tileReferences, npcRefs,
+            TheMapUnits = new MapUnits.MapUnits(tileReferences, npcRefs,
                state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, 
                state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets,
