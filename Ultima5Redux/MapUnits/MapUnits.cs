@@ -49,6 +49,7 @@ namespace Ultima5Redux.MapUnits
             set => CurrentMapUnits[0].CurrentCharacterPosition = value;
         }
 
+
         private MapUnitStates CurrentMapUnitStates
         {
             get
@@ -82,7 +83,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="timeOfDay"></param>
         /// <param name="playerCharacterRecords"></param>
         /// <param name="initialMap">The initial map you are beginning on. It's important to know because there is only
-        /// one CharacterState loaded in the save file at load time</param>
+        /// one TheSmallMapCharacterState loaded in the save file at load time</param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
         public MapUnits(TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, 
             DataChunk activeMapUnitStatesDataChunk, DataChunk overworldMapUnitStatesDataChunk, 
@@ -200,17 +201,17 @@ namespace Ultima5Redux.MapUnits
             SetCurrentMapType(location, mapType, false);
         }
 
-        public MapUnit GetMapCharacterByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
+        public MapUnit GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
         {
-            foreach (MapUnit character in CurrentMapUnits)
+            foreach (MapUnit mapUnit in CurrentMapUnits)
             {
                 // sometimes characters are null because they don't exist - and that is OK
-                if (!character.IsActive) continue;
+                if (!mapUnit.IsActive) continue;
 
-                if (character.CurrentCharacterPosition.XY == xy && 
-                    character.CurrentCharacterPosition.Floor == nFloor && character.NPCRef.MapLocation == location)
+                if (mapUnit.CurrentCharacterPosition.XY == xy && 
+                    mapUnit.CurrentCharacterPosition.Floor == nFloor && mapUnit.MapLocation == location)
                 {
-                    return character;
+                    return mapUnit;
                 }
             }
             return null;
@@ -269,16 +270,17 @@ namespace Ultima5Redux.MapUnits
 
                 if (_tileRefs.IsFrigate(charAnimState.Tile1Ref.Index))
                 {
-                    newUnit = new Frigate(charAnimState, charMovement, bInitialLoad);
+                    newUnit = new Frigate(charAnimState, charMovement, bInitialLoad, _tileRefs,
+                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
                 }
-                else if (_tileRefs.IsFrigate(charAnimState.Tile1Ref.Index))
+                else if (_tileRefs.IsSkiff(charAnimState.Tile1Ref.Index))
                 {
-                    newUnit = new Skiff(charAnimState, charMovement, bInitialLoad);
+                    newUnit = new Skiff(charAnimState, charMovement, bInitialLoad, _tileRefs,
+                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
                 }
                 else
                 {
-                    newUnit = new NonPlayerCharacter(null, charAnimState, null, charMovement,
-                        _timeOfDay, _playerCharacterRecords, bInitialLoad);
+                    newUnit = new EmptyMapUnit();
                 }
                 
                 // add the new character to our list of characters currently on the map
@@ -353,7 +355,7 @@ namespace Ultima5Redux.MapUnits
                     if (CurrentMapUnitStates.HasAnyAnimationStates())
                     {
                         charAnimState =
-                            CurrentMapUnitStates.GetCharacterState(smallMapCharacterState.CharacterAnimationStateIndex);
+                            CurrentMapUnitStates.GetCharacterState(smallMapCharacterState.MapUnitAnimationStateIndex);
                     }
                 }
                 else
@@ -367,8 +369,8 @@ namespace Ultima5Redux.MapUnits
                     charAnimState = new MapUnitState(_tileRefs, npcRef);
                 }
 
-                CurrentMapUnits.Add(new MapUnit(npcRef, charAnimState, smallMapCharacterState, mapUnitMovement, 
-                    _timeOfDay, _playerCharacterRecords, bInitialLoad));
+                CurrentMapUnits.Add(new NonPlayerCharacter(npcRef, charAnimState, smallMapCharacterState, mapUnitMovement, 
+                    _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location));
             }
         }
 
@@ -382,18 +384,18 @@ namespace Ultima5Redux.MapUnits
 
             foreach (MapUnit character in CurrentMapUnits)
             {
-                if (!character.AnimationState.Tile1Ref.IsBoardable) continue;
+                if (!character.TheMapUnitState.Tile1Ref.IsBoardable) continue;
                 
-                if (_tileRefs.IsFrigate(character.AnimationState.Tile1Ref.Index))
+                if (_tileRefs.IsFrigate(character.TheMapUnitState.Tile1Ref.Index))
                 {
-                    // Frigate frigate = new Frigate(character.CharacterState.TheCharacterPosition, 
-                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.AnimationState.Tile1Ref.Index));
+                    // Frigate frigate = new Frigate(character.TheSmallMapCharacterState.TheCharacterPosition, 
+                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
                     // vessels.Add(frigate);
                 }
-                else if (_tileRefs.IsSkiff(character.AnimationState.Tile1Ref.Index))
+                else if (_tileRefs.IsSkiff(character.TheMapUnitState.Tile1Ref.Index))
                 {
-                    // Skiff skiff = new Skiff(character.CharacterState.TheCharacterPosition, 
-                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.AnimationState.Tile1Ref.Index));
+                    // Skiff skiff = new Skiff(character.TheSmallMapCharacterState.TheCharacterPosition, 
+                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
                     // vessels.Add(skiff);
                 }
             }

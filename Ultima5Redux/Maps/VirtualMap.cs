@@ -435,14 +435,14 @@ namespace Ultima5Redux.Maps
         public MapUnit GetNPCToTalkTo(MapUnitMovement.MovementCommandDirection direction)
         {
             Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(_currentPosition, direction, 1);
-            MapUnit npc = GetNPCOnTile(adjustedPosition);
+            MapUnit npc = GetMapUnitOnTile(adjustedPosition);
             if (npc != null) return npc;
 
             if (!GetTileReference(adjustedPosition).IsTalkOverable)
                 return null;
             
             Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(_currentPosition, direction, 2);
-            return GetNPCOnTile(adjustedPosition2Away);
+            return GetMapUnitOnTile(adjustedPosition2Away);
         }
         
         
@@ -452,12 +452,12 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns>the NPC or null if one does not exist</returns>
-        public MapUnit GetNPCOnTile(Point2D xy)
+        public MapUnit GetMapUnitOnTile(Point2D xy)
         {
-            if (IsLargeMap) return null;
+            //if (IsLargeMap) return null;
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
 
-            MapUnit mapUnit = TheMapUnits.GetMapCharacterByLocation(location, xy, CurrentSingleMapReference.Floor);
+            MapUnit mapUnit = TheMapUnits.GetMapUnitByLocation(location, xy, CurrentSingleMapReference.Floor);
             
             return mapUnit;
         }
@@ -467,7 +467,7 @@ namespace Ultima5Redux.Maps
         #region Private Methods
 
         /// <summary>
-        /// Is the particular tile eligable to be moved onto
+        /// Is the particular tile eligible to be moved onto
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="bNoStaircases"></param>
@@ -477,7 +477,7 @@ namespace Ultima5Redux.Maps
             if (xy.X < 0 || xy.Y < 0) return false;
 
             bool bIsAvatarTile = CurrentPosition.XY == xy;
-            bool bIsNpcTile = IsNPCTile(xy);
+            bool bIsNpcTile = IsMapUnitOccupiedTile(xy);
             TileReference tileReference = GetTileReference(xy);
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
@@ -1032,7 +1032,7 @@ namespace Ultima5Redux.Maps
         /// Advances each of the NPCs by one movement each
         /// </summary>
         /// <returns></returns>
-        internal bool MoveNPCs()
+        internal bool MoveMapUnitsToNextMove()
         {
             // if not on small map - then no NPCs!
             if (IsLargeMap) return false;
@@ -1055,7 +1055,7 @@ namespace Ultima5Redux.Maps
                 Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(mapChar.CurrentCharacterPosition.XY, direction);
 
                 // need to evaluate if I can even move to the next tile before actually popping out of the queue
-                bool bIsNpcOnSpace = IsNPCTile(adjustedPos);
+                bool bIsNpcOnSpace = IsMapUnitOccupiedTile(adjustedPos);
                 //TileReference adjustedTile = GetTileReference(adjustedPos);
                 if (GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
                 {
@@ -1276,11 +1276,11 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public bool IsNPCTile(Point2D xy)
+        public bool IsMapUnitOccupiedTile(Point2D xy)
         {
-            // this method isnt super efficient, may want to optimize in the future
-            if (IsLargeMap) return false;
-            return (GetNPCOnTile(xy) != null);
+            // this method isn't super efficient, may want to optimize in the future
+            //if (IsLargeMap) return false;
+            return (GetMapUnitOnTile(xy) != null);
         }
 
         public bool ContainsSearchableThings(Point2D xy)

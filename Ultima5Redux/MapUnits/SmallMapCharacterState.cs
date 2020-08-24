@@ -14,7 +14,7 @@ namespace Ultima5Redux.MapUnits
     {
         #region Public Properties
         public CharacterPosition TheCharacterPosition { get; } = new CharacterPosition();
-        public int CharacterAnimationStateIndex { get; }
+        public int MapUnitAnimationStateIndex { get; }
         public int NPCIndex { get; }
         private TileReference TileRef { get; }
         public bool Active { get; }
@@ -27,13 +27,13 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="tileReferences"></param>
         /// <param name="npcRef"></param>
-        /// <param name="nCharacterAnimationStateIndex"></param>
+        /// <param name="nMapUnitAnimationStateIndex"></param>
         /// <param name="timeOfDay"></param>
-        public SmallMapCharacterState(TileReferences tileReferences, NonPlayerCharacterReference npcRef, int nCharacterAnimationStateIndex, TimeOfDay timeOfDay)
+        public SmallMapCharacterState(TileReferences tileReferences, NonPlayerCharacterReference npcRef, int nMapUnitAnimationStateIndex, TimeOfDay timeOfDay)
         {
             NPCIndex = npcRef.DialogIndex;
             TileRef = tileReferences.GetTileReference(npcRef.NPCKeySprite);
-            CharacterAnimationStateIndex = nCharacterAnimationStateIndex;
+            MapUnitAnimationStateIndex = nMapUnitAnimationStateIndex;
             // if you are adding by hand then we can assume that the character is active
             TheCharacterPosition = npcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
             Active = true;
@@ -61,7 +61,7 @@ namespace Ultima5Redux.MapUnits
             TheCharacterPosition.Y = stateUInts[2];
             TheCharacterPosition.Floor = stateUInts[3];
             TileRef = tileReferences.GetTileReference(stateUInts[4]+0x100);
-            CharacterAnimationStateIndex = stateUInts[6];
+            MapUnitAnimationStateIndex = stateUInts[6];
             Active = stateUInts[7]>0;
         }
         #endregion

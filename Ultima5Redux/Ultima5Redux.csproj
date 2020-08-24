@@ -97,7 +97,10 @@
     <Compile Include="DayNightMoon\TimeOfDay.cs" />
     <Compile Include="Dialogue\ShoppeKeeperDialogueReference.cs" />
     <Compile Include="External\AStarSharp.cs" />
+    <Compile Include="MapUnits\Avatar.cs" />
     <Compile Include="MapUnits\CharacterPosition.cs" />
+    <Compile Include="MapUnits\EmptyMapUnit.cs" />
+    <Compile Include="MapUnits\Monsters\Monster.cs" />
     <Compile Include="MapUnits\MovementCommand.cs" />
     <Compile Include="MapUnits\MapUnitMovements.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\NonPlayerCharacter.cs" />
@@ -249,10 +252,6 @@
     </EmbeddedResource>
     <Content Include="DataFiles\TileOverrides.csv" />
     <EmbeddedResource Include="DataFiles\TileOverrides.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MapUnits\Monsters" />
-    <Folder Include="Vehicles" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

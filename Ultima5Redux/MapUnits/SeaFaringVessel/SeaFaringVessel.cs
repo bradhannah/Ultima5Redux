@@ -19,14 +19,16 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessel
         //      Direction = direction;
         //  }
          
-      //   public CharacterPosition Position { get; set; }
          public VirtualMap.Direction Direction { get; set; }
 
-         protected SeaFaringVessel(MapUnitState mapUnitState, SmallMapCharacterState smallMapCharacterState,
+         protected SeaFaringVessel(MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
              MapUnitMovement mapUnitMovement, 
-             bool bLoadedFromDisk) : base(null, mapUnitState, smallMapCharacterState, mapUnitMovement,
-             null, null, bLoadedFromDisk)
+             bool bLoadedFromDisk, TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) 
+             : base(null, mapUnitState, smallMapTheSmallMapCharacterState, mapUnitMovement,
+             null, null, bLoadedFromDisk, tileReferences, location)
          {
          }
+
+         public override bool IsActive => true;
     }
 }

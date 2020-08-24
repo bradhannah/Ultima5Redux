@@ -87,6 +87,20 @@ namespace Ultima5Redux.Maps
             return TileReferenceDictionary[nSprite];
         }
 
+        public TileReference GetTileReferenceOfKeyIndex(int nSprite)
+        {
+            TileReference tileReference = GetTileReference(nSprite);
+            // if it isn't part of an animation then we can trust the tile index provided in the MapUnitState 
+            if (!tileReference.IsPartOfAnimation) return tileReference;
+
+            Debug.Assert(tileReference.AnimationIndex >= 0);
+            if (tileReference.AnimationIndex == 0) return tileReference;
+
+            // the AnimationIndex is an offset from the index,so by subtracting it, we get the key frame (initial)
+            // frame which is handy if the visual asset is described by it's key index
+            return GetTileReference(tileReference.Index - tileReference.AnimationIndex);
+        }
+
         /// <summary>
         /// Is the sprite a dirt path tile?
         /// </summary>

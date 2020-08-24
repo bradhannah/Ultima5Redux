@@ -183,7 +183,7 @@ namespace Ultima5Redux
         {
             State.TheTimeOfDay.AdvanceClock(nMinutes);
             if (State.TorchTurnsLeft > 0) State.TorchTurnsLeft--;
-            State.TheVirtualMap.MoveNPCs();
+            State.TheVirtualMap.MoveMapUnitsToNextMove();
         }
 
         /// <summary>
@@ -236,15 +236,15 @@ namespace Ultima5Redux
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
             // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
-            if (State.TheVirtualMap.IsNPCTile(xy))
+            if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
             {
-                MapUnit mapUnit = State.TheVirtualMap.GetNPCOnTile(xy);
+                MapUnit mapUnit = State.TheVirtualMap.GetMapUnitOnTile(xy);
                 if (mapUnit == null)
                 {
-                    throw new Ultima5ReduxException("Tried to look up NPC, but couldn't find the map character");
+                    throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
                 }
                 retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                    + " " + (LookRef.GetLookDescription(mapUnit.NPCRef.NPCKeySprite).Trim());
+                    + " " + (LookRef.GetLookDescription(mapUnit.KeyTileReference.Index).Trim());
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (SpriteTileReferences.IsSign(tileReference.Index))
@@ -355,7 +355,7 @@ namespace Ultima5Redux
             TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
 
             // it's not pushable OR if an NPC occupies the tile -so let's bail
-            if (!adjustedTileReference.IsPushable || State.TheVirtualMap.IsNPCTile(adjustedPos))
+            if (!adjustedTileReference.IsPushable || State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPos))
             {
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.WONT_BUDGE_BANG_N);
             }
@@ -377,7 +377,7 @@ namespace Ultima5Redux
             }
             
             // is there an NPC on the tile? if so, we won't move anything into them
-            bool bIsNPCOneMoreTile = State.TheVirtualMap.IsNPCTile(oneMoreTileAdjusted);
+            bool bIsNPCOneMoreTile = State.TheVirtualMap.IsMapUnitOccupiedTile(oneMoreTileAdjusted);
 
             // is the next tile walkable and is there NOT an NPC on it
             if (oneMoreTileReference.IsWalking_Passable && !bIsNPCOneMoreTile)
@@ -770,7 +770,7 @@ namespace Ultima5Redux
             // but we double check if the portcullis is down
             bool bPassable = newTileReference.IsWalking_Passable &&
                 !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index && !State.TheTimeOfDay.IsDayLight)
-                && !State.TheVirtualMap.IsNPCTile(newPos);
+                && !State.TheVirtualMap.IsMapUnitOccupiedTile(newPos);
 
 
             // this is insufficient in case I am in a boat

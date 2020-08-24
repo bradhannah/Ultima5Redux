@@ -7,8 +7,10 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class MapUnit
+    public abstract class MapUnit
     {
+        private readonly TileReferences _tileReferences;
+
         #region Private and Internal Properties 
         /// <summary>
         /// All the movements for the map character
@@ -18,14 +20,28 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// the state of the animations
         /// </summary>
-        internal MapUnitState AnimationState { get; private set; }
+        public MapUnitState TheMapUnitState { get; protected set; }
 
         /// <summary>
         /// The location state of the character
         /// </summary>
-        internal SmallMapCharacterState CharacterState { get; }
+        internal SmallMapCharacterState TheSmallMapCharacterState { get; }
 
         private readonly CharacterPosition _characterPosition = new CharacterPosition();
+        
+        /// <summary>
+        /// Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
+        /// </summary>
+        public TileReference KeyTileReference
+        {
+            get
+            {
+                if (NPCRef != null) return _tileReferences.GetTileReference(NPCRef.NPCKeySprite);
+
+                return _tileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
+            }
+        }
+
         
         /// <summary>
         /// The characters current position on the map
@@ -37,20 +53,20 @@ namespace Ultima5Redux.MapUnits
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 // this is a bit redundant but we have a backing field and also store the XY positions
-                // in the AnimationState and CharacterState, but we have to do this because the .XY
+                // in the TheMapUnitState and TheSmallMapCharacterState, but we have to do this because the .XY
                 // of the CharacterPosition is often edited directly
                 _characterPosition.X = value.X;
                 _characterPosition.Y = value.Y;
                 _characterPosition.Floor = value.Floor;
                 
-                AnimationState.X = (byte) value.X;
-                AnimationState.Y = (byte) value.Y;
-                AnimationState.Floor = (byte) value.Floor;
+                TheMapUnitState.X = (byte) value.X;
+                TheMapUnitState.Y = (byte) value.Y;
+                TheMapUnitState.Floor = (byte) value.Floor;
 
-                if (CharacterState == null) return;
-                CharacterState.TheCharacterPosition.X = value.X;
-                CharacterState.TheCharacterPosition.Y = value.Y;
-                CharacterState.TheCharacterPosition.Floor = value.Floor;
+                if (TheSmallMapCharacterState == null) return;
+                TheSmallMapCharacterState.TheCharacterPosition.X = value.X;
+                TheSmallMapCharacterState.TheCharacterPosition.Y = value.Y;
+                TheSmallMapCharacterState.TheCharacterPosition.Floor = value.Floor;
             }
         }
 
@@ -70,10 +86,12 @@ namespace Ultima5Redux.MapUnits
         /// Reference to current NPC (if it's an NPC at all!)
         /// </summary>
         public NonPlayerCharacterReference NPCRef { get; }
+
+        public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
+
         /// <summary>
         /// Is the character currently active on the map?
         /// </summary>
-        
         public bool IsInParty
         {
             get; set; 
@@ -82,32 +100,25 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// Is the map character currently an active character on the current map
         /// </summary>
-        public bool IsActive
-        { 
-            get
-            {
-                // if they are in our party then we don't include them in the map 
-                if (IsInParty) return false;
-
-                // if they are in 0,0 then I am certain they are not real
-                if (CurrentCharacterPosition.X == 0 && CurrentCharacterPosition.Y == 0) return false;
-
-                if (CharacterState == null) return false;
-                if (CharacterState.CharacterAnimationStateIndex != 0) return CharacterState.Active;
-                return false;
-            }
-        }
+        public abstract bool IsActive { get; }
 
         public string GetDebugDescription(TimeOfDay timeOfDay)
-        { 
-            string debugLookStr = ("Name=" + NPCRef.FriendlyName 
-                + " " + CurrentCharacterPosition + " Scheduled to be at: "+
-                NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) + " with AI Mode: "+ 
-                NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
-                " <b>Movement Attempts</b>: "+ MovementAttempts + " " + 
-                this.Movement);
+        {
+            if (NPCRef != null)
+            {
+                return ("Name=" + NPCRef.FriendlyName
+                       + " " + CurrentCharacterPosition + " Scheduled to be at: " +
+                       NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
+                       " with AI Mode: " +
+                       NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
+                       " <b>Movement Attempts</b>: " + MovementAttempts + " " +
+                       this.Movement);
+            }
             
-            return debugLookStr;
+            return ("MapUnit "+ KeyTileReference.Description  
+                    + " " + CurrentCharacterPosition + " Scheduled to be at: " 
+                    + " <b>Movement Attempts</b>: " + MovementAttempts + " "
+                    + this.Movement);
         }
 
         #endregion
@@ -116,11 +127,11 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// empty constructor if there is nothing in the map character slot
         /// </summary>
-        private MapUnit()
+        protected MapUnit()
         {
             NPCRef = null;
-            AnimationState = null;
-            CharacterState = null;
+            TheMapUnitState = null;
+            TheSmallMapCharacterState = null;
             Movement = null;
         }
 
@@ -129,25 +140,30 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="npcRef"></param>
         /// <param name="mapUnitState"></param>
-        /// <param name="smallMapCharacterState"></param>
+        /// <param name="smallMapTheSmallMapCharacterState"></param>
         /// <param name="mapUnitMovement"></param>
         /// <param name="timeOfDay"></param>
         /// <param name="playerCharacterRecords"></param>
         /// <param name="bLoadedFromDisk"></param>
-        public MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapCharacterState,
-            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk)
+        /// <param name="tileReferences"></param>
+        /// <param name="location"></param>
+        public MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
+            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
+            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location)
         {
+            _tileReferences = tileReferences;
+            MapLocation = location;
             NPCRef = npcRef;
-            AnimationState = mapUnitState;
-            CharacterState = smallMapCharacterState;
+            TheMapUnitState = mapUnitState;
+            TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
             Movement = mapUnitMovement;
 
             PlayerCharacterRecord record = null;
 
-            bool bLargeMap = CharacterState == null && npcRef == null;
+            bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
             
             // Debug.Assert(playerCharacterRecords != null);
-            Debug.Assert(AnimationState != null);
+            Debug.Assert(TheMapUnitState != null);
             Debug.Assert(Movement != null);
             
             // gets the player character record for an NPC if one exists
@@ -161,10 +177,10 @@ namespace Ultima5Redux.MapUnits
             IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty;
 
             // set the characters position 
-            CurrentCharacterPosition = new CharacterPosition(AnimationState.X, AnimationState.Y, AnimationState.Floor);
+            CurrentCharacterPosition = new CharacterPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
             
-            //CurrentCharacterPosition.Floor = AnimationState.Floor;
-            // CurrentCharacterPosition.Floor = CharacterState?.TheCharacterPosition.Floor ?? 0;
+            //CurrentCharacterPosition.Floor = TheMapUnitState.Floor;
+            // CurrentCharacterPosition.Floor = TheSmallMapCharacterState?.TheCharacterPosition.Floor ?? 0;
 
             // it's a large map so we follow different logic to determine the placement of the character
             if (bLargeMap)
@@ -173,7 +189,7 @@ namespace Ultima5Redux.MapUnits
             }
             else
             {
-                // there is no CharacterState which indicates that it is a large map
+                // there is no TheSmallMapCharacterState which indicates that it is a large map
                 if (!bLoadedFromDisk)
                 {
                     if (npcRef != null)
@@ -195,14 +211,11 @@ namespace Ultima5Redux.MapUnits
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static MapUnit CreateAvatar(TileReferences tileReferences, 
+        public static MapUnit CreateAvatar(TileReferences tileReferences,  
             SmallMapReferences.SingleMapReference.Location location)
         {
-            MapUnit theAvatar = new MapUnit
-            {
-                AnimationState = MapUnitState.CreateAvatar(tileReferences,
-                    SmallMapReferences.GetStartingXYZByLocation(location))
-            };
+            Avatar theAvatar = new Avatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location), 
+                location);
 
             return theAvatar;
         }
