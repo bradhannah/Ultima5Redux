@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
@@ -9,7 +12,7 @@ namespace Ultima5Redux.MapUnits
 {
     public abstract class MapUnit
     {
-        private readonly TileReferences _tileReferences;
+        protected readonly TileReferences TileReferences;
 
         #region Private and Internal Properties 
         /// <summary>
@@ -36,9 +39,9 @@ namespace Ultima5Redux.MapUnits
         {
             get
             {
-                if (NPCRef != null) return _tileReferences.GetTileReference(NPCRef.NPCKeySprite);
+                if (NPCRef != null) return TileReferences.GetTileReference(NPCRef.NPCKeySprite);
 
-                return _tileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
+                return TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
             }
         }
 
@@ -74,9 +77,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         internal int ForcedWandering { get; set; }
         
-        public bool ArrivedAtLocation { get; private set; }
         
-        private int _scheduleIndex = -1;
         #endregion
 
         #region Public Properties
@@ -100,6 +101,15 @@ namespace Ultima5Redux.MapUnits
         /// Is the map character currently an active character on the current map
         /// </summary>
         public abstract bool IsActive { get; }
+        public virtual void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor)
+        {
+            // by default the thing doesn't move on it's own
+        }
+
+        public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
+        {
+            // by default the thing doesn't move on it's own
+        }
 
         public string GetDebugDescription(TimeOfDay timeOfDay)
         {
@@ -150,7 +160,7 @@ namespace Ultima5Redux.MapUnits
             MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location)
         {
-            _tileReferences = tileReferences;
+            TileReferences = tileReferences;
             MapLocation = location;
             NPCRef = npcRef;
             TheMapUnitState = mapUnitState;
@@ -158,8 +168,6 @@ namespace Ultima5Redux.MapUnits
             Movement = mapUnitMovement;
 
             PlayerCharacterRecord record = null;
-
-            bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
             
             // Debug.Assert(playerCharacterRecords != null);
             Debug.Assert(TheMapUnitState != null);
@@ -177,113 +185,101 @@ namespace Ultima5Redux.MapUnits
 
             // set the characters position 
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
-            
-            //MapUnitPosition.Floor = TheMapUnitState.Floor;
-            // MapUnitPosition.Floor = TheSmallMapCharacterState?.TheMapUnitPosition.Floor ?? 0;
-
-            // it's a large map so we follow different logic to determine the placement of the character
-            if (bLargeMap)
-            {
-                Move(MapUnitPosition, null, true);
-            }
-            else
-            {
-                // there is no TheSmallMapCharacterState which indicates that it is a large map
-                if (!bLoadedFromDisk)
-                {
-                    if (npcRef != null)
-                    {
-                        MoveNPCToDefaultScheduledPosition(timeOfDay);
-                    }
-                }
-                else
-                {
-                    Move(MapUnitPosition, timeOfDay, false);
-                }
-            }
         }
 
-        /// <summary>
-        /// Creates an Avatar MapUnit at the default small map position
-        /// Note: this should never need to be called from a LargeMap since the values persist on disk
-        /// </summary>
-        /// <param name="tileReferences"></param>
-        /// <param name="location"></param>
-        /// <param name="movement"></param>
-        /// <returns></returns>
-        public static MapUnit CreateAvatar(TileReferences tileReferences, 
-            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement)
-        {
-            Avatar theAvatar = new Avatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location), 
-                location, movement);
-
-            return theAvatar;
-        }
+       
         #endregion
 
         #region Internal Methods
-        /// <summary>
-        /// Moves the NPC to the appropriate floor and location based on the their expected location and position
-        /// </summary>
-        internal void MoveNPCToDefaultScheduledPosition(TimeOfDay tod)
-        {
-            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod);
-
-            // the NPC is a non-NPC, so we keep looking
-            if (npcXy.X == 0 && npcXy.Y == 0) return;
-
-            Move(npcXy, tod, false);
-        }
+     
 
         /// <summary>
         /// move the character to a new position
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
-        /// <param name="tod"></param>
-        internal void Move(Point2D xy, int nFloor, TimeOfDay tod)
+        protected void Move(Point2D xy, int nFloor)
         {
             MapUnitPosition.XY = xy;
             MapUnitPosition.Floor = nFloor;
-
-            UpdateScheduleTracking(tod);
         }
 
         /// <summary>
         /// Move the character to a new position
         /// </summary>
         /// <param name="mapUnitPosition"></param>
-        /// <param name="tod"></param>
-        /// <param name="bIsLargeMap"></param>
-        internal void Move(MapUnitPosition mapUnitPosition, TimeOfDay tod, bool bIsLargeMap)
+        protected void Move(MapUnitPosition mapUnitPosition)
         {
             MapUnitPosition = mapUnitPosition;
-            if (!bIsLargeMap)
-            {
-                UpdateScheduleTracking(tod);
-            }
         }
-
-        private void UpdateScheduleTracking(TimeOfDay tod)
+        
+        /// <summary>
+        /// Builds the actual path for the character to travel based on their current position and their target position
+        /// </summary>
+        /// <param name="mapUnit">where the character is presently</param>
+        /// <param name="targetXy">where you want them to go</param>
+        /// <returns>returns true if a path was found, false if it wasn't</returns>
+        protected bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy)
         {
-            if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod))
+            MapUnitMovement.MovementCommandDirection GetCommandDirection(Point2D fromXy, Point2D toXy)
             {
-                ArrivedAtLocation = true;
+                if (fromXy == toXy) return MapUnitMovement.MovementCommandDirection.None;
+                if (fromXy.X < toXy.X) return MapUnitMovement.MovementCommandDirection.East;
+                if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
+                if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
+                if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
+                throw new Ultima5ReduxException("For some reason we couldn't determine the path of the command direction in getCommandDirection");
             }
 
-            int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
-            // it's the first time, so we don't reset the ArrivedAtLocation flag 
-            if (_scheduleIndex == -1)
+            Point2D Vector2ToPoint2D(Vector2 vector)
             {
-                _scheduleIndex = nCurrentScheduleIndex;
+                return new Point2D((int)vector.X, (int)vector.Y);
             }
-            else if (_scheduleIndex != nCurrentScheduleIndex)
+
+            if (mapUnit.MapUnitPosition.XY == targetXy)
             {
-                _scheduleIndex = nCurrentScheduleIndex;
-                ArrivedAtLocation = false;
+                throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name + " is already at " + targetXy.X + "," + targetXy.Y); //+ "," + targetXy.Floor);
             }
+
+            // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
+
+            Stack<Node> nodeStack = currentMap.AStar.FindPath(new System.Numerics.Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
+                new System.Numerics.Vector2(targetXy.X, targetXy.Y));
+
+            MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
+            MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;
+            Point2D prevPosition = mapUnit.MapUnitPosition.XY;
+
+            // temporary while I figure out why this happens
+            if (nodeStack == null) return false;
+
+            int nInARow = 0;
+            // builds the movement list that is compatible with the original U5 movement instruction queue stored in the state file
+            foreach (Node node in nodeStack)
+            {
+                Point2D newPosition = Vector2ToPoint2D(node.Position);
+                newDirection = GetCommandDirection(prevPosition, newPosition);
+
+                // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction
+                // that has N iterations (ie. move East 5 times)
+                if (prevDirection == newDirection || prevDirection == MapUnitMovement.MovementCommandDirection.None)
+                {
+                    nInARow++;
+                }
+                else
+                {
+                    // if the direction has changed then we add the previous direction and reset the concurrent counter
+                    mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(prevDirection, nInARow));
+                    nInARow = 1;
+                }
+                prevDirection = newDirection;
+                prevPosition = newPosition;
+            }
+            if (nInARow > 0) { mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow)); }
+            return true;
         }
-
+        
+ 
       
         #endregion
     }

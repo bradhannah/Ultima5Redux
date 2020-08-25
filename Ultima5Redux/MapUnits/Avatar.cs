@@ -24,5 +24,21 @@ namespace Ultima5Redux.MapUnits
         }
 
         public override bool IsActive => true;
+        /// <summary>
+        /// Creates an Avatar MapUnit at the default small map position
+        /// Note: this should never need to be called from a LargeMap since the values persist on disk
+        /// </summary>
+        /// <param name="tileReferences"></param>
+        /// <param name="location"></param>
+        /// <param name="movement"></param>
+        /// <returns></returns>
+        public static MapUnit CreateAvatar(TileReferences tileReferences, 
+            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement)
+        {
+            Avatar theAvatar = new Avatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location), 
+                location, movement);
+
+            return theAvatar;
+        }
     }
 }

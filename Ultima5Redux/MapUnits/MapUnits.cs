@@ -201,7 +201,27 @@ namespace Ultima5Redux.MapUnits
             SetCurrentMapType(location, mapType, false);
         }
 
-        public MapUnit GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy, int nFloor)
+        public T GetSpecificMapUnitByLocation<T>(SmallMapReferences.SingleMapReference.Location location, Point2D xy, 
+            int nFloor) where T: MapUnit
+        {
+            foreach (MapUnit mapUnit in CurrentMapUnits)
+            {
+                //T mapUnit = (T) mapUnit1;
+                // sometimes characters are null because they don't exist - and that is OK
+                if (!mapUnit.IsActive) continue;
+
+                if (mapUnit.MapUnitPosition.XY == xy && 
+                    mapUnit.MapUnitPosition.Floor == nFloor && mapUnit.MapLocation == location)
+                {
+                    // the map unit is at the right position AND is the correct type
+                    return mapUnit.GetType() == typeof(T) ? (T)mapUnit : null;
+                }
+            }
+            return null;
+        }
+
+        public MapUnit GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy,
+            int nFloor)
         {
             foreach (MapUnit mapUnit in CurrentMapUnits)
             {
@@ -256,7 +276,7 @@ namespace Ultima5Redux.MapUnits
                 // the party is always at zero
                 if (i == 0)
                 {
-                    MapUnit theAvatar = MapUnit.CreateAvatar(_tileRefs, 
+                    MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, 
                         SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement);
                     CurrentMapUnits.Add(theAvatar);
                     continue;
@@ -339,7 +359,7 @@ namespace Ultima5Redux.MapUnits
                 if (i == 0 && !bInitialLoad)
                 {
                     mapUnitMovement.ClearMovements();
-                    MapUnit theAvatar = MapUnit.CreateAvatar(_tileRefs, location, mapUnitMovement);
+                    MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement);
                     CurrentMapUnits.Add(theAvatar);
                     continue;
                 }
