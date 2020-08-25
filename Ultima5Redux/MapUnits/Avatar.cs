@@ -23,7 +23,7 @@ namespace Ultima5Redux.MapUnits
             Movement = movement;
         }
 
-        public override bool IsActive => true;
+        public override bool IsActive => false;
         /// <summary>
         /// Creates an Avatar MapUnit at the default small map position
         /// Note: this should never need to be called from a LargeMap since the values persist on disk

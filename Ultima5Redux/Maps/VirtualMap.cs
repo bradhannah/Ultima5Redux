@@ -429,7 +429,6 @@ namespace Ultima5Redux.Maps
             NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
                 (CurrentSingleMapReference.MapLocation, adjustedPosition, CurrentSingleMapReference.Floor);
             
-            //npc = GetMapUnitOnTile(adjustedPosition);
             if (npc != null) return npc;
 
             if (!GetTileReference(adjustedPosition).IsTalkOverable)
