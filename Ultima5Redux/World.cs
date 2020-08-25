@@ -442,7 +442,8 @@ namespace Ultima5Redux
             {
                 if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
-                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1));
+                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1),
+                        State.TheVirtualMap.CurrentPosition.XY);
                     klimbResult = KlimbResult.Success;
                     return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN));
                 }
@@ -451,7 +452,8 @@ namespace Ultima5Redux
             {
                 if (nCurrentFloor + 1 < nTopFloor)
                 {
-                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1));
+                    State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1),
+                        State.TheVirtualMap.CurrentPosition.XY);
                     klimbResult = KlimbResult.Success;
                     return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
                 }

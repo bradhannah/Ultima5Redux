@@ -14,8 +14,28 @@ namespace Ultima5Redux.MapUnits
     {
         private const int MAX_MAP_CHARACTERS = 0x20;
 
-        public readonly List<MapUnit> CurrentMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
-
+        public List<MapUnit> CurrentMapUnits
+        {
+            get
+            {
+                switch (_currentMapType)
+                {
+                    case LargeMap.Maps.Small:
+                        return _smallWorldMapUnits;
+                    case LargeMap.Maps.Overworld:
+                        return _overworldMapUnits;
+                    case LargeMap.Maps.Underworld:
+                        return _underworldMapUnits;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+            }
+        }
+        private readonly List<MapUnit> _smallWorldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        private readonly List<MapUnit> _overworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        private readonly List<MapUnit> _underworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        
         // load the MapAnimationStates once from disk, don't worry about again until you are saving to disk
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
 
@@ -148,18 +168,28 @@ namespace Ultima5Redux.MapUnits
             
             NPCRefs = npcRefs;
 
+            // we only load the large maps once and they always exist on disk
+            LoadLargeMap(LargeMap.Maps.Overworld, true);
+            LoadLargeMap(LargeMap.Maps.Underworld, true);
+
+            // if the small map is the initial map, then load it 
+            // otherwise we force the correct states to either the over or underworld
             switch (initialMap)
             {
                 case LargeMap.Maps.Small:
                     LoadSmallMap(currentSmallMap, true);
                     break;
                 case LargeMap.Maps.Overworld:
+                    _currentMapUnitStates = _overworldMapUnitStates;
+                    break;
                 case LargeMap.Maps.Underworld:
-                    LoadLargeMap(initialMap, true);
+                    _currentMapUnitStates = _underworldMapUnitStates;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
+
+            _currentMapType = initialMap;
         }
 
         /// <summary>
@@ -184,7 +214,7 @@ namespace Ultima5Redux.MapUnits
                     return;
                 case LargeMap.Maps.Overworld:
                 case LargeMap.Maps.Underworld:
-                    return;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
             }
@@ -245,20 +275,21 @@ namespace Ultima5Redux.MapUnits
         /// <param name="map"></param>
         /// <param name="bInitialLoad"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void LoadLargeMap(LargeMap.Maps map, bool bInitialLoad) 
+        private void LoadLargeMap(LargeMap.Maps map, bool bInitialLoad)
         {
-            CurrentMapUnits.Clear();
+            List<MapUnit> mapUnits;
             
             // the over and underworld animation states are already loaded and can stick around
             switch (map)
             {
                 case LargeMap.Maps.Overworld:
                     _currentMapUnitStates = _overworldMapUnitStates;
+                    mapUnits = _overworldMapUnits;
                     break;
                 case LargeMap.Maps.Underworld:
                     _currentMapUnitStates = _underworldMapUnitStates;
+                    mapUnits = _underworldMapUnits;
                     break;
-                case LargeMap.Maps.Small:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
             }
@@ -278,7 +309,7 @@ namespace Ultima5Redux.MapUnits
                 {
                     MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, 
                         SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement);
-                    CurrentMapUnits.Add(theAvatar);
+                    mapUnits.Add(theAvatar);
                     continue;
                 }
                 
@@ -305,7 +336,7 @@ namespace Ultima5Redux.MapUnits
                 }
                 
                 // add the new character to our list of characters currently on the map
-                CurrentMapUnits.Add(newUnit);
+                mapUnits.Add(newUnit);
             }
         }
 
@@ -315,7 +346,7 @@ namespace Ultima5Redux.MapUnits
         private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
         {
             // wipe all existing characters since they cannot exist beyond the load
-            CurrentMapUnits.Clear();
+            _smallWorldMapUnits.Clear();
             
             // are we loading from disk? This should only be done on initial game load since state is immediately 
             // lost when leaving
@@ -360,7 +391,7 @@ namespace Ultima5Redux.MapUnits
                 {
                     mapUnitMovement.ClearMovements();
                     MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement);
-                    CurrentMapUnits.Add(theAvatar);
+                    _smallWorldMapUnits.Add(theAvatar);
                     continue;
                 }
                 
@@ -392,7 +423,7 @@ namespace Ultima5Redux.MapUnits
                     mapUnitState = new MapUnitState(_tileRefs, npcRef);
                 }
 
-                CurrentMapUnits.Add(new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement, 
+                _smallWorldMapUnits.Add(new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement, 
                     _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location));
             }
         }

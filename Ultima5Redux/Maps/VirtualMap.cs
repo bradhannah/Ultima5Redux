@@ -223,11 +223,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        /// <summary>
-        /// Loads a small map based on the provided reference
-        /// </summary>
-        /// <param name="singleMapReference"></param>
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference)
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
@@ -239,8 +235,12 @@ namespace Ultima5Redux.Maps
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
             TheMapUnits.SetCurrentMapType(singleMapReference.MapLocation, LargeMap.Maps.Small);
+            if (xy != null)
+            {
+                CurrentPosition.XY = xy;
+            }
         }
-      
+
         /// <summary>
         /// Loads a large map -either overworld or underworld
         /// </summary>
@@ -751,9 +751,8 @@ namespace Ultima5Redux.Maps
         public void UseStairs(Point2D xy, bool bForceDown = false)
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
-            CurrentPosition.XY = xy.Copy();
             LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation, 
-                CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)));
+                CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)),xy.Copy());
         }
 
         #endregion
