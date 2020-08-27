@@ -119,10 +119,10 @@
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\ShoppeKeeper.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\ShoppeKeeperReference.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\ShoppeKeeperReferences.cs" />
-    <Compile Include="MapUnits\SeaFaringVessel\Frigate.cs" />
-    <Compile Include="MapUnits\SeaFaringVessel\SeaFaringVessel.cs" />
-    <Compile Include="MapUnits\SeaFaringVessel\SeaFaringVesselReference.cs" />
-    <Compile Include="MapUnits\SeaFaringVessel\Skiff.cs" />
+    <Compile Include="MapUnits\SeaFaringVessels\Frigate.cs" />
+    <Compile Include="MapUnits\SeaFaringVessels\SeaFaringVessel.cs" />
+    <Compile Include="MapUnits\SeaFaringVessels\SeaFaringVesselReference.cs" />
+    <Compile Include="MapUnits\SeaFaringVessels\Skiff.cs" />
     <Compile Include="Maps\GenericTileset.cs" />
     <Compile Include="Maps\Look.cs" />
     <Compile Include="Maps\Signs.cs" />

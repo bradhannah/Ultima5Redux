@@ -10,7 +10,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class Shipwright : ShoppeKeeper
     {
-        public Shipwright(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
+        public Shipwright(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, 
+            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : 
+            base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
         }
 
@@ -47,6 +49,34 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public string GetSkiffOffer(SmallMapReferences.SingleMapReference.Location location, PlayerCharacterRecords records)
         {
             return ShoppeKeeperDialogueReference.GetMerchantString(118, nGold: Skiff.GetPrice(location, records));
+        }
+
+        public string GetSkiffPlacedInFrigate()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(120).Trim();
+        }
+
+        public override string GetPissedOffNotEnoughMoney()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(122).Trim();
+        }
+
+        /// <summary>
+        /// The dock is occupied, so it's gonna be 87000 gold for that Frigate
+        /// </summary>
+        /// <returns></returns>
+        public string GetDockIsOccupiedExpensiveShipResponse()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(125).Trim();
+        }
+
+        public override string GetThanksAfterPurchaseResponse()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(123).TrimStart() + "\n\n" 
+                   + ShoppeKeeperDialogueReference.GetMerchantString(124).Trim() +
+                   " Avatar?\"";
+            // I'm lazy, may fix later
+            // genderedAddress:records.Records[0].Gender == PlayerCharacterRecord.CharacterGender.Male ? "sir":"mam");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Maps 
 {
@@ -16,20 +17,22 @@ namespace Ultima5Redux.Maps
         #endregion
 
         #region Public Constants and Enumerations
+
         public const int TILES_PER_MAP_ROW = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_X; // total number of tiles per row in the large map 
         public const int TILES_PER_MAP_COL = TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
         public enum Maps {Small = -1 , Overworld, Underworld};
 
         private Maps _mapChoice;
-        //private Dictionary<Point2D, TileOverride> xyOverrides;
         
         #endregion
+
         /// <summary>
         /// Build a large map. There are essentially two choices - Overworld and Underworld
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="mapChoice"></param>
+        /// <param name="tileOverrides"></param>
         public LargeMap (string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(u5Directory, tileOverrides, 
             SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
@@ -45,7 +48,7 @@ namespace Ultima5Redux.Maps
                     //xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britannia_Underworld, -1));
                     break;
                 case Maps.Small:
-                    throw new Ultima5ReduxException("tried to create a largemap with the .Small map enum");
+                    throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
             }
 
         }
@@ -62,7 +65,7 @@ namespace Ultima5Redux.Maps
         /// <param name="overlayFilename">If present, the special overlay file for Britannia</param>
         /// <param name="ignoreOverlay">Do we ignore the overlay?</param>
         /// <returns></returns>
-        private static byte[][] BuildGenericMap(String mapDatFilename, String overlayFilename, bool ignoreOverlay)
+        private static byte[][] BuildGenericMap(string mapDatFilename, string overlayFilename, bool ignoreOverlay)
         {
             List<byte> theChunksSerial = Utils.GetFileAsByteList(mapDatFilename);
 
@@ -83,7 +86,7 @@ namespace Ultima5Redux.Maps
             // counter for the serial chunks from brit.dat
             int britDatChunkCount = 0;
 
-            // not relaly needed, because we read as we go... but here it is
+            // not really needed, because we read as we go... but here it is
             int chunkCount = 0;
 
             // these are the chunks describe in data.ovl
@@ -97,7 +100,7 @@ namespace Ultima5Redux.Maps
                 // but if we are ignoring the overlay - then just give it zero, so the map will be processed without overlay considerations
                 dataOvlChunks[chunkCount] = ignoreOverlay ? (byte)0x00 : dataOvl.ReadByte();
 
-                // go through each row on the outer loop, becuase we want to read each horizon first
+                // go through each row on the outer loop, because we want to read each horizon first
                 for (int curRow = row * TILES_PER_CHUNK_Y; curRow < (row * TILES_PER_CHUNK_Y) + TILES_PER_CHUNK_Y; curRow++)
                 {
                     //System.Console.WriteLine("CurRow : " + curRow);
@@ -107,13 +110,11 @@ namespace Ultima5Redux.Maps
                         if (dataOvlChunks[chunkCount] == 0xFF)
                         {
                             // welp, it's a water tile
-//                            theMap[curRow][curCol] = 0x01;
                             theMap[curCol][curRow] = 0x01;
                         }
                         else
                         {
                             // it contains land tiles (look in brit.dat)
-                            //theMap[curRow][curCol] = theChunksSerial[britDatChunkCount++];
                             theMap[curCol][curRow] = theChunksSerial[britDatChunkCount++];
                         }
                     }
@@ -128,5 +129,6 @@ namespace Ultima5Redux.Maps
             return 1;
         }
 
+      
     }
 }

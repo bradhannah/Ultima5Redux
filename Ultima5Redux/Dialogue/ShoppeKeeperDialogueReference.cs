@@ -96,14 +96,15 @@ namespace Ultima5Redux.Dialogue
         /// <param name="shoppeName"></param>
         /// <param name="tod"></param>
         /// <param name="nQuantity"></param>
+        /// <param name="genderedAddress"></param>
         /// <returns>a complete string with full replacements</returns>
         internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", 
             bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null, 
-            int nQuantity = 0)
+            int nQuantity = 0, string genderedAddress = "")
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
-                shoppeName, tod, nQuantity);
+                shoppeName, tod, nQuantity, genderedAddress);
         }
 
         /// <summary>
@@ -117,10 +118,11 @@ namespace Ultima5Redux.Dialogue
         /// <param name="shoppeName"></param>
         /// <param name="tod"></param>
         /// <param name="nQuantity"></param>
+        /// <param name="genderedAddress"></param>
         /// <returns>a complete string with full replacements</returns>
         internal static string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", 
             bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null,
-            int nQuantity = 0)
+            int nQuantity = 0, string genderedAddress = "")
         {
             // % is gold
             // & is current piece of equipment
@@ -150,6 +152,10 @@ namespace Ultima5Redux.Dialogue
             if (shoppeName != "")
             {
                 sb.Replace("#", shoppeName);
+            }
+            if (genderedAddress != "")
+            {
+                sb.Replace(char.ToString((char)20), genderedAddress);
             }
             if (tod != null)
             {
@@ -221,7 +227,8 @@ namespace Ultima5Redux.Dialogue
         /// <param name="npcType"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">couldn't find the shoppe keeper at that particular location</exception>
-        public ShoppeKeeper GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+        public ShoppeKeeper GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location location, 
+            NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
         {
             switch (npcType)
             {

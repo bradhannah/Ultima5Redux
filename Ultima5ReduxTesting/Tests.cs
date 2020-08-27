@@ -124,7 +124,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-            List<SeaFaringVessel> vessels = world.State.TheVirtualMap.TheMapUnits.GetAllSeaFaringVessels();
+            //List<SeaFaringVessel> vessels = world.State.TheVirtualMap.TheMapUnits.GetAllSeaFaringVessels();
         }
 
         [Test]

@@ -4,10 +4,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.SeaFaringVessel;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
@@ -50,10 +52,6 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private int[][] _overrideMap;
         /// <summary>
-        /// Current position of player character (avatar)
-        /// </summary>
-        //private readonly Point2D _currentPosition = new Point2D(0, 0);
-        /// <summary>
         /// Current time of day
         /// </summary>
         private readonly TimeOfDay _timeOfDay;
@@ -79,25 +77,6 @@ namespace Ultima5Redux.Maps
 
 
         #region Public Properties
-
-        /// <summary>
-        /// Current position of player character (avatar)
-        /// </summary>
-        // public Point2D CurrentPosition
-        // {
-        //     get => _currentPosition;
-        //     set
-        //     {
-        //         _currentPosition.X = value.X;
-        //         _currentPosition.Y = value.Y;
-        //     }
-        // }
-
-        // public Point2D CurrentPosition
-        // {
-        //     get => CurrentPosition.XY;
-        //     set => CurrentPosition = new MapUnitPosition(value.X, value.Y, CurrentPosition.Floor);
-        // }
 
         public MapUnitPosition CurrentPosition => TheMapUnits.CurrentAvatarPosition;
 
@@ -126,6 +105,15 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public Map CurrentMap => (IsLargeMap ? (Map)CurrentLargeMap : (Map)CurrentSmallMap);
 
+        /// <summary>
+        /// The persistant overworld map
+        /// </summary>
+        public LargeMap OverworldMap => _largeMaps[LargeMap.Maps.Overworld];
+        /// <summary>
+        /// The persistant underworld map
+        /// </summary>
+        public LargeMap UnderworldMap => _largeMaps[LargeMap.Maps.Underworld];
+        
         /// <summary>
         /// Detailed reference of current small map
         /// </summary>
@@ -1003,6 +991,41 @@ namespace Ultima5Redux.Maps
 
             // just in case we didn't find a match - just use grass for now
             return nMostTile == -1 ? 5 : nMostTile;
+        }
+        
+        /// <summary>
+        /// Determines if a specific Dock is occupied by a Sea Faring Vessel
+        /// </summary>
+        /// <returns></returns>
+        public bool IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference)
+        {
+            return GetSeaFaringVesselAtDock(location, dataOvlReference) != null;
+        }
+
+        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location,
+            DataOvlReference dataOvlReference)
+        {
+            // 0 = Jhelom
+            // 1 = Minoc
+            // 2 = East Brittany
+            // 3 = Buccaneer's Den
+            List<byte> xDockCoords = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS).GetAsByteList();
+            List<byte> yDockCoords = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS).GetAsByteList();
+            Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
+                new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>
+                {
+                    {SmallMapReferences.SingleMapReference.Location.Jhelom, new Point2D(xDockCoords[0], yDockCoords[0])},
+                    {SmallMapReferences.SingleMapReference.Location.Minoc, new Point2D(xDockCoords[1], yDockCoords[1])},
+                    {SmallMapReferences.SingleMapReference.Location.East_Britanny, new Point2D(xDockCoords[2], yDockCoords[2])},
+                    {SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, new Point2D(xDockCoords[3], yDockCoords[3])},
+                };
+            
+            if (!docks.ContainsKey(location)) return null;
+
+            SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(LargeMap.Maps.Overworld, 
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                docks[location], 0, true);
+            return seaFaringVessel;
         }
         #endregion
     }

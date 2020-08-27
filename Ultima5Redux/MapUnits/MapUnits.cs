@@ -14,24 +14,23 @@ namespace Ultima5Redux.MapUnits
     {
         private const int MAX_MAP_CHARACTERS = 0x20;
 
-        public List<MapUnit> CurrentMapUnits
+        public List<MapUnit> CurrentMapUnits => GetMapUnits(_currentMapType);
+
+        private List<MapUnit> GetMapUnits(LargeMap.Maps map)
         {
-            get
+            switch (map)
             {
-                switch (_currentMapType)
-                {
-                    case LargeMap.Maps.Small:
-                        return _smallWorldMapUnits;
-                    case LargeMap.Maps.Overworld:
-                        return _overworldMapUnits;
-                    case LargeMap.Maps.Underworld:
-                        return _underworldMapUnits;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-                
+                case LargeMap.Maps.Small:
+                    return _smallWorldMapUnits;
+                case LargeMap.Maps.Overworld:
+                    return _overworldMapUnits;
+                case LargeMap.Maps.Underworld:
+                    return _underworldMapUnits;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
+        
         private readonly List<MapUnit> _smallWorldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
         private readonly List<MapUnit> _overworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
         private readonly List<MapUnit> _underworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
@@ -231,10 +230,13 @@ namespace Ultima5Redux.MapUnits
             SetCurrentMapType(location, mapType, false);
         }
 
-        public T GetSpecificMapUnitByLocation<T>(SmallMapReferences.SingleMapReference.Location location, Point2D xy, 
-            int nFloor) where T: MapUnit
+        public T GetSpecificMapUnitByLocation<T>(LargeMap.Maps map,
+            SmallMapReferences.SingleMapReference.Location location, Point2D xy,
+            int nFloor, bool bCheckBaseToo = false) where T : MapUnit
         {
-            foreach (MapUnit mapUnit in CurrentMapUnits)
+            List<MapUnit> mapUnits = GetMapUnits(map);
+            
+            foreach (MapUnit mapUnit in mapUnits)
             {
                 //T mapUnit = (T) mapUnit1;
                 // sometimes characters are null because they don't exist - and that is OK
@@ -243,11 +245,22 @@ namespace Ultima5Redux.MapUnits
                 if (mapUnit.MapUnitPosition.XY == xy && 
                     mapUnit.MapUnitPosition.Floor == nFloor && mapUnit.MapLocation == location)
                 {
+                    if (bCheckBaseToo && mapUnit.GetType().BaseType == typeof(T))
+                    {
+                        return (T)mapUnit;
+                    }
                     // the map unit is at the right position AND is the correct type
                     return mapUnit.GetType() == typeof(T) ? (T)mapUnit : null;
                 }
             }
             return null;
+        }
+        
+        
+        public T GetSpecificMapUnitByLocation<T>(SmallMapReferences.SingleMapReference.Location location, Point2D xy, 
+            int nFloor, bool bCheckBaseToo = false) where T: MapUnit
+        {
+            return GetSpecificMapUnitByLocation<T>(_currentMapType, location, xy, nFloor, bCheckBaseToo);
         }
 
         public MapUnit GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy,
@@ -268,9 +281,9 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// Called when switching to a new large map from a dungeon, small map or other large map
         /// Will load last known state from memory (originally disk) and recalculate some values
         /// such as movement as required.
+        /// Called only once on load - the state of the large map will persist in and out of small maps
         /// </summary>
         /// <param name="map"></param>
         /// <param name="bInitialLoad"></param>
@@ -432,30 +445,30 @@ namespace Ultima5Redux.MapUnits
         /// Get all of the sea faring vessels on the current map
         /// </summary>
         /// <returns></returns>
-        public List<SeaFaringVessel.SeaFaringVessel> GetAllSeaFaringVessels()
-        {
-            List<SeaFaringVessel.SeaFaringVessel> vessels = new List<SeaFaringVessel.SeaFaringVessel>();
-
-            foreach (MapUnit character in CurrentMapUnits)
-            {
-                if (!character.TheMapUnitState.Tile1Ref.IsBoardable) continue;
-                
-                if (_tileRefs.IsFrigate(character.TheMapUnitState.Tile1Ref.Index))
-                {
-                    // Frigate frigate = new Frigate(character.TheSmallMapCharacterState.TheMapUnitPosition, 
-                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
-                    // vessels.Add(frigate);
-                }
-                else if (_tileRefs.IsSkiff(character.TheMapUnitState.Tile1Ref.Index))
-                {
-                    // Skiff skiff = new Skiff(character.TheSmallMapCharacterState.TheMapUnitPosition, 
-                    //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
-                    // vessels.Add(skiff);
-                }
-            }
-
-            return vessels;
-        }
+        // public List<SeaFaringVessel.SeaFaringVessel> GetAllSeaFaringVessels()
+        // {
+        //     List<SeaFaringVessel.SeaFaringVessel> vessels = new List<SeaFaringVessel.SeaFaringVessel>();
+        //
+        //     foreach (MapUnit character in CurrentMapUnits)
+        //     {
+        //         if (!character.TheMapUnitState.Tile1Ref.IsBoardable) continue;
+        //         
+        //         if (_tileRefs.IsFrigate(character.TheMapUnitState.Tile1Ref.Index))
+        //         {
+        //             // Frigate frigate = new Frigate(character.TheSmallMapCharacterState.TheMapUnitPosition, 
+        //             //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
+        //             // vessels.Add(frigate);
+        //         }
+        //         else if (_tileRefs.IsSkiff(character.TheMapUnitState.Tile1Ref.Index))
+        //         {
+        //             // Skiff skiff = new Skiff(character.TheSmallMapCharacterState.TheMapUnitPosition, 
+        //             //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
+        //             // vessels.Add(skiff);
+        //         }
+        //     }
+        //
+        //     return vessels;
+        // }
         
     }
 }
