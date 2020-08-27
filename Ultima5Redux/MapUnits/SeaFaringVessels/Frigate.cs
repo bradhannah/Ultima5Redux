@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux.MapUnits.SeaFaringVessel
+namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
     public class Frigate : SeaFaringVessel
     {

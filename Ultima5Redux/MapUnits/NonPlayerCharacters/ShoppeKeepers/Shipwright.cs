@@ -3,7 +3,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.SeaFaringVessel;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
