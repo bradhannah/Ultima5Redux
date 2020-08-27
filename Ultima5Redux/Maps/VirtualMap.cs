@@ -1002,13 +1002,9 @@ namespace Ultima5Redux.Maps
             return GetSeaFaringVesselAtDock(location, dataOvlReference) != null;
         }
 
-        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location,
+        public Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference)
         {
-            // 0 = Jhelom
-            // 1 = Minoc
-            // 2 = East Brittany
-            // 3 = Buccaneer's Den
             List<byte> xDockCoords = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS).GetAsByteList();
             List<byte> yDockCoords = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS).GetAsByteList();
             Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
@@ -1022,9 +1018,20 @@ namespace Ultima5Redux.Maps
             
             if (!docks.ContainsKey(location)) return null;
 
+            return docks[location];
+        }
+        
+        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location,
+            DataOvlReference dataOvlReference)
+        {
+            // 0 = Jhelom
+            // 1 = Minoc
+            // 2 = East Brittany
+            // 3 = Buccaneer's Den
+
             SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(LargeMap.Maps.Overworld, 
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
-                docks[location], 0, true);
+                GetLocationOfDock(location, dataOvlReference), 0, true);
             return seaFaringVessel;
         }
         #endregion

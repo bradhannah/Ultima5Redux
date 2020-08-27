@@ -14,7 +14,6 @@ namespace Ultima5Redux.MapUnits
     {
         protected readonly TileReferences TileReferences;
 
-        #region Private and Internal Properties 
         /// <summary>
         /// All the movements for the map character
         /// </summary>
@@ -42,6 +41,11 @@ namespace Ultima5Redux.MapUnits
                 if (NPCRef != null) return TileReferences.GetTileReference(NPCRef.NPCKeySprite);
 
                 return TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
+            }
+            set
+            {
+                TheMapUnitState.Tile1Ref = value;
+                TheMapUnitState.Tile2Ref = value;
             }
         }
 
@@ -78,9 +82,6 @@ namespace Ultima5Redux.MapUnits
         internal int ForcedWandering { get; set; }
         
         
-        #endregion
-
-        #region Public Properties
         public int MovementAttempts = 0;
         /// <summary>
         /// Reference to current NPC (if it's an NPC at all!)
@@ -130,9 +131,6 @@ namespace Ultima5Redux.MapUnits
                     + this.Movement);
         }
 
-        #endregion
-
-        #region Constructors
         /// <summary>
         /// empty constructor if there is nothing in the map character slot
         /// </summary>
@@ -187,10 +185,6 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
         }
 
-       
-        #endregion
-
-        #region Internal Methods
      
 
         /// <summary>
@@ -278,9 +272,5 @@ namespace Ultima5Redux.MapUnits
             if (nInARow > 0) { mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow)); }
             return true;
         }
-        
- 
-      
-        #endregion
     }
 }

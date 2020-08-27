@@ -8,6 +8,22 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessel
 {
     public class Frigate : SeaFaringVessel
     {
+
+        /// <summary>
+        /// How many skiffs does the frigate have aboard?
+        /// </summary>
+        public int SkiffsAboard
+        {
+            get => this.TheMapUnitState.Depends3;
+            set => this.TheMapUnitState.Depends3 = (byte)value;
+        }
+        
+        // public static Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, 
+        //     MapUnitState existingState)
+        // {
+        //     Frigate frigate = new Frigate(existingState, );
+        // }
+
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } = new Dictionary<SmallMapReferences.SingleMapReference.Location, int>()
         {
             {SmallMapReferences.SingleMapReference.Location.East_Britanny, 1300},

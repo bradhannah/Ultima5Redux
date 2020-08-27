@@ -30,11 +30,11 @@ namespace Ultima5Redux.MapUnits
         public byte X { get; set; }
         public byte Y { get; set; }
         public byte Floor { get; set; }
-        public byte Depends1 { get; }
-        public byte Depends2 { get; }
-        public byte Depends3 { get; }
-        public TileReference Tile1Ref { get; }
-        public TileReference Tile2Ref { get; }
+        public byte Depends1 { get; internal set; }
+        public byte Depends2 { get; internal set; }
+        public byte Depends3 { get; internal set; }
+        public TileReference Tile1Ref { get; internal set; }
+        public TileReference Tile2Ref { get; internal set;}
         #endregion
 
         public MapUnitState(TileReferences tileReferences, byte[] stateBytes)

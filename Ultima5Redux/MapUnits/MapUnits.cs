@@ -5,6 +5,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessel;
 using Ultima5Redux.PlayerCharacters;
 
@@ -38,7 +39,7 @@ namespace Ultima5Redux.MapUnits
         // load the MapAnimationStates once from disk, don't worry about again until you are saving to disk
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
 
-        private readonly SmallMapCharacterStates _charStates;
+        private readonly SmallMapCharacterStates _smallMapCharacterStates;
         private LargeMap.Maps _currentMapType;
         /// <summary>
         /// static references to all NPCs in the world
@@ -67,7 +68,6 @@ namespace Ultima5Redux.MapUnits
             get => CurrentMapUnits[0].MapUnitPosition;
             set => CurrentMapUnits[0].MapUnitPosition = value;
         }
-
 
         private MapUnitStates CurrentMapUnitStates
         {
@@ -131,7 +131,7 @@ namespace Ultima5Redux.MapUnits
             {
                 // small, overworld and underworld always have saved Animation states so we load them in at the beginning
                 _smallMapUnitStates = new MapUnitStates(_activeDataChunk, tileRefs);
-                _smallMapUnitStates.Load(MapUnitStates.MapCharacterAnimationStatesFiles.SAVED_GAM, true);
+                _smallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
 
                 // we always load the over and underworld from disk immediately, no need to reload as we will track it in memory 
                 // going forward
@@ -156,11 +156,11 @@ namespace Ultima5Redux.MapUnits
                     _overworldMapUnitStates = new MapUnitStates(_overworldDataChunk, tileRefs);
                 }
             }
-            _overworldMapUnitStates.Load(MapUnitStates.MapCharacterAnimationStatesFiles.BRIT_OOL, true);
-            _underworldMapUnitStates.Load(MapUnitStates.MapCharacterAnimationStatesFiles.UNDER_OOL, true );
+            _overworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
+            _underworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true );
 
             // map character states pertain to whichever map was loaded from disk
-            _charStates = new SmallMapCharacterStates(charStatesDataChunk, tileRefs);
+            _smallMapCharacterStates = new SmallMapCharacterStates(charStatesDataChunk, tileRefs);
             
             // movements pertain to whichever map was loaded from disk
             Movements = new MapUnitMovements(nonPlayerCharacterMovementLists, nonPlayerCharacterMovementOffsets);
@@ -238,7 +238,6 @@ namespace Ultima5Redux.MapUnits
             
             foreach (MapUnit mapUnit in mapUnits)
             {
-                //T mapUnit = (T) mapUnit1;
                 // sometimes characters are null because they don't exist - and that is OK
                 if (!mapUnit.IsActive) continue;
 
@@ -278,6 +277,57 @@ namespace Ultima5Redux.MapUnits
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Adds a new map unit to the next position available
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="mapUnit"></param>
+        /// <returns>true if successful, false if no room was found</returns>
+        internal bool AddNewMapUnit(LargeMap.Maps map, MapUnit mapUnit)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(map);
+            return AddNewMapUnit(map, mapUnit, nIndex);
+        }
+
+        /// <summary>
+        /// Adds a new map unit to a given position
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="mapUnit"></param>
+        /// <param name="nIndex"></param>
+        /// <returns></returns>
+        internal bool AddNewMapUnit(LargeMap.Maps map, MapUnit mapUnit, int nIndex)
+        {
+            if (nIndex == -1) return false;
+            
+            List<MapUnit> mapUnits = GetMapUnits(map);
+            Debug.Assert(nIndex < mapUnits.Count);
+            mapUnits[nIndex] = mapUnit;
+            return true;
+        }
+
+
+        /// <summary>
+        /// Finds the next available index in the available map unit list
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns>>= 0 is an index, or -1 means no room found</returns>
+        private int FindNextFreeMapUnitIndex(LargeMap.Maps map)
+        {
+            int nIndex = 0;
+            foreach (MapUnit mapUnit in GetMapUnits(map))
+            {
+                if (mapUnit.GetType() == typeof(EmptyMapUnit))
+                {
+                    return nIndex;
+                }
+
+                nIndex++;
+            }
+
+            return -1;
         }
 
         /// <summary>
@@ -325,7 +375,6 @@ namespace Ultima5Redux.MapUnits
                     mapUnits.Add(theAvatar);
                     continue;
                 }
-                
 
                 // we have retrieved the _currentMapUnitStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
@@ -368,7 +417,7 @@ namespace Ultima5Redux.MapUnits
                 Debug.WriteLine("Loading character positions from disk...");
                 // we are loading the small animation from disk
                 // this is only done if you save the game and reload within a towne
-                _smallMapUnitStates.Load(MapUnitStates.MapCharacterAnimationStatesFiles.SAVED_GAM, true);
+                _smallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
             }
             else
             {
@@ -417,7 +466,7 @@ namespace Ultima5Redux.MapUnits
                 if (bInitialLoad)
                 {
                     // character states are only loaded when forced from disk and only on small maps
-                    smallMapCharacterState = _charStates.GetCharacterState(i);
+                    smallMapCharacterState = _smallMapCharacterStates.GetCharacterState(i);
 
                     if (CurrentMapUnitStates.HasAnyAnimationStates())
                     {
@@ -442,33 +491,28 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// Get all of the sea faring vessels on the current map
+        /// Creates a new frigate at a dock of a given location 
         /// </summary>
-        /// <returns></returns>
-        // public List<SeaFaringVessel.SeaFaringVessel> GetAllSeaFaringVessels()
-        // {
-        //     List<SeaFaringVessel.SeaFaringVessel> vessels = new List<SeaFaringVessel.SeaFaringVessel>();
-        //
-        //     foreach (MapUnit character in CurrentMapUnits)
-        //     {
-        //         if (!character.TheMapUnitState.Tile1Ref.IsBoardable) continue;
-        //         
-        //         if (_tileRefs.IsFrigate(character.TheMapUnitState.Tile1Ref.Index))
-        //         {
-        //             // Frigate frigate = new Frigate(character.TheSmallMapCharacterState.TheMapUnitPosition, 
-        //             //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
-        //             // vessels.Add(frigate);
-        //         }
-        //         else if (_tileRefs.IsSkiff(character.TheMapUnitState.Tile1Ref.Index))
-        //         {
-        //             // Skiff skiff = new Skiff(character.TheSmallMapCharacterState.TheMapUnitPosition, 
-        //             //     SeaFaringVesselReference.GetDirectionBySprite(_tileRefs, character.TheMapUnitState.Tile1Ref.Index));
-        //             // vessels.Add(skiff);
-        //         }
-        //     }
-        //
-        //     return vessels;
-        // }
-        
+        /// <param name="location"></param>
+        /// <param name="virtualMap"></param>
+        /// <param name="dataOvlReference"></param>
+        public void CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap,
+            DataOvlReference dataOvlReference)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
+            if (nIndex == -1) return;
+
+            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
+            Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex), false, 
+                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
+            
+            // set position of frigate in the world
+            Point2D frigateLocation = virtualMap.GetLocationOfDock(location, dataOvlReference);
+            frigate.MapUnitPosition = new MapUnitPosition(frigateLocation.X, frigateLocation.Y, 0);
+            frigate.SkiffsAboard = 1;
+            frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
+            
+            AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
+        }
     }
 }
