@@ -514,5 +514,23 @@ namespace Ultima5Redux.MapUnits
             
             AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
         }
+        
+        public void CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap,
+            DataOvlReference dataOvlReference)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
+            if (nIndex == -1) return;
+
+            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
+            Skiff frigate = new Skiff(mapUnitState, Movements.GetMovement(nIndex), false, 
+                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
+            
+            // set position of frigate in the world
+            Point2D skiffLocation = virtualMap.GetLocationOfDock(location, dataOvlReference);
+            frigate.MapUnitPosition = new MapUnitPosition(skiffLocation.X, skiffLocation.Y, 0);
+            frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("SkiffLeft");
+            
+            AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
+        }
     }
 }
