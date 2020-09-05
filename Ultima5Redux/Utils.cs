@@ -8,22 +8,8 @@ using System.Runtime.InteropServices;
 
 namespace Ultima5Redux
 {
-    public class Utils
+    public static class Utils
     {
-        /// <summary>
-        /// Simple 2D byte array initlialization to zeros
-        /// </summary>
-        /// <param name="numberOfRows"></param>
-        /// <param name="numberOfCols"></param>
-        /// <returns></returns>
-        //static public byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
-        //{
-        //    byte[][] byteArray = new byte[numberOfRows][];
-        //    for (int i = 0; i < numberOfRows; i++) { byteArray[i] = new byte[numberOfCols]; }
-
-        //    return byteArray;
-        //}
-
         public static byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
         {
             return Init2DArray<byte>(numberOfRows, numberOfCols);
@@ -36,10 +22,6 @@ namespace Ultima5Redux
             for (int i = 0; i < numberOfRows; i++)
             {
                 rowList.Add(new List<T>(numberOfCols));
-                //for (int j = 0; j < numberOfCols; j++)
-                //{
-
-                //}
             }
             return rowList;
 
@@ -73,14 +55,6 @@ namespace Ultima5Redux
         {
             return Init2DArray<bool>(numberOfRows, numberOfCols);
         }
-
-        //static public bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols)
-        //{
-        //    bool[][] byteArray = new bool[numberOfRows][];
-        //    for (int i = 0; i < numberOfRows; i++) { byteArray[i] = new bool[numberOfCols]; }
-
-        //    return byteArray;
-        //}
 
         public static T[][] TransposeArray<T>(T[][] ts)
         {
@@ -125,13 +99,11 @@ namespace Ultima5Redux
         {
             int listCount = byteList.Count;
 
-            // TODO: add safety code to make sure there is no remainer when dividing listCount/splitEveryN
-            int remainder = 0;
-            _ = Math.DivRem(listCount, splitEveryN, out remainder);
+            // TODO: add safety code to make sure there is no remainder when dividing listCount/splitEveryN
+            _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
             if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
 
-//            byte[][] byteArray = Init2DByteArray(length / splitEveryN, length / splitEveryN);
             byte[][] byteArray = Init2DArray<byte>(length / splitEveryN, length / splitEveryN);
 
             for (int listPos = offset, arrayPos = 0; listPos < offset + length; listPos++, arrayPos++)
@@ -181,8 +153,9 @@ namespace Ultima5Redux
         /// <summary>
         /// Converts a byte[] to a readable string, assumes it ends with a NULL (0x00) byte
         /// </summary>
-        /// <param name="biteArray">the array to read from</param>
+        /// <param name="byteArray"></param>
         /// <param name="offset">the offset to start at</param>
+        /// <param name="length"></param>
         /// <returns></returns>
         public static string BytesToStringNullTerm(List<byte> byteArray, int offset, int length)
         {

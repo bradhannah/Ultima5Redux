@@ -295,7 +295,7 @@ namespace Ultima5Redux.Dialogue
                         if (avatarNameResponse.ToLower() == _gameStateRef.AvatarsName.ToLower())
                         {
                             // i met them
-                            _gameStateRef.SetMetNPC(Npc);
+                            _gameStateRef.SetMetNpc(Npc);
                             EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.PLEASURE)));
                             break;
                         }

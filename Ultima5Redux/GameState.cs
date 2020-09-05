@@ -362,7 +362,6 @@ namespace Ultima5Redux
         }
         #endregion
 
-        #region Public Methods
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return _dataChunks.GetDataChunk(dataChunkName);
@@ -395,7 +394,7 @@ namespace Ultima5Redux
         /// <returns>true if NPC is alive</returns>
         public bool NpcIsAlive(NonPlayerCharacterReference npc)
         {
-            // the array isDead becasue LB stores 0=alive, 1=dead
+            // the array isDead because LB stores 0=alive, 1=dead
             // I think it's easier to evaluate if they are alive
             return _npcIsDeadArray[npc.MapLocationId][npc.DialogIndex] == false;
         }
@@ -404,7 +403,7 @@ namespace Ultima5Redux
         /// Sets the flag to indicate the NPC is met
         /// </summary>
         /// <param name="npc"></param>
-        public void SetMetNPC(NonPlayerCharacterReference npc)
+        public void SetMetNpc(NonPlayerCharacterReference npc)
         {
             _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = true;
         }
@@ -455,7 +454,7 @@ namespace Ultima5Redux
                 if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
                     if (nPartyMember++ == nPosition) return characterRecord;
             }
-            throw new Ultima5ReduxException("I've asked for member of the party who is aparently not there...");
+            throw new Ultima5ReduxException("I've asked for member of the party who is apparently not there...");
         }
 
         /// <summary>
@@ -502,6 +501,5 @@ namespace Ultima5Redux
             _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = bHasMet;
         }
 
-        #endregion
     }
 }
