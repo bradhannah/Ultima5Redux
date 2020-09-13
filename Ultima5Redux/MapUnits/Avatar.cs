@@ -7,15 +7,6 @@ namespace Ultima5Redux.MapUnits
 {
     public class Avatar : MapUnit
     {
-        // public Avatar(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
-        //     SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
-        //     TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
-        //     TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) :
-        //     base(npcRef, mapUnitState, smallMapTheSmallMapCharacterState,
-        //     mapUnitMovement, timeOfDay, playerCharacterRecords, bLoadedFromDisk, tileReferences, location)
-        // {
-        // }
-
         public Avatar(TileReferences tileReferences, MapUnitPosition avatarPosition, 
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement) : base()
         {
@@ -39,6 +30,34 @@ namespace Ultima5Redux.MapUnits
                 location, movement);
 
             return theAvatar;
+        }
+
+        /// <summary>
+        /// Show the Avatar that isn't boarded on top of anything
+        /// </summary>
+        public void SetUnboardedAvatar()
+        {
+            KeyTileReference = TileReferences.GetTileReferenceByName("BasicAvatar");
+        }
+        
+        public void SetBoardedCarpet()
+        {
+            KeyTileReference = TileReferences.GetTileReferenceByName("RidingMagicCarpetRight");
+        }
+
+        public void SetBoardedHorse()
+        {
+            KeyTileReference = TileReferences.GetTileReferenceByName("RidingHorseRight");
+        }
+
+        public void SetBoardedFrigate(VirtualMap.Direction direction, bool bSailsUp = false)
+        {
+            KeyTileReference = TileReferences.GetTileReferenceByName("ShipNoSailsRight");
+        }
+
+        public void SetBoardedSkiff()
+        {
+            KeyTileReference = TileReferences.GetTileReferenceByName("SkiffRight");
         }
     }
 }

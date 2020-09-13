@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using Ultima5Redux.Data;
@@ -135,6 +136,8 @@ namespace Ultima5Redux.Maps
         public LargeMap.Maps LargeMapOverUnder { get; private set; } = (LargeMap.Maps)(-1);
 
         public MapUnits.MapUnits TheMapUnits { get; private set; }
+
+        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingMagicCarpet");
 
         #endregion
 
@@ -426,7 +429,16 @@ namespace Ultima5Redux.Maps
             return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
                 (CurrentSingleMapReference.MapLocation, adjustedPosition2Away, CurrentSingleMapReference.Floor);
         }
-        
+
+
+        /// <summary>
+        /// Gets a map unit on the current tile
+        /// </summary>
+        /// <returns>MapUnit or null if none exist</returns>
+        public MapUnit GetMapUnitOnCurrentTile()
+        {
+            return GetMapUnitOnTile(CurrentPosition.XY);
+        }
         
         /// <summary>
         /// If an NPC is on a tile, then it will get them
@@ -436,7 +448,6 @@ namespace Ultima5Redux.Maps
         /// <returns>the NPC or null if one does not exist</returns>
         public MapUnit GetMapUnitOnTile(Point2D xy)
         {
-            //if (IsLargeMap) return null;
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
 
             MapUnit mapUnit = TheMapUnits.GetMapUnitByLocation(location, xy, CurrentSingleMapReference.Floor);
@@ -473,7 +484,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         /// Gets possible directions that are accessible from a particular point
         /// </summary>
-        /// <param name="characterPosition">the curent position of the character</param>
+        /// <param name="characterPosition">the current position of the character</param>
         /// <param name="scheduledPosition">the place they are supposed to be</param>
         /// <param name="nMaxDistance">max distance they can travel from that position</param>
         /// <param name="bNoStaircases"></param>
@@ -545,8 +556,6 @@ namespace Ultima5Redux.Maps
 
             return adjustedPosition;
         }
-
-
 
         private void CalculateNextPath(MapUnit mapUnit, int nMapCurrentFloor)
         {
@@ -624,7 +633,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         /// Gets the best possible stair or ladder location
         /// to go to the destinedPosition
-        /// Ladder/Stair -> destinedPositon
+        /// Ladder/Stair -> destinedPosition
         /// </summary>
         /// <param name="ladderOrStairDirection">go up or down a ladder/stair</param>
         /// <param name="destinedPosition">the position to go to</param>
@@ -721,16 +730,6 @@ namespace Ultima5Redux.Maps
         #endregion
 
         #region Public Actions Methods
-        // Action methods are things that the Avatar may do that will affect things around him like
-        // getting a torch changes the tile underneath, opening a door may set a timer that closes it again
-        // in a few turns
-        //public void PickUpThing(Point2D xy)
-        //{
-        //    // todo: will need to actually poccket the thing I picked up
-        //    SetOverridingTileReferece(tileReferences.GetTileReferenceByName("BrickFloor"), xy);
-        //}
-
-
         /// <summary>
         /// Use the stairs and change floors, loading a new map
         /// </summary>
@@ -888,6 +887,15 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
+        /// Gets a map unit if it's on the current tile
+        /// </summary>
+        /// <returns>true if there is a map unit of on the tile</returns>
+        public bool IsMapUnitOccupiedTile()
+        {
+            return (IsMapUnitOccupiedTile(CurrentPosition.XY));
+        }
+
+        /// <summary>
         /// Is there an NPC on the tile specified?
         /// </summary>
         /// <param name="xy"></param>
@@ -902,25 +910,8 @@ namespace Ultima5Redux.Maps
         public bool ContainsSearchableThings(Point2D xy)
         {
             // moonstone check
-            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder))
-            {
-                return true;
-            }
-
-            return false;
+            return IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
         }
-
-        /// <summary>
-        /// Once you have confirmed that there is something searchable with ContainsSearchableThings, you
-        /// will need to "stir them up", which means they become visible to the user on the map and
-        /// made available for "getting" from the virtual map
-        /// </summary>
-        /// <param name="xy"></param>
-        public void StirUpTileSearch(Point2D xy)
-        {
-            
-        }
-        
 
         public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
         {
@@ -1034,6 +1025,8 @@ namespace Ultima5Redux.Maps
                 GetLocationOfDock(location, dataOvlReference), 0, true);
             return seaFaringVessel;
         }
+
+        
         #endregion
     }
 }

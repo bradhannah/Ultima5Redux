@@ -861,6 +861,32 @@ namespace Ultima5Redux
             PassTime();
             return retStr;
         }
+        
+        /// <summary>
+        /// Board something such as a frigate, skiff, horse or carpet
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bWasSuccessful"></param>
+        /// <returns></returns>
+        public string Board(Point2D xy, out bool bWasSuccessful)
+        {
+            bWasSuccessful = true;
+            return "";
+        }
+
+        public string Xit(Point2D xy, out bool bWasSuccessful)
+        {
+            bWasSuccessful = true;
+            return "";
+        }
+        
+        public void DismountCarpet()
+        {
+            Debug.Assert(State.TheVirtualMap.IsAvatarRidingCarpet);
+
+            // show the Avatar as an unboarded player (regular ole Avatar) 
+            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.SetUnboardedAvatar();
+        }
 
         private string UseSpecialItem(SpecialItem spcItem)
         {

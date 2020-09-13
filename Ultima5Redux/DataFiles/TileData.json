@@ -6529,7 +6529,7 @@
       "DontDraw": false,
       "IsPushable": false,
       "IsTalkOverable": false,
-      "IsBoardable": false
+      "IsBoardable": true
    },
    "284": {
       "Name": "BasicAvatar",

@@ -65,9 +65,11 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         internal MapUnitPosition CurrentAvatarPosition
         {
-            get => CurrentMapUnits[0].MapUnitPosition;
-            set => CurrentMapUnits[0].MapUnitPosition = value;
+            get => AvatarMapUnit.MapUnitPosition;
+            set => AvatarMapUnit.MapUnitPosition = value;
         }
+
+        public Avatar AvatarMapUnit => (Avatar)CurrentMapUnits[0];
 
         private MapUnitStates CurrentMapUnitStates
         {
@@ -390,6 +392,11 @@ namespace Ultima5Redux.MapUnits
                 else if (_tileRefs.IsSkiff(mapUnitState.Tile1Ref.Index))
                 {
                     newUnit = new Skiff(mapUnitState, mapUnitMovement, bInitialLoad, _tileRefs,
+                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
+                }
+                else if (_tileRefs.IsMagicCarpet(mapUnitState.Tile1Ref.Index))
+                {
+                    newUnit = new MagicCarpet(mapUnitState, mapUnitMovement, bInitialLoad, _tileRefs,
                         SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
                 }
                 else
