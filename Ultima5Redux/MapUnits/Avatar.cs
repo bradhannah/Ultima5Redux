@@ -1,4 +1,5 @@
-﻿using Ultima5Redux.DayNightMoon;
+﻿using Ultima5Redux.Data;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
@@ -11,10 +12,14 @@ namespace Ultima5Redux.MapUnits
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement) : base()
         {
             TheMapUnitState = MapUnitState.CreateAvatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location));
+            TileReferences = tileReferences;
+            // set the initial key tile
+            // KeyTileReference = TheMapUnitState.Tile1Ref;
+            // _ = KeyTileReference;
             Movement = movement;
         }
 
-        public override bool IsActive => false;
+        public override bool IsActive => true;
         /// <summary>
         /// Creates an Avatar MapUnit at the default small map position
         /// Note: this should never need to be called from a LargeMap since the values persist on disk
@@ -28,7 +33,7 @@ namespace Ultima5Redux.MapUnits
         {
             Avatar theAvatar = new Avatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location), 
                 location, movement);
-
+            
             return theAvatar;
         }
 

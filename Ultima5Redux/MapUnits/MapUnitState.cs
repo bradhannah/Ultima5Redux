@@ -71,6 +71,8 @@ namespace Ultima5Redux.MapUnits
             TileReference avatarTileRef = tileReferences.GetTileReferenceByName("BasicAvatar");
             theAvatar._tile1 = avatarTileRef.Index;
             theAvatar._tile2 = avatarTileRef.Index;
+            theAvatar.Tile1Ref = tileReferences.GetTileReference(theAvatar._tile1);
+            theAvatar.Tile2Ref = tileReferences.GetTileReference(theAvatar._tile1);
 
             theAvatar.X = (byte) avatarPosition.X;
             theAvatar.Y = (byte) avatarPosition.Y;

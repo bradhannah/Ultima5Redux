@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits
 {
     public abstract class MapUnit
     {
-        protected readonly TileReferences TileReferences;
+        protected TileReferences TileReferences { get; set; }
 
         /// <summary>
         /// All the movements for the map character
