@@ -88,7 +88,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         public NonPlayerCharacterReference NPCRef { get; }
 
-        public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
+        public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
 
         /// <summary>
         /// Is the character currently active on the map?

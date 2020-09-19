@@ -27,7 +27,7 @@ namespace Ultima5Redux.MapUnits
 
             CurrentDirection = TheMapUnitState.Tile1Ref.GetDirection();
             CurrentAvatarState = CalculateAvatarState(TheMapUnitState.Tile1Ref);
-            
+            MapLocation = location;
             //TheMapUnitState = mapUnitState;
             // set the initial key tile
             // KeyTileReference = TheMapUnitState.Tile1Ref;
