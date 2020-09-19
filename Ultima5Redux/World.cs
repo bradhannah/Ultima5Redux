@@ -725,6 +725,10 @@ namespace Ultima5Redux
             int newX = (State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol;
             int newY = (State.TheVirtualMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow;
             Point2D newPos = new Point2D(newX, newY);
+            
+            // we change the direction of the Avatar map unit
+            // this will be used to determine which is the appropriate sprite to show
+            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.Move(direction);
 
             // if we have reached 0, and we are adjusting -1 then we should assume it's a round world and we are going to the opposite side
             // this should only be true if it is a RepeatMap

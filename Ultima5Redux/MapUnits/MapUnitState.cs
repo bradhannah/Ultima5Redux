@@ -65,6 +65,12 @@ namespace Ultima5Redux.MapUnits
             
         }
 
+        public void SetTileReference(TileReference tileReference)
+        {
+            Tile1Ref = tileReference;
+            Tile2Ref = tileReference;
+        }
+        
         public static MapUnitState CreateAvatar(TileReferences tileReferences, MapUnitPosition avatarPosition, MapUnitState mapUnitState = null)
         {
             // if a null map unit state is passed in then we are the default Avatar sprite
