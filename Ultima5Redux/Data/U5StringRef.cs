@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.Data
 {
@@ -69,6 +70,25 @@ namespace Ultima5Redux.Data
 
             return _strMap[strObj.GetType()].Strs[(int)strObj];
         }
-  
+
+        public string GetDirectionString(VirtualMap.Direction direction)
+        {
+            switch (direction)
+            {
+                case VirtualMap.Direction.Up:
+                    return (GetString(DataOvlReference.TravelStrings.NORTH));
+                case VirtualMap.Direction.Down:
+                    return (GetString(DataOvlReference.TravelStrings.SOUTH));
+                case VirtualMap.Direction.Left:
+                    return (GetString(DataOvlReference.TravelStrings.WEST));
+                case VirtualMap.Direction.Right:
+                    return (GetString(DataOvlReference.TravelStrings.EAST));
+                case VirtualMap.Direction.None:
+                    return "";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+        
     }
 }

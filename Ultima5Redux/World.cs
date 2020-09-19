@@ -17,16 +17,15 @@ namespace Ultima5Redux
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class World
     {
-        #region Private Variables
         /// <summary>
         /// Ultima 5 data and save files directory 
         /// </summary>
         private readonly string _u5Directory;
         private readonly CombatMapReference _combatMapRef = new CombatMapReference();
         private readonly TileOverrides _tileOverrides = new TileOverrides();
-        #endregion
+
+        private const int N_DEFAULT_ADVANCE_TIME = 2;
         
-        #region Private Properties
         /// <summary>
         /// The overworld map object
         /// </summary>
@@ -36,9 +35,6 @@ namespace Ultima5Redux
         /// the underworld map object
         /// </summary>
         private LargeMap UnderworldMap { get; }        
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         /// Is the Avatar positioned to fall? When falling from multiple floors this will be activated
@@ -101,14 +97,11 @@ namespace Ultima5Redux
         public ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; private set; }
 
         public MoonPhaseReferences MoonPhaseRefs { get; private set; }
-        #endregion
         
-        #region Public enumerations
         /// <summary>
         /// Special things that can be looked at in the world that will require special consideration
         /// </summary>
         public enum SpecialLookCommand { None, Sign, GemCrystal }
-        #endregion
 
         /// <summary>
         /// Constructor 
@@ -655,7 +648,7 @@ namespace Ultima5Redux
             }
         }
 
-        public enum TryToMoveResult { Moved, Blocked, OfferToExitScreen, UsedStairs, Fell }
+        public enum TryToMoveResult { Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell }
 
         /// <summary>
         /// Gets a +/- 1 x/y adjustment based on the current position and given direction
@@ -702,6 +695,7 @@ namespace Ultima5Redux
         /// <returns>output string (may be empty)</returns>
         public string TryToMove(VirtualMap.Direction direction, bool bKlimb, bool bFreeMove, out TryToMoveResult tryToMoveResult)
         {
+            string retStr = "";
             int nTilesPerMapRow = State.TheVirtualMap.NumberOfRowTiles;
             int nTilesPerMapCol = State.TheVirtualMap.NumberOfColumnTiles;
 
@@ -728,7 +722,41 @@ namespace Ultima5Redux
             
             // we change the direction of the Avatar map unit
             // this will be used to determine which is the appropriate sprite to show
-            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.Move(direction);
+            bool bAvatarActuallyMoved = State.TheVirtualMap.TheMapUnits.AvatarMapUnit.Move(direction);
+
+            if (!bAvatarActuallyMoved)
+            {
+                tryToMoveResult = TryToMoveResult.ShipChangeDirection;
+                AdvanceTime(N_DEFAULT_ADVANCE_TIME);
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HEAD) + " " +
+                       DataOvlRef.StringReferences.GetDirectionString(direction);
+            }
+
+            // we start with a different descriptor depending on the vehicle the Avatar is currently on
+            switch (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState)
+            {
+                case Avatar.AvatarState.Regular:
+                    retStr = DataOvlRef.StringReferences.GetDirectionString(direction);
+                    break;
+                case Avatar.AvatarState.Carpet:
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.FLY) + " " 
+                        + DataOvlRef.StringReferences.GetDirectionString(direction);
+                    break;
+                case Avatar.AvatarState.Horse:
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.RIDE) + " " 
+                        + DataOvlRef.StringReferences.GetDirectionString(direction);
+                    break;
+                case Avatar.AvatarState.Frigate:
+                    retStr = DataOvlRef.StringReferences.GetDirectionString(direction) + 
+                             DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROWING);
+                    break;
+                case Avatar.AvatarState.Skiff:
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) + " " 
+                        + DataOvlRef.StringReferences.GetDirectionString(direction);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             // if we have reached 0, and we are adjusting -1 then we should assume it's a round world and we are going to the opposite side
             // this should only be true if it is a RepeatMap
@@ -774,8 +802,8 @@ namespace Ultima5Redux
             {
                 tryToMoveResult = TryToMoveResult.Blocked;
                 // if it's not passable then we have no more business here
-                AdvanceTime(2);
-                return (DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED));
+                AdvanceTime(N_DEFAULT_ADVANCE_TIME);
+                return (retStr.TrimEnd() + "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED));
             }
 
             // the world is a circular - so when you get to the end, start over again
@@ -788,7 +816,9 @@ namespace Ultima5Redux
             {
                 tryToMoveResult = TryToMoveResult.UsedStairs;
                 State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
-                return string.Empty;
+                // todo: i need to figure out if I am going up or down stairs
+                return retStr.TrimEnd() + "\n" + "Up!";
+                //return string.Empty;
             }
 
             // if we are on a big map then we may issue extra information about slow moving terrain
@@ -796,7 +826,7 @@ namespace Ultima5Redux
             {
                 AdvanceTime(SpriteTileReferences.GetMinuteIncrement(newTileReference.Index));
                 tryToMoveResult = TryToMoveResult.Moved;
-                return SpriteTileReferences.GetSlowMovementString(newTileReference.Index);;
+                return retStr.TrimEnd() + "\n" + SpriteTileReferences.GetSlowMovementString(newTileReference.Index).TrimEnd();
             }
             else
             {
@@ -805,7 +835,7 @@ namespace Ultima5Redux
                 // if we are indoors then all walking takes 2 minutes
                 AdvanceTime(2);
 
-                return string.Empty;
+                return retStr.TrimEnd();
             }
         }
 

@@ -53,6 +53,19 @@ namespace Ultima5Redux.MapUnits
         public VirtualMap.Direction PreviousDirection { get; private set; } = VirtualMap.Direction.None;
         public VirtualMap.Direction CurrentDirection { get; private set; } = VirtualMap.Direction.None;
         public bool AreSailsUp { get; set; } = false;
+
+        /// <summary>
+        /// Describes if there are only left right sprites
+        /// </summary>
+        private readonly Dictionary<AvatarState, bool> _onlyLeftRight = new Dictionary<AvatarState, bool>()
+        {
+            {AvatarState.Carpet, true},
+            {AvatarState.Frigate, false},
+            {AvatarState.Hidden, false},
+            {AvatarState.Horse, true},
+            {AvatarState.Skiff, false},
+            {AvatarState.Regular, false}
+        };
         
         /// <summary>
         /// Map of all sprites the current state and avatar direction
@@ -103,11 +116,11 @@ namespace Ultima5Redux.MapUnits
                 { 
                     AvatarState.Horse, new Dictionary<VirtualMap.Direction, string> ()
                     {
-                        {VirtualMap.Direction.None, "HorseLeft"},
-                        {VirtualMap.Direction.Left, "HorseLeft"},
-                        {VirtualMap.Direction.Down, "HorseLeft"},
-                        {VirtualMap.Direction.Right, "HorseRight"},
-                        {VirtualMap.Direction.Up, "HorseRight"},
+                        {VirtualMap.Direction.None, "RidingHorseLeft"},
+                        {VirtualMap.Direction.Left, "RidingHorseLeft"},
+                        {VirtualMap.Direction.Down, "RidingHorseLeft"},
+                        {VirtualMap.Direction.Right, "RidingHorseRight"},
+                        {VirtualMap.Direction.Up, "RidingHorseRight"},
                     }
                 },           
             };
@@ -123,12 +136,41 @@ namespace Ultima5Redux.MapUnits
             return _tileIndexMap[CurrentAvatarState][CurrentDirection];
         }
         
-        public void Move(VirtualMap.Direction direction)
+        /// <summary>
+        /// Attempt to move the Avatar in a given direction
+        /// It takes into account if the Avatar has boarded a vehicle (horse, skiff etc)
+        /// </summary>
+        /// <param name="direction">the direction </param>
+        /// <returns>true if Avatar moved, false if they only changed direction</returns>
+        public bool Move(VirtualMap.Direction direction)
         {
+            bool bChangeTile = true;
+            // if there are only left and right sprites then we don't switch directions unless they actually
+            // go left or right, otherwise we maintain direction
+            if (_onlyLeftRight[CurrentAvatarState])
+            {
+                if (direction != VirtualMap.Direction.Left && direction != VirtualMap.Direction.Right)
+                {
+                    bChangeTile = false;
+                }
+            }
+
+            // we always track the previous position, this will be needed for slower frigate movement
             PreviousDirection = CurrentDirection;
             CurrentDirection = direction;
+
+            // did the Avatar change direction?
+            bool bDirectionChanged = PreviousDirection != CurrentDirection;
+
             // set the new sprite to reflect the new direction
-            TheMapUnitState.SetTileReference(TileReferences.GetTileReferenceByName(GetSpriteName()));
+            if (bChangeTile)
+            {
+                TheMapUnitState.SetTileReference(TileReferences.GetTileReferenceByName(GetSpriteName()));
+            }
+
+            // return false if the direction changed AND your on a Frigate
+            // because you will just change direction
+            return !(bDirectionChanged && CurrentAvatarState == AvatarState.Frigate);
         }
         
         /// <summary>
