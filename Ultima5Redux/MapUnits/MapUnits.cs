@@ -391,29 +391,8 @@ namespace Ultima5Redux.MapUnits
                     continue;
                 }
 
-
-                MapUnit newUnit;
-
-                if (_tileRefs.IsFrigate(mapUnitState.Tile1Ref.Index))
-                {
-                    newUnit = new Frigate(mapUnitState, mapUnitMovement, bInitialLoad, _tileRefs,
-                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
-                }
-                else if (_tileRefs.IsSkiff(mapUnitState.Tile1Ref.Index))
-                {
-                    newUnit = new Skiff(mapUnitState, mapUnitMovement, bInitialLoad, _tileRefs,
-                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
-                }
-                else if (_tileRefs.IsMagicCarpet(mapUnitState.Tile1Ref.Index))
-                {
-                    newUnit = new MagicCarpet(mapUnitState, mapUnitMovement, bInitialLoad, _tileRefs,
-                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
-                }
-                else
-                {
-                    newUnit = new EmptyMapUnit();
-                }
-                
+                MapUnit newUnit = CreateNewMapUnit(mapUnitState, mapUnitMovement, bInitialLoad,
+                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
                 // add the new character to our list of characters currently on the map
                 mapUnits.Add(newUnit);
             }
@@ -496,15 +475,56 @@ namespace Ultima5Redux.MapUnits
                     // we keep the object because we may be required to save this to disk - but since we are
                     // leaving the map there is no need to save their movements
                     mapUnitMovement.ClearMovements();
+
                     // set a default SmallMapCharacterState based on the given NPC
                     smallMapCharacterState = new SmallMapCharacterState(_tileRefs, npcRef, i, _timeOfDay);
                     // initialize a default MapUnitState 
                     mapUnitState = new MapUnitState(_tileRefs, npcRef);
                 }
 
-                _smallWorldMapUnits.Add(new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement, 
-                    _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location));
+                MapUnit mapUnit = CreateNewMapUnit(mapUnitState, mapUnitMovement,
+                    bInitialLoad, location, npcRef, smallMapCharacterState); 
+
+                _smallWorldMapUnits.Add(mapUnit);
             }
+        }
+
+        public MapUnit CreateNewMapUnit(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, bool bInitialLoad,
+            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference npcRef = null,
+            SmallMapCharacterState smallMapCharacterState = null)
+        {                    
+            MapUnit newUnit;
+
+            if (npcRef != null)
+            {
+                newUnit = new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
+                     _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location);;
+            }
+            else  if (_tileRefs.IsFrigate(mapUnitState.Tile1Ref.Index))
+            {
+                newUnit = new Frigate(mapUnitState, mapUnitMovement, _tileRefs, location);
+
+            }
+            else if (_tileRefs.IsSkiff(mapUnitState.Tile1Ref.Index))
+            {
+                newUnit = new Skiff(mapUnitState, mapUnitMovement, _tileRefs, location);
+            }
+            else if (_tileRefs.IsMagicCarpet(mapUnitState.Tile1Ref.Index))
+            {
+                newUnit = new MagicCarpet(mapUnitState, mapUnitMovement, _tileRefs, location);
+            }
+            else if (_tileRefs.IsHorse(mapUnitState.Tile1Ref.Index))
+            {
+                newUnit = new Horse(mapUnitState, mapUnitMovement, _tileRefs, location);
+            }
+            // this is where we will create monsters too
+            else
+            {
+                Debug.WriteLine("An empty map unit was created with "+mapUnitState.Tile1Ref.Name);
+                newUnit = new EmptyMapUnit();
+            }
+            
+            return newUnit;
         }
 
         /// <summary>
@@ -520,7 +540,7 @@ namespace Ultima5Redux.MapUnits
             if (nIndex == -1) return;
 
             MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
-            Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex), false, 
+            Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex),  
                 _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
             
             // set position of frigate in the world
@@ -539,7 +559,7 @@ namespace Ultima5Redux.MapUnits
             if (nIndex == -1) return;
 
             MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
-            Skiff frigate = new Skiff(mapUnitState, Movements.GetMovement(nIndex), false, 
+            Skiff frigate = new Skiff(mapUnitState, Movements.GetMovement(nIndex),  
                 _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
             
             // set position of frigate in the world

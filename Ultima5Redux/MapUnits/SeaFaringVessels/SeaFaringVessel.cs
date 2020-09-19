@@ -22,10 +22,9 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
          public VirtualMap.Direction Direction { get; set; }
 
          protected SeaFaringVessel(MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
-             MapUnitMovement mapUnitMovement, 
-             bool bLoadedFromDisk, TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) 
+             MapUnitMovement mapUnitMovement, TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) 
              : base(null, mapUnitState, smallMapTheSmallMapCharacterState, mapUnitMovement,
-             null, null, bLoadedFromDisk, tileReferences, location)
+             null, null, tileReferences, location)
          {
          }
 

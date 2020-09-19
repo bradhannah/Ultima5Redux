@@ -17,7 +17,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay,
             PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location) : base(npcRef, mapUnitState,
-            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords, bLoadedFromDisk,
+            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords, 
             tileReferences, location)
         {
             bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;

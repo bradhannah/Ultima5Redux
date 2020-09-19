@@ -9,9 +9,9 @@ namespace Ultima5Redux.MapUnits.Monsters
     {
         public Monster(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay,
-            PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, TileReferences tileReferences,
+            PlayerCharacterRecords playerCharacterRecords, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location) : base(npcRef, mapUnitState,
-            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords, bLoadedFromDisk, tileReferences,
+            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords, tileReferences,
             location)
         {
         }

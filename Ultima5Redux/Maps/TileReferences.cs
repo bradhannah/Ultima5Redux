@@ -293,7 +293,7 @@ namespace Ultima5Redux.Maps
 
         public bool IsSkiff(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Skiff");
         public bool IsMagicCarpet(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Carpet2");
-
+        public bool IsHorse(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Horse");
         public bool IsFrigate(int nSprite) =>
             GetTileReference(nSprite).Name.StartsWith("Ship")
             || GetTileReference(nSprite).Name.StartsWith("Pirate");

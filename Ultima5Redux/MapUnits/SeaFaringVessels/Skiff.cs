@@ -21,9 +21,9 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         }
 
         public Skiff(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, 
-            bool bLoadedFromDisk, TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) : 
+            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) : 
             base(mapUnitState, null,
-            mapUnitMovement, bLoadedFromDisk, tileReferences, location)
+            mapUnitMovement, tileReferences, location)
         {
         }
     }

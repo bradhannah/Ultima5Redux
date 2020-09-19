@@ -151,11 +151,10 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnitMovement"></param>
         /// <param name="timeOfDay"></param>
         /// <param name="playerCharacterRecords"></param>
-        /// <param name="bLoadedFromDisk"></param>
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
+            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location)
         {
             TileReferences = tileReferences;
