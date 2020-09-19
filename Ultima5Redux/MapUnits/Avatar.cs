@@ -9,10 +9,20 @@ namespace Ultima5Redux.MapUnits
     public class Avatar : MapUnit
     {
         public Avatar(TileReferences tileReferences, MapUnitPosition avatarPosition, 
-            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement) : base()
+            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
+            MapUnitState mapUnitState = null) : base()
         {
-            TheMapUnitState = MapUnitState.CreateAvatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location));
+            if (mapUnitState == null)
+            {
+                TheMapUnitState = MapUnitState.CreateAvatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location));
+            }
+            else
+            {
+                TheMapUnitState = MapUnitState.CreateAvatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location),
+                    mapUnitState);
+            }
             TileReferences = tileReferences;
+            //TheMapUnitState = mapUnitState;
             // set the initial key tile
             // KeyTileReference = TheMapUnitState.Tile1Ref;
             // _ = KeyTileReference;
@@ -29,10 +39,13 @@ namespace Ultima5Redux.MapUnits
         /// <param name="movement"></param>
         /// <returns></returns>
         public static MapUnit CreateAvatar(TileReferences tileReferences, 
-            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement)
+            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
+            MapUnitState mapUnitState = null)
         {
             Avatar theAvatar = new Avatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location), 
-                location, movement);
+                location, movement, mapUnitState);
+            
+            
             
             return theAvatar;
         }

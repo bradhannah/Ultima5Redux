@@ -264,6 +264,13 @@ namespace Ultima5Redux.MapUnits
             return GetSpecificMapUnitByLocation<T>(_currentMapType, location, xy, nFloor, bCheckBaseToo);
         }
 
+        /// <summary>
+        /// Gets a particular map unit on a tile in a given location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="xy"></param>
+        /// <param name="nFloor"></param>
+        /// <returns>MapUnit or null if non exist at location</returns>
         public MapUnit GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy,
             int nFloor)
         {
@@ -369,18 +376,21 @@ namespace Ultima5Redux.MapUnits
                 // the monsters will recalculate every turn based on where the Avatar is 
                 mapUnitMovement.ClearMovements();
 
+                // we have retrieved the _currentMapUnitStates based on the map type,
+                // now just get the existing animation state which persists on disk for under, over and small maps
+                MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(i);
+
                 // the party is always at zero
                 if (i == 0)
                 {
                     MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, 
-                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement);
+                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement,
+                        mapUnitState);
+                    
                     mapUnits.Add(theAvatar);
                     continue;
                 }
 
-                // we have retrieved the _currentMapUnitStates based on the map type,
-                // now just get the existing animation state which persists on disk for under, over and small maps
-                MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(i);
 
                 MapUnit newUnit;
 
