@@ -16,12 +16,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             get => this.TheMapUnitState.Depends3;
             set => this.TheMapUnitState.Depends3 = (byte)value;
         }
-        
-        // public static Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, 
-        //     MapUnitState existingState)
-        // {
-        //     Frigate frigate = new Frigate(existingState, );
-        // }
 
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } = new Dictionary<SmallMapReferences.SingleMapReference.Location, int>()
         {

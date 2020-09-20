@@ -6276,7 +6276,7 @@
       "DontDraw": false,
       "IsPushable": false,
       "IsTalkOverable": false,
-      "IsBoardable": false
+      "IsBoardable": true
    },
    "273": {
       "Name": "HorseLeft",
@@ -6299,7 +6299,7 @@
       "DontDraw": false,
       "IsPushable": false,
       "IsTalkOverable": false,
-      "IsBoardable": false
+      "IsBoardable": true
    },
    "274": {
       "Name": "RidingHorseRight",

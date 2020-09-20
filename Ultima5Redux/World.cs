@@ -10,6 +10,7 @@ using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
@@ -896,7 +897,7 @@ namespace Ultima5Redux
             PassTime();
             return retStr;
         }
-        
+
         /// <summary>
         /// Board something such as a frigate, skiff, horse or carpet
         /// </summary>
@@ -905,8 +906,87 @@ namespace Ultima5Redux
         /// <returns></returns>
         public string Board(Point2D xy, out bool bWasSuccessful)
         {
+            MapUnit currentAvatarTileRef =
+                State.TheVirtualMap.GetMapUnitOnCurrentTile();
             bWasSuccessful = true;
-            return "";
+            
+            if (currentAvatarTileRef == null
+                || !State.TheVirtualMap.IsMapUnitOccupiedTile()
+                || !currentAvatarTileRef.KeyTileReference.IsBoardable)
+            {
+                bWasSuccessful = false;
+                // can't board it
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() +
+                       " " + DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT);
+            }
+
+            //OutputStreamHelpers.WriteOutput("Gonna board something...");
+            bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
+            Avatar avatar = State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            MapUnit boardableMapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
+
+            // at this point we are certain that the current tile is boardable AND the we know if the avatar has already
+            // boarded something
+            string getOnFootResponse()
+            {
+                    return DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() +
+                           "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT)
+                               .Trim();
+            }
+
+            Type boardableMapUnitType = boardableMapUnit.GetType();
+            if (boardableMapUnitType == typeof(MagicCarpet))
+            {
+                if (bAvatarIsBoarded)
+                {
+                    bWasSuccessful = false;
+                    return getOnFootResponse();
+                }
+                avatar.SetBoardedCarpet();
+            } else if (boardableMapUnitType == typeof(Horse))
+            {
+                if (bAvatarIsBoarded)
+                {
+                    bWasSuccessful = false;
+                    return getOnFootResponse();
+                }
+                // delete or deactivate the horse we just mounted
+                avatar.SetBoardedHorse();
+            } else if (boardableMapUnitType == typeof(Frigate))
+            {
+                Frigate boardableFrigate = (Frigate) boardableMapUnit;
+                if (bAvatarIsBoarded)
+                {
+                    if (State.TheVirtualMap.IsAvatarRidingHorse)
+                    {
+                        bWasSuccessful = false;
+                        return getOnFootResponse();
+                    }
+                    if (State.TheVirtualMap.IsAvatarRidingCarpet)
+                    {
+                        // we tuck the carpet away
+                        State.PlayerInventory.MagicCarpets++;
+                    }
+                    if (State.TheVirtualMap.IsAvatarInSkiff)
+                    {
+                        // add a skiff the the frigate
+                        boardableFrigate.SkiffsAboard++;
+                    }
+                }
+                avatar.SetBoardedFrigate(boardableFrigate.Direction);
+            } else if (boardableMapUnitType == typeof(Skiff))
+            {
+                if (bAvatarIsBoarded)
+                {
+                    bWasSuccessful = false;
+                    return getOnFootResponse();
+                }
+                avatar.SetBoardedSkiff();
+            }
+            
+            //State.TheVirtualMap.TheMapUnits.
+            // throw new Ultima5ReduxException("Tried to board a thing that is not boardable: "+boardableMapUnitType.FullName);
+            return "BOARD";
         }
 
         public string Xit(Point2D xy, out bool bWasSuccessful)

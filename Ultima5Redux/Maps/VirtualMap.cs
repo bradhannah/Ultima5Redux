@@ -138,7 +138,14 @@ namespace Ultima5Redux.Maps
         public MapUnits.MapUnits TheMapUnits { get; private set; }
 
         public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingMagicCarpet");
+        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingHorse");
+        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Skiff");
+        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Ship");
 
+        public bool IsAvatarRidingSomething =>
+            IsAvatarRidingCarpet || IsAvatarRidingHorse || IsAvatarInSkiff || IsAvatarInFrigate;
+        
+        
         #endregion
 
         #region Constructor, Initializers and Loaders
@@ -435,7 +442,7 @@ namespace Ultima5Redux.Maps
 
 
         /// <summary>
-        /// Gets a map unit on the current tile
+        /// Gets a map unit on the current tile (that ISN'T the Avatar)
         /// </summary>
         /// <returns>MapUnit or null if none exist</returns>
         public MapUnit GetMapUnitOnCurrentTile()
