@@ -437,7 +437,14 @@ namespace Ultima5Redux.Maps
         /// <returns>MapUnit or null if none exist</returns>
         public MapUnit GetMapUnitOnCurrentTile()
         {
-            return GetMapUnitOnTile(CurrentPosition.XY);
+            List<MapUnit> mapUnits = GetMapUnitOnTile(CurrentPosition.XY);
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (!(mapUnit is Avatar))
+                    return mapUnit;
+            }
+
+            return null;
         }
         
         /// <summary>
@@ -446,13 +453,13 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns>the NPC or null if one does not exist</returns>
-        public MapUnit GetMapUnitOnTile(Point2D xy)
+        public List<MapUnit> GetMapUnitOnTile(Point2D xy)
         {
             SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
 
-            MapUnit mapUnit = TheMapUnits.GetMapUnitByLocation(location, xy, CurrentSingleMapReference.Floor);
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitByLocation(location, xy, CurrentSingleMapReference.Floor);
             
-            return mapUnit;
+            return mapUnits;
         }
         
         #endregion
@@ -904,7 +911,7 @@ namespace Ultima5Redux.Maps
         {
             // this method isn't super efficient, may want to optimize in the future
             //if (IsLargeMap) return false;
-            return (GetMapUnitOnTile(xy) != null);
+            return (GetMapUnitOnTile(xy).Count > 0);
         }
 
         public bool ContainsSearchableThings(Point2D xy)

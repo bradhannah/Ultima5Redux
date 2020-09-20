@@ -60,7 +60,7 @@ namespace Ultima5Redux.MapUnits
         {
         }
 
-        public MapUnitState()
+        private MapUnitState()
         {
             
         }

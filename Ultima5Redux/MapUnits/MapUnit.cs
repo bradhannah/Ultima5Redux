@@ -25,6 +25,14 @@ namespace Ultima5Redux.MapUnits
         public MapUnitState TheMapUnitState { get; protected set; }
 
         /// <summary>
+        /// Get's the appropriate sprite index when the Avatar occupies the same tile and comes from the given direction
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public abstract TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction);
+        
+        
+        /// <summary>
         /// The location state of the character
         /// </summary>
         internal SmallMapCharacterState TheSmallMapCharacterState { get; }
@@ -80,7 +88,6 @@ namespace Ultima5Redux.MapUnits
         /// How many iterations will I force the character to wander?
         /// </summary>
         internal int ForcedWandering { get; set; }
-        
         
         public int MovementAttempts = 0;
         /// <summary>
@@ -184,8 +191,6 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
         }
 
-     
-
         /// <summary>
         /// move the character to a new position
         /// </summary>
@@ -205,16 +210,17 @@ namespace Ultima5Redux.MapUnits
         {
             MapUnitPosition = mapUnitPosition;
         }
-        
+
         /// <summary>
         /// Builds the actual path for the character to travel based on their current position and their target position
         /// </summary>
+        /// <param name="currentMap"></param>
         /// <param name="mapUnit">where the character is presently</param>
         /// <param name="targetXy">where you want them to go</param>
         /// <returns>returns true if a path was found, false if it wasn't</returns>
         protected bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy)
         {
-            MapUnitMovement.MovementCommandDirection GetCommandDirection(Point2D fromXy, Point2D toXy)
+            MapUnitMovement.MovementCommandDirection getCommandDirection(Point2D fromXy, Point2D toXy)
             {
                 if (fromXy == toXy) return MapUnitMovement.MovementCommandDirection.None;
                 if (fromXy.X < toXy.X) return MapUnitMovement.MovementCommandDirection.East;
@@ -224,7 +230,7 @@ namespace Ultima5Redux.MapUnits
                 throw new Ultima5ReduxException("For some reason we couldn't determine the path of the command direction in getCommandDirection");
             }
 
-            Point2D Vector2ToPoint2D(Vector2 vector)
+            Point2D vector2ToPoint2D(Vector2 vector)
             {
                 return new Point2D((int)vector.X, (int)vector.Y);
             }
@@ -250,8 +256,8 @@ namespace Ultima5Redux.MapUnits
             // builds the movement list that is compatible with the original U5 movement instruction queue stored in the state file
             foreach (Node node in nodeStack)
             {
-                Point2D newPosition = Vector2ToPoint2D(node.Position);
-                newDirection = GetCommandDirection(prevPosition, newPosition);
+                Point2D newPosition = vector2ToPoint2D(node.Position);
+                newDirection = getCommandDirection(prevPosition, newPosition);
 
                 // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction
                 // that has N iterations (ie. move East 5 times)

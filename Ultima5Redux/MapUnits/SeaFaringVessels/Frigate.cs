@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
@@ -43,5 +44,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             mapUnitMovement, tileReferences, location)
         {
         }
+
     }
 }

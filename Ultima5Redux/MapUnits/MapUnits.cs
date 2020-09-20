@@ -271,9 +271,10 @@ namespace Ultima5Redux.MapUnits
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
         /// <returns>MapUnit or null if non exist at location</returns>
-        public MapUnit GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy,
+        public List<MapUnit> GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy,
             int nFloor)
         {
+            List<MapUnit> mapUnits = new List<MapUnit>();
             foreach (MapUnit mapUnit in CurrentMapUnits)
             {
                 // sometimes characters are null because they don't exist - and that is OK
@@ -282,10 +283,12 @@ namespace Ultima5Redux.MapUnits
                 if (mapUnit.MapUnitPosition.XY == xy && 
                     mapUnit.MapUnitPosition.Floor == nFloor && mapUnit.MapLocation == location)
                 {
-                    return mapUnit;
+                    mapUnits.Add(mapUnit);
+                    //return mapUnit;
                 }
             }
-            return null;
+
+            return mapUnits;
         }
 
         /// <summary>

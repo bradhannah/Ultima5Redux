@@ -6,6 +6,11 @@ namespace Ultima5Redux.MapUnits
 {
     public class EmptyMapUnit : MapUnit
     {
+        public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override bool IsActive => false;
 
         public EmptyMapUnit() : base()

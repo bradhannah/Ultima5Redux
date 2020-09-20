@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Configuration;
@@ -221,13 +222,13 @@ namespace Ultima5Redux
             // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
             if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
             {
-                MapUnit mapUnit = State.TheVirtualMap.GetMapUnitOnTile(xy);
-                if (mapUnit == null)
+                List<MapUnit> mapUnits = State.TheVirtualMap.GetMapUnitOnTile(xy);
+                if (mapUnits.Count <= 0)
                 {
                     throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
                 }
                 retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                    + " " + (LookRef.GetLookDescription(mapUnit.KeyTileReference.Index).Trim());
+                    + " " + (LookRef.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim());
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (SpriteTileReferences.IsSign(tileReference.Index))

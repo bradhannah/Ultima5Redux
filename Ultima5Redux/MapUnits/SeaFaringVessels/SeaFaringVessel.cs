@@ -28,6 +28,14 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
          {
          }
 
+         public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
+         {
+             // the direction that the Avatar comes from doesn't matter - instead we just use the current 
+             // tile reference which is faced in the correct direction
+             return TheMapUnitState.Tile1Ref;
+         }
+
+         
          public override bool IsActive => true;
     }
 }

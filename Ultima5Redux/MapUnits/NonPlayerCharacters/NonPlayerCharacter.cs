@@ -59,7 +59,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
-        
+
+        public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
+        {
+            // really this should never ever happen, but I like to run around it free move mode, 
+            // so we will handle it for now
+            return null;
+            //throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Is the map character currently an active character on the current map
         /// </summary>

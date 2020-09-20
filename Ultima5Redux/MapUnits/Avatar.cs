@@ -45,6 +45,11 @@ namespace Ultima5Redux.MapUnits
             throw new Ultima5ReduxException("Asked to calculate AvatarState of "+tileReference.Name + " but you can't do that, it's not a thing!");
         }
 
+        public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool IsActive => true;
 
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }

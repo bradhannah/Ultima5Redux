@@ -16,6 +16,11 @@ namespace Ultima5Redux.MapUnits.Monsters
         {
         }
 
+        public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override bool IsActive => true;
     }
 }

@@ -26,5 +26,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             mapUnitMovement, tileReferences, location)
         {
         }
+
     }
 }
