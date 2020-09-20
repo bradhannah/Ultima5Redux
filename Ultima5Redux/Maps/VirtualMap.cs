@@ -226,6 +226,9 @@ namespace Ultima5Redux.Maps
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
             TheMapUnits.SetCurrentMapType(singleMapReference.MapLocation, LargeMap.Maps.Small);
+            // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
+            TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
+
             if (xy != null)
             {
                 CurrentPosition.XY = xy;

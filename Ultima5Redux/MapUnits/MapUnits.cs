@@ -408,7 +408,7 @@ namespace Ultima5Redux.MapUnits
         {
             // wipe all existing characters since they cannot exist beyond the load
             _smallWorldMapUnits.Clear();
-            
+
             // are we loading from disk? This should only be done on initial game load since state is immediately 
             // lost when leaving
             if (bInitialLoad)

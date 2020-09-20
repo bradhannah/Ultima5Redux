@@ -64,8 +64,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
             // really this should never ever happen, but I like to run around it free move mode, 
             // so we will handle it for now
-            return null;
-            //throw new NotImplementedException();
+            return KeyTileReference;
         }
 
         /// <summary>
