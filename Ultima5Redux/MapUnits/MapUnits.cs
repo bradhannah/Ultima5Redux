@@ -291,6 +291,7 @@ namespace Ultima5Redux.MapUnits
             return mapUnits;
         }
 
+        
         /// <summary>
         /// Adds a new map unit to the next position available
         /// </summary>
@@ -303,6 +304,27 @@ namespace Ultima5Redux.MapUnits
             return AddNewMapUnit(map, mapUnit, nIndex);
         }
 
+        /// <summary>
+        /// Clear a current map unit, essentially removing it from the world
+        /// Commonly used when something is boarded, and collapses into the Avatar himself
+        /// </summary>
+        /// <param name="mapUnitToClear"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        public void ClearMapUnit(MapUnit mapUnitToClear)
+        {
+            for (int index = 0; index < CurrentMapUnits.Count; index++)
+            {
+                MapUnit mapUnit = CurrentMapUnits[index];
+                if (mapUnit == mapUnitToClear)
+                {
+                    CurrentMapUnits[index] = new EmptyMapUnit();
+                    return;
+                }
+            }
+
+            throw new Ultima5ReduxException("You provided a MapUnit to clear, but it is not in the active MapUnit list");
+        }
+        
         /// <summary>
         /// Adds a new map unit to a given position
         /// </summary>

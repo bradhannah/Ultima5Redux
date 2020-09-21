@@ -202,26 +202,31 @@ namespace Ultima5Redux.MapUnits
         public void SetUnboardedAvatar()
         {
             KeyTileReference = TileReferences.GetTileReferenceByName("BasicAvatar");
+            CurrentAvatarState = AvatarState.Regular;
         }
         
         public void SetBoardedCarpet()
         {
             KeyTileReference = TileReferences.GetTileReferenceByName("RidingMagicCarpetRight");
+            CurrentAvatarState = AvatarState.Carpet;
         }
 
         public void SetBoardedHorse()
         {
             KeyTileReference = TileReferences.GetTileReferenceByName("RidingHorseRight");
+            CurrentAvatarState = AvatarState.Horse;
         }
 
         public void SetBoardedFrigate(VirtualMap.Direction direction, bool bSailsUp = false)
         {
             KeyTileReference = TileReferences.GetTileReferenceByName("ShipNoSailsRight");
+            CurrentAvatarState = AvatarState.Frigate;
         }
 
         public void SetBoardedSkiff()
         {
             KeyTileReference = TileReferences.GetTileReferenceByName("SkiffRight");
+            CurrentAvatarState = AvatarState.Skiff;
         }
     }
 }

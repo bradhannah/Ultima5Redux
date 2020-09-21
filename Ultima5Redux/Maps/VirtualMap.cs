@@ -471,6 +471,36 @@ namespace Ultima5Redux.Maps
             
             return mapUnits;
         }
+
+        /// <summary>
+        /// Gets the top visible map unit
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bExcludeAvatar"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
+        {
+            List<Type> visibilePriorityOrder = new List<Type>()
+            {
+                typeof(Horse), typeof(MagicCarpet),  typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter), typeof(Avatar)
+            };
+            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
+            List<MapUnit> orderedMapUnits = new List<MapUnit>();
+            
+            // this is inefficient, but the lists are so small it is unlikely to matter
+            foreach (Type type in visibilePriorityOrder)
+            {
+                if (bExcludeAvatar && type == typeof(Avatar)) continue;
+                foreach (MapUnit mapUnit in mapUnits)
+                {
+                    // if we find the first highest priority item, then we simply return it 
+                    if (mapUnit.GetType() == type) return mapUnit;
+                }
+            }
+            throw new Ultima5ReduxException("Couldn't find a top visible map unit");
+        }
+
         
         #endregion
 

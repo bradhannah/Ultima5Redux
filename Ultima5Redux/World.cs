@@ -983,8 +983,8 @@ namespace Ultima5Redux
                 }
                 avatar.SetBoardedSkiff();
             }
-            
-            //State.TheVirtualMap.TheMapUnits.
+
+            State.TheVirtualMap.TheMapUnits.ClearMapUnit(currentAvatarTileRef);
             // throw new Ultima5ReduxException("Tried to board a thing that is not boardable: "+boardableMapUnitType.FullName);
             return "BOARD";
         }

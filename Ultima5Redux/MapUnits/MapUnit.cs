@@ -277,5 +277,6 @@ namespace Ultima5Redux.MapUnits
             if (nInARow > 0) { mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow)); }
             return true;
         }
+
     }
 }
