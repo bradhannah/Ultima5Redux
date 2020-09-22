@@ -1,4 +1,5 @@
-﻿using Ultima5Redux.Maps;
+﻿using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.SeaFaringVessels
@@ -19,12 +20,11 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         //      Direction = direction;
         //  }
          
-         public VirtualMap.Direction Direction { get; set; }
-
          protected SeaFaringVessel(MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
-             MapUnitMovement mapUnitMovement, TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) 
+             MapUnitMovement mapUnitMovement, TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
+             DataOvlReference dataOvlReference) 
              : base(null, mapUnitState, smallMapTheSmallMapCharacterState, mapUnitMovement,
-             null, null, tileReferences, location)
+             null, null, tileReferences, location, dataOvlReference)
          {
          }
 

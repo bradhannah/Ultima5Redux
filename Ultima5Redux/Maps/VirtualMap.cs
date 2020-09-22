@@ -63,6 +63,7 @@ namespace Ultima5Redux.Maps
         private readonly Moongates _moongates;
 
         private readonly InventoryReferences _inventoryReferences;
+        private readonly DataOvlReference _dataOvlReference;
 
         /// <summary>
         /// All overriden tiles
@@ -168,11 +169,12 @@ namespace Ultima5Redux.Maps
         /// <param name="playerCharacterRecords"></param>
         /// <param name="initialMap"></param>
         /// <param name="currentSmallMapReference"></param>
+        /// <param name="dataOvlReference"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMapLocationReferences largeMapLocationReferenceses,
             LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences,
             GameState state, NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates, InventoryReferences inventoryReferences,
             PlayerCharacterRecords playerCharacterRecords, LargeMap.Maps initialMap, 
-            SmallMapReferences.SingleMapReference currentSmallMapReference)
+            SmallMapReferences.SingleMapReference currentSmallMapReference, DataOvlReference dataOvlReference)
         {
             // let's make sure they are using the correct combination
             Debug.Assert((initialMap == LargeMap.Maps.Small &&
@@ -190,6 +192,7 @@ namespace Ultima5Redux.Maps
             _timeOfDay = timeOfDay;
             _moongates = moongates;
             _inventoryReferences = inventoryReferences;
+            _dataOvlReference = dataOvlReference;
             _overridenTiles = new TileOverrides();
             
             //this.characterStates = characterStates;
@@ -205,7 +208,7 @@ namespace Ultima5Redux.Maps
                state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks, 
                state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets,
-               timeOfDay, playerCharacterRecords, initialMap, mapLocation);
+               timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, mapLocation);
 
             switch (initialMap)
             {
@@ -1035,9 +1038,9 @@ namespace Ultima5Redux.Maps
         /// Determines if a specific Dock is occupied by a Sea Faring Vessel
         /// </summary>
         /// <returns></returns>
-        public bool IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference)
+        public bool IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            return GetSeaFaringVesselAtDock(location, dataOvlReference) != null;
+            return GetSeaFaringVesselAtDock(location) != null;
         }
 
         public Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location,
@@ -1059,8 +1062,7 @@ namespace Ultima5Redux.Maps
             return docks[location];
         }
         
-        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference)
+        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
             // 0 = Jhelom
             // 1 = Minoc
@@ -1069,7 +1071,7 @@ namespace Ultima5Redux.Maps
 
             SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(LargeMap.Maps.Overworld, 
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
-                GetLocationOfDock(location, dataOvlReference), 0, true);
+                GetLocationOfDock(location, _dataOvlReference), 0, true);
             return seaFaringVessel;
         }
 

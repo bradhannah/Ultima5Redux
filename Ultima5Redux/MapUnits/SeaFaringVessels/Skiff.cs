@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
@@ -21,11 +22,12 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         }
 
         public Skiff(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, 
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location) : 
-            base(mapUnitState, null,
-            mapUnitMovement, tileReferences, location)
+            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
+            DataOvlReference dataOvlReference) : 
+            base(mapUnitState, null, mapUnitMovement, tileReferences, location, dataOvlReference)
         {
         }
 
+        public override string BoardXitName => DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();
     }
 }

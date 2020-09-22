@@ -41,6 +41,8 @@ namespace Ultima5Redux.MapUnits
 
         private readonly SmallMapCharacterStates _smallMapCharacterStates;
         private LargeMap.Maps _currentMapType;
+        private readonly DataOvlReference _dataOvlReference;
+
         /// <summary>
         /// static references to all NPCs in the world
         /// </summary>
@@ -106,12 +108,14 @@ namespace Ultima5Redux.MapUnits
         /// <param name="initialMap">The initial map you are beginning on. It's important to know because there is only
         /// one TheSmallMapCharacterState loaded in the save file at load time</param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
+        /// <param name="dataOvlReference"></param>
         public MapUnits(TileReferences tileRefs, NonPlayerCharacterReferences npcRefs, 
             DataChunk activeMapUnitStatesDataChunk, DataChunk overworldMapUnitStatesDataChunk, 
             DataChunk underworldMapUnitStatesDataChunk, DataChunk charStatesDataChunk,
             DataChunk nonPlayerCharacterMovementLists, DataChunk nonPlayerCharacterMovementOffsets, 
             TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
-            LargeMap.Maps initialMap, SmallMapReferences.SingleMapReference.Location currentSmallMap = SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+            LargeMap.Maps initialMap, DataOvlReference dataOvlReference,  
+            SmallMapReferences.SingleMapReference.Location currentSmallMap = SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
             // let's make sure they are using the correct combination
             Debug.Assert((initialMap == LargeMap.Maps.Small &&
@@ -119,6 +123,7 @@ namespace Ultima5Redux.MapUnits
                          || initialMap != LargeMap.Maps.Small);
 
             _currentMapType = initialMap;
+            _dataOvlReference = dataOvlReference;
             _tileRefs = tileRefs;
             _timeOfDay = timeOfDay;
             _playerCharacterRecords = playerCharacterRecords;
@@ -523,24 +528,24 @@ namespace Ultima5Redux.MapUnits
             if (npcRef != null)
             {
                 newUnit = new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
-                     _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location);;
+                     _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location, _dataOvlReference);
             }
             else  if (_tileRefs.IsFrigate(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Frigate(mapUnitState, mapUnitMovement, _tileRefs, location);
+                newUnit = new Frigate(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
 
             }
             else if (_tileRefs.IsSkiff(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Skiff(mapUnitState, mapUnitMovement, _tileRefs, location);
+                newUnit = new Skiff(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
             }
             else if (_tileRefs.IsMagicCarpet(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new MagicCarpet(mapUnitState, mapUnitMovement, _tileRefs, location);
+                newUnit = new MagicCarpet(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
             }
             else if (_tileRefs.IsHorse(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Horse(mapUnitState, mapUnitMovement, _tileRefs, location);
+                newUnit = new Horse(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
             }
             // this is where we will create monsters too
             else
@@ -557,19 +562,17 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="location"></param>
         /// <param name="virtualMap"></param>
-        /// <param name="dataOvlReference"></param>
-        public void CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap,
-            DataOvlReference dataOvlReference)
+        public void CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap )
         {
             int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
             if (nIndex == -1) return;
 
             MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
             Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex),  
-                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
+                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
             
             // set position of frigate in the world
-            Point2D frigateLocation = virtualMap.GetLocationOfDock(location, dataOvlReference);
+            Point2D frigateLocation = virtualMap.GetLocationOfDock(location, _dataOvlReference);
             frigate.MapUnitPosition = new MapUnitPosition(frigateLocation.X, frigateLocation.Y, 0);
             frigate.SkiffsAboard = 1;
             frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
@@ -577,18 +580,17 @@ namespace Ultima5Redux.MapUnits
             AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
         }
         
-        public void CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap,
-            DataOvlReference dataOvlReference)
+        public void CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap)
         {
             int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
             if (nIndex == -1) return;
 
             MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
             Skiff frigate = new Skiff(mapUnitState, Movements.GetMovement(nIndex),  
-                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
+                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
             
             // set position of frigate in the world
-            Point2D skiffLocation = virtualMap.GetLocationOfDock(location, dataOvlReference);
+            Point2D skiffLocation = virtualMap.GetLocationOfDock(location, _dataOvlReference);
             frigate.MapUnitPosition = new MapUnitPosition(skiffLocation.X, skiffLocation.Y, 0);
             frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("SkiffLeft");
             

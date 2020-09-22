@@ -11,6 +11,8 @@ namespace Ultima5Redux.MapUnits
             throw new System.NotImplementedException();
         }
 
+        public override string BoardXitName => "EMPTY";
+
         public override bool IsActive => false;
 
         public EmptyMapUnit() : base()

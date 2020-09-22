@@ -23,10 +23,10 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public override bool HideQuantity => false;
         
-        // private void InitializePrices(DataOvlReference dataOvlReference)
+        // private void InitializePrices(DataOvlReference DataOvlRef)
         // {
         //     //const int nShieldOffset = 3;
-        //     dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ARMOUR_BASE_PRICES).GetChunkAsUint16List()[]
+        //     DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ARMOUR_BASE_PRICES).GetChunkAsUint16List()[]
         //     BasePrice = 1;
         // }
     }

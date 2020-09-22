@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
@@ -12,6 +13,7 @@ namespace Ultima5Redux.MapUnits
 {
     public abstract class MapUnit
     {
+        protected DataOvlReference DataOvlRef { get; }
         protected TileReferences TileReferences { get; set; }
 
         /// <summary>
@@ -30,7 +32,18 @@ namespace Ultima5Redux.MapUnits
         /// <param name="direction"></param>
         /// <returns></returns>
         public abstract TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction);
-        
+
+        // protected virtual Dictionary<VirtualMap.Direction, string> DirectionToSpriteName { get; }
+        // protected virtual Dictionary<string, VirtualMap.Direction> SpriteNameToDirection { get; }
+        // public virtual VirtualMap.Direction Direction
+        // {
+        //     get => SpriteNameToDirection[KeyTileReference.Name];
+        //     set => KeyTileReference = TileReferences.GetTileReferenceByName(DirectionToSpriteName[value]);
+        // }
+
+        public virtual VirtualMap.Direction Direction => KeyTileReference.GetDirection();
+
+        public abstract string BoardXitName { get; }
         
         /// <summary>
         /// The location state of the character
@@ -160,10 +173,12 @@ namespace Ultima5Redux.MapUnits
         /// <param name="playerCharacterRecords"></param>
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
+        /// <param name="dataOvlRef"></param>
         protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
             MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location)
+            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlRef)
         {
+            this.DataOvlRef = dataOvlRef;
             TileReferences = tileReferences;
             MapLocation = location;
             NPCRef = npcRef;

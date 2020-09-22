@@ -50,6 +50,8 @@ namespace Ultima5Redux.MapUnits
             throw new NotImplementedException();
         }
 
+        public override string BoardXitName => "You can't board the Avatar you silly goose!";
+
         public override bool IsActive => true;
 
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
@@ -177,7 +179,7 @@ namespace Ultima5Redux.MapUnits
             // because you will just change direction
             return !(bDirectionChanged && CurrentAvatarState == AvatarState.Frigate);
         }
-        
+
         /// <summary>
         /// Creates an Avatar MapUnit at the default small map position
         /// Note: this should never need to be called from a LargeMap since the values persist on disk
@@ -185,6 +187,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         /// <param name="movement"></param>
+        /// <param name="mapUnitState"></param>
         /// <returns></returns>
         public static MapUnit CreateAvatar(TileReferences tileReferences, 
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
@@ -205,27 +208,27 @@ namespace Ultima5Redux.MapUnits
             CurrentAvatarState = AvatarState.Regular;
         }
         
-        public void SetBoardedCarpet()
+        public void SetBoardedCarpet(VirtualMap.Direction direction)
         {
-            KeyTileReference = TileReferences.GetTileReferenceByName("RidingMagicCarpetRight");
+            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Carpet][direction]); 
             CurrentAvatarState = AvatarState.Carpet;
         }
 
-        public void SetBoardedHorse()
+        public void SetBoardedHorse(VirtualMap.Direction direction)
         {
-            KeyTileReference = TileReferences.GetTileReferenceByName("RidingHorseRight");
+            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Horse][direction]); 
             CurrentAvatarState = AvatarState.Horse;
         }
 
         public void SetBoardedFrigate(VirtualMap.Direction direction, bool bSailsUp = false)
         {
-            KeyTileReference = TileReferences.GetTileReferenceByName("ShipNoSailsRight");
+            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Frigate][direction]);
             CurrentAvatarState = AvatarState.Frigate;
         }
 
-        public void SetBoardedSkiff()
+        public void SetBoardedSkiff(VirtualMap.Direction direction)
         {
-            KeyTileReference = TileReferences.GetTileReferenceByName("SkiffRight");
+            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Skiff][direction]);
             CurrentAvatarState = AvatarState.Skiff;
         }
     }

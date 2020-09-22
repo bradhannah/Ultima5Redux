@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
@@ -16,9 +17,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public NonPlayerCharacter(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay,
             PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, TileReferences tileReferences,
-            SmallMapReferences.SingleMapReference.Location location) : base(npcRef, mapUnitState,
+            SmallMapReferences.SingleMapReference.Location location,
+            DataOvlReference dataOvlReference) : base(npcRef, mapUnitState,
             smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords, 
-            tileReferences, location)
+            tileReferences, location, dataOvlReference)
         {
             bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
 
@@ -66,6 +68,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             // so we will handle it for now
             return KeyTileReference;
         }
+
+        public override string BoardXitName => "Board them? You hardly know them!";
 
         /// <summary>
         /// Is the map character currently an active character on the current map

@@ -235,16 +235,17 @@ namespace Ultima5Redux
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         /// <param name="inventoryReferences"></param>
+        /// <param name="dataOvlReference"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap, 
             NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences, GameState state, 
-            NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences)
+            NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences, DataOvlReference dataOvlReference)
         {
             SmallMapReferences.SingleMapReference mapRef = state.Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld?null:
                 smallMapReferences.GetSingleMapByLocation(state.Location, state.Floor); 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferences, overworldMap, underworldMap,
                 nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, inventoryReferences,
-                CharacterRecords, Map, mapRef);
+                CharacterRecords, Map, mapRef, dataOvlReference);
         }
 
         /// <summary>

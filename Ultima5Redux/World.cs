@@ -156,7 +156,7 @@ namespace Ultima5Redux
             
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap, 
-                NpcRef, SpriteTileReferences, State, NpcRef, InvRef);
+                NpcRef, SpriteTileReferences, State, NpcRef, InvRef, DataOvlRef);
         }
 
         #region World actions - do a thing, report or change the state
@@ -741,20 +741,20 @@ namespace Ultima5Redux
                     retStr = DataOvlRef.StringReferences.GetDirectionString(direction);
                     break;
                 case Avatar.AvatarState.Carpet:
-                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.FLY) + " " 
-                        + DataOvlRef.StringReferences.GetDirectionString(direction);
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.FLY) +  
+                        DataOvlRef.StringReferences.GetDirectionString(direction);
                     break;
                 case Avatar.AvatarState.Horse:
-                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.RIDE) + " " 
-                        + DataOvlRef.StringReferences.GetDirectionString(direction);
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.RIDE) +  
+                        DataOvlRef.StringReferences.GetDirectionString(direction);
                     break;
                 case Avatar.AvatarState.Frigate:
                     retStr = DataOvlRef.StringReferences.GetDirectionString(direction) + 
                              DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROWING);
                     break;
                 case Avatar.AvatarState.Skiff:
-                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) + " " 
-                        + DataOvlRef.StringReferences.GetDirectionString(direction);
+                    retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) +  
+                        DataOvlRef.StringReferences.GetDirectionString(direction);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -934,6 +934,9 @@ namespace Ultima5Redux
                                .Trim();
             }
 
+            string retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.BOARD)
+                .Trim() + " " + boardableMapUnit.BoardXitName;
+            
             Type boardableMapUnitType = boardableMapUnit.GetType();
             if (boardableMapUnitType == typeof(MagicCarpet))
             {
@@ -942,16 +945,18 @@ namespace Ultima5Redux
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 }
-                avatar.SetBoardedCarpet();
+
+                avatar.SetBoardedCarpet(boardableMapUnit.Direction);
             } else if (boardableMapUnitType == typeof(Horse))
             {
+                
                 if (bAvatarIsBoarded)
                 {
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 }
                 // delete or deactivate the horse we just mounted
-                avatar.SetBoardedHorse();
+                avatar.SetBoardedHorse(boardableMapUnit.Direction);
             } else if (boardableMapUnitType == typeof(Frigate))
             {
                 Frigate boardableFrigate = (Frigate) boardableMapUnit;
@@ -973,6 +978,11 @@ namespace Ultima5Redux
                         boardableFrigate.SkiffsAboard++;
                     }
                 }
+
+                if (boardableFrigate.SkiffsAboard == 0)
+                {
+                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
+                }
                 avatar.SetBoardedFrigate(boardableFrigate.Direction);
             } else if (boardableMapUnitType == typeof(Skiff))
             {
@@ -981,12 +991,13 @@ namespace Ultima5Redux
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 }
-                avatar.SetBoardedSkiff();
+                avatar.SetBoardedSkiff(boardableMapUnit.Direction);
             }
 
             State.TheVirtualMap.TheMapUnits.ClearMapUnit(currentAvatarTileRef);
+            
             // throw new Ultima5ReduxException("Tried to board a thing that is not boardable: "+boardableMapUnitType.FullName);
-            return "BOARD";
+            return retStr;
         }
 
         public string Xit(Point2D xy, out bool bWasSuccessful)
