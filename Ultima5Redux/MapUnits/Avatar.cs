@@ -56,10 +56,14 @@ namespace Ultima5Redux.MapUnits
 
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
 
-        public AvatarState CurrentAvatarState { get; private set; } = AvatarState.Regular;
+        public AvatarState CurrentAvatarState { get; internal set; } = AvatarState.Regular;
         public VirtualMap.Direction PreviousDirection { get; private set; } = VirtualMap.Direction.None;
         public VirtualMap.Direction CurrentDirection { get; private set; } = VirtualMap.Direction.None;
         public bool AreSailsUp { get; set; } = false;
+        /// <summary>
+        /// Is the Avatar currently boarded onto a thing 
+        /// </summary>
+        public bool IsAvatarOnBoardedThing => CurrentAvatarState != AvatarState.Regular && CurrentAvatarState != AvatarState.Hidden;
 
         /// <summary>
         /// Describes if there are only left right sprites

@@ -901,10 +901,9 @@ namespace Ultima5Redux
         /// <summary>
         /// Board something such as a frigate, skiff, horse or carpet
         /// </summary>
-        /// <param name="xy"></param>
         /// <param name="bWasSuccessful"></param>
         /// <returns></returns>
-        public string Board(Point2D xy, out bool bWasSuccessful)
+        public string Board(out bool bWasSuccessful)
         {
             MapUnit currentAvatarTileRef =
                 State.TheVirtualMap.GetMapUnitOnCurrentTile();
@@ -936,62 +935,56 @@ namespace Ultima5Redux
 
             string retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.BOARD)
                 .Trim() + " " + boardableMapUnit.BoardXitName;
-            
-            Type boardableMapUnitType = boardableMapUnit.GetType();
-            if (boardableMapUnitType == typeof(MagicCarpet))
-            {
-                if (bAvatarIsBoarded)
-                {
-                    bWasSuccessful = false;
-                    return getOnFootResponse();
-                }
 
-                avatar.SetBoardedCarpet(boardableMapUnit.Direction);
-            } else if (boardableMapUnitType == typeof(Horse))
+            switch (boardableMapUnit)
             {
-                
-                if (bAvatarIsBoarded)
-                {
+                case MagicCarpet _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
                     return getOnFootResponse();
-                }
+                case MagicCarpet _:
+                    avatar.SetBoardedCarpet(boardableMapUnit.Direction);
+                    break;
+                case Horse _ when bAvatarIsBoarded:
+                    bWasSuccessful = false;
+                    return getOnFootResponse();
                 // delete or deactivate the horse we just mounted
-                avatar.SetBoardedHorse(boardableMapUnit.Direction);
-            } else if (boardableMapUnitType == typeof(Frigate))
-            {
-                Frigate boardableFrigate = (Frigate) boardableMapUnit;
-                if (bAvatarIsBoarded)
+                case Horse _:
+                    avatar.SetBoardedHorse(boardableMapUnit.Direction);
+                    break;
+                case Frigate boardableFrigate:
                 {
-                    if (State.TheVirtualMap.IsAvatarRidingHorse)
+                    if (bAvatarIsBoarded)
                     {
-                        bWasSuccessful = false;
-                        return getOnFootResponse();
+                        if (State.TheVirtualMap.IsAvatarRidingHorse)
+                        {
+                            bWasSuccessful = false;
+                            return getOnFootResponse();
+                        }
+                        if (State.TheVirtualMap.IsAvatarRidingCarpet)
+                        {
+                            // we tuck the carpet away
+                            State.PlayerInventory.MagicCarpets++;
+                        }
+                        if (State.TheVirtualMap.IsAvatarInSkiff)
+                        {
+                            // add a skiff the the frigate
+                            boardableFrigate.SkiffsAboard++;
+                        }
                     }
-                    if (State.TheVirtualMap.IsAvatarRidingCarpet)
-                    {
-                        // we tuck the carpet away
-                        State.PlayerInventory.MagicCarpets++;
-                    }
-                    if (State.TheVirtualMap.IsAvatarInSkiff)
-                    {
-                        // add a skiff the the frigate
-                        boardableFrigate.SkiffsAboard++;
-                    }
-                }
 
-                if (boardableFrigate.SkiffsAboard == 0)
-                {
-                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
+                    if (boardableFrigate.SkiffsAboard == 0)
+                    {
+                        retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
+                    }
+                    avatar.SetBoardedFrigate(boardableFrigate.Direction);
+                    break;
                 }
-                avatar.SetBoardedFrigate(boardableFrigate.Direction);
-            } else if (boardableMapUnitType == typeof(Skiff))
-            {
-                if (bAvatarIsBoarded)
-                {
+                case Skiff _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
                     return getOnFootResponse();
-                }
-                avatar.SetBoardedSkiff(boardableMapUnit.Direction);
+                case Skiff _:
+                    avatar.SetBoardedSkiff(boardableMapUnit.Direction);
+                    break;
             }
 
             State.TheVirtualMap.TheMapUnits.ClearMapUnit(currentAvatarTileRef);
@@ -1000,10 +993,42 @@ namespace Ultima5Redux
             return retStr;
         }
 
-        public string Xit(Point2D xy, out bool bWasSuccessful)
+        public string Xit(out bool bWasSuccessful)
         {
             bWasSuccessful = true;
-            return "";
+            string retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.XIT).TrimEnd();
+
+            if (!State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
+            {
+                return retStr += " " + DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
+            }
+
+            MapUnit mapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
+            //Debug.Assert(mapUnit.BoardXitName != "");
+
+            State.TheVirtualMap.TheMapUnits.XitCurrentVehicle();
+            
+            switch (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState)
+            {
+                case Avatar.AvatarState.Hidden:
+                case Avatar.AvatarState.Regular:
+                    break;
+                case Avatar.AvatarState.Carpet:
+                    break;
+                case Avatar.AvatarState.Horse:
+                    break;
+                case Avatar.AvatarState.Frigate:
+                    
+                    break;
+                case Avatar.AvatarState.Skiff:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            retStr += " " + State.TheVirtualMap.TheMapUnits.AvatarMapUnit.BoardXitName.Trim();
+            
+            return retStr;
         }
         
         public void DismountCarpet()

@@ -557,6 +557,44 @@ namespace Ultima5Redux.MapUnits
             return newUnit;
         }
 
+        private int CreateFrigate(Point2D xy)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
+
+            if (nIndex == -1) return nIndex;
+
+            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
+
+            Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex),  
+                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
+            
+            // set position of frigate in the world
+            Point2D frigateLocation = xy;
+            frigate.MapUnitPosition = new MapUnitPosition(frigateLocation.X, frigateLocation.Y, 0);
+            frigate.SkiffsAboard = 1;
+            frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
+
+            AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
+            return nIndex;
+        }
+
+        private int CreateSkiff(Point2D xy)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
+            if (nIndex == -1) return nIndex;
+
+            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
+            Skiff skiff = new Skiff(mapUnitState, Movements.GetMovement(nIndex),  
+                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
+            
+            // set position of frigate in the world
+            Point2D skiffLocation = xy;
+            skiff.MapUnitPosition = new MapUnitPosition(skiffLocation.X, skiffLocation.Y, 0);
+            skiff.KeyTileReference = _tileRefs.GetTileReferenceByName("SkiffLeft");
+            AddNewMapUnit(LargeMap.Maps.Overworld, skiff, nIndex);
+            return nIndex;
+        }
+        
         /// <summary>
         /// Creates a new frigate at a dock of a given location 
         /// </summary>
@@ -564,37 +602,45 @@ namespace Ultima5Redux.MapUnits
         /// <param name="virtualMap"></param>
         public void CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap )
         {
-            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
-            if (nIndex == -1) return;
-
-            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
-            Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex),  
-                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
-            
-            // set position of frigate in the world
-            Point2D frigateLocation = virtualMap.GetLocationOfDock(location, _dataOvlReference);
-            frigate.MapUnitPosition = new MapUnitPosition(frigateLocation.X, frigateLocation.Y, 0);
-            frigate.SkiffsAboard = 1;
-            frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
-            
-            AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
+            int nIndex = CreateFrigate(virtualMap.GetLocationOfDock(location, _dataOvlReference));
         }
         
         public void CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap)
         {
-            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
-            if (nIndex == -1) return;
-
-            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
-            Skiff frigate = new Skiff(mapUnitState, Movements.GetMovement(nIndex),  
-                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
-            
-            // set position of frigate in the world
-            Point2D skiffLocation = virtualMap.GetLocationOfDock(location, _dataOvlReference);
-            frigate.MapUnitPosition = new MapUnitPosition(skiffLocation.X, skiffLocation.Y, 0);
-            frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("SkiffLeft");
-            
-            AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
+            int nIndex = CreateSkiff(virtualMap.GetLocationOfDock(location, _dataOvlReference));
         }
+
+        public void XitCurrentVehicle()
+        {
+            // we can't exit something unless the Avatar has boarded something
+            Debug.Assert(AvatarMapUnit.IsAvatarOnBoardedThing);
+            
+            CreateNewMapUnitBasedOnAvatarState(AvatarMapUnit.CurrentAvatarState);
+        }
+
+        internal void CreateNewMapUnitBasedOnAvatarState(Avatar.AvatarState avatarState)
+        {
+            switch (avatarState)
+            {
+                case Avatar.AvatarState.Regular:
+                case Avatar.AvatarState.Hidden:
+                    break;
+                case Avatar.AvatarState.Carpet:
+                    break;
+                case Avatar.AvatarState.Horse:
+                    break;
+                case Avatar.AvatarState.Frigate:
+                    CreateFrigate(AvatarMapUnit.MapUnitPosition.XY);
+                    break;
+                case Avatar.AvatarState.Skiff:
+                    CreateSkiff(AvatarMapUnit.MapUnitPosition.XY);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
+            }
+
+            AvatarMapUnit.CurrentAvatarState = Avatar.AvatarState.Regular;
+        }
+        
     }
 }
