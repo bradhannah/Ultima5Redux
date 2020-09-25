@@ -35,11 +35,24 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         
         public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, 
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference) : 
+            DataOvlReference dataOvlReference, VirtualMap.Direction direction) : 
             base(mapUnitState, null, mapUnitMovement, tileReferences, location, 
-                dataOvlReference)
+                dataOvlReference, direction)
         {
         }
+
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<VirtualMap.Direction, string>()
+            {
+                {VirtualMap.Direction.None, "ShipNoSailsUp"},
+                {VirtualMap.Direction.Left, "ShipNoSailsLeft"},
+                {VirtualMap.Direction.Down, "ShipNoSailsDown"},
+                {VirtualMap.Direction.Right, "ShipNoSailsRight"},
+                {VirtualMap.Direction.Up, "ShipNoSailsUp"},
+            };
+
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
+        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
 
         public override string BoardXitName =>
             DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();

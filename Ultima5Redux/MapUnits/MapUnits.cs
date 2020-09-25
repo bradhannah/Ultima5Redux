@@ -40,8 +40,10 @@ namespace Ultima5Redux.MapUnits
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
 
         private readonly SmallMapCharacterStates _smallMapCharacterStates;
-        private LargeMap.Maps _currentMapType;
         private readonly DataOvlReference _dataOvlReference;
+
+        private LargeMap.Maps _currentMapType;
+        private SmallMapReferences.SingleMapReference.Location _currentLocation;
 
         /// <summary>
         /// static references to all NPCs in the world
@@ -127,6 +129,7 @@ namespace Ultima5Redux.MapUnits
             _tileRefs = tileRefs;
             _timeOfDay = timeOfDay;
             _playerCharacterRecords = playerCharacterRecords;
+            _currentLocation = currentSmallMap;
 
             _activeDataChunk = activeMapUnitStatesDataChunk;
             _overworldDataChunk = overworldMapUnitStatesDataChunk;
@@ -210,6 +213,7 @@ namespace Ultima5Redux.MapUnits
             bool bLoadFromDisk)
         {
             _currentMapType = mapType;
+            _currentLocation = location;
 
             // I may need make an additional save of state before wiping these MapUnits out
             
@@ -312,6 +316,8 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// Clear a current map unit, essentially removing it from the world
         /// Commonly used when something is boarded, and collapses into the Avatar himself
+        /// note: the MapUnit is no longer referenced - but it will often exist within the Avatar 
+        /// object if they have in fact boarded it
         /// </summary>
         /// <param name="mapUnitToClear"></param>
         /// <exception cref="Ultima5ReduxException"></exception>
@@ -337,7 +343,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnit"></param>
         /// <param name="nIndex"></param>
         /// <returns></returns>
-        internal bool AddNewMapUnit(LargeMap.Maps map, MapUnit mapUnit, int nIndex)
+        private bool AddNewMapUnit(LargeMap.Maps map, MapUnit mapUnit, int nIndex)
         {
             if (nIndex == -1) return false;
             
@@ -524,7 +530,8 @@ namespace Ultima5Redux.MapUnits
             SmallMapCharacterState smallMapCharacterState = null)
         {                    
             MapUnit newUnit;
-
+            TileReference tileRef = mapUnitState.Tile1Ref;
+            
             if (npcRef != null)
             {
                 newUnit = new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
@@ -532,20 +539,20 @@ namespace Ultima5Redux.MapUnits
             }
             else  if (_tileRefs.IsFrigate(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Frigate(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
+                newUnit = new Frigate(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference, tileRef.GetDirection());
 
             }
             else if (_tileRefs.IsSkiff(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Skiff(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
+                newUnit = new Skiff(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference, tileRef.GetDirection());
             }
             else if (_tileRefs.IsMagicCarpet(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new MagicCarpet(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
+                newUnit = new MagicCarpet(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference, tileRef.GetDirection());
             }
             else if (_tileRefs.IsHorse(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Horse(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference);
+                newUnit = new Horse(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference, tileRef.GetDirection());
             }
             // this is where we will create monsters too
             else
@@ -557,16 +564,55 @@ namespace Ultima5Redux.MapUnits
             return newUnit;
         }
 
-        private int CreateFrigate(Point2D xy)
+        private MagicCarpet CreateMagicCarpet(Point2D xy, VirtualMap.Direction direction, out int nIndex)
         {
-            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
+            nIndex = FindNextFreeMapUnitIndex(_currentMapType);
 
-            if (nIndex == -1) return nIndex;
+            if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
+            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
+
+            MagicCarpet magicCarpet = new MagicCarpet(mapUnitState, Movements.GetMovement(nIndex),  
+                _tileRefs, _currentLocation, _dataOvlReference, direction);
+            
+            // set position of frigate in the world
+            magicCarpet.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+            //frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
+
+            AddNewMapUnit(LargeMap.Maps.Overworld, magicCarpet, nIndex);
+            return magicCarpet;
+        }
+
+        private MagicCarpet CreateHorse(Point2D xy, VirtualMap.Direction direction, out int nIndex)
+        {
+            nIndex = FindNextFreeMapUnitIndex(_currentMapType);
+
+            if (nIndex == -1) return null;
+
+            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
+
+            MagicCarpet magicCarpet = new MagicCarpet(mapUnitState, Movements.GetMovement(nIndex),  
+                _tileRefs, _currentLocation, _dataOvlReference, direction);
+            
+            // set position of frigate in the world
+            magicCarpet.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+            //frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
+
+            AddNewMapUnit(LargeMap.Maps.Overworld, magicCarpet, nIndex);
+            return magicCarpet;
+        }
+        
+        private Frigate CreateFrigate(Point2D xy, VirtualMap.Direction direction, out int nIndex)
+        {
+            nIndex = FindNextFreeMapUnitIndex(_currentMapType);
+
+            if (nIndex == -1) return null;
+
+            
+            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
 
             Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex),  
-                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
+                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference, direction);
             
             // set position of frigate in the world
             Point2D frigateLocation = xy;
@@ -575,24 +621,24 @@ namespace Ultima5Redux.MapUnits
             frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
 
             AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
-            return nIndex;
+            return frigate;
         }
 
-        private int CreateSkiff(Point2D xy)
+        private Skiff CreateSkiff(Point2D xy, VirtualMap.Direction direction, out int nIndex)
         {
-            int nIndex = FindNextFreeMapUnitIndex(LargeMap.Maps.Overworld);
-            if (nIndex == -1) return nIndex;
+            nIndex = FindNextFreeMapUnitIndex(_currentMapType);
+            if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = _overworldMapUnitStates.GetCharacterState(nIndex);
+            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
             Skiff skiff = new Skiff(mapUnitState, Movements.GetMovement(nIndex),  
-                _tileRefs, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference);
+                _tileRefs, _currentLocation, _dataOvlReference, direction);
             
             // set position of frigate in the world
             Point2D skiffLocation = xy;
             skiff.MapUnitPosition = new MapUnitPosition(skiffLocation.X, skiffLocation.Y, 0);
-            skiff.KeyTileReference = _tileRefs.GetTileReferenceByName("SkiffLeft");
+            //skiff.KeyTileReference = _tileRefs.GetTileReferenceByName("SkiffLeft");
             AddNewMapUnit(LargeMap.Maps.Overworld, skiff, nIndex);
-            return nIndex;
+            return skiff;
         }
         
         /// <summary>
@@ -600,47 +646,51 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="location"></param>
         /// <param name="virtualMap"></param>
-        public void CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap )
+        public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap )
         {
-            int nIndex = CreateFrigate(virtualMap.GetLocationOfDock(location, _dataOvlReference));
+            return CreateFrigate(virtualMap.GetLocationOfDock(location, _dataOvlReference), VirtualMap.Direction.Right, out _);
         }
         
-        public void CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap)
+        public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap)
         {
-            int nIndex = CreateSkiff(virtualMap.GetLocationOfDock(location, _dataOvlReference));
+            return CreateSkiff(virtualMap.GetLocationOfDock(location, _dataOvlReference), VirtualMap.Direction.Right, out _);
         }
 
-        public void XitCurrentVehicle()
+        public MapUnit XitCurrentVehicle()
         {
             // we can't exit something unless the Avatar has boarded something
             Debug.Assert(AvatarMapUnit.IsAvatarOnBoardedThing);
-            
-            CreateNewMapUnitBasedOnAvatarState(AvatarMapUnit.CurrentAvatarState);
+            MapUnit unboardedMapUnit = AvatarMapUnit.UnboardedAvatar();
+            Debug.Assert(unboardedMapUnit != null);
+            return unboardedMapUnit; //CreateNewMapUnitBasedOnAvatarState(AvatarMapUnit.CurrentAvatarState);
         }
 
-        internal void CreateNewMapUnitBasedOnAvatarState(Avatar.AvatarState avatarState)
-        {
-            switch (avatarState)
-            {
-                case Avatar.AvatarState.Regular:
-                case Avatar.AvatarState.Hidden:
-                    break;
-                case Avatar.AvatarState.Carpet:
-                    break;
-                case Avatar.AvatarState.Horse:
-                    break;
-                case Avatar.AvatarState.Frigate:
-                    CreateFrigate(AvatarMapUnit.MapUnitPosition.XY);
-                    break;
-                case Avatar.AvatarState.Skiff:
-                    CreateSkiff(AvatarMapUnit.MapUnitPosition.XY);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
-            }
-
-            AvatarMapUnit.CurrentAvatarState = Avatar.AvatarState.Regular;
-        }
+        // internal MapUnit CreateNewMapUnitBasedOnAvatarState(Avatar.AvatarState avatarState)
+        // {
+        //     MapUnit retMapUnit = null;
+        //     switch (avatarState)
+        //     {
+        //         case Avatar.AvatarState.Regular:
+        //         case Avatar.AvatarState.Hidden:
+        //             break;
+        //         case Avatar.AvatarState.Carpet:
+        //             break;
+        //         case Avatar.AvatarState.Horse:
+        //             
+        //             break;
+        //         case Avatar.AvatarState.Frigate:
+        //             retMapUnit = CreateFrigate(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.Direction, out int _);
+        //             break;
+        //         case Avatar.AvatarState.Skiff:
+        //             retMapUnit = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY,  AvatarMapUnit.Direction, out int _);
+        //             break;
+        //         default:
+        //             throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
+        //     }
+        //
+        //     AvatarMapUnit.UnboardedAvatar();
+        //     return retMapUnit;
+        // }
         
     }
 }

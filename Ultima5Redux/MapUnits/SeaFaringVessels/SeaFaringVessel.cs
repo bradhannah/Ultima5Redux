@@ -13,29 +13,15 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
              //int price = /Prices[location]; 
              return (int) (nPrice - (nPrice * 0.015 * records.AvatarRecord.Stats.Intelligence));
          }
-
-        //  public SeaFaringVessel(MapUnitPosition position, VirtualMap.Direction direction)
-        //  {
-        // //     Position = position;
-        //      Direction = direction;
-        //  }
          
          protected SeaFaringVessel(MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
              MapUnitMovement mapUnitMovement, TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-             DataOvlReference dataOvlReference) 
+             DataOvlReference dataOvlReference, VirtualMap.Direction direction) 
              : base(null, mapUnitState, smallMapTheSmallMapCharacterState, mapUnitMovement,
-             null, null, tileReferences, location, dataOvlReference)
+             null, null, tileReferences, location, dataOvlReference, direction)
          {
          }
 
-         public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
-         {
-             // the direction that the Avatar comes from doesn't matter - instead we just use the current 
-             // tile reference which is faced in the correct direction
-             return TheMapUnitState.Tile1Ref;
-         }
-
-         
          public override bool IsActive => true;
     }
 }

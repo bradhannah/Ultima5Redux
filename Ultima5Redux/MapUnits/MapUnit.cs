@@ -31,18 +31,26 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public abstract TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction);
-
-        // protected virtual Dictionary<VirtualMap.Direction, string> DirectionToSpriteName { get; }
-        // protected virtual Dictionary<string, VirtualMap.Direction> SpriteNameToDirection { get; }
-        // public virtual VirtualMap.Direction Direction
+        // public TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
         // {
-        //     get => SpriteNameToDirection[KeyTileReference.Name];
-        //     set => KeyTileReference = TileReferences.GetTileReferenceByName(DirectionToSpriteName[value]);
+        //     return TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[direction]);
         // }
 
-        public virtual VirtualMap.Direction Direction => KeyTileReference.GetDirection();
+        protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
+        protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
+        public abstract Avatar.AvatarState BoardedAvatarState { get; }
+        public bool IsOccupiedByAvatar { get; protected internal set; } = false;
+        public virtual VirtualMap.Direction Direction
+        {
+            get => KeyTileReference.GetDirection();
+            protected internal set =>
+                KeyTileReference = TileReferences.GetTileReferenceByName(DirectionToTileName[value]);
+                     //TileReferences.GetTileReferenceByName(DirectionToTileName[value]);
+        }
 
+        public TileReference BoardedTileReference => TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[Direction]);
+        public TileReference NonBoardedTileReference => TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+        
         public abstract string BoardXitName { get; }
         
         /// <summary>
@@ -55,7 +63,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
         /// </summary>
-        public TileReference KeyTileReference
+        public virtual TileReference KeyTileReference
         {
             get
             {
@@ -174,9 +182,10 @@ namespace Ultima5Redux.MapUnits
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         /// <param name="dataOvlRef"></param>
+        /// <param name="direction"></param>
         protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
             MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlRef)
+            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlRef, VirtualMap.Direction direction)
         {
             this.DataOvlRef = dataOvlRef;
             TileReferences = tileReferences;
@@ -185,6 +194,7 @@ namespace Ultima5Redux.MapUnits
             TheMapUnitState = mapUnitState;
             TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
             Movement = mapUnitMovement;
+            Direction = direction;
 
             PlayerCharacterRecord record = null;
             

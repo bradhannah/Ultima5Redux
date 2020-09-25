@@ -138,13 +138,13 @@ namespace Ultima5Redux.Maps
 
         public MapUnits.MapUnits TheMapUnits { get; private set; }
 
-        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingMagicCarpet");
-        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingHorse");
-        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Skiff");
-        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Ship");
+        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingMagicCarpet");
+        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingHorse");
+        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Skiff");
+        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Ship");
 
-        public bool IsAvatarRidingSomething =>
-            IsAvatarRidingCarpet || IsAvatarRidingHorse || IsAvatarInSkiff || IsAvatarInFrigate;
+        public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
+            //IsAvatarRidingCarpet || IsAvatarRidingHorse || IsAvatarInSkiff || IsAvatarInFrigate;
         
         
         #endregion
@@ -450,14 +450,7 @@ namespace Ultima5Redux.Maps
         /// <returns>MapUnit or null if none exist</returns>
         public MapUnit GetMapUnitOnCurrentTile()
         {
-            List<MapUnit> mapUnits = GetMapUnitOnTile(CurrentPosition.XY);
-            foreach (MapUnit mapUnit in mapUnits)
-            {
-                if (!(mapUnit is Avatar))
-                    return mapUnit;
-            }
-
-            return null;
+            return GetTopVisibleMapUnit(CurrentPosition.XY, true);
         }
         
         /// <summary>
@@ -489,7 +482,7 @@ namespace Ultima5Redux.Maps
                 typeof(Horse), typeof(MagicCarpet),  typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter), typeof(Avatar)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
-            List<MapUnit> orderedMapUnits = new List<MapUnit>();
+            //List<MapUnit> orderedMapUnits = new List<MapUnit>();
             
             // this is inefficient, but the lists are so small it is unlikely to matter
             foreach (Type type in visibilePriorityOrder)

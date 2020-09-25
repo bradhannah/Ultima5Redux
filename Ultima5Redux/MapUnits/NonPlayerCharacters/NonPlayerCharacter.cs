@@ -15,12 +15,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public bool ArrivedAtLocation { get; private set; }
 
         public NonPlayerCharacter(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
-            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay,
+            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
+            TimeOfDay timeOfDay,
             PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference) : base(npcRef, mapUnitState,
-            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords, 
-            tileReferences, location, dataOvlReference)
+            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords,
+            tileReferences, location, dataOvlReference, VirtualMap.Direction.None)
         {
             bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
 
@@ -61,13 +62,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<VirtualMap.Direction, string>();
 
-        public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
-        {
-            // really this should never ever happen, but I like to run around it free move mode, 
-            // so we will handle it for now
-            return KeyTileReference;
-        }
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<VirtualMap.Direction, string>();
+
+        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
         public override string BoardXitName => "Board them? You hardly know them!";
 

@@ -35,6 +35,15 @@ namespace Ultima5Redux.MapUnits
             Movement = movement;
         }
 
+        public override TileReference KeyTileReference 
+        {
+            get =>
+                IsAvatarOnBoardedThing
+                    ? TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[CurrentDirection])
+                    : TileReferences.GetTileReferenceByName(DirectionToTileName[CurrentDirection]);
+            set => base.KeyTileReference = value;
+        }
+
         private AvatarState CalculateAvatarState(TileReference tileReference)
         {
             if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
@@ -45,10 +54,18 @@ namespace Ultima5Redux.MapUnits
             throw new Ultima5ReduxException("Asked to calculate AvatarState of "+tileReference.Name + " but you can't do that, it's not a thing!");
         }
 
-        public override TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
-        {
-            throw new NotImplementedException();
-        }
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
+            = new Dictionary<VirtualMap.Direction, string>()
+            {
+                {VirtualMap.Direction.None, "BasicAvatar"},
+                {VirtualMap.Direction.Left, "BasicAvatar"},
+                {VirtualMap.Direction.Down, "BasicAvatar"},
+                {VirtualMap.Direction.Right, "BasicAvatar"},
+                {VirtualMap.Direction.Up, "BasicAvatar"},
+            };
+
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
+        public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
         public override string BoardXitName => "You can't board the Avatar you silly goose!";
 
@@ -56,10 +73,15 @@ namespace Ultima5Redux.MapUnits
 
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
 
-        public AvatarState CurrentAvatarState { get; internal set; } = AvatarState.Regular;
+        internal AvatarState CurrentAvatarState { get; private set; } = AvatarState.Regular;
         public VirtualMap.Direction PreviousDirection { get; private set; } = VirtualMap.Direction.None;
         public VirtualMap.Direction CurrentDirection { get; private set; } = VirtualMap.Direction.None;
         public bool AreSailsUp { get; set; } = false;
+        /// <summary>
+        /// The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
+        /// the current MapUnits object 
+        /// </summary>
+        public MapUnit CurrentBoardedMapUnit { get; private set; }
         /// <summary>
         /// Is the Avatar currently boarded onto a thing 
         /// </summary>
@@ -77,74 +99,13 @@ namespace Ultima5Redux.MapUnits
             {AvatarState.Skiff, false},
             {AvatarState.Regular, false}
         };
-        
-        /// <summary>
-        /// Map of all sprites the current state and avatar direction
-        /// </summary>
-        private readonly Dictionary<AvatarState, Dictionary<VirtualMap.Direction, string>> 
-        _tileIndexMap = new Dictionary<AvatarState, Dictionary<VirtualMap.Direction, string>>()
-            { 
-                { 
-                    AvatarState.Carpet, new Dictionary<VirtualMap.Direction, string> ()
-                    {
-                        {VirtualMap.Direction.None, "RidingMagicCarpetLeft"},
-                        {VirtualMap.Direction.Left, "RidingMagicCarpetLeft"},
-                        {VirtualMap.Direction.Down, "RidingMagicCarpetLeft"},
-                        {VirtualMap.Direction.Right, "RidingMagicCarpetRight"},
-                        {VirtualMap.Direction.Up, "RidingMagicCarpetRight"},
-                    }
-                },
-                { 
-                    AvatarState.Regular, new Dictionary<VirtualMap.Direction, string> ()
-                    {
-                        {VirtualMap.Direction.None, "BasicAvatar"},
-                        {VirtualMap.Direction.Left, "BasicAvatar"},
-                        {VirtualMap.Direction.Down, "BasicAvatar"},
-                        {VirtualMap.Direction.Right, "BasicAvatar"},
-                        {VirtualMap.Direction.Up, "BasicAvatar"},
-                    }
-                },
-                { 
-                    AvatarState.Frigate, new Dictionary<VirtualMap.Direction, string> ()
-                    {
-                        {VirtualMap.Direction.None, "ShipNoSailsUp"},
-                        {VirtualMap.Direction.Left, "ShipNoSailsLeft"},
-                        {VirtualMap.Direction.Down, "ShipNoSailsDown"},
-                        {VirtualMap.Direction.Right, "ShipNoSailsRight"},
-                        {VirtualMap.Direction.Up, "ShipNoSailsUp"},
-                    }
-                },
-                { 
-                    AvatarState.Skiff, new Dictionary<VirtualMap.Direction, string> ()
-                    {
-                        {VirtualMap.Direction.None, "SkiffLeft"},
-                        {VirtualMap.Direction.Left, "SkiffLeft"},
-                        {VirtualMap.Direction.Down, "SkiffDown"},
-                        {VirtualMap.Direction.Right, "SkiffRight"},
-                        {VirtualMap.Direction.Up, "SkiffUp"},
-                    }
-                },           
-                { 
-                    AvatarState.Horse, new Dictionary<VirtualMap.Direction, string> ()
-                    {
-                        {VirtualMap.Direction.None, "RidingHorseLeft"},
-                        {VirtualMap.Direction.Left, "RidingHorseLeft"},
-                        {VirtualMap.Direction.Down, "RidingHorseLeft"},
-                        {VirtualMap.Direction.Right, "RidingHorseRight"},
-                        {VirtualMap.Direction.Up, "RidingHorseRight"},
-                    }
-                },           
-            };
 
-        private string GetSpriteName()
+        private TileReference GetCurrentTileReference()
         {
-            // if the sails are up then we make a slight modification to show the sails up
-            if (CurrentAvatarState == AvatarState.Frigate && AreSailsUp)
-            {
-                return _tileIndexMap[CurrentAvatarState][CurrentDirection].Replace("No", "");
-            }
-
-            return _tileIndexMap[CurrentAvatarState][CurrentDirection];
+            if (CurrentAvatarState == AvatarState.Regular || CurrentAvatarState == AvatarState.Hidden)
+                return NonBoardedTileReference;
+            
+            return CurrentBoardedMapUnit.BoardedTileReference;
         }
         
         /// <summary>
@@ -169,6 +130,7 @@ namespace Ultima5Redux.MapUnits
             // we always track the previous position, this will be needed for slower frigate movement
             PreviousDirection = CurrentDirection;
             CurrentDirection = direction;
+            if (CurrentBoardedMapUnit != null) CurrentBoardedMapUnit.Direction = CurrentDirection;
 
             // did the Avatar change direction?
             bool bDirectionChanged = PreviousDirection != CurrentDirection;
@@ -176,7 +138,7 @@ namespace Ultima5Redux.MapUnits
             // set the new sprite to reflect the new direction
             if (bChangeTile)
             {
-                TheMapUnitState.SetTileReference(TileReferences.GetTileReferenceByName(GetSpriteName()));
+                TheMapUnitState.SetTileReference(GetCurrentTileReference());
             }
 
             // return false if the direction changed AND your on a Frigate
@@ -206,34 +168,48 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// Show the Avatar that isn't boarded on top of anything
         /// </summary>
-        public void SetUnboardedAvatar()
+        public MapUnit UnboardedAvatar()
         {
-            KeyTileReference = TileReferences.GetTileReferenceByName("BasicAvatar");
+            KeyTileReference = NonBoardedTileReference;// GetTileReferenceByName("BasicAvatar");
             CurrentAvatarState = AvatarState.Regular;
+            MapUnit previouslyBoardedMapUnit = CurrentBoardedMapUnit;
+            CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
+            CurrentBoardedMapUnit = null;
+            return previouslyBoardedMapUnit;
+        }
+
+        public void BoardMapUnit(MapUnit mapUnit)
+        {
+            // note: since the Avatar does not control all MapUnits, we only add it our internal tracker
+            // but do not release it from the world - that must be done outside this method
+            KeyTileReference = mapUnit.KeyTileReference;
+            CurrentAvatarState = mapUnit.BoardedAvatarState;
+            CurrentBoardedMapUnit = mapUnit;
+            CurrentBoardedMapUnit.IsOccupiedByAvatar = true;
         }
         
-        public void SetBoardedCarpet(VirtualMap.Direction direction)
-        {
-            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Carpet][direction]); 
-            CurrentAvatarState = AvatarState.Carpet;
-        }
-
-        public void SetBoardedHorse(VirtualMap.Direction direction)
-        {
-            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Horse][direction]); 
-            CurrentAvatarState = AvatarState.Horse;
-        }
-
-        public void SetBoardedFrigate(VirtualMap.Direction direction, bool bSailsUp = false)
-        {
-            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Frigate][direction]);
-            CurrentAvatarState = AvatarState.Frigate;
-        }
-
-        public void SetBoardedSkiff(VirtualMap.Direction direction)
-        {
-            KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Skiff][direction]);
-            CurrentAvatarState = AvatarState.Skiff;
-        }
+        // public void SetBoardedCarpet(VirtualMap.Direction direction)
+        // {
+        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Carpet][direction]); 
+        //     CurrentAvatarState = AvatarState.Carpet;
+        // }
+        //
+        // public void SetBoardedHorse(VirtualMap.Direction direction)
+        // {
+        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Horse][direction]); 
+        //     CurrentAvatarState = AvatarState.Horse;
+        // }
+        //
+        // public void SetBoardedFrigate(VirtualMap.Direction direction, bool bSailsUp = false)
+        // {
+        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Frigate][direction]);
+        //     CurrentAvatarState = AvatarState.Frigate;
+        // }
+        //
+        // public void SetBoardedSkiff(VirtualMap.Direction direction)
+        // {
+        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Skiff][direction]);
+        //     CurrentAvatarState = AvatarState.Skiff;
+        // }
     }
 }

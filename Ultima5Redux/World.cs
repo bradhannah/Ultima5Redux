@@ -942,14 +942,14 @@ namespace Ultima5Redux
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 case MagicCarpet _:
-                    avatar.SetBoardedCarpet(boardableMapUnit.Direction);
+                    avatar.BoardMapUnit(boardableMapUnit);
                     break;
                 case Horse _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 // delete or deactivate the horse we just mounted
                 case Horse _:
-                    avatar.SetBoardedHorse(boardableMapUnit.Direction);
+                    avatar.BoardMapUnit(boardableMapUnit);
                     break;
                 case Frigate boardableFrigate:
                 {
@@ -976,14 +976,14 @@ namespace Ultima5Redux
                     {
                         retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
                     }
-                    avatar.SetBoardedFrigate(boardableFrigate.Direction);
+                    avatar.BoardMapUnit(boardableFrigate);
                     break;
                 }
                 case Skiff _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 case Skiff _:
-                    avatar.SetBoardedSkiff(boardableMapUnit.Direction);
+                    avatar.BoardMapUnit(boardableMapUnit);
                     break;
             }
 
@@ -1003,30 +1003,9 @@ namespace Ultima5Redux
                 return retStr += " " + DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
             }
 
-            MapUnit mapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
-            //Debug.Assert(mapUnit.BoardXitName != "");
-
-            State.TheVirtualMap.TheMapUnits.XitCurrentVehicle();
-            
-            switch (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState)
-            {
-                case Avatar.AvatarState.Hidden:
-                case Avatar.AvatarState.Regular:
-                    break;
-                case Avatar.AvatarState.Carpet:
-                    break;
-                case Avatar.AvatarState.Horse:
-                    break;
-                case Avatar.AvatarState.Frigate:
-                    
-                    break;
-                case Avatar.AvatarState.Skiff:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
-            retStr += " " + State.TheVirtualMap.TheMapUnits.AvatarMapUnit.BoardXitName.Trim();
+            MapUnit unboardedMapUnit = State.TheVirtualMap.TheMapUnits.XitCurrentVehicle();
+            if (unboardedMapUnit == null) return "FAILED TO UNBOARD";
+            retStr += " " + unboardedMapUnit.BoardXitName.Trim();
             
             return retStr;
         }
@@ -1036,7 +1015,7 @@ namespace Ultima5Redux
             Debug.Assert(State.TheVirtualMap.IsAvatarRidingCarpet);
 
             // show the Avatar as an unboarded player (regular ole Avatar) 
-            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.SetUnboardedAvatar();
+            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.UnboardedAvatar();
         }
 
         private string UseSpecialItem(SpecialItem spcItem)
