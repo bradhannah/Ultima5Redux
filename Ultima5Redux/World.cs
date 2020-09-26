@@ -1001,7 +1001,7 @@ namespace Ultima5Redux
                 return retStr += " " + DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
             }
 
-            MapUnit unboardedMapUnit = State.TheVirtualMap.TheMapUnits.XitCurrentVehicle();
+            MapUnit unboardedMapUnit = State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit();
             if (unboardedMapUnit == null) return "FAILED TO UNBOARD";
             retStr += " " + unboardedMapUnit.BoardXitName.Trim();
             
