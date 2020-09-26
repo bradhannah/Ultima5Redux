@@ -469,12 +469,11 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Gets the top visible map unit
+        /// Gets the top visible map unit - excluding the Avatar
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="bExcludeAvatar"></param>
-        /// <returns></returns>
-        /// <exception cref="Ultima5ReduxException"></exception>
+        /// <returns>MapUnit or </returns>
         public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
         {
             List<Type> visibilePriorityOrder = new List<Type>()
@@ -494,7 +493,9 @@ namespace Ultima5Redux.Maps
                     if (mapUnit.GetType() == type) return mapUnit;
                 }
             }
-            throw new Ultima5ReduxException("Couldn't find a top visible map unit");
+
+            return null;
+            //throw new Ultima5ReduxException("Couldn't find a top visible map unit");
         }
 
         

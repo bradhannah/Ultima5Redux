@@ -62,6 +62,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
+        public override TileReference NonBoardedTileReference => KeyTileReference;
+        
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
             new Dictionary<VirtualMap.Direction, string>();
 

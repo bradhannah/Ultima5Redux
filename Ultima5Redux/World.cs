@@ -905,12 +905,10 @@ namespace Ultima5Redux
         /// <returns></returns>
         public string Board(out bool bWasSuccessful)
         {
-            MapUnit currentAvatarTileRef =
-                State.TheVirtualMap.GetMapUnitOnCurrentTile();
+            MapUnit currentAvatarTileRef = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             bWasSuccessful = true;
             
-            if (currentAvatarTileRef == null
-                || !State.TheVirtualMap.IsMapUnitOccupiedTile()
+            if (currentAvatarTileRef is null
                 || !currentAvatarTileRef.KeyTileReference.IsBoardable)
             {
                 bWasSuccessful = false;
@@ -1010,13 +1008,13 @@ namespace Ultima5Redux
             return retStr;
         }
         
-        public void DismountCarpet()
-        {
-            Debug.Assert(State.TheVirtualMap.IsAvatarRidingCarpet);
-
-            // show the Avatar as an unboarded player (regular ole Avatar) 
-            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.UnboardedAvatar();
-        }
+        // public void DismountCarpet()
+        // {
+        //     Debug.Assert(State.TheVirtualMap.IsAvatarRidingCarpet);
+        //
+        //     // show the Avatar as an unboarded player (regular ole Avatar) 
+        //     State.TheVirtualMap.TheMapUnits.AvatarMapUnit.UnboardedAvatar();
+        // }
 
         private string UseSpecialItem(SpecialItem spcItem)
         {

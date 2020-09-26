@@ -26,30 +26,14 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         public MapUnitState TheMapUnitState { get; protected set; }
 
-        /// <summary>
-        /// Get's the appropriate sprite index when the Avatar occupies the same tile and comes from the given direction
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        // public TileReference GetTileReferenceWithAvatarOnTile(VirtualMap.Direction direction)
-        // {
-        //     return TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[direction]);
-        // }
-
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
         public abstract Avatar.AvatarState BoardedAvatarState { get; }
         public bool IsOccupiedByAvatar { get; protected internal set; } = false;
-        public virtual VirtualMap.Direction Direction
-        {
-            get => KeyTileReference.GetDirection();
-            protected internal set =>
-                KeyTileReference = TileReferences.GetTileReferenceByName(DirectionToTileName[value]);
-                     //TileReferences.GetTileReferenceByName(DirectionToTileName[value]);
-        }
+        public virtual VirtualMap.Direction Direction { get; set; }
 
         public TileReference BoardedTileReference => TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[Direction]);
-        public TileReference NonBoardedTileReference => TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+        public virtual TileReference NonBoardedTileReference => TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
         
         public abstract string BoardXitName { get; }
         
@@ -168,6 +152,7 @@ namespace Ultima5Redux.MapUnits
             TheMapUnitState = null;
             TheSmallMapCharacterState = null;
             Movement = null;
+            Direction = VirtualMap.Direction.None;
         }
 
         /// <summary>

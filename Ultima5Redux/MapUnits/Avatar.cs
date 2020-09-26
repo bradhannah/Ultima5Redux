@@ -4,6 +4,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
@@ -186,6 +187,13 @@ namespace Ultima5Redux.MapUnits
             CurrentAvatarState = mapUnit.BoardedAvatarState;
             CurrentBoardedMapUnit = mapUnit;
             CurrentBoardedMapUnit.IsOccupiedByAvatar = true;
+            if (mapUnit is Frigate)
+            {
+                // if we are going onto a frigate, then we want to make sure the Avatar can start rowing
+                // in the direction that it's already facing
+                PreviousDirection = mapUnit.Direction;
+                CurrentDirection = mapUnit.Direction;
+            }
         }
         
         // public void SetBoardedCarpet(VirtualMap.Direction direction)

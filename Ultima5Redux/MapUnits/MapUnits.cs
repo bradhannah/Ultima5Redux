@@ -662,6 +662,15 @@ namespace Ultima5Redux.MapUnits
             Debug.Assert(AvatarMapUnit.IsAvatarOnBoardedThing);
             MapUnit unboardedMapUnit = AvatarMapUnit.UnboardedAvatar();
             Debug.Assert(unboardedMapUnit != null);
+
+            // set the current positions to the equal the Avatar's as he exits the vehicle 
+            unboardedMapUnit.MapLocation = _currentLocation;
+            unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
+            unboardedMapUnit.Direction = AvatarMapUnit.CurrentDirection;
+            
+
+            AddNewMapUnit(_currentMapType, unboardedMapUnit);
+            
             return unboardedMapUnit; //CreateNewMapUnitBasedOnAvatarState(AvatarMapUnit.CurrentAvatarState);
         }
 
