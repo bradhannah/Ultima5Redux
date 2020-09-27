@@ -36,7 +36,7 @@ namespace Ultima5Redux.MapUnits
             MapUnitAnimationStateIndex = nMapUnitAnimationStateIndex;
             // if you are adding by hand then we can assume that the character is active
             TheMapUnitPosition = npcRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
-            Active = true;
+            Active = !(TheMapUnitPosition.X == 0 && TheMapUnitPosition.Y == 0);
         }
 
         /// <summary>

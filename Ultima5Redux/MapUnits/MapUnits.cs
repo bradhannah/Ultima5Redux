@@ -555,10 +555,15 @@ namespace Ultima5Redux.MapUnits
             MapUnit newUnit;
             TileReference tileRef = mapUnitState.Tile1Ref;
             
-            if (npcRef != null)
+            if (smallMapCharacterState != null && npcRef != null && smallMapCharacterState.Active)
             {
                 newUnit = new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
                      _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location, _dataOvlReference);
+            }
+            else if (mapUnitState.Tile1Ref == null)
+            {
+                Debug.WriteLine("An empty map unit was created with no tile reference");
+                newUnit = new EmptyMapUnit();
             }
             else  if (_tileRefs.IsFrigate(mapUnitState.Tile1Ref.Index))
             {
