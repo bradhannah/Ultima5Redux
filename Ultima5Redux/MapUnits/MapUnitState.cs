@@ -58,6 +58,8 @@ namespace Ultima5Redux.MapUnits
 
         public MapUnitState(TileReferences tileReferences, NonPlayerCharacterReference npcRef)
         {
+            Tile1Ref = tileReferences.GetTileReference(npcRef.NPCKeySprite);
+            Tile2Ref = tileReferences.GetTileReference(npcRef.NPCKeySprite);
         }
 
         private MapUnitState()

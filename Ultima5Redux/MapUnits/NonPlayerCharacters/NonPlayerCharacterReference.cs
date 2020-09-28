@@ -125,7 +125,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// </summary>
         public TalkScript Script { get; }
 
-//        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
+        public bool NormalNPC { get; }
+
+        //        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
 //        public int CurrentFloor { get; private set; }
 
         /// <summary>
@@ -144,6 +146,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             {
                 foreach (int npctype in Enum.GetValues(typeof(NPCDialogTypeEnum)))
                 {
+                    //if (npctype == 0 && CharacterType != (int) NPCDialogTypeEnum.Guard) return NPCDialogTypeEnum.Custom;
                     if (npctype == DialogNumber && npctype != (int)NPCDialogTypeEnum.Custom)
                     {
                         return (NPCDialogTypeEnum)npctype;
@@ -157,12 +160,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         //{
         //    get; private set;
         //}
-        private int _npcKeySprite;
+        //private int _npcKeySprite;
         public int NPCKeySprite
         {
-            private set => _npcKeySprite = value;
+            //private set => CharacterType = 0x00;//_npcKeySprite = value;
             get
             {
+                return CharacterType + 0x100;
                 {
                     switch (this.NPCType)
                     {
@@ -226,30 +230,30 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// Construct an NPC
         /// </summary>
         /// <param name="gameStateRef"></param>
-        /// <param name="sched">daily schedule</param>
+        /// <param name="schedule">daily schedule</param>
         /// <param name="npcType">type of NPC they are</param>
         /// <param name="dialogNumber">dialog number referencing data OVL</param>
         /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
         /// <param name="talkScript">their conversation script</param>
         /// <param name="location"></param>
-        /// <param name="nKeySprite"></param>
-        public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location, GameState gameStateRef, NPCSchedule sched,
-            byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript, int nKeySprite)
+        /// <param name="bNormalNPC"></param>
+        public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location, GameState gameStateRef, NPCSchedule schedule,
+            byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript, bool bNormalNPC)
         {
-            Schedule = new NonPlayerCharacterSchedule(sched);
+            Schedule = new NonPlayerCharacterSchedule(schedule);
             
             MapLocation = location;
-            NPCKeySprite = nKeySprite;
+            //NPCKeySprite = nKeySprite;
 
             CharacterType = npcType;
             DialogNumber = dialogNumber;
             Script = talkScript;
+            NormalNPC = bNormalNPC;
             DialogIndex = dialogIndex;
-            this._gameStateRef = gameStateRef;
-
+            _gameStateRef = gameStateRef;
 
             // no schedule? I guess you're not real
-            if (!IsEmptySchedule(sched))
+            if (!IsEmptySchedule(schedule))
             {
                 Debug.WriteLine(location + "     NPC Number: " + this.DialogNumber + " in " + location);
             }

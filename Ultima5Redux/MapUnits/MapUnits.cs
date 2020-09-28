@@ -212,29 +212,32 @@ namespace Ultima5Redux.MapUnits
         /// Sets the current map type
         /// Called internally to the class only since it has the bLoadFromDisk option
         /// </summary>
-        /// <param name="location"></param>
+        /// <param name="mapRef"></param>
         /// <param name="mapType"></param>
         /// <param name="bLoadFromDisk"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void SetCurrentMapType(SmallMapReferences.SingleMapReference.Location location, LargeMap.Maps mapType,
+        private void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, LargeMap.Maps mapType,
             bool bLoadFromDisk)
         {
             _currentMapType = mapType;
-            _currentLocation = location;
+            _currentLocation = mapRef.MapLocation;
 
             // I may need make an additional save of state before wiping these MapUnits out
             
             switch (mapType)
             {
                 case LargeMap.Maps.Small:
-                    LoadSmallMap(location, bLoadFromDisk);
-                    return;
+                    LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
+                    break;
                 case LargeMap.Maps.Overworld:
                 case LargeMap.Maps.Underworld:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
             }
+
+            AvatarMapUnit.MapLocation = mapRef.MapLocation;
+            AvatarMapUnit.MapUnitPosition.Floor = mapRef.Floor;
         }
 
         /// <summary>
@@ -243,9 +246,9 @@ namespace Ultima5Redux.MapUnits
         /// <param name="location"></param>
         /// <param name="mapType">Is it a small map, overworld or underworld</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void SetCurrentMapType(SmallMapReferences.SingleMapReference.Location location, LargeMap.Maps mapType) 
+        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, LargeMap.Maps mapType) 
         {
-            SetCurrentMapType(location, mapType, false);
+            SetCurrentMapType(mapRef, mapType, false);
         }
 
         public T GetSpecificMapUnitByLocation<T>(LargeMap.Maps map,
@@ -529,6 +532,9 @@ namespace Ultima5Redux.MapUnits
                     smallMapCharacterState = new SmallMapCharacterState(_tileRefs, npcRef, i, _timeOfDay);
                     // initialize a default MapUnitState 
                     mapUnitState = new MapUnitState(_tileRefs, npcRef);
+                    mapUnitState.X = (byte)smallMapCharacterState.TheMapUnitPosition.X;
+                    mapUnitState.Y = (byte)smallMapCharacterState.TheMapUnitPosition.Y;
+                    mapUnitState.Floor = (byte)smallMapCharacterState.TheMapUnitPosition.Floor;
                 }
 
                 MapUnit mapUnit = CreateNewMapUnit(mapUnitState, mapUnitMovement,
@@ -555,7 +561,7 @@ namespace Ultima5Redux.MapUnits
             MapUnit newUnit;
             TileReference tileRef = mapUnitState.Tile1Ref;
             
-            if (smallMapCharacterState != null && npcRef != null && smallMapCharacterState.Active)
+            if (smallMapCharacterState != null && npcRef != null && smallMapCharacterState.Active && npcRef.NormalNPC)
             {
                 newUnit = new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
                      _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileRefs, location, _dataOvlReference);

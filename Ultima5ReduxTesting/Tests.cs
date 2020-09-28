@@ -58,7 +58,7 @@ namespace Ultima5ReduxTesting
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
+                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
             }
             int i = (24 * (60 / 2));
             while (i > 0)

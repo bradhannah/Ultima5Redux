@@ -235,7 +235,7 @@ namespace Ultima5Redux.Maps
             IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps)(-1);
 
-            TheMapUnits.SetCurrentMapType(singleMapReference.MapLocation, LargeMap.Maps.Small);
+            TheMapUnits.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small);
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
 
@@ -271,7 +271,7 @@ namespace Ultima5Redux.Maps
             IsLargeMap = true;
             LargeMapOverUnder = map;
 
-            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, map);
+            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map);
         }
         #endregion
 

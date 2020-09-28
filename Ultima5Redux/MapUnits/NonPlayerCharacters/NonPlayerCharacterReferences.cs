@@ -157,7 +157,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // bajh: I know this could be done in a single loop, but it would be so damn ugly that I honestly don't even want to both
                 // read through the schedules first
                 int count = 0;
-                // start at the town offset, incremenet by an NPC record each time, for 32 loops
+                // start at the town offset, increment by an NPC record each time, for 32 loops
                 for (int offset = townOffset; count < NPCS_PER_TOWN; offset += ScheduleOffsetSize, count++)
                 {
                     NonPlayerCharacterReference.NPCSchedule schedule = (NonPlayerCharacterReference.NPCSchedule)Utils.ReadStruct(npcData, offset, typeof(NonPlayerCharacterReference.NPCSchedule));
@@ -180,8 +180,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
-                    NonPlayerCharacterReference npc = new NonPlayerCharacterReference(location, gameStateRef, schedules[nNpc], npcTypes[nNpc], 
-                        npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]), (int)(keySpriteList[nNpc]+100));
+                    NonPlayerCharacterReference npc = new NonPlayerCharacterReference(location, gameStateRef,
+                        schedules[nNpc], npcTypes[nNpc],
+                        npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]),
+                        keySpriteList[nNpc] != 0);
+                        //, (int)(keySpriteList[nNpc]+100));
                     _npcs.Add(npc);
                     // we also create a quick lookup table by location but first need to check that there is an initialized list inside
                     if (!_locationToNPCsDictionary.ContainsKey(singleMapRef.MapLocation)) 
