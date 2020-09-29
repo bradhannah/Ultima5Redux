@@ -128,9 +128,15 @@ namespace Ultima5Redux.MapUnits
                 }
             }
 
-            // we always track the previous position, this will be needed for slower frigate movement
-            PreviousDirection = CurrentDirection;
-            CurrentDirection = direction;
+            // we only track changes in tile if we are changing the direction of the sprite, otherwise we don't track
+            // it and don't care - this makes sure carpets and horses don't change direction when going up
+            // and down
+            if (bChangeTile)
+            {
+                PreviousDirection = CurrentDirection;
+                CurrentDirection = direction;
+            }
+
             if (CurrentBoardedMapUnit != null) CurrentBoardedMapUnit.Direction = CurrentDirection;
 
             // did the Avatar change direction?
