@@ -10,22 +10,27 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     public class Inventory
     {
         private readonly List<byte> _gameStateByteArray;
+        private readonly DataOvlReference _dataOvlRef;
+        private readonly MoonPhaseReferences _moonPhaseReferences;
+        private readonly Moongates _moongates;
+        private readonly GameState _state;
 
-        public LordBritishArtifacts Artifacts { get; }
-        public ShadowlordShards Shards { get; }
-        public Potions MagicPotions { get; }
-        public Scrolls MagicScrolls { get; }
-        public Spells MagicSpells { get; }
-        public SpecialItems SpecializedItems { get; }
-        public Armours ProtectiveArmour { get; }
-        public Weapons TheWeapons { get; }
-        public Reagents SpellReagents { get; }
-        public Moonstones TheMoonstones { get; }
+        public LordBritishArtifacts Artifacts { get; set; }
+        public ShadowlordShards Shards { get; set; }
+        public Potions MagicPotions { get; set; }
+        public Scrolls MagicScrolls { get; set; }
+        public Spells MagicSpells { get; set; }
+        public SpecialItems SpecializedItems { get; set; }
+        public Armours ProtectiveArmour { get; set; }
+        public Weapons TheWeapons { get; set; }
+        public Reagents SpellReagents { get; set; }
+        public Moonstones TheMoonstones { get; set; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
-        public Provisions TheProvisions { get; }  
+        public Provisions TheProvisions { get; set; }
+
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A };
 
         private static byte BoolToByte(bool bBool)
@@ -139,53 +144,60 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             throw new Ultima5ReduxException("Requested " + equipment + " but is not a combat type");
         }
 
-        public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,  
-            MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state)
+        public void RefreshInventory()
         {
-            this._gameStateByteArray = gameStateByteArray;
+            _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", _gameStateByteArray, 0x209, sizeof(byte));
+            _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", _gameStateByteArray, 0x20A, sizeof(byte));
 
-            _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", gameStateByteArray, 0x209, sizeof(byte));
-            _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", gameStateByteArray, 0x20A, sizeof(byte));
-
-            ProtectiveArmour = new Armours(dataOvlRef, gameStateByteArray);
+            ProtectiveArmour = new Armours(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(ProtectiveArmour.GenericItemList);
             ReadyItems.AddRange(ProtectiveArmour.GenericItemList);
             CombatItems.AddRange(ProtectiveArmour.AllCombatItems);
 
-            TheWeapons = new Weapons(dataOvlRef, gameStateByteArray);
+            TheWeapons = new Weapons(_dataOvlRef, _gameStateByteArray);
             ReadyItems.AddRange(TheWeapons.GenericItemList);
             CombatItems.AddRange(TheWeapons.AllCombatItems);
 
-            MagicScrolls = new Scrolls(dataOvlRef, gameStateByteArray);
+            MagicScrolls = new Scrolls(_dataOvlRef, _gameStateByteArray);
             UseItems.AddRange(MagicScrolls.GenericItemList);
 
-            MagicPotions = new Potions(dataOvlRef, gameStateByteArray);
+            MagicPotions = new Potions(_dataOvlRef, _gameStateByteArray);
             UseItems.AddRange(MagicPotions.GenericItemList);
 
-            SpecializedItems = new SpecialItems(dataOvlRef, gameStateByteArray);
+            SpecializedItems = new SpecialItems(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(SpecializedItems.GenericItemList);
             UseItems.AddRange(SpecializedItems.GenericItemList);
 
-            Artifacts = new LordBritishArtifacts(dataOvlRef, gameStateByteArray);
+            Artifacts = new LordBritishArtifacts(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(Artifacts.GenericItemList);
             UseItems.AddRange(Artifacts.GenericItemList);
 
-            Shards = new ShadowlordShards(dataOvlRef, gameStateByteArray);
+            Shards = new ShadowlordShards(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(Shards.GenericItemList);
             UseItems.AddRange(Shards.GenericItemList);
 
-            SpellReagents = new Reagents(dataOvlRef, gameStateByteArray, state);
+            SpellReagents = new Reagents(_dataOvlRef, _gameStateByteArray, _state);
             AllItems.AddRange(SpellReagents.GenericItemList);
 
-            MagicSpells = new Spells(dataOvlRef, gameStateByteArray);
+            MagicSpells = new Spells(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(MagicSpells.GenericItemList);
 
-            TheMoonstones = new Moonstones(dataOvlRef, moonPhaseReferences, moongates);
+            TheMoonstones = new Moonstones(_dataOvlRef, _moonPhaseReferences, _moongates);
             AllItems.AddRange(TheMoonstones.GenericItemList);
             UseItems.AddRange(TheMoonstones.GenericItemList);
             
-            TheProvisions = new Provisions(dataOvlRef, state);
-            
+            TheProvisions = new Provisions(_dataOvlRef, _state);
+        }
+        
+        public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,  
+            MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state)
+        {
+            _gameStateByteArray = gameStateByteArray;
+            _dataOvlRef = dataOvlRef;
+            _moonPhaseReferences = moonPhaseReferences;
+            _moongates = moongates;
+            _state = state;
+            RefreshInventory();            
         }
 
     }

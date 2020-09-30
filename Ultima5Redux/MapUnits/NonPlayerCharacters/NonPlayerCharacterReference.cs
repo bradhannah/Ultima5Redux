@@ -161,38 +161,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         //    get; private set;
         //}
         //private int _npcKeySprite;
-        public int NPCKeySprite
-        {
-            //private set => CharacterType = 0x00;//_npcKeySprite = value;
-            get
-            {
-                return CharacterType + 0x100;
-                {
-                    switch (this.NPCType)
-                    {
-                        case NPCDialogTypeEnum.Custom:
-                            return (int)CharacterType + 0x100;
-                        //                            return (int)NPCKeySpriteEnum.Guard;
-                        case NPCDialogTypeEnum.Guard:
-                            return (int)NPCKeySpriteEnum.Guard;
-                        case NPCDialogTypeEnum.Blacksmith:
-                        case NPCDialogTypeEnum.Barkeeper:
-                        case NPCDialogTypeEnum.HorseSeller:
-                        case NPCDialogTypeEnum.Shipwright:
-                        case NPCDialogTypeEnum.InnKeeper:
-                        case NPCDialogTypeEnum.MagicSeller:
-                        case NPCDialogTypeEnum.GuildMaster:
-                            return (int)NPCKeySpriteEnum.Merchant;
-                        case NPCDialogTypeEnum.Healer:
-                            return (int)NPCKeySpriteEnum.Healer;
-                        case NPCDialogTypeEnum.Unknown:
-                            return (int)NPCKeySpriteEnum.Guard;
-                        default:
-                            throw new Ultima5ReduxException("Unrecognized NPC type");
-                    }
-                }
-            }
-        }
+        public int NPCKeySprite => CharacterType + 0x100;
 
         /// <summary>
         /// Returns true if the NPC knows/has met the Avatar

@@ -274,6 +274,13 @@ namespace Ultima5Redux
             
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
+            // List<MapUnit> mapUnits = State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(State.TheVirtualMap.CurrentSingleMapReference.MapLocation, 
+            //     xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+
+            MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
+                State.TheVirtualMap.LargeMapOverUnder, State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+                xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+            
             // wall sconces - BORROWED!
             if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
                 tileReference.Index == SpriteTileReferences.GetTileNumberByName("RightSconce"))
@@ -283,6 +290,14 @@ namespace Ultima5Redux
                 State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
                 bGotAThing = true;
                 return (DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED));
+            }
+            else if (magicCarpet != null)
+            {
+                // add the carpet to the players inventory and remove it from the map
+                State.PlayerInventory.MagicCarpets++;
+                State.TheVirtualMap.TheMapUnits.ClearMapUnit(magicCarpet);
+                bGotAThing = true;
+                return (DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.A_MAGIC_CARPET));
             }
             // are there any exposed items (generic call)
             else if (State.TheVirtualMap.IsAnyExposedItems(xy))
