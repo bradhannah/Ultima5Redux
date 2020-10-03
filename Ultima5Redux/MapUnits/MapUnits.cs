@@ -632,32 +632,6 @@ namespace Ultima5Redux.MapUnits
             return magicCarpet;
         }
 
-        /// <summary>
-        /// Creates a Horse and places it on the map
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="direction"></param>
-        /// <param name="nIndex"></param>
-        /// <returns></returns>
-        private MagicCarpet CreateHorse(Point2D xy, VirtualMap.Direction direction, out int nIndex)
-        {
-            nIndex = FindNextFreeMapUnitIndex(_currentMapType);
-
-            if (nIndex == -1) return null;
-
-            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
-
-            MagicCarpet magicCarpet = new MagicCarpet(mapUnitState, Movements.GetMovement(nIndex),  
-                _tileRefs, _currentLocation, _dataOvlReference, direction);
-            
-            // set position of frigate in the world
-            magicCarpet.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
-            //frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
-
-            AddNewMapUnit(LargeMap.Maps.Overworld, magicCarpet, nIndex);
-            return magicCarpet;
-        }
-        
         public Horse CreateHorse(MapUnitPosition mapUnitPosition, LargeMap.Maps map, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
@@ -669,10 +643,8 @@ namespace Ultima5Redux.MapUnits
             {
                 MapUnitPosition = mapUnitPosition
             };
-
+            
             // set position of frigate in the world
-            //Point2D horseLocation = xy;
-            //new MapUnitPosition(horseLocation.X, horseLocation.Y, 0);
             AddNewMapUnit(map, horse, nIndex);
             return horse;
         }

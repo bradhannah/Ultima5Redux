@@ -37,10 +37,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// </summary>
         public enum NPCDialogTypeEnum
         {
-            Custom = -1, Guard = 0, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87,
-            InnKeeper = 0x88, MagicSeller = 0x85, GuildMaster = 0x86, Unknown = 0xFF
+            Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87,
+            InnKeeper = 0x88, MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF
             // unknowns may be crown and sandlewood box
         };
+        // public enum NPCDialogTypeEnum
+        // {
+        //     Custom = -1, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87,
+        //     InnKeeper = 0x88, MagicSeller = 0x85, GuildMaster = 0x86, Unknown = 0xFF, None = 0xFE, Avatar = 0x1C
+        //     // unknowns may be crown and sandlewood box
+        // };
 
         private enum NPCKeySpriteEnum
         {
@@ -61,6 +67,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <returns></returns>
         public static bool IsSpecialDialogType(NPCDialogTypeEnum dialogType)
         {
+            if (dialogType == 0) return true;
+            //if (dialogType == NPCDialogTypeEnum.Avatar) return true;
             foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[])Enum.GetValues(typeof(NPCDialogTypeEnum)))
             {
                 if (dialogType == tempDialogType)
@@ -97,9 +105,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// </summary>
         public string FriendlyName => (Name == "" ? NPCType.ToString() : Name);
 
-        public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.Custom &&
-                                      NPCType != NPCDialogTypeEnum.Guard &&
-                                      NPCType != NPCDialogTypeEnum.Unknown;
+        public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.None;
+        // public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.Custom &&
+        //                               NPCType != NPCDialogTypeEnum.Avatar &&
+        //                               NPCType != NPCDialogTypeEnum.Unknown;
 
         /// <summary>
         /// The daily schedule of the NPC
@@ -125,7 +134,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// </summary>
         public TalkScript Script { get; }
 
-        public bool NormalNPC { get; }
+        /// <summary>
+        /// They are either a merchant or they have a speaking role
+        /// </summary>
+        public bool NormalNPC => NPCType != NPCDialogTypeEnum.None || DialogNumber > 0;
 
         //        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
 //        public int CurrentFloor { get; private set; }
@@ -144,15 +156,28 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
             get
             {
+                // it's the Avatar
+                if (NPCKeySprite == 256) return NPCDialogTypeEnum.None;
+                // it's a merchant
+               // if (NPCKeySprite == 340)
+                {
+                    foreach (int npctype in Enum.GetValues(typeof(NPCDialogTypeEnum)))
+                    {
+                        if (npctype == DialogNumber) //&& npctype != (int)NPCDialogTypeEnum.Custom)
+                        {
+                            return (NPCDialogTypeEnum)npctype;
+                        }
+                    }
+                }
                 foreach (int npctype in Enum.GetValues(typeof(NPCDialogTypeEnum)))
                 {
-                    //if (npctype == 0 && CharacterType != (int) NPCDialogTypeEnum.Guard) return NPCDialogTypeEnum.Custom;
-                    if (npctype == DialogNumber && npctype != (int)NPCDialogTypeEnum.Custom)
+                    if (npctype == CharacterType) //&& npctype != (int)NPCDialogTypeEnum.Custom)
+                        // if (npctype == DialogNumber && npctype != (int)NPCDialogTypeEnum.Custom)
                     {
                         return (NPCDialogTypeEnum)npctype;
                     }
                 }
-                return NPCDialogTypeEnum.Custom;
+                return NPCDialogTypeEnum.None;
             }
         }
 
@@ -217,7 +242,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             CharacterType = npcType;
             DialogNumber = dialogNumber;
             Script = talkScript;
-            NormalNPC = bNormalNPC;
+            //NormalNPC = bNormalNPC;
             DialogIndex = dialogIndex;
             _gameStateRef = gameStateRef;
 

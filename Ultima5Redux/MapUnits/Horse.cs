@@ -5,7 +5,7 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class Horse :  MapUnit
+    public sealed class Horse :  MapUnit
     {
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
             new Dictionary<VirtualMap.Direction, string>()
@@ -44,8 +44,8 @@ namespace Ultima5Redux.MapUnits
         {
             return GetAdjustedPrice(records, Prices[location]);
         }
-        
-        protected static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
+
+        private static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
         {
             return (int) (nPrice - (nPrice * 0.015 * records.AvatarRecord.Stats.Intelligence));
         }
@@ -57,7 +57,7 @@ namespace Ultima5Redux.MapUnits
             : base(null, mapUnitState, null, mapUnitMovement, null, null, tileReferences, 
                 location, dataOvlReference, direction)
         {
-            
+            KeyTileReference = NonBoardedTileReference;
         }
     }
 }
