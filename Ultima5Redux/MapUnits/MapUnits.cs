@@ -495,13 +495,22 @@ namespace Ultima5Redux.MapUnits
                 if (i == 0 && !bInitialLoad)
                 {
                     mapUnitMovement.ClearMovements();
-                    //MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement);
                     // load the existing AvatarMapUnit with boarded MapUnits
                     //_smallWorldMapUnits= AvatarMapUnit;
                     
                     _smallWorldMapUnits.Add(_masterAvatarMapUnit);
                     AvatarMapUnit.MapUnitPosition = SmallMapReferences.GetStartingXYZByLocation(location);
                     AvatarMapUnit.MapLocation = location;
+                    continue;
+                }
+                else if (bInitialLoad)
+                {
+                    MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement);
+                    MapUnitState theAvatarMapState = _smallMapUnitStates.GetCharacterState(0);
+                    theAvatar.MapUnitPosition.X = theAvatarMapState.X;
+                    theAvatar.MapUnitPosition.Y = theAvatarMapState.Y;
+                    theAvatar.MapLocation = location;
+                    _smallWorldMapUnits.Add(theAvatar);
                     continue;
                 }
                 
@@ -649,6 +658,25 @@ namespace Ultima5Redux.MapUnits
             return magicCarpet;
         }
         
+        public Horse CreateHorse(MapUnitPosition mapUnitPosition, LargeMap.Maps map, out int nIndex)
+        {
+            nIndex = FindNextFreeMapUnitIndex(_currentMapType);
+            if (nIndex == -1) return null;
+            
+            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
+            Horse horse = new Horse(mapUnitState, Movements.GetMovement(nIndex),
+                _tileRefs, _currentLocation, _dataOvlReference, VirtualMap.Direction.Right)
+            {
+                MapUnitPosition = mapUnitPosition
+            };
+
+            // set position of frigate in the world
+            //Point2D horseLocation = xy;
+            //new MapUnitPosition(horseLocation.X, horseLocation.Y, 0);
+            AddNewMapUnit(map, horse, nIndex);
+            return horse;
+        }
+        
         /// <summary>
         /// Creates a Frigate and places it in on the map 
         /// </summary>
@@ -720,7 +748,7 @@ namespace Ultima5Redux.MapUnits
         {
             return CreateSkiff(virtualMap.GetLocationOfDock(location, _dataOvlReference), VirtualMap.Direction.Right, out _);
         }
-
+        
         /// <summary>
         /// Makes the Avatar exit the current MapUnit they are occupying
         /// </summary>

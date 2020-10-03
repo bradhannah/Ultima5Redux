@@ -225,10 +225,11 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         /// <param name="location"></param>
         /// <param name="npcType"></param>
+        /// <param name="playerCharacterRecords"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">couldn't find the shoppe keeper at that particular location</exception>
         public ShoppeKeeper GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location location, 
-            NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+            NonPlayerCharacterReference.NPCDialogTypeEnum npcType, PlayerCharacterRecords playerCharacterRecords)
         {
             switch (npcType)
             {
@@ -240,7 +241,8 @@ namespace Ultima5Redux.Dialogue
                         _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.HorseSeller:
                     return new HorseSeller(this, 
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference,
+                        playerCharacterRecords);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright:
                     return new Shipwright(this, 
                         _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);

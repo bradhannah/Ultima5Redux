@@ -10,6 +10,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.PlayerCharacters;
@@ -27,7 +28,7 @@ namespace Ultima5ReduxTesting
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return @"/Users/bradhannah/games/u5/Gold";
-                return @"C:\games\ultima_5_late\Britain";
+                return @"C:\games\ultima_5_late\Britain2";
                 //return @"C:\games\ultima_5\Gold";
             }
 
@@ -499,7 +500,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
             BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Minoc,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith) as BlackSmith;
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith, null) as BlackSmith;
             
             string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
             string purchaseStr = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
@@ -523,7 +524,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
             Healer healer = (Healer) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Cove,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Healer);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Healer, null);
 
             _ = healer.NoNeedForMyArt();
 
@@ -535,7 +536,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
             MagicSeller magicSeller = (MagicSeller)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Cove,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null);
             //( magicSeller). //SmallMapReferences.SingleMapReference.Location.Cove);
             List<Reagent> reagents = magicSeller.GetReagentsForSale();
 
@@ -569,7 +570,7 @@ namespace Ultima5ReduxTesting
                 .GetAdjustedBuyPrice(world.State.CharacterRecords,
                     SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
             GuildMaster guildMaster = (GuildMaster)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null);
             string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
         }
         
@@ -579,7 +580,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
             Shipwright shipwright = (Shipwright)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null);
 
             string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay, shipwright.TheShoppeKeeperReference);
         }
@@ -600,6 +601,20 @@ namespace Ultima5ReduxTesting
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
             Assert.True(true);
+        }
+
+        [Test]
+        public void Test_MakeAHorse()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            
+            Horse horse = world.State.TheVirtualMap.CreateHorseAroundAvatar();
+            Assert.True(horse != null);
+
         }
 
      }

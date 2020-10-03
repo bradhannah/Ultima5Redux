@@ -138,14 +138,12 @@ namespace Ultima5Redux.Maps
 
         public MapUnits.MapUnits TheMapUnits { get; private set; }
 
-        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingMagicCarpet");
-        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("RidingHorse");
-        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Skiff");
-        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;//TheMapUnits.AvatarMapUnit.KeyTileReference.Name.StartsWith("Ship");
+        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
+        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
+        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
+        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
 
         public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
-            //IsAvatarRidingCarpet || IsAvatarRidingHorse || IsAvatarInSkiff || IsAvatarInFrigate;
-        
         
         #endregion
 
@@ -1069,6 +1067,51 @@ namespace Ultima5Redux.Maps
             return seaFaringVessel;
         }
 
+
+        /// <summary>
+        /// Create a list of the free spaces surrounding around the Avatar suitable for something to be generated onto
+        /// </summary>
+        /// <returns></returns>
+        private List<Point2D> GetFreeSpacesSurroundingAvatar()
+        {
+            List<Point2D> freeSpacesAroundAvatar = new List<Point2D>();
+
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    Point2D pointToCheck = new Point2D(Math.Max(CurrentPosition.X + x, 0), Math.Max(CurrentPosition.Y + y, 0));
+                    if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
+                    {
+                        freeSpacesAroundAvatar.Add(pointToCheck);
+                    }
+                }
+            }
+            
+            return freeSpacesAroundAvatar;
+        }
+        
+        /// <summary>
+        /// Creates a horse MapUnit in the surrounding tiles of the Avatar - if one exists
+        /// </summary>
+        /// <returns>the new horse or null if there was no where to put it</returns>
+        public Horse CreateHorseAroundAvatar()
+        {
+            List<Point2D> freeSpacesAroundAvatar = GetFreeSpacesSurroundingAvatar();
+            if (freeSpacesAroundAvatar.Count <= 0)
+            {
+                return null;
+            }
+
+            Random ran = new Random();
+            Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
+            Horse horse = TheMapUnits.CreateHorse(new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor),
+                LargeMapOverUnder, out int nIndex);
+
+            if (nIndex == -1 || horse == null) return null;
+
+            return horse;
+        }
         
         #endregion
     }

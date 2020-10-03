@@ -135,7 +135,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// Gets a common response after deciding not to buy
         /// </summary>
         /// <returns></returns>
-        public string GetPissedOffNotBuyingResponse()
+        public virtual string GetPissedOffNotBuyingResponse()
         {
             return "Stop wasting my time!";
         }
