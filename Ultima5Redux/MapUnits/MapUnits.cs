@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
@@ -596,6 +597,11 @@ namespace Ultima5Redux.MapUnits
             else if (_tileRefs.IsHorse(mapUnitState.Tile1Ref.Index))
             {
                 newUnit = new Horse(mapUnitState, mapUnitMovement, _tileRefs, location, _dataOvlReference, tileRef.GetDirection());
+            }
+            else if (_tileRefs.IsMonster(mapUnitState.Tile1Ref.Index))
+            {
+                newUnit = new Monster(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
+                    _timeOfDay, _playerCharacterRecords, _tileRefs, location, _dataOvlReference);
             }
             // this is where we will create monsters too
             else

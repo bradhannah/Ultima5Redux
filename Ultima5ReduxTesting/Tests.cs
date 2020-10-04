@@ -62,6 +62,19 @@ namespace Ultima5ReduxTesting
 
             Assert.True(true);
         }
+        
+        [Test]
+        public void test_LoadSkaraBraeSmallMapsLoadTest()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
+
+            Assert.True(true);
+        }
 
         [Test]
         public void LoadBritishBasement()

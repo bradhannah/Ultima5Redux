@@ -294,6 +294,8 @@ namespace Ultima5Redux.Maps
         public bool IsSkiff(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Skiff");
         public bool IsMagicCarpet(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Carpet2");
         public bool IsHorse(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Horse");
+        // a bit a rough cut right now, this will need to be refined as the monsters are assigned actual behaviours
+        public bool IsMonster(int nSprite) => nSprite >= 384 && nSprite <= 511;
         public bool IsFrigate(int nSprite) =>
             GetTileReference(nSprite).Name.StartsWith("Ship")
             || GetTileReference(nSprite).Name.StartsWith("Pirate");

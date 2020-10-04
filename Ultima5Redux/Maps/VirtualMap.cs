@@ -9,6 +9,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
@@ -476,7 +477,7 @@ namespace Ultima5Redux.Maps
         {
             List<Type> visibilePriorityOrder = new List<Type>()
             {
-                typeof(Horse), typeof(MagicCarpet),  typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter), typeof(Avatar)
+                typeof(Horse), typeof(MagicCarpet),  typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter), typeof(Monster), typeof(Avatar)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
             //List<MapUnit> orderedMapUnits = new List<MapUnit>();
