@@ -13,6 +13,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -60,6 +61,38 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
 
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void test_LoadMinocBuyFrigateAndCheck()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+            world.State.TheVirtualMap.TheMapUnits.CreateFrigateAtDock(
+                SmallMapReferences.SingleMapReference.Location.Minoc,
+                world.State.TheVirtualMap);
+            Point2D dockLocation =
+                world.State.TheVirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    world.DataOvlRef);
+            List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
+                //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                LargeMap.Maps.Overworld,
+                dockLocation, 0);
+
+            Frigate frigate2 = world.State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<Frigate>(LargeMap.Maps.Overworld,
+                //SmallMapReferences.SingleMapReference.Location.Ararat,
+                dockLocation, 0);
+
+            Debug.Assert(
+                world.State.TheVirtualMap.IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location.Minoc));
+            
+            Assert.True(frigate2 != null);
+            Assert.True(mapUnits[0] is Frigate);
             Assert.True(true);
         }
         
@@ -586,9 +619,9 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedBuyPrice(world.State.CharacterRecords, world.State.Location);
+                .GetAdjustedBuyPrice(world.State.CharacterRecords, world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
             int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedSellPrice(world.State.CharacterRecords, world.State.Location);
+                .GetAdjustedSellPrice(world.State.CharacterRecords, world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
             Debug.Assert(nCrossbowBuy > 0);
             Debug.Assert(nCrossbowSell > 0);
 

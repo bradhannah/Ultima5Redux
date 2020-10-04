@@ -278,7 +278,7 @@ namespace Ultima5Redux
             //     xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
 
             MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
-                State.TheVirtualMap.LargeMapOverUnder, State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+                State.TheVirtualMap.LargeMapOverUnder, //State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
                 xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
             
             // wall sconces - BORROWED!

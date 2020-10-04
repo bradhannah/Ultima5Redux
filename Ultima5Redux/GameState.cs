@@ -89,7 +89,7 @@ namespace Ultima5Redux
         /// <summary>
         /// Current location
         /// </summary>
-        public SmallMapReferences.SingleMapReference.Location Location => (SmallMapReferences.SingleMapReference.Location)_dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
+        internal SmallMapReferences.SingleMapReference.Location Location => (SmallMapReferences.SingleMapReference.Location)_dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
 
         /// <summary>
         /// Current floor

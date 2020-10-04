@@ -430,7 +430,9 @@ namespace Ultima5Redux.Maps
             Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 1);
             
             NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
-                (CurrentSingleMapReference.MapLocation, adjustedPosition, CurrentSingleMapReference.Floor);
+                (LargeMapOverUnder,
+                //CurrentSingleMapReference.MapLocation,
+                adjustedPosition, CurrentSingleMapReference.Floor);
             
             if (npc != null) return npc;
 
@@ -439,7 +441,9 @@ namespace Ultima5Redux.Maps
             
             Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
             return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
-                (CurrentSingleMapReference.MapLocation, adjustedPosition2Away, CurrentSingleMapReference.Floor);
+                ( LargeMapOverUnder,
+                //CurrentSingleMapReference.MapLocation, 
+                adjustedPosition2Away, CurrentSingleMapReference.Floor);
         }
 
 
@@ -460,9 +464,12 @@ namespace Ultima5Redux.Maps
         /// <returns>the NPC or null if one does not exist</returns>
         public List<MapUnit> GetMapUnitOnTile(Point2D xy)
         {
-            SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
+            //SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
+            
 
-            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitByLocation(location, xy, CurrentSingleMapReference.Floor);
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitByLocation(
+                //location
+                LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
             
             return mapUnits;
         }
@@ -1063,7 +1070,7 @@ namespace Ultima5Redux.Maps
             // 3 = Buccaneer's Den
 
             SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(LargeMap.Maps.Overworld, 
-                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 GetLocationOfDock(location, _dataOvlReference), 0, true);
             return seaFaringVessel;
         }

@@ -253,7 +253,8 @@ namespace Ultima5Redux.MapUnits
         }
 
         public T GetSpecificMapUnitByLocation<T>(LargeMap.Maps map,
-            SmallMapReferences.SingleMapReference.Location location, Point2D xy,
+            //SmallMapReferences.SingleMapReference.Location location, 
+            Point2D xy,
             int nFloor, bool bCheckBaseToo = false) where T : MapUnit
         {
             List<MapUnit> mapUnits = GetMapUnits(map);
@@ -264,7 +265,7 @@ namespace Ultima5Redux.MapUnits
                 if (!mapUnit.IsActive) continue;
 
                 if (mapUnit.MapUnitPosition.XY == xy && 
-                    mapUnit.MapUnitPosition.Floor == nFloor && mapUnit.MapLocation == location)
+                    mapUnit.MapUnitPosition.Floor == nFloor) //&& mapUnit.MapLocation == location)
                 {
                     if (bCheckBaseToo && mapUnit.GetType().BaseType == typeof(T))
                     {
@@ -278,11 +279,11 @@ namespace Ultima5Redux.MapUnits
         }
         
         
-        public T GetSpecificMapUnitByLocation<T>(SmallMapReferences.SingleMapReference.Location location, Point2D xy, 
-            int nFloor, bool bCheckBaseToo = false) where T: MapUnit
-        {
-            return GetSpecificMapUnitByLocation<T>(_currentMapType, location, xy, nFloor, bCheckBaseToo);
-        }
+        // public T GetSpecificMapUnitByLocation<T>(SmallMapReferences.SingleMapReference.Location location, Point2D xy, 
+        //     int nFloor, bool bCheckBaseToo = false) where T: MapUnit
+        // {
+        //     return GetSpecificMapUnitByLocation<T>(_currentMapType, location, xy, nFloor, bCheckBaseToo);
+        // }
 
         /// <summary>
         /// Gets a particular map unit on a tile in a given location
@@ -291,17 +292,18 @@ namespace Ultima5Redux.MapUnits
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
         /// <returns>MapUnit or null if non exist at location</returns>
-        public List<MapUnit> GetMapUnitByLocation(SmallMapReferences.SingleMapReference.Location location, Point2D xy,
-            int nFloor)
+        public List<MapUnit> GetMapUnitByLocation(
+            //SmallMapReferences.SingleMapReference.Location location,
+            LargeMap.Maps map, Point2D xy, int nFloor)
         {
             List<MapUnit> mapUnits = new List<MapUnit>();
-            foreach (MapUnit mapUnit in CurrentMapUnits)
+            
+            foreach (MapUnit mapUnit in GetMapUnits(map))
             {
                 // sometimes characters are null because they don't exist - and that is OK
                 if (!mapUnit.IsActive) continue;
 
-                if (mapUnit.MapUnitPosition.XY == xy && 
-                    mapUnit.MapUnitPosition.Floor == nFloor && mapUnit.MapLocation == location)
+                if (mapUnit.MapUnitPosition.XY == xy && mapUnit.MapUnitPosition.Floor == nFloor) //&& mapUnit.MapLocation == location)
                 {
                     mapUnits.Add(mapUnit);
                     //return mapUnit;
