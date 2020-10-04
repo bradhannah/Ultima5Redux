@@ -591,6 +591,19 @@ namespace Ultima5ReduxTesting
         }
         
         [Test]
+        public void Test_BasicTavernDialogue()
+        {
+            World world = new World(SaveDirectory);
+            BarKeeper barKeeper = (BarKeeper) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Paws,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null);
+
+            _ = barKeeper.GetGossipResponse("oppr");
+
+            //int price = barKeeper.GetPrice(Healer.RemedyTypes.Heal);
+        }
+        
+        [Test]
         public void Test_BasicMagicSellerDialogue()
         {
             World world = new World(SaveDirectory);

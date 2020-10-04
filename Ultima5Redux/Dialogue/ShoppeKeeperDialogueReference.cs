@@ -81,7 +81,7 @@ namespace Ultima5Redux.Dialogue
 
         internal int CountReplacementVariables(int nDialogueIndex)
         {
-            int freq = Regex.Matches(GetMerchantString(nDialogueIndex), @"[\%\&\$\#\@\*\^]").Count;
+            int freq = Regex.Matches(GetMerchantString(nDialogueIndex), @"[\%\&\$\#\@\*\^\*]").Count;
             return freq;
         }
 
@@ -97,10 +97,13 @@ namespace Ultima5Redux.Dialogue
         /// <param name="tod"></param>
         /// <param name="nQuantity"></param>
         /// <param name="genderedAddress"></param>
+        /// <param name="personOfInterest"></param>
+        /// <param name="locationToFindPersonOfInterest"></param>
         /// <returns>a complete string with full replacements</returns>
         internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", 
             bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null, 
-            int nQuantity = 0, string genderedAddress = "")
+            int nQuantity = 0, string genderedAddress = "", string personOfInterest = "", 
+            string locationToFindPersonOfInterest = "")
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
@@ -119,10 +122,13 @@ namespace Ultima5Redux.Dialogue
         /// <param name="tod"></param>
         /// <param name="nQuantity"></param>
         /// <param name="genderedAddress"></param>
+        /// <param name="personOfInterest"></param>
+        /// <param name="locationToFindPersonOfInterest"></param>
         /// <returns>a complete string with full replacements</returns>
         internal static string GetMerchantString(string dialogue, int nGold = -1, string equipmentName = "", 
             bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null,
-            int nQuantity = 0, string genderedAddress = "")
+            int nQuantity = 0, string genderedAddress = "", string personOfInterest = "", 
+            string locationToFindPersonOfInterest = "")
         {
             // % is gold
             // & is current piece of equipment
@@ -160,6 +166,15 @@ namespace Ultima5Redux.Dialogue
             if (tod != null)
             {
                 sb.Replace("@", tod.TimeOfDayName);
+            }
+
+            if (personOfInterest != "")
+            {
+                sb.Replace("&", personOfInterest);
+            }
+            if (locationToFindPersonOfInterest != "")
+            {
+                sb.Replace("*", locationToFindPersonOfInterest);
             }
             if (nQuantity > 0)
             {
