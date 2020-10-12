@@ -110,6 +110,7 @@
     <Compile Include="MapUnits\NonPlayerCharacters\NonPlayerCharacterReferences.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\NonPlayerCharacterSchedule.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\BarKeeper.cs" />
+    <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\BarKeeperStockReference.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\BlackSmith.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\GuildMaster.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\Healer.cs" />

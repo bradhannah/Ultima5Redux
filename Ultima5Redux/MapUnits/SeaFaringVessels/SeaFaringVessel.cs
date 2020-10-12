@@ -10,7 +10,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
          protected static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
          {
-             //int price = /Prices[location]; 
              return (int) (nPrice - (nPrice * 0.015 * records.AvatarRecord.Stats.Intelligence));
          }
          

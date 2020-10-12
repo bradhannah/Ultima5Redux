@@ -110,7 +110,8 @@ namespace Ultima5Redux.Data
             BAR_KEEP_GOSSIP_PEOPLE,
             BAR_KEEP_GOSSIP_PLACES,
             SHOPPE_KEEPER_BAR_KEEP,
-            BAR_KEEP_GOSSIP_MAP
+            BAR_KEEP_GOSSIP_MAP,
+            SHOPPE_KEEPER_BAR_KEEP_2
         };
 
         public enum Equipment
@@ -835,6 +836,55 @@ namespace Ultima5Redux.Data
         // [31] = {string} "No"        
         
         public enum ShoppeKeeperHealerStrings2 { DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME }
+
+        public enum ShoppeKeeperBarKeepStrings2
+        {
+            TWO, THREE, FOUR, FIVE, SIX, SIR, MILADY, THAT_WILL_BE_SP, SP_GOLD_FOR_THE_SP, S_OF_YE_COMMA_N, DQ_N_N_CANT_PAY_Q_B_BEAT_IT_BANG_DQ_N_YELLS_SP,
+            N_ENJOY_BANG_DQ_N_N, N_N_DQ_I_BEG_THY_N_PARDON_COMMA_SP, COMMA_DQ_N_SAYS_SP, DOT_N_DQ_BUT_HAVENT_N_THY_HAD_ENOUGH_N_TO_DRINK_Q_DQ,
+            YES_N_N, NO_BANG, OUR_WINE_LIST_COMMA_N, DOT_N_N, A_WINE_1_N, B_WINE_2_N, C_WINE_3_N, D_WINE_4_N, E_WINE_5_N, F_WINE_6_N,
+            THY_CHOICE_Q_DQ, N_N_DQ_AH_A_FINE_CHOICE_COMMA_SP, DQ_N_N_DQ_CANT_PAY_Q_BEAT_IT_BANG_DQ_N_YELLS_SP, N_ENJOY_BANG_DQ,
+            N_N_HOW_MANY_WOULDST_N_THOU_LIKE_Q_DQ_SP, N_N_DQ_HRUMPH_DOT_DQ, N_N, THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N,
+            YELLS_SP, DOT_N, DQ_THOU_CANST_AFFORD_ONLY_SP, BANG_DQ_N_N, N_N_2
+        }
+
+        // [0] = {string} "two"
+        // [1] = {string} "three"
+        // [2] = {string} "four"
+        // [3] = {string} "five"
+        // [4] = {string} "six"
+        // [5] = {string} "sir"
+        // [6] = {string} "milady"
+        // [7] = {string} "That will be "
+        // [8] = {string} " gold for the "
+        // [9] = {string} " of ye,\n"
+        // [10] = {string} ""\n\n"CAN'T PAY?\nBeat it!"\nyells "
+        // [11] = {string} "\nEnjoy!"\n\n"
+        // [12] = {string} "\n\n"I beg thy\npardon, "
+        // [13] = {string} ","\nsays "
+        // [14] = {string} ".\n"But haven't\nye had enough\nto drink?" "
+        // [15] = {string} "Yes\n\n"
+        // [16] = {string} "No!"
+        // [17] = {string} ""Our wine list,\n"
+        // [18] = {string} ".\n\n"
+        // [19] = {string} "a) Rose.......18\n"
+        // [20] = {string} "b) Claret....192\n"
+        // [21] = {string} "c) Sauterne...79\n"
+        // [22] = {string} "d) Muscatel...30\n"
+        // [23] = {string} "e) Moselle...275\n"
+        // [24] = {string} "f) Chablis....98\n\n"
+        // [25] = {string} "Thy choice?" "
+        // [26] = {string} "\n\n"Ah, a fine\nchoice, "
+        // [27] = {string} ""\n\n"CAN'T PAY?\nBeat it!"\nyells "
+        // [28] = {string} "\nEnjoy!""
+        // [29] = {string} "\n\nHow many wouldst\nthou like?" "
+        // [30] = {string} "\n\n"Hrumph.""
+        // [31] = {string} "\n\n"
+        // [32] = {string} ""Thou hast\nneither gold nor\nneed! Out!"\n"
+        // [33] = {string} "yells "
+        // [34] = {string} ".\n"
+        // [35] = {string} ""Thou canst\nafford only "
+        // [36] = {string} "!"\n\n"
+        // [37] = {string} "\n\n"
         #endregion
 
         #region Public Methods
@@ -1157,7 +1207,8 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper gossip places", 0x9e68, 0xA3, 0, DataChunkName.BAR_KEEP_GOSSIP_PLACES);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper random stuff", 0x9f0e, 0xDE, 0, DataChunkName.SHOPPE_KEEPER_BAR_KEEP);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper gossip location map", 0x4cec, 0x1A, 0, DataChunkName.BAR_KEEP_GOSSIP_MAP);
-            SomeStrings someStrings2 = GetDataChunk(DataChunkName.SHOPPE_KEEPER_BAR_KEEP).GetChunkAsStringList();
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper random stuff", 0x9ab8, 0x227, 0, DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2);
+            SomeStrings someStrings2 = GetDataChunk(DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2).GetChunkAsStringList();
             
             //SHOPPE_KEEPER_BAR_KEEP
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);

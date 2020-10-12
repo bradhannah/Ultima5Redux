@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -212,6 +214,23 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
             return locations;
         }
+        
+        protected string GetNumberInPartyAsStringWord(int nNum)
+        {
+            if (nNum > 6) return "many";
+            if (nNum == 1) return "one";
+            Debug.Assert(nNum > 0);
+            int nStartIndex = (int)DataOvlReference.ShoppeKeeperBarKeepStrings2.TWO - 2;
+            return DataOvlReference.StringReferences.GetString((DataOvlReference.ShoppeKeeperBarKeepStrings2) nStartIndex + nNum);
+        }
+
+        protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)
+        {
+            if (gender == PlayerCharacterRecord.CharacterGender.Male)
+                return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.SIR);
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.MILADY);
+        }
+
 
     }
 }

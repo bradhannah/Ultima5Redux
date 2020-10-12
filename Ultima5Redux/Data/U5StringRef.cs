@@ -55,6 +55,9 @@ namespace Ultima5Redux.Data
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperHealerStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_HEALER).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperHealerStrings2), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_HEALER2).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBarKeepStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BAR_KEEP).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBarKeepStrings2), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2).GetChunkAsStringList());
+            
+            
         }
 
         private readonly Dictionary<Type, SomeStrings> _strMap;
