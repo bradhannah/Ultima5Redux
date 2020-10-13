@@ -1195,7 +1195,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Healer shop strings", 0x806C, 0x1a2, 0x00, DataChunkName.SHOPPE_KEEPER_HEALER);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Healer shop strings", 0x3D6C, 0x29, 0x00, DataChunkName.SHOPPE_KEEPER_HEALER2);
             
-            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith hello strings", 0x7F58, 0x6A, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith positive exclamation strings", 0x7FC2, 0x36, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith 'we have' strings", 0x7FF8, 0x30, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);

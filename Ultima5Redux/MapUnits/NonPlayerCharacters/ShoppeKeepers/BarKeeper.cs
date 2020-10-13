@@ -15,6 +15,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         private readonly BarKeeperStockReference _barKeeperStockReference = new BarKeeperStockReference();
 
+        private readonly List<string> _gossipWordByPosition = new List<string>();
+        private readonly Dictionary<string, int> _gossipWordToPosition = new Dictionary<string, int>(); 
+        private readonly List<int> _gossipCostByPosition = new List<int>()
+        {
+            50, 75, 50, 50, 75, 50, 25, 50, 100, 150, 75, 150, 75, 100, 100, 200, 200, 200, 250, 250, 250, 100, 50, 50, 200, 100
+        };
+        
         public bool BoughtSomethingFromBarKeep { get; set; } = false;
         
         public BarKeeperStockReference.BarKeeperStock TheBarKeeperStock => 
@@ -24,7 +31,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
             // the words the bar keeper knows about
-            List<string> gossipWords = dataOvlReference
+            _gossipWordByPosition = dataOvlReference
                 .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_WORDS).GetChunkAsStringList().Strs;
             // the people they gossip about
             List<string> gossipPeople = dataOvlReference
@@ -42,12 +49,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             // initialize the quick look up map for gossip look ups
 
             // let's make sure they all line up properly first
-            Debug.Assert(gossipLocations != null && gossipPeople != null && gossipWords != null && 
-                         (gossipPeople.Count == gossipWords.Count));
+            Debug.Assert(gossipLocations != null && gossipPeople != null && _gossipWordByPosition != null && 
+                         (gossipPeople.Count == _gossipWordByPosition.Count));
             
-            for (int nIndex = 0; nIndex < gossipWords.Count; nIndex++)
+            for (int nIndex = 0; nIndex < _gossipWordByPosition.Count; nIndex++)
             {
-                string gossipWord = gossipWords[nIndex];
+                string gossipWord = _gossipWordByPosition[nIndex];
+                _gossipWordToPosition.Add(gossipWord, nIndex);
                 _gossipWordToPersonMap.Add(gossipWord, gossipPeople[nIndex]);
                 // it requires additional translation since the original code only provides 13 possible locations
                 // but 26 words and people to speak with
@@ -58,7 +66,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public string GetMoneyForGossipResponse(string word)
         {
-            return ShoppeKeeperDialogueReference.GetMerchantString(84, nGold: 100) + 
+            string cleanedWord = CleanGossipWordForLookup(word);
+            return ShoppeKeeperDialogueReference.GetMerchantString(84, nGold: GetCostOfGossip(cleanedWord)) + 
                    DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
                        .N_N_FAIR_NUFF_Q_DQ);
             //84
@@ -71,23 +80,35 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return retStr;
         }
 
+        private string CleanGossipWordForLookup(string word)
+        {
+            return word.Substring(0, 4);
+        }
+
         public string GetGossipResponse(string word)
         {
-            Debug.Assert(DoesBarKeeperKnowGossip(word));
+            string cleanedWord = CleanGossipWordForLookup(word);
+            Debug.Assert(DoesBarKeeperKnowGossip(cleanedWord));
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(85, 88);
             return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                personOfInterest: _gossipWordToPersonMap[word],
-                locationToFindPersonOfInterest: _gossipWordToPlaceMap[word]);
+                personOfInterest: _gossipWordToPersonMap[cleanedWord],
+                locationToFindPersonOfInterest: _gossipWordToPlaceMap[cleanedWord]);
         }
 
         public bool DoesBarKeeperKnowGossip(string word)
         {
-            return _gossipWordToPlaceMap.ContainsKey(word);
+            return _gossipWordToPlaceMap.ContainsKey(CleanGossipWordForLookup(word));
         }
 
         public int GetCostOfGossip(string word)
         {
-            return 100;
+            string cleanedWord = CleanGossipWordForLookup(word);
+            Debug.Assert(DoesBarKeeperKnowGossip(cleanedWord));
+            if (!_gossipWordToPosition.ContainsKey(cleanedWord))
+            {
+                throw new Ultima5ReduxException("Asked for cost of gossip word \""+cleanedWord+"\" but wasn't in list");
+            }
+            return _gossipCostByPosition[_gossipWordToPosition[cleanedWord]];
         }
         
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>() 
@@ -162,7 +183,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                                                                    DataOvlReference.StringReferences
                                                                        .GetString(DataOvlReference
                                                                            .ShoppeKeeperBarKeepStrings2.N_ENJOY_BANG_DQ)
-                                                                       .TrimStart());
+                                                                       .TrimStart().Replace("\"", ""));
         }
 
         public string GetRationOffer(PlayerCharacterRecords records)
