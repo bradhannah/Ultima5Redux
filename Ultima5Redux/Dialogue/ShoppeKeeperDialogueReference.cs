@@ -107,7 +107,7 @@ namespace Ultima5Redux.Dialogue
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
-                shoppeName, tod, nQuantity, genderedAddress);
+                shoppeName, tod, nQuantity, genderedAddress, personOfInterest, locationToFindPersonOfInterest);
         }
 
         /// <summary>

@@ -598,7 +598,7 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Paws,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null);
 
-            _ = barKeeper.GetGossipResponse("oppr");
+            string myOppressionTest = barKeeper.GetGossipResponse("oppr");
 
             //int price = barKeeper.GetPrice(Healer.RemedyTypes.Heal);
         }
@@ -660,6 +660,12 @@ namespace Ultima5ReduxTesting
         public void Test_ShipInWorldState()
         {
             World world = new World(SaveDirectory);
+        }
+        
+        public void Test_Gossip()
+        {
+            World world = new World(SaveDirectory);
+            
         }
         
         [Test]

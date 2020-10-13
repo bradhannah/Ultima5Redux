@@ -56,6 +56,21 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
+        public string GetMoneyForGossipResponse(string word)
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(84, nGold: 100) + 
+                   DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                       .N_N_FAIR_NUFF_Q_DQ);
+            //84
+        }
+        
+        public string GetDoesntKnowGossipResponse(PlayerCharacterRecord.CharacterGender avatarGender)
+        {
+            string retStr =  DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                .THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N);// + GetGossipQuestion(avatarGender);
+            return retStr;
+        }
+
         public string GetGossipResponse(string word)
         {
             Debug.Assert(DoesBarKeeperKnowGossip(word));
@@ -70,6 +85,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return _gossipWordToPlaceMap.ContainsKey(word);
         }
 
+        public int GetCostOfGossip(string word)
+        {
+            return 100;
+        }
+        
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>() 
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBarkeeper),
@@ -156,6 +176,25 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(69, 72);
             return ShoppeKeeperDialogueReference.GetMerchantString(nIndex);
+        }
+
+        public string GetGossipQuestion(PlayerCharacterRecord.CharacterGender avatarGender)
+        {
+            return (DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                .OF_WHAT_WOULDST_N_THOU_HEAD_MY_N_LORE_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) + "?");
+        }
+
+        public string GetAnythingElseResponse()
+        {
+            return (DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                .DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ));
+        }
+
+        public string GetMustAttendToPayingCustomers(PlayerCharacterRecord.CharacterGender avatarGender)
+        {
+            return (DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                .SORRY_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) + ", I must attend to my PAYING customers!\" says "
+                    + TheShoppeKeeperReference.ShoppeKeeperName);
         }
     }
 
