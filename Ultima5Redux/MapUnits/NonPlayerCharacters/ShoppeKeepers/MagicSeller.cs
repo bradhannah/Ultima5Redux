@@ -23,15 +23,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyMagicSeller),
         };
 
-        public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null)
+        public override string GetHelloResponse(TimeOfDay tod = null)
         {
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
-            if (shoppeKeeperReference != null)
-                return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                    shoppeKeeperName: shoppeKeeperReference.ShoppeKeeperName,
-                    shoppeName: shoppeKeeperReference.ShoppeName,
-                    tod: tod);
-            throw new Ultima5ReduxException("Can't get a hello response without a ShoppeKeeperReference");
+            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
+                shoppeName: TheShoppeKeeperReference.ShoppeName,
+                tod: tod);
         }
 
         public override string GetWhichWouldYouSee()

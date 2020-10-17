@@ -61,7 +61,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <param name="tod"></param>
         /// <param name="shoppeKeeperReference"></param>
         /// <returns></returns>
-        public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null) 
+        public override string GetHelloResponse(TimeOfDay tod = null) 
         {
             string helloStr = base.GetHelloResponse(tod) + "\n\n" + TheShoppeKeeperReference.ShoppeKeeperName + " says \"" +
                               GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);           

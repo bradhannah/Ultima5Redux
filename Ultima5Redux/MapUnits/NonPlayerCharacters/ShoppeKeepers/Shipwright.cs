@@ -21,14 +21,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyShipwright)
         };
         
-        public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null)
+        public override string GetHelloResponse(TimeOfDay tod = null)
         {
-            if (shoppeKeeperReference != null)
-                return ShoppeKeeperDialogueReference.GetMerchantString(ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(105,108),
-                    shoppeName: shoppeKeeperReference.ShoppeName,
-                    shoppeKeeperName: shoppeKeeperReference.ShoppeKeeperName,
-                    tod: tod).TrimStart();
-            throw new Ultima5ReduxException("Did not include shoppeKeeperReference in Hello response");
+            return ShoppeKeeperDialogueReference.GetMerchantString(ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(105,108),
+                shoppeName: TheShoppeKeeperReference.ShoppeName,
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
+                tod: tod).TrimStart();
         }
 
         public override string GetWhichWouldYouSee()

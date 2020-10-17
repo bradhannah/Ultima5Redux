@@ -12,14 +12,25 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         }
 
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
-        public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null)
+        public override string GetHelloResponse(TimeOfDay tod = null)
         {
-            throw new System.NotImplementedException();
+            //174-177
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(174, 177);
+            return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,  
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName, 
+                shoppeName:TheShoppeKeeperReference.ShoppeName,
+                tod: tod);
         }
 
         public override string GetWhichWouldYouSee()
         {
-            throw new System.NotImplementedException();
+            return (ShoppeKeeperDialogueReference.GetMerchantString(
+                    DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings
+                        .N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N),
+                    shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName) +
+                DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings
+                    .LEAVE_A_COMPANION_OR_TO_REST_FOR_NIGHT_Q_DQ)).Trim().Replace("\n", " ");
+            //N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N
         }
 
         public override string GetForSaleList()

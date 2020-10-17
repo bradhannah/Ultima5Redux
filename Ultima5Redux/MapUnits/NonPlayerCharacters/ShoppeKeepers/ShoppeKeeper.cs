@@ -190,7 +190,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return responses[nResponseIndex];
         }
 
-        public abstract string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null); 
+        //public abstract string GetHelloResponse(TimeOfDay tod = null); 
             //string shoppeKeeperName = "", string shoppeName = "");
         public abstract string GetWhichWouldYouSee();
         public abstract string GetForSaleList();

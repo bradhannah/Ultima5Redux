@@ -116,7 +116,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBarkeeper),
         };
 
-        public override string GetHelloResponse(TimeOfDay tod = null, ShoppeKeeperReference shoppeKeeperReference = null)
+        public override string GetHelloResponse(TimeOfDay tod = null)
         {
             //57-60
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(57, 60);

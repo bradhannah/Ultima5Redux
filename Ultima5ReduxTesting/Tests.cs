@@ -617,7 +617,7 @@ namespace Ultima5ReduxTesting
             int price2 = reagents[1].GetAdjustedBuyPrice(world.State.CharacterRecords,
                 SmallMapReferences.SingleMapReference.Location.Cove);
 
-            string hello = magicSeller.GetHelloResponse(world.State.TheTimeOfDay, magicSeller.TheShoppeKeeperReference);
+            string hello = magicSeller.GetHelloResponse(world.State.TheTimeOfDay);
             string buything = magicSeller.GetReagentBuyingOutput(reagents[0]);
             buything = magicSeller.GetReagentBuyingOutput(reagents[1]);
             buything = magicSeller.GetReagentBuyingOutput(reagents[2]);
@@ -654,7 +654,7 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null);
 
-            string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay, shipwright.TheShoppeKeeperReference);
+            string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay);
         }
 
         public void Test_ShipInWorldState()
