@@ -117,6 +117,7 @@
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\HealerServices.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\HorseSeller.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\Innkeeper.cs" />
+    <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\InnKeeperServiceReference.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\MagicSeller.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\Shipwright.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\ShoppeKeeper.cs" />

@@ -2,11 +2,19 @@
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
+using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class Innkeeper : ShoppeKeeper
     {
+
+        private InnKeeperServiceReference _innKeeperServiceReference = new InnKeeperServiceReference();
+
+        private InnKeeperServiceReference.InnKeeperServices _innKeeperServices => _innKeeperServiceReference
+            .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation);
+      
         public Innkeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
         }
@@ -36,6 +44,17 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public override string GetForSaleList()
         {
             throw new System.NotImplementedException();
+        }
+
+        public override string GetPissedOffNotBuyingResponse()
+        {
+            return (ShoppeKeeperDialogueReference.GetMerchantString(181) + " says " +
+                    TheShoppeKeeperReference.ShoppeKeeperName);
+        }
+
+        public string GetOfferForRest(PlayerCharacterRecords records)
+        {
+            return (ShoppeKeeperDialogueReference.GetMerchantString(_innKeeperServices.DialogueOfferIndex, nGold:_innKeeperServices.RestCost * records.TotalPartyMembers()));
         }
     }
 }
