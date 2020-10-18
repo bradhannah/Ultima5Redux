@@ -46,15 +46,32 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             throw new System.NotImplementedException();
         }
 
-        public override string GetPissedOffNotBuyingResponse()
+        public override string GetPissedOffShoppeKeeperGoodbyeResponse()
         {
-            return (ShoppeKeeperDialogueReference.GetMerchantString(181) + " says " +
-                    TheShoppeKeeperReference.ShoppeKeeperName);
+            // 178 - 181
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(178, 181);
+            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,  
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName, 
+                shoppeName:TheShoppeKeeperReference.ShoppeName) + " says " +
+                   TheShoppeKeeperReference.ShoppeKeeperName;
         }
 
         public string GetOfferForRest(PlayerCharacterRecords records)
         {
-            return (ShoppeKeeperDialogueReference.GetMerchantString(_innKeeperServices.DialogueOfferIndex, nGold:_innKeeperServices.RestCost * records.TotalPartyMembers()));
+            return (ShoppeKeeperDialogueReference.GetMerchantString(_innKeeperServices.DialogueOfferIndex, nGold: GetCostOfRest(records)));
+        }
+
+        public int GetCostOfRest(PlayerCharacterRecords records)
+        {
+            return _innKeeperServices.RestCost * records.TotalPartyMembers();
+        }
+        
+        public override string GetPissedOffNotEnoughMoney()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
+                           DataOvlReference.ShoppeKeeperInnkeeperStrings.HIGHWAYMAN_BANG_CHEAP_OUT_BANG), 
+                    shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
+                    shoppeName:TheShoppeKeeperReference.ShoppeName).Trim() + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
         }
     }
 }

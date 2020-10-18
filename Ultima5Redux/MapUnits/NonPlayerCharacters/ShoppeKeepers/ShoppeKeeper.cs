@@ -104,7 +104,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// Get a random response when the shoppekeeper gets pissed off at you
         /// </summary>
         /// <returns></returns>
-        public string GetPissedOffShoppeKeeperGoodbyeResponse()
+        public virtual string GetPissedOffShoppeKeeperGoodbyeResponse()
         {
             return ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP);
         }
