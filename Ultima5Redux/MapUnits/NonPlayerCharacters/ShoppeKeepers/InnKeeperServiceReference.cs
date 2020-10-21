@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
-        private Dictionary<SmallMapReferences.SingleMapReference.Location, InnKeeperServices> _innKeeperServices =
+        private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, InnKeeperServices> _innKeeperServices =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, InnKeeperServices>()
             {
                 {SmallMapReferences.SingleMapReference.Location.Britain, new InnKeeperServices(186, 4, 40, new MapUnitPosition(21,10,0))},

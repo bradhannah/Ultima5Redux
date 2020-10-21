@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         private InnKeeperServiceReference _innKeeperServiceReference = new InnKeeperServiceReference();
 
-        private InnKeeperServiceReference.InnKeeperServices _innKeeperServices => _innKeeperServiceReference
+        public InnKeeperServiceReference.InnKeeperServices InnKeeperServices => _innKeeperServiceReference
             .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation);
       
         public Innkeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
@@ -58,12 +58,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public string GetOfferForRest(PlayerCharacterRecords records)
         {
-            return (ShoppeKeeperDialogueReference.GetMerchantString(_innKeeperServices.DialogueOfferIndex, nGold: GetCostOfRest(records)));
+            return (ShoppeKeeperDialogueReference.GetMerchantString(InnKeeperServices.DialogueOfferIndex, nGold: GetCostOfRest(records)));
         }
 
         public int GetCostOfRest(PlayerCharacterRecords records)
         {
-            return _innKeeperServices.RestCost * records.TotalPartyMembers();
+            return InnKeeperServices.RestCost * records.TotalPartyMembers();
         }
         
         public override string GetPissedOffNotEnoughMoney()
