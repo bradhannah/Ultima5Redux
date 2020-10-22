@@ -111,7 +111,10 @@ namespace Ultima5Redux.Data
             BAR_KEEP_GOSSIP_PLACES,
             SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP,
-            SHOPPE_KEEPER_BAR_KEEP_2
+            SHOPPE_KEEPER_BAR_KEEP_2,
+            INN_DESCRIPTION_INDEXES,
+            INN_BED_X_COORDS,
+            INN_BED_Y_COORDS
         };
 
         public enum Equipment
@@ -1113,11 +1116,6 @@ namespace Ultima5Redux.Data
             SomeStrings someStrings = GetDataChunk(DataChunkName.EXCLAIMS).GetChunkAsStringList();
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x4aa5, 0x259);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Inn room description text", 0x4e7e, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed X-coordinate", 0x4e8a, 0x5);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed Y-coordinate", 0x4e90, 0x5);
-
-
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204, 0, DataChunkName.WEAR_USE_ITEM);
 
 
@@ -1207,6 +1205,10 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper random stuff", 0x9f0e, 0xDE, 0, DataChunkName.SHOPPE_KEEPER_BAR_KEEP);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper gossip location map", 0x4cec, 0x1A, 0, DataChunkName.BAR_KEEP_GOSSIP_MAP);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper random stuff", 0x9ab8, 0x227, 0, DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn room description text index", 0x4e7e, 0xc, 0, DataChunkName.INN_DESCRIPTION_INDEXES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed X-coordinate", 0x4e8a, 0x6, 0, DataChunkName.INN_BED_X_COORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed Y-coordinate", 0x4e90, 0x6, 0, DataChunkName.INN_BED_Y_COORDS);
+            
             SomeStrings someStrings2 = GetDataChunk(DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2).GetChunkAsStringList();
             
             //SHOPPE_KEEPER_BAR_KEEP

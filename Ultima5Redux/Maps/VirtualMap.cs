@@ -223,9 +223,9 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public void MoveAvatar(MapUnitPosition mapUnitPosition)
+        public void MoveAvatar(Point2D newPosition)
         {
-            TheMapUnits.CurrentAvatarPosition = mapUnitPosition;
+            TheMapUnits.CurrentAvatarPosition = new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
         }
         
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)

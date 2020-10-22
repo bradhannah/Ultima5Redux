@@ -10,13 +10,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     public class Innkeeper : ShoppeKeeper
     {
 
-        private InnKeeperServiceReference _innKeeperServiceReference = new InnKeeperServiceReference();
+        private readonly InnKeeperServiceReference _innKeeperServiceReference;
 
         public InnKeeperServiceReference.InnKeeperServices InnKeeperServices => _innKeeperServiceReference
             .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation);
       
-        public Innkeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
+        public Innkeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, ShoppeKeeperReference theShoppeKeeperReference, 
+            DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
+            _innKeeperServiceReference = new InnKeeperServiceReference(dataOvlReference);
         }
 
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }

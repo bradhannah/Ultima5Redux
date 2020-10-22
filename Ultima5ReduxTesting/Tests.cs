@@ -680,6 +680,25 @@ namespace Ultima5ReduxTesting
 
             Assert.True(true);
         }
+        
+        [Test]
+        public void Test_GetBedLocationInBritain()
+        {
+
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+
+            Innkeeper innKeeper = (Innkeeper) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Britain,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null);
+
+            Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
+            
+            Assert.True(true);
+        }
 
         [Test]
         public void Test_MakeAHorse()
