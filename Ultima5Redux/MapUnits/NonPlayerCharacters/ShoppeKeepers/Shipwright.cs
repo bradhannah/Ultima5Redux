@@ -34,6 +34,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return ShoppeKeeperDialogueReference.GetMerchantString(119).Trim();
         }
 
+        public override string GetHappyShoppeKeeperGoodbyeResponse()
+        {
+            return AddSaysShoppeKeeper(ShoppeKeeperDialogueReference.GetMerchantString(ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(113,116),
+                shoppeName: TheShoppeKeeperReference.ShoppeName, shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName));
+        }
+
         public override string GetForSaleList()
         {
             throw new System.NotImplementedException();

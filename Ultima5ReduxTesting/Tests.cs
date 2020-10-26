@@ -682,21 +682,35 @@ namespace Ultima5ReduxTesting
         }
         
         [Test]
-        public void Test_GetBedLocationInBritain()
+        public void Test_GetInnStuffAtBucDen()
         {
 
             // World world = new World(SaveDirectory);
-            World world = new World(@"C:\games\ultima_5_late\Britain");
+            World world = new World(@"C:\games\ultima_5_late\Bucden1");
             _ = "";
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
             Innkeeper innKeeper = (Innkeeper) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
-                SmallMapReferences.SingleMapReference.Location.Britain,
+                SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null);
 
             Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
-            
+
+            IEnumerable <PlayerCharacterRecord> records =
+                world.State.CharacterRecords.GetPlayersAtInn(SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
+
+            string noRoom = innKeeper.GetNoRoomAtTheInn(world.State.CharacterRecords);
+            foreach (PlayerCharacterRecord record in records)
+            {
+                world.State.CharacterRecords.JoinPlayerCharacter(record);
+            }
+
+            List<PlayerCharacterRecord> activeRecords = world.State.CharacterRecords.GetActiveCharacterRecords();
+
+            string goodbye = innKeeper.GetPissedOffShoppeKeeperGoodbyeResponse();
+            string pissed = innKeeper.GetPissedOffNotEnoughMoney();
+            string howmuch = innKeeper.GetThatWillBeGold(activeRecords[1]);
             Assert.True(true);
         }
 

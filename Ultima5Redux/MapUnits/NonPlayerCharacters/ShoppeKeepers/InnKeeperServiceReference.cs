@@ -30,7 +30,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 RestCost = nRestCost;
                 MonthlyLeaveCost = nMonthlyLeaveCost;
                 SleepingPosition = new Point2D(xBedList[nOffset], yBedList[nOffset]); 
-                //sleepingPosition;
             }
         }
 
@@ -46,11 +45,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 {SmallMapReferences.SingleMapReference.Location.North_Britanny, new InnKeeperServices(3,188, 6, 60, dataOvlReference)},
                 {SmallMapReferences.SingleMapReference.Location.Paws, new InnKeeperServices(4, 189, 4, 40, dataOvlReference)},
                 {SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, new InnKeeperServices(5, 190, 6, 60, dataOvlReference)},
-            // {SmallMapReferences.SingleMapReference.Location.Jhelom, new InnKeeperServices(187, 6, 60, new MapUnitPosition(15,7,1))},
-            // {SmallMapReferences.SingleMapReference.Location.Skara_Brae, new InnKeeperServices(188, 4, 40, new MapUnitPosition(25,9,0))},
-            // {SmallMapReferences.SingleMapReference.Location.North_Britanny, new InnKeeperServices(188, 6, 60, new MapUnitPosition(20,1,0))},
-            // {SmallMapReferences.SingleMapReference.Location.Paws, new InnKeeperServices(189, 4, 40, new MapUnitPosition(27,6,0))},
-            // {SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, new InnKeeperServices(190, 6, 60, new MapUnitPosition(7,26,0))}
             };
         }
 

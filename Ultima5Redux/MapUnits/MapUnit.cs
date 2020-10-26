@@ -195,7 +195,7 @@ namespace Ultima5Redux.MapUnits
             }
 
             // is the NPC you are loading currently in the party?
-            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty;
+            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
 
             // set the characters position 
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);

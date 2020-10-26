@@ -327,7 +327,7 @@ namespace Ultima5Redux.Dialogue
                         EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.JoinParty:
-                        if (_gameStateRef.IsFullParty())
+                        if (_gameStateRef.CharacterRecords.IsFullParty())
                         {
                             string noJoinResponse = GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_1) +
                                 GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_2);

@@ -166,9 +166,22 @@ namespace Ultima5Redux
         /// <param name="nMinutes">Number of minutes to advance (maximum of 9*60)</param>
         public void AdvanceTime(int nMinutes)
         {
+            int nCurrentHour = State.TheTimeOfDay.Month;
+
             State.TheTimeOfDay.AdvanceClock(nMinutes);
+
+            // if a whole month has advanced then we go and add one month to the "staying at the inn" count
+            if (nCurrentHour < State.TheTimeOfDay.Month)
+            {
+                State.CharacterRecords.IncrementStayingAtInnCounters();
+            }
             if (State.TorchTurnsLeft > 0) State.TorchTurnsLeft--;
             State.TheVirtualMap.MoveMapUnitsToNextMove();
+        }
+
+        public void SetAggressiveGuards(bool bAggressiveGuards)
+        {
+            
         }
 
         /// <summary>

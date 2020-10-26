@@ -22,7 +22,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 }
             };
         
-            public static Dictionary<ProvisionTypeEnum, int> BundleQuantity = new Dictionary<ProvisionTypeEnum, int>()
+            public static readonly Dictionary<ProvisionTypeEnum, int> BundleQuantity = new Dictionary<ProvisionTypeEnum, int>()
             {
                 {ProvisionTypeEnum.Torches, 5}, {ProvisionTypeEnum.Keys, 3}, {ProvisionTypeEnum.Gems, 4}
             };

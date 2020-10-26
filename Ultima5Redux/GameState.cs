@@ -302,7 +302,6 @@ namespace Ultima5Redux
             // 0x2DA is copy of 2D9 for some reason
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Minute", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
 
-
             //dataChunks.AddDataChunk()
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Met Bitmap", 0x634, 0x80, 0x00, DataChunkName.NPC_ISMET_TABLE);
@@ -409,78 +408,6 @@ namespace Ultima5Redux
             _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = true;
         }
 
-        /// <summary>
-        /// Gets the number of active characters in the Avatars party
-        /// </summary>
-        /// <returns></returns>
-        public int GetNumberOfActiveCharacters()
-        {
-            // todo: this is inefficient!
-            return GetActiveCharacterRecords().Count;
-        }
-
-        /// <summary>
-        /// Gets all active character records for members in the Avatars party
-        /// </summary>
-        /// <returns></returns>
-        public List<PlayerCharacterRecord> GetActiveCharacterRecords()
-        {
-            List<PlayerCharacterRecord> activeCharacterRecords = new List<PlayerCharacterRecord>();
-
-            foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
-            {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
-                    activeCharacterRecords.Add(characterRecord);
-            }
-            if (activeCharacterRecords.Count == 0) throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party");
-            if (activeCharacterRecords.Count > PlayerCharacterRecords.MAX_PARTY_MEMBERS) throw new Ultima5ReduxException("There are too many party members in the party... party...");
-
-            return activeCharacterRecords;
-        }
-
-        /// <summary>
-        /// Gets a character from the active party by index
-        /// Throws an exception if you asked for a member who isn't there - so check first
-        /// </summary>
-        /// <param name="nPosition"></param>
-        /// <returns></returns>
-        public PlayerCharacterRecord GetCharacterFromParty(int nPosition)
-        {
-            Debug.Assert(nPosition >= 0 && nPosition < PlayerCharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
-            Debug.Assert(nPosition < CharacterRecords.TotalPartyMembers(), "You cannot request a character that isn't on the roster");
-
-            int nPartyMember = 0;
-            foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
-            {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
-                    if (nPartyMember++ == nPosition) return characterRecord;
-            }
-            throw new Ultima5ReduxException("I've asked for member of the party who is apparently not there...");
-        }
-
-        /// <summary>
-        /// Adds an NPC character to the party, and maps their CharacterRecord
-        /// </summary>
-        /// <param name="npc">the NPC to add</param>
-        public void AddMemberToParty(NonPlayerCharacterReference npc)
-        {
-            PlayerCharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
-            if (record == null)
-            {
-                throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
-            }
-            record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InParty;
-        }
-
-        /// <summary>
-        /// Is my party full (at capacity)
-        /// </summary>
-        /// <returns>true if party is full</returns>
-        public bool IsFullParty()
-        {
-            Debug.Assert(!(CharacterRecords.TotalPartyMembers() > PlayerCharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
-            return (CharacterRecords.TotalPartyMembers() == PlayerCharacterRecords.MAX_PARTY_MEMBERS);
-        }
 
         /// <summary>
         /// Has the NPC met the avatar yet?

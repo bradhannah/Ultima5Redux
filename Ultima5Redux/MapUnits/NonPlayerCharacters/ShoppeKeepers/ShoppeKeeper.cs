@@ -72,6 +72,25 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private const int HAPPY_START = 4;
         private const int HAPPY_STOP = 7;
 
+        protected string FlattenStr(string str)
+        {
+            return str.Trim().Replace("\n", " ");
+        }
+
+        /// <summary>
+        /// Quotes the string and adds "says shoppekeeper"
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        protected string AddSaysShoppeKeeper(string str)
+        {
+            str = FlattenStr(str);
+            if (!str.StartsWith("\"")) str = "\"" + str;
+            if (!str.EndsWith("\"")) str += "\"";
+            str += " says " + TheShoppeKeeperReference.ShoppeKeeperName;
+            return str;
+        }
+        
         public bool IsOnDuty(TimeOfDay tod)
         {
             // shoppe keepers are open during their 1 and 3 index into their schedule (0 based)
@@ -106,16 +125,18 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <returns></returns>
         public virtual string GetPissedOffShoppeKeeperGoodbyeResponse()
         {
-            return ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP);
+            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP)
+                + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
         }
 
         /// <summary>
         /// Get a random response when the shoppekeeper is happy as you leave
         /// </summary>
         /// <returns></returns>
-        public string GetHappyShoppeKeeperGoodbyeResponse()
+        public virtual string GetHappyShoppeKeeperGoodbyeResponse()
         {
-            return ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP);
+            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP)
+                + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
         }
 
         public virtual string GetThyInterest()

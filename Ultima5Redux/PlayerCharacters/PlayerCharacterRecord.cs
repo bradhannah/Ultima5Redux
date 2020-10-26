@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.PlayerCharacters
 {
@@ -11,33 +12,12 @@ namespace Ultima5Redux.PlayerCharacters
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
 
-        //private enum CharacterInnOrParty { InParty = 0x00, HasntJoined = 0xFF, PermanentlyKilled = 0x7F };
         public enum CharacterGender { Male = 0x0B, Female = 0x0C };
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'};
         
         public enum CharacterStatus { Good = 'G', Poisioned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D'};
-        
-        // if your InnorParty value is included in the list, then it's clear - if not then they are at the location referenced by the number
-        //public int TotalDefense
-        //{
-        //    get
-        //    {
-        //        //return Equipped.Amulet;
-        //        return 30;
-        //    }
-        //}
-
-        //public int TotalAttack
-        //{
-        //    get
-        //    {
-        //        return 25;
-        //    }
-        //}
-        
-        public enum CharacterPartyStatus { InParty = 0x00, HasntJoinedYet = 0xFF, KilledPermanently = 0x7F}; // otherwise it is at an inn at Settlement # in byte value
-
-        private byte Unknown1 { get; set; }
+        public enum CharacterPartyStatus { InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01}; // otherwise it is at an inn at Settlement # in byte value
+            //, KilledPermanently = 0x7F
         private byte Unknown2 { get; set; }
 
         private byte InnOrParty { get; set; }
@@ -45,14 +25,49 @@ namespace Ultima5Redux.PlayerCharacters
         public string Name { get; private set; }
         public CharacterGender Gender { get; set; }
         public CharacterClass Class { get; set; }
+
+        public byte MonthsSinceStayingAtInn
+        {
+            get => _monthsSinceStayingAtInn;
+            set => _monthsSinceStayingAtInn = (byte)(value % byte.MaxValue);
+        }
+
+        public int PrimarySpriteIndex
+        {
+            get {  
+                switch (Class)
+                {
+                    case PlayerCharacterRecord.CharacterClass.Avatar:
+                        return 284;
+                    case PlayerCharacterRecord.CharacterClass.Bard:
+                        return 324;
+                    case PlayerCharacterRecord.CharacterClass.Fighter:
+                        return 328;
+                    case PlayerCharacterRecord.CharacterClass.Mage:
+                        return 320;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
+            (SmallMapReferences.SingleMapReference.Location) InnOrParty;
+        
         public CharacterPartyStatus PartyStatus
         {
-            get => (CharacterPartyStatus)InnOrParty;
+            get
+            {
+                if (InnOrParty == 0x00) return CharacterPartyStatus.InTheParty;
+                if (InnOrParty == 0xFF) return CharacterPartyStatus.HasntJoinedYet;
+                return CharacterPartyStatus.AtTheInn;
+            }
             set => InnOrParty = (byte)value;
         }
         
         public readonly CharacterEquipped Equipped = new CharacterEquipped();
         public readonly CharacterStats Stats = new CharacterStats();
+        private byte _monthsSinceStayingAtInn;
 
         private enum DataChunkName { Unused };
         //        offset length      purpose range
@@ -82,8 +97,14 @@ namespace Ultima5Redux.PlayerCharacters
 
         private enum CharacterRecordOffsets { Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D, Intelligence = 0x0E,
         CurrentMP = 0x0F, CurrentHP = 0x10, MaximimumHP = 0x12, ExperiencePoints = 0x14, Level = 0x16, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B, Shield  = 0x1C,
-        Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F, Unknown1 = 0x17, Unknown2 = 0x18 };
+        Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F, MonthsSinceStayingAtInn = 0x17, Unknown2 = 0x18 };
 
+        public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
+        {
+            InnOrParty = (byte)location;
+            MonthsSinceStayingAtInn = 0;
+        }
+        
         public int Heal()
         {
             int nCurrentHp = Stats.CurrentHp;
@@ -118,6 +139,7 @@ namespace Ultima5Redux.PlayerCharacters
             Name = DataChunk.CreateDataChunk(DataChunk.DataFormatType.SimpleString, "Character Name", rawRecordByteList, (int)CharacterRecordOffsets.Name, 9).GetChunkAsString();
             Gender = (CharacterGender)rawRecordByteList[(int)CharacterRecordOffsets.Gender];                
             Class = (CharacterClass)rawRecordByteList[(int)CharacterRecordOffsets.Class];
+            _monthsSinceStayingAtInn = rawRecordByteList[(int)CharacterRecordOffsets.MonthsSinceStayingAtInn];
             Stats.Status = (CharacterStatus)rawRecordByteList[(int)CharacterRecordOffsets.Status];
             Stats.Strength = rawRecordByteList[(int)CharacterRecordOffsets.Strength];
             Stats.Dexterity = rawRecordByteList[(int)CharacterRecordOffsets.Dexterity];
@@ -127,6 +149,7 @@ namespace Ultima5Redux.PlayerCharacters
             Stats.MaximumHp = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.MaximimumHP, sizeof(UInt16)).GetChunkAsUint16List()[0];
             Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points", rawRecordByteList, (int)CharacterRecordOffsets.ExperiencePoints, sizeof(UInt16)).GetChunkAsUint16List()[0];
             Stats.Level = rawRecordByteList[(int)CharacterRecordOffsets.Level];
+            
 
             // this approach is necessary because I have found circumstances where shields and weapons were swapped in the save file
             // I couldn't guarantee that other items wouldn't do the same so instead we allow each of the equipment save
@@ -158,7 +181,6 @@ namespace Ultima5Redux.PlayerCharacters
        
             InnOrParty = rawRecordByteList[(int)CharacterRecordOffsets.InnParty];
 
-            Unknown1 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown1];
             Unknown2 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown2];
         }
 
