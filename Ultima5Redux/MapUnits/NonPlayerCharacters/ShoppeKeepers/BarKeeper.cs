@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
@@ -82,7 +83,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         private string CleanGossipWordForLookup(string word)
         {
-            return word.Substring(0, 4);
+            int nLength = Math.Min(4, word.Length);
+            return word.Substring(0, nLength);
         }
 
         public string GetGossipResponse(string word)
