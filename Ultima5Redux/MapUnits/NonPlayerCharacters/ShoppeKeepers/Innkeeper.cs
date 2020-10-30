@@ -157,5 +157,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 nGold: GetCostOfInnStay(record));
             return FlattenStr(thatWillBeStr.Substring(0, thatWillBeStr.Length - 1));
         }
+
+        public string GetThyFriendHasDied()
+        {
+            return AddSaysShoppeKeeper(DataOvlReference.StringReferences.GetString(
+                DataOvlReference.ShoppeKeeperInnkeeper2Strings.THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N));
+        }
+
+        public string GetNotAMorgue()
+        {
+            return FlattenStr(ShoppeKeeperDialogueReference.GetMerchantString(192, shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName));
+        }
     }
 }

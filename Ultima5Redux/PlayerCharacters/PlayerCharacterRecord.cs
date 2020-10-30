@@ -103,6 +103,12 @@ namespace Ultima5Redux.PlayerCharacters
         {
             InnOrParty = (byte)location;
             MonthsSinceStayingAtInn = 0;
+            // if the character goes to the Inn while poisoned then they die there immediately
+            if (Stats.Status == CharacterStatus.Poisioned)
+            {
+                Stats.CurrentHp = 0;
+                Stats.Status = CharacterStatus.Dead;
+            }
         }
         
         public int Heal()

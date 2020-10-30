@@ -82,12 +82,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        protected string AddSaysShoppeKeeper(string str)
+        protected string AddSaysShoppeKeeper(string str, string saysStr = "says")
         {
             str = FlattenStr(str);
             if (!str.StartsWith("\"")) str = "\"" + str;
             if (!str.EndsWith("\"")) str += "\"";
-            str += " says " + TheShoppeKeeperReference.ShoppeKeeperName;
+            str += " " + saysStr+ " " + TheShoppeKeeperReference.ShoppeKeeperName;
             return str;
         }
         
