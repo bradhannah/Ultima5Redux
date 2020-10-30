@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Ultima5Redux.Data;
 using Ultima5Redux.Dialogue;
-using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
-
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace U5ConversationSimulator
 {
@@ -24,7 +23,7 @@ namespace U5ConversationSimulator
                 //_world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britain, 0), _world.State.CharacterRecords, false);
             }
             
-            _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0), _world.State.CharacterRecords, false);
+            _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
             
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
@@ -87,7 +86,7 @@ namespace U5ConversationSimulator
                     //
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    _world.State.AddMemberToParty(conversation.Npc);
+                    _world.State.CharacterRecords.AddMemberToParty(conversation.Npc);
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //

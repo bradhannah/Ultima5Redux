@@ -188,10 +188,10 @@ namespace Ultima5Redux.Dialogue
                     }
 
                     // this signifies the end of the printing (sample code enters a newline)
-                    if ((char) tempByte == '@')
-                    {
-                        continue;
-                    }
+                    // if ((char) tempByte == '@')
+                    // {
+                    //     continue;
+                    // }
 
                     buildAWord += (char) tempByte;
                 }

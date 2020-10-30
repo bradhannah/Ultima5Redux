@@ -49,6 +49,7 @@ namespace Ultima5Redux.Maps
         public bool IsPushable;
         [DataMember]
         public bool IsTalkOverable;
+        [DataMember] public bool IsBoardable;
 
         public override string ToString()
         {
@@ -61,5 +62,18 @@ namespace Ultima5Redux.Maps
         public bool IsSolidSpriteButNotDoor => (!this.IsWalking_Passable && !this.IsOpenable);
 
         public bool IsSolidSprite => (!IsWalking_Passable);
+
+        /// <summary>
+        /// Makes a best guess on the directionality of the sprite
+        /// </summary>
+        /// <returns></returns>
+        public VirtualMap.Direction GetDirection()
+        {
+            if (Name.Contains("Left")) return VirtualMap.Direction.Left;
+            if (Name.Contains("Right")) return VirtualMap.Direction.Right;
+            if (Name.Contains("Down")) return VirtualMap.Direction.Down;
+            if (Name.Contains("Up")) return VirtualMap.Direction.Up;
+            return VirtualMap.Direction.None;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.Maps
 {
@@ -130,9 +131,25 @@ namespace Ultima5Redux.Maps
             return _smallMapBasementDictionary[location];
         }
 
+        /// <summary>
+        /// Gets the starting location of a small map
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public static Point2D GetStartingXYByLocation(SmallMapReferences.SingleMapReference.Location location)
         {
             return new Point2D(32 / 2 - 1, 30);
+        }
+
+        /// <summary>
+        /// Gets the starting position of a small map 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public static MapUnitPosition GetStartingXYZByLocation(SmallMapReferences.SingleMapReference.Location location)
+        {
+            Point2D startingXY = SmallMapReferences.GetStartingXYByLocation(location);
+            return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
         }
 
         public string GetLocationName(SmallMapReferences.SingleMapReference.Location location)

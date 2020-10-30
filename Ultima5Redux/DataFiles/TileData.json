@@ -19,7 +19,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "1": {
       "Name": "Water1",
@@ -41,7 +42,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "2": {
       "Name": "Water2",
@@ -63,7 +65,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "3": {
       "Name": "WaterCoast",
@@ -85,7 +88,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "4": {
       "Name": "Swamp",
@@ -107,7 +111,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "5": {
       "Name": "Grass",
@@ -129,7 +134,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "6": {
       "Name": "Forest1",
@@ -151,7 +157,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "7": {
       "Name": "Desert1",
@@ -173,7 +180,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "8": {
       "Name": "Forest2",
@@ -195,7 +203,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "9": {
       "Name": "Forest3",
@@ -217,7 +226,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "10": {
       "Name": "Forest4",
@@ -239,7 +249,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "11": {
       "Name": "Hills1",
@@ -261,7 +272,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "12": {
       "Name": "SmallMountains",
@@ -283,7 +295,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "13": {
       "Name": "TallMountains",
@@ -305,7 +318,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "14": {
       "Name": "LeftHills2",
@@ -327,7 +341,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "15": {
       "Name": "RightHills2",
@@ -349,7 +364,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "16": {
       "Name": "Hut",
@@ -371,7 +387,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "17": {
       "Name": "Codex",
@@ -393,7 +410,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "18": {
       "Name": "Keep",
@@ -415,7 +433,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "19": {
       "Name": "Village",
@@ -437,7 +456,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "20": {
       "Name": "SmallCastle",
@@ -459,7 +479,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "21": {
       "Name": "LargeCastle",
@@ -481,7 +502,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "22": {
       "Name": "CaveEntrance",
@@ -503,7 +525,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "23": {
       "Name": "MineEntrance",
@@ -525,7 +548,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "24": {
       "Name": "DoomEntrance",
@@ -547,7 +571,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "25": {
       "Name": "Shrine",
@@ -569,7 +594,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "26": {
       "Name": "BrokenShrine",
@@ -591,7 +617,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "27": {
       "Name": "Lighthouse",
@@ -613,7 +640,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "28": {
       "Name": "Oasis",
@@ -635,7 +663,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "29": {
       "Name": "Bridge",
@@ -657,7 +686,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "30": {
       "Name": "LeftDesert2",
@@ -679,7 +709,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "31": {
       "Name": "RightDesert2",
@@ -701,7 +732,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "32": {
       "Name": "Path1",
@@ -723,7 +755,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "33": {
       "Name": "Path2",
@@ -745,7 +778,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "34": {
       "Name": "Path3",
@@ -767,7 +801,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "35": {
       "Name": "Path4",
@@ -789,7 +824,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "36": {
       "Name": "Path5",
@@ -811,7 +847,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "37": {
       "Name": "Path6",
@@ -833,7 +870,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "38": {
       "Name": "Path7",
@@ -855,7 +893,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "39": {
       "Name": "Roof1",
@@ -877,7 +916,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "40": {
       "Name": "Roof2",
@@ -899,7 +939,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "41": {
       "Name": "CrystalBall",
@@ -921,7 +962,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "42": {
       "Name": "LighthouseLight",
@@ -943,7 +985,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "43": {
       "Name": "DeadTree",
@@ -965,7 +1008,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "44": {
       "Name": "PlowedField",
@@ -987,7 +1031,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "45": {
       "Name": "WheatInField",
@@ -1009,7 +1054,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "46": {
       "Name": "Tree",
@@ -1031,7 +1077,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "47": {
       "Name": "Cactus",
@@ -1053,7 +1100,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "48": {
       "Name": "OutsidePath1",
@@ -1075,7 +1123,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "49": {
       "Name": "OutsidePath2",
@@ -1097,7 +1146,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "50": {
       "Name": "OutsidePath3",
@@ -1119,7 +1169,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "51": {
       "Name": "OutsidePath4",
@@ -1141,7 +1192,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "52": {
       "Name": "OutsideWaterCoast1",
@@ -1163,7 +1215,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "53": {
       "Name": "OutsideWaterCoast2",
@@ -1185,7 +1238,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "54": {
       "Name": "OutsideWaterCoast3",
@@ -1207,7 +1261,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "55": {
       "Name": "OutsideWaterCoast4",
@@ -1229,7 +1284,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "56": {
       "Name": "CastleGargoyle",
@@ -1251,7 +1307,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "57": {
       "Name": "EvilCastleEntrance",
@@ -1273,7 +1330,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "58": {
       "Name": "CastleBritian1",
@@ -1295,7 +1353,8 @@
       "IsBuilding": false,
       "DontDraw": true,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "59": {
       "Name": "CastleBritian2",
@@ -1317,7 +1376,8 @@
       "IsBuilding": false,
       "DontDraw": true,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "60": {
       "Name": "CastleBritian3",
@@ -1339,7 +1399,8 @@
       "IsBuilding": false,
       "DontDraw": true,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "61": {
       "Name": "CastleBritian4",
@@ -1361,7 +1422,8 @@
       "IsBuilding": false,
       "DontDraw": true,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "62": {
       "Name": "CastleBritianEntrace",
@@ -1383,7 +1445,8 @@
       "IsBuilding": true,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "63": {
       "Name": "CastleBritian5",
@@ -1405,7 +1468,8 @@
       "IsBuilding": false,
       "DontDraw": true,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "64": {
       "Name": "WoodFloor1",
@@ -1427,7 +1491,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "65": {
       "Name": "Lecturn",
@@ -1449,7 +1514,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "66": {
       "Name": "WoodFloorShipTie",
@@ -1471,7 +1537,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "67": {
       "Name": "WoodFloorShipEdge",
@@ -1493,7 +1560,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "68": {
       "Name": "BrickFloor",
@@ -1515,7 +1583,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "69": {
       "Name": "MetalFloor",
@@ -1537,7 +1606,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "70": {
       "Name": "DryStone",
@@ -1559,7 +1629,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "71": {
       "Name": "Dock",
@@ -1581,7 +1652,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "72": {
       "Name": "LeftWoodFloor2",
@@ -1603,7 +1675,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "73": {
       "Name": "RightWoodFloor2",
@@ -1625,7 +1698,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "74": {
       "Name": "StoneCrossWindow",
@@ -1647,7 +1721,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "75": {
       "Name": "StoneGlassWindow",
@@ -1669,7 +1744,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "76": {
       "Name": "SmallRockWall",
@@ -1691,7 +1767,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "77": {
       "Name": "LargeRockWall",
@@ -1713,7 +1790,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "78": {
       "Name": "StoneBrickWallSecret",
@@ -1735,7 +1813,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "79": {
       "Name": "StoneBrickWall",
@@ -1757,7 +1836,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "80": {
       "Name": "CastleParapet1",
@@ -1779,7 +1859,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "81": {
       "Name": "CastleParapet2",
@@ -1801,7 +1882,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "82": {
       "Name": "CastleParapet3",
@@ -1823,7 +1905,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "83": {
       "Name": "CastleParapet4",
@@ -1845,7 +1928,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "84": {
       "Name": "CastleParapet5",
@@ -1867,7 +1951,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "85": {
       "Name": "CastleParapet6",
@@ -1889,7 +1974,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "86": {
       "Name": "CastleParapet7",
@@ -1911,7 +1997,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "87": {
       "Name": "CastleParapet8",
@@ -1933,7 +2020,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "88": {
       "Name": "Anvil",
@@ -1955,7 +2043,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "89": {
       "Name": "Telescope",
@@ -1977,7 +2066,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "90": {
       "Name": "Bookcase",
@@ -1999,7 +2089,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "91": {
       "Name": "Plant",
@@ -2021,7 +2112,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "92": {
       "Name": "BookcaseLeft",
@@ -2043,7 +2135,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "93": {
       "Name": "BookcaseRight",
@@ -2065,7 +2158,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "94": {
       "Name": "CodexAngelLeft",
@@ -2087,7 +2181,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "95": {
       "Name": "CodexAngelRight",
@@ -2109,7 +2204,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "96": {
       "Name": "WaterStream1",
@@ -2131,7 +2227,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "97": {
       "Name": "WaterStream2",
@@ -2153,7 +2250,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "98": {
       "Name": "WaterStream3",
@@ -2175,7 +2273,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "99": {
       "Name": "WaterStream4",
@@ -2197,7 +2296,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "100": {
       "Name": "WaterStream5",
@@ -2219,7 +2319,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "101": {
       "Name": "WaterStream6",
@@ -2241,7 +2342,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "102": {
       "Name": "WaterStream7",
@@ -2263,7 +2365,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "103": {
       "Name": "WaterStream8",
@@ -2285,7 +2388,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "104": {
       "Name": "WaterStream9",
@@ -2307,7 +2411,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "105": {
       "Name": "WaterStream10",
@@ -2329,7 +2434,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "106": {
       "Name": "TrollBridgeHoriz",
@@ -2351,7 +2457,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "107": {
       "Name": "TrollBridgeVert",
@@ -2373,7 +2480,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "108": {
       "Name": "WaterStream11",
@@ -2395,7 +2503,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "109": {
       "Name": "WaterStream12",
@@ -2417,7 +2526,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "110": {
       "Name": "WaterStream13",
@@ -2439,7 +2549,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "111": {
       "Name": "WaterStream14",
@@ -2461,7 +2572,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "112": {
       "Name": "ShadowlordBoundary1",
@@ -2483,7 +2595,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "113": {
       "Name": "ShadowlordBoundary2",
@@ -2505,7 +2618,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "114": {
       "Name": "ShadowlordBoundary3",
@@ -2527,7 +2641,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "115": {
       "Name": "ShadowlordBoundary4",
@@ -2549,7 +2664,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "116": {
       "Name": "ShadowlordBoundary5",
@@ -2571,7 +2687,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "117": {
       "Name": "ShadowlordBoundary6",
@@ -2593,7 +2710,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "118": {
       "Name": "ShadowlordBoundary7",
@@ -2615,7 +2733,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "119": {
       "Name": "ShadowlordBoundary8",
@@ -2637,7 +2756,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "120": {
       "Name": "ShadowlordBoundary9",
@@ -2659,7 +2779,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "121": {
       "Name": "ShadowlordBoundary10",
@@ -2681,7 +2802,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "122": {
       "Name": "ShadowlordBoundary11",
@@ -2703,7 +2825,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "123": {
       "Name": "ShadowlordBoundary12",
@@ -2725,7 +2848,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "124": {
       "Name": "ShadowlordBoundary13",
@@ -2747,7 +2871,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "125": {
       "Name": "ShadowlordBoundary14",
@@ -2769,7 +2894,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "126": {
       "Name": "ShadowlordBoundary15",
@@ -2791,7 +2917,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "127": {
       "Name": "ShadowlordBoundary16",
@@ -2813,7 +2940,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "128": {
       "Name": "TortureChair1",
@@ -2835,7 +2963,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "129": {
       "Name": "TortureTable2",
@@ -2857,7 +2986,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "130": {
       "Name": "TortureTableWithBody1",
@@ -2879,7 +3009,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "131": {
       "Name": "TortureTableWithBody2",
@@ -2901,7 +3032,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "132": {
       "Name": "Stocks",
@@ -2923,7 +3055,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "133": {
       "Name": "Manacles",
@@ -2945,7 +3078,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "134": {
       "Name": "Grate",
@@ -2967,7 +3101,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "135": {
       "Name": "BrickWallArchway",
@@ -2989,7 +3124,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "136": {
       "Name": "CannonBalls",
@@ -3011,7 +3147,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "137": {
       "Name": "SimpleCross",
@@ -3033,7 +3170,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "138": {
       "Name": "StoneHeadstone",
@@ -3055,7 +3193,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "139": {
       "Name": "TortureChair",
@@ -3077,7 +3216,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "140": {
       "Name": "BrickFloorHole",
@@ -3099,7 +3239,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "141": {
       "Name": "Harpsichord",
@@ -3121,7 +3262,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "142": {
       "Name": "Guillotine",
@@ -3143,7 +3285,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "143": {
       "Name": "Lava",
@@ -3165,7 +3308,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "144": {
       "Name": "ChairBackForward",
@@ -3187,7 +3331,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "145": {
       "Name": "ChairBackLeft",
@@ -3209,7 +3354,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "146": {
       "Name": "ChairBackBack",
@@ -3231,7 +3377,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "147": {
       "Name": "ChairBackRight",
@@ -3253,7 +3400,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "148": {
       "Name": "TableLeft",
@@ -3275,7 +3423,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": true
+      "IsTalkOverable": true,
+      "IsBoardable": false
    },
    "149": {
       "Name": "TableMiddle",
@@ -3297,7 +3446,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": true
+      "IsTalkOverable": true,
+      "IsBoardable": false
    },
    "150": {
       "Name": "TableRight",
@@ -3319,7 +3469,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": true
+      "IsTalkOverable": true,
+      "IsBoardable": false
    },
    "151": {
       "Name": "MagicLockDoor",
@@ -3341,7 +3492,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "152": {
       "Name": "MagicLockDoorWithView",
@@ -3363,7 +3515,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "153": {
       "Name": "Portcullis",
@@ -3385,7 +3538,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "154": {
       "Name": "TableFoodTop",
@@ -3407,7 +3561,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": true
+      "IsTalkOverable": true,
+      "IsBoardable": false
    },
    "155": {
       "Name": "TableFoodBottom",
@@ -3429,7 +3584,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": true
+      "IsTalkOverable": true,
+      "IsBoardable": false
    },
    "156": {
       "Name": "TableFoodBoth",
@@ -3451,7 +3607,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": true
+      "IsTalkOverable": true,
+      "IsBoardable": false
    },
    "157": {
       "Name": "Mirror",
@@ -3473,7 +3630,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "158": {
       "Name": "MirrorAvatar",
@@ -3495,7 +3653,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "159": {
       "Name": "MirrorBroken",
@@ -3517,7 +3676,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "160": {
       "Name": "Sign",
@@ -3539,7 +3699,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "161": {
       "Name": "Well",
@@ -3561,7 +3722,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "162": {
       "Name": "Fence1",
@@ -3583,7 +3745,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "163": {
       "Name": "FireLogs",
@@ -3605,7 +3768,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "164": {
       "Name": "SmallSign",
@@ -3627,7 +3791,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "165": {
       "Name": "EndTable",
@@ -3649,7 +3814,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "166": {
       "Name": "Barrel",
@@ -3671,7 +3837,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "167": {
       "Name": "Cask",
@@ -3693,7 +3860,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "168": {
       "Name": "Vanity",
@@ -3715,7 +3883,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "169": {
       "Name": "WaterJugTable",
@@ -3737,7 +3906,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "170": {
       "Name": "Carpet",
@@ -3759,7 +3929,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "171": {
       "Name": "LeftBed",
@@ -3781,7 +3952,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "172": {
       "Name": "RightBed",
@@ -3803,7 +3975,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "173": {
       "Name": "Dresser",
@@ -3825,7 +3998,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "174": {
       "Name": "CoffeeTable",
@@ -3847,7 +4021,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "175": {
       "Name": "Box",
@@ -3869,7 +4044,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "176": {
       "Name": "RightSconce",
@@ -3891,7 +4067,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "177": {
       "Name": "LeftSconce",
@@ -3913,7 +4090,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "178": {
       "Name": "Brazier",
@@ -3935,7 +4113,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "179": {
       "Name": "CampFire",
@@ -3957,7 +4136,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "180": {
       "Name": "CannonUp",
@@ -3979,7 +4159,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "181": {
       "Name": "CannonDown",
@@ -4001,7 +4182,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "182": {
       "Name": "CannonRight",
@@ -4023,7 +4205,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "183": {
       "Name": "CannonLeft",
@@ -4045,7 +4228,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": true,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "184": {
       "Name": "RegularDoor",
@@ -4067,7 +4251,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "185": {
       "Name": "LockedDoor",
@@ -4089,7 +4274,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "186": {
       "Name": "RegularDoorView",
@@ -4111,7 +4297,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "187": {
       "Name": "LockedDoorView",
@@ -4133,7 +4320,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "188": {
       "Name": "Fireplace",
@@ -4155,7 +4343,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "189": {
       "Name": "LampPost",
@@ -4177,7 +4366,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "190": {
       "Name": "CandleOnTable",
@@ -4199,7 +4389,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": true,
+      "IsBoardable": false
    },
    "191": {
       "Name": "CookStove",
@@ -4221,7 +4412,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "192": {
       "Name": "ScaryBlackThing1",
@@ -4243,7 +4435,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "193": {
       "Name": "ScaryBlackThing2",
@@ -4265,7 +4458,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "194": {
       "Name": "ScaryBlackThing3",
@@ -4287,7 +4481,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "195": {
       "Name": "ScaryBlackThingDead",
@@ -4309,7 +4504,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "196": {
       "Name": "StairsNorth",
@@ -4331,7 +4527,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "197": {
       "Name": "StairsEast",
@@ -4353,7 +4550,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "198": {
       "Name": "StairsSouth",
@@ -4375,7 +4573,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "199": {
       "Name": "StairsWest",
@@ -4397,7 +4596,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "200": {
       "Name": "LadderUp",
@@ -4419,7 +4619,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "201": {
       "Name": "LadderDown",
@@ -4441,7 +4642,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "202": {
       "Name": "FenceHoriz",
@@ -4463,7 +4665,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "203": {
       "Name": "FenceVert",
@@ -4485,7 +4688,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "204": {
       "Name": "Wtf1",
@@ -4507,7 +4711,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "205": {
       "Name": "Wtf2",
@@ -4529,7 +4734,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "206": {
       "Name": "Wtf3",
@@ -4551,7 +4757,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "207": {
       "Name": "Wtf4",
@@ -4573,7 +4780,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "208": {
       "Name": "CornerStructure1",
@@ -4595,7 +4803,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "209": {
       "Name": "CornerStructure2",
@@ -4617,7 +4826,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "210": {
       "Name": "CornerStructure3",
@@ -4639,7 +4849,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "211": {
       "Name": "CornerStructure4",
@@ -4661,7 +4872,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "212": {
       "Name": "Waterfall1",
@@ -4683,7 +4895,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "213": {
       "Name": "Waterfall2",
@@ -4705,7 +4918,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "214": {
       "Name": "Waterfall3",
@@ -4727,7 +4941,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "215": {
       "Name": "Waterfall4",
@@ -4749,7 +4964,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "216": {
       "Name": "Fountain1",
@@ -4771,7 +4987,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "217": {
       "Name": "Fountain2",
@@ -4793,7 +5010,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "218": {
       "Name": "Fountain3",
@@ -4815,7 +5033,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "219": {
       "Name": "Fountain4",
@@ -4837,7 +5056,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "220": {
       "Name": "Moongate",
@@ -4859,7 +5079,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "221": {
       "Name": "Desert3",
@@ -4881,7 +5102,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "222": {
       "Name": "BlueFlame",
@@ -4903,7 +5125,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "223": {
       "Name": "BlockEntrance",
@@ -4925,7 +5148,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "224": {
       "Name": "LargeSignBottom",
@@ -4947,7 +5171,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "225": {
       "Name": "LargeSignLeft",
@@ -4969,7 +5194,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "226": {
       "Name": "LargeSignRight",
@@ -4991,7 +5217,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "227": {
       "Name": "SignGrass",
@@ -5013,7 +5240,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "228": {
       "Name": "CornerWithWater1",
@@ -5035,7 +5263,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "229": {
       "Name": "CornerWithWater2",
@@ -5057,7 +5286,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "230": {
       "Name": "CornerWithWater3",
@@ -5079,7 +5309,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "231": {
       "Name": "CornerWithWater4",
@@ -5101,7 +5332,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "232": {
       "Name": "Hourglass1",
@@ -5123,7 +5355,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "233": {
       "Name": "Hourglass2",
@@ -5145,7 +5378,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "234": {
       "Name": "Hourglass3",
@@ -5167,7 +5401,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "235": {
       "Name": "Hourglass4",
@@ -5189,7 +5424,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "236": {
       "Name": "SnakeSign1",
@@ -5211,7 +5447,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "237": {
       "Name": "SnakeSign2",
@@ -5233,7 +5470,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "238": {
       "Name": "SnakeSign3",
@@ -5255,7 +5493,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "239": {
       "Name": "SnakeSign4",
@@ -5277,7 +5516,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "240": {
       "Name": "SignFood",
@@ -5299,7 +5539,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "241": {
       "Name": "SignCourt",
@@ -5321,7 +5562,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "242": {
       "Name": "SignArmourer",
@@ -5343,7 +5585,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "243": {
       "Name": "SignHealer",
@@ -5365,7 +5608,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "244": {
       "Name": "SignSmith",
@@ -5387,7 +5631,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "245": {
       "Name": "SignGuild",
@@ -5409,7 +5654,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "246": {
       "Name": "SignInn",
@@ -5431,7 +5677,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "247": {
       "Name": "SignMagic",
@@ -5453,7 +5700,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "248": {
       "Name": "SignWarning",
@@ -5475,7 +5723,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "249": {
       "Name": "SignShipwright",
@@ -5497,7 +5746,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "250": {
       "Name": "Clock1",
@@ -5519,7 +5769,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "251": {
       "Name": "Clock2",
@@ -5541,7 +5792,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "252": {
       "Name": "Bellows1",
@@ -5563,7 +5815,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "253": {
       "Name": "Bellows2",
@@ -5585,7 +5838,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "254": {
       "Name": "WhiteSquare",
@@ -5607,7 +5861,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "255": {
       "Name": "BlackSquare",
@@ -5629,7 +5884,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "256": {
       "Name": "StarPattern",
@@ -5651,7 +5907,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "257": {
       "Name": "Chest",
@@ -5673,7 +5930,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "258": {
       "Name": "ItemMoney",
@@ -5695,7 +5953,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "259": {
       "Name": "ItemPotion",
@@ -5717,7 +5976,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "260": {
       "Name": "ItemScroll",
@@ -5739,7 +5999,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "261": {
       "Name": "ItemWeapon",
@@ -5761,7 +6022,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "262": {
       "Name": "ItemShield",
@@ -5783,7 +6045,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "263": {
       "Name": "ItemKey",
@@ -5805,7 +6068,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "264": {
       "Name": "ItemGem",
@@ -5827,7 +6091,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "265": {
       "Name": "ItemHelm",
@@ -5849,7 +6114,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "266": {
       "Name": "ItemRing",
@@ -5871,7 +6137,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "267": {
       "Name": "ItemArmour",
@@ -5893,7 +6160,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "268": {
       "Name": "ItemAnkh",
@@ -5915,7 +6183,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "269": {
       "Name": "ItemTorch",
@@ -5937,7 +6206,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "270": {
       "Name": "ItemSandalwoodBox",
@@ -5959,7 +6229,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "271": {
       "Name": "ItemFood",
@@ -5981,7 +6252,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "272": {
       "Name": "HorseRight",
@@ -6003,7 +6275,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "273": {
       "Name": "HorseLeft",
@@ -6025,7 +6298,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "274": {
       "Name": "RidingHorseRight",
@@ -6047,7 +6321,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "275": {
       "Name": "RidingHorseLeft",
@@ -6069,7 +6344,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "276": {
       "Name": "RidingMagicCarpetRight",
@@ -6091,7 +6367,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "277": {
       "Name": "RidingMagicCarpetLeft",
@@ -6113,7 +6390,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "278": {
       "Name": "HolyFloorSymbol",
@@ -6135,7 +6413,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "279": {
       "Name": "KlimbLadderUp",
@@ -6157,7 +6436,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "280": {
       "Name": "KlimbLadderDown",
@@ -6179,7 +6459,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "281": {
       "Name": "Moon",
@@ -6201,7 +6482,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "282": {
       "Name": "SleepingInBed",
@@ -6223,7 +6505,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "283": {
       "Name": "Carpet2",
@@ -6245,7 +6528,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "284": {
       "Name": "BasicAvatar",
@@ -6267,7 +6551,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "285": {
       "Name": "Apparition",
@@ -6289,7 +6574,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "286": {
       "Name": "DeadBody",
@@ -6311,7 +6597,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "287": {
       "Name": "Splat",
@@ -6333,7 +6620,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "288": {
       "Name": "ShipSailsUp",
@@ -6355,7 +6643,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "289": {
       "Name": "ShipSailsRight",
@@ -6377,7 +6666,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "290": {
       "Name": "ShipSailsDown",
@@ -6399,7 +6689,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "291": {
       "Name": "ShipSailsLeft",
@@ -6421,7 +6712,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "292": {
       "Name": "ShipNoSailsUp",
@@ -6443,7 +6735,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "293": {
       "Name": "ShipNoSailsRight",
@@ -6465,7 +6758,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "294": {
       "Name": "ShipNoSailsDown",
@@ -6487,7 +6781,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "295": {
       "Name": "ShipNoSailsLeft",
@@ -6509,7 +6804,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "296": {
       "Name": "SkiffUp",
@@ -6531,7 +6827,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "297": {
       "Name": "SkiffRight",
@@ -6553,7 +6850,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "298": {
       "Name": "SkiffDown",
@@ -6575,7 +6873,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "299": {
       "Name": "SkiffLeft",
@@ -6597,7 +6896,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "300": {
       "Name": "PirateShipUp",
@@ -6619,7 +6919,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "301": {
       "Name": "PirateShipRight",
@@ -6641,7 +6942,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "302": {
       "Name": "PirateShipLeft",
@@ -6663,7 +6965,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "303": {
       "Name": "PirateShipDown",
@@ -6685,7 +6988,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": true
    },
    "304": {
       "Name": "SitChairUp",
@@ -6707,7 +7011,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "305": {
       "Name": "SitChairRight",
@@ -6729,7 +7034,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "306": {
       "Name": "SitChairDown",
@@ -6751,7 +7057,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "307": {
       "Name": "SitChairLeft",
@@ -6773,7 +7080,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "308": {
       "Name": "SitChairDown1",
@@ -6795,7 +7103,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "309": {
       "Name": "SitChairDown2",
@@ -6817,7 +7126,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "310": {
       "Name": "SitChairDown3",
@@ -6839,7 +7149,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "311": {
       "Name": "SitChairDown4",
@@ -6861,7 +7172,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "312": {
       "Name": "SitChairUp1",
@@ -6883,7 +7195,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "313": {
       "Name": "SitChairUp2",
@@ -6905,7 +7218,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "314": {
       "Name": "SitChairUp3",
@@ -6927,7 +7241,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "315": {
       "Name": "SitChairUp4",
@@ -6949,7 +7264,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "316": {
       "Name": "LordBritishMirror1",
@@ -6971,7 +7287,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "317": {
       "Name": "LordBritishMirror2",
@@ -6993,7 +7310,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "318": {
       "Name": "LordBritishMirror3",
@@ -7015,7 +7333,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "319": {
       "Name": "LordBritishMirror4",
@@ -7037,7 +7356,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "320": {
       "Name": "Wizard1",
@@ -7059,7 +7379,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "321": {
       "Name": "Wizard2",
@@ -7081,7 +7402,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "322": {
       "Name": "Wizard3",
@@ -7103,7 +7425,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "323": {
       "Name": "Wizard4",
@@ -7125,7 +7448,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "324": {
       "Name": "Bard1",
@@ -7147,7 +7471,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "325": {
       "Name": "Bard2",
@@ -7169,7 +7494,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "326": {
       "Name": "Bard3",
@@ -7191,7 +7517,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "327": {
       "Name": "Bard4",
@@ -7213,7 +7540,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "328": {
       "Name": "Fighter1",
@@ -7235,7 +7563,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "329": {
       "Name": "Fighter2",
@@ -7257,7 +7586,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "330": {
       "Name": "Fighter3",
@@ -7279,7 +7609,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "331": {
       "Name": "Fighter4",
@@ -7301,7 +7632,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "332": {
       "Name": "Avatar1",
@@ -7323,7 +7655,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "333": {
       "Name": "Avatar2",
@@ -7345,7 +7678,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "334": {
       "Name": "Avatar3",
@@ -7367,7 +7701,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "335": {
       "Name": "Avatar4",
@@ -7389,7 +7724,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "336": {
       "Name": "TownsPerson1",
@@ -7411,7 +7747,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "337": {
       "Name": "TownsPerson2",
@@ -7433,7 +7770,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "338": {
       "Name": "TownsPerson3",
@@ -7455,7 +7793,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "339": {
       "Name": "TownsPerson4",
@@ -7477,7 +7816,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "340": {
       "Name": "Merchant1",
@@ -7499,7 +7839,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "341": {
       "Name": "Merchant2",
@@ -7521,7 +7862,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "342": {
       "Name": "Merchant3",
@@ -7543,7 +7885,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "343": {
       "Name": "Merchant4",
@@ -7565,7 +7908,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "344": {
       "Name": "Jester1",
@@ -7587,7 +7931,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "345": {
       "Name": "Jester2",
@@ -7609,7 +7954,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "346": {
       "Name": "Jester3",
@@ -7631,7 +7977,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "347": {
       "Name": "Jester4",
@@ -7653,7 +8000,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "348": {
       "Name": "BardPlaying1",
@@ -7675,7 +8023,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "349": {
       "Name": "BardPlaying2",
@@ -7697,7 +8046,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "350": {
       "Name": "BardPlaying3",
@@ -7719,7 +8069,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "351": {
       "Name": "BardPlaying4",
@@ -7741,7 +8092,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "352": {
       "Name": "PersonStocks1",
@@ -7763,7 +8115,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "353": {
       "Name": "PersonStocks2",
@@ -7785,7 +8138,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "354": {
       "Name": "PersonStocks3",
@@ -7807,7 +8161,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "355": {
       "Name": "PersonStocks4",
@@ -7829,7 +8184,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "356": {
       "Name": "WallPrisoner1",
@@ -7851,7 +8207,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "357": {
       "Name": "WallPrisoner2",
@@ -7873,7 +8230,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "358": {
       "Name": "WallPrisoner3",
@@ -7895,7 +8253,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "359": {
       "Name": "WallPrisoner4",
@@ -7917,7 +8276,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "360": {
       "Name": "Child1",
@@ -7939,7 +8299,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "361": {
       "Name": "Child2",
@@ -7961,7 +8322,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "362": {
       "Name": "Child3",
@@ -7983,7 +8345,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "363": {
       "Name": "Child4",
@@ -8005,7 +8368,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "364": {
       "Name": "Begger1",
@@ -8027,7 +8391,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "365": {
       "Name": "Begger2",
@@ -8049,7 +8414,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "366": {
       "Name": "Begger3",
@@ -8071,7 +8437,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "367": {
       "Name": "Begger4",
@@ -8093,7 +8460,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "368": {
       "Name": "Guard1",
@@ -8115,7 +8483,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "369": {
       "Name": "Guard2",
@@ -8137,7 +8506,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "370": {
       "Name": "Guard3",
@@ -8159,7 +8529,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "371": {
       "Name": "Guard4",
@@ -8181,7 +8552,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "372": {
       "Name": "Apparation1",
@@ -8203,7 +8575,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "373": {
       "Name": "Apparation2",
@@ -8225,7 +8598,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "374": {
       "Name": "Apparation3",
@@ -8247,7 +8621,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "375": {
       "Name": "Apparation4",
@@ -8269,7 +8644,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "376": {
       "Name": "Blackthorn1",
@@ -8291,7 +8667,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "377": {
       "Name": "Blackthorn2",
@@ -8313,7 +8690,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "378": {
       "Name": "Blackthorn3",
@@ -8335,7 +8713,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "379": {
       "Name": "Blackthorn4",
@@ -8357,7 +8736,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "380": {
       "Name": "LordBritish1",
@@ -8379,7 +8759,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "381": {
       "Name": "LordBritish2",
@@ -8401,7 +8782,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "382": {
       "Name": "LordBritish3",
@@ -8423,7 +8805,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "383": {
       "Name": "LordBritish4",
@@ -8445,7 +8828,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "384": {
       "Name": "Seahorse1",
@@ -8467,7 +8851,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "385": {
       "Name": "Seahorse2",
@@ -8489,7 +8874,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "386": {
       "Name": "Seahorse3",
@@ -8511,7 +8897,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "387": {
       "Name": "Seahorse4",
@@ -8533,7 +8920,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "388": {
       "Name": "Squid1",
@@ -8555,7 +8943,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "389": {
       "Name": "Squid2",
@@ -8577,7 +8966,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "390": {
       "Name": "Squid3",
@@ -8599,7 +8989,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "391": {
       "Name": "Squid4",
@@ -8621,7 +9012,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "392": {
       "Name": "SeaSerpent1",
@@ -8643,7 +9035,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "393": {
       "Name": "SeaSerpent2",
@@ -8665,7 +9058,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "394": {
       "Name": "SeaSerpent3",
@@ -8687,7 +9081,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "395": {
       "Name": "SeaSerpent4",
@@ -8709,7 +9104,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "396": {
       "Name": "Shark1",
@@ -8731,7 +9127,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "397": {
       "Name": "Shark2",
@@ -8753,7 +9150,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "398": {
       "Name": "Shark3",
@@ -8775,7 +9173,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "399": {
       "Name": "Shark4",
@@ -8797,7 +9196,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "400": {
       "Name": "Rat1",
@@ -8819,7 +9219,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "401": {
       "Name": "Rat2",
@@ -8841,7 +9242,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "402": {
       "Name": "Rat3",
@@ -8863,7 +9265,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "403": {
       "Name": "Rat4",
@@ -8885,7 +9288,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "404": {
       "Name": "Bat1",
@@ -8907,7 +9311,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "405": {
       "Name": "Bat2",
@@ -8929,7 +9334,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "406": {
       "Name": "Bat3",
@@ -8951,7 +9357,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "407": {
       "Name": "Bat4",
@@ -8973,7 +9380,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "408": {
       "Name": "Spider1",
@@ -8995,7 +9403,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "409": {
       "Name": "Spider2",
@@ -9017,7 +9426,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "410": {
       "Name": "Spider3",
@@ -9039,7 +9449,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "411": {
       "Name": "Spider4",
@@ -9061,7 +9472,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "412": {
       "Name": "Ghost1",
@@ -9083,7 +9495,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "413": {
       "Name": "Ghost2",
@@ -9105,7 +9518,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "414": {
       "Name": "Ghost3",
@@ -9127,7 +9541,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "415": {
       "Name": "Ghost4",
@@ -9149,7 +9564,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "416": {
       "Name": "Slime1",
@@ -9171,7 +9587,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "417": {
       "Name": "Slime2",
@@ -9193,7 +9610,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "418": {
       "Name": "Slime3",
@@ -9215,7 +9633,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "419": {
       "Name": "Slime4",
@@ -9237,7 +9656,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "420": {
       "Name": "Gremlin1",
@@ -9259,7 +9679,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "421": {
       "Name": "Gremlin2",
@@ -9281,7 +9702,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "422": {
       "Name": "Gremlin3",
@@ -9303,7 +9725,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "423": {
       "Name": "Gremlin4",
@@ -9325,7 +9748,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "424": {
       "Name": "Mimic1",
@@ -9347,7 +9771,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "425": {
       "Name": "Mimic2",
@@ -9369,7 +9794,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "426": {
       "Name": "Mimic3",
@@ -9391,7 +9817,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "427": {
       "Name": "Mimic4",
@@ -9413,7 +9840,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "428": {
       "Name": "Reaper1",
@@ -9435,7 +9863,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "429": {
       "Name": "Reaper2",
@@ -9457,7 +9886,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "430": {
       "Name": "Reaper3",
@@ -9479,7 +9909,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "431": {
       "Name": "Reaper4",
@@ -9501,7 +9932,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "432": {
       "Name": "Gazer1",
@@ -9523,7 +9955,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "433": {
       "Name": "Gazer2",
@@ -9545,7 +9978,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "434": {
       "Name": "Gazer3",
@@ -9567,7 +10001,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "435": {
       "Name": "Gazer4",
@@ -9589,7 +10024,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "436": {
       "Name": "Shard",
@@ -9611,7 +10047,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "437": {
       "Name": "Crown",
@@ -9633,7 +10070,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "438": {
       "Name": "Sceptre",
@@ -9655,7 +10093,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "439": {
       "Name": "Amulet",
@@ -9677,7 +10116,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "440": {
       "Name": "StoneGargoyle1",
@@ -9699,7 +10139,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "441": {
       "Name": "StoneGargoyle2",
@@ -9721,7 +10162,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "442": {
       "Name": "StoneGargoyle3",
@@ -9743,7 +10185,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "443": {
       "Name": "StoneGargoyle4",
@@ -9765,7 +10208,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "444": {
       "Name": "InsectSwarm1",
@@ -9787,7 +10231,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "445": {
       "Name": "InsectSwarm2",
@@ -9809,7 +10254,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "446": {
       "Name": "InsectSwarm3",
@@ -9831,7 +10277,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "447": {
       "Name": "InsectSwarm4",
@@ -9853,7 +10300,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "448": {
       "Name": "Orc1",
@@ -9875,7 +10323,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "449": {
       "Name": "Orc2",
@@ -9897,7 +10346,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "450": {
       "Name": "Orc3",
@@ -9919,7 +10369,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "451": {
       "Name": "Orc4",
@@ -9941,7 +10392,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "452": {
       "Name": "Skeleton1",
@@ -9963,7 +10415,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "453": {
       "Name": "Skeleton2",
@@ -9985,7 +10438,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "454": {
       "Name": "Skeleton3",
@@ -10007,7 +10461,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "455": {
       "Name": "Skeleton4",
@@ -10029,7 +10484,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "456": {
       "Name": "Snake1",
@@ -10051,7 +10507,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "457": {
       "Name": "Snake2",
@@ -10073,7 +10530,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "458": {
       "Name": "Snake3",
@@ -10095,7 +10553,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "459": {
       "Name": "Snake4",
@@ -10117,7 +10576,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "460": {
       "Name": "Ettin1",
@@ -10139,7 +10599,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "461": {
       "Name": "Ettin2",
@@ -10161,7 +10622,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "462": {
       "Name": "Ettin3",
@@ -10183,7 +10645,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "463": {
       "Name": "Ettin4",
@@ -10205,7 +10668,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "464": {
       "Name": "Headless1",
@@ -10227,7 +10691,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "465": {
       "Name": "Headless2",
@@ -10249,7 +10714,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "466": {
       "Name": "Headless3",
@@ -10271,7 +10737,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "467": {
       "Name": "Headless4",
@@ -10293,7 +10760,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "468": {
       "Name": "Wisp1",
@@ -10315,7 +10783,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "469": {
       "Name": "Wisp2",
@@ -10337,7 +10806,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "470": {
       "Name": "Wisp3",
@@ -10359,7 +10829,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "471": {
       "Name": "Wisp4",
@@ -10381,7 +10852,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "472": {
       "Name": "Daemon1",
@@ -10403,7 +10875,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "473": {
       "Name": "Daemon2",
@@ -10425,7 +10898,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "474": {
       "Name": "Daemon3",
@@ -10447,7 +10921,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "475": {
       "Name": "Daemon4",
@@ -10469,7 +10944,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "476": {
       "Name": "Dragon1",
@@ -10491,7 +10967,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "477": {
       "Name": "Dragon2",
@@ -10513,7 +10990,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "478": {
       "Name": "Dragon3",
@@ -10535,7 +11013,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "479": {
       "Name": "Dragon4",
@@ -10557,7 +11036,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "480": {
       "Name": "SandTrap1",
@@ -10579,7 +11059,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "481": {
       "Name": "SandTrap2",
@@ -10601,7 +11082,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "482": {
       "Name": "SandTrap3",
@@ -10623,7 +11105,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "483": {
       "Name": "SandTrap4",
@@ -10645,7 +11128,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "484": {
       "Name": "Troll1",
@@ -10667,7 +11151,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "485": {
       "Name": "Troll2",
@@ -10689,7 +11174,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "486": {
       "Name": "Troll3",
@@ -10711,7 +11197,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "487": {
       "Name": "Troll4",
@@ -10733,7 +11220,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "488": {
       "Name": "PoisonField",
@@ -10755,7 +11243,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "489": {
       "Name": "MagicField",
@@ -10777,7 +11266,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "490": {
       "Name": "FireField",
@@ -10799,7 +11289,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "491": {
       "Name": "ColdField",
@@ -10821,7 +11312,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "492": {
       "Name": "Whirpool1",
@@ -10843,7 +11335,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "493": {
       "Name": "Whirpool2",
@@ -10865,7 +11358,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "494": {
       "Name": "Whirpool3",
@@ -10887,7 +11381,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "495": {
       "Name": "Whirpool4",
@@ -10909,7 +11404,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "496": {
       "Name": "MongBat1",
@@ -10931,7 +11427,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "497": {
       "Name": "MongBat2",
@@ -10953,7 +11450,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "498": {
       "Name": "MongBat3",
@@ -10975,7 +11473,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "499": {
       "Name": "MongBat4",
@@ -10997,7 +11496,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "500": {
       "Name": "Corpser1",
@@ -11019,7 +11519,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "501": {
       "Name": "Corpser2",
@@ -11041,7 +11542,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "502": {
       "Name": "Corpser3",
@@ -11063,7 +11565,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "503": {
       "Name": "Corpser4",
@@ -11085,7 +11588,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "504": {
       "Name": "RotWork1",
@@ -11107,7 +11611,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "505": {
       "Name": "RotWork2",
@@ -11129,7 +11634,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "506": {
       "Name": "RotWork3",
@@ -11151,7 +11657,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "507": {
       "Name": "RotWork4",
@@ -11173,7 +11680,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "508": {
       "Name": "ShadowLord1",
@@ -11195,7 +11703,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "509": {
       "Name": "ShadowLord2",
@@ -11217,7 +11726,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "510": {
       "Name": "ShadowLord3",
@@ -11239,7 +11749,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "511": {
       "Name": "ShadowLord4",
@@ -11261,7 +11772,8 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    },
    "512": {
       "Name": "BrickWallArchwayWithPortcullis",
@@ -11283,6 +11795,7 @@
       "IsBuilding": false,
       "DontDraw": false,
       "IsPushable": false,
-      "IsTalkOverable": false
+      "IsTalkOverable": false,
+      "IsBoardable": false
    }
 }

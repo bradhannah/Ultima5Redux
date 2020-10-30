@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux
 {
@@ -66,30 +67,14 @@ namespace Ultima5Redux
 
         public Moongates TheMoongates { get; }
 
+        public DataChunks<DataChunkName> DataChunks => _dataChunks;
+
         public byte ActivePlayerNumber
         {
             get => _dataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
             set => _dataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).SetChunkAsByte(value);
         }
         
-        /// <summary>
-        /// Total number of Gems
-        /// </summary>
-        public byte Gems
-        {
-            get => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
-            set => _dataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).SetChunkAsByte(value);
-        }
-
-        /// <summary>
-        /// Total nunmber of torches
-        /// </summary>
-        public byte Torches
-        {
-            get => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
-            set => _dataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).SetChunkAsByte(value);
-        }
-
         public bool IsTorchLit => TorchTurnsLeft > 0;
 
         /// <summary>
@@ -102,18 +87,9 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Total number of regular keys
-        /// </summary>
-        public byte Keys
-        {
-            get => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
-            set => _dataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).SetChunkAsByte(value);
-        }
-
-        /// <summary>
         /// Current location
         /// </summary>
-        public SmallMapReferences.SingleMapReference.Location Location => (SmallMapReferences.SingleMapReference.Location)_dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
+        internal SmallMapReferences.SingleMapReference.Location Location => (SmallMapReferences.SingleMapReference.Location)_dataChunks.GetDataChunk(DataChunkName.PARTY_LOC).GetChunkAsByte();
 
         /// <summary>
         /// Current floor
@@ -176,6 +152,22 @@ namespace Ultima5Redux
         /// </summary>
         public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
+        /// <summary>
+        /// Which map am I currently on?
+        /// </summary>
+        public LargeMap.Maps Map
+        {
+            get
+            {
+                if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                {
+                    return Floor == 0xFF ? LargeMap.Maps.Underworld : LargeMap.Maps.Overworld;
+                }
+
+                return LargeMap.Maps.Small;
+            }
+        }
+        
         #endregion
 
         #region Enumerations
@@ -221,7 +213,9 @@ namespace Ultima5Redux
             MOONSTONE_BURIED,
             MOONSTONE_Z_COORDS,
             ACTIVE_CHARACTER,
-            GRAPPLE
+            GRAPPLE,
+            SKULL_KEYS_QUANTITY,
+            MONSTERS_AND_STUFF_TABLE
         };
         #endregion
 
@@ -241,12 +235,17 @@ namespace Ultima5Redux
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         /// <param name="inventoryReferences"></param>
+        /// <param name="dataOvlReference"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap, NonPlayerCharacterReferences nonPlayerCharacters,
-            TileReferences tileReferences, GameState state, NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences)
+            LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap, 
+            NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences, GameState state, 
+            NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences, DataOvlReference dataOvlReference)
         {
+            SmallMapReferences.SingleMapReference mapRef = state.Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld?null:
+                smallMapReferences.GetSingleMapByLocation(state.Location, state.Floor); 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferences, overworldMap, underworldMap,
-                nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, inventoryReferences);
+                nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, inventoryReferences,
+                CharacterRecords, Map, mapRef, dataOvlReference);
         }
 
         /// <summary>
@@ -269,13 +268,11 @@ namespace Ultima5Redux
             DataChunk rawCharacterRecords = _dataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
             CharacterRecords = new PlayerCharacterRecords(rawCharacterRecords.GetAsByteList());
 
-
             // player location
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party _location", 0x2ED, 0x01, 0x00, DataChunkName.PARTY_LOC);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Z Coordinate of Party [10]", 0x2EF, 0x01, 0x00, DataChunkName.Z_COORD);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "X Coordinate of Party", 0x2F0, 0x01, 0x00, DataChunkName.X_COORD);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Y Coordinate of Party", 0x2F1, 0x01, 0x00, DataChunkName.Y_COORD);
-
 
             // quantities of standard items
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00, DataChunkName.FOOD_QUANTITY);
@@ -283,6 +280,7 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00, DataChunkName.KEYS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00, DataChunkName.GEMS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00, DataChunkName.TORCHES_QUANTITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x20B, 0x01, 0x00, DataChunkName.SKULL_KEYS_QUANTITY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Grapple", 0x209, 0x01, 0x00, DataChunkName.GRAPPLE);
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01, 0x00, DataChunkName.TORCHES_TURNS);
@@ -303,7 +301,6 @@ namespace Ultima5Redux
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Hour", 0x2D9, 0x01, 0x00, DataChunkName.CURRENT_HOUR);
             // 0x2DA is copy of 2D9 for some reason
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Minute", 0x2DB, 0x01, 0x00, DataChunkName.CURRENT_MINUTE);
-
 
             //dataChunks.AddDataChunk()
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "NPC Killed Bitmap", 0x5B4, 0x80, 0x00, DataChunkName.NPC_ISALIVE_TABLE);
@@ -333,20 +330,25 @@ namespace Ultima5Redux
             _npcIsMetArray = Utils.ListTo2DArray<bool>(npcMet, NonPlayerCharacterReferences.NPCS_PER_TOWN, 0x00, NonPlayerCharacterReferences.NPCS_PER_TOWN * SmallMapReferences.SingleMapReference.TOTAL_SMALL_MAP_LOCATIONS);
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_ANIMATION_STATES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - Current Environment", 0x6B4, 0x100, 0x00, DataChunkName.CHARACTER_ANIMATION_STATES);
 
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Character States - including xyz", 0x9B8, 0x200, 0x00, DataChunkName.CHARACTER_STATES);
 
             // load the overworld and underworld overlays
-            string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
-            string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
+            // they are stored in the saved.ool file - but also the brit.ool and under.ool file - not quite sure why it's stored in both...
+            // string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
+            // string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
+            string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
+            string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
 
             _overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(overworldOverlayPath, OverlayChunkName.Unused);
             _underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(underworldOverlayPath, OverlayChunkName.Unused);
 
-            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
-            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            // _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            // _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - including xyz", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - Overworld", 0x00, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Character Animation States - Underworld", 0x100, 0x100, 0x00, OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
             TheMoongates = new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS), GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS), 
                 GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
@@ -356,11 +358,10 @@ namespace Ultima5Redux
                 _dataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
             
             // import the players inventory
-            PlayerInventory = new Inventory(gameStateByteArray, dataRef, new MoonPhaseReferences(dataRef), TheMoongates);
+            PlayerInventory = new Inventory(gameStateByteArray, dataRef, new MoonPhaseReferences(dataRef), TheMoongates, this);
         }
         #endregion
 
-        #region Public Methods
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return _dataChunks.GetDataChunk(dataChunkName);
@@ -393,7 +394,7 @@ namespace Ultima5Redux
         /// <returns>true if NPC is alive</returns>
         public bool NpcIsAlive(NonPlayerCharacterReference npc)
         {
-            // the array isDead becasue LB stores 0=alive, 1=dead
+            // the array isDead because LB stores 0=alive, 1=dead
             // I think it's easier to evaluate if they are alive
             return _npcIsDeadArray[npc.MapLocationId][npc.DialogIndex] == false;
         }
@@ -402,83 +403,11 @@ namespace Ultima5Redux
         /// Sets the flag to indicate the NPC is met
         /// </summary>
         /// <param name="npc"></param>
-        public void SetMetNPC(NonPlayerCharacterReference npc)
+        public void SetMetNpc(NonPlayerCharacterReference npc)
         {
             _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = true;
         }
 
-        /// <summary>
-        /// Gets the number of active characters in the Avatars party
-        /// </summary>
-        /// <returns></returns>
-        public int GetNumberOfActiveCharacters()
-        {
-            // todo: this is inefficient!
-            return GetActiveCharacterRecords().Count;
-        }
-
-        /// <summary>
-        /// Gets all active character records for members in the Avatars party
-        /// </summary>
-        /// <returns></returns>
-        public List<PlayerCharacterRecord> GetActiveCharacterRecords()
-        {
-            List<PlayerCharacterRecord> activeCharacterRecords = new List<PlayerCharacterRecord>();
-
-            foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
-            {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
-                    activeCharacterRecords.Add(characterRecord);
-            }
-            if (activeCharacterRecords.Count == 0) throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party");
-            if (activeCharacterRecords.Count > PlayerCharacterRecords.MAX_PARTY_MEMBERS) throw new Ultima5ReduxException("There are too many party members in the party... party...");
-
-            return activeCharacterRecords;
-        }
-
-        /// <summary>
-        /// Gets a character from the active party by index
-        /// Throws an exception if you asked for a member who isn't there - so check first
-        /// </summary>
-        /// <param name="nPosition"></param>
-        /// <returns></returns>
-        public PlayerCharacterRecord GetCharacterFromParty(int nPosition)
-        {
-            Debug.Assert(nPosition >= 0 && nPosition < PlayerCharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
-            Debug.Assert(nPosition < CharacterRecords.TotalPartyMembers(), "You cannot request a character that isn't on the roster");
-
-            int nPartyMember = 0;
-            foreach (PlayerCharacterRecord characterRecord in CharacterRecords.Records)
-            {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InParty)
-                    if (nPartyMember++ == nPosition) return characterRecord;
-            }
-            throw new Ultima5ReduxException("I've asked for member of the party who is aparently not there...");
-        }
-
-        /// <summary>
-        /// Adds an NPC character to the party, and maps their CharacterRecord
-        /// </summary>
-        /// <param name="npc">the NPC to add</param>
-        public void AddMemberToParty(NonPlayerCharacterReference npc)
-        {
-            PlayerCharacterRecord record = CharacterRecords.GetCharacterRecordByNPC(npc);
-            if (record == null)
-            {
-                throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
-            }
-            record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InParty;
-        }
-
-        /// <summary>
-        /// Is my party full (at capacity)
-        /// </summary>
-        /// <returns>true if party is full</returns>
-        public bool IsFullParty()
-        {
-            Debug.Assert(!(CharacterRecords.TotalPartyMembers() > PlayerCharacterRecords.MAX_PARTY_MEMBERS), "You have more party members than you should.");
-            return (CharacterRecords.TotalPartyMembers() == PlayerCharacterRecords.MAX_PARTY_MEMBERS);
-        }
 
         /// <summary>
         /// Has the NPC met the avatar yet?
@@ -500,6 +429,5 @@ namespace Ultima5Redux
             _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = bHasMet;
         }
 
-        #endregion
     }
 }

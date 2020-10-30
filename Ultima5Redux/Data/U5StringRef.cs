@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.Data
 {
@@ -46,11 +47,20 @@ namespace Ultima5Redux.Data
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithPositiveExclamation), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithHello), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO).GetChunkAsStringList());
             _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBlacksmithWeHave), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperGeneralStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_GENERAL).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperInnkeeperStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_INNKEEPER).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperInnkeeper2Strings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_INNKEEPER_2).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperReagentStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_REAGENTS).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperGeneral2Strings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_GENERAL_2).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperHealerStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_HEALER).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperHealerStrings2), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_HEALER2).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBarKeepStrings), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BAR_KEEP).GetChunkAsStringList());
+            _strMap.Add(typeof(DataOvlReference.ShoppeKeeperBarKeepStrings2), dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2).GetChunkAsStringList());
             
             
         }
 
-        private Dictionary<Type, SomeStrings> _strMap;
+        private readonly Dictionary<Type, SomeStrings> _strMap;
 
         /// <summary>
         /// Returns a string based on an enumeration
@@ -64,6 +74,25 @@ namespace Ultima5Redux.Data
 
             return _strMap[strObj.GetType()].Strs[(int)strObj];
         }
-  
+
+        public string GetDirectionString(VirtualMap.Direction direction)
+        {
+            switch (direction)
+            {
+                case VirtualMap.Direction.Up:
+                    return (GetString(DataOvlReference.TravelStrings.NORTH));
+                case VirtualMap.Direction.Down:
+                    return (GetString(DataOvlReference.TravelStrings.SOUTH));
+                case VirtualMap.Direction.Left:
+                    return (GetString(DataOvlReference.TravelStrings.WEST));
+                case VirtualMap.Direction.Right:
+                    return (GetString(DataOvlReference.TravelStrings.EAST));
+                case VirtualMap.Direction.None:
+                    return "";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+        
     }
 }

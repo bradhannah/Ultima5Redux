@@ -87,6 +87,20 @@ namespace Ultima5Redux.Maps
             return TileReferenceDictionary[nSprite];
         }
 
+        public TileReference GetTileReferenceOfKeyIndex(int nSprite)
+        {
+            TileReference tileReference = GetTileReference(nSprite);
+            // if it isn't part of an animation then we can trust the tile index provided in the MapUnitState 
+            if (!tileReference.IsPartOfAnimation) return tileReference;
+
+            Debug.Assert(tileReference.AnimationIndex >= 0);
+            if (tileReference.AnimationIndex == 0) return tileReference;
+
+            // the AnimationIndex is an offset from the index,so by subtracting it, we get the key frame (initial)
+            // frame which is handy if the visual asset is described by it's key index
+            return GetTileReference(tileReference.Index - tileReference.AnimationIndex);
+        }
+
         /// <summary>
         /// Is the sprite a dirt path tile?
         /// </summary>
@@ -149,20 +163,14 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderUp(int nSprite)
-        {
-            return nSprite == GetTileNumberByName("LadderUp");
-        }
+        public bool IsLadderUp(int nSprite) => nSprite == GetTileNumberByName("LadderUp");
 
         /// <summary>
         /// Is the sprite a down ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderDown(int nSprite)
-        {
-            return nSprite == GetTileNumberByName("LadderDown");
-        }
+        public bool IsLadderDown(int nSprite) => nSprite == GetTileNumberByName("LadderDown");
 
         /// <summary>
         /// is the sprite an up or a down ladder?
@@ -282,6 +290,15 @@ namespace Ultima5Redux.Maps
               GetTileNumberByName("SmallSign") == nSprite ||
               GetTileNumberByName("SignWarning") == nSprite);
         }
+
+        public bool IsSkiff(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Skiff");
+        public bool IsMagicCarpet(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Carpet2");
+        public bool IsHorse(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Horse");
+        // a bit a rough cut right now, this will need to be refined as the monsters are assigned actual behaviours
+        public bool IsMonster(int nSprite) => nSprite >= 384 && nSprite <= 511;
+        public bool IsFrigate(int nSprite) =>
+            GetTileReference(nSprite).Name.StartsWith("Ship")
+            || GetTileReference(nSprite).Name.StartsWith("Pirate");
 
         /// <summary>
         /// is it a door with a view window? locked or unlocked

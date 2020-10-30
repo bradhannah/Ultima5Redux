@@ -16,7 +16,7 @@ namespace Ultima5Redux.Maps
         public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } = new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
         /// <summary>
         /// Maps the xy based on the location
-        /// </summary>
+        /// </summary> 
         private Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXYLocations { get; } = new Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location>();
 
         /// <summary>

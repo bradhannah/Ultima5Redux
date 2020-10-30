@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Ultima5Redux.Data;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.Dialogue
 { 
@@ -295,7 +295,7 @@ namespace Ultima5Redux.Dialogue
                         if (avatarNameResponse.ToLower() == _gameStateRef.AvatarsName.ToLower())
                         {
                             // i met them
-                            _gameStateRef.SetMetNPC(Npc);
+                            _gameStateRef.SetMetNpc(Npc);
                             EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, GetConversationStr(DataOvlReference.ChunkPhrasesConversation.PLEASURE)));
                             break;
                         }
@@ -327,7 +327,7 @@ namespace Ultima5Redux.Dialogue
                         EnqueueToOutputBuffer(item);
                         break;
                     case TalkScript.TalkCommand.JoinParty:
-                        if (_gameStateRef.IsFullParty())
+                        if (_gameStateRef.CharacterRecords.IsFullParty())
                         {
                             string noJoinResponse = GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_1) +
                                 GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_2);

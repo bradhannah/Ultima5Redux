@@ -23,8 +23,7 @@ namespace Ultima5Redux.Maps
         //11,9 to 26,9 is the x, then y coordinate of the first location replaced by the respective tile from 11,0-18,0.
         //11,10 to 26,10 is the x, then y coordinate of the second location replaced by the respective tile from 11,0-18,0.
 
-
-        private CombatMapReference.SingleCombatMapReference _mapRef;
+        private readonly CombatMapReference.SingleCombatMapReference _mapRef;
 
         private const int MAX_X_COLS =11 , MAX_Y_ROWS = 11;
         private const int ROW_BYTES = 32;
@@ -70,13 +69,7 @@ namespace Ultima5Redux.Maps
             fixed byte zeroes[5];
         };
 
-        public string Description
-        {
-            get
-            {
-                return _mapRef.Description;
-            }
-        }
+        public string Description => _mapRef.Description;
 
         /// <summary>
         /// Special function to read the map data only, putting it into a 2D array
@@ -97,7 +90,7 @@ namespace Ultima5Redux.Maps
 
         // These are the legacy structures read in from the file. They will need to be abstracted into useable data.
         private MapRow _row0; // Information contains the new tiles once a trigger happens  
-        private List<MapPlayerPosRow> _row1To4Player=new List<MapPlayerPosRow>(4); // row 1 = east, row 2 = west, row 3 = south, row 4 = north
+        private readonly List<MapPlayerPosRow> _row1To4Player=new List<MapPlayerPosRow>(4); // row 1 = east, row 2 = west, row 3 = south, row 4 = north
         private MapMonsterTileRow _row5Monster; 
         private MapMonsterXRow _row6MonsterX;
         private MapMonsterYRow _row7MonsterY;  
@@ -131,6 +124,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="u5Directory">Directory of data files</param>
         /// <param name="mapRef">specific combat map reference</param>
+        /// <param name="tileOverrides"></param>
         public CombatMap (string u5Directory, CombatMapReference.SingleCombatMapReference mapRef, TileOverrides tileOverrides) : base (u5Directory, tileOverrides, null)
         {
             string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);

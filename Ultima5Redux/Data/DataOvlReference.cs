@@ -84,7 +84,37 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_SELLING,
             SHOPPE_KEEPER_BLACKSMITH_WE_HAVE,
             SHOPPE_KEEPER_BLACKSMITH_HELLO,
-            SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM
+            SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM,
+            SHOPPE_KEEPER_GENERAL,
+            SHOPPE_KEEPER_INNKEEPER,
+            SHOPPE_KEEPER_INNKEEPER_2,
+            REAGENT_QUANTITES,
+            REAGENT_BASE_PRICES,
+            SHOPPE_KEEPER_GENERAL_2,
+            SHOPPE_KEEPER_REAGENTS,
+            SHOPPE_KEEPER_TOWNES_PROVISIONS,
+            SHOPPE_KEEPER_TOWNES_REAGENTS,
+            SHOPPE_KEEPER_TOWNES_HEALING,
+            SHOPPE_KEEPER_TOWNES_TAVERN,
+            SHOPPE_KEEPER_TOWNES_INN,
+            SHOPPE_KEEPER_TOWNES_SHIPS,
+            SHOPPE_KEEPER_TOWNES_HORSES,
+            SHOPPE_KEEPER_HEALER,
+            SHOPPE_KEEPER_HEALER2,
+            HEALER_HEAL_PRICES,
+            HEALER_CURE_PRICES,
+            HEALER_RESURRECT_PRICES,
+            X_DOCKS,
+            Y_DOCKS,
+            BAR_KEEP_GOSSIP_WORDS,
+            BAR_KEEP_GOSSIP_PEOPLE,
+            BAR_KEEP_GOSSIP_PLACES,
+            SHOPPE_KEEPER_BAR_KEEP,
+            BAR_KEEP_GOSSIP_MAP,
+            SHOPPE_KEEPER_BAR_KEEP_2,
+            INN_DESCRIPTION_INDEXES,
+            INN_BED_X_COORDS,
+            INN_BED_Y_COORDS
         };
 
         public enum Equipment
@@ -429,6 +459,24 @@ namespace Ultima5Redux.Data
             DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE, GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q,
             PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME, MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
         }
+        // [0] = {string} "\n\nDost thou pay?\n\n:"
+        // [1] = {string} "Yes\n"
+        // [2] = {string} "No!\n"
+        // [3] = {string} "A merchant says:\n"GET THAT HORSE OUT OF HERE!"\n"
+        // [4] = {string} "Thou wilt give\nhalf thy gold to\ncharity!"
+        // [5] = {string} "A guard demands\na "
+        // [6] = {string} " gp tribute\nto Blackthorn!"
+        // [7] = {string} "Give now the\npassword, bearer\nof the Badge!"
+        // [8] = {string} "\n\nYour response?\n"
+        // [9] = {string} "Pass, friend!"
+        // [10] = {string} "The guard offers\nno response!\n"
+        // [11] = {string} "No response!\n"
+        // [12] = {string} "Don't hurt me!\nPlease go away!"
+        // [13] = {string} "A merchant says:\n"Come see me at\nmy shoppe, "
+        // [14] = {string} "when\nit's open!"\n"
+        // [15] = {string} "\nNobody's here!\n"
+        // [16] = {string} "\n"Zzzzzz..."\n"
+        // [17] = {string} "\nNo response!\n"
 
         public enum LocationStrings
         {
@@ -450,7 +498,7 @@ namespace Ultima5Redux.Data
             WHAT, EARTHQUAKE, ZZZ, BRIT_DAT_2, EXIT_TO_DOS, N, V1_16, SOUND, OFF, ON, WHAT_2, NEW_DQUOTE, PASS_SEEKER, NOT_SACRED_QUEST, PASSAGE_DENIED, ROUGH_SEAS }
 
         public enum OpeningThingsStrings { T = 0, HOU_DOST_FIND, A_HIDDEN_DOOR, KEY_BROKE, SUCCESS, KEY_BROKE2, NEWLINE, NO_KEYS, KEY_BROKE3, NO_KEYS2, CHEST_UNLOCKED, KEY_BROKE4,
-            ALREADY_OPEN, WHAT, NO_KEYS3, KEY_BROKE6, UNLOCKED, KEY_BROKE5, NO_ONE_IS_THERE, KEY_BROKE7, COULDNT_FIND_NPC, N_N_I_THANK_THREE_N, UNLOCKED2, NO_LOCK, FOUND,
+            ALREADY_OPEN, WHAT, NO_KEYS3, KEY_BROKE6, UNLOCKED, KEY_BROKE5, NO_ONE_IS_THERE, KEY_BROKE7, COULDNT_FIND_NPC, N_N_I_THANK_THEE_N, UNLOCKED2, NO_LOCK, FOUND,
             CANT, NOTHING_TO_OPEN, TRAPPED, CHEST_EMPTY, CHEST_OPENED, ALREADY_OPEN2, WHAT2, ITS_OPEN, TOO_HEAVY, LOCKED_N, OPENED
         }
 
@@ -578,6 +626,268 @@ namespace Ultima5Redux.Data
         public enum ChunkPhrasesConversation { CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
             YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F, YOU_SEE = 0x11, I_AM_CALLED = 0x12 };
 
+        public enum ShoppeKeeperGeneralStrings
+        {
+            DOT_DOT_DOT, N_THY_INTEREST_Q_QUOTE, YES_N_N_FINE_BANG_WE_SELL_COLON, NO, THE_STABLES_ARE_CLOSED_DOT_N, 
+            YES_N_N, N_N_DEAL_Q_QUOTE, NO_2, YES_BANG, N_N_QUOTE_THOU_COULDST_NOT_AFFORD_TO,
+            FEED_IT_BANG_QUOTE_N_YELLS_SK_N, NO_3
+        }
+
+        // [0] = {string} "..."
+        // [1] = {string} "\nThy interest?" "
+        // [2] = {string} "Yes\n\n"Fine! We sell:\n\n"
+        // [3] = {string} "No"
+        // [4] = {string} "The stables are closed.\n"
+        // [5] = {string} "Yes\n\n""
+        // [6] = {string} "\n\nDeal?" "
+        // [7] = {string} "No"
+        // [8] = {string} "Yes!"
+        // [9] = {string} "\n\n"Thou couldst not afford to "
+        // [10] = {string} "feed it!"\nyells $.\n"
+        // [11] = {string} "No"
+
+        public enum ShoppeKeeperInnkeeperStrings
+        {
+            I_AM_SORRY_COMMA_N, MILADY, SIR, COMMA_BUT_WE_HAVE_NO_ROOM_N_N, XXX_N_WILT_THOU_TAKE_N_IT_Q_DQ,
+            N_N, HIGHWAYMAN_BANG_CHEAP_OUT_BANG, SCREAMS_N_NAME_N, HAVE_A_PLEASENT_NIGHT_COMMA,
+            MILADY_2, SIR_2, BANG_N_SAYS_NAME_DOT_N_N, ZZZZ_DOTS_N_N, MORNING_BANG_N, _HAS_N_PASSED_AWAY_DOT_N,
+            
+        }
+        // [0] = {string} ""I am sorry,\n"
+        // [1] = {string} "milady"
+        // [2] = {string} "sir"
+        // [3] = {string} ", but we\nhave no room\navailable."\n\n"
+        // [4] = {string} "\nWilt thou take\nit?" "
+        // [5] = {string} "\n\n"
+        // [6] = {string} ""Highwaymen!\nCheap, at that!\nOUT!" "
+        // [7] = {string} "screams\n$.\n"
+        // [8] = {string} ""Have a pleasant\nnight, "
+        // [9] = {string} "milady"
+        // [10] = {string} "sir"
+        // [11] = {string} "!"\nsays $.\n\n"
+        // [12] = {string} "Zzzzzz....\n\n"
+        // [13] = {string} "Morning!\n"
+        // [14] = {string} " has\npassed away.\n"
+        
+        public enum ShoppeKeeperInnkeeper2Strings
+        {
+            ASKS_N_WHO_WILL_STAY_Q, NOBODY_N_N, N_N, THY_FRIEND, _WILL_NOT_LEAVE_THEE_BANG_N_N,
+            DQ_THE_RATE_FOR_OUR_MOST_COMFORTABLE_ROOM_WILL_BE_, GLD_GOLD_PER_MONTH_DUE_AT_CHECKOUT_DOT,
+            N_WILT_THOU_TAKE_IT_Q_DQ, N_N_2, I_THANK_THEE_DQ_N_SAYS_NAME_DOT_N_N, N_N_ONE_MUST_FIRST_BE_LEFT_BEHIND_BANG_N_N, 
+            N_N_DQ_NO_ONE_HERE_IS_FROM_THY_PARTY_BANG_DQ_N_SAYS_NAME_DOT_N_N, N_N_DQ_WHO_WILL_N_CHECK_OUT_Q_DQ,
+            ___GUEST, __REGISTER_COLON_N_N, NO_ONE_N_N, N_N_DQ_THAT_WILL_BE_GLD_GOLD_PLEASE_DOT_DQ_N_N,
+            THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N, I_HOPE_THOU_HAST_THY_STAY_ENJOYABLE_COMMA_N, SAYS_NAME_DOT_N_N,
+            NO, YES, N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N, LEAVE_A_COMPANION_OR_TO_REST_FOR_NIGHT_Q_DQ,
+            IS_THERE_N_ANYTHING_MORE_N_I_CAN_DO_FOR_N_THEE_Q_DQ 
+        }
+        
+        // [0] = {string} "$ asks,\n"Who will\nstay?" "
+        // [1] = {string} "Nobody\n\n"
+        // [2] = {string} "\n\n"
+        // [3] = {string} "Thy friend"
+        // [4] = {string} " will not leave thee!\n\n"
+        // [5] = {string} ""The rate for\nour most comfortable room will be "
+        // [6] = {string} "% gold per month, due at check-out."
+        // [7] = {string} "\nWilt thou take\nit?" "
+        // [8] = {string} "\n\n"
+        // [9] = {string} ""I thank thee."\nsays $.\n\n"
+        // [10] = {string} "\n\nOne must first be left behind!\n\n"
+        // [11] = {string} "\n\n"No one here is from thy party!"\nsays $.\n\n"
+        // [12] = {string} "\n\n"Who will\ncheck out?" "
+        // [13] = {string} "    GUEST"
+        // [14] = {string} "  REGISTER:\n\n"
+        // [15] = {string} "No one\n\n"
+        // [16] = {string} "\n\n"That will be % gold, please."\n\n""
+        // [17] = {string} "Thy friend has died, by the way."\n"
+        // [18] = {string} "I hope thou hast found thy stay enjoyable,"\n"
+        // [19] = {string} "says $.\n\n"
+        // [20] = {string} "No"
+        // [21] = {string} "Yes"
+        // [22] = {string} "\n\n$ asks,\n"Art thou here\nto Pick up or\n"
+        // [23] = {string} "Leave a\ncompanion, or\nto Rest for the\nnight?" "
+        // [24] = {string} ""Is there\nanything more\nI can do for\nthee?" "
+      
+
+        public enum ShoppeKeeperGeneral2Strings
+        {
+            N_N_COLON, N_COLON, N_N_DQ, N_N_DQ_2, SAYS_NAME_DOT_N, NO, YES, N_N_DQ_3, N_N_INTERESTED_Q_DQ,
+            NO_N_N_DQ_WHAT_ELSE_Q_N_N, YES_N, N_DQ_SOLID_BANG_N_SAYS_NAME_N_N_DQ_WHAT_ELSE_N, M_LADY,
+            M_LORD, Q_N_N, A_DOTS_KEYS_N, B_DOTS_GEMS_N, C_DOTS_TORCHES_N_N, THY_CONCERN_Q_DQ,
+            YES_N_N_DQ__WE_SELL_COLON_N_N, NO_2, N_N_DQ_THOU_CANST_CARRY_BANG_DQ_N_N, N_N_DQ_4,
+            IS_THIS_THY_NEED_Q_DQ, N_COLON_2, NO_N_N_DQ_WHAT_ELSE_Q_N_N_2, YES_N_2, N_DQ_I_THANK_THEE_BANG_DQ_N_SAYS_NAME__N,
+            DQ_ANYTHING_ELSE_Q_N_N
+        }
+       
+        // [0] = {string} "\n\n:"
+        // [1] = {string} "\n:"
+        // [2] = {string} "\n\n""
+        // [3] = {string} "\n\n""
+        // [4] = {string} "says $.\n"
+        // [5] = {string} "No"
+        // [6] = {string} "Yes"
+        // [7] = {string} "\n\n""
+        // [8] = {string} "\n\nInterested?" "
+        // [9] = {string} "No\n\n"What else, then?\n\n"
+        // [10] = {string} "Yes\n"
+        // [11] = {string} "\n"Sold!"\nsays $.\n\n"What else, \n"
+        // [12] = {string} "m'lady"
+        // [13] = {string} "m'lord"
+        // [14] = {string} "?\n\n"
+        // [15] = {string} "a.........Keys\n"
+        // [16] = {string} "b.........Gems\n"
+        // [17] = {string} "c......Torches\n\n"
+        // [18] = {string} "Thy concern?" "
+        // [19] = {string} "Yes\n\n"We sell:\n\n"
+        // [20] = {string} "No"
+        // [21] = {string} "\n\n"Thou canst not carry any more!"\n\n"
+        // [22] = {string} "\n\n""
+        // [23] = {string} " Is this thy need?" "
+        // [24] = {string} "\n:"
+        // [25] = {string} "No\n\n"What else?\n\n"
+        // [26] = {string} "Yes\n"
+        // [27] = {string} "\n"I thank thee!"\nsays $.\n"
+        // [28] = {string} ""Anything else?\n\n"
+
+        public enum ShoppeKeeperReagentStrings
+        {
+            SULFUR_ASH, GINSENG, GARLIC, SPIDER_SILK, BLOOD_MOSS, BLACK_PEARL, NIGHTSAHDE, MANDRAKE
+        }
+
+        // [0] = {string} "Sulfur Ash"
+        // [1] = {string} "Ginseng"
+        // [2] = {string} "Garlic"
+        // [3] = {string} "Spider Silk"
+        // [4] = {string} "Blood Moss"
+        // [5] = {string} "Black Pearl"
+        // [6] = {string} "Nightshade"
+        // [7] = {string} "Mandrake"        
+
+        public enum ShoppeKeeperHealerStrings
+        {
+            N_N_DQ_WHO_NEEDS_MY_AID_Q_DQ, NO_ONE, FOR_GOLD_GOLD_DO_N_N_WILT_THO_N_PAY_Q_DQ, YES, NO, NO_2, YES_N_N,
+            DQ_WE_HAVE_POWERS_TO_CURE_HEAL_RESURRECT_DOT_DQ_N, SAYS_NAME_DOT_N_N_DQ_WHAT_IS_THE_NATURE_OF_THY_NEED_Q_DQ,
+            CURING, N_N, RECEIVE_NOW_THE_LIGHT_BANG_DQ, I_CAN_CURE_THY_POISONED_BODY, HEALING, N_N_2,
+            RECEIVE_NOW_THE_LIGHT_BANG_DQ_2, I_CAN_HEAL_THEE, RESURRECT, N_N_3, I_CAN_RAISE_THIS_UNFORTUNATE_PERSON_FROM,
+            THE_DEAD, NOTHING, N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N, AID_THEE_Q
+        }
+        // [22] = {string} "\n\n"Who needs my aid?" "
+        // [23] = {string} "No one"
+        // [24] = {string} "for % gold.\n\nWilt thou\npay?" "
+        // [25] = {string} "Yes"
+        // [26] = {string} "No"
+        // [27] = {string} "No"
+        // [28] = {string} "Yes\n\n"
+        // [29] = {string} ""We have powers to Cure, Heal, or Resurrect."\n"
+        // [30] = {string} "says $.\n\n"What is the nature of thy need?" "
+        // [31] = {string} "Curing"
+        // [32] = {string} "\n\n""
+        // [33] = {string} "Receive now the Light!""
+        // [34] = {string} "I can cure thy poisoned body "
+        // [35] = {string} "Healing"
+        // [36] = {string} "\n\n""
+        // [37] = {string} "Receive now the Light!""
+        // [38] = {string} "I can heal thee "
+        // [39] = {string} "Resurrect"
+        // [40] = {string} "\n\n""
+        // [41] = {string} "I can raise this unfortunate person from "
+        // [42] = {string} "the dead "
+        // [43] = {string} "Nothing"
+        // [44] = {string} "\n\n"Is there any other way in which I may\n"
+        // [45] = {string} "aid thee?" "
+
+
+        public enum ShoppeKeeperBarKeepStrings
+        {
+            DQ, OF_WHAT_WOULDST_N_THOU_HEAD_MY_N_LORE_COMMA_SP, Q_DQ_N_N_YOU_RESPOND_COLON_N, N_N,
+            THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N, N_N_FAIR_NUFF_Q_DQ, NO_N_N, YES_N_N, SORRY_COMMA_SP, N_SAYS_SP,
+            DOT_N_N, NO, YES_N_N_2, DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ, NO_2, YES_N_N_3, YELLS_NPC_DOT_N, MILADY,
+            SIR, Q_DQ
+        }
+        
+        // from 0x9f0e-9feb
+        // [0] = {string} """
+        // [1] = {string} "Of what wouldst\nthou hear my\nlore, "
+        // [2] = {string} "?"\n\nYou respond:\n"
+        // [3] = {string} "\n\n"
+        // [4] = {string} ""That, I cannot help thee with.\n\n"
+        // [5] = {string} "\n\nFair 'nuff?" "
+        // [6] = {string} "No\n\n"
+        // [7] = {string} "Yes\n\n"
+        // [8] = {string} ""Sorry, "
+        // [9] = {string} "\nsays "
+        // [10] = {string} ".\n\n"
+        // [11] = {string} "No"
+        // [12] = {string} "Yes\n\n""
+        // [13] = {string} ""Anything else\nfor thee?" "
+        // [14] = {string} "No"
+        // [15] = {string} "Yes\n\n""
+        // [16] = {string} "yells $.\n"
+        // [17] = {string} "milady"
+        // [18] = {string} "sir"
+        // [19] = {string} "?" "
+        // [20] = {string} "Yes"
+        // [21] = {string} "No"
+        // [22] = {string} "F\n\n"
+        // [23] = {string} "Yes"
+        // [24] = {string} "No"
+        // [25] = {string} "Yes\n\n"
+        // [26] = {string} "No"
+        // [27] = {string} "S\n\n"
+        // [28] = {string} "Yes\n\n"
+        // [29] = {string} "No"
+        // [30] = {string} "Yes"
+        // [31] = {string} "No"        
+        
+        public enum ShoppeKeeperHealerStrings2 { DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME }
+
+        public enum ShoppeKeeperBarKeepStrings2
+        {
+            TWO, THREE, FOUR, FIVE, SIX, SIR, MILADY, THAT_WILL_BE_SP, SP_GOLD_FOR_THE_SP, S_OF_YE_COMMA_N, DQ_N_N_CANT_PAY_Q_B_BEAT_IT_BANG_DQ_N_YELLS_SP,
+            N_ENJOY_BANG_DQ_N_N, N_N_DQ_I_BEG_THY_N_PARDON_COMMA_SP, COMMA_DQ_N_SAYS_SP, DOT_N_DQ_BUT_HAVENT_N_THY_HAD_ENOUGH_N_TO_DRINK_Q_DQ,
+            YES_N_N, NO_BANG, OUR_WINE_LIST_COMMA_N, DOT_N_N, A_WINE_1_N, B_WINE_2_N, C_WINE_3_N, D_WINE_4_N, E_WINE_5_N, F_WINE_6_N,
+            THY_CHOICE_Q_DQ, N_N_DQ_AH_A_FINE_CHOICE_COMMA_SP, DQ_N_N_DQ_CANT_PAY_Q_BEAT_IT_BANG_DQ_N_YELLS_SP, N_ENJOY_BANG_DQ,
+            N_N_HOW_MANY_WOULDST_N_THOU_LIKE_Q_DQ_SP, N_N_DQ_HRUMPH_DOT_DQ, N_N, THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N,
+            YELLS_SP, DOT_N, DQ_THOU_CANST_AFFORD_ONLY_SP, BANG_DQ_N_N, N_N_2
+        }
+
+        // [0] = {string} "two"
+        // [1] = {string} "three"
+        // [2] = {string} "four"
+        // [3] = {string} "five"
+        // [4] = {string} "six"
+        // [5] = {string} "sir"
+        // [6] = {string} "milady"
+        // [7] = {string} "That will be "
+        // [8] = {string} " gold for the "
+        // [9] = {string} " of ye,\n"
+        // [10] = {string} ""\n\n"CAN'T PAY?\nBeat it!"\nyells "
+        // [11] = {string} "\nEnjoy!"\n\n"
+        // [12] = {string} "\n\n"I beg thy\npardon, "
+        // [13] = {string} ","\nsays "
+        // [14] = {string} ".\n"But haven't\nye had enough\nto drink?" "
+        // [15] = {string} "Yes\n\n"
+        // [16] = {string} "No!"
+        // [17] = {string} ""Our wine list,\n"
+        // [18] = {string} ".\n\n"
+        // [19] = {string} "a) Rose.......18\n"
+        // [20] = {string} "b) Claret....192\n"
+        // [21] = {string} "c) Sauterne...79\n"
+        // [22] = {string} "d) Muscatel...30\n"
+        // [23] = {string} "e) Moselle...275\n"
+        // [24] = {string} "f) Chablis....98\n\n"
+        // [25] = {string} "Thy choice?" "
+        // [26] = {string} "\n\n"Ah, a fine\nchoice, "
+        // [27] = {string} ""\n\n"CAN'T PAY?\nBeat it!"\nyells "
+        // [28] = {string} "\nEnjoy!""
+        // [29] = {string} "\n\nHow many wouldst\nthou like?" "
+        // [30] = {string} "\n\n"Hrumph.""
+        // [31] = {string} "\n\n"
+        // [32] = {string} ""Thou hast\nneither gold nor\nneed! Out!"\n"
+        // [33] = {string} "yells "
+        // [34] = {string} ".\n"
+        // [35] = {string} ""Thou canst\nafford only "
+        // [36] = {string} "!"\n\n"
+        // [37] = {string} "\n\n"
         #endregion
 
         #region Public Methods
@@ -727,6 +1037,14 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinates of shrines", 0x1F86, 0x8);            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Arms seller's name index", 0x22da, 0x12);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x22ec, 0x20c);
+
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that have a tavern", 0x23ea, 0x09, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_TAVERN);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell horses", 0x23fa, 0x04, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_HORSES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell ships", 0x240a, 0x04, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_SHIPS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell reagents", 0x241a, 0x05, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell provisions", 0x242a, 0x03, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that sell healing", 0x243a, 0x07, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_HEALING);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Shoppe Keeper - Towne indexes that have an inn", 0x244a, 0x06, 0x00, DataChunkName.SHOPPE_KEEPER_TOWNES_INN);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Indexes to the dialog text (add + 0x10) (see .TLK)", 0x24f8, 0x13e, 0x10);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".DAT file names (4 files)", 0x2636, 0x2b);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2661, 0x9);
@@ -754,29 +1072,32 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3664, 0x322);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Chunking information for Britannia's map, 0xFF the chunk only consists of tile 0x1, otherwise see BRIT.DAT", 0x3886, 0x100);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random filenames, texts and unknown", 0x3986, 0xaf);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0x7d);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3a35, 0xd);
 
-            // ARMOUR_ACCESSORY_BASE_PRICES,
-            // ARMOUR_BASE_PRICES,
-            // WEAPON_BASE_PRICES,
-            // WEAPONS_SOLD_BY_MERCHANTS
+            // Another big thank you to Markus Brenner (@minstrel_dragon) for providing the "actual" base prices that 
+            // helped track down the meaning and location of the reagent data
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Reagent base prices", 0x3a42, 0x28, 0, DataChunkName.REAGENT_BASE_PRICES); 
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Reagent quantities", 0x3a6a, 0x28, 0, DataChunkName.REAGENT_QUANTITES); 
+
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "All equipment base prices", 0x3a92, 0x60, 0, DataChunkName.EQUIPMENT_BASE_PRICE); 
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3aa2, 0x2);
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Armour base prices", 0x3aa4, 0xc, 0, DataChunkName.ARMOUR_BASE_PRICES);
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Weapon base prices", 0x3ab2, 0x2e, 0, DataChunkName.WEAPON_BASE_PRICES);
-            //List<UInt16> weaponprices =
-              //  _dataChunks.GetDataChunk(DataChunkName.WEAPON_BASE_PRICES).GetChunkAsUint16List();
-            
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Nil", 0x3ae0, 0x2);
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
                 "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	",
                 0x3af2, 0x48, 0, DataChunkName.WEAPONS_SOLD_BY_MERCHANTS);
             
+            // Healer prices
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
+                "Heal Prices", 0x3d96, 0x08, 0, DataChunkName.HEALER_HEAL_PRICES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, 
+                "Cure Prices", 0x3d9e, 0x08, 0, DataChunkName.HEALER_CURE_PRICES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, 
+                "Resurrect Prices", 0x3da6, 0x10, 0, DataChunkName.HEALER_RESURRECT_PRICES); 
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3b3a, 0x38);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Innkeeper welcome text index into SHOPPE.DAT (+0x0, 2 bytes for each index)", 0x3b72, 0x8);
             // this section contains information about hidden, non-regenerating objects (e.g. the magic axe in the dead tree in Jhelom); there are
             // only 0x71 such objects; the last entry in each table is 0
+            //3db0
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object type (tile - 0x100) (item)", 0x3E88, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object quality (e.g. potion type, number of gems) (item)", 0x3EFA, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party _location\") (item)", 0x3F6C, 0x72);
@@ -794,23 +1115,17 @@ namespace Ultima5Redux.Data
 
             SomeStrings someStrings = GetDataChunk(DataChunkName.EXCLAIMS).GetChunkAsStringList();
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x4aa5, 0x259);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x4d97, 0x361);
-
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Inn room description text", 0x4e7e, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed X-coordinate", 0x4e8a, 0x5);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed Y-coordinate", 0x4e90, 0x5);
-
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204, 0, DataChunkName.WEAR_USE_ITEM);
 
 
-            // dock coordinates (where puchased ships/skiffs are placed)
+            // dock coordinates (where purchased ships/skiffs are placed)
             // 0 = Jhelom
             // 1 = Minoc
             // 2 = East Brittany
             // 3 = Buccaneer's Den
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (dock)", 0x4D86, 0x4);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (dock)", 0x4D8A, 0x4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (dock)", 0x4D86, 0x4, 0x00, DataChunkName.X_DOCKS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (dock)", 0x4D8A, 0x4, 0x00, DataChunkName.Y_DOCKS);
 
             // scan code translation table:
             // when the player presses a key that produces one of the scan codes in
@@ -866,18 +1181,37 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7850, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Magic shop strings", 0x785c, 0x1be);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7a1a, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Armour/weapon shop strings", 0x7a26, 0x4e4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - General 1", 0x7a26, 0xa0, 0x00, DataChunkName.SHOPPE_KEEPER_GENERAL);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - General 2 ", 0x785C, 0x168, 0x00, DataChunkName.SHOPPE_KEEPER_GENERAL_2);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Reagents Long Name ", 0x79C4, 0x55, 0x00, DataChunkName.SHOPPE_KEEPER_REAGENTS);
+               
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - do you want to buy?", 0x7ac6, 0x4E, 0, DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - not enough money", 0x7b14, 0x59, 0, DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various selling strings", 0x7d44, 0x7f, 0, DataChunkName.SHOPPE_KEEPER_SELLING);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - what have you got for sale", 0x7dc4, 0x7F, 0, DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Shoppe.dat", 0x7f0a, 0xc);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Healer shop strings", 0x7f16, 0x2f8);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Healer shop strings", 0x806C, 0x1a2, 0x00, DataChunkName.SHOPPE_KEEPER_HEALER);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - Healer shop strings", 0x3D6C, 0x29, 0x00, DataChunkName.SHOPPE_KEEPER_HEALER2);
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith hello strings", 0x7F58, 0x6A, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith positive exclamation strings", 0x7FC2, 0x36, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - blacksmith 'we have' strings", 0x7FF8, 0x30, 0, DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
-            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO).GetChunkAsStringList();
-                        
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various string", 0x4d97, 0x363, 0, DataChunkName.SHOPPE_KEEPER_INNKEEPER);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - various string", 0x4e96, 0x264, 0, DataChunkName.SHOPPE_KEEPER_INNKEEPER_2);
+         
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper gossip words", 0x9ce4, 0x9B, 0, DataChunkName.BAR_KEEP_GOSSIP_WORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper gossip people", 0x9d80, 0xE7, 0, DataChunkName.BAR_KEEP_GOSSIP_PEOPLE);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper gossip places", 0x9e68, 0xA3, 0, DataChunkName.BAR_KEEP_GOSSIP_PLACES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper random stuff", 0x9f0e, 0xDE, 0, DataChunkName.SHOPPE_KEEPER_BAR_KEEP);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper gossip location map", 0x4cec, 0x1A, 0, DataChunkName.BAR_KEEP_GOSSIP_MAP);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shoppe Keeper - bar keeper random stuff", 0x9ab8, 0x227, 0, DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn room description text index", 0x4e7e, 0xc, 0, DataChunkName.INN_DESCRIPTION_INDEXES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed X-coordinate", 0x4e8a, 0x6, 0, DataChunkName.INN_BED_X_COORDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed Y-coordinate", 0x4e90, 0x6, 0, DataChunkName.INN_BED_Y_COORDS);
+            
+            SomeStrings someStrings2 = GetDataChunk(DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2).GetChunkAsStringList();
+            
+            //SHOPPE_KEEPER_BAR_KEEP
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Numbers as strings (ie. twelfth)", 0x8216, 0x17c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "End of game strings", 0x8392, 0xfe);
@@ -885,7 +1219,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "endmsg.dat", 0x849e, 0xc);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "random texts", 0x84aa, 0x74);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "finding/searching for things strings ", 0x851e, 0x442, 0, DataChunkName.THINGS_I_FIND);
-            SomeStrings someStrings2 = GetDataChunk(DataChunkName.THINGS_I_FIND).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "where you found something (ie. In the wall) ", 0x8960, 0xe4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "strings about unlocking or finding doors", 0x8a44, 0x1b3, 0x00, DataChunkName.OPENING_THINGS_STUFF);
@@ -899,6 +1232,8 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Mixing spells", 0x8f74, 0xbe);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Klimbing strings", 0x9026, 0x3A, 0x00, DataChunkName.KLIMBING);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "pay fine/bribe, merchant chat", 0x9062, 0x1b2, 0x00, DataChunkName.CHIT_CHAT);
+            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.CHIT_CHAT).GetChunkAsStringList();
+
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".tlk file list", 0x9216, 0x2e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Talking strings for ALL npcs", 0x9244, 0x1a);

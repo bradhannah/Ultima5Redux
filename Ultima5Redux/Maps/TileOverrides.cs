@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Ultima5Redux.MapCharacters;
+using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.Maps
 {
@@ -57,7 +57,7 @@ namespace Ultima5Redux.Maps
         /// <param name="bOverworld"></param>
         /// <returns>TileOverride if one exists, otherwise null</returns>
         public TileOverride GetReplacementSprite(SmallMapReferences.SingleMapReference.Location location,
-            CharacterPosition position, bool bOverworld)
+            MapUnitPosition position, bool bOverworld)
         {
             if (!_tileOverrides.ContainsKey((int) location)) return null;
 
@@ -148,6 +148,6 @@ namespace Ultima5Redux.Maps
         [JsonProperty]
         public string Comment { get; set; }
 
-        public CharacterPosition Position => new CharacterPosition(X, Y, Z);
+        public MapUnitPosition Position => new MapUnitPosition(X, Y, Z);
     }
 }

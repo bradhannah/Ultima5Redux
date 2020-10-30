@@ -9,9 +9,14 @@ using System.Runtime.InteropServices;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
-using Ultima5Redux.MapCharacters;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.CombatItems;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5ReduxTesting
 {
@@ -24,7 +29,7 @@ namespace Ultima5ReduxTesting
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return @"/Users/bradhannah/games/u5/Gold";
-                return @"C:\games\ultima_5_late\Britain";
+                return @"C:\games\ultima_5_late\Britain2";
                 //return @"C:\games\ultima_5\Gold";
             }
 
@@ -34,14 +39,72 @@ namespace Ultima5ReduxTesting
         public void AllSmallMapsLoadTest()
         {
 
-            World world = new World(SaveDirectory);
-
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
             foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor), world.State.CharacterRecords,
-                    false);
+                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
             }
+
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void test_LoadTrinsicSmallMapsLoadTest()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void test_LoadMinocBuyFrigateAndCheck()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+            world.State.TheVirtualMap.TheMapUnits.CreateFrigateAtDock(
+                SmallMapReferences.SingleMapReference.Location.Minoc,
+                world.State.TheVirtualMap);
+            Point2D dockLocation =
+                world.State.TheVirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    world.DataOvlRef);
+            List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
+                //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                LargeMap.Maps.Overworld,
+                dockLocation, 0);
+
+            Frigate frigate2 = world.State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<Frigate>(LargeMap.Maps.Overworld,
+                //SmallMapReferences.SingleMapReference.Location.Ararat,
+                dockLocation, 0);
+
+            Debug.Assert(
+                world.State.TheVirtualMap.IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location.Minoc));
+            
+            Assert.True(frigate2 != null);
+            Assert.True(mapUnits[0] is Frigate);
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void test_LoadSkaraBraeSmallMapsLoadTest()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
 
             Assert.True(true);
         }
@@ -55,9 +118,7 @@ namespace Ultima5ReduxTesting
             //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae,
-                        0), world.State.CharacterRecords,
-                    false);
+                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
             }
             int i = (24 * (60 / 2));
             while (i > 0)
@@ -82,8 +143,7 @@ namespace Ultima5ReduxTesting
             {
                 Debug.WriteLine("***** Loading " + smr.MapLocation + " on floor " + smr.Floor);
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor), world.State.CharacterRecords,
-                    false);
+                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
 
                 int i = (24 * (60 / 2));
                 while (i > 0)
@@ -108,9 +168,7 @@ namespace Ultima5ReduxTesting
             Trace.Write("Starting ");
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1),
-                world.State.CharacterRecords,
-                false);
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1));
 
             world.State.TheVirtualMap.GuessTile(new Point2D(14, 7));
         }
@@ -124,10 +182,12 @@ namespace Ultima5ReduxTesting
             Trace.Write("Starting ");
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
+
+            //List<SeaFaringVessel> vessels = world.State.TheVirtualMap.TheMapUnits.GetAllSeaFaringVessels();
         }
 
         [Test]
-        public void Test_LoadOverworldOverrideTile()
+        public void Test_LoadOverworldOverrideTile()    
         {
             World world = new World(SaveDirectory);
 
@@ -157,9 +217,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0),
-                world.State.CharacterRecords,
-                false);
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0));
 
             string pushAThing = world.PushAThing(new Point2D(5, 7), VirtualMap.Direction.Down, out bool bWasPushed);
             Assert.False(bWasPushed);
@@ -181,14 +239,14 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
 
             for (int i = 0; i < 256; i++)
             {
                 world.TryToMove(VirtualMap.Direction.Up, false, true, out World.TryToMoveResult moveResult);
             }
 
-            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
 
             Assert.True(finalLocation == startLocation);
         }
@@ -200,7 +258,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
             for (int x = 0; x < 256; x++)
             {
                 for (int y = 0; y < 256; y++)
@@ -209,7 +267,7 @@ namespace Ultima5ReduxTesting
                 }
             }
 
-            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.Copy();
+            Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
 
             Assert.True(finalLocation == startLocation);
         }
@@ -238,7 +296,7 @@ namespace Ultima5ReduxTesting
             world.State.TheTimeOfDay.Hour = 12;
 
             Point2D moongatePosition = new Point2D(166, 19);
-            world.State.TheVirtualMap.CurrentPosition = moongatePosition;
+            world.State.TheVirtualMap.CurrentPosition.XY = moongatePosition;
             // first search should find moonstone
             world.TryToSearch(moongatePosition, out bool bWasSuccessful);
             Debug.Assert(bWasSuccessful);
@@ -295,7 +353,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
-            world.State.TheVirtualMap.CurrentPosition = new Point2D(167, 22);
+            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(167, 22);
             bool bOnMoongate = world.IsAvatarOnActiveMoongate();
             world.State.TheTimeOfDay.Hour = 23;
             world.State.TheTimeOfDay.Day = 1;
@@ -387,7 +445,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
-            world.State.TheVirtualMap.CurrentPosition = new Point2D(166, 21);
+            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
             world.TryToKlimb(out World.KlimbResult klimbResult);
             Debug.Assert(klimbResult == World.KlimbResult.RequiresDirection);
         }
@@ -398,7 +456,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
-            world.State.TheVirtualMap.CurrentPosition = new Point2D(166, 21);
+            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
 
             world.TryToMove(VirtualMap.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
         }
@@ -497,11 +555,11 @@ namespace Ultima5ReduxTesting
         }
 
         [Test]
-        public void Test_BasicMerchantDialog()
+        public void Test_BasicBlackSmithDialogue()
         {
             World world = new World(SaveDirectory);
             BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Minoc,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith) as BlackSmith;
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith, null) as BlackSmith;
             
             string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
             string purchaseStr = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
@@ -515,7 +573,57 @@ namespace Ultima5ReduxTesting
                     blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Arrows, 100);
             }
             string hello = blacksmith.GetHelloResponse(world.State.TheTimeOfDay);
-            blacksmith.GetEquipmentForSaleList();
+            blacksmith.GetForSaleList();
+            _ = blacksmith.GetDoneResponse();
+        }
+
+        [Test]
+        public void Test_BasicHealerDialogue()
+        {
+            World world = new World(SaveDirectory);
+            Healer healer = (Healer) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Cove,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Healer, null);
+
+            _ = healer.NoNeedForMyArt();
+
+            int price = healer.GetPrice(Healer.RemedyTypes.Heal);
+        }
+        
+        [Test]
+        public void Test_BasicTavernDialogue()
+        {
+            World world = new World(SaveDirectory);
+            BarKeeper barKeeper = (BarKeeper) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Paws,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null);
+
+            string myOppressionTest = barKeeper.GetGossipResponse("oppr", true);
+
+            //int price = barKeeper.GetPrice(Healer.RemedyTypes.Heal);
+        }
+        
+        [Test]
+        public void Test_BasicMagicSellerDialogue()
+        {
+            World world = new World(SaveDirectory);
+            MagicSeller magicSeller = (MagicSeller)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Cove,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null);
+            //( magicSeller). //SmallMapReferences.SingleMapReference.Location.Cove);
+            List<Reagent> reagents = magicSeller.GetReagentsForSale();
+
+            int price1 = reagents[0].GetAdjustedBuyPrice(world.State.CharacterRecords,
+                SmallMapReferences.SingleMapReference.Location.Cove);
+            int price2 = reagents[1].GetAdjustedBuyPrice(world.State.CharacterRecords,
+                SmallMapReferences.SingleMapReference.Location.Cove);
+
+            string hello = magicSeller.GetHelloResponse(world.State.TheTimeOfDay);
+            string buything = magicSeller.GetReagentBuyingOutput(reagents[0]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[1]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[2]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[3]);
+            buything = magicSeller.GetReagentBuyingOutput(reagents[4]);
+            
         }
 
         [Test]
@@ -524,11 +632,138 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedBuyPrice(world.State.CharacterRecords);
+                .GetAdjustedBuyPrice(world.State.CharacterRecords, world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
             int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedSellPrice(world.State.CharacterRecords);
+                .GetAdjustedSellPrice(world.State.CharacterRecords, world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
             Debug.Assert(nCrossbowBuy > 0);
             Debug.Assert(nCrossbowSell > 0);
+
+            int nKeysPrice = world.State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys]
+                .GetAdjustedBuyPrice(world.State.CharacterRecords,
+                    SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
+            GuildMaster guildMaster = (GuildMaster)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null);
+            string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
         }
+        
+        [Test]
+        public void Test_ShipwrightDialogue()
+        {
+            World world = new World(SaveDirectory);
+            Shipwright shipwright = (Shipwright)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null);
+
+            string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay);
+        }
+
+        public void Test_ShipInWorldState()
+        {
+            World world = new World(SaveDirectory);
+        }
+        
+        public void Test_Gossip()
+        {
+            World world = new World(SaveDirectory);
+            
+        }
+        
+        [Test]
+        public void EnterBuilding()
+        {
+
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void Test_GetInnStuffAtBucDen()
+        {
+
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Bucden1");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+
+            Innkeeper innKeeper = (Innkeeper) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null);
+
+            Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
+
+            IEnumerable <PlayerCharacterRecord> records =
+                world.State.CharacterRecords.GetPlayersAtInn(SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
+
+            string noRoom = innKeeper.GetNoRoomAtTheInn(world.State.CharacterRecords);
+            foreach (PlayerCharacterRecord record in records)
+            {
+                world.State.CharacterRecords.JoinPlayerCharacter(record);
+            }
+
+            List<PlayerCharacterRecord> activeRecords = world.State.CharacterRecords.GetActiveCharacterRecords();
+
+            string goodbye = innKeeper.GetPissedOffShoppeKeeperGoodbyeResponse();
+            string pissed = innKeeper.GetPissedOffNotEnoughMoney();
+            string howmuch = innKeeper.GetThatWillBeGold(activeRecords[1]);
+            string shoppename = innKeeper.TheShoppeKeeperReference.ShoppeName;
+
+            _ = world.State.CharacterRecords.GetCharacterFromParty(5);
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void Test_GetInnStuffAtBritain()
+        {
+
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain3");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+
+            Innkeeper innKeeper = (Innkeeper) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Britain,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null);
+
+            Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
+
+            IEnumerable <PlayerCharacterRecord> records =
+                world.State.CharacterRecords.GetPlayersAtInn(SmallMapReferences.SingleMapReference.Location.Britain);
+
+            string noRoom = innKeeper.GetNoRoomAtTheInn(world.State.CharacterRecords);
+            foreach (PlayerCharacterRecord record in records)
+            {
+                world.State.CharacterRecords.JoinPlayerCharacter(record);
+            }
+
+            List<PlayerCharacterRecord> activeRecords = world.State.CharacterRecords.GetActiveCharacterRecords();
+
+            string goodbye = innKeeper.GetPissedOffShoppeKeeperGoodbyeResponse();
+            string pissed = innKeeper.GetPissedOffNotEnoughMoney();
+            string howmuch = innKeeper.GetThatWillBeGold(activeRecords[1]);
+            string shoppename = innKeeper.TheShoppeKeeperReference.ShoppeName;
+            Assert.True(true);
+        }
+
+        [Test]
+        public void Test_MakeAHorse()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            
+            Horse horse = world.State.TheVirtualMap.CreateHorseAroundAvatar();
+            Assert.True(horse != null);
+
+        }
+
      }
 }

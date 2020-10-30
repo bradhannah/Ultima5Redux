@@ -22,8 +22,6 @@ namespace Ultima5Redux.Maps
                 Floor = floor;
                 FileOffset = fileOffset;
                 DataRef = dataRef;
-
-
             }
 
             public static SingleMapReference GetLargeMapSingleInstance(LargeMap.Maps map)
@@ -138,7 +136,7 @@ namespace Ultima5Redux.Maps
                 string mapStr = this.MapLocation.ToString().Replace("_", " ") + " - ";
                 if (Floor == -1) mapStr += "Basement";
                 else if (Floor == 0) mapStr += "Main Level";
-                else mapStr += "Floor " + Floor.ToString();
+                else mapStr += "Floor " + Floor;
                 return mapStr;
             }
             #endregion
