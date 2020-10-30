@@ -87,14 +87,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return word.Substring(0, nLength);
         }
 
-        public string GetGossipResponse(string word)
+        public string GetGossipResponse(string word, bool bHighlightDetails)
         {
             string cleanedWord = CleanGossipWordForLookup(word);
             Debug.Assert(DoesBarKeeperKnowGossip(cleanedWord));
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(85, 88);
             return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
                 personOfInterest: _gossipWordToPersonMap[cleanedWord],
-                locationToFindPersonOfInterest: _gossipWordToPlaceMap[cleanedWord]);
+                locationToFindPersonOfInterest: _gossipWordToPlaceMap[cleanedWord], 
+                bUseRichText: bHighlightDetails);
         }
 
         public bool DoesBarKeeperKnowGossip(string word)

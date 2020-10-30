@@ -598,7 +598,7 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Paws,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null);
 
-            string myOppressionTest = barKeeper.GetGossipResponse("oppr");
+            string myOppressionTest = barKeeper.GetGossipResponse("oppr", true);
 
             //int price = barKeeper.GetPrice(Healer.RemedyTypes.Heal);
         }

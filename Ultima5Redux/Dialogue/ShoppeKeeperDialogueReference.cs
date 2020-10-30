@@ -99,11 +99,12 @@ namespace Ultima5Redux.Dialogue
         /// <param name="genderedAddress"></param>
         /// <param name="personOfInterest"></param>
         /// <param name="locationToFindPersonOfInterest"></param>
+        /// <param name="bHighlightDetails"></param>
         /// <returns>a complete string with full replacements</returns>
         internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "", 
             bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null, 
             int nQuantity = 0, string genderedAddress = "", string personOfInterest = "", 
-            string locationToFindPersonOfInterest = "")
+            string locationToFindPersonOfInterest = "", bool bHighlightDetails = false)
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
@@ -137,19 +138,19 @@ namespace Ultima5Redux.Dialogue
             // @ barkeeps food/drink etc
             // * location of thing
             // ^ quantity of thing (ie. reagent)
-            const string HighlightColor = "<color=#00CC00>";
+            string highlightColor = bUseRichText?"<color=#00CC00>":"";
             //const string RegularColor = "<color=#FFFFFF>";
-            const string QuantityColor = "<color=#00ffffff>";
-            const string CloseColor = "</color>";
+            string quantityColor = bUseRichText?"<color=#00ffffff>":"";
+            string closeColor = bUseRichText?"</color>":"";
 
             StringBuilder sb = new StringBuilder(dialogue);
             if (nGold >= 0)
             {
-                sb.Replace("%", HighlightColor+nGold.ToString()+CloseColor);
+                sb.Replace("%", highlightColor+nGold.ToString()+closeColor);
             }
             if (equipmentName != "")
             {
-                sb.Replace("&", HighlightColor+equipmentName.ToString()+CloseColor);
+                sb.Replace("&", highlightColor+equipmentName.ToString()+closeColor);
             }
             if (shoppeKeeperName != "")
             {
@@ -170,15 +171,15 @@ namespace Ultima5Redux.Dialogue
 
             if (personOfInterest != "")
             {
-                sb.Replace("&", personOfInterest);
+                sb.Replace("&", quantityColor+personOfInterest+closeColor);
             }
             if (locationToFindPersonOfInterest != "")
             {
-                sb.Replace("*", locationToFindPersonOfInterest);
+                sb.Replace("*", highlightColor+locationToFindPersonOfInterest+closeColor);
             }
             if (nQuantity > 0)
             {
-                sb.Replace("^", QuantityColor+nQuantity.ToString()+CloseColor);
+                sb.Replace("^", quantityColor+nQuantity.ToString()+closeColor);
             }
 
             return sb.ToString();
