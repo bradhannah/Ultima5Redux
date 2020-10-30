@@ -161,13 +161,15 @@ namespace Ultima5Redux.PlayerCharacters
             Debug.Assert(nPosition >= 0 && nPosition < PlayerCharacterRecords.MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
             Debug.Assert(nPosition < TotalPartyMembers(), "You cannot request a character that isn't on the roster");
 
-            int nPartyMember = 0;
-            foreach (PlayerCharacterRecord characterRecord in Records)
-            {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty)
-                    if (nPartyMember++ == nPosition) return characterRecord;
-            }
-            throw new Ultima5ReduxException("I've asked for member of the party who is apparently not there...");
+            return (GetActiveCharacterRecords()[nPosition]);
+            
+            // int nPartyMember = 0;
+            // foreach (PlayerCharacterRecord characterRecord in Records)
+            // {
+            //     if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty)
+            //         if (nPartyMember++ == nPosition) return characterRecord;
+            // }
+            // throw new Ultima5ReduxException("I've asked for member of the party who is apparently not there...");
         }
 
         /// <summary>

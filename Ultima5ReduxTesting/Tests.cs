@@ -711,6 +711,43 @@ namespace Ultima5ReduxTesting
             string goodbye = innKeeper.GetPissedOffShoppeKeeperGoodbyeResponse();
             string pissed = innKeeper.GetPissedOffNotEnoughMoney();
             string howmuch = innKeeper.GetThatWillBeGold(activeRecords[1]);
+            string shoppename = innKeeper.TheShoppeKeeperReference.ShoppeName;
+
+            _ = world.State.CharacterRecords.GetCharacterFromParty(5);
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void Test_GetInnStuffAtBritain()
+        {
+
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\Britain3");
+            _ = "";
+
+            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+
+            Innkeeper innKeeper = (Innkeeper) world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                SmallMapReferences.SingleMapReference.Location.Britain,
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null);
+
+            Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
+
+            IEnumerable <PlayerCharacterRecord> records =
+                world.State.CharacterRecords.GetPlayersAtInn(SmallMapReferences.SingleMapReference.Location.Britain);
+
+            string noRoom = innKeeper.GetNoRoomAtTheInn(world.State.CharacterRecords);
+            foreach (PlayerCharacterRecord record in records)
+            {
+                world.State.CharacterRecords.JoinPlayerCharacter(record);
+            }
+
+            List<PlayerCharacterRecord> activeRecords = world.State.CharacterRecords.GetActiveCharacterRecords();
+
+            string goodbye = innKeeper.GetPissedOffShoppeKeeperGoodbyeResponse();
+            string pissed = innKeeper.GetPissedOffNotEnoughMoney();
+            string howmuch = innKeeper.GetThatWillBeGold(activeRecords[1]);
+            string shoppename = innKeeper.TheShoppeKeeperReference.ShoppeName;
             Assert.True(true);
         }
 

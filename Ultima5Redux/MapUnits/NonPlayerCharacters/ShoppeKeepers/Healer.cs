@@ -71,7 +71,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
                     DataOvlReference.ShoppeKeeperHealerStrings2
                         .DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME).Trim().Replace("\n", " "),
-                shoppeKeeperName: this.TheShoppeKeeperReference.ShoppeKeeperName) + "\n" +
+                shoppeKeeperName: this.TheShoppeKeeperReference.ShoppeKeeperName) + "\n\n" +
                    DataOvlReference.StringReferences.GetString(
                        DataOvlReference.ShoppeKeeperHealerStrings.N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N).Trim() + "\n"
                 + DataOvlReference.StringReferences.GetString(
@@ -88,7 +88,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                         DataOvlReference.ShoppeKeeperHealerStrings.I_CAN_CURE_THY_POISONED_BODY);
                     break;
                 case RemedyTypes.Heal:
-                    offerStr = DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.I_CAN_HEAL_THEE);
+                    offerStr = "\"" + DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings.I_CAN_HEAL_THEE);
                     break;
                 case RemedyTypes.Resurrect:
                     offerStr = DataOvlReference.StringReferences.GetString(
