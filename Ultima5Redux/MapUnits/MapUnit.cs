@@ -162,14 +162,13 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnitState"></param>
         /// <param name="smallMapTheSmallMapCharacterState"></param>
         /// <param name="mapUnitMovement"></param>
-        /// <param name="timeOfDay"></param>
         /// <param name="playerCharacterRecords"></param>
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         /// <param name="dataOvlRef"></param>
         /// <param name="direction"></param>
         protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
+            MapUnitMovement mapUnitMovement, PlayerCharacterRecords playerCharacterRecords,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlRef, VirtualMap.Direction direction)
         {
             this.DataOvlRef = dataOvlRef;

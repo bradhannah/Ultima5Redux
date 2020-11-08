@@ -26,7 +26,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public Reagents SpellReagents { get; set; }
         public Moonstones TheMoonstones { get; set; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
-        public List<InventoryItem> ReadyItems { get; } = new List<InventoryItem>();
+        public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
         public Provisions TheProvisions { get; set; }
@@ -151,11 +151,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             ProtectiveArmour = new Armours(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(ProtectiveArmour.GenericItemList);
-            ReadyItems.AddRange(ProtectiveArmour.GenericItemList);
+            ReadyItems.AddRange(ProtectiveArmour.AllCombatItems);
             CombatItems.AddRange(ProtectiveArmour.AllCombatItems);
 
             TheWeapons = new Weapons(_dataOvlRef, _gameStateByteArray);
-            ReadyItems.AddRange(TheWeapons.GenericItemList);
+            ReadyItems.AddRange(TheWeapons.AllCombatItems);
             CombatItems.AddRange(TheWeapons.AllCombatItems);
 
             MagicScrolls = new Scrolls(_dataOvlRef, _gameStateByteArray);

@@ -35,7 +35,7 @@ namespace Ultima5Redux.MapUnits
 
         public MagicCarpet(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences, 
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference, VirtualMap.Direction direction) 
-            : base(null, mapUnitState, null, mapUnitMovement, null, null, 
+            : base(null, mapUnitState, null, mapUnitMovement, null, 
                 tileReferences, location, dataOvlReference, direction)
         {
             

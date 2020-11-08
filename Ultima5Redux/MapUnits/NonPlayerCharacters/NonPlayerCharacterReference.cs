@@ -16,6 +16,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         #region Private Variables
         private GameState _gameStateRef;
+        private readonly bool _normalNPC;
+
         #endregion
 
         #region Constants, Sructures and Enums
@@ -245,6 +247,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             //NormalNPC = bNormalNPC;
             DialogIndex = dialogIndex;
             _gameStateRef = gameStateRef;
+            _normalNPC = bNormalNPC;
 
             // no schedule? I guess you're not real
             if (!IsEmptySchedule(schedule))

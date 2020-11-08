@@ -243,6 +243,7 @@ namespace Ultima5Redux
         {
             SmallMapReferences.SingleMapReference mapRef = state.Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld?null:
                 smallMapReferences.GetSingleMapByLocation(state.Location, state.Floor); 
+            
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferences, overworldMap, underworldMap,
                 nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, inventoryReferences,
                 CharacterRecords, Map, mapRef, dataOvlReference);
@@ -339,8 +340,9 @@ namespace Ultima5Redux
             // they are stored in the saved.ool file - but also the brit.ool and under.ool file - not quite sure why it's stored in both...
             // string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
             // string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
-            string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
-            string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
+            string savedOolFile = Path.Combine(u5Directory, FileConstants.SAVED_OOL);;
+            string overworldOverlayPath = savedOolFile;
+            string underworldOverlayPath = savedOolFile; 
 
             _overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(overworldOverlayPath, OverlayChunkName.Unused);
             _underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(underworldOverlayPath, OverlayChunkName.Unused);

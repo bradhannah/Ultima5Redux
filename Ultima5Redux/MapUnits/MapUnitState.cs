@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
@@ -78,13 +79,28 @@ namespace Ultima5Redux.MapUnits
             // if a null map unit state is passed in then we are the default Avatar sprite
             // otherwise we may be on a horse, ship etc.
             bool bDefaultState = mapUnitState != null;
-            MapUnitState theAvatar = mapUnitState ?? new MapUnitState();
-            TileReference avatarTileRef = bDefaultState ? mapUnitState.Tile1Ref :
-                tileReferences.GetTileReferenceByName("BasicAvatar");
+            MapUnitState theAvatar;
+            TileReference avatarTileRef;
+            // MapUnitState theAvatar = mapUnitState ?? new MapUnitState();
+            // TileReference avatarTileRef = bDefaultState ? mapUnitState.Tile1Ref :
+            //     tileReferences.GetTileReferenceByName("BasicAvatar");
+
+            if (mapUnitState == null)
+            {
+                theAvatar = new MapUnitState();
+                avatarTileRef = tileReferences.GetTileReferenceByName("BasicAvatar");
+            }
+            else
+            {
+                theAvatar = mapUnitState;
+                avatarTileRef = mapUnitState.Tile1Ref;
+            }
+            
+            
             theAvatar._tile1 = avatarTileRef.Index;
             theAvatar._tile2 = avatarTileRef.Index;
             theAvatar.Tile1Ref = tileReferences.GetTileReference(theAvatar._tile1);
-            theAvatar.Tile2Ref = tileReferences.GetTileReference(theAvatar._tile1);
+            theAvatar.Tile2Ref = theAvatar.Tile1Ref;
 
             theAvatar.X = (byte) avatarPosition.X;
             theAvatar.Y = (byte) avatarPosition.Y;

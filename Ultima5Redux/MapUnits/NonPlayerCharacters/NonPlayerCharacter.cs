@@ -20,7 +20,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference) : base(npcRef, mapUnitState,
-            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords,
+            smallMapTheSmallMapCharacterState, mapUnitMovement, playerCharacterRecords,
             tileReferences, location, dataOvlReference, VirtualMap.Direction.None)
         {
             bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
@@ -320,7 +320,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 if (virtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
                 {
                     // pop the direction from the queue
-                    direction = Movement.GetNextMovementCommandDirection(false);
+                    _ = Movement.GetNextMovementCommandDirection(false);
                     Move(adjustedPos, MapUnitPosition.Floor, timeOfDay);
                     MovementAttempts = 0;
                 }

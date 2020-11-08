@@ -11,7 +11,7 @@ namespace Ultima5Redux.MapUnits
 {
     public class Avatar : MapUnit
     {
-        public Avatar(TileReferences tileReferences, MapUnitPosition avatarPosition, 
+        public Avatar(TileReferences tileReferences, 
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
             MapUnitState mapUnitState = null) : base()
         {
@@ -166,7 +166,7 @@ namespace Ultima5Redux.MapUnits
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
             MapUnitState mapUnitState = null)
         {
-            Avatar theAvatar = new Avatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location), 
+            Avatar theAvatar = new Avatar(tileReferences, //SmallMapReferences.GetStartingXYZByLocation(location), 
                 location, movement, mapUnitState);
             
             return theAvatar;

@@ -33,7 +33,7 @@ namespace Ultima5Redux.DayNightMoon
             get
             {
                 if (Hour > 5 && Hour < 12) return "morning";
-                if (Hour >= 12 && Hour < 6) return "afternoon";
+                if (Hour >= 12 && Hour < 17) return "afternoon";
                 return "evening";
             }
         }

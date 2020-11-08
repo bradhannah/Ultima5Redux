@@ -13,7 +13,7 @@ namespace Ultima5Redux.MapUnits.Monsters
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay,
             PlayerCharacterRecords playerCharacterRecords, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference) : base(npcRef, mapUnitState,
-            smallMapTheSmallMapCharacterState, mapUnitMovement, timeOfDay, playerCharacterRecords, tileReferences,
+            smallMapTheSmallMapCharacterState, mapUnitMovement, playerCharacterRecords, tileReferences,
             location, dataOvlReference, VirtualMap.Direction.None)
         {
         }

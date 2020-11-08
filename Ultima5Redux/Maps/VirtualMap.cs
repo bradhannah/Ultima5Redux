@@ -176,9 +176,8 @@ namespace Ultima5Redux.Maps
             SmallMapReferences.SingleMapReference currentSmallMapReference, DataOvlReference dataOvlReference)
         {
             // let's make sure they are using the correct combination
-            Debug.Assert((initialMap == LargeMap.Maps.Small &&
-                          currentSmallMapReference.MapLocation != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                         || initialMap != LargeMap.Maps.Small);
+            // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
+            //               currentSmallMapReference.MapLocation != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld) 
             
             SmallMapRefs = smallMapReferences;
             
@@ -1062,7 +1061,7 @@ namespace Ultima5Redux.Maps
                     {SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, new Point2D(xDockCoords[3], yDockCoords[3])},
                 };
             
-            if (!docks.ContainsKey(location)) return null;
+            if (!docks.ContainsKey(location)) throw new Ultima5ReduxException("Asked for a dock  in "+location+" but there isn't one there");
 
             return docks[location];
         }

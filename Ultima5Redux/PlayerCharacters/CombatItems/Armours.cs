@@ -47,14 +47,13 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             get
             {
                 List<InventoryItem> itemList = Helms.Cast<InventoryItem>().ToList();
-                itemList.AddRange(ChestArmours.Cast<InventoryItem>());
-                itemList.AddRange(Amulets.Cast<InventoryItem>());
-                itemList.AddRange(Rings.Cast<InventoryItem>());
+                itemList.AddRange(ChestArmours);
+                itemList.AddRange(Amulets);
+                itemList.AddRange(Rings);
                 return itemList;
-                //foreach (Shield shield in Shields) { itemList.Add(shield); }
-                //foreach (Amulet amulet in Amulets) { itemList.Add(amulet); }
             }
         }
+
 
         private void AddChestArmour(ChestArmour.ChestArmourEnum chestArmour, DataOvlReference.Equipment equipment)
         {

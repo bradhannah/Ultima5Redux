@@ -936,8 +936,7 @@ namespace Ultima5Redux
             MapUnit currentAvatarTileRef = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             bWasSuccessful = true;
             
-            if (currentAvatarTileRef is null
-                || !currentAvatarTileRef.KeyTileReference.IsBoardable)
+            if (currentAvatarTileRef is null || !currentAvatarTileRef.KeyTileReference.IsBoardable)
             {
                 bWasSuccessful = false;
                 // can't board it
@@ -949,6 +948,10 @@ namespace Ultima5Redux
             bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
             Avatar avatar = State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
             MapUnit boardableMapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
+            if (boardableMapUnit is null)
+            {
+                throw new Ultima5ReduxException("Tried to board something but the tile appears to be boardable without a MapUnit");
+            }
 
             // at this point we are certain that the current tile is boardable AND the we know if the avatar has already
             // boarded something
