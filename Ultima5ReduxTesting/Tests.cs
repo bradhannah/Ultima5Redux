@@ -346,7 +346,7 @@ namespace Ultima5ReduxTesting
         public void Test_GetAndUseMoonstone()
         {
             World world = new World(SaveDirectory);
-
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
             world.State.TheTimeOfDay.Hour = 12;
 
             Point2D moongatePosition = new Point2D(166, 19);
@@ -370,6 +370,7 @@ namespace Ultima5ReduxTesting
         public void Test_SearchForMoonstoneAndGet()
         {
             World world = new World(SaveDirectory);
+            world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
 
             world.State.TheTimeOfDay.Hour = 12;
 
