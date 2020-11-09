@@ -19,7 +19,7 @@ namespace Ultima5Redux.MapUnits
 
     public class MapUnitState
     {
-        private readonly byte[] _stateBytes;
+        internal readonly byte[] StateBytes;
         public const int NBYTES = 0x8;
 
         #region Private Fields
@@ -41,7 +41,7 @@ namespace Ultima5Redux.MapUnits
         public MapUnitState(TileReferences tileReferences, byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
-            _stateBytes = stateBytes;
+            this.StateBytes = stateBytes;
             //
             _tile1 = stateBytes[0] + 0x100;
             _tile2 = stateBytes[1] + 0x100;
@@ -63,7 +63,7 @@ namespace Ultima5Redux.MapUnits
             Tile2Ref = tileReferences.GetTileReference(npcRef.NPCKeySprite);
         }
 
-        private MapUnitState()
+        internal MapUnitState()
         {
             
         }
@@ -72,6 +72,19 @@ namespace Ultima5Redux.MapUnits
         {
             Tile1Ref = tileReference;
             Tile2Ref = tileReference;
+        }
+
+        public void CopyTo(TileReferences tileReferences, MapUnitState mapUnitState)
+        {
+            mapUnitState._tile1 = _tile1;
+            mapUnitState._tile2 = _tile2;
+            mapUnitState.Depends1 = Depends1;
+            mapUnitState.Depends2 = Depends2;
+            mapUnitState.Depends3 = Depends3;
+            mapUnitState.Floor = Floor;
+            mapUnitState.X = X;
+            mapUnitState.Y = Y;
+            mapUnitState.SetTileReference(tileReferences.GetTileReference(_tile1));
         }
         
         public static MapUnitState CreateAvatar(TileReferences tileReferences, MapUnitPosition avatarPosition, MapUnitState mapUnitState = null)

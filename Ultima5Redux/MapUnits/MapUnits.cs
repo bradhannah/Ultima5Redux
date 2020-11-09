@@ -432,7 +432,7 @@ namespace Ultima5Redux.MapUnits
                 {
                     MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, 
                         SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement,
-                        mapUnitState);
+                        mapUnitState, _dataOvlReference);
                     
                     mapUnits.Add(theAvatar);
                     continue;
@@ -506,7 +506,7 @@ namespace Ultima5Redux.MapUnits
                 }
                 else if (bInitialLoad)
                 {
-                    MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement);
+                    MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement, null, _dataOvlReference);
                     MapUnitState theAvatarMapState = _smallMapUnitStates.GetCharacterState(0);
                     theAvatar.MapUnitPosition.X = theAvatarMapState.X;
                     theAvatar.MapUnitPosition.Y = theAvatarMapState.Y;

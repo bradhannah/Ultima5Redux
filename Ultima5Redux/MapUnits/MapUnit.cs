@@ -13,7 +13,7 @@ namespace Ultima5Redux.MapUnits
 {
     public abstract class MapUnit
     {
-        protected DataOvlReference DataOvlRef { get; }
+        protected DataOvlReference DataOvlRef { get; set; }
         protected TileReferences TileReferences { get; set; }
 
         /// <summary>

@@ -11,10 +11,10 @@ namespace Ultima5Redux.MapUnits
 {
     public class Avatar : MapUnit
     {
-        public Avatar(TileReferences tileReferences, 
-            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
-            MapUnitState mapUnitState = null) : base()
+        public Avatar(TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location, 
+            MapUnitMovement movement, MapUnitState mapUnitState, DataOvlReference dataOvlReference) : base()
         {
+            DataOvlRef = dataOvlReference;
             if (mapUnitState == null)
             {
                 TheMapUnitState = MapUnitState.CreateAvatar(tileReferences, SmallMapReferences.GetStartingXYZByLocation(location));
@@ -28,6 +28,9 @@ namespace Ultima5Redux.MapUnits
 
             CurrentDirection = TheMapUnitState.Tile1Ref.GetDirection();
             CurrentAvatarState = CalculateAvatarState(TheMapUnitState.Tile1Ref);
+            
+            BoardMapUnitFromAvatarState(CurrentAvatarState);
+            
             MapLocation = location;
             //TheMapUnitState = mapUnitState;
             // set the initial key tile
@@ -161,13 +164,13 @@ namespace Ultima5Redux.MapUnits
         /// <param name="location"></param>
         /// <param name="movement"></param>
         /// <param name="mapUnitState"></param>
+        /// <param name="dataOvlReference"></param>
         /// <returns></returns>
         public static MapUnit CreateAvatar(TileReferences tileReferences, 
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
-            MapUnitState mapUnitState = null)
+            MapUnitState mapUnitState, DataOvlReference dataOvlReference)
         {
-            Avatar theAvatar = new Avatar(tileReferences, //SmallMapReferences.GetStartingXYZByLocation(location), 
-                location, movement, mapUnitState);
+            Avatar theAvatar = new Avatar(tileReferences, location, movement, mapUnitState, dataOvlReference);
             
             return theAvatar;
         }
@@ -179,12 +182,40 @@ namespace Ultima5Redux.MapUnits
         {
             KeyTileReference = NonBoardedTileReference;// GetTileReferenceByName("BasicAvatar");
             CurrentAvatarState = AvatarState.Regular;
-            MapUnit previouslyBoardedMapUnit = CurrentBoardedMapUnit;
+            MapUnit previouslyBoardedMapUnit =  CurrentBoardedMapUnit;
             CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
             CurrentBoardedMapUnit = null;
             return previouslyBoardedMapUnit;
         }
 
+        private void BoardMapUnitFromAvatarState(AvatarState avatarState)
+        {
+            switch (avatarState)
+            {
+                case AvatarState.Regular:
+                    break;
+                case AvatarState.Carpet:
+                    MapUnitState state = new MapUnitState();
+                    // we copy the Avatar map unit state as a starting point
+                    TheMapUnitState.CopyTo(TileReferences, state);
+                    MagicCarpet carpet = new MagicCarpet(state, 
+                        new MapUnitMovement(0,null, null), 
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                    BoardMapUnit(carpet);
+                    break;
+                case AvatarState.Horse:
+                    break;
+                case AvatarState.Frigate:
+                    break;
+                case AvatarState.Skiff:
+                    break;
+                case AvatarState.Hidden:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
+            }
+        }
+        
         public void BoardMapUnit(MapUnit mapUnit)
         {
             // note: since the Avatar does not control all MapUnits, we only add it our internal tracker
@@ -201,29 +232,5 @@ namespace Ultima5Redux.MapUnits
                 CurrentDirection = mapUnit.Direction;
             }
         }
-        
-        // public void SetBoardedCarpet(VirtualMap.Direction direction)
-        // {
-        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Carpet][direction]); 
-        //     CurrentAvatarState = AvatarState.Carpet;
-        // }
-        //
-        // public void SetBoardedHorse(VirtualMap.Direction direction)
-        // {
-        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Horse][direction]); 
-        //     CurrentAvatarState = AvatarState.Horse;
-        // }
-        //
-        // public void SetBoardedFrigate(VirtualMap.Direction direction, bool bSailsUp = false)
-        // {
-        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Frigate][direction]);
-        //     CurrentAvatarState = AvatarState.Frigate;
-        // }
-        //
-        // public void SetBoardedSkiff(VirtualMap.Direction direction)
-        // {
-        //     KeyTileReference = TileReferences.GetTileReferenceByName(_tileIndexMap[AvatarState.Skiff][direction]);
-        //     CurrentAvatarState = AvatarState.Skiff;
-        // }
     }
 }

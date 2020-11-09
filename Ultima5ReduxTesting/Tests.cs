@@ -817,9 +817,22 @@ namespace Ultima5ReduxTesting
             
             Horse horse = world.State.TheVirtualMap.CreateHorseAroundAvatar();
             Assert.True(horse != null);
-
         }
 
+        [Test]
+        public void Test_CheckedBoardedTileBucDen4()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(@"C:\games\ultima_5_late\BucDen4");
 
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Debug.Assert(avatar.IsAvatarOnBoardedThing);
+            Debug.Assert(avatar.CurrentBoardedMapUnit != null);
+
+            world.Xit(out bool bWasSuccessful);
+            
+            _ = "";
+
+        }
      }
 }
