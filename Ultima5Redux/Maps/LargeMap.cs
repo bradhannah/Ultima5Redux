@@ -1,46 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using Ultima5Redux.Data;
 
-namespace Ultima5Redux.Maps 
+namespace Ultima5Redux.Maps
 {
     public class LargeMap : Map
     {
-        #region Private Constants
+        public enum Maps { Small = -1, Overworld, Underworld }
+
         private const int TILES_PER_CHUNK_X = 16; // number of tiles horizontal in each chunk
         private const int TILES_PER_CHUNK_Y = 16; // number of tiles vertically in each chunk
         private const int TOTAL_CHUNKS_PER_X = 16; // total number of chunks horizontally
         private const int TOTAL_CHUNKS_PER_Y = 16; // total number of chunks vertically
         private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
-        #endregion
 
-        #region Public Constants and Enumerations
+        public const int
+            TILES_PER_MAP_ROW =
+                TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_X; // total number of tiles per row in the large map 
 
-        public const int TILES_PER_MAP_ROW = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_X; // total number of tiles per row in the large map 
-        public const int TILES_PER_MAP_COL = TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
-
-        public enum Maps {Small = -1 , Overworld, Underworld};
+        public const int
+            TILES_PER_MAP_COL =
+                TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
         private Maps _mapChoice;
-        
-        #endregion
 
         /// <summary>
-        /// Build a large map. There are essentially two choices - Overworld and Underworld
+        ///     Build a large map. There are essentially two choices - Overworld and Underworld
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="mapChoice"></param>
         /// <param name="tileOverrides"></param>
-        public LargeMap (string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(u5Directory, tileOverrides, 
+        public LargeMap(string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(u5Directory,
+            tileOverrides,
             SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
-            this._mapChoice = mapChoice;
+            _mapChoice = mapChoice;
             switch (mapChoice)
             {
                 case Maps.Overworld:
-                    TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.BRIT_DAT), Path.Combine(u5Directory, FileConstants.DATA_OVL), false);
+                    TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.BRIT_DAT),
+                        Path.Combine(u5Directory, FileConstants.DATA_OVL), false);
                     //xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britannia_Underworld, 0));
                     break;
                 case Maps.Underworld:
@@ -50,16 +49,15 @@ namespace Ultima5Redux.Maps
                 case Maps.Small:
                     throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
             }
-
         }
 
         public void PrintMap()
         {
-            Map.PrintMapSection(TheMap, 0, 0, 160, 80);
+            PrintMapSection(TheMap, 0, 0, 160, 80);
         }
 
         /// <summary>
-        /// Build a generic map - compatible with Britannia and Underworld
+        ///     Build a generic map - compatible with Britannia and Underworld
         /// </summary>
         /// <param name="mapDatFilename">Map data filename and path</param>
         /// <param name="overlayFilename">If present, the special overlay file for Britannia</param>
@@ -98,29 +96,29 @@ namespace Ultima5Redux.Maps
 
                 // get the overlay chunk value... to help determine if it is a water only tile
                 // but if we are ignoring the overlay - then just give it zero, so the map will be processed without overlay considerations
-                dataOvlChunks[chunkCount] = ignoreOverlay ? (byte)0x00 : dataOvl.ReadByte();
+                dataOvlChunks[chunkCount] = ignoreOverlay ? (byte) 0x00 : dataOvl.ReadByte();
 
                 // go through each row on the outer loop, because we want to read each horizon first
-                for (int curRow = row * TILES_PER_CHUNK_Y; curRow < (row * TILES_PER_CHUNK_Y) + TILES_PER_CHUNK_Y; curRow++)
+                for (int curRow = row * TILES_PER_CHUNK_Y;
+                    curRow < row * TILES_PER_CHUNK_Y + TILES_PER_CHUNK_Y;
+                    curRow++)
                 {
                     //System.Console.WriteLine("CurRow : " + curRow);
                     // go through each horizon
-                    for (int curCol = col * 16; curCol < (col * TILES_PER_CHUNK_X) + TILES_PER_CHUNK_X; curCol++)
+                    for (int curCol = col * 16; curCol < col * TILES_PER_CHUNK_X + TILES_PER_CHUNK_X; curCol++)
                     {
                         if (dataOvlChunks[chunkCount] == 0xFF)
-                        {
                             // welp, it's a water tile
                             theMap[curCol][curRow] = 0x01;
-                        }
                         else
-                        {
                             // it contains land tiles (look in brit.dat)
                             theMap[curCol][curRow] = theChunksSerial[britDatChunkCount++];
-                        }
                     }
                 }
+
                 chunkCount++;
             }
+
             return theMap;
         }
 
@@ -128,7 +126,5 @@ namespace Ultima5Redux.Maps
         {
             return 1;
         }
-
-      
     }
 }

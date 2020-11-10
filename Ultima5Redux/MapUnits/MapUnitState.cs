@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
@@ -19,29 +18,16 @@ namespace Ultima5Redux.MapUnits
 
     public class MapUnitState
     {
-        internal readonly byte[] StateBytes;
         public const int NBYTES = 0x8;
+        internal readonly byte[] StateBytes;
 
-        #region Private Fields
         private int _tile1;
         private int _tile2;
-        #endregion
-
-        #region Public Properties
-        public byte X { get; set; }
-        public byte Y { get; set; }
-        public byte Floor { get; set; }
-        public byte Depends1 { get; internal set; }
-        public byte Depends2 { get; internal set; }
-        public byte Depends3 { get; internal set; }
-        public TileReference Tile1Ref { get; internal set; }
-        public TileReference Tile2Ref { get; internal set;}
-        #endregion
 
         public MapUnitState(TileReferences tileReferences, byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
-            this.StateBytes = stateBytes;
+            StateBytes = stateBytes;
             //
             _tile1 = stateBytes[0] + 0x100;
             _tile2 = stateBytes[1] + 0x100;
@@ -65,8 +51,16 @@ namespace Ultima5Redux.MapUnits
 
         internal MapUnitState()
         {
-            
         }
+
+        public byte X { get; set; }
+        public byte Y { get; set; }
+        public byte Floor { get; set; }
+        public byte Depends1 { get; internal set; }
+        public byte Depends2 { get; internal set; }
+        public byte Depends3 { get; internal set; }
+        public TileReference Tile1Ref { get; internal set; }
+        public TileReference Tile2Ref { get; internal set; }
 
         public void SetTileReference(TileReference tileReference)
         {
@@ -86,8 +80,9 @@ namespace Ultima5Redux.MapUnits
             mapUnitState.Y = Y;
             mapUnitState.SetTileReference(tileReferences.GetTileReference(_tile1));
         }
-        
-        public static MapUnitState CreateAvatar(TileReferences tileReferences, MapUnitPosition avatarPosition, MapUnitState mapUnitState = null)
+
+        public static MapUnitState CreateAvatar(TileReferences tileReferences, MapUnitPosition avatarPosition,
+            MapUnitState mapUnitState = null)
         {
             // if a null map unit state is passed in then we are the default Avatar sprite
             // otherwise we may be on a horse, ship etc.
@@ -108,8 +103,7 @@ namespace Ultima5Redux.MapUnits
                 theAvatar = mapUnitState;
                 avatarTileRef = mapUnitState.Tile1Ref;
             }
-            
-            
+
             theAvatar._tile1 = avatarTileRef.Index;
             theAvatar._tile2 = avatarTileRef.Index;
             theAvatar.Tile1Ref = tileReferences.GetTileReference(theAvatar._tile1);

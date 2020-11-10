@@ -4,21 +4,26 @@ using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
-
     /// <summary>
-    /// Map character animation states
-    /// This is a generic application of it. The raw data must be passed in during construction.
+    ///     Map character animation states
+    ///     This is a generic application of it. The raw data must be passed in during construction.
     /// </summary>
     public class MapUnitStates
     {
-        public enum MapUnitStatesFiles { SAVED_GAM, BRIT_OOL, UNDER_OOL };
+        public enum MapUnitStatesFiles { SAVED_GAM, BRIT_OOL, UNDER_OOL }
 
         private const int MAX_CHARACTER_STATES = 0x20;
 
         private readonly List<MapUnitState> _mapUnitStates = new List<MapUnitState>(MAX_CHARACTER_STATES);
+        private readonly TileReferences _tileReferences;
 
         private DataChunk _mapUnitStatesDataChunk;
-        private readonly TileReferences _tileReferences;
+
+        public MapUnitStates(DataChunk mapUnitStatesDataChunk, TileReferences tileReferences)
+        {
+            _tileReferences = tileReferences;
+            _mapUnitStatesDataChunk = mapUnitStatesDataChunk;
+        }
 
         public MapUnitStatesFiles MapUnitStatesType { get; private set; }
 
@@ -39,11 +44,12 @@ namespace Ultima5Redux.MapUnits
                 if (characterState.X == xy.X && characterState.Y == xy.Y && characterState.Floor == nFloor)
                     return characterState;
             }
+
             return null;
         }
 
         /// <summary>
-        /// Load the character animation states into the object
+        ///     Load the character animation states into the object
         /// </summary>
         /// <param name="mapUnitStatesType"></param>
         /// <param name="bLoadFromDisk"></param>
@@ -53,26 +59,20 @@ namespace Ultima5Redux.MapUnits
             MapUnitStatesType = mapUnitStatesType;
 
             if (!bLoadFromDisk) return;
-            
+
             List<byte> characterStateBytes = _mapUnitStatesDataChunk.GetAsByteList();
 
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
-                _mapUnitStates.Add(new MapUnitState(_tileReferences, 
-                    characterStateBytes.GetRange((i * MapUnitState.NBYTES) + nOffset,
+                _mapUnitStates.Add(new MapUnitState(_tileReferences,
+                    characterStateBytes.GetRange(i * MapUnitState.NBYTES + nOffset,
                         MapUnitState.NBYTES).ToArray()));
             }
         }
 
-        public MapUnitStates(DataChunk mapUnitStatesDataChunk, TileReferences tileReferences)
-        {
-            _tileReferences = tileReferences;
-            _mapUnitStatesDataChunk = mapUnitStatesDataChunk;
-        }
-
         /// <summary>
-        /// Keeps all existing data in tact, but assigns a new DataChunk. This will be used when saving to
-        /// a different DataChunk then it was read from. 
+        ///     Keeps all existing data in tact, but assigns a new DataChunk. This will be used when saving to
+        ///     a different DataChunk then it was read from.
         /// </summary>
         /// <param name="newAnimationStatesDataChunk"></param>
         public void ReassignNewDataChunk(DataChunk newAnimationStatesDataChunk)

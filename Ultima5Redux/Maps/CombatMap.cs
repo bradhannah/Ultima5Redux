@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -6,6 +7,9 @@ namespace Ultima5Redux.Maps
 {
     public class CombatMap : Map
     {
+        private const int MAX_X_COLS = 11, MAX_Y_ROWS = 11;
+
+        private const int ROW_BYTES = 32;
         // https://github.com/andrewschultz/rpg-mapping-tools/wiki/Ultima-V-Dungeon-File-Format
 
         //  Dungeon.cbt's format is different from U4. It has a 32x11 array for each room. There are 112 rooms.
@@ -25,62 +29,53 @@ namespace Ultima5Redux.Maps
 
         private readonly CombatMapReference.SingleCombatMapReference _mapRef;
 
-        private const int MAX_X_COLS =11 , MAX_Y_ROWS = 11;
-        private const int ROW_BYTES = 32;
+        private readonly List<MapPlayerPosRow>
+            _row1To4Player = new List<MapPlayerPosRow>(4); // row 1 = east, row 2 = west, row 3 = south, row 4 = north
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct MapRow
-        {
-            fixed byte tiles[11];
-            fixed byte newTiles[8];
-            fixed byte zeroes[13];
-        };
+        // These are the legacy structures read in from the file. They will need to be abstracted into useable data.
+        private MapRow _row0; // Information contains the new tiles once a trigger happens  
+        private MapRow _row10NewTilesY; // row 10: position Y of the new tiles
+        private MapMonsterTileRow _row5Monster;
+        private MapMonsterXRow _row6MonsterX;
+        private MapMonsterYRow _row7MonsterY;
+        private MapRow _row8Trigger; // row 8: positions of triggers, one position hits to new tiles
+        private MapRow _row9NewTilesX; // row 9: position X of the new tiles
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct MapPlayerPosRow
+        /// <summary>
+        ///     Create the individual Combat Map object
+        /// </summary>
+        /// <param name="u5Directory">Directory of data files</param>
+        /// <param name="mapRef">specific combat map reference</param>
+        /// <param name="tileOverrides"></param>
+        public CombatMap(string u5Directory, CombatMapReference.SingleCombatMapReference mapRef,
+            TileOverrides tileOverrides) : base(u5Directory, tileOverrides, null)
         {
-            fixed byte tiles[11];
-            fixed byte initial_X[6]; // initial x position of each party member
-            fixed byte initial_Y[6]; // initial y position of each party member
-            fixed byte zeroes[9];
-        };
+            string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct MapMonsterTileRow
-        {
-            fixed byte tiles[11];
-            fixed byte monster_tiles[16]; // tile for each monster
-            fixed byte zeroes[5];
-        };
+            _mapRef = mapRef;
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct MapMonsterXRow
-        {
-            fixed byte tiles[11];
-            fixed byte initial_X[16]; // initial x position of each monster
-            fixed byte zeroes[5];
-        };
+            // TOOD: reads in the data from the file - should read file into memory once and leave it there so quicker reference
+            List<byte> mapList = Utils.GetFileAsByteList(dataFilenameAndPath, mapRef.FileOffset,
+                CombatMapReference.SingleCombatMapReference.MAP_BYTE_COUNT);
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private unsafe struct MapMonsterYRow
-        {
-            fixed byte tiles[11];
-            fixed byte initial_Y[16]; // initial y position of each monster
-            fixed byte zeroes[5];
-        };
+            TheMap = ReadCombatBytesIntoByteArray(mapList);
+
+            // initialize the legacy structures that describe the map details
+            InitializeCombatMapStructures(dataFilenameAndPath, mapRef.FileOffset);
+        }
 
         public string Description => _mapRef.Description;
 
         /// <summary>
-        /// Special function to read the map data only, putting it into a 2D array
+        ///     Special function to read the map data only, putting it into a 2D array
         /// </summary>
         /// <param name="byteList">the raw data</param>
         /// <returns>2D byte map</returns>
-        private static byte[][] ReadCombatBytesIntoByteArray (List<byte> byteList)
+        private static byte[][] ReadCombatBytesIntoByteArray(List<byte> byteList)
         {
             byte[][] combatMap = Utils.Init2DByteArray(MAX_Y_ROWS, MAX_X_COLS);
 
-            for (int i=0; i < MAX_Y_ROWS; i++)
+            for (int i = 0; i < MAX_Y_ROWS; i++)
             {
                 byteList.CopyTo(i * ROW_BYTES, combatMap[i], 0, MAX_X_COLS);
             }
@@ -88,58 +83,25 @@ namespace Ultima5Redux.Maps
             return combatMap;
         }
 
-        // These are the legacy structures read in from the file. They will need to be abstracted into useable data.
-        private MapRow _row0; // Information contains the new tiles once a trigger happens  
-        private readonly List<MapPlayerPosRow> _row1To4Player=new List<MapPlayerPosRow>(4); // row 1 = east, row 2 = west, row 3 = south, row 4 = north
-        private MapMonsterTileRow _row5Monster; 
-        private MapMonsterXRow _row6MonsterX;
-        private MapMonsterYRow _row7MonsterY;  
-        private MapRow _row8Trigger; // row 8: positions of triggers, one position hits to new tiles
-        private MapRow _row9NewTilesX;// row 9: position X of the new tiles
-        private MapRow _row10NewTilesY; // row 10: position Y of the new tiles
-
         private void InitializeCombatMapStructures(string dataFilenameAndPath, int fileOffset)
         {
             FileStream fs = File.OpenRead(dataFilenameAndPath);
             fs.Seek(fileOffset, SeekOrigin.Begin);
 
-            _row0 = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
-            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
-            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
-            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
-            _row1To4Player.Add((MapPlayerPosRow)Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
-            _row5Monster = (MapMonsterTileRow)Utils.ReadStruct(fs, typeof(MapMonsterTileRow));
-            _row6MonsterX = (MapMonsterXRow)Utils.ReadStruct(fs, typeof(MapMonsterXRow));
-            _row7MonsterY = (MapMonsterYRow)Utils.ReadStruct(fs, typeof(MapMonsterYRow));
-            _row8Trigger = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
-            _row9NewTilesX = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
-            _row10NewTilesY = (MapRow)Utils.ReadStruct(fs, typeof(MapRow));
+            _row0 = (MapRow) Utils.ReadStruct(fs, typeof(MapRow));
+            _row1To4Player.Add((MapPlayerPosRow) Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row1To4Player.Add((MapPlayerPosRow) Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row1To4Player.Add((MapPlayerPosRow) Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row1To4Player.Add((MapPlayerPosRow) Utils.ReadStruct(fs, typeof(MapPlayerPosRow)));
+            _row5Monster = (MapMonsterTileRow) Utils.ReadStruct(fs, typeof(MapMonsterTileRow));
+            _row6MonsterX = (MapMonsterXRow) Utils.ReadStruct(fs, typeof(MapMonsterXRow));
+            _row7MonsterY = (MapMonsterYRow) Utils.ReadStruct(fs, typeof(MapMonsterYRow));
+            _row8Trigger = (MapRow) Utils.ReadStruct(fs, typeof(MapRow));
+            _row9NewTilesX = (MapRow) Utils.ReadStruct(fs, typeof(MapRow));
+            _row10NewTilesY = (MapRow) Utils.ReadStruct(fs, typeof(MapRow));
             fs.Close();
 
-            System.Console.WriteLine("");
-        }
-
-        /// <summary>
-        /// Create the individual Combat Map object
-        /// </summary>
-        /// <param name="u5Directory">Directory of data files</param>
-        /// <param name="mapRef">specific combat map reference</param>
-        /// <param name="tileOverrides"></param>
-        public CombatMap (string u5Directory, CombatMapReference.SingleCombatMapReference mapRef, TileOverrides tileOverrides) : base (u5Directory, tileOverrides, null)
-        {
-            string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);
-
-            _mapRef = mapRef;
-
-            // TOOD: reads in the data from the file - should read file into memory once and leave it there so quicker reference
-            List<byte> mapList = Utils.GetFileAsByteList(dataFilenameAndPath, mapRef.FileOffset, CombatMapReference.SingleCombatMapReference.MAP_BYTE_COUNT);
-
-            TheMap = ReadCombatBytesIntoByteArray(mapList);
-
-            // initialize the legacy structures that describe the map details
-            InitializeCombatMapStructures(dataFilenameAndPath, mapRef.FileOffset);
-
-
+            Console.WriteLine("");
         }
 
         protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
@@ -147,5 +109,45 @@ namespace Ultima5Redux.Maps
             return 1;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private unsafe struct MapRow
+        {
+            private fixed byte tiles[11];
+            private fixed byte newTiles[8];
+            private fixed byte zeroes[13];
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private unsafe struct MapPlayerPosRow
+        {
+            private fixed byte tiles[11];
+            private fixed byte initial_X[6]; // initial x position of each party member
+            private fixed byte initial_Y[6]; // initial y position of each party member
+            private fixed byte zeroes[9];
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private unsafe struct MapMonsterTileRow
+        {
+            private fixed byte tiles[11];
+            private fixed byte monster_tiles[16]; // tile for each monster
+            private fixed byte zeroes[5];
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private unsafe struct MapMonsterXRow
+        {
+            private fixed byte tiles[11];
+            private fixed byte initial_X[16]; // initial x position of each monster
+            private fixed byte zeroes[5];
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private unsafe struct MapMonsterYRow
+        {
+            private fixed byte tiles[11];
+            private fixed byte initial_Y[16]; // initial y position of each monster
+            private fixed byte zeroes[5];
+        }
     }
 }

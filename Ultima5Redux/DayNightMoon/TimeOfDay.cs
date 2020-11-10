@@ -7,26 +7,44 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
-        private readonly DataChunk _currentYearDataChunk;
-        private readonly DataChunk _currentMonthDataChunk;
         private readonly DataChunk _currentDayDataChunk;
         private readonly DataChunk _currentHourDataChunk;
         private readonly DataChunk _currentMinuteDataChunk;
+        private readonly DataChunk _currentMonthDataChunk;
+        private readonly DataChunk _currentYearDataChunk;
 
         /// <summary>
-        /// Dictionary of all change trackers and if time has changed since last check
+        ///     Dictionary of all change trackers and if time has changed since last check
         /// </summary>
         private readonly Dictionary<int, bool> _timeHasChangedDictionary = new Dictionary<int, bool>();
-        
+
         /// <summary>
-        /// tracks the total number of registered change trackers
+        ///     tracks the total number of registered change trackers
         /// </summary>
-        private int _nTotalChangeTrackers = 0;
-        
+        private int _nTotalChangeTrackers;
+
         /// <summary>
-        /// Gets a string describing the current time of day
+        ///     Constructor. Builds with datachunks from save game file
         /// </summary>
-        /// <param name="tod"></param>
+        /// <param name="currentYearDataChunk"></param>
+        /// <param name="currentMonthDataChunk"></param>
+        /// <param name="currentDayDataChunk"></param>
+        /// <param name="currentHourDataChunk"></param>
+        /// <param name="currentMinuteDataChunk"></param>
+        public TimeOfDay(DataChunk currentYearDataChunk, DataChunk currentMonthDataChunk, DataChunk currentDayDataChunk,
+            DataChunk currentHourDataChunk,
+            DataChunk currentMinuteDataChunk)
+        {
+            _currentYearDataChunk = currentYearDataChunk;
+            _currentMonthDataChunk = currentMonthDataChunk;
+            _currentDayDataChunk = currentDayDataChunk;
+            _currentHourDataChunk = currentHourDataChunk;
+            _currentMinuteDataChunk = currentMinuteDataChunk;
+        }
+
+        /// <summary>
+        ///     Gets a string describing the current time of day
+        /// </summary>
         /// <returns></returns>
         public string TimeOfDayName
         {
@@ -37,63 +55,8 @@ namespace Ultima5Redux.DayNightMoon
                 return "evening";
             }
         }
-        
-        /// <summary>
-        /// Constructor. Builds with datachunks from save game file
-        /// </summary>
-        /// <param name="currentYearDataChunk"></param>
-        /// <param name="currentMonthDataChunk"></param>
-        /// <param name="currentDayDataChunk"></param>
-        /// <param name="currentHourDataChunk"></param>
-        /// <param name="currentMinuteDataChunk"></param>
-        public TimeOfDay(DataChunk currentYearDataChunk, DataChunk currentMonthDataChunk, DataChunk currentDayDataChunk, DataChunk currentHourDataChunk,
-            DataChunk currentMinuteDataChunk)
-        {
-            _currentYearDataChunk = currentYearDataChunk;
-            _currentMonthDataChunk = currentMonthDataChunk;
-            _currentDayDataChunk = currentDayDataChunk;
-            _currentHourDataChunk = currentHourDataChunk;
-            _currentMinuteDataChunk = currentMinuteDataChunk;
-        }
 
-        public bool IsDayLight => (Hour >= 5 && Hour < (8 + 12));
-
-        /// <summary>
-        /// Registers a change tracker, returning the int handle to it that will need to be stored
-        /// </summary>
-        /// <returns>the int handler of the change tracker</returns>
-        public int RegisterChangeTracker()
-        {
-            int nChangeTracker = _nTotalChangeTrackers++;
-            _timeHasChangedDictionary[nChangeTracker] = true;
-            return nChangeTracker;
-        }
-
-        /// <summary>
-        /// Sets all the flags to indicate if time has or hasn't changed for all "RegisterChangeTracker" registered
-        /// change tracker id
-        /// </summary>
-        /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
-        public void SetAllChangeTrackers(bool bTimeChangeHappened = true)
-        {
-            for (int i = 0; i < _nTotalChangeTrackers; i++)
-            {
-                _timeHasChangedDictionary[i] = bTimeChangeHappened;
-            }
-        }
-
-        /// <summary>
-        /// Has the time changed since the last time we checked with the given change tracker id
-        /// </summary>
-        /// <param name="nChangeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
-        /// <returns>true if change has occured, otherwise false</returns>
-        public bool HasTimeChanged(int nChangeTrackerId)
-        {
-            bool bTimeChangeOccured = _timeHasChangedDictionary[nChangeTrackerId];
-            // we reset it to false to say we saw it until the next change
-            _timeHasChangedDictionary[nChangeTrackerId] = false;
-            return bTimeChangeOccured;
-        }
+        public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
         public string FormattedDate => Month + "-" + Day + "-" + Year;
 
         public string FormattedTime
@@ -141,28 +104,65 @@ namespace Ultima5Redux.DayNightMoon
                 Debug.Assert(value <= 59);
                 _currentMinuteDataChunk.SetChunkAsByte(value);
             }
-        } 
+        }
 
         /// <summary>
-        /// Advances the clock by certain number of minutes
+        ///     Registers a change tracker, returning the int handle to it that will need to be stored
+        /// </summary>
+        /// <returns>the int handler of the change tracker</returns>
+        public int RegisterChangeTracker()
+        {
+            int nChangeTracker = _nTotalChangeTrackers++;
+            _timeHasChangedDictionary[nChangeTracker] = true;
+            return nChangeTracker;
+        }
+
+        /// <summary>
+        ///     Sets all the flags to indicate if time has or hasn't changed for all "RegisterChangeTracker" registered
+        ///     change tracker id
+        /// </summary>
+        /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
+        public void SetAllChangeTrackers(bool bTimeChangeHappened = true)
+        {
+            for (int i = 0; i < _nTotalChangeTrackers; i++)
+            {
+                _timeHasChangedDictionary[i] = bTimeChangeHappened;
+            }
+        }
+
+        /// <summary>
+        ///     Has the time changed since the last time we checked with the given change tracker id
+        /// </summary>
+        /// <param name="nChangeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
+        /// <returns>true if change has occured, otherwise false</returns>
+        public bool HasTimeChanged(int nChangeTrackerId)
+        {
+            bool bTimeChangeOccured = _timeHasChangedDictionary[nChangeTrackerId];
+            // we reset it to false to say we saw it until the next change
+            _timeHasChangedDictionary[nChangeTrackerId] = false;
+            return bTimeChangeOccured;
+        }
+
+        /// <summary>
+        ///     Advances the clock by certain number of minutes
         /// </summary>
         /// <param name="nMinutes"></param>
         /// <exception cref="Ultima5ReduxException"></exception>
         public void AdvanceClock(int nMinutes)
         {
             const int nDaysInMonth = 28;
-            
+
             // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
-            if (nMinutes > (60 * 9)) throw new Ultima5ReduxException("You can not advance more than 9 hours at a time");
+            if (nMinutes > 60 * 9) throw new Ultima5ReduxException("You can not advance more than 9 hours at a time");
 
             // if we add the time, and it enters the next hour then we have some work to do
             if (Minute + nMinutes > 59)
             {
                 int nExtraMinutes;
-                byte nHours = (byte)Math.DivRem(nMinutes, 60, out nExtraMinutes);
+                byte nHours = (byte) Math.DivRem(nMinutes, 60, out nExtraMinutes);
 
-                byte newHour = (byte)((Hour + nHours + 1));
-                Minute = (byte)((Minute + (byte)nExtraMinutes) % 60);
+                byte newHour = (byte) (Hour + nHours + 1);
+                Minute = (byte) ((Minute + (byte) nExtraMinutes) % 60);
 
                 // if it puts us into a new day
                 if (newHour <= 23)
@@ -171,13 +171,13 @@ namespace Ultima5Redux.DayNightMoon
                 }
                 else
                 {
-                    Hour = (byte)(newHour % 24);
+                    Hour = (byte) (newHour % 24);
                     // if the day + 1 is more days then we are allow in the month, then restart the days, and go to next month
-                    int nDay = (byte)(Day + 1);
+                    int nDay = (byte) (Day + 1);
                     if (nDay > nDaysInMonth)
                     {
                         Day = 1;
-                        int nMonth = (byte)(Month + 1);
+                        int nMonth = (byte) (Month + 1);
                         // if the next month goes beyond 13, then we reset and advance the year
                         if (nMonth > 13)
                         {
@@ -191,13 +191,13 @@ namespace Ultima5Redux.DayNightMoon
                     }
                     else
                     {
-                        Day = (byte)(Day + 1);
+                        Day = (byte) (Day + 1);
                     }
                 }
             }
             else
             {
-                Minute += (byte)nMinutes;
+                Minute += (byte) nMinutes;
             }
 
             // time has changed, so we reset all our change tracking flags

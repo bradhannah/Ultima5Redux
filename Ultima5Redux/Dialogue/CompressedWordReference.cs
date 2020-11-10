@@ -8,33 +8,23 @@ namespace Ultima5Redux.Dialogue
 {
     public class CompressedWordReference
     {
+        /// <summary>
+        ///     when you must adjust the offset into the compressed word lookup, subtract this
+        /// </summary>
+        private const int TALK_OFFSET_ADJUST = 0x80;
+
         private readonly SomeStrings _compressedWords;
 
         private readonly Dictionary<int, byte> _compressWordLookupMap;
 
         /// <summary>
-        /// Adds a byte offset lookup.
-        /// This is hard to follow - but basically it describes what should be added or subtracted from an index based on the range it lies in.
-        /// </summary>
-        /// <param name="indexStart">the first index to apply the offset</param>
-        /// <param name="indexStop">the last index to apply the offset to</param>
-        /// <param name="offset">the offset to add or subtract (positive or negative)</param>
-        private void AddByteLookupMapping(byte indexStart, byte indexStop, int offset)
-        {
-            Debug.Assert(indexStop <= 255);
-            for (int i = indexStart; i <= indexStop; i++)
-            {
-                _compressWordLookupMap.Add((byte)i, (byte)(i + offset));
-            }
-        }
-
-        /// <summary>
-        /// Construct a compressed word reference using the Data.OVL reference
+        ///     Construct a compressed word reference using the Data.OVL reference
         /// </summary>
         /// <param name="dataRef"></param>
         public CompressedWordReference(DataOvlReference dataRef)
         {
-            _compressedWords = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TALK_COMPRESSED_WORDS).GetChunkAsStringList();
+            _compressedWords = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TALK_COMPRESSED_WORDS)
+                .GetChunkAsStringList();
             _compressedWords.PrintSomeStrings();
 
             // we are creating a lookup map because the indexes are not concurrent
@@ -55,7 +45,24 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        /// Is there a talking word at the given index?
+        ///     Adds a byte offset lookup.
+        ///     This is hard to follow - but basically it describes what should be added or subtracted from an index based on the
+        ///     range it lies in.
+        /// </summary>
+        /// <param name="indexStart">the first index to apply the offset</param>
+        /// <param name="indexStop">the last index to apply the offset to</param>
+        /// <param name="offset">the offset to add or subtract (positive or negative)</param>
+        private void AddByteLookupMapping(byte indexStart, byte indexStop, int offset)
+        {
+            Debug.Assert(indexStop <= 255);
+            for (int i = indexStart; i <= indexStop; i++)
+            {
+                _compressWordLookupMap.Add((byte) i, (byte) (i + offset));
+            }
+        }
+
+        /// <summary>
+        ///     Is there a talking word at the given index?
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -63,17 +70,14 @@ namespace Ultima5Redux.Dialogue
         {
             // Note: I originally wrote this just to catch the exceptions, but it was SUPER SLOW, so I hopefully smartened it up
             // is the index in the range that we can even lookup?
-            if (index > (_compressWordLookupMap.Keys.Max() - _compressWordLookupMap.Keys.Min()))
-            {
-                return false;
-            }
+            if (index > _compressWordLookupMap.Keys.Max() - _compressWordLookupMap.Keys.Min()) return false;
             // if the index is in range, then does the key exist?
             return _compressWordLookupMap.ContainsKey(index);
         }
 
         /// <summary>
-        /// Get a compressed word with an index
-        /// The index will be automatically adjusted
+        ///     Get a compressed word with an index
+        ///     The index will be automatically adjusted
         /// </summary>
         /// <param name="index">the index as it appears in the .tlk file</param>
         /// <returns></returns>
@@ -81,26 +85,26 @@ namespace Ultima5Redux.Dialogue
         {
             try
             {
-                return (_compressedWords.Strs[_compressWordLookupMap[index]]);
-            } catch (System.Collections.Generic.KeyNotFoundException)
+                return _compressedWords.Strs[_compressWordLookupMap[index]];
+            } catch (KeyNotFoundException)
             {
-                throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " + index);
-            }
-            catch (System.ArgumentOutOfRangeException)
+                throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " +
+                                                 index);
+            } catch (ArgumentOutOfRangeException)
             {
                 throw new NoTalkingWordException("Couldn't find TalkWord at index " + index);
             }
         }
 
         /// <summary>
-        /// Is it expected punctuation (not replacement characters though)
+        ///     Is it expected punctuation (not replacement characters though)
         /// </summary>
         /// <param name="character"></param>
         /// <returns>true if it is acceptable</returns>
         private bool IsAcceptablePunctuation(char character)
         {
             return character == ' ' || character == '"' || character == '!' || character == ',' || character == '\''
-                || character == '.' ||  character == '-' || character == '?' || character == '\n' || character == ';';
+                   || character == '.' || character == '-' || character == '?' || character == '\n' || character == ';';
         }
 
         private bool IsReplacementCharacter(char character)
@@ -113,28 +117,23 @@ namespace Ultima5Redux.Dialogue
             // * location of thing
             // ^ quantity of thing (ie. reagent)
             return character == '%' || character == '&' || character == '$' || character == '#' || character == '@'
-                || character == '*' || character == '^';
+                   || character == '*' || character == '^';
         }
 
         /// <summary>
-        /// Is this an expected letter or digit in the string
+        ///     Is this an expected letter or digit in the string
         /// </summary>
         /// <param name="character"></param>
         /// <returns>true if it is acceptable</returns>
         private bool IsAcceptableLettersOrDigits(char character)
         {
-            return (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z') ||
-                   (character >= '0' && character <= '9');
+            return character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z' ||
+                   character >= '0' && character <= '9';
         }
-        
-        /// <summary>
-        /// when you must adjust the offset into the compressed word lookup, subtract this
-        /// </summary>
-        private const int TALK_OFFSET_ADJUST = 0x80;
 
         /// <summary>
-        /// Replaces all compressed word symbols from the shopkeepers dialogue
-        /// <remarks>this leaves the variable replacement symbols in tact</remarks>
+        ///     Replaces all compressed word symbols from the shopkeepers dialogue
+        ///     <remarks>this leaves the variable replacement symbols in tact</remarks>
         /// </summary>
         /// <param name="rawString">raw string from shoppes.dat</param>
         /// <returns>full string with all compressed words expanded</returns>
@@ -149,7 +148,8 @@ namespace Ultima5Redux.Dialogue
                 byte tempByte = byteWord;
 
                 bool bUsePhraseLookup = false;
-                if (!(IsAcceptablePunctuation((char)byteWord) || IsAcceptableLettersOrDigits((char)byteWord) || IsReplacementCharacter((char)byteWord)))
+                if (!(IsAcceptablePunctuation((char) byteWord) || IsAcceptableLettersOrDigits((char) byteWord) ||
+                      IsReplacementCharacter((char) byteWord)))
                 {
                     bUsePhraseLookup = true;
                     tempByte -= TALK_OFFSET_ADJUST;
@@ -165,9 +165,9 @@ namespace Ultima5Redux.Dialogue
                     buildAWord += " ";
 
                     // we are going to lookup the word in the compressed word list, if we throw an exception then we know it wasn't in the list
-                    if (IsTalkingWord((int) tempByte + 1))
+                    if (IsTalkingWord(tempByte + 1))
                     {
-                        string talkingWord = GetTalkingWord((int) tempByte + 1);
+                        string talkingWord = GetTalkingWord(tempByte + 1);
                         bUseCompressedWord = true;
                         buildAWord += talkingWord;
                     }
@@ -196,18 +196,18 @@ namespace Ultima5Redux.Dialogue
                     buildAWord += (char) tempByte;
                 }
             }
+
             return buildAWord;
         }
 
         /// <summary>
-        /// Couldn't find a talking word at the indicated index
+        ///     Couldn't find a talking word at the indicated index
         /// </summary>
-        public class NoTalkingWordException: Ultima5ReduxException
+        public class NoTalkingWordException : Ultima5ReduxException
         {
-            public NoTalkingWordException(string message) :base(message)
+            public NoTalkingWordException(string message) : base(message)
             {
             }
         }
-
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -7,29 +6,21 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 namespace Ultima5Redux.MapUnits
 {
     /// <summary>
-    /// Based on original U5 data structure
-    /// tracks the position and state of the map character
+    ///     Based on original U5 data structure
+    ///     tracks the position and state of the map character
     /// </summary>
     public class SmallMapCharacterState
     {
-        #region Public Properties
-        public MapUnitPosition TheMapUnitPosition { get; } = new MapUnitPosition();
-        public int MapUnitAnimationStateIndex { get; }
-        public int NPCIndex { get; }
-        private TileReference TileRef { get; }
-        public bool Active { get; }
-        #endregion
-
-        #region Constructors
         /// <summary>
-        /// Build the character state based on existing conditions
-        /// This is called when entering a new map within the game - as opposed to loading from disk
+        ///     Build the character state based on existing conditions
+        ///     This is called when entering a new map within the game - as opposed to loading from disk
         /// </summary>
         /// <param name="tileReferences"></param>
         /// <param name="npcRef"></param>
         /// <param name="nMapUnitAnimationStateIndex"></param>
         /// <param name="timeOfDay"></param>
-        public SmallMapCharacterState(TileReferences tileReferences, NonPlayerCharacterReference npcRef, int nMapUnitAnimationStateIndex, TimeOfDay timeOfDay)
+        public SmallMapCharacterState(TileReferences tileReferences, NonPlayerCharacterReference npcRef,
+            int nMapUnitAnimationStateIndex, TimeOfDay timeOfDay)
         {
             NPCIndex = npcRef.DialogIndex;
             TileRef = tileReferences.GetTileReference(npcRef.NPCKeySprite);
@@ -40,30 +31,35 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// Create a blank SmallMapCharacterState indicating no character
+        ///     Create a blank SmallMapCharacterState indicating no character
         /// </summary>
         public SmallMapCharacterState()
         {
             Active = false;
         }
-        
+
         /// <summary>
-        /// Build the character state from data retrieved from disk
+        ///     Build the character state from data retrieved from disk
         /// </summary>
         /// <param name="tileReferences"></param>
         /// <param name="stateUInts"></param>
         /// <param name="nNPCIndex"></param>
-        public SmallMapCharacterState(TileReferences tileReferences, UInt16[] stateUInts, int nNPCIndex)
+        public SmallMapCharacterState(TileReferences tileReferences, ushort[] stateUInts, int nNPCIndex)
         {
             Debug.Assert(stateUInts.Length == 0x8);
             NPCIndex = nNPCIndex;
             TheMapUnitPosition.X = stateUInts[1];
             TheMapUnitPosition.Y = stateUInts[2];
             TheMapUnitPosition.Floor = stateUInts[3];
-            TileRef = tileReferences.GetTileReference(stateUInts[4]+0x100);
+            TileRef = tileReferences.GetTileReference(stateUInts[4] + 0x100);
             MapUnitAnimationStateIndex = stateUInts[6];
-            Active = stateUInts[7]>0;
+            Active = stateUInts[7] > 0;
         }
-        #endregion
+
+        public MapUnitPosition TheMapUnitPosition { get; } = new MapUnitPosition();
+        public int MapUnitAnimationStateIndex { get; }
+        public int NPCIndex { get; }
+        private TileReference TileRef { get; }
+        public bool Active { get; }
     }
 }

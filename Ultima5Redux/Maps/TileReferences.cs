@@ -1,41 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
+using Ultima5Redux.Properties;
 
 namespace Ultima5Redux.Maps
 {
     public class TileReferences
     {
         /// <summary>
-        /// Tile reference dictionary indexed by sprite number
-        /// </summary>
-        private Dictionary<int, TileReference> TileReferenceDictionary { get; }
-        /// <summary>
-        /// Tile reference dictionary referenced by tile string value
-        /// </summary>
-        private Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } = new Dictionary<string, TileReference>(1024);
-
-        /// <summary>
-        /// String references for Ultima 5
+        ///     String references for Ultima 5
         /// </summary>
         private readonly U5StringRef _u5StringRef;
 
-        /// <summary>
-        /// Number of tile references
-        /// </summary>
-        public int Count => TileReferenceByStringDictionary.Count;
-
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="u5StringRef"></param>
         public TileReferences(U5StringRef u5StringRef)
         {
-            this._u5StringRef = u5StringRef;
-            TileReferenceDictionary = TileReferences.Load();
+            _u5StringRef = u5StringRef;
+            TileReferenceDictionary = Load();
 
             for (int i = 0; i < TileReferenceDictionary.Count; i++)
             {
@@ -47,18 +33,35 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Loads the data from the embedded JSON data
+        ///     Tile reference dictionary indexed by sprite number
+        /// </summary>
+        private Dictionary<int, TileReference> TileReferenceDictionary { get; }
+
+        /// <summary>
+        ///     Tile reference dictionary referenced by tile string value
+        /// </summary>
+        private Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } =
+            new Dictionary<string, TileReference>(1024);
+
+        /// <summary>
+        ///     Number of tile references
+        /// </summary>
+        public int Count => TileReferenceByStringDictionary.Count;
+
+        /// <summary>
+        ///     Loads the data from the embedded JSON data
         /// </summary>
         /// <returns></returns>
         private static Dictionary<int, TileReference> Load()
         {
-            Dictionary<int, TileReference> result = JsonConvert.DeserializeObject<Dictionary<int, TileReference>>(Properties.Resources.TileData);
+            Dictionary<int, TileReference> result =
+                JsonConvert.DeserializeObject<Dictionary<int, TileReference>>(Resources.TileData);
 
             return result;
         }
 
         /// <summary>
-        /// Gets a tile sprite index by the tiles string name (defined in JSON)
+        ///     Gets a tile sprite index by the tiles string name (defined in JSON)
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -68,7 +71,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Gets a tile reference by the tiles string name (defined in JSON)
+        ///     Gets a tile reference by the tiles string name (defined in JSON)
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -78,7 +81,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Gets the tile reference based on sprite index
+        ///     Gets the tile reference based on sprite index
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -102,7 +105,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Is the sprite a dirt path tile?
+        ///     Is the sprite a dirt path tile?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -113,19 +116,19 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Can you typically bury a moonstone on the tile type?
+        ///     Can you typically bury a moonstone on the tile type?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns>true if you can normally bury a moonstone</returns>
         public bool IsMoonstoneBuriable(int nSprite)
         {
-            TileReference tileRef = GetTileReference(nSprite); 
-            return (tileRef.Name == "Grass" || tileRef.Name == "Swamp" || tileRef.Name == "Desert1"
-                       || tileRef.Name.Contains("Forest")) ;
+            TileReference tileRef = GetTileReference(nSprite);
+            return tileRef.Name == "Grass" || tileRef.Name == "Swamp" || tileRef.Name == "Desert1"
+                   || tileRef.Name.Contains("Forest");
         }
-        
+
         /// <summary>
-        /// Is the sprite any of the door sprites (lock, unlocked, with a view, magic)
+        ///     Is the sprite any of the door sprites (lock, unlocked, with a view, magic)
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -135,19 +138,22 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Is the sprite a staircase sprite
+        ///     Is the sprite a staircase sprite
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool IsStaircase(int nSprite)
         {
-            bool bIsLadder = nSprite == GetTileNumberByName("StairsWest") || nSprite == GetTileNumberByName("StairsEast")
-                || nSprite == GetTileNumberByName("StairsNorth") || nSprite == GetTileNumberByName("StairsSouth"); // is it a ladder
+            bool bIsLadder =
+                nSprite == GetTileNumberByName("StairsWest") || nSprite == GetTileNumberByName("StairsEast")
+                                                             || nSprite == GetTileNumberByName("StairsNorth") ||
+                                                             nSprite == GetTileNumberByName(
+                                                                 "StairsSouth"); // is it a ladder
             return bIsLadder;
         }
 
         /// <summary>
-        /// Is the sprite a klimbable grate?
+        ///     Is the sprite a klimbable grate?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -156,24 +162,30 @@ namespace Ultima5Redux.Maps
             bool bIsGrate = nSprite == GetTileNumberByName("Grate");
             return bIsGrate;
         }
-        
+
 
         /// <summary>
-        /// Is the sprite an up ladder?
+        ///     Is the sprite an up ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderUp(int nSprite) => nSprite == GetTileNumberByName("LadderUp");
+        public bool IsLadderUp(int nSprite)
+        {
+            return nSprite == GetTileNumberByName("LadderUp");
+        }
 
         /// <summary>
-        /// Is the sprite a down ladder?
+        ///     Is the sprite a down ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderDown(int nSprite) => nSprite == GetTileNumberByName("LadderDown");
+        public bool IsLadderDown(int nSprite)
+        {
+            return nSprite == GetTileNumberByName("LadderDown");
+        }
 
         /// <summary>
-        /// is the sprite an up or a down ladder?
+        ///     is the sprite an up or a down ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -182,8 +194,9 @@ namespace Ultima5Redux.Maps
             bool bIsLadder = IsLadderDown(nSprite) || IsLadderUp(nSprite); // is it a ladder
             return bIsLadder;
         }
+
         /// <summary>
-        /// is the sprite the head (with pillor) of a bed 
+        ///     is the sprite the head (with pillor) of a bed
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -194,7 +207,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// is the sprite a stock 
+        ///     is the sprite a stock
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -205,7 +218,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// is the sprite manacles (hand irons)
+        ///     is the sprite manacles (hand irons)
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -216,19 +229,19 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Is the spirit a mirror? broken, reflected or regular
+        ///     Is the spirit a mirror? broken, reflected or regular
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool IsMirror(int nSprite)
         {
-            bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar") 
+            bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar")
                                                                       || nSprite == GetTileNumberByName("MirrorBroken");
             return bIsMirror;
         }
 
         /// <summary>
-        /// Is it an unbroken mirror - reflected or regular
+        ///     Is it an unbroken mirror - reflected or regular
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -237,94 +250,114 @@ namespace Ultima5Redux.Maps
             bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar");
             return bIsMirror;
         }
-        
-        
+
+
         /// <summary>
-        /// Is it a magical door?
+        ///     Is it a magical door?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool IsDoorMagical(int nSprite)
         {
             Debug.Assert(GetTileReference(nSprite).IsOpenable);
-            bool bIsDoorMagical = nSprite == GetTileNumberByName("MagicLockDoorWithView") || nSprite == GetTileNumberByName("MagicLockDoor");
+            bool bIsDoorMagical = nSprite == GetTileNumberByName("MagicLockDoorWithView") ||
+                                  nSprite == GetTileNumberByName("MagicLockDoor");
             return bIsDoorMagical;
         }
 
         /// <summary>
-        /// Is it a locked door?
+        ///     Is it a locked door?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool IsDoorLocked(int nSprite)
         {
             Debug.Assert(GetTileReference(nSprite).IsOpenable);
-            bool bIsDoorLocked = nSprite == GetTileNumberByName("LockedDoor") || nSprite == GetTileNumberByName("LockedDoorView");
+            bool bIsDoorLocked = nSprite == GetTileNumberByName("LockedDoor") ||
+                                 nSprite == GetTileNumberByName("LockedDoorView");
             return bIsDoorLocked;
         }
 
         /// <summary>
-        /// Is it an unoccupied chair?
+        ///     Is it an unoccupied chair?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool IsChair(int nSprite)
         {
-            bool bIsChair = nSprite== GetTileNumberByName("ChairBackForward") ||
-                nSprite == GetTileNumberByName("ChairBackLeft") ||
-                nSprite == GetTileNumberByName("ChairBackBack") ||
-                nSprite == GetTileNumberByName("ChairBackRight");
+            bool bIsChair = nSprite == GetTileNumberByName("ChairBackForward") ||
+                            nSprite == GetTileNumberByName("ChairBackLeft") ||
+                            nSprite == GetTileNumberByName("ChairBackBack") ||
+                            nSprite == GetTileNumberByName("ChairBackRight");
             return bIsChair;
         }
 
         /// <summary>
-        /// is it a readable sign?
+        ///     is it a readable sign?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool IsSign(int nSprite)
         {
-            return (GetTileNumberByName("Sign") == nSprite ||
-              GetTileNumberByName("SimpleCross") == nSprite ||
-              GetTileNumberByName("StoneHeadstone") == nSprite ||
-              GetTileNumberByName("SmallSign") == nSprite ||
-              GetTileNumberByName("SignWarning") == nSprite);
+            return GetTileNumberByName("Sign") == nSprite ||
+                   GetTileNumberByName("SimpleCross") == nSprite ||
+                   GetTileNumberByName("StoneHeadstone") == nSprite ||
+                   GetTileNumberByName("SmallSign") == nSprite ||
+                   GetTileNumberByName("SignWarning") == nSprite;
         }
 
-        public bool IsSkiff(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Skiff");
-        public bool IsMagicCarpet(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Carpet2");
-        public bool IsHorse(int nSprite) => GetTileReference(nSprite).Name.StartsWith("Horse");
+        public bool IsSkiff(int nSprite)
+        {
+            return GetTileReference(nSprite).Name.StartsWith("Skiff");
+        }
+
+        public bool IsMagicCarpet(int nSprite)
+        {
+            return GetTileReference(nSprite).Name.StartsWith("Carpet2");
+        }
+
+        public bool IsHorse(int nSprite)
+        {
+            return GetTileReference(nSprite).Name.StartsWith("Horse");
+        }
+
         // a bit a rough cut right now, this will need to be refined as the monsters are assigned actual behaviours
-        public bool IsMonster(int nSprite) => nSprite >= 384 && nSprite <= 511;
-        public bool IsFrigate(int nSprite) =>
-            GetTileReference(nSprite).Name.StartsWith("Ship")
-            || GetTileReference(nSprite).Name.StartsWith("Pirate");
+        public bool IsMonster(int nSprite)
+        {
+            return nSprite >= 384 && nSprite <= 511;
+        }
+
+        public bool IsFrigate(int nSprite)
+        {
+            return GetTileReference(nSprite).Name.StartsWith("Ship")
+                   || GetTileReference(nSprite).Name.StartsWith("Pirate");
+        }
 
         /// <summary>
-        /// is it a door with a view window? locked or unlocked
+        ///     is it a door with a view window? locked or unlocked
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool IsDoorWithView(int nSprite)
         {
-            bool bIsDoorWithView = nSprite == GetTileNumberByName("RegularDoorView") || nSprite == GetTileNumberByName("LockedDoorView") ||
-                 nSprite == GetTileNumberByName("MagicLockDoorWithView");
+            bool bIsDoorWithView = nSprite == GetTileNumberByName("RegularDoorView") ||
+                                   nSprite == GetTileNumberByName("LockedDoorView") ||
+                                   nSprite == GetTileNumberByName("MagicLockDoorWithView");
             return bIsDoorWithView;
         }
 
         /// <summary>
-        /// does the sprite require a grappling hook to Klimb?
+        ///     does the sprite require a grappling hook to Klimb?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
         public bool RequiresGrapplingHook(int nSprite)
         {
             return nSprite == GetTileNumberByName("SmallMountains");
-
         }
 
         /// <summary>
-        /// Returns the travel speed factor of a particular tile 
+        ///     Returns the travel speed factor of a particular tile
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -334,7 +367,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Get the message you should display to the user when travelling on a given sprite
+        ///     Get the message you should display to the user when travelling on a given sprite
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
@@ -356,23 +389,25 @@ namespace Ultima5Redux.Maps
                 default:
                     //throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
                     return "Untrodden Land";
-                    // throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
+                // throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
             }
         }
 
         /// <summary>
-        /// When building a map, there are times where default tiles need to be replaced with substitute tiles (like klimbing a ladder)
-        /// or replaced with an animation (like eating in a chair). 
-        /// 
-        /// This method will use the info provided to provide a suitable substitution
+        ///     When building a map, there are times where default tiles need to be replaced with substitute tiles (like klimbing a
+        ///     ladder)
+        ///     or replaced with an animation (like eating in a chair).
+        ///     This method will use the info provided to provide a suitable substitution
         /// </summary>
         /// <param name="nSprite">The default sprite</param>
         /// <param name="bIsNPCTile">Is there an NPC on the tile as well?</param>
         /// <param name="bIsAvatarTile">Is the Avatar on the tile?</param>
         /// <param name="bIsFoodNearby">Is there food within +/- 1 y pos?</param>
-        /// <param name="bIsDaylight">Is it current daylight (<8pm)</param>
+        /// <param name="bIsDaylight">
+        ///     Is it current daylight (<8pm)</param>
         /// <returns></returns>
-        public int GetCorrectSprite(int nSprite, bool bIsNPCTile, bool bIsAvatarTile, bool bIsFoodNearby, bool bIsDaylight)
+        public int GetCorrectSprite(int nSprite, bool bIsNPCTile, bool bIsAvatarTile, bool bIsFoodNearby,
+            bool bIsDaylight)
         {
             int nNewSprite = nSprite;
 
@@ -394,7 +429,7 @@ namespace Ultima5Redux.Maps
                 };
 
                 if (!bIsNPCTile && !bIsAvatarTile) return nNewSprite;
-                
+
                 if (bIsFoodNearby)
                 {
                     if (npcOnTopMapWithFood.ContainsKey(nSprite)) nNewSprite = npcOnTopMapWithFood[nSprite];
@@ -409,10 +444,9 @@ namespace Ultima5Redux.Maps
             else if (IsLadder(nSprite)) // on a ladder
             {
                 if (bIsNPCTile || bIsAvatarTile)
-                {
-                    nNewSprite = IsLadderUp(nSprite) ?
-                        GetTileNumberByName("KlimbLadderUp") : GetTileNumberByName("KlimbLadderDown");
-                }
+                    nNewSprite = IsLadderUp(nSprite)
+                        ? GetTileNumberByName("KlimbLadderUp")
+                        : GetTileNumberByName("KlimbLadderDown");
             }
             else if (IsHeadOfBed(nSprite) && (bIsNPCTile || bIsAvatarTile)) // in bed
             {

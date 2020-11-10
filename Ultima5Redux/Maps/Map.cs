@@ -1,57 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using Ultima5Redux.External;
 
 namespace Ultima5Redux.Maps
 {
     public abstract class Map
     {
-        public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
-        
-        #region Protected Fields
         /// <summary>
-        /// The directory of the U5 data files
+        ///     A* algorithm helper class
+        /// </summary>
+        internal AStar AStar;
+
+        /// <summary>
+        ///     All A* nodes for the current map
+        ///     Accessed by [x][y]
+        /// </summary>
+        protected List<List<Node>> AStarNodes;
+
+        protected TileOverrides TileOverrides;
+
+        /// <summary>
+        ///     The directory of the U5 data files
         /// </summary>
         protected string U5Directory;
 
-        protected TileOverrides TileOverrides;
-        #endregion
-
-        #region Internal Fields
-        /// <summary>
-        /// All A* nodes for the current map
-        /// Accessed by [x][y]
-        /// </summary>
-        protected List<List<Node>> AStarNodes;
-        /// <summary>
-        /// A* algorithm helper class
-        /// </summary>
-        internal AStar AStar;
-        #endregion
+        protected Dictionary<Point2D, TileOverride> XYOverrides;
 
         public Map(string u5Directory, TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
         {
-            this.U5Directory = u5Directory;
-            this.TileOverrides = tileOverrides;
-            CurrentSingleMapReference = mapRef; 
+            U5Directory = u5Directory;
+            TileOverrides = tileOverrides;
+            CurrentSingleMapReference = mapRef;
 
             // for now combat maps don't have overrides
-            if (mapRef != null)
-            {
-                XYOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
-            }
+            if (mapRef != null) XYOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
         }
 
+        public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+
+
+        public byte[][] TheMap { get; protected set; }
+
         /// <summary>
-        /// Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
+        ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
         /// </summary>
         /// <param name="spriteTileReferences"></param>
         /// <param name="xy"></param>
         /// <returns></returns>
         protected abstract float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy);
-        
+
         /// <summary>
-        /// Builds the A* map to be used for NPC pathfinding
+        ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
         /// <param name="spriteTileReferences"></param>
         protected void InitializeAStarMap(TileReferences spriteTileReferences)
@@ -79,23 +80,16 @@ namespace Ultima5Redux.Maps
                                                            .GetTileReferenceByName("LockedDoor").Index
                                                        || currentTile.Index == spriteTileReferences
                                                            .GetTileReferenceByName("LockedDoorView").Index;
-                    
-                    float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x,y));
-                    
-                    Node node = new Node(new System.Numerics.Vector2(x, y), bIsWalkable, fWeight);
+
+                    float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x, y));
+
+                    Node node = new Node(new Vector2(x, y), bIsWalkable, fWeight);
                     AStarNodes[x].Add(node);
                 }
             }
+
             AStar = new AStar(AStarNodes);
         }
-
-
-        public byte[][] TheMap
-        {
-            get; protected set;
-        }
-
-        protected Dictionary<Point2D, TileOverride> XYOverrides;
 
         public bool IsXYOverride(Point2D xy)
         {
@@ -106,12 +100,12 @@ namespace Ultima5Redux.Maps
         {
             return XYOverrides[xy];
         }
+
         // public abstract TileOverride GetTileOverride(Point2D xy);
         // public abstract bool IsXYOverride(Point2D xy);
 
-        #region Debug methods
         /// <summary>
-        /// Filthy little map to assign single letter to map elements
+        ///     Filthy little map to assign single letter to map elements
         /// </summary>
         /// <param name="tile"></param>
         /// <returns></returns>
@@ -177,11 +171,12 @@ namespace Ultima5Redux.Maps
                 case 0x37:
                     return 'S'; // streams
             }
+
             return 'L';
         }
 
         /// <summary>
-        /// Prints the map in ASCII on the console
+        ///     Prints the map in ASCII on the console
         /// </summary>
         /// <param name="map">map object</param>
         /// <param name="xOffset">where to start the top left origin (row) </param>
@@ -194,14 +189,11 @@ namespace Ultima5Redux.Maps
             {
                 for (int curCol = xOffset; curCol < xTilesToPrint + xOffset; curCol++)
                 {
-                    if (curCol % (xTilesToPrint) == 0) { System.Console.WriteLine(""); }
+                    if (curCol % xTilesToPrint == 0) Console.WriteLine("");
                     byte mapTile = map[curCol][curRow];
-                    System.Console.Write(Map.GetMapLetter(mapTile));
+                    Console.Write(GetMapLetter(mapTile));
                 }
             }
         }
-        #endregion
-
-
     }
 }

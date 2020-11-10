@@ -10,9 +10,11 @@ namespace Ultima5Redux.MapUnits.Monsters
     public class Monster : MapUnit
     {
         public Monster(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
-            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay,
+            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
+            TimeOfDay timeOfDay,
             PlayerCharacterRecords playerCharacterRecords, TileReferences tileReferences,
-            SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference) : base(npcRef, mapUnitState,
+            SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference) : base(npcRef,
+            mapUnitState,
             smallMapTheSmallMapCharacterState, mapUnitMovement, playerCharacterRecords, tileReferences,
             location, dataOvlReference, VirtualMap.Direction.None)
         {
@@ -21,7 +23,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
 
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
-        
+
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         public override string BoardXitName => "Hostile creates don't not like to be boarded!";
         public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;

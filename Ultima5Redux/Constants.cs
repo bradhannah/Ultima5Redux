@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ultima5Redux
+﻿namespace Ultima5Redux
 {
     public static class FileConstants
     {
         public const string DATA_OVL = "data.ovl";
 
         public const string SHOPPE_DAT = "shoppe.dat";
-        
+
         public const string SAVED_GAM = "saved.gam";
         public const string INIT_GAM = "init.gam";
         public const string BRIT_OOL = "brit.ool";
@@ -38,9 +32,8 @@ namespace Ultima5Redux
         public const string DWELLING_TLK = "dwelling.tlk";
         public const string KEEP_TLK = "keep.tlk";
 
-        public static readonly string[] TalkFiles = { CASTLE_TLK, TOWNE_TLK, DWELLING_TLK, KEEP_TLK };
-        public static readonly string[] NPCFiles = { CASTLE_NPC, TOWNE_NPC, DWELLING_NPC, KEEP_NPC };
-        public static readonly string[] SmallMapFiles = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };
-
+        public static readonly string[] TalkFiles = {CASTLE_TLK, TOWNE_TLK, DWELLING_TLK, KEEP_TLK};
+        public static readonly string[] NPCFiles = {CASTLE_NPC, TOWNE_NPC, DWELLING_NPC, KEEP_NPC};
+        public static readonly string[] SmallMapFiles = {CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT};
     }
 }

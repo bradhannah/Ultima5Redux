@@ -12,15 +12,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         private readonly Inventory _inventory;
 
-        public MagicSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory, ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : 
+        public MagicSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
+            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) :
             base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
             _inventory = inventory;
         }
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>()
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
         {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyMagicSeller),
+            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyMagicSeller)
         };
 
         public override string GetHelloResponse(TimeOfDay tod = null)
@@ -34,7 +35,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public override string GetWhichWouldYouSee()
         {
-            string retStr= ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
+            string retStr = ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
                 DataOvlReference.ShoppeKeeperGeneralStrings
                     .YES_N_N_FINE_BANG_WE_SELL_COLON), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
             retStr = retStr.Replace("Yes", "");
@@ -45,25 +46,27 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public override string GetForSaleList()
         {
             List<Reagent> reagents = GetReagentsForSale();
-            
+
             StringBuilder sb = new StringBuilder();
             char itemChar = 'a';
             foreach (Reagent reagent in reagents)
             {
-                sb.Append((itemChar++) + "..." +  reagent.LongName + "\n");
+                sb.Append(itemChar++ + "..." + reagent.LongName + "\n");
             }
+
             return sb.ToString().TrimEnd();
         }
 
-        public List<Reagent> GetReagentsForSale()//SmallMapReferences.SingleMapReference.Location location)
+        public List<Reagent> GetReagentsForSale() //SmallMapReferences.SingleMapReference.Location location)
         {
-            return _inventory.SpellReagents.GetReagentsForSale(this.TheShoppeKeeperReference
+            return _inventory.SpellReagents.GetReagentsForSale(TheShoppeKeeperReference
                 .ShoppeKeeperLocation); //location);
         }
 
         public override string GetPissedOffNotEnoughMoney()
         {
-            return ShoppeKeeperDialogueReference.GetMerchantString(147, shoppeKeeperName:TheShoppeKeeperReference.ShoppeKeeperName);
+            return ShoppeKeeperDialogueReference.GetMerchantString(147,
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
         }
 
         public override string GetThanksAfterPurchaseResponse()
@@ -82,10 +85,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             int nQuantity = reagent.GetQuantityForSale(TheShoppeKeeperReference.NpcRef.MapLocation);
             Debug.Assert(nQuantity > 0);
             return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nStartReagentBuyStrings + nIndex,
-                nQuantity:nQuantity, nGold:nPrice) + "\n" +
-                   DataOvlReference.StringReferences.
-                       GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
+                       nQuantity: nQuantity, nGold: nPrice) + "\n" +
+                   DataOvlReference.StringReferences
+                       .GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
         }
-
     }
 }

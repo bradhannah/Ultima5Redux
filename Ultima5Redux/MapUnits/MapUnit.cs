@@ -13,16 +13,76 @@ namespace Ultima5Redux.MapUnits
 {
     public abstract class MapUnit
     {
+        private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
+
+        protected int MovementAttempts = 0;
+
+        /// <summary>
+        ///     empty constructor if there is nothing in the map character slot
+        /// </summary>
+        protected MapUnit()
+        {
+            NPCRef = null;
+            TheMapUnitState = null;
+            TheSmallMapCharacterState = null;
+            Movement = null;
+            Direction = VirtualMap.Direction.None;
+        }
+
+        /// <summary>
+        ///     Builds a MpaCharacter from pre-instantiated objects - typically loaded from disk in advance
+        /// </summary>
+        /// <param name="npcRef"></param>
+        /// <param name="mapUnitState"></param>
+        /// <param name="smallMapTheSmallMapCharacterState"></param>
+        /// <param name="mapUnitMovement"></param>
+        /// <param name="playerCharacterRecords"></param>
+        /// <param name="tileReferences"></param>
+        /// <param name="location"></param>
+        /// <param name="dataOvlRef"></param>
+        /// <param name="direction"></param>
+        protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
+            SmallMapCharacterState smallMapTheSmallMapCharacterState,
+            MapUnitMovement mapUnitMovement, PlayerCharacterRecords playerCharacterRecords,
+            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
+            DataOvlReference dataOvlRef, VirtualMap.Direction direction)
+        {
+            DataOvlRef = dataOvlRef;
+            TileReferences = tileReferences;
+            MapLocation = location;
+            NPCRef = npcRef;
+            TheMapUnitState = mapUnitState;
+            TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
+            Movement = mapUnitMovement;
+            Direction = direction;
+
+            PlayerCharacterRecord record = null;
+
+            // Debug.Assert(playerCharacterRecords != null);
+            Debug.Assert(TheMapUnitState != null);
+            Debug.Assert(Movement != null);
+
+            // gets the player character record for an NPC if one exists
+            // this is commonly used when meeting NPCs who have not yet joined your party 
+            if (npcRef != null) record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
+
+            // is the NPC you are loading currently in the party?
+            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
+
+            // set the characters position 
+            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
+        }
+
         protected DataOvlReference DataOvlRef { get; set; }
         protected TileReferences TileReferences { get; set; }
 
         /// <summary>
-        /// All the movements for the map character
+        ///     All the movements for the map character
         /// </summary>
         internal MapUnitMovement Movement { get; private protected set; }
-        
+
         /// <summary>
-        /// the state of the animations
+        ///     the state of the animations
         /// </summary>
         public MapUnitState TheMapUnitState { get; protected set; }
 
@@ -32,29 +92,27 @@ namespace Ultima5Redux.MapUnits
         public bool IsOccupiedByAvatar { get; protected internal set; } = false;
         public virtual VirtualMap.Direction Direction { get; set; }
 
-        public TileReference BoardedTileReference => TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[Direction]);
-        public virtual TileReference NonBoardedTileReference => TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
-        
+        public TileReference BoardedTileReference =>
+            TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[Direction]);
+
+        public virtual TileReference NonBoardedTileReference =>
+            TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+
         public abstract string BoardXitName { get; }
-        
+
         /// <summary>
-        /// The location state of the character
+        ///     The location state of the character
         /// </summary>
         internal SmallMapCharacterState TheSmallMapCharacterState { get; }
 
-        private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
-        
         /// <summary>
-        /// Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
+        ///     Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
         /// </summary>
         public virtual TileReference KeyTileReference
         {
-            get
-            {
-                if (NPCRef != null) return TileReferences.GetTileReference(NPCRef.NPCKeySprite);
-
-                return TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
-            }
+            get => NPCRef == null
+                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
+                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
             set
             {
                 TheMapUnitState.Tile1Ref = value;
@@ -63,7 +121,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// The characters current position on the map
+        ///     The characters current position on the map
         /// </summary>
         internal MapUnitPosition MapUnitPosition
         {
@@ -77,7 +135,7 @@ namespace Ultima5Redux.MapUnits
                 _mapMapUnitPosition.X = value.X;
                 _mapMapUnitPosition.Y = value.Y;
                 _mapMapUnitPosition.Floor = value.Floor;
-                
+
                 TheMapUnitState.X = (byte) value.X;
                 TheMapUnitState.Y = (byte) value.Y;
                 TheMapUnitState.Floor = (byte) value.Floor;
@@ -90,30 +148,27 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// How many iterations will I force the character to wander?
+        ///     How many iterations will I force the character to wander?
         /// </summary>
         internal int ForcedWandering { get; set; }
-        
-        public int MovementAttempts = 0;
+
         /// <summary>
-        /// Reference to current NPC (if it's an NPC at all!)
+        ///     Reference to current NPC (if it's an NPC at all!)
         /// </summary>
         public NonPlayerCharacterReference NPCRef { get; }
 
         public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
 
         /// <summary>
-        /// Is the character currently active on the map?
+        ///     Is the character currently active on the map?
         /// </summary>
-        public bool IsInParty
-        {
-            get; set; 
-        }
+        protected bool IsInParty { get; }
 
         /// <summary>
-        /// Is the map character currently an active character on the current map
+        ///     Is the map character currently an active character on the current map
         /// </summary>
         public abstract bool IsActive { get; }
+
         public virtual void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor)
         {
             // by default the thing doesn't move on it's own
@@ -127,81 +182,22 @@ namespace Ultima5Redux.MapUnits
         public string GetDebugDescription(TimeOfDay timeOfDay)
         {
             if (NPCRef != null)
-            {
-                return ("Name=" + NPCRef.FriendlyName
-                       + " " + MapUnitPosition + " Scheduled to be at: " +
-                       NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
-                       " with AI Mode: " +
-                       NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
-                       " <b>Movement Attempts</b>: " + MovementAttempts + " " +
-                       this.Movement);
-            }
-            
-            return ("MapUnit "+ KeyTileReference.Description  
-                    + " " + MapUnitPosition + " Scheduled to be at: " 
-                    + " <b>Movement Attempts</b>: " + MovementAttempts + " "
-                    + this.Movement);
+                return "Name=" + NPCRef.FriendlyName
+                               + " " + MapUnitPosition + " Scheduled to be at: " +
+                               NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
+                               " with AI Mode: " +
+                               NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
+                               " <b>Movement Attempts</b>: " + MovementAttempts + " " +
+                               Movement;
+
+            return "MapUnit " + KeyTileReference.Description
+                              + " " + MapUnitPosition + " Scheduled to be at: "
+                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
+                              + Movement;
         }
 
         /// <summary>
-        /// empty constructor if there is nothing in the map character slot
-        /// </summary>
-        protected MapUnit()
-        {
-            NPCRef = null;
-            TheMapUnitState = null;
-            TheSmallMapCharacterState = null;
-            Movement = null;
-            Direction = VirtualMap.Direction.None;
-        }
-
-        /// <summary>
-        /// Builds a MpaCharacter from pre-instantiated objects - typically loaded from disk in advance
-        /// </summary>
-        /// <param name="npcRef"></param>
-        /// <param name="mapUnitState"></param>
-        /// <param name="smallMapTheSmallMapCharacterState"></param>
-        /// <param name="mapUnitMovement"></param>
-        /// <param name="playerCharacterRecords"></param>
-        /// <param name="tileReferences"></param>
-        /// <param name="location"></param>
-        /// <param name="dataOvlRef"></param>
-        /// <param name="direction"></param>
-        protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState, SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, PlayerCharacterRecords playerCharacterRecords,
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlRef, VirtualMap.Direction direction)
-        {
-            this.DataOvlRef = dataOvlRef;
-            TileReferences = tileReferences;
-            MapLocation = location;
-            NPCRef = npcRef;
-            TheMapUnitState = mapUnitState;
-            TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
-            Movement = mapUnitMovement;
-            Direction = direction;
-
-            PlayerCharacterRecord record = null;
-            
-            // Debug.Assert(playerCharacterRecords != null);
-            Debug.Assert(TheMapUnitState != null);
-            Debug.Assert(Movement != null);
-            
-            // gets the player character record for an NPC if one exists
-            // this is commonly used when meeting NPCs who have not yet joined your party 
-            if (npcRef != null)
-            {
-                record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
-            }
-
-            // is the NPC you are loading currently in the party?
-            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
-
-            // set the characters position 
-            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
-        }
-
-        /// <summary>
-        /// move the character to a new position
+        ///     move the character to a new position
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
@@ -212,7 +208,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// Move the character to a new position
+        ///     Move the character to a new position
         /// </summary>
         /// <param name="mapUnitPosition"></param>
         protected void Move(MapUnitPosition mapUnitPosition)
@@ -221,13 +217,13 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// Builds the actual path for the character to travel based on their current position and their target position
+        ///     Builds the actual path for the character to travel based on their current position and their target position
         /// </summary>
         /// <param name="currentMap"></param>
         /// <param name="mapUnit">where the character is presently</param>
         /// <param name="targetXy">where you want them to go</param>
         /// <returns>returns true if a path was found, false if it wasn't</returns>
-        protected bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy)
+        protected static bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy)
         {
             MapUnitMovement.MovementCommandDirection getCommandDirection(Point2D fromXy, Point2D toXy)
             {
@@ -236,23 +232,25 @@ namespace Ultima5Redux.MapUnits
                 if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
                 if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
                 if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
-                throw new Ultima5ReduxException("For some reason we couldn't determine the path of the command direction in getCommandDirection");
+                throw new Ultima5ReduxException(
+                    "For some reason we couldn't determine the path of the command direction in getCommandDirection");
             }
 
             Point2D vector2ToPoint2D(Vector2 vector)
             {
-                return new Point2D((int)vector.X, (int)vector.Y);
+                return new Point2D((int) vector.X, (int) vector.Y);
             }
 
             if (mapUnit.MapUnitPosition.XY == targetXy)
-            {
-                throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name + " is already at " + targetXy.X + "," + targetXy.Y); //+ "," + targetXy.Floor);
-            }
+                throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name +
+                                                " is already at " + targetXy.X + "," +
+                                                targetXy.Y); //+ "," + targetXy.Floor);
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<Node> nodeStack = currentMap.AStar.FindPath(new System.Numerics.Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
-                new System.Numerics.Vector2(targetXy.X, targetXy.Y));
+            Stack<Node> nodeStack = currentMap.AStar.FindPath(
+                new Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
+                new Vector2(targetXy.X, targetXy.Y));
 
             MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
             MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;
@@ -277,15 +275,18 @@ namespace Ultima5Redux.MapUnits
                 else
                 {
                     // if the direction has changed then we add the previous direction and reset the concurrent counter
-                    mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(prevDirection, nInARow));
+                    mapUnit.Movement.AddNewMovementInstruction(
+                        new MapUnitMovement.MovementCommand(prevDirection, nInARow));
                     nInARow = 1;
                 }
+
                 prevDirection = newDirection;
                 prevPosition = newPosition;
             }
-            if (nInARow > 0) { mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow)); }
+
+            if (nInARow > 0)
+                mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow));
             return true;
         }
-
     }
 }

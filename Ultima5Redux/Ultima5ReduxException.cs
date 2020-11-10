@@ -7,7 +7,5 @@ namespace Ultima5Redux
         public Ultima5ReduxException(string message) : base(message)
         {
         }
-
-        
     }
 }

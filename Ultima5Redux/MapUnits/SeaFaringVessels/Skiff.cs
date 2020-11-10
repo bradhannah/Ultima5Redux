@@ -7,43 +7,44 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
     public class Skiff : SeaFaringVessel
     {
-        private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } = new Dictionary<SmallMapReferences.SingleMapReference.Location, int>()
-        {
-            {SmallMapReferences.SingleMapReference.Location.East_Britanny, 250},
-            {SmallMapReferences.SingleMapReference.Location.Minoc, 350},
-            {SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 200},
-            {SmallMapReferences.SingleMapReference.Location.Jhelom, 400}
-        };
-        
-        public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
-            PlayerCharacterRecords records)
-        {
-            return GetAdjustedPrice(records, Prices[location]);
-        }
-
-        public Skiff(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, 
+        public Skiff(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, VirtualMap.Direction direction) : 
-            base(mapUnitState, null, mapUnitMovement, tileReferences, location, 
+            DataOvlReference dataOvlReference, VirtualMap.Direction direction) :
+            base(mapUnitState, null, mapUnitMovement, tileReferences, location,
                 dataOvlReference, direction)
         {
-            
         }
 
+        private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
+            new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
+            {
+                {SmallMapReferences.SingleMapReference.Location.East_Britanny, 250},
+                {SmallMapReferences.SingleMapReference.Location.Minoc, 350},
+                {SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 200},
+                {SmallMapReferences.SingleMapReference.Location.Jhelom, 400}
+            };
+
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<VirtualMap.Direction, string>()
+            new Dictionary<VirtualMap.Direction, string>
             {
                 {VirtualMap.Direction.None, "SkiffLeft"},
                 {VirtualMap.Direction.Left, "SkiffLeft"},
                 {VirtualMap.Direction.Down, "SkiffDown"},
                 {VirtualMap.Direction.Right, "SkiffRight"},
-                {VirtualMap.Direction.Up, "SkiffUp"},
+                {VirtualMap.Direction.Up, "SkiffUp"}
             };
 
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Skiff;
 
 
-        public override string BoardXitName => DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();
+        public override string BoardXitName => DataOvlRef.StringReferences
+            .GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();
+
+        public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
+            PlayerCharacterRecords records)
+        {
+            return GetAdjustedPrice(records, Prices[location]);
+        }
     }
 }

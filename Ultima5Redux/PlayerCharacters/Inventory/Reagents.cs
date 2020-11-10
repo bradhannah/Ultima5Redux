@@ -6,24 +6,28 @@ using Ultima5Redux.Maps;
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     /// <summary>
-    /// All reagents collection
+    ///     All reagents collection
     /// </summary>
     public class Reagents : InventoryItems<Reagent.ReagentTypeEnum, Reagent>
     {
-        public Reagents(DataOvlReference dataOvlRef, List<byte> gameStateByteArray, GameState state) : base(dataOvlRef, gameStateByteArray)
+        public Reagents(DataOvlReference dataOvlRef, List<byte> gameStateByteArray, GameState state) : base(dataOvlRef,
+            gameStateByteArray)
         {
             int nIndex = 0;
             foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
             {
-                AddReagent(reagent, (DataOvlReference.ReagentStrings)nIndex++, dataOvlRef, state);
+                AddReagent(reagent, (DataOvlReference.ReagentStrings) nIndex++, dataOvlRef, state);
             }
         }
+
+        public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; } =
+            new Dictionary<Reagent.ReagentTypeEnum, Reagent>();
 
         private void AddReagent(Reagent.ReagentTypeEnum reagentType, DataOvlReference.ReagentStrings reagentStrRef,
             DataOvlReference dataOvlRef, GameState state)
         {
             Reagent reagent = new Reagent(reagentType,
-                GameStateByteArray[(int)reagentType],
+                GameStateByteArray[(int) reagentType],
                 DataOvlRef.StringReferences.GetString(reagentStrRef),
                 DataOvlRef.StringReferences.GetString(reagentStrRef), dataOvlRef, state);
             Items[reagentType] = reagent;
@@ -40,7 +44,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             return items;
         }
-        
-        public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; } = new Dictionary<Reagent.ReagentTypeEnum, Reagent>();
     }
 }

@@ -7,15 +7,17 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
     {
         public enum HelmEnum { LeatherHelm = 0x21A, ChainCoif = 0x21B, IronHelm = 0x21C, SpikedHelm = 0x21D }
 
-        public HelmEnum HelmType;
-
         private const int HELM_SPRITE = 265;
 
-        public override bool HideQuantity => false;
-        public Helm(HelmEnum helmType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
-            : base(equipment, dataOvlRef, gameStateByteArray, (int)helmType, HELM_SPRITE)
+        public HelmEnum HelmType;
+
+        public Helm(HelmEnum helmType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef,
+            List<byte> gameStateByteArray)
+            : base(equipment, dataOvlRef, gameStateByteArray, (int) helmType, HELM_SPRITE)
         {
             HelmType = helmType;
         }
+
+        public override bool HideQuantity => false;
     }
 }

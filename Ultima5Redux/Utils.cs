@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Ultima5Redux
@@ -23,8 +21,8 @@ namespace Ultima5Redux
             {
                 rowList.Add(new List<T>(numberOfCols));
             }
-            return rowList;
 
+            return rowList;
         }
 
         public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
@@ -34,6 +32,7 @@ namespace Ultima5Redux
             {
                 theArray[i] = new T[numberOfCols];
             }
+
             return theArray;
         }
 
@@ -48,6 +47,7 @@ namespace Ultima5Redux
                     theArray[i][j] = defaultValue;
                 }
             }
+
             return theArray;
         }
 
@@ -59,14 +59,19 @@ namespace Ultima5Redux
         public static T[][] TransposeArray<T>(T[][] ts)
         {
             // makes some assumptions, like each row has an equal number of elements
-            T[][] transArray = Utils.Init2DArray<T>(ts[0].Length, ts.Length);
+            T[][] transArray = Init2DArray<T>(ts[0].Length, ts.Length);
 
             for (int i = 0; i < ts[0].Length; i++)
+            {
                 for (int j = 0; j < ts.Length; j++)
+                {
                     transArray[i][j] = ts[j][i];
+                }
+            }
 
-            return transArray;            
+            return transArray;
         }
+
         public static T[][] ListTo2DArray<T>(List<T> theList, short splitEveryN, int offset, int length)
         {
             int listCount = theList.Count;
@@ -74,7 +79,9 @@ namespace Ultima5Redux
             // TODO: add safety code to make sure there is no remainer when dividing listCount/splitEveryN
             _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
-            if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
+            if (remainder != 0)
+                throw new IndexOutOfRangeException("The Remainder: " + remainder +
+                                                   " should be zero when loading a map");
 
             // if a problem pops up for the maps in the future, then it's because of this call... am I creating the array correctly???
             T[][] theArray = Init2DArray<T>(length / splitEveryN, splitEveryN);
@@ -83,12 +90,13 @@ namespace Ultima5Redux
             {
                 theArray[arrayPos / splitEveryN][arrayPos % splitEveryN] = theList[listPos];
             }
+
             return theArray;
         }
 
         /// <summary>
-        /// Divides a list of bytes into a two dimension byte array
-        /// Ideal for searialized byte arrays from map files, into a more readable x,y
+        ///     Divides a list of bytes into a two dimension byte array
+        ///     Ideal for searialized byte arrays from map files, into a more readable x,y
         /// </summary>
         /// <param name="byteList"></param>
         /// <param name="splitEveryN">split into a new row every N bytes</param>
@@ -102,7 +110,9 @@ namespace Ultima5Redux
             // TODO: add safety code to make sure there is no remainder when dividing listCount/splitEveryN
             _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
-            if (remainder != 0) { throw new IndexOutOfRangeException("The Remainder: " + remainder + " should be zero when loading a map"); }
+            if (remainder != 0)
+                throw new IndexOutOfRangeException("The Remainder: " + remainder +
+                                                   " should be zero when loading a map");
 
             byte[][] byteArray = Init2DArray<byte>(length / splitEveryN, length / splitEveryN);
 
@@ -110,12 +120,12 @@ namespace Ultima5Redux
             {
                 byteArray[arrayPos / splitEveryN][arrayPos % splitEveryN] = byteList[listPos];
             }
+
             return byteArray;
         }
 
         /// <summary>
-        /// Reads a list of bytes from a file.
-        /// 
+        ///     Reads a list of bytes from a file.
         /// </summary>
         /// <remarks>Could be optimized with a cache function that keeps the particular file in memory</remarks>
         /// <param name="filename">Filename to open (read only)</param>
@@ -129,29 +139,29 @@ namespace Ultima5Redux
             byte[] fileContents = File.ReadAllBytes(filename);
             if (length == -1) return fileContents.ToList();
 
-            List<byte> specificContents=new List<byte>(length);
+            List<byte> specificContents = new List<byte>(length);
 
-            for (int i = offset ; i < offset + length; i++)
+            for (int i = offset; i < offset + length; i++)
             {
                 specificContents.Add(fileContents[i]);
             }
+
             return specificContents;
         }
 
 
         /// <summary>
-        /// Gets a binary file as a stream of bytes into a list<byte>
+        ///     Gets a binary file as a stream of bytes into a list<byte>
         /// </summary>
         /// <param name="filename">filename of the binary file</param>
         /// <returns>a list of bytes</returns>
         public static List<byte> GetFileAsByteList(string filename)
         {
-            return (GetFileAsByteList(filename, 0, -1));
-    
+            return GetFileAsByteList(filename, 0, -1);
         }
 
         /// <summary>
-        /// Converts a byte[] to a readable string, assumes it ends with a NULL (0x00) byte
+        ///     Converts a byte[] to a readable string, assumes it ends with a NULL (0x00) byte
         /// </summary>
         /// <param name="byteArray"></param>
         /// <param name="offset">the offset to start at</param>
@@ -162,66 +172,67 @@ namespace Ultima5Redux
             byte curCharByte;
             string str = "";
             int curOffset = offset;
-            int count = 0; 
+            int count = 0;
             // loop until a zero byte is found indicating end of string
             while (count < length && (curCharByte = byteArray[curOffset]) != 0x00)
             {
                 // cast to (char) to ensure the string understands it not a number
-                str += (char)(curCharByte);
+                str += (char) curCharByte;
                 curOffset++;
                 count++;
             }
+
             return str;
         }
 
         public static string BytesToStringFixedWidth(List<byte> byteArray, int offset, int length)
         {
             string str = string.Empty;
-            for (int i=0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
-                str += (char)byteArray[i];
+                str += (char) byteArray[i];
             }
+
             return str;
         }
 
-        public static List<UInt16> CreateOffsetList(byte[] byteArray, int offset, int length)
+        public static List<ushort> CreateOffsetList(byte[] byteArray, int offset, int length)
         {
-            List<UInt16> offsetArray = new List<UInt16>();
+            List<ushort> offsetArray = new List<ushort>();
 
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < length; i += 2)
             {
-                offsetArray.Add((UInt16)(byteArray[i] | (((UInt16)byteArray[i + 1]) << 8)));
+                offsetArray.Add((ushort) (byteArray[i] | (byteArray[i + 1] << 8)));
             }
 
             return offsetArray;
         }
 
         /// <summary>
-        /// Creates an offset list when uint16 offsets are described in a data file
+        ///     Creates an offset list when uint16 offsets are described in a data file
         /// </summary>
         /// <remarks>this is only midly useful due to it not passing back the byte array</remarks>
         /// <param name="filename">data filename and path</param>
         /// <param name="offset">initial offset (typically 0)</param>
         /// <param name="length">number of bytes to read</param>
         /// <returns>a list of offsets</returns>
-        public static List<int> CreateOffsetList (string filename, int offset, int length)
+        public static List<int> CreateOffsetList(string filename, int offset, int length)
         {
-            List<byte> byteArray = Utils.GetFileAsByteList(filename);
+            List<byte> byteArray = GetFileAsByteList(filename);
 
             List<int> offsetArray = new List<int>();
-            
+
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < length; i += 2)
             {
-                offsetArray.Add((int)(byteArray[i] | (((uint)byteArray[i + 1]) << 8)));
+                offsetArray.Add((int) (byteArray[i] | ((uint) byteArray[i + 1] << 8)));
             }
 
             return offsetArray;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <remarks>Borrowed from: https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>
         /// <param name="fs"></param>
@@ -235,17 +246,16 @@ namespace Ultima5Redux
                 Marshal.SizeOf(t));
             GCHandle handle =
                 GCHandle.Alloc(buffer,
-                GCHandleType.Pinned);
-            Object temp =
+                    GCHandleType.Pinned);
+            object temp =
                 Marshal.PtrToStructure(
-                handle.AddrOfPinnedObject(),
-                t);
+                    handle.AddrOfPinnedObject(),
+                    t);
             handle.Free();
             return temp;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <remarks>Hacked from FileStream to List_byte https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>
         /// <param name="byteArray"></param>
@@ -257,14 +267,14 @@ namespace Ultima5Redux
             byteArray.CopyTo(fileOffset, buffer, 0, Marshal.SizeOf(t));
 
             GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            Object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
+            object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
             handle.Free();
             return temp;
         }
 
-        public static int LittleEndianConversion (byte a, byte b)
+        public static int LittleEndianConversion(byte a, byte b)
         {
-             return ((int)(a| (((int)b) << 8)));
+            return a | (b << 8);
         }
     }
 }

@@ -9,18 +9,17 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class GuildMaster : ShoppeKeeper
     {
-        
-        public GuildMaster(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, 
-            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : 
+        public GuildMaster(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
+            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) :
             base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
         }
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>()
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
         {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType. BuyGuildMaster),
+            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyGuildMaster)
         };
-        
+
         public override string GetHelloResponse(TimeOfDay tod = null)
         {
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(148, 151);
@@ -33,12 +32,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public override string GetWhichWouldYouSee()
         {
             return DataOvlReference.StringReferences.GetString(
-                DataOvlReference.ShoppeKeeperGeneral2Strings.YES_N_N_DQ__WE_SELL_COLON_N_N).Replace("Yes", "").TrimStart();
+                    DataOvlReference.ShoppeKeeperGeneral2Strings.YES_N_N_DQ__WE_SELL_COLON_N_N).Replace("Yes", "")
+                .TrimStart();
         }
 
         public override string GetThyInterest()
         {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.THY_CONCERN_Q_DQ);
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneral2Strings
+                .THY_CONCERN_Q_DQ);
         }
 
         public override string GetForSaleList()
@@ -56,16 +57,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             switch (provision)
             {
                 case Provision.ProvisionTypeEnum.Torches:
-                    return ShoppeKeeperDialogueReference.GetMerchantString(162, nGold: nGold); 
+                    return ShoppeKeeperDialogueReference.GetMerchantString(162, nGold);
                 case Provision.ProvisionTypeEnum.Gems:
-                    return ShoppeKeeperDialogueReference.GetMerchantString(161, nGold: nGold); 
+                    return ShoppeKeeperDialogueReference.GetMerchantString(161, nGold);
                 case Provision.ProvisionTypeEnum.Keys:
-                    return ShoppeKeeperDialogueReference.GetMerchantString(160, nGold: nGold); 
+                    return ShoppeKeeperDialogueReference.GetMerchantString(160, nGold);
                 case Provision.ProvisionTypeEnum.SkullKeys:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(provision), provision, null);
             }
-            
         }
     }
 }

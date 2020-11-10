@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -18,10 +16,5 @@ namespace Ultima5Redux.MapUnits
         public override string BoardXitName => "EMPTY";
 
         public override bool IsActive => false;
-
-        public EmptyMapUnit() : base()
-        {
-            
-        }
     }
 }
