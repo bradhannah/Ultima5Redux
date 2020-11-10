@@ -820,10 +820,10 @@ namespace Ultima5ReduxTesting
         }
 
         [Test]
-        public void Test_CheckedBoardedTileBucDen4()
+        public void Test_CheckedBoardedTileCarpet()
         {
             // World world = new World(SaveDirectory);
-            World world = new World(@"C:\games\ultima_5_late\BucDen4");
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
 
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
             Debug.Assert(avatar.IsAvatarOnBoardedThing);
@@ -832,7 +832,52 @@ namespace Ultima5ReduxTesting
             world.Xit(out bool bWasSuccessful);
             
             _ = "";
+        }
+        
+        
+        [Test]
+        public void Test_CheckedBoardedTileHorse()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(this.ActualSaveDirectory+@"\b_horse");
 
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Debug.Assert(avatar.IsAvatarOnBoardedThing);
+            Debug.Assert(avatar.CurrentBoardedMapUnit != null);
+
+            world.Xit(out bool bWasSuccessful);
+            
+            _ = "";
+        }
+        
+        [Test]
+        public void Test_CheckedBoardedTileSkiff()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(this.ActualSaveDirectory+@"\b_skiff");
+
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Debug.Assert(avatar.IsAvatarOnBoardedThing);
+            Debug.Assert(avatar.CurrentBoardedMapUnit != null);
+
+            world.Xit(out bool bWasSuccessful);
+            
+            _ = "";
+        }
+        
+        [Test]
+        public void Test_CheckedBoardedTileFrigate()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(this.ActualSaveDirectory+@"\b_frigat");
+
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Debug.Assert(avatar.IsAvatarOnBoardedThing);
+            Debug.Assert(avatar.CurrentBoardedMapUnit != null);
+
+            world.Xit(out bool bWasSuccessful);
+            
+            _ = "";
         }
      }
 }

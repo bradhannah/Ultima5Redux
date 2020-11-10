@@ -506,8 +506,8 @@ namespace Ultima5Redux.MapUnits
                 }
                 else if (bInitialLoad)
                 {
-                    MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement, null, _dataOvlReference);
                     MapUnitState theAvatarMapState = _smallMapUnitStates.GetCharacterState(0);
+                    MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement, theAvatarMapState, _dataOvlReference);
                     theAvatar.MapUnitPosition.X = theAvatarMapState.X;
                     theAvatar.MapUnitPosition.Y = theAvatarMapState.Y;
                     theAvatar.MapLocation = location;

@@ -55,6 +55,7 @@ namespace Ultima5Redux.MapUnits
             if (tileReference.Name.StartsWith("Skiff")) return AvatarState.Skiff;
             if (tileReference.Name.StartsWith("RidingMagicCarpet")) return AvatarState.Carpet;
             if (tileReference.Name.StartsWith("RidingHorse")) return AvatarState.Horse;
+            if (tileReference.Name.StartsWith("Horse")) return AvatarState.Horse;
             throw new Ultima5ReduxException("Asked to calculate AvatarState of "+tileReference.Name + " but you can't do that, it's not a thing!");
         }
 
@@ -190,24 +191,39 @@ namespace Ultima5Redux.MapUnits
 
         private void BoardMapUnitFromAvatarState(AvatarState avatarState)
         {
+            MapUnitState vehicleState = new MapUnitState();
+            // we copy the Avatar map unit state as a starting point
+            TheMapUnitState.CopyTo(TileReferences, vehicleState);
+
             switch (avatarState)
             {
                 case AvatarState.Regular:
                     break;
                 case AvatarState.Carpet:
-                    MapUnitState state = new MapUnitState();
-                    // we copy the Avatar map unit state as a starting point
-                    TheMapUnitState.CopyTo(TileReferences, state);
-                    MagicCarpet carpet = new MagicCarpet(state, 
+                    MagicCarpet carpet = new MagicCarpet(vehicleState, 
                         new MapUnitMovement(0,null, null), 
                         TileReferences, MapLocation, DataOvlRef, CurrentDirection);
                     BoardMapUnit(carpet);
                     break;
                 case AvatarState.Horse:
+                    Horse horse = new Horse(vehicleState,
+                        new MapUnitMovement(0, null, null),
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                    BoardMapUnit(horse);
                     break;
                 case AvatarState.Frigate:
+                    Frigate frigate = new Frigate(vehicleState,
+                        new MapUnitMovement(0, null, null),
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                    // must decide how many skiffs are there and assign them
+                    frigate.SkiffsAboard = TheMapUnitState.Depends3;
+                    BoardMapUnit(frigate);
                     break;
                 case AvatarState.Skiff:
+                    Skiff skiff = new Skiff(vehicleState,
+                        new MapUnitMovement(0, null, null),
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                    BoardMapUnit(skiff);
                     break;
                 case AvatarState.Hidden:
                     break;
