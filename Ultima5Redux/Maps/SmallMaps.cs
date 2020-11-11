@@ -12,12 +12,9 @@ namespace Ultima5Redux.Maps
         private readonly List<SmallMap> _smallMaps = new List<SmallMap>();
         private readonly TileReferences _spriteTileReferences;
 
-        private SmallMapReferences _smallMapRef;
-
         public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences spriteTileReferences,
             TileOverrides tileOverrides)
         {
-            _smallMapRef = smallMapRef;
             _spriteTileReferences = spriteTileReferences;
             foreach (SmallMapReferences.SingleMapReference mapRef in smallMapRef.MapReferenceList)
             {
@@ -40,21 +37,20 @@ namespace Ultima5Redux.Maps
 
         public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
         {
-            return !DoStrairsGoUp(location, nFloor, tilePos);
+            return !DoStairsGoUp(location, nFloor, tilePos);
         }
 
-        public bool DoStrairsGoUp(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
+        public bool DoStairsGoUp(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
         {
-            //SmallMapReferences smallMapref = smallMapRef.Get(location, nFloor);
             SmallMap currentFloorSmallMap = _mapLocationDictionary[location][nFloor];
             bool bHasLowerFloor = _mapLocationDictionary[location].ContainsKey(nFloor - 1);
-            bool bHasHigherFllor = _mapLocationDictionary[location].ContainsKey(nFloor + 1);
+            bool bHasHigherFloor = _mapLocationDictionary[location].ContainsKey(nFloor + 1);
 
             // is it a stair case?
             Debug.Assert(_spriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
             // is it the bottom or top floor? if so, then we know
             if (!bHasLowerFloor) return true;
-            if (!bHasHigherFllor) return false;
+            if (!bHasHigherFloor) return false;
 
             // is there a stair case on the lower floor?
             if (_spriteTileReferences.IsStaircase(

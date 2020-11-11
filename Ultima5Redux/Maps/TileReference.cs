@@ -53,7 +53,10 @@ namespace Ultima5Redux.Maps
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool IsSolidSpriteButNotDoor => !IsWalking_Passable && !IsOpenable;
+
+        public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC;
 
         public bool IsSolidSprite => !IsWalking_Passable;
 

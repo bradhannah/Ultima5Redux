@@ -435,8 +435,8 @@ namespace Ultima5Redux
                     ? null
                     : smallMapReferences.GetSingleMapByLocation(state.Location, state.Floor);
 
-            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, largeMapLocationReferences, overworldMap,
-                underworldMap, nonPlayerCharacters, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, 
+            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
+                underworldMap, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, 
                 inventoryReferences, CharacterRecords, Map, mapRef, dataOvlReference);
         }
 

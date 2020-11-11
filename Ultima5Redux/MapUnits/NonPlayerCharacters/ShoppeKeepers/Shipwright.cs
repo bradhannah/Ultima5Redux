@@ -7,6 +7,10 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class Shipwright : ShoppeKeeper

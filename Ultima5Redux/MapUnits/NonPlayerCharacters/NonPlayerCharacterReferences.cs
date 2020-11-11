@@ -60,23 +60,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         private readonly Dictionary<string, NonPlayerCharacterReference> _npcByNameDictionary =
             new Dictionary<string, NonPlayerCharacterReference>();
 
-        //public NonPlayerCharacterReference GetNonPlayerCharacter(SmallMapReferences.SingleMapReference._location location, Point2D xy, int nFloor)
-        //{
-        //    foreach (NonPlayerCharacterReference npc in GetNonPlayerCharactersByLocation(location))
-        //    {
-        //        if (npc.CurrentMapPosition == xy && npc.CurrentFloor == nFloor)
-        //        {
-        //            return npc;
-        //        }
-        //    }
-        //    return null; 
-        //}
-
-        /// <summary>
-        ///     All of the NPCs
-        /// </summary>
-        private readonly List<NonPlayerCharacterReference> _npcs = new List<NonPlayerCharacterReference>();
-
         /// <summary>
         ///     Construct all of the non player characters across all of the SmallMaps
         /// </summary>
@@ -100,14 +83,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     All of the NPCs
         /// </summary>
-        public List<NonPlayerCharacterReference> NPCs => _npcs;
+        public List<NonPlayerCharacterReference> NPCs { get; } = new List<NonPlayerCharacterReference>();
 
         public List<NonPlayerCharacterReference> GetNonPlayerCharactersByLocation(
             SmallMapReferences.SingleMapReference.Location location)
         {
-            if (!_locationToNPCsDictionary.ContainsKey(location)) return new List<NonPlayerCharacterReference>();
-
-            return _locationToNPCsDictionary[location];
+            return _locationToNPCsDictionary.ContainsKey(location) ? _locationToNPCsDictionary[location] : 
+                new List<NonPlayerCharacterReference>();
         }
 
         public NonPlayerCharacterReference GetNonPlayerCharacterByName(string name)
@@ -171,8 +153,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     smallMapRef.GetLocationByIndex(mapMaster, nTown);
                 SmallMapReferences.SingleMapReference singleMapRef = smallMapRef.GetSingleMapByLocation(location, 0);
 
-                //sing = SmallMapRef.GetSingleMapByLocation(SmallMapRef.GetLocationByIndex(mapMaster, nTown);
-
                 int townOffset = TownOffsetSize * nTown;
 
                 // bajh: I know this could be done in a single loop, but it would be so damn ugly that I honestly don't even want to both
@@ -208,8 +188,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                         schedules[nNpc], npcTypes[nNpc],
                         npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]),
                         keySpriteList[nNpc] != 0);
-                    //, (int)(keySpriteList[nNpc]+100));
-                    _npcs.Add(npc);
+                    NPCs.Add(npc);
                     // we also create a quick lookup table by location but first need to check that there is an initialized list inside
                     if (!_locationToNPCsDictionary.ContainsKey(singleMapRef.MapLocation))
                         _locationToNPCsDictionary.Add(singleMapRef.MapLocation,

@@ -146,11 +146,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 int nEarliestIndex = 0;
                 for (int i = 1; i < Times.Count; i++)
                 {
-                    if (Times[i] < nEarliest)
-                    {
-                        nEarliestIndex = i;
-                        nEarliest = Times[i];
-                    }
+                    if (Times[i] >= nEarliest) continue;
+                    
+                    nEarliestIndex = i;
+                    nEarliest = Times[i];
                 }
 
                 return nEarliestIndex;
@@ -166,11 +165,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 int nLargestIndex = 0;
                 for (int i = 1; i < Times.Count; i++)
                 {
-                    if (Times[i] > nLargest)
-                    {
-                        nLargestIndex = i;
-                        nLargest = Times[i];
-                    }
+                    if (Times[i] <= nLargest) continue;
+                    
+                    nLargestIndex = i;
+                    nLargest = Times[i];
                 }
 
                 return nLargestIndex;
@@ -193,13 +191,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             {
                 MapUnitPosition mapUnitPosition = new MapUnitPosition();
                 int nIndex = GetRawScheduleIndex(timeOfDay);
-
-                //return nOrigIndex == 3 ? 1 : nOrigIndex;
-
-                //if (nHour > Times[3] && nHour < Times[0]) return 1;
-                //if (nHour > Times[0] && nHour < Times[1]) return 0;
-                //if (nHour > Times[1] && nHour < Times[2]) return 1;
-                //if (nHour > Times[2] && nHour < Times[3]) return 2;
 
                 if (nIndex == 0) nIndex = 1;
                 else if (nIndex == 1) nIndex = 0;

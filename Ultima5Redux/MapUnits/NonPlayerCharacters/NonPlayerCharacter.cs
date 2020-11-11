@@ -14,12 +14,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         public NonPlayerCharacter(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
-            TimeOfDay timeOfDay,
-            PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, TileReferences tileReferences,
-            SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference) : base(npcRef, mapUnitState,
-            smallMapTheSmallMapCharacterState, mapUnitMovement, playerCharacterRecords,
-            tileReferences, location, dataOvlReference, VirtualMap.Direction.None)
+            TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
+            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
+            DataOvlReference dataOvlReference) : base(npcRef, mapUnitState, smallMapTheSmallMapCharacterState,
+            mapUnitMovement, playerCharacterRecords, tileReferences, location, dataOvlReference,
+            VirtualMap.Direction.None)
         {
             bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
 
@@ -379,11 +378,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// </summary>
         /// <param name="virtualMap"></param>
         /// <param name="timeOfDay"></param>
-        /// <param name="mapUnit">character to wander</param>
         /// <param name="nMaxDistance">max distance character should be from their scheduled position</param>
         /// <param name="bForceWander">force a wander? if not forced then there is a chance they will not move anywhere</param>
         /// <returns>the direction they should move</returns>
-        internal void WanderWithinN(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMaxDistance,
+        private void WanderWithinN(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMaxDistance,
             bool bForceWander = false)
         {
             Random ran = new Random();

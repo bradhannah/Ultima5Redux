@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Maps;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {

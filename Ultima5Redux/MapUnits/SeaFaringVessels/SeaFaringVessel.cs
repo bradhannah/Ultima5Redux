@@ -16,7 +16,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         }
 
         public override bool IsActive => true;
-        //protected abstract Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; }
 
         protected static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
         {

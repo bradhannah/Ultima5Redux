@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.MapUnits;
 
@@ -7,11 +9,8 @@ namespace Ultima5Redux.Maps
 {
     public partial class SmallMapReferences
     {
-        // the master copy of the map references
-
         // total number of master files (towne, keep, castle and dwelling)
         private const int MASTER_FILES = 4;
-
 
         /// <summary>
         ///     Data OVL reference used for grabbing a lot of different data
@@ -35,6 +34,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     a list of all the location names
         /// </summary>
+        // ReSharper disable once CollectionNeverQueried.Local
         private List<string> _locationNames;
 
         /// <summary>
@@ -109,9 +109,10 @@ namespace Ultima5Redux.Maps
         /// <param name="location"></param>
         /// <param name="startFloor"></param>
         /// <param name="nFloors"></param>
+        /// <param name="roomOffset"></param>
         /// <returns></returns>
-        private List<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
-            int startFloor, short nFloors, short roomOffset, string name)
+        private IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
+            int startFloor, short nFloors, short roomOffset)
         {
             List<SingleMapReference> mapRefs = new List<SingleMapReference>();
 
@@ -122,7 +123,7 @@ namespace Ultima5Redux.Maps
             for (int i = 0; i < nFloors; i++)
             {
                 mapRefs.Add(new SingleMapReference(location, startFloor + i,
-                    fileOffset + i * SmallMap.XTILES * SmallMap.YTILES, _dataRef));
+                    fileOffset + i * SmallMap.XTILES * SmallMap.YTILES));
             }
 
             return mapRefs;
@@ -154,10 +155,9 @@ namespace Ultima5Redux.Maps
             short roomOffset = _roomOffsetCountDictionary[dataFilename];
 
             // add one or more map references 
-            MapReferenceList.AddRange(GenerateSingleMapReferences(location, hasBasement ? -1 : 0, nFloors, roomOffset,
-                _locationNames[(int) location]));
+            MapReferenceList.AddRange(GenerateSingleMapReferences(location, hasBasement ? -1 : 0, nFloors, roomOffset));
 
-            // add the number of floors you have just added so that it can increment the file offset for subequent calls
+            // add the number of floors you have just added so that it can increment the file offset for subsequent calls
             _roomOffsetCountDictionary[dataFilename] += nFloors;
 
             _smallMapBasementDictionary.Add(location, hasBasement);
@@ -177,9 +177,8 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Gets the starting location of a small map
         /// </summary>
-        /// <param name="location"></param>
         /// <returns></returns>
-        public static Point2D GetStartingXYByLocation(SingleMapReference.Location location)
+        public static Point2D GetStartingXYByLocation()
         {
             return new Point2D(32 / 2 - 1, 30);
         }
@@ -187,22 +186,17 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Gets the starting position of a small map
         /// </summary>
-        /// <param name="location"></param>
         /// <returns></returns>
-        public static MapUnitPosition GetStartingXYZByLocation(SingleMapReference.Location location)
+        public static MapUnitPosition GetStartingXYZByLocation()
         {
-            Point2D startingXY = GetStartingXYByLocation(location);
+            Point2D startingXY = GetStartingXYByLocation();
             return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
         }
 
-        public string GetLocationName(SingleMapReference.Location location)
+        [SuppressMessage("ReSharper", "StringLiteralTypo")] public string GetLocationName(SingleMapReference.Location location)
         {
-            Func<DataOvlReference.LocationStrings, string> getLocationNameStr =
-                delegate(DataOvlReference.LocationStrings index)
-                {
-                    return _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.LOCATION_NAMES,
-                        (int) index);
-                };
+            string getLocationNameStr(DataOvlReference.LocationStrings index) => 
+                _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.LOCATION_NAMES, (int) index);
 
             // filthy way to convert our more commonly used _location enum to the less used LOCATION_STRINGS
             // they didn't even bother having them all match, and then decided to leave some out
@@ -211,33 +205,31 @@ namespace Ultima5Redux.Maps
                     location.ToString());
 
             // if the DataOVL didn't provide a name, then we are forced to set our own... :(
-            if ((int) newLocStrEnum < 0)
-                switch (newLocStrEnum)
-                {
-                    case DataOvlReference.LocationStrings.Suteks_Hut:
-                        return "SUTEK'S HUT";
-                    case DataOvlReference.LocationStrings.SinVraals_Hut:
-                        return "SIN VRAAL'S HUT";
-                    case DataOvlReference.LocationStrings.Grendels_Hut:
-                        return "GRENDAL'S HUT";
-                    case DataOvlReference.LocationStrings.Lord_Britishs_Castle:
-                        return "LORD BRITISH'S CASTLE";
-                    case DataOvlReference.LocationStrings.Palace_of_Blackthorn:
-                        return "PALACE OF BLACKTHORN";
-                    default:
-                        throw new Ultima5ReduxException("Ummm asked for a location name and wasn't on the guest list.");
-                }
-
-            return getLocationNameStr(newLocStrEnum);
+            if ((int) newLocStrEnum >= 0) return getLocationNameStr(newLocStrEnum);
+            
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            switch (newLocStrEnum)
+            {
+                case DataOvlReference.LocationStrings.Suteks_Hut:
+                    return "SUTEK'S HUT";
+                case DataOvlReference.LocationStrings.SinVraals_Hut:
+                    return "SIN VRAAL'S HUT";
+                case DataOvlReference.LocationStrings.Grendels_Hut:
+                    return "GRENDAL'S HUT";
+                case DataOvlReference.LocationStrings.Lord_Britishs_Castle:
+                    return "LORD BRITISH'S CASTLE";
+                case DataOvlReference.LocationStrings.Palace_of_Blackthorn:
+                    return "PALACE OF BLACKTHORN";
+                default:
+                    throw new Ultima5ReduxException("Ummm asked for a location name and wasn't on the guest list.");
+            }
         }
 
         public string GetLocationTypeStr(SingleMapReference.Location location)
         {
             // anon function for quick lookup of strings
-            Func<DataOvlReference.WorldStrings, string> getTypePlaceStr = delegate(DataOvlReference.WorldStrings index)
-            {
-                return _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.WORLD, (int) index);
-            };
+            string getTypePlaceStr(DataOvlReference.WorldStrings index) =>
+                _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.WORLD, (int) index);
 
             switch (location)
             {
@@ -295,6 +287,8 @@ namespace Ultima5Redux.Maps
                     break;
                 case SingleMapReference.Location.Combat_resting_shrine:
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             return "";
@@ -317,19 +311,19 @@ namespace Ultima5Redux.Maps
         ///     Get a map reference based on a location
         /// </summary>
         /// <param name="location">The location you are looking for</param>
+        /// <param name="floor"></param>
         /// <returns>a single map reference providing details on the map itself</returns>
         public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor)
         {
-            SingleMapReference.SmallMapMasterFiles masterMap = SingleMapReference.GetMapMasterFromLocation(location);
-            foreach (SingleMapReference mapRef in MapReferenceList)
+            foreach (SingleMapReference mapRef in MapReferenceList.Where(mapRef => mapRef.MapLocation == location && mapRef.Floor == floor))
             {
-                if (mapRef.MapLocation == location && mapRef.Floor == floor) return mapRef;
+                return mapRef;
             }
 
             throw new Ultima5ReduxException("_location was not found!");
         }
 
-        public void InitializeLocationNames()
+        private void InitializeLocationNames()
         {
             // get the data chunks that have the offsets to the strings in the data.ovl file, representing each location (most)
             DataChunk locationNameOffsetChunk =
@@ -337,10 +331,9 @@ namespace Ultima5Redux.Maps
 
             // get the offsets 
             List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUint16List();
-            _locationNames = new List<string>(locationOffsets.Count + 1);
 
             // I happen to know that the underworld and overworld is [0], so let's add a placeholder
-            _locationNames.Add("Overworld/Underworld");
+            _locationNames = new List<string>(locationOffsets.Count + 1) {"Overworld/Underworld"};
 
             // grab each location string
             // it isn't the most efficient way, but it gets the job done

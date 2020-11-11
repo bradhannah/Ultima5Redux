@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.Properties;
+// ReSharper disable CommentTypo
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
@@ -12,10 +13,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         private readonly DataOvlReference _dataOvlReference;
 
+        // ReSharper disable once CollectionNeverQueried.Local
         private readonly Dictionary<string, ShoppeKeeperReference> _shoppeKeepers =
             new Dictionary<string, ShoppeKeeperReference>();
-
-        private readonly Dictionary<int, ShoppeKeeperReference> _shoppeKeepersByIndex;
 
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location,
                 Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>>
@@ -29,7 +29,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
             // we load a list of all shoppe keeper locations which we unfortunately had to map 
             // ourselves because it appears most shoppe keeper data is in the code (OVL) files
-            _shoppeKeepersByIndex = LoadShoppeKeepersByIndex(_dataOvlReference);
+            Dictionary<int, ShoppeKeeperReference> shoppeKeepersByIndex = LoadShoppeKeepersByIndex();
 
             List<string> shoppeNames = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES)
                 .GetChunkAsStringList().Strs;
@@ -45,7 +45,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             for (int i = 0; i < shoppeNames.Count; i++)
             {
                 // create a new shoppe keeper object then add it to the list
-                ShoppeKeeperReference shoppeKeeper = _shoppeKeepersByIndex[i]; //new TheShoppeKeeperReference();
+                ShoppeKeeperReference shoppeKeeper = shoppeKeepersByIndex[i]; //new TheShoppeKeeperReference();
                 string shoppeKeeperName = shoppeKeeperNames[i];
                 shoppeKeeper.ShoppeName = shoppeNames[i];
                 shoppeKeeper.ShoppeKeeperName = shoppeKeeperName;
@@ -73,7 +73,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 }
                 else if (shoppeKeeper.NpcRef.NPCType == NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller)
                 {
-                    //shoppeKeeper.InventoryItemsForSale
                 }
             }
         }
@@ -108,14 +107,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return _shoppeKeepersByLocationAndType[location][npcType];
         }
 
-        private static Dictionary<int, ShoppeKeeperReference> LoadShoppeKeepersByIndex(
-            DataOvlReference dataOvlReference)
+        private static Dictionary<int, ShoppeKeeperReference> LoadShoppeKeepersByIndex()
         {
             Dictionary<int, ShoppeKeeperReference> result =
                 JsonConvert.DeserializeObject<Dictionary<int, ShoppeKeeperReference>>(Resources.ShoppeKeeperMap);
-            foreach (ShoppeKeeperReference shoppeKeeperReference in result.Values)
-            {
-            }
 
             return result;
         }

@@ -13,7 +13,6 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private readonly U5StringRef _u5StringRef;
 
-
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -46,6 +45,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Number of tile references
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public int Count => TileReferenceByStringDictionary.Count;
 
         /// <summary>
@@ -132,6 +132,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public bool IsDoor(int nSprite)
         {
             return GetTileReference(nSprite).IsOpenable;
@@ -196,10 +197,11 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     is the sprite the head (with pillor) of a bed
+        ///     is the sprite the head of a bed
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool IsHeadOfBed(int nSprite)
         {
             bool bIsHeadOfBed = nSprite == GetTileNumberByName("LeftBed"); // is it the human sleeping side of the bed?
@@ -211,6 +213,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool IsStocks(int nSprite)
         {
             bool bIsStocks = nSprite == GetTileNumberByName("Stocks"); // is it the stocks
@@ -222,6 +225,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool IsManacles(int nSprite)
         {
             bool bIsManacles = nSprite == GetTileNumberByName("Manacles"); // is it shackles/manacles
@@ -233,6 +237,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public bool IsMirror(int nSprite)
         {
             bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar")
@@ -245,6 +250,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public bool IsUnbrokenMirror(int nSprite)
         {
             bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar");
@@ -351,6 +357,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public bool RequiresGrapplingHook(int nSprite)
         {
             return nSprite == GetTileNumberByName("SmallMountains");
@@ -403,9 +410,9 @@ namespace Ultima5Redux.Maps
         /// <param name="bIsNPCTile">Is there an NPC on the tile as well?</param>
         /// <param name="bIsAvatarTile">Is the Avatar on the tile?</param>
         /// <param name="bIsFoodNearby">Is there food within +/- 1 y pos?</param>
-        /// <param name="bIsDaylight">
-        ///     Is it current daylight (<8pm)</param>
+        /// <param name="bIsDaylight"> Is it current daylight </param>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public int GetCorrectSprite(int nSprite, bool bIsNPCTile, bool bIsAvatarTile, bool bIsFoodNearby,
             bool bIsDaylight)
         {

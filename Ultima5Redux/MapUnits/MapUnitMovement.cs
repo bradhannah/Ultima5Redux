@@ -212,7 +212,7 @@ namespace Ultima5Redux.MapUnits
             else if (!bPeek)
             {
                 // we have more moves, but we are going to spend one 
-                int nRemainingMovements = _movementQueue.Peek().SpendSingleMovement();
+                int _ = _movementQueue.Peek().SpendSingleMovement();
             }
 
             return direction;
@@ -224,8 +224,8 @@ namespace Ultima5Redux.MapUnits
         /// <returns></returns>
         public override string ToString()
         {
-            if (_movementQueue.Count == 0) return "Empty";
-            return $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
+            return _movementQueue.Count == 0 ? "Empty" : 
+                $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
         }
     }
 }

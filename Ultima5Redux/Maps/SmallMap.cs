@@ -63,7 +63,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
         {
-            bool IsPreferredIndex(int nSprite)
+            bool isPreferredIndex(int nSprite)
             {
                 bool bIsPreferredIndex = nSprite == spriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
                                          spriteTileReferences.IsPath(nSprite);
@@ -71,15 +71,16 @@ namespace Ultima5Redux.Maps
             }
 
             const int fDefaultDeduction = 2;
-            TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+            
+            TileReference unused = spriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
 
             float fCost = 10;
 
             // we reduce the weight for the A* for each adjacent brick floor or path tile
-            if (xy.X - 1 >= 0) fCost -= IsPreferredIndex(TheMap[xy.X - 1][xy.Y]) ? fDefaultDeduction : 0;
-            if (xy.X + 1 < XTILES) fCost -= IsPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
-            if (xy.Y - 1 >= 0) fCost -= IsPreferredIndex(TheMap[xy.X][xy.Y - 1]) ? fDefaultDeduction : 0;
-            if (xy.Y + 1 < YTILES) fCost -= IsPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
+            if (xy.X - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X - 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.X + 1 < XTILES) fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.Y - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y - 1]) ? fDefaultDeduction : 0;
+            if (xy.Y + 1 < YTILES) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
 
             return fCost;
         }

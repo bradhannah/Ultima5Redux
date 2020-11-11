@@ -28,7 +28,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         private void BuildServicesList()
         {
-            List<SmallMapReferences.SingleMapReference.Location> locations = ShoppeKeeper.GetLocations(
+            IEnumerable<SmallMapReferences.SingleMapReference.Location> locations = ShoppeKeeper.GetLocations(
                 _dataOvlReference,
                 DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_HEALING);
             List<byte> healPrices = _dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.HEALER_HEAL_PRICES)

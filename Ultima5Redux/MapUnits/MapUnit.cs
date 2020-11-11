@@ -89,7 +89,7 @@ namespace Ultima5Redux.MapUnits
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
         public abstract Avatar.AvatarState BoardedAvatarState { get; }
-        public bool IsOccupiedByAvatar { get; protected internal set; } = false;
+        public bool IsOccupiedByAvatar { get; protected internal set; }
         public virtual VirtualMap.Direction Direction { get; set; }
 
         public TileReference BoardedTileReference =>
@@ -179,6 +179,7 @@ namespace Ultima5Redux.MapUnits
             // by default the thing doesn't move on it's own
         }
 
+        // ReSharper disable once UnusedMember.Global
         public string GetDebugDescription(TimeOfDay timeOfDay)
         {
             if (NPCRef != null)
@@ -244,7 +245,7 @@ namespace Ultima5Redux.MapUnits
             if (mapUnit.MapUnitPosition.XY == targetXy)
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name +
                                                 " is already at " + targetXy.X + "," +
-                                                targetXy.Y); //+ "," + targetXy.Floor);
+                                                targetXy.Y); 
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 

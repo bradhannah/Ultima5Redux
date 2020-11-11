@@ -1,4 +1,4 @@
-﻿using Ultima5Redux.Data;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Ultima5Redux.Maps
 {
@@ -9,6 +9,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public class SingleMapReference
         {
+            [SuppressMessage("ReSharper", "IdentifierTypo")] 
             public enum Location
             {
                 Britannia_Underworld = 0x00, Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6,
@@ -40,20 +41,19 @@ namespace Ultima5Redux.Maps
             /// <param name="mapLocation">overall location (ie. Moonglow)</param>
             /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
             /// <param name="fileOffset">location of data offset in map file</param>
-            public SingleMapReference(Location mapLocation, int floor, int fileOffset, DataOvlReference dataRef)
+            public SingleMapReference(Location mapLocation, int floor, int fileOffset)
             {
                 MapLocation = mapLocation;
                 Floor = floor;
                 FileOffset = fileOffset;
-                DataRef = dataRef;
             }
 
-            public DataOvlReference DataRef { get; }
 
             /// <summary>
             ///     ID of the map location (used in saved.gam references)
             ///     Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
             /// </summary>
+            // ReSharper disable once UnusedMember.Global
             public byte Id => (byte) (MapLocation - 1);
 
             /// <summary>
@@ -64,26 +64,22 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     the floor that the single map represents
             /// </summary>
-            public int Floor { get; set; }
+            public int Floor { get; }
 
             /// <summary>
             ///     the offset of the map data in the data file
             /// </summary>
-            public int FileOffset { get; set; }
+            public int FileOffset { get; }
 
             /// <summary>
             ///     the location (ie. single town like Moonglow)
             /// </summary>
-            public Location MapLocation { get; set; }
-
-            /// <summary>
-            ///     The official name of the location
-            /// </summary>
-            public string Name { get; }
+            public Location MapLocation { get; }
 
             /// <summary>
             ///     The master file
             /// </summary>
+            // ReSharper disable once UnusedMember.Global
             public SmallMapMasterFiles MasterFile
             {
                 get
@@ -118,8 +114,8 @@ namespace Ultima5Redux.Maps
                 if (map == LargeMap.Maps.Small)
                     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
 
-                return new SingleMapReference(Location.Britannia_Underworld, map == LargeMap.Maps.Overworld ? 0 : -1,
-                    0, null);
+                return new SingleMapReference(Location.Britannia_Underworld, 
+                    map == LargeMap.Maps.Overworld ? 0 : -1, 0);
             }
 
             /// <summary>
@@ -226,12 +222,10 @@ namespace Ultima5Redux.Maps
                     case Location.Doom:
                         return SmallMapMasterFiles.Dungeon;
                     case Location.Britannia_Underworld:
-                        break;
                     case Location.Combat_resting_shrine:
-                        break;
+                    default: 
+                        throw new Ultima5ReduxException("EH?");
                 }
-
-                throw new Ultima5ReduxException("EH?");
             }
 
             /// <summary>
@@ -253,9 +247,9 @@ namespace Ultima5Redux.Maps
                         return FileConstants.KEEP_DAT;
                     case SmallMapMasterFiles.Dungeon:
                         return "NOFILE";
+                    default:
+                        throw new Ultima5ReduxException("Bad _location");
                 }
-
-                throw new Ultima5ReduxException("Bad _location");
             }
         }
     }

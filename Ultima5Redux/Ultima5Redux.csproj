@@ -125,7 +125,6 @@
     <Compile Include="MapUnits\NonPlayerCharacters\ShoppeKeepers\ShoppeKeeperReferences.cs" />
     <Compile Include="MapUnits\SeaFaringVessels\Frigate.cs" />
     <Compile Include="MapUnits\SeaFaringVessels\SeaFaringVessel.cs" />
-    <Compile Include="MapUnits\SeaFaringVessels\SeaFaringVesselReference.cs" />
     <Compile Include="MapUnits\SeaFaringVessels\Skiff.cs" />
     <Compile Include="Maps\GenericTileset.cs" />
     <Compile Include="Maps\Look.cs" />

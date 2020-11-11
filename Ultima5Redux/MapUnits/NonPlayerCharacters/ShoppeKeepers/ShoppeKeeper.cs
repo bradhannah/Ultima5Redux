@@ -5,8 +5,11 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
+// ReSharper disable UnusedMemberInSuper.Global
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
@@ -83,6 +86,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Quotes the string and adds "says shoppekeeper"
         /// </summary>
         /// <param name="str"></param>
+        /// <param name="saysStr"></param>
         /// <returns></returns>
         protected string AddSaysShoppeKeeper(string str, string saysStr = "says")
         {
@@ -212,8 +216,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return responses[nResponseIndex];
         }
 
-        //public abstract string GetHelloResponse(TimeOfDay tod = null); 
-        //string shoppeKeeperName = "", string shoppeName = "");
+
         public abstract string GetWhichWouldYouSee();
         public abstract string GetForSaleList();
 
@@ -223,7 +226,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <param name="dataOvlReference"></param>
         /// <param name="chunkName"></param>
         /// <returns></returns>
-        public static List<SmallMapReferences.SingleMapReference.Location> GetLocations(
+        public static IEnumerable<SmallMapReferences.SingleMapReference.Location> GetLocations(
             DataOvlReference dataOvlReference, DataOvlReference.DataChunkName chunkName)
         {
             List<SmallMapReferences.SingleMapReference.Location> locations =
@@ -243,7 +246,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             if (nNum > 6) return "many";
             if (nNum == 1) return "one";
             Debug.Assert(nNum > 0);
-            int nStartIndex = (int) DataOvlReference.ShoppeKeeperBarKeepStrings2.TWO - 2;
+            const int nStartIndex = (int) DataOvlReference.ShoppeKeeperBarKeepStrings2.TWO - 2;
             return DataOvlReference.StringReferences.GetString(
                 (DataOvlReference.ShoppeKeeperBarKeepStrings2) nStartIndex + nNum);
         }

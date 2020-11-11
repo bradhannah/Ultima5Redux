@@ -87,7 +87,7 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Minoc,
                 world.State.TheVirtualMap);
             Point2D dockLocation =
-                world.State.TheVirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
+                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
                     world.DataOvlRef);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
                 //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
@@ -125,7 +125,7 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Minoc,
                 world.State.TheVirtualMap);
             Point2D dockLocation =
-                world.State.TheVirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
+                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
                     world.DataOvlRef);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
                 //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,

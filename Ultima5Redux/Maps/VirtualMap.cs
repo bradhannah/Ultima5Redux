@@ -11,6 +11,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable IdentifierTypo
 
@@ -25,6 +26,7 @@ namespace Ultima5Redux.Maps
 
         private readonly DataOvlReference _dataOvlReference;
 
+        // ReSharper disable once NotAccessedField.Local
         private readonly InventoryReferences _inventoryReferences;
 
         /// <summary>
@@ -60,36 +62,17 @@ namespace Ultima5Redux.Maps
         private Queue<InventoryItem>[][] _exposedSearchItems;
 
         /// <summary>
-        ///     Reference to towne/keep etc locations on the large map
-        /// </summary>
-        private LargeMapLocationReferences _largeMapLocationReferenceses;
-
-        /// <summary>
-        ///     Non player characters on current map
-        /// </summary>
-        private NonPlayerCharacterReferences _nonPlayerCharacters;
-
-        private NonPlayerCharacterReferences _npcRefs;
-
-        /// <summary>
         ///     override map is responsible for overriding tiles that would otherwise be static
         /// </summary>
         private int[][] _overrideMap;
-
-        /// <summary>
-        ///     All overriden tiles
-        /// </summary>
-        private TileOverrides _overridenTiles;
 
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
         /// <param name="smallMapReferences"></param>
         /// <param name="smallMaps"></param>
-        /// <param name="largeMapLocationReferenceses"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
-        /// <param name="nonPlayerCharacters"></param>
         /// <param name="tileReferences"></param>
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
@@ -100,9 +83,8 @@ namespace Ultima5Redux.Maps
         /// <param name="initialMap"></param>
         /// <param name="currentSmallMapReference"></param>
         /// <param name="dataOvlReference"></param>
-        public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapLocationReferences largeMapLocationReferenceses, LargeMap overworldMap, LargeMap underworldMap,
-            NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences, GameState state,
+        public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
+            LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
             LargeMap.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
@@ -115,18 +97,13 @@ namespace Ultima5Redux.Maps
             SmallMapRefs = smallMapReferences;
 
             _smallMaps = smallMaps;
-            _nonPlayerCharacters = nonPlayerCharacters;
-            _largeMapLocationReferenceses = largeMapLocationReferenceses;
             _tileReferences = tileReferences;
             _state = state;
-            _npcRefs = npcRefs;
             _timeOfDay = timeOfDay;
             _moongates = moongates;
             _inventoryReferences = inventoryReferences;
             _dataOvlReference = dataOvlReference;
-            _overridenTiles = new TileOverrides();
 
-            //this.characterStates = characterStates;
             _largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
             _largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
 
@@ -173,11 +150,13 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     The current small map (null if on large map)
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public SmallMap CurrentSmallMap { get; private set; }
 
         /// <summary>
         ///     Current large map (null if on small map)
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public LargeMap CurrentLargeMap { get; private set; }
 
         /// <summary>
@@ -272,7 +251,6 @@ namespace Ultima5Redux.Maps
         public void LoadLargeMap(LargeMap.Maps map)
         {
             CurrentLargeMap = _largeMaps[map];
-            int nFloor = map == LargeMap.Maps.Overworld ? 0 : -1;
             switch (map)
             {
                 case LargeMap.Maps.Underworld:
@@ -414,11 +392,11 @@ namespace Ultima5Redux.Maps
         /// <param name="tileReference"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        // ReSharper disable once MemberCanBePrivate.Global
         public void SetOverridingTileReferece(TileReference tileReference, int x, int y)
         {
             _overrideMap[x][y] = tileReference.Index;
         }
-
 
         /// <summary>
         ///     Gets the NPC you want to talk to in the given direction
@@ -443,7 +421,6 @@ namespace Ultima5Redux.Maps
             Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
             return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
             (LargeMapOverUnder,
-                //CurrentSingleMapReference.MapLocation, 
                 adjustedPosition2Away, CurrentSingleMapReference.Floor);
         }
 
@@ -465,11 +442,7 @@ namespace Ultima5Redux.Maps
         /// <returns>the NPC or null if one does not exist</returns>
         public List<MapUnit> GetMapUnitOnTile(Point2D xy)
         {
-            //SmallMapReferences.SingleMapReference.Location location = CurrentSingleMapReference.MapLocation;
-
-            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitByLocation(
-                //location
-                LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitByLocation( LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
 
             return mapUnits;
         }
@@ -479,7 +452,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="bExcludeAvatar"></param>
-        /// <returns>MapUnit or </returns>
+        /// <returns>MapUnit or null</returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
         {
             List<Type> visibilePriorityOrder = new List<Type>
@@ -488,7 +462,6 @@ namespace Ultima5Redux.Maps
                 typeof(Monster), typeof(Avatar)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
-            //List<MapUnit> orderedMapUnits = new List<MapUnit>();
 
             // this is inefficient, but the lists are so small it is unlikely to matter
             foreach (Type type in visibilePriorityOrder)
@@ -496,13 +469,12 @@ namespace Ultima5Redux.Maps
                 if (bExcludeAvatar && type == typeof(Avatar)) continue;
                 foreach (MapUnit mapUnit in mapUnits)
                 {
-                    // if we find the first highest priority item, then we simply return it 
+                    // if we find the first highest priority item, then we simply return it
                     if (mapUnit.GetType() == type) return mapUnit;
                 }
             }
 
             return null;
-            //throw new Ultima5ReduxException("Couldn't find a top visible map unit");
         }
 
         /// <summary>
@@ -520,7 +492,7 @@ namespace Ultima5Redux.Maps
             TileReference tileReference = GetTileReference(xy);
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
-            bool bStaircaseWalkable = bNoStaircases ? !_tileReferences.IsStaircase(tileReference.Index) : true;
+            bool bStaircaseWalkable = !(bNoStaircases && _tileReferences.IsStaircase(tileReference.Index));
             bool bIsWalkable = tileReference.IsWalking_Passable && bStaircaseWalkable;
 
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
@@ -605,13 +577,6 @@ namespace Ultima5Redux.Maps
             Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
 
             return adjustedPosition;
-        }
-
-        private void CalculateNextPath(MapUnit mapUnit, int nMapCurrentFloor)
-        {
-            Type mapUnitType = mapUnit.GetType();
-            if (mapUnitType == typeof(NonPlayerCharacter))
-                CalculateNextPath((NonPlayerCharacter) mapUnit, nMapCurrentFloor);
         }
 
         /// <summary>
@@ -755,19 +720,13 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Advances each of the NPCs by one movement each
         /// </summary>
-        /// <returns></returns>
-        internal bool MoveMapUnitsToNextMove()
+        internal void MoveMapUnitsToNextMove()
         {
-            // if not on small map - then no NPCs!
-            //if (IsLargeMap) return false;
-
             // go through each of the NPCs on the map
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.Where(mapChar => mapChar.IsActive))
             {
                 mapUnit.CompleteNextMove(this, _timeOfDay);
             }
-
-            return true;
         }
 
         /// <summary>
@@ -785,7 +744,6 @@ namespace Ultima5Redux.Maps
                        || nSprite == _tileReferences.GetTileReferenceByName("TableFoodBoth").Index;
             }
 
-            //Todo: use TileReference lookups instead of hard coded values
             if (CurrentSingleMapReference == null) return false;
             // yuck, but if the food is up one tile or down one tile, then food is nearby
             bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index)
@@ -803,7 +761,7 @@ namespace Ultima5Redux.Maps
         {
             if (!_tileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
 
-            bool bStairGoUp = _smallMaps.DoStrairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
             return bStairGoUp;
         }
 
@@ -819,6 +777,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool IsStairsGoingDown(Point2D xy)
         {
             if (!_tileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
@@ -839,6 +798,7 @@ namespace Ultima5Redux.Maps
         ///     Are the stairs at the player characters current position going up?
         /// </summary>
         /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool IsStairGoingUp()
         {
             return IsStairGoingUp(CurrentPosition.XY);
@@ -849,6 +809,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public Direction GetStairsDirection(Point2D xy)
         {
             // we are making a BIG assumption at this time that a stair case ONLY ever has a single
@@ -867,7 +828,7 @@ namespace Ultima5Redux.Maps
         /// <returns>stair sprite</returns>
         public int GetStairsSprite(Point2D xy)
         {
-            bool bGoingUp = IsStairGoingUp(xy); //UltimaGlobal.IsStairGoingUp(voxelPos);
+            bool bGoingUp = IsStairGoingUp(xy); 
             Direction direction = GetStairsDirection(xy);
             int nSpriteNum = -1;
             switch (direction)
@@ -908,11 +869,8 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsHorizDoor(Point2D xy)
         {
-            if (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoor
-                || GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoor)
-                return true;
-
-            return false;
+            return GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC
+                   || GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC;
         }
 
         /// <summary>
@@ -964,7 +922,6 @@ namespace Ultima5Redux.Maps
             // todo: technically this is only for 3D worlds, we should consider that
             // this method is much quicker because we only load the data once in the maps 
             if (!IsLargeMap && CurrentMap.IsXYOverride(xy))
-                //Debug.WriteLine("Wanted to guess a tile but it was overriden: "+new MapUnitPosition(xy.X,xy.Y,CurrentSingleMapReference.Floor));
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
             if (IsLargeMap && CurrentMap.IsXYOverride(xy)) return CurrentMap.GetTileOverride(xy).SpriteNum;
 
@@ -1023,7 +980,7 @@ namespace Ultima5Redux.Maps
             return GetSeaFaringVesselAtDock(location) != null;
         }
 
-        public Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location,
+        public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference)
         {
             List<byte> xDockCoords =
@@ -1054,6 +1011,7 @@ namespace Ultima5Redux.Maps
             return docks[location];
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
             // 0 = Jhelom

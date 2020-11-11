@@ -5,6 +5,11 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.PlayerCharacters;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
+
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class Innkeeper : ShoppeKeeper
@@ -22,7 +27,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public InnKeeperServiceReference.InnKeeperServices InnKeeperServices => _innKeeperServiceReference
             .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation);
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions { get; } = null;
 
         public override string GetHelloResponse(TimeOfDay tod = null)
         {

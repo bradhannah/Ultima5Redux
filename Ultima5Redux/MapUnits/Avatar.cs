@@ -29,10 +29,10 @@ namespace Ultima5Redux.MapUnits
             DataOvlRef = dataOvlReference;
             if (mapUnitState == null)
                 TheMapUnitState = MapUnitState.CreateAvatar(tileReferences,
-                    SmallMapReferences.GetStartingXYZByLocation(location));
+                    SmallMapReferences.GetStartingXYZByLocation());
             else
                 TheMapUnitState = MapUnitState.CreateAvatar(tileReferences,
-                    SmallMapReferences.GetStartingXYZByLocation(location),
+                    SmallMapReferences.GetStartingXYZByLocation(),
                     mapUnitState);
             TileReferences = tileReferences;
 
@@ -73,7 +73,7 @@ namespace Ultima5Redux.MapUnits
         public override bool IsActive => true;
 
         internal AvatarState CurrentAvatarState { get; private set; }
-        public VirtualMap.Direction PreviousDirection { get; private set; } = VirtualMap.Direction.None;
+        private VirtualMap.Direction PreviousDirection { get; set; } = VirtualMap.Direction.None;
         public VirtualMap.Direction CurrentDirection { get; private set; }
         public bool AreSailsUp { get; set; } = false;
 

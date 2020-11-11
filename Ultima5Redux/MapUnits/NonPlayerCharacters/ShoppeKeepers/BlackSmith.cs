@@ -61,7 +61,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Get blacksmiths typical hello response
         /// </summary>
         /// <param name="tod"></param>
-        /// <param name="shoppeKeeperReference"></param>
         /// <returns></returns>
         public override string GetHelloResponse(TimeOfDay tod = null)
         {

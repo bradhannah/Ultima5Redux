@@ -943,7 +943,7 @@ namespace Ultima5Redux
                 SmallMapReferences.SingleMapReference.Location location = LargeMapRef.GetLocationByMapXY(xy);
                 State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, 0));
                 // set us to the front of the building
-                State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation(location);
+                State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
 
                 retStr =
                     DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE)

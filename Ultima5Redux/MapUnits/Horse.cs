@@ -59,7 +59,8 @@ namespace Ultima5Redux.MapUnits
 
         private static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
         {
-            return (int) (nPrice - nPrice * 0.015 * records.AvatarRecord.Stats.Intelligence);
+            const double IntelligenceFactor = 0.015;
+            return (int) (nPrice - nPrice * IntelligenceFactor * records.AvatarRecord.Stats.Intelligence);
         }
     }
 }
