@@ -132,9 +132,9 @@ namespace Ultima5Redux
         /// <param name="offset">byte offset to start at</param>
         /// <param name="length">number of bytes to read, use -1 to indicate to read until EOF</param>
         /// <returns></returns>
-        public static List<byte> GetFileAsByteList(string filename, int offset, int length)
+        public static List<byte> GetFileAsByteList(string filename, int offset = 0, int length = -1)
         {
-            FileStream readFile = File.OpenRead(filename);
+            File.OpenRead(filename);
 
             byte[] fileContents = File.ReadAllBytes(filename);
             if (length == -1) return fileContents.ToList();
@@ -149,16 +149,6 @@ namespace Ultima5Redux
             return specificContents;
         }
 
-
-        /// <summary>
-        ///     Gets a binary file as a stream of bytes into a list<byte>
-        /// </summary>
-        /// <param name="filename">filename of the binary file</param>
-        /// <returns>a list of bytes</returns>
-        public static List<byte> GetFileAsByteList(string filename)
-        {
-            return GetFileAsByteList(filename, 0, -1);
-        }
 
         /// <summary>
         ///     Converts a byte[] to a readable string, assumes it ends with a NULL (0x00) byte
@@ -259,6 +249,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <remarks>Hacked from FileStream to List_byte https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>
         /// <param name="byteArray"></param>
+        /// <param name="fileOffset"></param>
         /// <param name="t"></param>
         /// <returns></returns>
         public static object ReadStruct(List<byte> byteArray, int fileOffset, Type t)

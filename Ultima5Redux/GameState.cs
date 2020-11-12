@@ -26,12 +26,12 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        ///     2D array of flag indicating if an NPC is dead [mastermap][npc#]
+        ///     2D array of flag indicating if an NPC is dead [MasterMap][npc#]
         /// </summary>
         private readonly bool[][] _npcIsDeadArray;
 
         /// <summary>
-        ///     2D array of flag indicating if an NPC is met [mastermap][npc#]
+        ///     2D array of flag indicating if an NPC is met [MasterMap][npc#]
         /// </summary>
         private readonly bool[][] _npcIsMetArray;
 
@@ -131,9 +131,9 @@ namespace Ultima5Redux
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Number of Party Members", 0x2B5, 0x1, 0x00,
                 DataChunkName.N_PEOPLE_PARTY);
 
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Type Map", 0x5B4, 0x20, 0x00,
+            DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Type InitialMap", 0x5B4, 0x20, 0x00,
                 DataChunkName.NPC_TYPES);
-            List<byte> chunks = DataChunks.GetDataChunk(DataChunkName.NPC_TYPES).GetAsByteList();
+            //List<byte> chunks = DataChunks.GetDataChunk(DataChunkName.NPC_TYPES).GetAsByteList();
 
             // get the NPCs movement list - 0x20 NPCs, with 0x10 movement commands each, consisting of 0x1 direction byte + 0x1 repetitions
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Movement List", 0xBB8,
@@ -175,7 +175,6 @@ namespace Ultima5Redux
             // string overworldOverlayPath = Path.Combine(u5Directory, FileConstants.BRIT_OOL);
             // string underworldOverlayPath = Path.Combine(u5Directory, FileConstants.UNDER_OOL);
             string savedOolFile = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
-            ;
             string overworldOverlayPath = savedOolFile;
             string underworldOverlayPath = savedOolFile;
 
@@ -244,7 +243,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     Game State raw data
         /// </summary>
-        public DataChunks<DataChunkName> DataChunks { get; }
+        private DataChunks<DataChunkName> DataChunks { get; }
 
         public byte ActivePlayerNumber
         {
@@ -252,6 +251,7 @@ namespace Ultima5Redux
             set => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).SetChunkAsByte(value);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public bool IsTorchLit => TorchTurnsLeft > 0;
 
         /// <summary>
@@ -266,14 +266,14 @@ namespace Ultima5Redux
         /// <summary>
         ///     Current location
         /// </summary>
-        internal SmallMapReferences.SingleMapReference.Location Location =>
+        private SmallMapReferences.SingleMapReference.Location Location =>
             (SmallMapReferences.SingleMapReference.Location) DataChunks.GetDataChunk(DataChunkName.PARTY_LOC)
                 .GetChunkAsByte();
 
         /// <summary>
         ///     Current floor
         /// </summary>
-        public int Floor => DataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
+        private int Floor => DataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
 
         /// <summary>
         ///     Saved X location of Avatar
@@ -331,16 +331,10 @@ namespace Ultima5Redux
         /// <summary>
         ///     Which map am I currently on?
         /// </summary>
-        public LargeMap.Maps Map
-        {
-            get
-            {
-                if (Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                    return Floor == 0xFF ? LargeMap.Maps.Underworld : LargeMap.Maps.Overworld;
-
-                return LargeMap.Maps.Small;
-            }
-        }
+        private LargeMap.Maps InitialMap =>
+            Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
+                ? Floor == 0xFF ? LargeMap.Maps.Underworld : LargeMap.Maps.Overworld
+                : LargeMap.Maps.Small;
 
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
@@ -415,18 +409,15 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="smallMapReferences"></param>
         /// <param name="smallMaps"></param>
-        /// <param name="largeMapLocationReferences"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
-        /// <param name="nonPlayerCharacters"></param>
         /// <param name="tileReferences"></param>
         /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         /// <param name="inventoryReferences"></param>
         /// <param name="dataOvlReference"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMapLocationReferences largeMapLocationReferences, LargeMap overworldMap, LargeMap underworldMap,
-            NonPlayerCharacterReferences nonPlayerCharacters, TileReferences tileReferences, GameState state,
+            LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
             DataOvlReference dataOvlReference)
         {
@@ -437,7 +428,7 @@ namespace Ultima5Redux
 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
                 underworldMap, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, 
-                inventoryReferences, CharacterRecords, Map, mapRef, dataOvlReference);
+                inventoryReferences, CharacterRecords, InitialMap, mapRef, dataOvlReference);
         }
 
         private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }

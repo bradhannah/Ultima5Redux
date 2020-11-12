@@ -97,6 +97,7 @@
     <Compile Include="DayNightMoon\TimeOfDay.cs" />
     <Compile Include="Dialogue\ShoppeKeeperDialogueReference.cs" />
     <Compile Include="External\AStarSharp.cs" />
+    <Compile Include="ImportedGameState.cs" />
     <Compile Include="MapUnits\Avatar.cs" />
     <Compile Include="MapUnits\Horse.cs" />
     <Compile Include="MapUnits\MagicCarpet.cs" />

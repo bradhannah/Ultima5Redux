@@ -14,7 +14,8 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux
 {
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global"),
+     SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public class World
     {
         public enum KlimbResult { Success, SuccessFell, CantKlimb, RequiresDirection }
@@ -22,18 +23,20 @@ namespace Ultima5Redux
         /// <summary>
         ///     Special things that can be looked at in the world that will require special consideration
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public enum SpecialLookCommand { None, Sign, GemCrystal }
 
         public enum TryToMoveResult { Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
+        // ReSharper disable once UnusedMember.Local
         private readonly CombatMapReference _combatMapRef = new CombatMapReference();
         private readonly TileOverrides _tileOverrides = new TileOverrides();
 
         /// <summary>
         ///     Ultima 5 data and save files directory
         /// </summary>
-        private readonly string _u5Directory;
+        public string U5Directory { get; }
 
         /// <summary>
         ///     Constructor
@@ -41,17 +44,17 @@ namespace Ultima5Redux
         /// <param name="ultima5Directory">ultima 5 data and save game directory</param>
         public World(string ultima5Directory)
         {
-            _u5Directory = ultima5Directory;
+            U5Directory = ultima5Directory;
 
-            DataOvlRef = new DataOvlReference(_u5Directory);
+            DataOvlRef = new DataOvlReference(U5Directory);
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
 
             // build the overworld map
-            OverworldMap = new LargeMap(_u5Directory, LargeMap.Maps.Overworld, _tileOverrides);
+            OverworldMap = new LargeMap(U5Directory, LargeMap.Maps.Overworld, _tileOverrides);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(_u5Directory, LargeMap.Maps.Underworld, _tileOverrides);
+            UnderworldMap = new LargeMap(U5Directory, LargeMap.Maps.Underworld, _tileOverrides);
 
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
@@ -59,42 +62,34 @@ namespace Ultima5Redux
 
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
 
-            AllSmallMaps = new SmallMaps(SmallMapRef, _u5Directory, SpriteTileReferences, _tileOverrides);
+            AllSmallMaps = new SmallMaps(SmallMapRef, U5Directory, SpriteTileReferences, _tileOverrides);
 
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
 
-            State = new GameState(_u5Directory, DataOvlRef);
+            State = new GameState(U5Directory, DataOvlRef);
 
             // build all combat maps from the Combat Map References
-            foreach (CombatMapReference.SingleCombatMapReference combatMapRef in _combatMapRef.MapReferenceList)
-            {
-                CombatMap combatMap = new CombatMap(_u5Directory, combatMapRef, _tileOverrides);
-            }
+            // foreach (CombatMapReference.SingleCombatMapReference combatMapRef in _combatMapRef.MapReferenceList)
+            // {
+            //     CombatMap combatMap = new CombatMap(_u5Directory, combatMapRef, _tileOverrides);
+            // }
 
             // build a "look" table for all tiles
-            LookRef = new Look(_u5Directory);
+            LookRef = new Look(U5Directory);
 
             // build the sign tables
-            SignRef = new Signs(_u5Directory);
+            SignRef = new Signs(U5Directory);
 
-            TalkScriptsRef = new TalkScripts(_u5Directory, DataOvlRef);
+            TalkScriptsRef = new TalkScripts(U5Directory, DataOvlRef);
 
             // build the NPC tables
-            NpcRef = new NonPlayerCharacterReferences(_u5Directory, SmallMapRef, TalkScriptsRef, State);
+            NpcRef = new NonPlayerCharacterReferences(U5Directory, SmallMapRef, TalkScriptsRef, State);
 
             ShoppeKeeperDialogueReference =
-                new ShoppeKeeperDialogueReference(_u5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
+                new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, LargeMapRef, OverworldMap, UnderworldMap,
-                NpcRef, SpriteTileReferences, State, NpcRef, InvRef, DataOvlRef);
-        }
-
-        /// <summary>
-        ///     Constructor only used for testing
-        /// </summary>
-        public World() : this(@"C:\Games\Ultima_5\Gold")
-        {
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences, State, NpcRef, InvRef, DataOvlRef);
         }
 
         /// <summary>
@@ -110,6 +105,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     Is the Avatar positioned to fall? When falling from multiple floors this will be activated
         /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsPendingFall { get; private set; }
 
         /// <summary>
@@ -130,11 +126,13 @@ namespace Ultima5Redux
         /// <summary>
         ///     A collection of all Look references
         /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public Look LookRef { get; }
 
         /// <summary>
         ///     A collection of all Sign references
         /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public Signs SignRef { get; }
 
         /// <summary>
@@ -194,12 +192,6 @@ namespace Ultima5Redux
             return CurrentConversation;
         }
 
-        public void FinishConversation()
-        {
-            if (CurrentConversation != null)
-                throw new Ultima5ReduxException("Can't close a conversation if haven't got one open!");
-        }
-
         /// <summary>
         ///     Advances time and takes care of all day, month, year calculations
         /// </summary>
@@ -216,6 +208,8 @@ namespace Ultima5Redux
             State.TheVirtualMap.MoveMapUnitsToNextMove();
         }
 
+        // ReSharper disable once UnusedMember.Global
+        // ReSharper disable once UnusedParameter.Global
         public void SetAggressiveGuards(bool bAggressiveGuards)
         {
         }
@@ -241,22 +235,23 @@ namespace Ultima5Redux
         {
             Debug.Assert(State.TheVirtualMap.IsLargeMap);
 
-            Point3D currentPos = new Point3D(State.TheVirtualMap.CurrentPosition.X,
-                State.TheVirtualMap.CurrentPosition.Y,
-                State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
+            // Point3D currentPos = new Point3D(State.TheVirtualMap.CurrentPosition.X,
+            //     State.TheVirtualMap.CurrentPosition.Y,
+            //     State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
 
             return State.TheMoongates.GetMoongatePosition((int) MoonPhaseRefs.GetMoonGateMoonPhase(State.TheTimeOfDay));
         }
-
+        
         /// <summary>
         ///     Gets the angle of the 360 rotation of all moons where Sun is 0degrees (straight up) at 12pm Noon
         /// </summary>
         /// <returns>0-359 degrees</returns>
+        // ReSharper disable once UnusedMember.Global
         public float GetMoonAngle()
         {
             return MoonPhaseReferences.GetMoonAngle(State.TheTimeOfDay);
         }
-
+        
         /// <summary>
         ///     Looks at a particular tile, detecting if NPCs are present as well
         ///     Provides string output or special instructions if it is "special"B
@@ -264,6 +259,7 @@ namespace Ultima5Redux
         /// <param name="xy">position of tile to look at</param>
         /// <param name="specialLookCommand">Special command such as look at gem or sign</param>
         /// <returns>String to output to user</returns>
+        // ReSharper disable once UnusedMember.Global
         public string Look(Point2D xy, out SpecialLookCommand specialLookCommand)
         {
             specialLookCommand = SpecialLookCommand.None;
@@ -315,6 +311,7 @@ namespace Ultima5Redux
         /// <param name="bGotAThing">did I get a thing?</param>
         /// <param name="inventoryItem"></param>
         /// <returns>the output string</returns>
+        // ReSharper disable once UnusedMethodReturnValue.Global
         public string TryToGetAThing(Point2D xy, out bool bGotAThing, out InventoryItem inventoryItem)
         {
             bGotAThing = false;
@@ -450,7 +447,7 @@ namespace Ultima5Redux
         /// </summary>
         public string TryToKlimb(out KlimbResult klimbResult)
         {
-            string GetKlimbOutput(string output = "")
+            string getKlimbOutput(string output = "")
             {
                 if (output == "") return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.KLIMB);
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.KLIMB) + output;
@@ -464,11 +461,11 @@ namespace Ultima5Redux
                 if (State.HasGrapple) // we don't have a grapple, so we can't klimb
                 {
                     klimbResult = KlimbResult.RequiresDirection;
-                    return GetKlimbOutput();
+                    return getKlimbOutput();
                 }
 
                 klimbResult = KlimbResult.CantKlimb;
-                return GetKlimbOutput(
+                return getKlimbOutput(
                     DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings.WITH_WHAT));
             }
 
@@ -476,7 +473,7 @@ namespace Ultima5Redux
             if (!SpriteTileReferences.IsLadder(curTileRef.Index) && !SpriteTileReferences.IsGrate(curTileRef.Index))
             {
                 klimbResult = KlimbResult.RequiresDirection;
-                return GetKlimbOutput();
+                return getKlimbOutput();
             }
 
             SmallMapReferences.SingleMapReference.Location location =
@@ -495,7 +492,7 @@ namespace Ultima5Redux
                     State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1),
                         State.TheVirtualMap.CurrentPosition.XY);
                     klimbResult = KlimbResult.Success;
-                    return GetKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN));
+                    return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN));
                 }
             }
             else if (SpriteTileReferences.IsLadderUp(tileReference.Index))
@@ -505,12 +502,12 @@ namespace Ultima5Redux
                     State.TheVirtualMap.LoadSmallMap(SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1),
                         State.TheVirtualMap.CurrentPosition.XY);
                     klimbResult = KlimbResult.Success;
-                    return GetKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
+                    return getKlimbOutput(DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
                 }
             }
 
             klimbResult = KlimbResult.RequiresDirection;
-            return GetKlimbOutput();
+            return getKlimbOutput();
         }
 
         /// <summary>
@@ -519,6 +516,7 @@ namespace Ultima5Redux
         /// <param name="xy"></param>
         /// <param name="klimbResult"></param>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public string TryToKlimbInDirection(Point2D xy, out KlimbResult klimbResult)
         {
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
@@ -609,6 +607,8 @@ namespace Ultima5Redux
         /// <param name="record">character who will attempt to open it</param>
         /// <param name="bWasSuccessful">was it a successful jimmy?</param>
         /// <returns>the output string to write to console</returns>
+        // ReSharper disable once UnusedMember.Global
+        // ReSharper disable once UnusedParameter.Global
         public string TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record, out bool bWasSuccessful)
         {
             bWasSuccessful = false;
@@ -632,12 +632,10 @@ namespace Ultima5Redux
                     State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys].Quantity--;
 
                     // for now we will also just open the door so we can get around - will address when we have spells
-                    if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
-                        State.TheVirtualMap.SetOverridingTileReferece(
-                            SpriteTileReferences.GetTileReferenceByName("RegularDoorView"), xy);
-                    else
-                        State.TheVirtualMap.SetOverridingTileReferece(
-                            SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
+                    State.TheVirtualMap.SetOverridingTileReferece(
+                        SpriteTileReferences.IsDoorWithView(tileReference.Index)
+                            ? SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
+                            : SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
 
                     bWasSuccessful = true;
 
@@ -650,12 +648,10 @@ namespace Ultima5Redux
 
                     // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
 
-                    if (SpriteTileReferences.IsDoorWithView(tileReference.Index))
-                        State.TheVirtualMap.SetOverridingTileReferece(
-                            SpriteTileReferences.GetTileReferenceByName("RegularDoorView"), xy);
-                    else
-                        State.TheVirtualMap.SetOverridingTileReferece(
-                            SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
+                    State.TheVirtualMap.SetOverridingTileReferece(
+                        SpriteTileReferences.IsDoorWithView(tileReference.Index)
+                            ? SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
+                            : SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
 
                     bWasSuccessful = true;
                     retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.UNLOCKED);
@@ -676,6 +672,7 @@ namespace Ultima5Redux
         /// <param name="xy">position of door</param>
         /// <param name="bWasSuccessful">was the door opening successful?</param>
         /// <returns>the output string to write to console</returns>
+        // ReSharper disable once UnusedMember.Global
         public string TryToOpenDoor(Point2D xy, out bool bWasSuccessful)
         {
             bWasSuccessful = false;
@@ -748,7 +745,7 @@ namespace Ultima5Redux
         public string TryToMove(VirtualMap.Direction direction, bool bKlimb, bool bFreeMove,
             out TryToMoveResult tryToMoveResult)
         {
-            string retStr = "";
+            string retStr;
             int nTilesPerMapRow = State.TheVirtualMap.NumberOfRowTiles;
             int nTilesPerMapCol = State.TheVirtualMap.NumberOfColumnTiles;
 
@@ -883,7 +880,6 @@ namespace Ultima5Redux
                 State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
                 // todo: i need to figure out if I am going up or down stairs
                 return retStr.TrimEnd() + "\n" + "Up!";
-                //return string.Empty;
             }
 
             // if we are on a big map then we may issue extra information about slow moving terrain
@@ -912,6 +908,7 @@ namespace Ultima5Redux
         ///     Ignites a torch, if available and set the number of turns for the torch to be burnt out
         /// </summary>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public string IgniteTorch()
         {
             PassTime();
@@ -1060,7 +1057,7 @@ namespace Ultima5Redux
                 .TrimEnd();
 
             if (!State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
-                return retStr += " " + DataOvlRef.StringReferences
+                return retStr + " " + DataOvlRef.StringReferences
                     .GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
 
             MapUnit unboardedMapUnit = State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit();
@@ -1069,14 +1066,6 @@ namespace Ultima5Redux
 
             return retStr;
         }
-
-        // public void DismountCarpet()
-        // {
-        //     Debug.Assert(State.TheVirtualMap.IsAvatarRidingCarpet);
-        //
-        //     // show the Avatar as an unboarded player (regular ole Avatar) 
-        //     State.TheVirtualMap.TheMapUnits.AvatarMapUnit.UnboardedAvatar();
-        // }
 
         private string UseSpecialItem(SpecialItem spcItem)
         {
@@ -1205,25 +1194,6 @@ namespace Ultima5Redux
 
             PassTime();
             return retStr;
-        }
-
-        public void Test_BasicConversation()
-        {
-            foreach (NonPlayerCharacterReference npc in NpcRef.NPCs)
-            {
-                Conversation conversation = new Conversation(npc, State, DataOvlRef);
-                Debug.Assert(conversation != null);
-            }
-        }
-
-
-        public void Test_Signs()
-        {
-            Signs.Sign sign = SignRef.GetSign(SmallMapReferences.SingleMapReference.Location.Yew, 16, 2);
-            Signs.Sign sign2 = SignRef.GetSign(42);
-
-            Debug.Assert(sign != null);
-            Debug.Assert(sign2 != null);
         }
     }
 }

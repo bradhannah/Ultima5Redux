@@ -1,5 +1,8 @@
-﻿namespace Ultima5Redux
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Ultima5Redux
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")] 
     public static class FileConstants
     {
         public const string DATA_OVL = "data.ovl";

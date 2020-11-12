@@ -2,7 +2,8 @@
 
 namespace Ultima5Redux
 {
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] 
+    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     public class Point3D
     {
         public Point3D(int x, int y, int z)
