@@ -470,7 +470,7 @@ namespace Ultima5ReduxTesting
 
                     MoonPhaseReferences.MoonPhases moonPhase = moonPhaseReferences.GetMoonGateMoonPhase(tod);
 
-                    float fMoonAngle = moonPhaseReferences.GetMoonAngle(tod);
+                    float fMoonAngle = MoonPhaseReferences.GetMoonAngle(tod);
                     Assert.True(fMoonAngle >= 0 && fMoonAngle < 360);
                 }
             }
@@ -555,7 +555,7 @@ namespace Ultima5ReduxTesting
                     break;
                 case TalkScript.TalkCommand.AvatarsName:
                     break;
-                case TalkScript.TalkCommand.EndCoversation:
+                case TalkScript.TalkCommand.EndConversation:
                     break;
                 case TalkScript.TalkCommand.Pause:
                     break;

@@ -79,7 +79,7 @@ namespace U5ConversationSimulator
                 case TalkScript.TalkCommand.Change:
                     //
                     break;
-                case TalkScript.TalkCommand.EndCoversation:
+                case TalkScript.TalkCommand.EndConversation:
                     // 
                     break;
                 case TalkScript.TalkCommand.Gold:

@@ -197,7 +197,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         protected string GetRandomStringFromChoices(DataOvlReference.DataChunkName chunkName)
         {
             List<string> responses = DataOvlReference.GetDataChunk(chunkName)
-                .GetChunkAsStringList().Strs;
+                .GetChunkAsStringList().StringList;
 
             // if this hasn't been access before, then lets add a chunk to make sure we don't repeat the same thing 
             // twice in a row

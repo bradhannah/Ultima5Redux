@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
@@ -10,13 +11,13 @@ namespace Ultima5Redux.DayNightMoon
         /// <summary>
         ///     All available moon phases
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
         public enum MoonPhases
         {
             NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter,
             CrescentWaning, NoMoon
         }
 
-        //public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
         public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
 
         public enum TimeOfDayPhases { Daytime, Nighttime, Sunrise, Sunset }
@@ -60,6 +61,7 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <param name="moonPhase"></param>
         /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
         public SmallMapReferences.SingleMapReference.Location GetLocationByMoonPhase(MoonPhases moonPhase)
         {
             Debug.Assert(moonPhase >= 0 && (int) moonPhase < 8);
@@ -71,6 +73,7 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <param name="tod"></param>
         /// <returns>true if lights should be on</returns>
+        // ReSharper disable once UnusedMember.Global
         public bool AreAmbientLightsOn(TimeOfDay tod)
         {
             return GetTimeOfDayPhase(tod) != TimeOfDayPhases.Daytime;
@@ -136,7 +139,8 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <param name="tod">current time of day</param>
         /// <returns></returns>
-        public TimeOfDayPhases GetTimeOfDayPhase(TimeOfDay tod)
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static TimeOfDayPhases GetTimeOfDayPhase(TimeOfDay tod)
         {
             const int nSunsetHour = 19;
             const int nSunriseHour = 6;
@@ -152,20 +156,10 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <param name="timeOfDay">current time of day</param>
         /// <returns></returns>
-        public float GetMoonAngle(TimeOfDay timeOfDay)
+        public static float GetMoonAngle(TimeOfDay timeOfDay)
         {
             float moonPercentageOfDay = (timeOfDay.Hour * 60f + timeOfDay.Minute) / (60f * 24f);
             return moonPercentageOfDay * 360f;
-        }
-
-        /// <summary>
-        ///     Returns a numeric offset for the moon and sun types
-        /// </summary>
-        /// <param name="moonAndSun">particular moon or sun</param>
-        /// <returns></returns>
-        public int GetMoonsOrSunOffset(MoonsAndSun moonAndSun)
-        {
-            return (int) moonAndSun;
         }
 
         /// <summary>
@@ -175,9 +169,8 @@ namespace Ultima5Redux.DayNightMoon
         /// <param name="dDiameter">the diameter of the square space</param>
         /// <param name="dOffset">an offset to inset into the circle</param>
         /// <returns></returns>
-        private Point2DFloat GetSunMoonPosition(double dAngle, double dDiameter, double dOffset)
+        private static Point2DFloat GetSunMoonPosition(double dAngle, double dDiameter, double dOffset)
         {
-            //const double dOffset = 35;
             dAngle %= dDiameter;
             double radius = (dDiameter - dOffset) / 2d;
             double x = radius * Math.Cos(dAngle * (Math.PI / 180));
@@ -193,6 +186,7 @@ namespace Ultima5Redux.DayNightMoon
         /// <param name="dOffset"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
+        // ReSharper disable once UnusedMember.Global
         public Point2DFloat GetMoonSunPositionOnCircle(MoonsAndSun moonAndSun, double dDiameter, double dOffset)
         {
             switch (moonAndSun)

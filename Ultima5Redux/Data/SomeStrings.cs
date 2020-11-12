@@ -16,8 +16,7 @@ namespace Ultima5Redux.Data
         /// <param name="length">the number of bytes to consume</param>
         public SomeStrings(List<byte> byteArray, int offset, int length)
         {
-            string str = string.Empty;
-            Strs = new List<string>();
+            StringList = new List<string>();
             int curOffset = offset;
 
             while (curOffset < length)
@@ -30,9 +29,9 @@ namespace Ultima5Redux.Data
                     continue;
                 }
 
-                str = Utils.BytesToStringNullTerm(byteArray, curOffset, length - curOffset);
+                string str = Utils.BytesToStringNullTerm(byteArray, curOffset, length - curOffset);
 
-                Strs.Add(str);
+                StringList.Add(str);
                 curOffset += str.Length + 1;
                 str = string.Empty;
             }
@@ -41,11 +40,11 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     List of all strings
         /// </summary>
-        public List<string> Strs { get; }
+        public List<string> StringList { get; }
 
         public void PrintSomeStrings()
         {
-            foreach (string str in Strs)
+            foreach (string str in StringList)
             {
                 Console.WriteLine(str);
             }

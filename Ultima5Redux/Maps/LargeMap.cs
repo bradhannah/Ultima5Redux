@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Ultima5Redux.Maps
@@ -14,15 +15,15 @@ namespace Ultima5Redux.Maps
         private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public const int
             TILES_PER_MAP_ROW =
-                TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_X; // total number of tiles per row in the large map 
+                TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public const int
             TILES_PER_MAP_COL =
                 TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
-
-        private Maps _mapChoice;
 
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
@@ -34,23 +35,23 @@ namespace Ultima5Redux.Maps
             tileOverrides,
             SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
-            _mapChoice = mapChoice;
             switch (mapChoice)
             {
                 case Maps.Overworld:
                     TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.BRIT_DAT),
                         Path.Combine(u5Directory, FileConstants.DATA_OVL), false);
-                    //xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britannia_Underworld, 0));
                     break;
                 case Maps.Underworld:
                     TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.UNDER_DAT), "", true);
-                    //xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britannia_Underworld, -1));
                     break;
                 case Maps.Small:
                     throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void PrintMap()
         {
             PrintMapSection(TheMap, 0, 0, 160, 80);

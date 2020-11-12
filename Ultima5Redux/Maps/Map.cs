@@ -17,29 +17,24 @@ namespace Ultima5Redux.Maps
         ///     All A* nodes for the current map
         ///     Accessed by [x][y]
         /// </summary>
-        protected List<List<Node>> AStarNodes;
+        private List<List<Node>> _aStarNodes;
 
+        // ReSharper disable once NotAccessedField.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         protected TileOverrides TileOverrides;
 
-        /// <summary>
-        ///     The directory of the U5 data files
-        /// </summary>
-        protected string U5Directory;
+        private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
 
-        protected Dictionary<Point2D, TileOverride> XYOverrides;
-
-        public Map(string u5Directory, TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
+        protected Map(string u5Directory, TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
         {
-            U5Directory = u5Directory;
             TileOverrides = tileOverrides;
             CurrentSingleMapReference = mapRef;
 
             // for now combat maps don't have overrides
-            if (mapRef != null) XYOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
+            if (mapRef != null) _xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
         }
 
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
-
 
         public byte[][] TheMap { get; protected set; }
 
@@ -63,7 +58,7 @@ namespace Ultima5Redux.Maps
             int nYTiles = TheMap.Length;
 
             // load the A-Star compatible map into memory
-            AStarNodes = Utils.Init2DList<Node>(nXTiles, nYTiles);
+            _aStarNodes = Utils.Init2DList<Node>(nXTiles, nYTiles);
 
             for (int x = 0; x < nXTiles; x++)
             {
@@ -84,32 +79,29 @@ namespace Ultima5Redux.Maps
                     float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x, y));
 
                     Node node = new Node(new Vector2(x, y), bIsWalkable, fWeight);
-                    AStarNodes[x].Add(node);
+                    _aStarNodes[x].Add(node);
                 }
             }
 
-            AStar = new AStar(AStarNodes);
+            AStar = new AStar(_aStarNodes);
         }
 
         public bool IsXYOverride(Point2D xy)
         {
-            return XYOverrides != null && XYOverrides.ContainsKey(xy);
+            return _xyOverrides != null && _xyOverrides.ContainsKey(xy);
         }
 
         public TileOverride GetTileOverride(Point2D xy)
         {
-            return XYOverrides[xy];
+            return _xyOverrides[xy];
         }
-
-        // public abstract TileOverride GetTileOverride(Point2D xy);
-        // public abstract bool IsXYOverride(Point2D xy);
 
         /// <summary>
         ///     Filthy little map to assign single letter to map elements
         /// </summary>
         /// <param name="tile"></param>
         /// <returns></returns>
-        public static char GetMapLetter(byte tile)
+        private static char GetMapLetter(byte tile)
         {
             switch (tile)
             {
@@ -183,7 +175,7 @@ namespace Ultima5Redux.Maps
         /// <param name="yOffset">where to start the top left origin (column) </param>
         /// <param name="xTilesToPrint">how many tiles to print vertically</param>
         /// <param name="yTilesToPrint">how many tiles to print horizontally</param>
-        public static void PrintMapSection(byte[][] map, int xOffset, int yOffset, int xTilesToPrint, int yTilesToPrint)
+        protected static void PrintMapSection(byte[][] map, int xOffset, int yOffset, int xTilesToPrint, int yTilesToPrint)
         {
             for (int curRow = yOffset; curRow < yTilesToPrint + yOffset; curRow++)
             {

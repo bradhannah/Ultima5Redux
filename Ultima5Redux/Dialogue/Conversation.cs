@@ -511,7 +511,7 @@ namespace Ultima5Redux.Dialogue
                         _currentSkipInstruction = SkipInstruction.SkipToLabel;
                         return;
                     //return SkipInstruction.SkipToLabel;
-                    case TalkScript.TalkCommand.EndCoversation:
+                    case TalkScript.TalkCommand.EndConversation:
                         EnqueueToOutputBuffer(item);
                         ConversationEnded = true;
                         break;

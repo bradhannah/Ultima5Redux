@@ -16,13 +16,13 @@ namespace Ultima5Redux.Maps
         public LargeMapLocationReferences(DataOvlReference dataRef)
         {
             // Load the location XYs and map them against the location
-            List<byte> xLocs = dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATIONS_X).GetAsByteList();
-            List<byte> yLocs = dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATIONS_Y).GetAsByteList();
-            Debug.Assert(xLocs.Count == yLocs.Count);
+            List<byte> xPos = dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATIONS_X).GetAsByteList();
+            List<byte> yPos = dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATIONS_Y).GetAsByteList();
+            Debug.Assert(xPos.Count == yPos.Count);
 
             for (int nVector = 0; nVector < N_TOTAL_LOCATIONS; nVector++)
             {
-                Point2D mapPoint = new Point2D(xLocs[nVector], yLocs[nVector]);
+                Point2D mapPoint = new Point2D(xPos[nVector], yPos[nVector]);
                 SmallMapReferences.SingleMapReference.Location location =
                     (SmallMapReferences.SingleMapReference.Location) nVector + 1;
                 LocationXY.Add(location, mapPoint);
@@ -34,6 +34,7 @@ namespace Ultima5Redux.Maps
         ///     Maps the location to an actual 0,0 based map xy coordinates
         /// </summary>
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        // ReSharper disable once CollectionNeverQueried.Global
         public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
 

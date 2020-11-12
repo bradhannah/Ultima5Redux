@@ -28,7 +28,7 @@ namespace Ultima5Redux.Dialogue
             _compressedWords.PrintSomeStrings();
 
             // we are creating a lookup map because the indexes are not concurrent
-            _compressWordLookupMap = new Dictionary<int, byte>(_compressedWords.Strs.Count);
+            _compressWordLookupMap = new Dictionary<int, byte>(_compressedWords.StringList.Count);
 
             // this is kind of gross, but these define the index gaps in the lookup table
             // I have no idea why there are gaps, but alas, this works around them
@@ -85,7 +85,7 @@ namespace Ultima5Redux.Dialogue
         {
             try
             {
-                return _compressedWords.Strs[_compressWordLookupMap[index]];
+                return _compressedWords.StringList[_compressWordLookupMap[index]];
             } catch (KeyNotFoundException)
             {
                 throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " +
@@ -143,11 +143,12 @@ namespace Ultima5Redux.Dialogue
             string buildAWord = string.Empty;
             bool bUseCompressedWord = false;
 
-            foreach (byte byteWord in rawString)
+            foreach (char c in rawString)
             {
+                byte byteWord = (byte) c;
                 byte tempByte = byteWord;
 
-                bool bUsePhraseLookup = false;
+                bool bUsePhraseLookup;
                 if (!(IsAcceptablePunctuation((char) byteWord) || IsAcceptableLettersOrDigits((char) byteWord) ||
                       IsReplacementCharacter((char) byteWord)))
                 {
@@ -203,7 +204,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     Couldn't find a talking word at the indicated index
         /// </summary>
-        public class NoTalkingWordException : Ultima5ReduxException
+        private class NoTalkingWordException : Ultima5ReduxException
         {
             public NoTalkingWordException(string message) : base(message)
             {

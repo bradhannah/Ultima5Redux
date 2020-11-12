@@ -60,7 +60,7 @@ namespace Ultima5Redux.Dialogue
         private void BuildConversationTable(DataOvlReference dataOvlReference)
         {
             IEnumerable<string> rawShoppeStrings =
-                _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData).GetChunkAsStringList().Strs;
+                _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData).GetChunkAsStringList().StringList;
             CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
             int i = 0;
             foreach (string rawShoppeString in rawShoppeStrings)

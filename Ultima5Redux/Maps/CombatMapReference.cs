@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Ultima5Redux.Maps
 {
@@ -25,7 +26,7 @@ namespace Ultima5Redux.Maps
         public class SingleCombatMapReference
         {
             /// <summary>
-            ///     The territory that the combat map is in. This matters most for determing data files.
+            ///     The territory that the combat map is in. This matters most for determining data files.
             /// </summary>
             public enum Territory { Britannia = 0, Dungeon }
 
@@ -38,8 +39,7 @@ namespace Ultima5Redux.Maps
             private static readonly string[] BritanniaDescriptions =
             {
                 "Camp Fire", "Swamp", "Glade", "Treed", "Desert", "Clean Tree", "Mountains", "Big Bridge", "Brick",
-                "Basement", "Psychodelic",
-                "Boat - Ocean", "Boat - North", "Boat - South", "Boat-Boat", "Bay"
+                "Basement", "Psychedelic", "Boat - Ocean", "Boat - North", "Boat - South", "Boat-Boat", "Bay"
             };
 
             private static readonly string[] DungeonDescriptions = {"A", "B"};
@@ -63,24 +63,20 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     The number of the combat map (order in data file)
             /// </summary>
+            // ReSharper disable once MemberCanBePrivate.Global
             public short CombatMapNum { get; }
 
             /// <summary>
             ///     Brief description of the combat map
             /// </summary>
-            public string Description
-            {
-                get
-                {
-                    if (MapTerritory == Territory.Britannia)
-                        return BritanniaDescriptions[CombatMapNum];
-                    return DungeonDescriptions[CombatMapNum];
-                }
-            }
+            public string Description =>
+                MapTerritory == Territory.Britannia ? 
+                    BritanniaDescriptions[CombatMapNum] : DungeonDescriptions[CombatMapNum];
 
             /// <summary>
             ///     Territory of the combat map
             /// </summary>
+            // ReSharper disable once MemberCanBePrivate.Global
             public Territory MapTerritory { get; set; }
 
             /// <summary>
@@ -102,9 +98,9 @@ namespace Ultima5Redux.Maps
                             return "brit.cbt";
                         case Territory.Dungeon:
                             return "dungeon.cbt";
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
-
-                    return "";
                 }
             }
         }

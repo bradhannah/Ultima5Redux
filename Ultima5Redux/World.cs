@@ -254,7 +254,7 @@ namespace Ultima5Redux
         /// <returns>0-359 degrees</returns>
         public float GetMoonAngle()
         {
-            return MoonPhaseRefs.GetMoonAngle(State.TheTimeOfDay);
+            return MoonPhaseReferences.GetMoonAngle(State.TheTimeOfDay);
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace Ultima5Redux
                 if (mapUnits.Count <= 0)
                     throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
                 retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                         + " " + LookRef.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
+                         + " " + Maps.Look.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (SpriteTileReferences.IsSign(tileReference.Index))
@@ -288,13 +288,13 @@ namespace Ultima5Redux
             else if (SpriteTileReferences.GetTileNumberByName("Clock1") == tileReference.Index)
             {
                 retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                         + " " + LookRef.GetLookDescription(tileReference.Index).TrimStart() +
+                         + " " + Maps.Look.GetLookDescription(tileReference.Index).TrimStart() +
                          State.TheTimeOfDay.FormattedTime;
             }
             else // lets see what we've got here!
             {
                 retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                         + " " + LookRef.GetLookDescription(tileReference.Index).TrimStart();
+                         + " " + Maps.Look.GetLookDescription(tileReference.Index).TrimStart();
             }
 
             // pass time at the end to make sure moving characters are accounted for

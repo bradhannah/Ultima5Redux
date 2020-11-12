@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,24 +15,9 @@ namespace Ultima5Redux.Maps
         private const short TOTAL_SIGNS = 0x21;
 
         /// <summary>
-        ///     character used to denote end of string
-        /// </summary>
-        private const byte END_OF_STRING_BYTE = 0x00;
-
-        /// <summary>
         ///     List of all assembled signs
         /// </summary>
         private readonly List<Sign> _signList = new List<Sign>(TOTAL_SIGNS);
-
-        /// <summary>
-        ///     Raw sign file
-        /// </summary>
-        private readonly List<byte> _signsByteArray = new List<byte>();
-
-        /// <summary>
-        ///     List of all sign offsets in file
-        /// </summary>
-        private List<int> _signsOffsets = new List<int>(TOTAL_SIGNS);
 
         /// <summary>
         ///     Loads the "Look" descriptions
@@ -41,7 +25,7 @@ namespace Ultima5Redux.Maps
         /// <param name="u5directory">directory of data files</param>
         public Signs(string u5directory)
         {
-            _signsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.SIGNS_DAT));
+            List<byte> signsByteArray = Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.SIGNS_DAT));
 
             int nIndex = TOTAL_SIGNS * 2;
             // we are ignoring the "offsets" which are likely used to help optimize the lookup 
@@ -50,7 +34,7 @@ namespace Ultima5Redux.Maps
             // TODO: optimize storage to improve lookup speed
             do
             {
-                string rawSignTxt = Utils.BytesToStringNullTerm(_signsByteArray, nIndex + 4, 0xFF);
+                string rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4, 0xFF);
                 int nRawSignTxtLength = rawSignTxt.Length;
 
                 // there are often two "warning signs" in the main virtue townes. Only one of the signs text is actually 
@@ -59,25 +43,25 @@ namespace Ultima5Redux.Maps
                 if (rawSignTxt.Trim() == string.Empty)
                 {
                     int nNextSignAdjust = rawSignTxt.Length + 1 + 4;
-                    rawSignTxt = Utils.BytesToStringNullTerm(_signsByteArray, nIndex + 4 + nNextSignAdjust, 0xFF);
+                    rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4 + nNextSignAdjust, 0xFF);
                 }
 
-                _signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location) _signsByteArray[nIndex],
-                    _signsByteArray[nIndex + 1],
-                    _signsByteArray[nIndex + 2],
-                    _signsByteArray[nIndex + 3],
+                _signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location) signsByteArray[nIndex],
+                    signsByteArray[nIndex + 1],
+                    signsByteArray[nIndex + 2],
+                    signsByteArray[nIndex + 3],
                     rawSignTxt, nIndex));
                 nIndex += nRawSignTxtLength + 1 +
                           4; // we hop over the string plus it's null byte plus the four bytes for definition
                 // while we don't encounter four zero bytes in a row, which is essentially the end of the file
-            } while (!(_signsByteArray[nIndex] == 0 && _signsByteArray[nIndex + 1] == 0 &&
-                       _signsByteArray[nIndex + 2] == 0 && _signsByteArray[nIndex + 3] == 0));
+            } while (!(signsByteArray[nIndex] == 0 && signsByteArray[nIndex + 1] == 0 &&
+                       signsByteArray[nIndex + 2] == 0 && signsByteArray[nIndex + 3] == 0));
 
             // there are some signs that are not included in the signs.dat file, so we manually pont to them and add them to our sign list
-            List<byte> dataovlSignsByteArray =
+            List<byte> dataOvlSignsByteArray =
                 Utils.GetFileAsByteList(Path.Combine(u5directory, FileConstants.DATA_OVL));
             List<byte> shSign = DataChunk.CreateDataChunk(DataChunk.DataFormatType.ByteList, "SH Sign of Eight Laws",
-                dataovlSignsByteArray, 0x743a, 0x66).GetAsByteList();
+                dataOvlSignsByteArray, 0x743a, 0x66).GetAsByteList();
             _signList.Add(new Sign(SmallMapReferences.SingleMapReference.Location.Serpents_Hold, 0, 15, 19,
                 shSign.ToArray(), 0x743a));
         }
@@ -89,40 +73,9 @@ namespace Ultima5Redux.Maps
 
         public Sign GetSign(SmallMapReferences.SingleMapReference.Location location, int x, int y)
         {
-            foreach (Sign sign in _signList)
-            {
-                if (sign.X == x && sign.Y == y && sign.Location == location) return sign;
-            }
-
-            //throw new Ultima5ReduxException("You asked for a sigh that simple doesn't exist in " + location + " at X=" + x.ToString() + " Y="+y.ToString());
-            return null;
+            return _signList.FirstOrDefault(sign => sign.X == x && sign.Y == y && sign.Location == location);
         }
 
-        /// <summary>
-        ///     Gets a copy of a sign and assigns new X, Y values
-        ///     Commonly used for Blackthornes Eight Laws signs
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="newX">new X value</param>
-        /// <param name="newY">new Y value</param>
-        /// <returns>a new copy of the sign</returns>
-        public Sign CopySign(SmallMapReferences.SingleMapReference.Location location, int x, int y, int newX, int newY)
-        {
-            Sign origSign = GetSign(location, x, y);
-            if (origSign == null) throw new Ultima5ReduxException("Original sign was not instantiated.");
-            Sign newSign = new Sign(origSign.Location, origSign.Floor, newX, newY, origSign.RawSignText,
-                origSign.Offset);
-            Debug.Assert(newSign != null);
-            return newSign;
-        }
-
-
-        public int GetNumberOfSigns()
-        {
-            return _signList.Count;
-        }
 
         public class Sign
         {
@@ -142,7 +95,8 @@ namespace Ultima5Redux.Maps
             /// <param name="floor">the floor the sign appears in</param>
             /// <param name="x">x coord of sign</param>
             /// <param name="y">y coord of sign</param>
-            /// <param name="signText">Text of sign (may contain unpritable txt that requires fonts from ibm.ch and runes.ch</param>
+            /// <param name="signText">Text of sign (may contain unprintable txt that requires fonts from ibm.ch and runes.ch</param>
+            /// <param name="nOffset"></param>
             public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y,
                 string signText, int nOffset)
             {
@@ -152,9 +106,10 @@ namespace Ultima5Redux.Maps
                 Y = y;
                 RawSignText = signText;
                 Offset = nOffset;
-                //SignText = signText;
             }
 
+            // ReSharper disable once MemberCanBePrivate.Global
+            // ReSharper disable once UnusedAutoPropertyAccessor.Global
             public int Offset { get; }
 
             /// <summary>
@@ -165,6 +120,8 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     Floor of location
             /// </summary>
+            // ReSharper disable once MemberCanBePrivate.Global
+            // ReSharper disable once UnusedAutoPropertyAccessor.Global
             public int Floor { get; }
 
             /// <summary>
@@ -180,20 +137,22 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     Actual text of sign
             /// </summary>
+            // ReSharper disable once MemberCanBePrivate.Global
             public string SignText => ScrubSignText(RawSignText);
 
+            // ReSharper disable once UnusedMember.Global
             public string SignTextCleanedSpaces => TrimSpareSpacesFromSign(SignText);
 
 
-            public string RawSignText { get; }
+            private string RawSignText { get; }
 
             /// <summary>
             ///     A print function that frankly doesn't work very well...
             /// </summary>
+            // ReSharper disable once UnusedMember.Global
             public void PrintSign()
             {
-                int remainder = 0;
-                _ = Math.DivRem(SignText.Length, CHARS_PER_LINE, out remainder);
+                _ = Math.DivRem(SignText.Length, CHARS_PER_LINE, out int remainder);
                 int lines = remainder == 0 ? SignText.Length / CHARS_PER_LINE : SignText.Length / CHARS_PER_LINE + 1;
                 for (int i = 0; i < lines; i++)
                 {
@@ -205,7 +164,6 @@ namespace Ultima5Redux.Maps
 
             private static string TrimSpareSpacesFromSign(string signText)
             {
-                char[] signTextArray = signText.ToArray();
                 string trimmedStr = string.Empty;
 
                 string[] lines = signText.Split('\n');
@@ -239,7 +197,7 @@ namespace Ultima5Redux.Maps
                 // l = horizontal line
                 // m = top num
                 // 9 = top right
-                // g = verticle line
+                // g = vertical line
                 // n = bottom sign post
                 // : = bottom left
                 // ; = bottom right
@@ -252,15 +210,16 @@ namespace Ultima5Redux.Maps
                 // e = scrawly bottom horizontal (double line)
                 // f = scrawly bottom right
 
-                Dictionary<char, string> replacementChars = new Dictionary<char, string>();
-                replacementChars.Add('@',
-                    " "); // the actual character is a solid circle for separation //((char)0xA7).ToString());
-                replacementChars.Add('[', "TH");
-                replacementChars.Add('^', "EA");
-                replacementChars.Add('_', "ST");
-                replacementChars.Add(']', "NG");
-                replacementChars.Add('\\', "EE");
-                //replacementChars.Add((char)138, "\n");
+                Dictionary<char, string> replacementChars = new Dictionary<char, string>
+                {
+                    {'@', " "},
+                    {'[', "TH"},
+                    {'^', "EA"},
+                    {'_', "ST"},
+                    {']', "NG"},
+                    {'\\', "EE"}
+                };
+                // the actual character is a solid circle for separation //((char)0xA7).ToString());
 
                 char prevChar = '\0';
                 foreach (char signChar in signTextArray)
@@ -270,11 +229,10 @@ namespace Ultima5Redux.Maps
                         scrubbedStr += signChar;
                     else if (replacementChars.ContainsKey(signChar))
                         scrubbedStr += replacementChars[signChar];
-                    // if we have two verticle bars then we move to the next line   
+                    // if we have two vertical bars then we move to the next line   
                     else if (signChar == 'g' && prevChar == 'g')
                         // do nothing and leave it out
                         scrubbedStr += '\n';
-                    //else if ((signChar >= 127 + 'a' && signChar <= 127 + 'z') || (signChar >= 127 + 'A' && signChar <= 127 + 'Z'))
                     else if (signChar > 127) scrubbedStr += ((char) (signChar - 128)).ToString();
                     prevChar = signChar;
                 }

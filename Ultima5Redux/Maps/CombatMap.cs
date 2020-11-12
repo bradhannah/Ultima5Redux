@@ -14,7 +14,7 @@ namespace Ultima5Redux.Maps
 
         //  Dungeon.cbt's format is different from U4. It has a 32x11 array for each room. There are 112 rooms.
 
-        //11x11 leftmost is reserved for the room itself's icons.
+        //11x11 leftmost is reserved for the room it's own icons.
         //11,0 to 18,0 is the replacement tiles used by triggers.Only 8 tiles are allowed, but up to 16 locations may be replaced by re-using tiles.
         //11,1 to 22,1 is the x, then y location of your party members when entering from the north.Avatar = 11 & 17, #2 = 12 & 18, etc.
         //11,2 to 22,2 is for entering from the east.

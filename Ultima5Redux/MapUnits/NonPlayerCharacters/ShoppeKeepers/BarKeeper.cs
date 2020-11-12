@@ -31,13 +31,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             // the words the bar keeper knows about
             List<string> gossipWordByPosition = dataOvlReference
-                .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_WORDS).GetChunkAsStringList().Strs;
+                .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_WORDS).GetChunkAsStringList().StringList;
             // the people they gossip about
             List<string> gossipPeople = dataOvlReference
-                .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_PEOPLE).GetChunkAsStringList().Strs;
+                .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_PEOPLE).GetChunkAsStringList().StringList;
             // the location of the people they gossip about
             List<string> gossipLocations = dataOvlReference
-                .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_PLACES).GetChunkAsStringList().Strs;
+                .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_PLACES).GetChunkAsStringList().StringList;
             // the map of word to the location
             List<byte> gossipListMap =
                 dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_MAP).GetAsByteList();

@@ -32,9 +32,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             Dictionary<int, ShoppeKeeperReference> shoppeKeepersByIndex = LoadShoppeKeepersByIndex();
 
             List<string> shoppeNames = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.STORE_NAMES)
-                .GetChunkAsStringList().Strs;
+                .GetChunkAsStringList().StringList;
             List<string> shoppeKeeperNames = dataOvlReference
-                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_NAMES).GetChunkAsStringList().Strs;
+                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_NAMES).GetChunkAsStringList().StringList;
 
             // Dammit Simplon, how the hell did you sneak into the Shoppe Keeper array!?!
             shoppeKeeperNames.Remove(@"Simplon");

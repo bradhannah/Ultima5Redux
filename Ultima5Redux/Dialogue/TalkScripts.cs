@@ -94,7 +94,7 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     Initlializes the talk scripts into a fairly raw byte[] format
+        ///     Initializes the talk scripts into a fairly raw byte[] format
         /// </summary>
         /// <param name="u5Directory">directory of Ultima 5 data files</param>
         /// <param name="mapMaster">the small map reference (helps pick *.tlk file)</param>
@@ -149,18 +149,15 @@ namespace Ultima5Redux.Dialogue
                 int count = 1;
                 foreach (int key in npcOffsets.Keys)
                 {
-                    long chunkLength = 0; // didn't want a long, but the file size is long...
+                    long chunkLength; // didn't want a long, but the file size is long...
 
                     // calculate the offset size
-//                    foreach (int key in npcOffsets.Keys)
-                    {
-                        if (count < npcOffsets.Keys.Count)
-                            chunkLength = npcOffsets[key + 1].fileOffset - npcOffsets[key].fileOffset;
-                        else
-                            chunkLength = talkFileSize - npcOffsets[key].fileOffset;
+                    if (count < npcOffsets.Keys.Count)
+                        chunkLength = npcOffsets[key + 1].fileOffset - npcOffsets[key].fileOffset;
+                    else
+                        chunkLength = talkFileSize - npcOffsets[key].fileOffset;
 
-                        count++;
-                    }
+                    count++;
 
                     byte[] chunk = new byte[chunkLength];
 
@@ -176,7 +173,7 @@ namespace Ultima5Redux.Dialogue
 
 
         /// <summary>
-        ///     Intializes an individual TalkingScript using the raw data created from InitializeTalkScriptsRaw
+        ///     Initializes an individual TalkingScript using the raw data created from InitializeTalkScriptsRaw
         ///     <remark>May God have mercy on my soul if I ever need to debug or troubleshoot this again.</remark>
         /// </summary>
         /// <param name="smallMapRef">the small map reference</param>
@@ -203,7 +200,7 @@ namespace Ultima5Redux.Dialogue
                 // if a NULL byte is provided then you need to go the next line, resetting the writingSingleCharacters so that a space is not inserted next line
                 // bh: Sept 21, 2019 - had to add a disgusting hack to account for what appears to be broken
                 //   data or a misunderstood algorithm - they seem to have an end of script line in the middle of a response
-                //   there could be a rule I simply don't undertstand, but for now - i hack 
+                //   there could be a rule I simply don't understand, but for now - i hack 
                 if (byteWord == END_OF_SCRIPTLINE_BYTE && !buildAWord.EndsWith("to give unto charity!"))
                 {
                     buildAWord += "\n";
@@ -327,7 +324,7 @@ namespace Ultima5Redux.Dialogue
         ///     the mapping of NPC # to file .tlk file offset
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-        private struct NPCTalkOffset
+        private readonly struct NPCTalkOffset
         {
             public readonly ushort npcIndex;
             public readonly ushort fileOffset;

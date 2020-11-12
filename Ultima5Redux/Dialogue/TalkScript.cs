@@ -12,7 +12,7 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         public enum TalkCommand
         {
-            PlainString = 0x00, AvatarsName = 0x81, EndCoversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85,
+            PlainString = 0x00, AvatarsName = 0x81, EndConversation = 0x82, Pause = 0x83, JoinParty = 0x84, Gold = 0x85,
             Change = 0x86, Or = 0x87, AskName = 0x88, KarmaPlusOne = 0x89, KarmaMinusOne = 0x8A, CallGuards = 0x8B,
             IfElseKnowsName = 0x8C, NewLine = 0x8D, Rune = 0x8E, KeyWait = 0x8F, StartLabelDefinition = 0x90,
             StartNewSection = 0xA2, Unknown_Enter = 0x9F, GotoLabel = 0xFD, DefineLabel = 0xFE, DoNothingSection = 0xFF,
@@ -22,7 +22,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     The default script line offsets for the static responses
         /// </summary>
-        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye, PreEmp_Name }
+        public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
 
 
         /// <summary>
@@ -51,12 +51,12 @@ namespace Ultima5Redux.Dialogue
         private readonly List<ScriptLine> _scriptLines = new List<ScriptLine>();
 
         /// <summary>
-        ///     Non label specific q&a
+        ///     Non label specific Q & A
         /// </summary>
         private readonly ScriptQuestionAnswers _scriptQuestionAnswers = new ScriptQuestionAnswers();
 
         /// <summary>
-        ///     Script talk labels contain all the labels, their q&a and default responses
+        ///     Script talk labels contain all the labels, their Q & A and default responses
         /// </summary>
         private readonly ScriptTalkLabels _scriptTalkLabels = new ScriptTalkLabels();
 
@@ -64,7 +64,7 @@ namespace Ultima5Redux.Dialogue
         private ScriptLine _currentScriptLine = new ScriptLine();
 
         /// <summary>
-        ///     Build the initial TalkScrit
+        ///     Build the initial TalkScript
         /// </summary>
         public TalkScript()
         {
@@ -84,23 +84,9 @@ namespace Ultima5Redux.Dialogue
         protected internal ScriptQuestionAnswers QuestionAnswers => _scriptQuestionAnswers;
 
         /// <summary>
-        ///     The number of scriptlines in the Script
+        ///     The number of ScriptLines in the Script
         /// </summary>
         public int NumberOfScriptLines => _scriptLines.Count;
-
-        /// <summary>
-        ///     Is the command only a simple or dynamic string?
-        /// </summary>
-        /// <param name="command">the command to evaluate</param>
-        /// <returns>true if it is a string command only</returns>
-        public static bool IsStringOnlyCommand(TalkCommand command)
-        {
-            if (command == TalkCommand.PlainString || command == TalkCommand.AvatarsName ||
-                command == TalkCommand.NewLine || command == TalkCommand.Rune)
-                return true;
-
-            return false;
-        }
 
         /// <summary>
         ///     Move to the next line in the script (for adding new content)
@@ -168,7 +154,7 @@ namespace Ultima5Redux.Dialogue
             } while (true);
 
             // a little hack - it's easy to end the conversation if it always ends with the end conversation tag
-            _scriptLines[(int) TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndCoversation));
+            _scriptLines[(int) TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndConversation));
 
             // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
             int count = 0;

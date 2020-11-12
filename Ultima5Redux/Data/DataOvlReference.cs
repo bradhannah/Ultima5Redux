@@ -1289,7 +1289,7 @@ namespace Ultima5Redux.Data
         /// <returns>string at the index specified</returns>
         public string GetStringFromDataChunkList(DataChunkName chunkName, int strIndex)
         {
-            return GetDataChunk(chunkName).GetChunkAsStringList().Strs[strIndex];
+            return GetDataChunk(chunkName).GetChunkAsStringList().StringList[strIndex];
         }
 
         /// <summary>

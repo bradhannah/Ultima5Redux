@@ -28,8 +28,6 @@ namespace Ultima5Redux.External
             Walkable = walkable;
         }
 
-        public Vector2 Center => new Vector2(Position.X + NODE_SIZE / 2, Position.Y + NODE_SIZE / 2); //-V3157
-
         public float F
         {
             get

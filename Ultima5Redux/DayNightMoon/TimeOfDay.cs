@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.DayNightMoon
@@ -57,6 +58,7 @@ namespace Ultima5Redux.DayNightMoon
         }
 
         public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
+        // ReSharper disable once UnusedMember.Global
         public string FormattedDate => Month + "-" + Day + "-" + Year;
 
         public string FormattedTime
@@ -68,12 +70,14 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public ushort Year
         {
             get => _currentYearDataChunk.GetChunkAsUint16();
             set => _currentYearDataChunk.SetChunkAsUint16(value);
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public byte Month
         {
             get => _currentMonthDataChunk.GetChunkAsByte();
@@ -96,6 +100,7 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public byte Minute
         {
             get => _currentMinuteDataChunk.GetChunkAsByte();
@@ -110,6 +115,7 @@ namespace Ultima5Redux.DayNightMoon
         ///     Registers a change tracker, returning the int handle to it that will need to be stored
         /// </summary>
         /// <returns>the int handler of the change tracker</returns>
+        // ReSharper disable once UnusedMember.Global
         public int RegisterChangeTracker()
         {
             int nChangeTracker = _nTotalChangeTrackers++;
@@ -135,6 +141,7 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <param name="nChangeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
         /// <returns>true if change has occured, otherwise false</returns>
+        // ReSharper disable once UnusedMember.Global
         public bool HasTimeChanged(int nChangeTrackerId)
         {
             bool bTimeChangeOccured = _timeHasChangedDictionary[nChangeTrackerId];
@@ -158,8 +165,7 @@ namespace Ultima5Redux.DayNightMoon
             // if we add the time, and it enters the next hour then we have some work to do
             if (Minute + nMinutes > 59)
             {
-                int nExtraMinutes;
-                byte nHours = (byte) Math.DivRem(nMinutes, 60, out nExtraMinutes);
+                byte nHours = (byte) Math.DivRem(nMinutes, 60, out int nExtraMinutes);
 
                 byte newHour = (byte) (Hour + nHours + 1);
                 Minute = (byte) ((Minute + (byte) nExtraMinutes) % 60);

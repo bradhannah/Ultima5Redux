@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Ultima5Redux.Data
@@ -7,7 +8,7 @@ namespace Ultima5Redux.Data
     /// <summary>
     ///     A collection of Datachunks
     /// </summary>
-    public class DataChunks<T>
+    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")] public class DataChunks<T>
     {
         /// <summary>
         ///     A Dictionary that maps the DataChunkName to the specific location
@@ -47,7 +48,6 @@ namespace Ultima5Redux.Data
         /// <param name="chunk">datachunk</param>
         private void AddDataChunk(DataChunk chunk)
         {
-            //dataChunks.Add(chunk);
             AddDataChunk(chunk, _unusedValue);
         }
 
@@ -133,14 +133,13 @@ namespace Ultima5Redux.Data
         /// </summary>
         /// <param name="index">index into chunk list</param>
         /// <returns></returns>
-        public DataChunk GetDataChunk(int index)
-        {
-            return _dataChunks[index];
-        }
+        // ReSharper disable once UnusedMember.Global
+        public DataChunk GetDataChunk(int index) => _dataChunks[index];
 
         /// <summary>
         ///     Debug function to print it all (slow)
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void PrintEverything()
         {
             foreach (DataChunk chunk in _dataChunks)
@@ -171,13 +170,8 @@ namespace Ultima5Redux.Data
         private const int BITS_PER_BYTE = 8;
 
         /// <summary>
-        ///     Are we running in debug mode?
-        /// </summary>
-        private const bool IS_DEBUG = false;
-
-        /// <summary>
         ///     A link to the actual Full RawData
-        ///     used in StringListFromIndexes - but private so no one accessess it directly
+        ///     used in StringListFromIndexes - but private so no one accesses it directly
         /// </summary>
         private readonly List<byte> _fullRawData;
 
@@ -190,11 +184,11 @@ namespace Ultima5Redux.Data
         /// <param name="offset">the offset to start in the rawData that represents the chunk</param>
         /// <param name="dataLength">the length of the data from the offset that represents the chunk</param>
         /// <param name="addToValue">
-        ///     the value to add to each of each byte value (used occasionaly for bytes that represent
+        ///     the value to add to each of each byte value (used occasionally for bytes that represent
         ///     offsets)
         /// </param>
         public DataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength,
-            byte addToValue)
+            byte addToValue = 0)
         {
             DataFormat = dataFormat;
             Description = description;
@@ -208,21 +202,6 @@ namespace Ultima5Redux.Data
         }
 
         /// <summary>
-        ///     Construct a data chunk
-        ///     Note: Assumes nothing to add to the byte values
-        /// </summary>
-        /// <param name="dataFormat">what kind of encoding represents the data?</param>
-        /// <param name="description">a brief description of what the data represents</param>
-        /// <param name="rawData">the raw byte data</param>
-        /// <param name="offset">the offset to start in the rawData that represents the chunk</param>
-        /// <param name="dataLength">the length of the data from the offset that represents the chunk</param>
-        public DataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset,
-            int dataLength) :
-            this(dataFormat, description, rawData, offset, dataLength, 0)
-        {
-        }
-
-        /// <summary>
         ///     A brief description of the data chunk
         /// </summary>
         public string Description { get; }
@@ -230,28 +209,28 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     The raw data of the data chunk
         /// </summary>
-        public byte[] RawData { get; }
+        private byte[] RawData { get; }
 
         /// <summary>
         ///     The length of the RawData
         ///     This begins at zero in the array
         /// </summary>
-        public int DataLength { get; }
+        private int DataLength { get; }
 
         /// <summary>
         ///     The offset used when getting the RawData
         /// </summary>
-        public int FileOffset { get; }
+        private int FileOffset { get; }
 
         /// <summary>
         ///     The adjustment value for bytes and UINT16
         /// </summary>
-        public byte ValueModifier { get; }
+        private byte ValueModifier { get; }
 
         /// <summary>
         ///     The expected data format of the chunk
         /// </summary>
-        public DataFormatType DataFormat { get; }
+        private DataFormatType DataFormat { get; }
 
         /// <summary>
         ///     Statically create a DataChunk
@@ -331,12 +310,12 @@ namespace Ultima5Redux.Data
             List<byte> rawByteList)
         {
             List<string> strList = new List<string>(indexList.Count);
-            const int maxStrLength = 20;
+            const int MaxStrLength = 20;
 
             foreach (ushort index in indexList)
             {
                 // we grab the strings from the fullRawData because it is the entire file
-                strList.Add(CreateDataChunk(DataFormatType.SimpleString, string.Empty, rawByteList, index, maxStrLength)
+                strList.Add(CreateDataChunk(DataFormatType.SimpleString, string.Empty, rawByteList, index, MaxStrLength)
                     .GetChunkAsString());
             }
 
@@ -350,7 +329,7 @@ namespace Ultima5Redux.Data
         public List<bool> GetAsBitmapBoolList()
         {
             // this is essentially the number 1, but we use this to show that we are ANDing on the final bit
-            byte shiftBit = 0b000_0001;
+            const byte ShiftBit = 0b000_0001;
 
             List<bool> boolList = new List<bool>(DataLength * BITS_PER_BYTE);
 
@@ -361,7 +340,7 @@ namespace Ultima5Redux.Data
 
                 for (int nBit = 0; nBit < BITS_PER_BYTE; nBit++)
                 {
-                    bool curBit = ((curByte >> nBit) & shiftBit) == shiftBit;
+                    bool curBit = ((curByte >> nBit) & ShiftBit) == ShiftBit;
                     boolList.Add(curBit);
                     // if (isDebug) Debug.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
                 }
@@ -436,6 +415,7 @@ namespace Ultima5Redux.Data
         /// <returns>a single string</returns>
         public string GetChunkAsString()
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (DataFormat)
             {
                 case DataFormatType.FixedString:
