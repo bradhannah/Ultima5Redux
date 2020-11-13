@@ -19,7 +19,8 @@ namespace Ultima5Redux.MapUnits
     public class MapUnitState
     {
         public const int NBYTES = 0x8;
-        internal readonly byte[] StateBytes;
+        // ReSharper disable once NotAccessedField.Local
+        private readonly byte[] _stateBytes;
 
         private int _tile1;
         private int _tile2;
@@ -27,7 +28,7 @@ namespace Ultima5Redux.MapUnits
         public MapUnitState(TileReferences tileReferences, byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
-            StateBytes = stateBytes;
+            _stateBytes = stateBytes;
             //
             _tile1 = stateBytes[0] + 0x100;
             _tile2 = stateBytes[1] + 0x100;
@@ -56,10 +57,11 @@ namespace Ultima5Redux.MapUnits
         public byte X { get; set; }
         public byte Y { get; set; }
         public byte Floor { get; set; }
-        public byte Depends1 { get; internal set; }
-        public byte Depends2 { get; internal set; }
-        public byte Depends3 { get; internal set; }
+        private byte Depends1 { get; set; }
+        private byte Depends2 { get; set; }
+        internal byte Depends3 { get; set; }
         public TileReference Tile1Ref { get; internal set; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public TileReference Tile2Ref { get; internal set; }
 
         public void SetTileReference(TileReference tileReference)

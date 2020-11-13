@@ -18,11 +18,13 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     DataChunk of all loaded instructions (only needed during save and load)
         /// </summary>
+        // ReSharper disable once NotAccessedField.Local
         private DataChunk _movementInstructionDataChunk;
 
         /// <summary>
         ///     DataChunk of all loaded offsets into the movement lists (only needed during save and load)
         /// </summary>
+        // ReSharper disable once NotAccessedField.Local
         private DataChunk _movementOffsetDataChunk;
 
         public MapUnitMovements(DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)

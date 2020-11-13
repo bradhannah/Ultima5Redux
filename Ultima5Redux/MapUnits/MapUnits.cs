@@ -25,6 +25,7 @@ namespace Ultima5Redux.MapUnits
         // load the MapAnimationStates once from disk, don't worry about again until you are saving to disk
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
 
+        // ReSharper disable once NotAccessedField.Local
         private readonly SmallMapCharacterStates _smallMapCharacterStates;
         private readonly MapUnitStates _smallMapUnitStates;
 
@@ -177,6 +178,7 @@ namespace Ultima5Redux.MapUnits
 
         public Avatar AvatarMapUnit => (Avatar) CurrentMapUnits[0];
 
+        // ReSharper disable once UnusedMember.Local
         private MapUnitStates CurrentMapUnitStates
         {
             get
@@ -310,6 +312,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="map"></param>
         /// <param name="mapUnit"></param>
         /// <returns>true if successful, false if no room was found</returns>
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private bool AddNewMapUnit(LargeMap.Maps map, MapUnit mapUnit)
         {
             int nIndex = FindNextFreeMapUnitIndex(map);
@@ -484,8 +487,6 @@ namespace Ultima5Redux.MapUnits
                 {
                     mapUnitMovement.ClearMovements();
                     // load the existing AvatarMapUnit with boarded MapUnits
-                    //_smallWorldMapUnits= AvatarMapUnit;
-
                     _smallWorldMapUnits.Add(_masterAvatarMapUnit);
                     AvatarMapUnit.MapUnitPosition = SmallMapReferences.GetStartingXYZByLocation();
                     AvatarMapUnit.MapLocation = location;
@@ -524,7 +525,7 @@ namespace Ultima5Redux.MapUnits
                 };
 
                 MapUnit mapUnit = CreateNewMapUnit(mapUnitState, mapUnitMovement,
-                    bInitialLoad, location, npcRef, smallMapCharacterState);
+                    false, location, npcRef, smallMapCharacterState);
 
                 _smallWorldMapUnits.Add(mapUnit);
             }
@@ -693,9 +694,8 @@ namespace Ultima5Redux.MapUnits
         ///     Creates a new frigate at a dock of a given location
         /// </summary>
         /// <param name="location"></param>
-        /// <param name="virtualMap"></param>
-        public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location,
-            VirtualMap virtualMap)
+        // ReSharper disable once UnusedMethodReturnValue.Global
+        public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
             return CreateFrigate(VirtualMap.GetLocationOfDock(location, _dataOvlReference), VirtualMap.Direction.Right,
                 out _);
@@ -705,9 +705,9 @@ namespace Ultima5Redux.MapUnits
         ///     Creates a new skiff and places it at a given location
         /// </summary>
         /// <param name="location"></param>
-        /// <param name="virtualMap"></param>
         /// <returns></returns>
-        public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location, VirtualMap virtualMap)
+        // ReSharper disable once UnusedMethodReturnValue.Global
+        public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
             return CreateSkiff(VirtualMap.GetLocationOfDock(location, _dataOvlReference), VirtualMap.Direction.Right,
                 out _);

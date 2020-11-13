@@ -89,12 +89,14 @@ namespace Ultima5Redux.MapUnits
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
         public abstract Avatar.AvatarState BoardedAvatarState { get; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsOccupiedByAvatar { get; protected internal set; }
-        public virtual VirtualMap.Direction Direction { get; set; }
+        public VirtualMap.Direction Direction { get; set; }
 
         public TileReference BoardedTileReference =>
             TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[Direction]);
 
+        // ReSharper disable once MemberCanBeProtected.Global
         public virtual TileReference NonBoardedTileReference =>
             TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
@@ -155,6 +157,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Reference to current NPC (if it's an NPC at all!)
         /// </summary>
+        // ReSharper disable once MemberCanBeProtected.Global
         public NonPlayerCharacterReference NPCRef { get; }
 
         public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
@@ -168,11 +171,6 @@ namespace Ultima5Redux.MapUnits
         ///     Is the map character currently an active character on the current map
         /// </summary>
         public abstract bool IsActive { get; }
-
-        public virtual void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor)
-        {
-            // by default the thing doesn't move on it's own
-        }
 
         public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
         {
@@ -226,22 +224,6 @@ namespace Ultima5Redux.MapUnits
         /// <returns>returns true if a path was found, false if it wasn't</returns>
         protected static bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy)
         {
-            MapUnitMovement.MovementCommandDirection getCommandDirection(Point2D fromXy, Point2D toXy)
-            {
-                if (fromXy == toXy) return MapUnitMovement.MovementCommandDirection.None;
-                if (fromXy.X < toXy.X) return MapUnitMovement.MovementCommandDirection.East;
-                if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
-                if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
-                if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
-                throw new Ultima5ReduxException(
-                    "For some reason we couldn't determine the path of the command direction in getCommandDirection");
-            }
-
-            Point2D vector2ToPoint2D(Vector2 vector)
-            {
-                return new Point2D((int) vector.X, (int) vector.Y);
-            }
-
             if (mapUnit.MapUnitPosition.XY == targetXy)
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name +
                                                 " is already at " + targetXy.X + "," +
@@ -264,8 +246,8 @@ namespace Ultima5Redux.MapUnits
             // builds the movement list that is compatible with the original U5 movement instruction queue stored in the state file
             foreach (Node node in nodeStack)
             {
-                Point2D newPosition = vector2ToPoint2D(node.Position);
-                newDirection = getCommandDirection(prevPosition, newPosition);
+                Point2D newPosition = Vector2ToPoint2D(node.Position);
+                newDirection = GetCommandDirection(prevPosition, newPosition);
 
                 // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction
                 // that has N iterations (ie. move East 5 times)
@@ -288,6 +270,18 @@ namespace Ultima5Redux.MapUnits
             if (nInARow > 0)
                 mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow));
             return true;
+        }
+
+        private static Point2D Vector2ToPoint2D(Vector2 vector) => new Point2D((int) vector.X, (int) vector.Y);
+
+        private static MapUnitMovement.MovementCommandDirection GetCommandDirection(Point2D fromXy, Point2D toXy)
+        {
+            if (fromXy == toXy) return MapUnitMovement.MovementCommandDirection.None;
+            if (fromXy.X < toXy.X) return MapUnitMovement.MovementCommandDirection.East;
+            if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
+            if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
+            if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
+            throw new Ultima5ReduxException("For some reason we couldn't determine the path of the command direction in getCommandDirection");
         }
     }
 }

@@ -58,7 +58,9 @@ namespace Ultima5Redux.MapUnits
 
         public MapUnitPosition TheMapUnitPosition { get; } = new MapUnitPosition();
         public int MapUnitAnimationStateIndex { get; }
-        public int NPCIndex { get; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        private int NPCIndex { get; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private TileReference TileRef { get; }
         public bool Active { get; }
     }

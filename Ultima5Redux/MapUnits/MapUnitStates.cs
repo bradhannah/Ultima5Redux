@@ -25,7 +25,7 @@ namespace Ultima5Redux.MapUnits
             _mapUnitStatesDataChunk = mapUnitStatesDataChunk;
         }
 
-        public MapUnitStatesFiles MapUnitStatesType { get; private set; }
+        private MapUnitStatesFiles MapUnitStatesType { get; set; }
 
         public MapUnitState GetCharacterState(int nIndex)
         {

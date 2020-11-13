@@ -273,7 +273,8 @@ namespace Ultima5Redux
         /// <summary>
         ///     Current floor
         /// </summary>
-        private int Floor => DataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
+        // ReSharper disable once MemberCanBePrivate.Global
+        public int Floor => DataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
 
         /// <summary>
         ///     Saved X location of Avatar

@@ -1,4 +1,6 @@
-﻿namespace Ultima5Redux.MapUnits
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Ultima5Redux.MapUnits
 {
     /// <summary>
     ///     Tracks the position of any character on the screen
@@ -59,6 +61,7 @@
                    Floor == position.Floor;
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")] 
         public override int GetHashCode()
         {
             int hashCode = 1832819848;

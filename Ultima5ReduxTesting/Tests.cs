@@ -84,8 +84,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
             world.State.TheVirtualMap.TheMapUnits.CreateFrigateAtDock(
-                SmallMapReferences.SingleMapReference.Location.Minoc,
-                world.State.TheVirtualMap);
+                SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
                 VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
                     world.DataOvlRef);
@@ -122,8 +121,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
             world.State.TheVirtualMap.TheMapUnits.CreateSkiffAtDock(
-                SmallMapReferences.SingleMapReference.Location.Minoc,
-                world.State.TheVirtualMap);
+                SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
                 VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
                     world.DataOvlRef);
