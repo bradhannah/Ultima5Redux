@@ -597,7 +597,7 @@ namespace Ultima5Redux.Maps
                     if (ladderOrStairDirection == LadderOrStairDirection.Down)
                     {
                         // if this is a ladder or staircase and it's in the right direction, then add it to the list
-                        if (_tileReferences.IsLadderDown(tileReference.Index) || IsStairsGoingDown(new Point2D(x, y)))
+                        if (_tileReferences.IsLadderDown(tileReference.Index) || IsStairGoingDown(new Point2D(x, y)))
                             laddersAndStairs.Add(new Point2D(x, y));
                     }
                     else // otherwise we know you are going up
@@ -778,10 +778,10 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStairsGoingDown(Point2D xy)
+        public bool IsStairGoingDown(Point2D xy)
         {
             if (!_tileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
-            bool bStairGoUp = _smallMaps.DoStairsGoDown(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
             return bStairGoUp;
         }
 
@@ -791,7 +791,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsStairsGoingDown()
         {
-            return IsStairsGoingDown(CurrentPosition.XY);
+            return IsStairGoingDown(CurrentPosition.XY);
         }
 
         /// <summary>
@@ -911,6 +911,7 @@ namespace Ultima5Redux.Maps
 
         /// <summary>
         ///     Attempts to guess the tile underneath a thing that is upright such as a fountain
+        /// <remarks>This is only for 3D worlds, the 2D top down single sprite per tile model would not require this</remarks>
         /// </summary>
         /// <param name="xy">position of the thing</param>
         /// <returns>tile (sprite) number</returns>
@@ -919,7 +920,6 @@ namespace Ultima5Redux.Maps
             Dictionary<int, int> tileCountDictionary = new Dictionary<int, int>();
 
             // we check our high level tile override
-            // todo: technically this is only for 3D worlds, we should consider that
             // this method is much quicker because we only load the data once in the maps 
             if (!IsLargeMap && CurrentMap.IsXYOverride(xy))
                 return CurrentMap.GetTileOverride(xy).SpriteNum;

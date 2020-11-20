@@ -913,7 +913,6 @@ namespace Ultima5Redux.Data
             //flags that define the special abilities of
             //             monsters during combat; 32 bits per monster
             //             0x0020 = undead (affected by An Xen Corp)
-            //             todo:
             //             - passes through walls (ghost, shadowlord)
             //             - can become invisible (wisp, ghost, shadowlord)
             //             - can teleport (wisp, shadowlord)

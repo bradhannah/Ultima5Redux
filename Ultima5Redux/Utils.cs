@@ -76,7 +76,7 @@ namespace Ultima5Redux
         {
             int listCount = theList.Count;
 
-            // TODO: add safety code to make sure there is no remainer when dividing listCount/splitEveryN
+            // TODO: add safety code to make sure there is no remainder when dividing listCount/splitEveryN
             _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
             if (remainder != 0)

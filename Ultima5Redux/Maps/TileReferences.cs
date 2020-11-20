@@ -152,8 +152,8 @@ namespace Ultima5Redux.Maps
                                                                  "StairsSouth"); // is it a ladder
             return bIsLadder;
         }
-
-        /// <summary>
+        
+       /// <summary>
         ///     Is the sprite a klimbable grate?
         /// </summary>
         /// <param name="nSprite"></param>

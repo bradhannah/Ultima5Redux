@@ -62,7 +62,7 @@ namespace Ultima5Redux.MapUnits
             _movementOffsetDataChunk = movementOffsetDataChunk;
             _nDialogIndex = nDialogIndex;
 
-            // todo: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
+            // Note: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
             ushort offset = movementOffsetDataChunk.GetChunkAsUint16List()[nDialogIndex];
 
             // if it has the value of 0xFFFF then it indicates there are currently no instructions

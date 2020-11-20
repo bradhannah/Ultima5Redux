@@ -148,7 +148,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// <returns></returns>
         public int GetNumberOfActiveCharacters()
         {
-            // todo: this is inefficient!
+            // Note: this is inefficient!
             return GetActiveCharacterRecords().Count;
         }
 

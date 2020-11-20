@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+// ReSharper disable InvalidXmlDocComment
 
 namespace Ultima5Redux.Dialogue
 {
@@ -359,11 +360,8 @@ namespace Ultima5Redux.Dialogue
                     continue;
                 }
 
-                ;
-
                 ScriptItem item = line.GetScriptItem(1);
                 if (line.IsLabelDefinition() && item.LabelNum == nLabel)
-//                if (item.Command == TalkCommand.DefineLabel && item.LabelNum == nLabel)
                     return nCount;
                 nCount++;
             }
@@ -412,10 +410,9 @@ namespace Ultima5Redux.Dialogue
         /// <param name="talkStr"></param>
         public void AddTalkCommand(TalkCommand talkCommand, string talkStr)
         {
-            if (talkCommand == TalkCommand.PlainString)
-                _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, talkStr));
-            else
-                _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand));
+            _currentScriptLine.AddScriptItem(talkCommand == TalkCommand.PlainString
+                ? new ScriptItem(talkCommand, talkStr)
+                : new ScriptItem(talkCommand));
         }
 
         /// <summary>
@@ -424,12 +421,12 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         public void PrintComprehensiveScript()
         {
-            Console.WriteLine("---- BEGIN NEW SCRIPT -----");
-            Console.WriteLine("Name: " + GetScriptLine(TalkConstants.Name));
-            Console.WriteLine("Description: " + GetScriptLine(TalkConstants.Description));
-            Console.WriteLine("Greeting: " + GetScriptLine(TalkConstants.Greeting));
-            Console.WriteLine("Job: " + GetScriptLine(TalkConstants.Job));
-            Console.WriteLine("Bye: " + GetScriptLine(TalkConstants.Bye));
+            Console.WriteLine(@"---- BEGIN NEW SCRIPT -----");
+            Console.WriteLine(@"Name: " + GetScriptLine(TalkConstants.Name));
+            Console.WriteLine(@"Description: " + GetScriptLine(TalkConstants.Description));
+            Console.WriteLine(@"Greeting: " + GetScriptLine(TalkConstants.Greeting));
+            Console.WriteLine(@"Job: " + GetScriptLine(TalkConstants.Job));
+            Console.WriteLine(@"Bye: " + GetScriptLine(TalkConstants.Bye));
             Console.WriteLine("");
 
             _scriptQuestionAnswers.Print();
@@ -438,13 +435,13 @@ namespace Ultima5Redux.Dialogue
             // enumerate the labels and print their scripts
             foreach (ScriptTalkLabel label in _scriptTalkLabels.Labels)
             {
-                Console.WriteLine("Label #: " + label.LabelNum);
-                Console.WriteLine("Initial Line: " + label.InitialLine);
+                Console.WriteLine(@"Label #: " + label.LabelNum);
+                Console.WriteLine(@"Initial Line: " + label.InitialLine);
                 if (label.DefaultAnswers.Count > 0)
                 {
                     foreach (ScriptLine line in label.DefaultAnswers)
                     {
-                        Console.WriteLine("Default Line(s): " + line);
+                        Console.WriteLine(@"Default Line(s): " + line);
                     }
 
                     label.QuestionAnswers.Print();
@@ -464,16 +461,18 @@ namespace Ultima5Redux.Dialogue
                 {
                     ScriptItem item = line.GetScriptItem(nItem);
 
-                    if (item.Command == TalkCommand.PlainString)
+                    switch (item.Command)
                     {
-                        Console.Write(item.Str);
-                    }
-                    else
-                    {
-                        if (item.Command == TalkCommand.DefineLabel || item.Command == TalkCommand.GotoLabel)
-                            Console.Write("<" + item.Command + item.LabelNum + ">");
-                        else
-                            Console.Write("<" + item.Command + ">");
+                        case TalkCommand.PlainString:
+                            Console.Write(item.Str);
+                            break;
+                        case TalkCommand.DefineLabel:
+                        case TalkCommand.GotoLabel:
+                            Console.Write(@"<" + item.Command + item.LabelNum + @">");
+                            break;
+                        default:
+                            Console.Write(@"<" + item.Command + @">");
+                            break;
                     }
                 }
             }
@@ -1029,16 +1028,7 @@ namespace Ultima5Redux.Dialogue
             /// </summary>
             /// <param name="command">the command to search for</param>
             /// <returns>true if it's present, false if it isn't</returns>
-            public bool ContainsCommand(TalkCommand command)
-            {
-                for (int nItem = 0; nItem < ScriptItems.Count; nItem++)
-                {
-                    if (ScriptItems[nItem].Command == command)
-                        return true;
-                }
-
-                return false;
-            }
+            public bool ContainsCommand(TalkCommand command) =>ScriptItems.Any(scriptItem => scriptItem.Command == command); 
         }
     }
 }

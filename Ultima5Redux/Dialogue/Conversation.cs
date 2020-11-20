@@ -378,7 +378,7 @@ namespace Ultima5Redux.Dialogue
                 if (scriptLines[i].ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !Npc.KnowTheAvatar) continue;
 
                 // If there are no script items, then just skip
-                // todo: this shouldn't really happen, but it does, so maybe one day find out why they are being added
+                // Note: this shouldn't really happen, but it does, so maybe one day find out why they are being added
                 if (scriptLines[i].NumberOfScriptItems == 0) continue;
 
                 // process the individual line

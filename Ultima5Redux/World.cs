@@ -879,7 +879,14 @@ namespace Ultima5Redux
                 tryToMoveResult = TryToMoveResult.UsedStairs;
                 State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
                 // todo: i need to figure out if I am going up or down stairs
-                return retStr.TrimEnd() + "\n" + "Up!";
+                //if (State.TheVirtualMap.GetStairsSprite(State.TheVirtualMap.CurrentPosition.XY) == )
+                if (State.TheVirtualMap.IsStairGoingDown(State.TheVirtualMap.CurrentPosition.XY))
+                {
+                    return retStr.TrimEnd() + "\n" +
+                           DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN);
+                }
+                return retStr.TrimEnd() + "\n" +
+                       DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP);
             }
 
             // if we are on a big map then we may issue extra information about slow moving terrain

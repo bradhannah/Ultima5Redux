@@ -31,7 +31,6 @@ namespace Ultima5Redux.Maps
             // we are ignoring the "offsets" which are likely used to help optimize the lookup 
             // on older hardware, instead we will just be lazy and search for them by cycling
             // through the whole list
-            // TODO: optimize storage to improve lookup speed
             do
             {
                 string rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4, 0xFF);
