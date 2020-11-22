@@ -427,21 +427,21 @@ namespace Ultima5ReduxTesting
 
             MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(world.DataOvlRef);
 
-            TimeOfDay tod = new TimeOfDay(world.State.GetDataChunk(GameState.DataChunkName.CURRENT_YEAR),
-                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MONTH),
-                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_DAY),
-                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_HOUR),
-                world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MINUTE));
+            // TimeOfDay tod = new TimeOfDay(world.State.GetDataChunk(GameState.DataChunkName.CURRENT_YEAR),
+            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MONTH),
+            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_DAY),
+            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_HOUR),
+            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MINUTE));
 
             // tod.Day = 2;
             // tod.Hour = 4;
-            tod.Day = 25;
-            tod.Hour = 4;
+            world.State.TheTimeOfDay.Day = 25;
+            world.State.TheTimeOfDay.Hour = 4;
 
             MoonPhaseReferences.MoonPhases trammelPhase =
-                moonPhaseReferences.GetMoonPhasesByTimeOfDay(tod, MoonPhaseReferences.MoonsAndSun.Trammel);
+                moonPhaseReferences.GetMoonPhasesByTimeOfDay(world.State.TheTimeOfDay, MoonPhaseReferences.MoonsAndSun.Trammel);
             MoonPhaseReferences.MoonPhases feluccaPhase =
-                moonPhaseReferences.GetMoonPhasesByTimeOfDay(tod, MoonPhaseReferences.MoonsAndSun.Felucca);
+                moonPhaseReferences.GetMoonPhasesByTimeOfDay(world.State.TheTimeOfDay, MoonPhaseReferences.MoonsAndSun.Felucca);
             Debug.Assert(trammelPhase == MoonPhaseReferences.MoonPhases.GibbousWaning);
             Debug.Assert(feluccaPhase == MoonPhaseReferences.MoonPhases.LastQuarter);
         }
@@ -457,18 +457,12 @@ namespace Ultima5ReduxTesting
             {
                 for (byte nHour = 0; nHour < 24; nHour++)
                 {
-                    TimeOfDay tod = new TimeOfDay(world.State.GetDataChunk(GameState.DataChunkName.CURRENT_YEAR),
-                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MONTH),
-                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_DAY),
-                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_HOUR),
-                        world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MINUTE));
+                    world.State.TheTimeOfDay.Day = nDay;
+                    world.State.TheTimeOfDay.Hour = nHour;
 
-                    tod.Day = nDay;
-                    tod.Hour = nHour;
+                    MoonPhaseReferences.MoonPhases moonPhase = moonPhaseReferences.GetMoonGateMoonPhase(world.State.TheTimeOfDay);
 
-                    MoonPhaseReferences.MoonPhases moonPhase = moonPhaseReferences.GetMoonGateMoonPhase(tod);
-
-                    float fMoonAngle = MoonPhaseReferences.GetMoonAngle(tod);
+                    float fMoonAngle = MoonPhaseReferences.GetMoonAngle(world.State.TheTimeOfDay);
                     Assert.True(fMoonAngle >= 0 && fMoonAngle < 360);
                 }
             }
