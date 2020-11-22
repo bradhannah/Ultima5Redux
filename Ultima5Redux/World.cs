@@ -89,7 +89,7 @@ namespace Ultima5Redux
                 new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences, State, NpcRef, InvRef, DataOvlRef);
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences, NpcRef, InvRef, DataOvlRef);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Ultima5Redux
 
             // if a whole month has advanced then we go and add one month to the "staying at the inn" count
             if (nCurrentHour < State.TheTimeOfDay.Month) State.CharacterRecords.IncrementStayingAtInnCounters();
-            if (State.TorchTurnsLeft > 0) State.TorchTurnsLeft--;
+            if (State.TurnsToExtinguish > 0) State.TurnsToExtinguish--;
             State.TheVirtualMap.MoveMapUnitsToNextMove();
         }
 
@@ -925,7 +925,7 @@ namespace Ultima5Redux
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.NONE_OWNED_BANG_N);
 
             State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity--;
-            State.TorchTurnsLeft = nDefaultNumberOfTurnsForTorch;
+            State.TurnsToExtinguish = nDefaultNumberOfTurnsForTorch;
             // this will trigger a re-read of time of day changes
             State.TheTimeOfDay.SetAllChangeTrackers();
             return DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.IGNITE_TORCH);

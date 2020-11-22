@@ -48,13 +48,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 switch (ProvisionType)
                 {
                     case ProvisionTypeEnum.Torches:
-                        return _state.GetDataChunk(GameState.DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
+                        return _state.Torches;
                     case ProvisionTypeEnum.Gems:
-                        return _state.GetDataChunk(GameState.DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
+                        return _state.Gems;
                     case ProvisionTypeEnum.Keys:
-                        return _state.GetDataChunk(GameState.DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
+                        return _state.Keys;
                     case ProvisionTypeEnum.SkullKeys:
-                        return _state.GetDataChunk(GameState.DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
+                        return _state.SkullKeys;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -64,16 +64,16 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 switch (ProvisionType)
                 {
                     case ProvisionTypeEnum.Torches:
-                        _state.GetDataChunk(GameState.DataChunkName.TORCHES_QUANTITY).SetChunkAsByte((byte) value);
+                        _state.Torches = value;
                         break;
                     case ProvisionTypeEnum.Gems:
-                        _state.GetDataChunk(GameState.DataChunkName.GEMS_QUANTITY).SetChunkAsByte((byte) value);
+                        _state.Gems = value;
                         break;
                     case ProvisionTypeEnum.Keys:
-                        _state.GetDataChunk(GameState.DataChunkName.KEYS_QUANTITY).SetChunkAsByte((byte) value);
+                        _state.Keys = value;
                         break;
                     case ProvisionTypeEnum.SkullKeys:
-                        _state.GetDataChunk(GameState.DataChunkName.SKULL_KEYS_QUANTITY).SetChunkAsByte((byte) value);
+                        _state.SkullKeys = value;
                         break;
                     //throw new ArgumentOutOfRangeException();
                 }

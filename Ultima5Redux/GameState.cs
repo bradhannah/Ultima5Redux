@@ -4,6 +4,7 @@ using System.IO;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -17,11 +18,10 @@ namespace Ultima5Redux
         /// </summary>
         public enum DataChunkName
         {
-            Unused, CHARACTER_RECORDS, NPC_ISALIVE_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY, FOOD_QUANTITY, GOLD_QUANTITY,
-            KEYS_QUANTITY, GEMS_QUANTITY, TORCHES_QUANTITY, TORCHES_TURNS, CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY,
+            Unused, NPC_ISALIVE_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY,  CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY,
             CURRENT_HOUR, CURRENT_MINUTE, NPC_TYPES, NPC_MOVEMENT_LISTS, NPC_MOVEMENT_OFFSETS, NPC_SPRITE_INDEXES,
-            PARTY_LOC, Z_COORD, X_COORD, Y_COORD, CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
-            MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, GRAPPLE, SKULL_KEYS_QUANTITY,
+            CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
+            MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, 
             MONSTERS_AND_STUFF_TABLE
         }
 
@@ -44,6 +44,28 @@ namespace Ultima5Redux
 
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
+        private readonly ImportedGameState _importedGameState;
+
+        // all initial loaded state information
+        private readonly SmallMapReferences.SingleMapReference.Location _location;
+        private readonly int _nInitialFloor;
+        private readonly int _nInitialX;
+        private readonly int _nInitialY;
+        private readonly LargeMap.Maps _initialMap;
+        
+        
+        public ushort Food { get; set; }
+        public ushort Gold { get; set; }
+        public int Keys { get; set; }
+        public int Gems { get; set; }
+        public int Torches { get; set; }
+        public int SkullKeys { get; set; }
+        public bool HasGrapple { get; set; }
+        public int TurnsToExtinguish { get; set; }
+        public bool IsTorchLit => TurnsToExtinguish > 0;
+        
+        //public MapUnitPosition InitialPosition
+
         /// <summary>
         ///     Construct the GameState
         /// </summary>
@@ -55,44 +77,29 @@ namespace Ultima5Redux
 
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
+            _importedGameState = new ImportedGameState(u5Directory, dataOvlRef);
+            
             DataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
 
             List<byte> gameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
 
-            // import all character records
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02,
-                0x20 * 16, 0x00, DataChunkName.CHARACTER_RECORDS);
-            DataChunk rawCharacterRecords = DataChunks.GetDataChunk(DataChunkName.CHARACTER_RECORDS);
-            CharacterRecords = new PlayerCharacterRecords(rawCharacterRecords.GetAsByteList());
-
-            // player location
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party _location", 0x2ED, 0x01, 0x00,
-                DataChunkName.PARTY_LOC);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Z Coordinate of Party [10]", 0x2EF, 0x01, 0x00,
-                DataChunkName.Z_COORD);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "X Coordinate of Party", 0x2F0, 0x01, 0x00,
-                DataChunkName.X_COORD);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Y Coordinate of Party", 0x2F1, 0x01, 0x00,
-                DataChunkName.Y_COORD);
-
-            // quantities of standard items
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Food Quantity", 0x202, 0x02, 0x00,
-                DataChunkName.FOOD_QUANTITY);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16, "Gold Quantity", 0x204, 0x02, 0x00,
-                DataChunkName.GOLD_QUANTITY);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Keys Quantity", 0x206, 0x01, 0x00,
-                DataChunkName.KEYS_QUANTITY);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Gems Quantity", 0x207, 0x01, 0x00,
-                DataChunkName.GEMS_QUANTITY);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x208, 0x01, 0x00,
-                DataChunkName.TORCHES_QUANTITY);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches Quantity", 0x20B, 0x01, 0x00,
-                DataChunkName.SKULL_KEYS_QUANTITY);
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Grapple", 0x209, 0x01, 0x00, DataChunkName.GRAPPLE);
-
-            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Torches turns until it extinguishes", 0x301, 0x01,
-                0x00, DataChunkName.TORCHES_TURNS);
-
+            // one time copy of all imported state information
+            CharacterRecords = _importedGameState.CharacterRecords;
+            _location = _importedGameState.Location;
+            _nInitialFloor = _importedGameState.Floor;
+            _initialMap = _importedGameState.InitialMap;
+            _nInitialX = _importedGameState.X;
+            _nInitialY = _importedGameState.Y;
+            
+            Food = _importedGameState.Food;
+            Gold = _importedGameState.Gold;
+            Keys = _importedGameState.Keys;
+            Gems = _importedGameState.Gems;
+            Torches = _importedGameState.Torches;
+            SkullKeys = _importedGameState.SkullKeys;
+            HasGrapple = _importedGameState.HasGrapple;
+            TurnsToExtinguish = _importedGameState.TorchTurnsLeft;
+            
             // moonstones and moongates
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte,
                 "0-0xFF Moonstone X Coordinates (valid only if buried)", 0x28A, 0x08, 0x00,
@@ -251,73 +258,11 @@ namespace Ultima5Redux
             set => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).SetChunkAsByte(value);
         }
 
-        // ReSharper disable once UnusedMember.Global
-        public bool IsTorchLit => TorchTurnsLeft > 0;
-
-        /// <summary>
-        ///     How many turns left until your torch is burnt out?
-        /// </summary>
-        public byte TorchTurnsLeft
-        {
-            get => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
-            set => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).SetChunkAsByte(value);
-        }
-
-        /// <summary>
-        ///     Current location
-        /// </summary>
-        private SmallMapReferences.SingleMapReference.Location Location =>
-            (SmallMapReferences.SingleMapReference.Location) DataChunks.GetDataChunk(DataChunkName.PARTY_LOC)
-                .GetChunkAsByte();
-
-        /// <summary>
-        ///     Current floor
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public int Floor => DataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
-
-        /// <summary>
-        ///     Saved X location of Avatar
-        /// </summary>
-        public int X => DataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
-
-        /// <summary>
-        ///     Saved Y location of Avatar
-        /// </summary>
-        public int Y => DataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
-
-
         /// <summary>
         ///     Players current inventory
         /// </summary>
         public Inventory PlayerInventory { get; }
 
-        /// <summary>
-        ///     Players total gold
-        /// </summary>
-        public ushort Gold
-        {
-            get => DataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUint16();
-            set => DataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).SetChunkAsUint16(value);
-        }
-
-        /// <summary>
-        ///     Players total food
-        /// </summary>
-        public ushort Food
-        {
-            get => DataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUint16();
-            set => DataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).SetChunkAsUint16(value);
-        }
-
-        /// <summary>
-        ///     Does the Avatar have a grapple?
-        /// </summary>
-        public bool HasGrapple
-        {
-            get => DataChunks.GetDataChunk(DataChunkName.GRAPPLE).GetChunkAsByte() != 0x00;
-            set => DataChunks.GetDataChunk(DataChunkName.GRAPPLE).SetChunkAsByte((byte) (value ? 0x01 : 0x00));
-        }
 
         /// <summary>
         ///     Users Karma
@@ -328,14 +273,6 @@ namespace Ultima5Redux
         ///     The name of the Avatar
         /// </summary>
         public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
-
-        /// <summary>
-        ///     Which map am I currently on?
-        /// </summary>
-        private LargeMap.Maps InitialMap =>
-            Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
-                ? Floor == 0xFF ? LargeMap.Maps.Underworld : LargeMap.Maps.Overworld
-                : LargeMap.Maps.Small;
 
         public DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
@@ -413,23 +350,24 @@ namespace Ultima5Redux
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
         /// <param name="tileReferences"></param>
-        /// <param name="state"></param>
         /// <param name="npcRefs"></param>
         /// <param name="inventoryReferences"></param>
         /// <param name="dataOvlReference"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences, GameState state,
+            LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences, 
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
             DataOvlReference dataOvlReference)
         {
             SmallMapReferences.SingleMapReference mapRef =
-                state.Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
-                    ? null
-                    : smallMapReferences.GetSingleMapByLocation(state.Location, state.Floor);
+                _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
+                    ? null : smallMapReferences.GetSingleMapByLocation(_location, _nInitialFloor);
 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
-                underworldMap, tileReferences, state, npcRefs, TheTimeOfDay, TheMoongates, 
-                inventoryReferences, CharacterRecords, InitialMap, mapRef, dataOvlReference);
+                underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates, 
+                inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference);
+            // we have to set the initial xy, not the floor because that is part of the SingleMapReference
+            // I should probably just add yet another thing to the constructor
+            TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);
         }
 
         private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }
