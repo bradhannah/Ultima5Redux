@@ -12,9 +12,9 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public bool DontDraw;
 
-        [DataMember] public int FlatTileSubstitionIndex;
+        [DataMember] public int FlatTileSubstitutionIndex;
 
-        [DataMember] public string FlatTileSubstitionName;
+        [DataMember] public string FlatTileSubstitutionName;
 
         [DataMember] public int Index;
 

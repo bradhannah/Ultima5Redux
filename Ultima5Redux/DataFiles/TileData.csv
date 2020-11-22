@@ -1,4 +1,4 @@
-Index,Name,Description,IsWalking_Passable,IsBoat_Passable,IsSkiff_Passable,IsCarpet_Passable,IsKlimable,IsOpenable,SpeedFactor,IsPartOfAnimation,AnimationIndex,IsUpright,FlatTileSubstitionIndex,FlatTileSubstitionName,IsEnemy,IsNPC,IsBuilding,DontDraw,IsPushable,IsTalkOverable,IsBoardable
+Index,Name,Description,IsWalking_Passable,IsBoat_Passable,IsSkiff_Passable,IsCarpet_Passable,IsKlimable,IsOpenable,SpeedFactor,IsPartOfAnimation,AnimationIndex,IsUpright,FlatTileSubstitutionIndex,FlatTileSubstitutionName,IsEnemy,IsNPC,IsBuilding,DontDraw,IsPushable,IsTalkOverable,IsBoardable
 0,Explosion,,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,1,FALSE,0,TRUE,5,Grass,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
 1,Water1,,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,2,TRUE,0,FALSE,-1,None,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
 2,Water2,,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,2,TRUE,1,FALSE,-1,None,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE

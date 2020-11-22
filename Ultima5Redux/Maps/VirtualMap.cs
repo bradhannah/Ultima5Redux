@@ -931,7 +931,7 @@ namespace Ultima5Redux.Maps
             {
                 // there are exposed items on this tile
                 TileReference tileRef = GetTileReference(xy.X, xy.Y, true, true);
-                if (tileRef.FlatTileSubstitionIndex != -2)
+                if (tileRef.FlatTileSubstitutionIndex != -2)
                     return tileRef.Index;
             }
 
