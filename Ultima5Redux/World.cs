@@ -319,8 +319,8 @@ namespace Ultima5Redux
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
-            List<MapUnit> mapUnits = State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(State.TheVirtualMap.LargeMapOverUnder, 
-                 xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+            // List<MapUnit> mapUnits = State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(State.TheVirtualMap.LargeMapOverUnder, 
+            //      xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
 
              MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
                  State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
@@ -338,7 +338,7 @@ namespace Ultima5Redux
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED);
             }
 
-            if (magicCarpet != null) //SpriteTileReferences.IsMagicCarpet(tileReference.Index))
+            if (magicCarpet != null) 
             {
 
                 // add the carpet to the players inventory and remove it from the map
@@ -347,8 +347,8 @@ namespace Ultima5Redux
                 bGotAThing = true;
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.A_MAGIC_CARPET);
             }
-            // are there any exposed items (generic call)
 
+            // are there any exposed items (generic call)
             if (State.TheVirtualMap.IsAnyExposedItems(xy))
             {
                 bGotAThing = true;
@@ -849,7 +849,7 @@ namespace Ultima5Redux
 
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
-            bool bPassable = State.TheVirtualMap.IsTileFreeToTravel(new Point2D(newX, newY), false); 
+            bool bPassable = State.TheVirtualMap.IsTileFreeToTravel(new Point2D(newX, newY)); 
 
             // this is insufficient in case I am in a boat
             if ((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove )
@@ -983,7 +983,6 @@ namespace Ultima5Redux
             }
 
             bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
-            Avatar avatar = State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
             MapUnit boardableMapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             if (boardableMapUnit is null)
                 throw new Ultima5ReduxException(
@@ -1097,7 +1096,7 @@ namespace Ultima5Redux
             
             State.PlayerInventory.MagicCarpets--;
             MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(State.TheVirtualMap.CurrentPosition.XY, 
-                State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection, out int nIndex);
+                State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection, out int _);
             BoardAndCleanFromWorld(carpet);
             return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.CARPET_BANG);
         }
@@ -1233,6 +1232,32 @@ namespace Ultima5Redux
             bAbleToUseItem = true;
             State.PlayerInventory.RefreshInventory();
             return retStr;
+        }
+
+        /// <summary>
+        /// Yell to hoist or furl the sails
+        /// </summary>
+        /// <param name="bSailsHoisted">are they now hoisted?</param>
+        /// <returns>output string</returns>
+        public string YellForSails(out bool bSailsHoisted)
+        {
+            Debug.Assert(State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate);
+
+            Frigate avatarsFrigate = State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit as Frigate;
+            Debug.Assert(avatarsFrigate != null, nameof(avatarsFrigate) + " != null");
+            
+            avatarsFrigate.SailsHoisted = !avatarsFrigate.SailsHoisted;
+            bSailsHoisted = avatarsFrigate.SailsHoisted;
+            if (bSailsHoisted)
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.YELL) +
+                   DataOvlRef.StringReferences.GetString(DataOvlReference.YellingStrings.HOIST_BANG_N).Trim();
+            return DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.YELL) +
+                   DataOvlRef.StringReferences.GetString(DataOvlReference.YellingStrings.FURL_BANG_N).Trim();
+        }
+
+        public void YellWord(string word)
+        {
+            
         }
     }
 }

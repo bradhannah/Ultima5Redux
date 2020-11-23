@@ -24,6 +24,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             set => TheMapUnitState.Depends3 = (byte) value;
         }
 
+        public bool SailsHoisted { get; set; } = false;
+
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
             {
@@ -33,17 +35,27 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 {SmallMapReferences.SingleMapReference.Location.Jhelom, 1200}
             };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<VirtualMap.Direction, string>
-            {
-                {VirtualMap.Direction.None, "ShipNoSailsUp"},
-                {VirtualMap.Direction.Left, "ShipNoSailsLeft"},
-                {VirtualMap.Direction.Down, "ShipNoSailsDown"},
-                {VirtualMap.Direction.Right, "ShipNoSailsRight"},
-                {VirtualMap.Direction.Up, "ShipNoSailsUp"}
-            };
+        private readonly Dictionary<VirtualMap.Direction, string> _sailsFurledTiles = new Dictionary<VirtualMap.Direction, string>
+        {
+            {VirtualMap.Direction.None, "ShipNoSailsUp"},
+            {VirtualMap.Direction.Left, "ShipNoSailsLeft"},
+            {VirtualMap.Direction.Down, "ShipNoSailsDown"},
+            {VirtualMap.Direction.Right, "ShipNoSailsRight"},
+            {VirtualMap.Direction.Up, "ShipNoSailsUp"}
+        };
+        
+        private readonly Dictionary<VirtualMap.Direction, string> _sailsHoistedTiles = new Dictionary<VirtualMap.Direction, string>
+        {
+            {VirtualMap.Direction.None, "ShipSailsUp"},
+            {VirtualMap.Direction.Left, "ShipSailsLeft"},
+            {VirtualMap.Direction.Down, "ShipSailsDown"},
+            {VirtualMap.Direction.Right, "ShipSailsRight"},
+            {VirtualMap.Direction.Up, "ShipSailsUp"}
+        };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName => _sailsFurledTiles;
+
+        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
 
         public override string BoardXitName =>

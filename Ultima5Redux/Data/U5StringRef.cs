@@ -173,7 +173,16 @@ namespace Ultima5Redux.Data
                 {
                     typeof(DataOvlReference.ShoppeKeeperBarKeepStrings2),
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2).GetChunkAsStringList()
-                }
+                },
+                {
+                    typeof(DataOvlReference.YellingStrings),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.YELLING).GetChunkAsStringList()
+                },
+                {
+                    typeof(DataOvlReference.WordsOfPower),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORDS_OF_POWER).GetChunkAsStringList()
+                },
+                
             };
         }
 

@@ -60,7 +60,8 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_TOWNES_INN, SHOPPE_KEEPER_TOWNES_SHIPS, SHOPPE_KEEPER_TOWNES_HORSES, SHOPPE_KEEPER_HEALER,
             SHOPPE_KEEPER_HEALER2, HEALER_HEAL_PRICES, HEALER_CURE_PRICES, HEALER_RESURRECT_PRICES, X_DOCKS, Y_DOCKS,
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
-            BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS
+            BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
+            YELLING
         }
 
         public enum Equipment
@@ -777,6 +778,22 @@ namespace Ultima5Redux.Data
             //[32]	"Done\n"	string
             //[33]	"\n\n"	string
         }
+        
+        public enum WordsOfPower { FALLAX, VILIS, INOPIA, MALUM, AVIDUS, INFAMA, IGANVUS, VERAMOCOR}
+        // [0] = {string} "FALLAX"
+        // [1] = {string} "VILIS"
+        // [2] = {string} "INOPIA"
+        // [3] = {string} "MALUM"
+        // [4] = {string} "AVIDUS"
+        // [5] = {string} "INFAMA"
+        // [6] = {string} "IGNAVUS"
+        // [7] = {string} "VERAMOCOR"
+
+        public enum YellingStrings { FURL_BANG_N, HOIST_BANG_N, WHAT_Q_N_COLON, NOTHING_N }
+        // FURL!\n"
+        // [3] = {string} "HOIST!\n"
+        // [4] = {string} "what?\n:"
+        // [5] = {string} "Nothing\n"
 
         /// <summary>
         ///     All the data chunks
@@ -831,7 +848,6 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", 0xa4d,
                 0x111 + 0x3a, 0, DataChunkName.LOCATION_NAMES);
-            SomeStrings str = _dataChunks.GetDataChunk(DataChunkName.LOCATION_NAMES).GetChunkAsStringList();
 
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", 0xa4d, 0x111);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Dungeon names (8 of them)", 0xb5e, 0x3a);
@@ -846,10 +862,6 @@ namespace Ultima5Redux.Data
                 "Compressed words used in the conversation files", 0x104c, 0x24e, 0,
                 DataChunkName.TALK_COMPRESSED_WORDS);
             //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e);
-
-            SomeStrings stores = _dataChunks.GetDataChunk(DataChunkName.STORE_NAMES).GetChunkAsStringList();
-            SomeStrings merchantNames =
-                _dataChunks.GetDataChunk(DataChunkName.SHOPPE_KEEPER_NAMES).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
@@ -873,8 +885,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Required Strength for Equipment Values",
                 0x1ABE, 0x2F, 0x00, DataChunkName.REQ_STRENGTH_EQUIP);
 
-            List<string> strsss = strEquipIndexes.GetAsStringListFromIndexes();
-            //DataChunk.GetAsStringListFromIndexes(strEquipIndexes.GetChunkAsUINT16List(), this.dataChunks.FileByteList);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Text index (add + 0x10)", 0x187a, 0x1ee,
                 0x10);
@@ -887,14 +897,9 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Which Map index do we start in (for KEEP.DAT)",
                 0x1e42, 0x8);
 
-            //            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13 shorts, add 0x10)", 0x1e4a, 0x1a, 0x10);
-            //            dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Name of dwellings/castle/keeps/dungeons index (22 shorts, add 0x10))", 0x1e6e, 0x2c, 0x10);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List,
                 "Name of cities index (13+22 shorts, add 0x10)", 0x1e4a, 0x50, 0x10,
                 DataChunkName.LOCATION_NAME_INDEXES);
-            //SomeStrings strs = GetDataChunk(DataChunkName.LOCATION_NAMES).GetChunkAsStringList();
-            //AddDataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13+22 shorts, add 0x10)", 0x1e4a, 0x1a, 0x10, DataChunkName.LOCATION_NAME_INDEXES_1);
-            //AddDataChunk(DataChunk.DataFormatType.UINT16List, "Name of cities index (13+22 shorts, add 0x10)", 0x1e6e, 0x2c, 0x10, DataChunkName.LOCATION_NAME_INDEXES_2);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "X-coordinates to Towns, Dwellings, Castles, Keeps, Dungeons", 0x1e9a, 0x28, 0x00,
@@ -908,7 +913,7 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Virtue and mantra index (add + 0x10)", 0x1f5e,
                 0x20, 0x10);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x1f7e, 0x33b);
+
             // extended stuff "old list"
             //flags that define the special abilities of
             //             monsters during combat; 32 bits per monster
@@ -1026,19 +1031,23 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate (item)", 0x4050, 0x72);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (item)", 0x40C2, 0x72);
 
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Words of Power", 0x44ad, 0x3A, 0, DataChunkName.WORDS_OF_POWER);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Yelling strings", 0x452A, 0x20, 0, DataChunkName.YELLING);
+            // SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.WORDS_OF_POWER).GetChunkAsStringList();
+            // SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.YELLING).GetChunkAsStringList();
+
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Sleeping, transportation stuff, others, ",
                 0x41e4, 0x21a, 0, DataChunkName.SLEEP_TRANSPORT);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Exclamations!, ", 0x454b, 0x27A, 0,
                 DataChunkName.EXCLAIMS);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Word of power strings", 0x47A4, 0x96, 0,
-                DataChunkName.WORDS_OF_POWER);
+            // _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Word of power strings", 0x47A4, 0x96, 0,
+            //     DataChunkName.WORDS_OF_POWER);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Word of power locations (PERHAPS?!?)", 0x4512,
                 0x10);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Sprite index of replacement tile for word of power", 0x4513, 0xF);
 
-            SomeStrings someStrings = GetDataChunk(DataChunkName.EXCLAIMS).GetChunkAsStringList();
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x4aa5, 0x259);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Using and wearing item text", 0x48A5, 0x204,
@@ -1166,8 +1175,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Inn bed Y-coordinate", 0x4e90, 0x6, 0,
                 DataChunkName.INN_BED_Y_COORDS);
 
-            SomeStrings someStrings2 = GetDataChunk(DataChunkName.SHOPPE_KEEPER_BAR_KEEP_2).GetChunkAsStringList();
-
             //SHOPPE_KEEPER_BAR_KEEP
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "end.dat", 0x820e, 0x8);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Numbers as strings (ie. twelfth)", 0x8216,
@@ -1196,7 +1203,6 @@ namespace Ultima5Redux.Data
                 DataChunkName.KLIMBING);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "pay fine/bribe, merchant chat", 0x9062,
                 0x1b2, 0x00, DataChunkName.CHIT_CHAT);
-            SomeStrings strs3 = _dataChunks.GetDataChunk(DataChunkName.CHIT_CHAT).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, ".tlk file list", 0x9216, 0x2e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Talking strings for ALL npcs", 0x9244, 0x1a);
