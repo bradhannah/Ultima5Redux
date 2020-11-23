@@ -758,6 +758,7 @@ namespace Ultima5Redux.MapUnits
                 {
                     Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int nIndex);
                     AvatarMapUnit.BoardMapUnit(skiff);
+                    avatarFrigate.SkiffsAboard--;
                     ClearMapUnit(skiff);
                 }
             }
