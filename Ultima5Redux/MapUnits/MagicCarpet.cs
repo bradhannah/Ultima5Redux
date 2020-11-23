@@ -36,6 +36,7 @@ namespace Ultima5Redux.MapUnits
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
 
+        public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby);
 
         public override string BoardXitName => DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();

@@ -121,7 +121,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             switch (remedy)
             {
                 case RemedyTypes.Cure:
-                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisioned;
+                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned;
                 case RemedyTypes.Heal:
                     return record.Stats.CurrentHp < record.Stats.MaximumHp;
                 case RemedyTypes.Resurrect:

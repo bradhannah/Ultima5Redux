@@ -170,7 +170,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         public MapUnit UnboardedAvatar()
         {
-            KeyTileReference = NonBoardedTileReference; // GetTileReferenceByName("BasicAvatar");
+            KeyTileReference = NonBoardedTileReference; 
             CurrentAvatarState = AvatarState.Regular;
             MapUnit previouslyBoardedMapUnit = CurrentBoardedMapUnit;
             CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
@@ -221,7 +221,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public void BoardMapUnit(MapUnit mapUnit)
+        public void BoardMapUnit(MapUnit mapUnit)//, MapUnits mapUnits)
         {
             // note: since the Avatar does not control all MapUnits, we only add it our internal tracker
             // but do not release it from the world - that must be done outside this method
@@ -229,6 +229,9 @@ namespace Ultima5Redux.MapUnits
             CurrentAvatarState = mapUnit.BoardedAvatarState;
             CurrentBoardedMapUnit = mapUnit;
             CurrentBoardedMapUnit.IsOccupiedByAvatar = true;
+            
+            //mapUnits.ClearMapUnit(mapUnit);
+            
             if (!(mapUnit is Frigate)) return;
 
             // if we are going onto a frigate, then we want to make sure the Avatar can start rowing

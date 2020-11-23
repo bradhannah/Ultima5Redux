@@ -17,7 +17,7 @@ namespace Ultima5Redux.PlayerCharacters
             InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01
         } // otherwise it is at an inn at Settlement # in byte value
 
-        public enum CharacterStatus { Good = 'G', Poisioned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
+        public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
 
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
@@ -30,9 +30,9 @@ namespace Ultima5Redux.PlayerCharacters
         ///     Creates a character record from a raw record that begins at offset 0
         /// </summary>
         /// <param name="rawRecord"></param>
-        public PlayerCharacterRecord(byte[] rawRecord)
+        public PlayerCharacterRecord(IReadOnlyCollection<byte> rawRecord)
         {
-            Debug.Assert(rawRecord.Length == CHARACTER_RECORD_BYTE_ARRAY_SIZE);
+            Debug.Assert(rawRecord.Count == CHARACTER_RECORD_BYTE_ARRAY_SIZE);
             List<byte> rawRecordByteList = new List<byte>(rawRecord);
 
             Name = DataChunk.CreateDataChunk(DataChunk.DataFormatType.SimpleString, "Character Name", rawRecordByteList,
@@ -142,7 +142,7 @@ namespace Ultima5Redux.PlayerCharacters
             InnOrParty = (byte) location;
             MonthsSinceStayingAtInn = 0;
             // if the character goes to the Inn while poisoned then they die there immediately
-            if (Stats.Status == CharacterStatus.Poisioned)
+            if (Stats.Status == CharacterStatus.Poisoned)
             {
                 Stats.CurrentHp = 0;
                 Stats.Status = CharacterStatus.Dead;
@@ -158,7 +158,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         public bool Cure()
         {
-            if (Stats.Status != CharacterStatus.Poisioned) return false;
+            if (Stats.Status != CharacterStatus.Poisoned) return false;
             Stats.Status = CharacterStatus.Good;
             return true;
         }

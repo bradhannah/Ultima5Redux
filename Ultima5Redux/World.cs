@@ -319,12 +319,12 @@ namespace Ultima5Redux
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
-            // List<MapUnit> mapUnits = State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(State.TheVirtualMap.CurrentSingleMapReference.MapLocation, 
-            //     xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+            List<MapUnit> mapUnits = State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(State.TheVirtualMap.LargeMapOverUnder, 
+                 xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
 
-            MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
-                State.TheVirtualMap.LargeMapOverUnder, //State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
-                xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+             MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
+                 State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
+
 
             // wall sconces - BORROWED!
             if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
@@ -338,8 +338,9 @@ namespace Ultima5Redux
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED);
             }
 
-            if (magicCarpet != null)
+            if (magicCarpet != null) //SpriteTileReferences.IsMagicCarpet(tileReference.Index))
             {
+
                 // add the carpet to the players inventory and remove it from the map
                 State.PlayerInventory.MagicCarpets++;
                 State.TheVirtualMap.TheMapUnits.ClearMapUnit(magicCarpet);
@@ -848,10 +849,11 @@ namespace Ultima5Redux
 
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
-            bool bPassable = newTileReference.IsWalking_Passable &&
-                             !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index &&
-                               !State.TheTimeOfDay.IsDayLight)
-                             && !State.TheVirtualMap.IsMapUnitOccupiedTile(newPos);
+            bool bPassable = State.TheVirtualMap.IsTileFreeToTravel(new Point2D(newX, newY), false); 
+                // newTileReference.IsWalking_Passable &&
+                //              !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index &&
+                //                !State.TheTimeOfDay.IsDayLight)
+                //              && !State.TheVirtualMap.IsMapUnitOccupiedTile(newPos);
 
             // this is insufficient in case I am in a boat
             if ((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove )
@@ -984,7 +986,6 @@ namespace Ultima5Redux
                        " " + DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT);
             }
 
-            //OutputStreamHelpers.WriteOutput("Gonna board something...");
             bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
             Avatar avatar = State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
             MapUnit boardableMapUnit = State.TheVirtualMap.GetMapUnitOnCurrentTile();
@@ -1010,14 +1011,14 @@ namespace Ultima5Redux
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 case MagicCarpet _:
-                    avatar.BoardMapUnit(boardableMapUnit);
+                    BoardAndCleanFromWorld(boardableMapUnit);
                     break;
                 case Horse _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
                     return getOnFootResponse();
                 // delete or deactivate the horse we just mounted
                 case Horse _:
-                    avatar.BoardMapUnit(boardableMapUnit);
+                    BoardAndCleanFromWorld(boardableMapUnit);
                     break;
                 case Frigate boardableFrigate:
                 {
@@ -1040,46 +1041,78 @@ namespace Ultima5Redux
                     if (boardableFrigate.SkiffsAboard == 0)
                         retStr += DataOvlRef.StringReferences
                             .GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
-                    avatar.BoardMapUnit(boardableFrigate);
+                    BoardAndCleanFromWorld(boardableFrigate);
                     break;
                 }
                 case Skiff _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
-                    return getOnFootResponse();
+                    retStr = getOnFootResponse();
+                    break;
                 case Skiff _:
-                    avatar.BoardMapUnit(boardableMapUnit);
+                    BoardAndCleanFromWorld(boardableMapUnit);
                     break;
             }
 
-            State.TheVirtualMap.TheMapUnits.ClearMapUnit(currentAvatarTileRef);
-
-            // throw new Ultima5ReduxException("Tried to board a thing that is not boardable: "+boardableMapUnitType.FullName);
             return retStr;
         }
 
+        /// <summary>
+        /// Safe method to board a MapUnit and removing it from the world
+        /// </summary>
+        /// <param name="mapUnit"></param>
+        private void BoardAndCleanFromWorld(MapUnit mapUnit)
+        {
+            // board the unit
+            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.BoardMapUnit(mapUnit);
+            // clean it from the world so it no longer appears
+            State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
+        }
+
+        /// <summary>
+        /// eXit the current vehicle you are boarded on
+        /// </summary>
+        /// <param name="bWasSuccessful">did you successfully eXit the vehicle</param>
+        /// <returns>string to print out for user</returns>
         public string Xit(out bool bWasSuccessful)
         {
             bWasSuccessful = true;
-            string retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.XIT)
-                .TrimEnd();
 
-            if (!State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
-                return retStr + " " + DataOvlRef.StringReferences
-                    .GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
+            MapUnit unboardedMapUnit = State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit(State.TheVirtualMap, out string retStr);
 
-            MapUnit unboardedMapUnit = State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit();
-            if (unboardedMapUnit == null) return "FAILED TO UNBOARD";
-            retStr += " " + unboardedMapUnit.BoardXitName.Trim();
-
+            bWasSuccessful = unboardedMapUnit != null;
             return retStr;
         }
 
-        private string UseSpecialItem(SpecialItem spcItem)
+        /// <summary>
+        /// Use a magic carpet from your inventory
+        /// </summary>
+        /// <param name="bWasUsed">was the magic carpet used?</param>
+        /// <returns>string to print and show user</returns>
+        private string UseMagicCarpet(out bool bWasUsed)
         {
+            bWasUsed = true;
+            Debug.Assert((State.PlayerInventory.MagicCarpets > 0));
+
+            if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
+            {
+                bWasUsed = false;
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.ONLY_ON_FOOT);
+            }
+            
+            State.PlayerInventory.MagicCarpets--;
+            MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(State.TheVirtualMap.CurrentPosition.XY, 
+                State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection, out int nIndex);
+            BoardAndCleanFromWorld(carpet);
+            return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.CARPET_BANG);
+        }
+        
+        private string UseSpecialItem(SpecialItem spcItem, out bool bWasUsed)
+        {
+            bWasUsed = true;
             switch (spcItem.ItemType)
             {
                 case SpecialItem.ItemTypeSpriteEnum.Carpet:
-                    return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.CARPET_BANG);
+                    return UseMagicCarpet(out bWasUsed);
                 case SpecialItem.ItemTypeSpriteEnum.Grapple:
                     return "Grapple\n\nYou need to K-limb with it!";
                 case SpecialItem.ItemTypeSpriteEnum.Spyglass:
@@ -1185,7 +1218,7 @@ namespace Ultima5Redux
             bAbleToUseItem = false;
             string retStr;
             if (item.GetType() == typeof(SpecialItem))
-                retStr = UseSpecialItem((SpecialItem) item);
+                retStr = UseSpecialItem((SpecialItem) item, out bAbleToUseItem);
             else if (item.GetType() == typeof(Potion))
                 retStr = "Potion\n\nPoof!";
             else if (item.GetType() == typeof(Scroll))
@@ -1200,6 +1233,9 @@ namespace Ultima5Redux
                 throw new Exception("You are trying to use an item that can't be used: " + item.LongName);
 
             PassTime();
+            // temporary until we determine if there are some items we can't use
+            bAbleToUseItem = true;
+            State.PlayerInventory.RefreshInventory();
             return retStr;
         }
     }

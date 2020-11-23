@@ -814,22 +814,57 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_CheckedBoardedTileCarpet()
         {
-            // World world = new World(SaveDirectory);
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
 
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
             Debug.Assert(avatar.IsAvatarOnBoardedThing);
             Debug.Assert(avatar.CurrentBoardedMapUnit != null);
 
+            int nCarpets = world.State.PlayerInventory.MagicCarpets;
             world.Xit(out bool bWasSuccessful);
+            Debug.Assert(nCarpets == world.State.PlayerInventory.MagicCarpets);
             Debug.Assert(bWasSuccessful);
             world.Board(out bool bWasSuccessfulBoard);
             Debug.Assert(bWasSuccessfulBoard);
+            world.Xit(out bWasSuccessful);
+
+            nCarpets = world.State.PlayerInventory.MagicCarpets;
+            Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
+            world.TryToMove(VirtualMap.Direction.Left, false, false, out World.TryToMoveResult result);
+            world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet);
+            Debug.Assert(bGotACarpet);
+            //Debug.Assert(carpet!=null);
+            Debug.Assert(nCarpets + 1 == world.State.PlayerInventory.MagicCarpets);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
+            Debug.Assert(!bGotACarpet);
+            
+            world.TryToUseAnInventoryItem(
+                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
+                out bool bAbleToUseItem);
+            Debug.Assert(bAbleToUseItem);
+            world.Xit(out bWasSuccessful);
+            Debug.Assert(bWasSuccessful);
+            world.TryToMove(VirtualMap.Direction.Left, false, false, out result);
+            curPos = world.State.TheVirtualMap.CurrentPosition.XY;
+            string retStr = world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
+            Debug.Assert(bGotACarpet);
             
             _ = "";
         }
-        
-        
+
+
+        [Test] public void Test_CheckUseCarpet()
+        {
+            World world = new World(this.ActualSaveDirectory+@"\Bucden3");
+
+            int nCarpets = world.State.PlayerInventory.MagicCarpets;
+            world.TryToUseAnInventoryItem(
+                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
+                out bool bAbleToUseItem);
+            Debug.Assert(bAbleToUseItem);
+            Debug.Assert(world.State.PlayerInventory.MagicCarpets == nCarpets - 1);
+        }
+
         [Test]
         public void Test_CheckedBoardedTileHorse()
         {

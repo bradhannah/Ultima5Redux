@@ -199,6 +199,35 @@ namespace Ultima5Redux.Maps
 
         public MapUnits.MapUnits TheMapUnits { get; }
 
+        public bool IsLandNearby
+        {
+            get
+            {
+                // bool isWalkableMapUnit(Direction direction) =>
+                //     GetTopVisibleMapUnit(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction), true)
+                //         ?.KeyTileReference.IsWalking_Passable ?? false;
+                //
+                // bool isLandWalkable(Direction direction) =>
+                //     GetTileReference(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction))
+                //         .IsWalking_Passable;
+                bool isWalkable(Direction direciton) =>
+                    IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direciton), true);
+                
+                bool bisWalkable = isWalkable(Direction.Down)
+                                       || isWalkable(Direction.Up)
+                                       || isWalkable(Direction.Left)
+                                       || isWalkable(Direction.Right);
+
+
+                // bool bIsMapUnitWalkable = isWalkableMapUnit(Direction.Down)
+                //                           || isWalkableMapUnit(Direction.Up)
+                //                           || isWalkableMapUnit(Direction.Left)
+                //                           || isWalkableMapUnit(Direction.Right);
+
+                return bisWalkable;
+            }
+        }
+
         public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
         public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
         public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
@@ -488,15 +517,30 @@ namespace Ultima5Redux.Maps
             if (xy.X < 0 || xy.Y < 0) return false;
 
             bool bIsAvatarTile = CurrentPosition.XY == xy;
-            bool bIsNpcTile = IsMapUnitOccupiedTile(xy);
+
+            // get the regular tile reference AND get the map unit (NPC, frigate etc)
+            // we need to evaluate both
             TileReference tileReference = GetTileReference(xy);
+            MapUnit mapUnit = GetTopVisibleMapUnit(xy, true);
+
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
             bool bStaircaseWalkable = !(bNoStaircases && _tileReferences.IsStaircase(tileReference.Index));
-            bool bIsWalkable = tileReference.IsWalking_Passable && bStaircaseWalkable;
 
+            // if it's nighttime then the portcullises go down and you cannot pass
+            bool bPortcullisDown = _tileReferences.GetTileNumberByName("BrickWallArchway") == tileReference.Index &&
+                                     !_timeOfDay.IsDayLight;
+
+            Avatar.AvatarState currentAvatarState = TheMapUnits.AvatarMapUnit.CurrentAvatarState;
+            
+            // we check both the tile reference below as well as the map unit that occupies the tile
+            bool bIsWalkable = (tileReference.IsPassable(currentAvatarState) && bStaircaseWalkable)
+                             || (mapUnit?.KeyTileReference.IsPassable(currentAvatarState) ?? false)
+                             && !bPortcullisDown;
+            
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
-            return !bIsNpcTile && bIsWalkable && !bIsAvatarTile;
+            // return !bIsNpcTile && bIsWalkable && !bIsAvatarTile;
+            return bIsWalkable && !bIsAvatarTile;
         }
 
         /// <summary>
@@ -1029,6 +1073,7 @@ namespace Ultima5Redux.Maps
 
         /// <summary>
         ///     Create a list of the free spaces surrounding around the Avatar suitable for something to be generated onto
+        ///     Uses all 8 directions
         /// </summary>
         /// <returns></returns>
         private List<Point2D> GetFreeSpacesSurroundingAvatar()

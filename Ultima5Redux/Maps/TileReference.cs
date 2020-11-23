@@ -1,5 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.Maps
 {
@@ -52,13 +54,32 @@ namespace Ultima5Redux.Maps
 
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
-
         // ReSharper disable once MemberCanBePrivate.Global
         public bool IsSolidSpriteButNotDoor => !IsWalking_Passable && !IsOpenable;
 
         public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC;
 
         public bool IsSolidSprite => !IsWalking_Passable;
+
+        public bool IsPassable(Avatar.AvatarState avatarState)
+        {
+            switch (avatarState)
+            {
+                case Avatar.AvatarState.Horse:
+                case Avatar.AvatarState.Regular:
+                    return IsWalking_Passable;
+                case Avatar.AvatarState.Carpet:
+                    return IsCarpet_Passable;
+                case Avatar.AvatarState.Frigate:
+                    return IsBoat_Passable;
+                case Avatar.AvatarState.Skiff:
+                    return IsSkiff_Passable;
+                case Avatar.AvatarState.Hidden:
+                    return false;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
+            }
+        }
 
         public override string ToString()
         {

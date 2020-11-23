@@ -155,6 +155,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public void RefreshInventory()
         {
+            AllItems.Clear();
+            ReadyItems.Clear();
+            UseItems.Clear();
+            
             _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", _gameStateByteArray, 0x209,
                 sizeof(byte));
             _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", _gameStateByteArray, 0x20A,

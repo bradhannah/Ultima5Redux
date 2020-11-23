@@ -177,6 +177,11 @@ namespace Ultima5Redux.MapUnits
             // by default the thing doesn't move on it's own
         }
 
+        public virtual bool CanBeExited(VirtualMap virtualMap)
+        {
+            return true;
+        }
+
         // ReSharper disable once UnusedMember.Global
         public string GetDebugDescription(TimeOfDay timeOfDay)
         {

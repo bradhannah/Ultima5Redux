@@ -273,7 +273,8 @@ namespace Ultima5Redux.MapUnits
                 {
                     if (bCheckBaseToo && mapUnit.GetType().BaseType == typeof(T)) return (T) mapUnit;
                     // the map unit is at the right position AND is the correct type
-                    return mapUnit.GetType() == typeof(T) ? (T) mapUnit : null;
+                    if (mapUnit.GetType() == typeof(T)) return (T) mapUnit;
+                    //return mapUnit.GetType() == typeof(T) ? (T) mapUnit : null;
                 }
             }
 
@@ -601,7 +602,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="nIndex"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Local
-        private MagicCarpet CreateMagicCarpet(Point2D xy, VirtualMap.Direction direction, out int nIndex)
+        internal MagicCarpet CreateMagicCarpet(Point2D xy, VirtualMap.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
 
@@ -717,10 +718,25 @@ namespace Ultima5Redux.MapUnits
         ///     Makes the Avatar exit the current MapUnit they are occupying
         /// </summary>
         /// <returns>The MapUnit object they were occupying - you need to re-add it the map after</returns>
-        public MapUnit XitCurrentMapUnit()
+        public MapUnit XitCurrentMapUnit(VirtualMap virtualMap, out string retStr)
         {
-            // we can't exit something unless the Avatar has boarded something
-            Debug.Assert(AvatarMapUnit.IsAvatarOnBoardedThing);
+            retStr = _dataOvlReference.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.XIT)
+                .TrimEnd();
+
+            if (!virtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
+            {
+                retStr += " " + _dataOvlReference.StringReferences
+                    .GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
+                return null;
+            }
+
+            if (!AvatarMapUnit.CurrentBoardedMapUnit.CanBeExited(virtualMap))
+            {
+                retStr += "\n" + _dataOvlReference.StringReferences
+                    .GetString(DataOvlReference.SleepTransportStrings.N_NO_LAND_NEARBY_BANG_N).Trim();
+                return null;
+            }
+            
             MapUnit unboardedMapUnit = AvatarMapUnit.UnboardedAvatar();
             Debug.Assert(unboardedMapUnit != null);
 
@@ -731,7 +747,7 @@ namespace Ultima5Redux.MapUnits
             unboardedMapUnit.KeyTileReference = unboardedMapUnit.NonBoardedTileReference;
 
             AddNewMapUnit(_currentMapType, unboardedMapUnit);
-
+            retStr += " " + unboardedMapUnit.BoardXitName;
             return unboardedMapUnit;
         }
     }
