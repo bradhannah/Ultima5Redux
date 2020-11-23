@@ -830,7 +830,7 @@ namespace Ultima5Redux
             //int newTile = GetTileNumber(newX, newY);
             TileReference newTileReference = State.TheVirtualMap.GetTileReference(newX, newY);
 
-            if (newTileReference.Index == SpriteTileReferences.GetTileNumberByName("BrickFloorHole"))
+            if (newTileReference.Index == SpriteTileReferences.GetTileNumberByName("BrickFloorHole") && !State.TheVirtualMap.IsAvatarRidingCarpet)
             {
                 State.TheVirtualMap.UseStairs(newPos, true);
                 tryToMoveResult = TryToMoveResult.Fell;

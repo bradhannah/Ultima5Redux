@@ -728,6 +728,7 @@ namespace Ultima5Redux.MapUnits
             unboardedMapUnit.MapLocation = _currentLocation;
             unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
             unboardedMapUnit.Direction = AvatarMapUnit.CurrentDirection;
+            unboardedMapUnit.KeyTileReference = unboardedMapUnit.NonBoardedTileReference;
 
             AddNewMapUnit(_currentMapType, unboardedMapUnit);
 

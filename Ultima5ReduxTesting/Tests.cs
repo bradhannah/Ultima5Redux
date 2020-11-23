@@ -822,6 +822,9 @@ namespace Ultima5ReduxTesting
             Debug.Assert(avatar.CurrentBoardedMapUnit != null);
 
             world.Xit(out bool bWasSuccessful);
+            Debug.Assert(bWasSuccessful);
+            world.Board(out bool bWasSuccessfulBoard);
+            Debug.Assert(bWasSuccessfulBoard);
             
             _ = "";
         }
