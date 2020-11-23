@@ -506,6 +506,11 @@ namespace Ultima5Redux.Maps
             return null;
         }
 
+        public bool IsNPCInBed(NonPlayerCharacter npc)
+        {
+            return GetTileReference(npc.MapUnitPosition.XY).Index == _tileReferences.GetTileNumberByName("LeftBed");
+        }
+        
         /// <summary>
         ///     Is the particular tile eligible to be moved onto
         /// </summary>
