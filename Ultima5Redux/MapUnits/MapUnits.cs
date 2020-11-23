@@ -736,10 +736,10 @@ namespace Ultima5Redux.MapUnits
                     .GetString(DataOvlReference.SleepTransportStrings.N_NO_LAND_NEARBY_BANG_N).Trim();
                 return null;
             }
-            
+
             MapUnit unboardedMapUnit = AvatarMapUnit.UnboardedAvatar();
             Debug.Assert(unboardedMapUnit != null);
-
+            
             // set the current positions to the equal the Avatar's as he exits the vehicle 
             unboardedMapUnit.MapLocation = _currentLocation;
             unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
@@ -748,6 +748,20 @@ namespace Ultima5Redux.MapUnits
 
             AddNewMapUnit(_currentMapType, unboardedMapUnit);
             retStr += " " + unboardedMapUnit.BoardXitName;
+
+            // if the Avatar is on a frigate then we will check for Skiffs and exit on a skiff instead
+            if (unboardedMapUnit is Frigate avatarFrigate)
+            {
+                Debug.Assert(avatarFrigate != null, nameof(avatarFrigate) + " != null");
+                // if we have skiffs, AND do not have land close by then we deploy a skiff
+                if (avatarFrigate.SkiffsAboard > 0 && !virtualMap.IsLandNearby())
+                {
+                    Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int nIndex);
+                    AvatarMapUnit.BoardMapUnit(skiff);
+                    ClearMapUnit(skiff);
+                }
+            }
+            
             return unboardedMapUnit;
         }
     }

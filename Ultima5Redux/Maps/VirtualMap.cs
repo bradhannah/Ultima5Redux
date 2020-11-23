@@ -199,34 +199,23 @@ namespace Ultima5Redux.Maps
 
         public MapUnits.MapUnits TheMapUnits { get; }
 
-        public bool IsLandNearby
-        {
-            get
-            {
-                // bool isWalkableMapUnit(Direction direction) =>
-                //     GetTopVisibleMapUnit(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction), true)
-                //         ?.KeyTileReference.IsWalking_Passable ?? false;
-                //
-                // bool isLandWalkable(Direction direction) =>
-                //     GetTileReference(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction))
-                //         .IsWalking_Passable;
-                bool isWalkable(Direction direciton) =>
-                    IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direciton), true);
-                
-                bool bisWalkable = isWalkable(Direction.Down)
-                                       || isWalkable(Direction.Up)
-                                       || isWalkable(Direction.Left)
-                                       || isWalkable(Direction.Right);
+        public bool IsLandNearby() => IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
+        public bool IsLandNearby(Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Down), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Up), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Left), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Right), bNoStairCases, avatarState);
 
-                // bool bIsMapUnitWalkable = isWalkableMapUnit(Direction.Down)
-                //                           || isWalkableMapUnit(Direction.Up)
-                //                           || isWalkableMapUnit(Direction.Left)
-                //                           || isWalkableMapUnit(Direction.Right);
+        public bool IsLandNearby(Avatar.AvatarState avatarState) => IsTileFreeToTravelLocal(Direction.Down, avatarState) 
+                                                                    || IsTileFreeToTravelLocal(Direction.Up, avatarState)
+                                                                    || IsTileFreeToTravelLocal(Direction.Left, avatarState) 
+                                                                    || IsTileFreeToTravelLocal(Direction.Right, avatarState);
 
-                return bisWalkable;
-            }
-        }
+        private bool IsTileFreeToTravelLocal(Direction direction, Avatar.AvatarState avatarState) => 
+            IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction), true, avatarState);
+        private bool IsTileFreeToTravelLocal(Direction direction, Point2D xy, Avatar.AvatarState avatarState) => 
+            IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, direction), true, avatarState);
 
         public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
         public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
@@ -510,14 +499,17 @@ namespace Ultima5Redux.Maps
         {
             return GetTileReference(npc.MapUnitPosition.XY).Index == _tileReferences.GetTileNumberByName("LeftBed");
         }
-        
+
+        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) => 
+            IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
+
         /// <summary>
         ///     Is the particular tile eligible to be moved onto
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="bNoStaircases"></param>
         /// <returns>true if you can move onto the tile</returns>
-        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases)
+        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
         {
             if (xy.X < 0 || xy.Y < 0) return false;
 
@@ -535,12 +527,10 @@ namespace Ultima5Redux.Maps
             // if it's nighttime then the portcullises go down and you cannot pass
             bool bPortcullisDown = _tileReferences.GetTileNumberByName("BrickWallArchway") == tileReference.Index &&
                                      !_timeOfDay.IsDayLight;
-
-            Avatar.AvatarState currentAvatarState = TheMapUnits.AvatarMapUnit.CurrentAvatarState;
             
             // we check both the tile reference below as well as the map unit that occupies the tile
-            bool bIsWalkable = (tileReference.IsPassable(currentAvatarState) && bStaircaseWalkable)
-                             || (mapUnit?.KeyTileReference.IsPassable(currentAvatarState) ?? false)
+            bool bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable)
+                             || (mapUnit?.KeyTileReference.IsPassable(forcedAvatarState) ?? false)
                              && !bPortcullisDown;
             
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it

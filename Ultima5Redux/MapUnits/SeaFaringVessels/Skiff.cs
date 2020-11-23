@@ -37,7 +37,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Skiff;
 
-        public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby);
+        public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby(Avatar.AvatarState.Regular));
 
         public override string BoardXitName => DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();

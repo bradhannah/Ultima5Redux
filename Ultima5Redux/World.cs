@@ -850,10 +850,6 @@ namespace Ultima5Redux
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
             bool bPassable = State.TheVirtualMap.IsTileFreeToTravel(new Point2D(newX, newY), false); 
-                // newTileReference.IsWalking_Passable &&
-                //              !(SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == newTileReference.Index &&
-                //                !State.TheTimeOfDay.IsDayLight)
-                //              && !State.TheVirtualMap.IsMapUnitOccupiedTile(newPos);
 
             // this is insufficient in case I am in a boat
             if ((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove )
