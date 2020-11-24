@@ -756,14 +756,20 @@ namespace Ultima5Redux.MapUnits
                 // if we have skiffs, AND do not have land close by then we deploy a skiff
                 if (avatarFrigate.SkiffsAboard > 0 && !virtualMap.IsLandNearby())
                 {
-                    Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int nIndex);
-                    AvatarMapUnit.BoardMapUnit(skiff);
+                    MakeAndBoardSkiff();
                     avatarFrigate.SkiffsAboard--;
-                    ClearMapUnit(skiff);
                 }
             }
             
             return unboardedMapUnit;
+        }
+
+        public Skiff MakeAndBoardSkiff()
+        {
+            Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int nIndex);
+            AvatarMapUnit.BoardMapUnit(skiff);
+            ClearMapUnit(skiff);
+            return skiff;
         }
     }
 }

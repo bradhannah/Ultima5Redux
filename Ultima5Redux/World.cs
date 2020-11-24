@@ -26,7 +26,8 @@ namespace Ultima5Redux
         // ReSharper disable once UnusedMember.Global
         public enum SpecialLookCommand { None, Sign, GemCrystal }
 
-        public enum TryToMoveResult { Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell }
+        public enum TryToMoveResult { Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell, 
+            ShipBreakingUp, ShipDestroyed }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         // ReSharper disable once UnusedMember.Local
@@ -742,9 +743,10 @@ namespace Ultima5Redux
         /// <param name="bKlimb">is the avatar K-limbing?</param>
         /// <param name="bFreeMove">is "free move" on?</param>
         /// <param name="tryToMoveResult">outputs the result of the attempt</param>
+        /// <param name="bManualMovement">true if movement is manual</param>
         /// <returns>output string (may be empty)</returns>
         public string TryToMove(VirtualMap.Direction direction, bool bKlimb, bool bFreeMove,
-            out TryToMoveResult tryToMoveResult)
+            out TryToMoveResult tryToMoveResult, bool bManualMovement = true)
         {
             string retStr;
             int nTilesPerMapRow = State.TheVirtualMap.NumberOfRowTiles;
@@ -800,8 +802,24 @@ namespace Ultima5Redux
                              DataOvlRef.StringReferences.GetDirectionString(direction);
                     break;
                 case Avatar.AvatarState.Frigate:
-                    retStr = DataOvlRef.StringReferences.GetDirectionString(direction) +
-                             DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROWING);
+                    if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.AreSailsHoisted)
+                    {
+                        if (bManualMovement)
+                        {
+                            retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HEAD) +
+                                DataOvlRef.StringReferences.GetDirectionString(direction);
+                        }
+                        else
+                        {
+                            retStr = DataOvlRef.StringReferences.GetDirectionString(direction);
+                        }
+                    }
+                    else
+                    {
+                        retStr = DataOvlRef.StringReferences.GetDirectionString(direction) +
+                                 DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROWING);
+                    }
+
                     break;
                 case Avatar.AvatarState.Skiff:
                     retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) +
@@ -857,13 +875,54 @@ namespace Ultima5Redux
                 State.TheVirtualMap.CurrentPosition.X = newX;
                 State.TheVirtualMap.CurrentPosition.Y = newY;
             }
-            else
+            else // it is not passable
             {
-                tryToMoveResult = TryToMoveResult.Blocked;
+                Avatar avatar = State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+                if (!bManualMovement && avatar.AreSailsHoisted)
+                {
+                    Random ran = new Random();
+                    int nDamage = ran.Next(5, 15);
+
+                    Debug.Assert(avatar.CurrentBoardedMapUnit is Frigate);
+                    Frigate frigate = avatar.CurrentBoardedMapUnit as Frigate;
+                    Debug.Assert(frigate != null, nameof(frigate) + " != null");
+
+                    // if the wind is blowing the same direction then we double the damage
+                    if (avatar.CurrentDirection == State.WindDirection) nDamage *= 2;
+                    // decrement the damage from the frigate
+                    frigate.Hitpoints -= nDamage; 
+                    
+                    retStr += "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.BREAKING_UP);
+                    // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
+                    if (frigate.Hitpoints <= 0)
+                    {
+                        tryToMoveResult = TryToMoveResult.ShipDestroyed;
+                        // destroy the ship and leave board the Avatar onto a skiff
+                        retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings2.SHIP_SUNK_BANG_N);
+                        retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings2.ABANDON_SHIP_BANG_N).TrimEnd();
+
+                        MapUnit newFrigate = State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit(State.TheVirtualMap, out string _); 
+                        State.TheVirtualMap.TheMapUnits.ClearMapUnit(newFrigate);
+                        State.TheVirtualMap.TheMapUnits.MakeAndBoardSkiff();
+                    }
+                    else
+                    {
+                        if (frigate.Hitpoints <= 10)
+                        {
+                            retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HULL_WEAK);
+                        }
+                        tryToMoveResult = TryToMoveResult.ShipBreakingUp;
+                    }
+                }
+                else
+                {
+                    tryToMoveResult = TryToMoveResult.Blocked;
+                    retStr += "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED);
+                }
+
                 // if it's not passable then we have no more business here
                 AdvanceTime(N_DEFAULT_ADVANCE_TIME);
-                return retStr.TrimEnd() + "\n" +
-                       DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED);
+                return retStr;
             }
 
             // the world is a circular - so when you get to the end, start over again
@@ -1255,6 +1314,7 @@ namespace Ultima5Redux
                    DataOvlRef.StringReferences.GetString(DataOvlReference.YellingStrings.FURL_BANG_N).Trim();
         }
 
+        
         public void YellWord(string word)
         {
             

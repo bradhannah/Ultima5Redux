@@ -75,8 +75,10 @@ namespace Ultima5Redux.MapUnits
         internal AvatarState CurrentAvatarState { get; private set; }
         private VirtualMap.Direction PreviousDirection { get; set; } = VirtualMap.Direction.None;
         public VirtualMap.Direction CurrentDirection { get; private set; }
-        public bool AreSailsUp { get; set; } = false;
 
+        public bool AreSailsHoisted => IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate &&
+                                       frigate.SailsHoisted;
+        
         /// <summary>
         ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
         ///     the current MapUnits object
@@ -168,7 +170,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Show the Avatar that isn't boarded on top of anything
         /// </summary>
-        public MapUnit UnboardedAvatar()
+        internal MapUnit UnboardedAvatar()
         {
             KeyTileReference = NonBoardedTileReference; 
             CurrentAvatarState = AvatarState.Regular;

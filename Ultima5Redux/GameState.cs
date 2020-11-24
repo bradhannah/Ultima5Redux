@@ -30,6 +30,8 @@ namespace Ultima5Redux
         private readonly int _nInitialY;
         private readonly LargeMap.Maps _initialMap;
         
+        public VirtualMap.Direction WindDirection { get; set; } = VirtualMap.Direction.None;
+
         /// <summary>
         /// Amount of food Avatar has 
         /// </summary>

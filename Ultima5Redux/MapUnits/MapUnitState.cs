@@ -57,7 +57,7 @@ namespace Ultima5Redux.MapUnits
         public byte X { get; set; }
         public byte Y { get; set; }
         public byte Floor { get; set; }
-        private byte Depends1 { get; set; }
+        internal byte Depends1 { get; set; }
         private byte Depends2 { get; set; }
         internal byte Depends3 { get; set; }
         public TileReference Tile1Ref { get; internal set; }

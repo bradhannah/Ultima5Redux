@@ -34,23 +34,11 @@ namespace Ultima5Redux.Data
         {
             Unused = -1, TALK_COMPRESSED_WORDS, LOCATION_NAME_INDEXES, LOCATION_NAMES, PHRASES_CONVERSATION,
             LOCATIONS_X, LOCATIONS_Y, TRAVEL, WORLD, CHIT_CHAT, KEYPRESS_COMMANDS,
-
-            //VISION1,
             VISION2, OPENING_THINGS_STUFF, KLIMBING, GET_THINGS, SPECIAL_ITEM_NAMES, SPECIAL_ITEM_NAMES2, WEAR_USE_ITEM,
             SHARDS, WORDS_OF_POWER, POTIONS, SPELLS, LONG_ARMOUR, SHORT_ARMOUR,
-
-            //SHIELD_DEFENSE,
-            //CHEST_DEFENSE,
-            //HELM_DEFENSE,
-            //RING_AMULET_DEFENSE,
-            //WEAPON_DEFENSE
             DEFENSE_VALUES, ATTACK_VALUES, ATTACK_RANGE_VALUES, SPELL_ATTACK_RANGE, EQUIP_INDEXES, REQ_STRENGTH_EQUIP,
             EQUIPPING, ZSTATS, SLEEP_TRANSPORT, REAGENTS, EXCLAIMS, MOON_PHASES, THINGS_I_FIND, STORE_NAMES,
             SHOPPE_KEEPER_NAMES,
-
-            //ARMOUR_ACCESSORY_BASE_PRICES,
-            //ARMOUR_BASE_PRICES,
-            //WEAPON_BASE_PRICES,
             EQUIPMENT_BASE_PRICE, WEAPONS_SOLD_BY_MERCHANTS, SHOPPE_KEEPER_NOT_ENOUGH_MONEY, SHOPPE_KEEPER_DO_YOU_WANT,
             SHOPPE_KEEPER_WHATS_FOR_SALE, SHOPPE_KEEPER_SELLING, SHOPPE_KEEPER_BLACKSMITH_WE_HAVE,
             SHOPPE_KEEPER_BLACKSMITH_HELLO, SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM, SHOPPE_KEEPER_GENERAL,
@@ -61,7 +49,7 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_HEALER2, HEALER_HEAL_PRICES, HEALER_CURE_PRICES, HEALER_RESURRECT_PRICES, X_DOCKS, Y_DOCKS,
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
-            YELLING
+            YELLING, WORLD2
         }
 
         public enum Equipment
@@ -707,6 +695,26 @@ namespace Ultima5Redux.Data
             BADGE_N_N, BADGE_WORN_BANG_N, BOX_N_HOW_N, FAILED_BANG_N, SPACE_OF_LORD_BRITISH_DOT_N
         }
 
+        public enum WorldStrings2
+        {
+            SHIP_SUNK_BANG_N, ABANDON_SHIP_BANG_N, DROWNING_BANGS_N, N_WHIRLPOOL_BANG_N, STAR_BOOM_BANG_STAR_N_N,
+            CAUGHT_BANG_N_N_THE_TROLLS_DEMAND_A_SP, SP_GP_TOLL_BANG_N_N_DOST_THOU_PAY_Q, 
+            N_THOU_SPIETH_TROLLS_UNDER_THE_BRIDGE_BANG_N_N, SP_SNEAKS_ACROSS, N_N, TROLLS_EVADED_BANG_N, BOTTOMLESS_N_SP_PIT_SP
+        }
+        // [0] = {string} "Ship sunk!\n"
+        // [1] = {string} "Abandon ship!\n"
+        // [2] = {string} "DROWNING!!!\n"
+        // [3] = {string} "\nWHIRLPOOL!\n"
+        // [4] = {string} "\nAttacked!\n"
+        // [5] = {string} "* BOOOM! *\n\n"
+        // [6] = {string} "Caught!\n\nThe trolls demand a "
+        // [7] = {string} " gp toll!\n\nDost thou pay?"
+        // [8] = {string} "\nThou spieth trolls under the bridge!\n\n"
+        // [9] = {string} " sneaks across"
+        // [10] = {string} "\n\n"
+        // [11] = {string} "Trolls evaded!\n"
+        // [12] = {string} "BOTTOMLESS\n   PIT    "
+        
         public enum WorldStrings
         {
             RIDE = 0, FLY, ROW, HEAD, NORTH, SOUTH, EAST, WEST, HULL_WEAK, ROWING, BREAKING_UP, COLISSION, DOCKED,
@@ -1033,16 +1041,12 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Words of Power", 0x44ad, 0x3A, 0, DataChunkName.WORDS_OF_POWER);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Yelling strings", 0x452A, 0x20, 0, DataChunkName.YELLING);
-            // SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.WORDS_OF_POWER).GetChunkAsStringList();
-            // SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.YELLING).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Sleeping, transportation stuff, others, ",
                 0x41e4, 0x21a, 0, DataChunkName.SLEEP_TRANSPORT);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Exclamations!, ", 0x454b, 0x27A, 0,
                 DataChunkName.EXCLAIMS);
 
-            // _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Word of power strings", 0x47A4, 0x96, 0,
-            //     DataChunkName.WORDS_OF_POWER);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Word of power locations (PERHAPS?!?)", 0x4512,
                 0x10);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
@@ -1077,8 +1081,12 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x54e1, 0x83);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x5564, 0x49);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Nil", 0x55Ac, 0x1470);
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x6a1c, 0xce);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x6aea, 0x21d);
+            
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x6aea, 0xec, 0, DataChunkName.WORLD2);
+            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.WORLD2).GetChunkAsStringList();
+
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Stat lines (z-stats?)", 0x6d08, 0x43);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Ultima IV", 0x6d48, 0xb);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Stat lines (z-stats?)", 0x6d08, 0x43);

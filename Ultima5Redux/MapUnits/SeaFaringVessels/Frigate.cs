@@ -57,9 +57,15 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
-
+    
         public override string BoardXitName =>
             DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
+
+        public int Hitpoints
+        {
+            get => this.TheMapUnitState.Depends1;
+            set => this.TheMapUnitState.Depends1 = (byte)(value < 0 ? 0 : (value > 99 ? 99 : value));
+        }
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
             PlayerCharacterRecords records)

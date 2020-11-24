@@ -182,6 +182,11 @@ namespace Ultima5Redux.Data
                     typeof(DataOvlReference.WordsOfPower),
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORDS_OF_POWER).GetChunkAsStringList()
                 },
+                {
+                    typeof(DataOvlReference.WorldStrings2),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORLD2).GetChunkAsStringList()
+                },
+                
                 
             };
         }
