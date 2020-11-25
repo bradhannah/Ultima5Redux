@@ -52,6 +52,8 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public int SpeedFactor;
 
+        [DataMember] public bool IsHorse_Passable;
+
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
         // ReSharper disable once MemberCanBePrivate.Global
@@ -66,6 +68,7 @@ namespace Ultima5Redux.Maps
             switch (avatarState)
             {
                 case Avatar.AvatarState.Horse:
+                    return IsHorse_Passable;
                 case Avatar.AvatarState.Regular:
                     return IsWalking_Passable;
                 case Avatar.AvatarState.Carpet:
