@@ -27,7 +27,7 @@ namespace Ultima5Redux
         public enum SpecialLookCommand { None, Sign, GemCrystal }
 
         public enum TryToMoveResult { Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell, 
-            ShipBreakingUp, ShipDestroyed }
+            ShipBreakingUp, ShipDestroyed, MovedWithDamage }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         // ReSharper disable once UnusedMember.Local
@@ -950,9 +950,25 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.IsLargeMap)
             {
                 AdvanceTime(SpriteTileReferences.GetMinuteIncrement(newTileReference.Index));
-                tryToMoveResult = TryToMoveResult.Moved;
-                return retStr.TrimEnd() + "\n" +
-                       SpriteTileReferences.GetSlowMovementString(newTileReference.Index).TrimEnd();
+                
+                retStr = retStr.TrimEnd() + "\n" +
+                    SpriteTileReferences.GetSlowMovementString(newTileReference.Index).TrimEnd();
+                
+                // if you are on the carpet or skiff and hit rough seas then we injure the players and report it back 
+                if ((State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState == Avatar.AvatarState.Carpet ||
+                    State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState == Avatar.AvatarState.Skiff) && 
+                    newTileReference.Index == 1)
+                {
+                    State.CharacterRecords.RoughSeasInjure();
+                    tryToMoveResult = TryToMoveResult.MovedWithDamage;
+                    retStr += "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROUGH_SEAS);
+                }
+                else
+                {
+                    tryToMoveResult = TryToMoveResult.Moved;
+                }
+
+                return retStr;
             }
 
             tryToMoveResult = TryToMoveResult.Moved;

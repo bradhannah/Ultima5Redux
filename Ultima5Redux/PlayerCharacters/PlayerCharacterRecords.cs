@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.Data;
@@ -194,6 +195,18 @@ namespace Ultima5Redux.PlayerCharacters
         {
             Debug.Assert(!(TotalPartyMembers() > MAX_PARTY_MEMBERS), "You have more party members than you should.");
             return TotalPartyMembers() == MAX_PARTY_MEMBERS;
+        }
+
+        /// <summary>
+        /// Injures all party members due to rough sea
+        /// </summary>
+        public void RoughSeasInjure()
+        {
+            Random ran = new Random();
+            foreach (PlayerCharacterRecord record in Records)
+            {
+                record.Stats.CurrentHp -= ran.Next(1, 9);
+            }
         }
     }
 }

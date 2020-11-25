@@ -243,7 +243,7 @@ namespace Ultima5Redux.PlayerCharacters
             public int CurrentHp
             {
                 get => Status == CharacterStatus.Dead ? 0 : _currentHp;
-                set => _currentHp = value;
+                set => _currentHp = Math.Max(0,value);
             }
 
             public int MaximumHp { get; set; }
