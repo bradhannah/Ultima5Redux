@@ -91,7 +91,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         private void AddWeapon(Weapon.WeaponTypeEnum weapon, Weapon.WeaponTypeSpriteEnum weaponSprite,
             DataOvlReference.Equipment equipment)
         {
-            Weapon newWeapon = new Weapon(weapon, weaponSprite, equipment, DataOvlRef, GameStateByteArray);
+            Weapon newWeapon = new Weapon(weapon, weaponSprite, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
             Items.Add(weapon, newWeapon);
             ItemsFromEquipment.Add(equipment, newWeapon);
         }

@@ -26,8 +26,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
 
         public Weapon(WeaponTypeEnum weapon, WeaponTypeSpriteEnum sprite, DataOvlReference.Equipment equipment,
-            DataOvlReference dataOvlRef, IReadOnlyList<byte> gameStateByteArray)
-            : base(equipment, dataOvlRef, gameStateByteArray, (int) weapon, (int) sprite)
+            DataOvlReference dataOvlRef, int nQuantity)
+            : base(equipment, dataOvlRef, nQuantity, (int) weapon, (int) sprite)
         {
             IsAmmo = equipment == DataOvlReference.Equipment.Quarrels || equipment == DataOvlReference.Equipment.Arrows;
             IsTwoHanded = equipment == DataOvlReference.Equipment.TwoHAxe ||

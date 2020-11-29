@@ -32,7 +32,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.SEXTANT));
             Items[SpecialItem.ItemTypeSpriteEnum.PocketWatch] = new SpecialItem(
                 SpecialItem.ItemTypeSpriteEnum.PocketWatch,
-                //gameStateByteArray[(int)SpecialItem.ItemTypeEnum.PocketWatch],
                 1,
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.POCKET_WATCH),
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.POCKET_WATCH));

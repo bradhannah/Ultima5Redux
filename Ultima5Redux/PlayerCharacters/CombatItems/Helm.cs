@@ -12,8 +12,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public HelmEnum HelmType;
 
         public Helm(HelmEnum helmType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef,
-            List<byte> gameStateByteArray)
-            : base(equipment, dataOvlRef, gameStateByteArray, (int) helmType, HELM_SPRITE)
+            int nQuantity)
+            : base(equipment, dataOvlRef, nQuantity, (int) helmType, HELM_SPRITE)
         {
             HelmType = helmType;
         }

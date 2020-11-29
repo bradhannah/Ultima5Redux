@@ -13,8 +13,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public readonly DataOvlReference.Equipment SpecificEquipment;
 
         protected CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef,
-            IReadOnlyList<byte> gameStateRef, int nOffset, int nSpriteNum)
-            : base(gameStateRef[nOffset], GetEquipmentString(dataOvlRef, (int) specificEquipment),
+            int nQuantity, int nOffset, int nSpriteNum)
+            : base(nQuantity, GetEquipmentString(dataOvlRef, (int) specificEquipment),
                 GetEquipmentString(dataOvlRef, (int) specificEquipment), nSpriteNum)
         {
             AttackStat = GetAttack(dataOvlRef, (int) specificEquipment);

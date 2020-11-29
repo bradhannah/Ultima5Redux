@@ -11,8 +11,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public AmuletEnum AmuletType;
 
         public Amulet(AmuletEnum amuletType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef,
-            List<byte> gameStateByteArray)
-            : base(equipment, dataOvlRef, gameStateByteArray, (int) amuletType, AMULET_SPRITE)
+            int nQuantity)
+            : base(equipment, dataOvlRef, nQuantity, (int) amuletType, AMULET_SPRITE)
         {
             AmuletType = amuletType;
         }

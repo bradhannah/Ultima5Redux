@@ -143,7 +143,6 @@
     <Compile Include="PlayerCharacters\CombatItems\CombatItems.cs" />
     <Compile Include="PlayerCharacters\CombatItems\Helm.cs" />
     <Compile Include="PlayerCharacters\CombatItems\Ring.cs" />
-    <Compile Include="PlayerCharacters\CombatItems\Shield.cs" />
     <Compile Include="PlayerCharacters\CombatItems\Weapon.cs" />
     <Compile Include="PlayerCharacters\CombatItems\Weapons.cs" />
     <Compile Include="PlayerCharacters\Inventory\Inventory.cs" />

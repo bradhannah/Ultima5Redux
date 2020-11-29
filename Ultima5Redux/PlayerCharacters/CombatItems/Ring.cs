@@ -11,8 +11,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public RingEnum RingType;
 
         public Ring(RingEnum ringType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef,
-            List<byte> gameStateByteArray)
-            : base(equipment, dataOvlRef, gameStateByteArray, (int) ringType, RING_SPRITE)
+            int nQuantity)
+            : base(equipment, dataOvlRef, nQuantity, (int) ringType, RING_SPRITE)
         {
             RingType = ringType;
         }

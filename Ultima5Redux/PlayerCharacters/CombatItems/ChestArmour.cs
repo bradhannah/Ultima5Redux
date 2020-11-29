@@ -16,8 +16,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public ChestArmourEnum ChestArmourType;
 
         public ChestArmour(ChestArmourEnum chestArmourType, DataOvlReference.Equipment equipment,
-            DataOvlReference dataOvlRef, List<byte> gameStateByteArray)
-            : base(equipment, dataOvlRef, gameStateByteArray, (int) chestArmourType, CHEST_ARMOUR_SPRITE)
+            DataOvlReference dataOvlRef, int nQuantity)
+            : base(equipment, dataOvlRef, nQuantity, (int) chestArmourType, CHEST_ARMOUR_SPRITE)
         {
             ChestArmourType = chestArmourType;
         }

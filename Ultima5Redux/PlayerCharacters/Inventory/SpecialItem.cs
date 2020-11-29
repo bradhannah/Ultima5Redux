@@ -22,14 +22,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ItemType = itemType;
         }
 
-        public override bool HideQuantity
-        {
-            get
-            {
-                if (ItemType == ItemTypeSpriteEnum.Carpet) return false;
-                return true;
-            }
-        }
+        public override bool HideQuantity => ItemType != ItemTypeSpriteEnum.Carpet;
 
         public override bool IsSellable => false;
 
