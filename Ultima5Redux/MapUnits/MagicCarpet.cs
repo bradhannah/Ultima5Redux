@@ -33,6 +33,16 @@ namespace Ultima5Redux.MapUnits
                 {VirtualMap.Direction.Right, "RidingMagicCarpetRight"},
                 {VirtualMap.Direction.Up, "RidingMagicCarpetRight"}
             };
+        
+        protected override Dictionary<VirtualMap.Direction, string> FourDirectionToTileNameBoarded  =>
+            new Dictionary<VirtualMap.Direction, string>
+            {
+                {VirtualMap.Direction.None, "RidingMagicCarpetLeft"},
+                {VirtualMap.Direction.Left, "RidingMagicCarpetLeft"},
+                {VirtualMap.Direction.Down, "RidingMagicCarpetDown"},
+                {VirtualMap.Direction.Right, "RidingMagicCarpetRight"},
+                {VirtualMap.Direction.Up, "RidingMagicCarpetUp"}
+            };
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
 

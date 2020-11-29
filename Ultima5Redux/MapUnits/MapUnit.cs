@@ -88,13 +88,19 @@ namespace Ultima5Redux.MapUnits
 
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
         protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
+
+        protected virtual Dictionary<VirtualMap.Direction, string> FourDirectionToTileNameBoarded  =>
+            DirectionToTileNameBoarded;
+        
         public abstract Avatar.AvatarState BoardedAvatarState { get; }
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsOccupiedByAvatar { get; protected internal set; }
         public VirtualMap.Direction Direction { get; set; }
 
+        public bool UseFourDirections { get; set; } = false;
+        
         public TileReference BoardedTileReference =>
-            TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[Direction]);
+            TileReferences.GetTileReferenceByName(UseFourDirections?FourDirectionToTileNameBoarded[Direction]:DirectionToTileNameBoarded[Direction]);
 
         // ReSharper disable once MemberCanBeProtected.Global
         public virtual TileReference NonBoardedTileReference =>

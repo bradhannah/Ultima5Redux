@@ -811,6 +811,19 @@ namespace Ultima5ReduxTesting
             Assert.True(horse != null);
         }
 
+        [Test] public void Test_MoveWithExtendedSprites()
+        {
+            World world = new World(this.ActualSaveDirectory + @"\b_carpet", true);
+        
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+
+            string retStr = world.TryToMove(VirtualMap.Direction.Down, false, false, out World.TryToMoveResult result, true);
+            //Debug.Assert(retStr != "");
+            //Debug.Assert(result == World.TryToMoveResult.Moved);
+            // make sure it is using the extended sprite
+            Debug.Assert(world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit.BoardedTileReference.Index == 515);
+        }
+
         [Test]
         public void Test_CheckedBoardedTileCarpet()
         {

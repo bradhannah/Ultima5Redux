@@ -8,6 +8,8 @@ namespace Ultima5Redux.MapUnits
 {
     public class Avatar : MapUnit
     {
+        private readonly bool _bUseExtendedSprites;
+
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
 
         /// <summary>
@@ -24,8 +26,9 @@ namespace Ultima5Redux.MapUnits
         };
 
         private Avatar(TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            MapUnitMovement movement, MapUnitState mapUnitState, DataOvlReference dataOvlReference)
+            MapUnitMovement movement, MapUnitState mapUnitState, DataOvlReference dataOvlReference, bool bUseExtendedSprites)
         {
+            _bUseExtendedSprites = bUseExtendedSprites;
             DataOvlRef = dataOvlReference;
             if (mapUnitState == null)
                 TheMapUnitState = MapUnitState.CreateAvatar(tileReferences,
@@ -121,8 +124,10 @@ namespace Ultima5Redux.MapUnits
         {
             bool bChangeTile = true;
             // if there are only left and right sprites then we don't switch directions unless they actually
-            // go left or right, otherwise we maintain direction
-            if (_onlyLeftRight[CurrentAvatarState])
+            // go left or right, otherwise we maintain direction - UNLESS we have forced extended sprites on
+            // for the vehicle
+            bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections??false;
+            if (_onlyLeftRight[CurrentAvatarState] && !bUseFourDirections)
                 if (direction != VirtualMap.Direction.Left && direction != VirtualMap.Direction.Right)
                     bChangeTile = false;
 
@@ -157,12 +162,14 @@ namespace Ultima5Redux.MapUnits
         /// <param name="movement"></param>
         /// <param name="mapUnitState"></param>
         /// <param name="dataOvlReference"></param>
+        /// <param name="bUseExtendedSprites"></param>
         /// <returns></returns>
         public static MapUnit CreateAvatar(TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
-            MapUnitState mapUnitState, DataOvlReference dataOvlReference)
+            MapUnitState mapUnitState, DataOvlReference dataOvlReference, bool bUseExtendedSprites)
         {
-            Avatar theAvatar = new Avatar(tileReferences, location, movement, mapUnitState, dataOvlReference);
+            Avatar theAvatar = new Avatar(tileReferences, location, movement, mapUnitState, dataOvlReference, 
+                bUseExtendedSprites);
 
             return theAvatar;
         }
@@ -223,7 +230,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public void BoardMapUnit(MapUnit mapUnit)//, MapUnits mapUnits)
+        public void BoardMapUnit(MapUnit mapUnit)
         {
             // note: since the Avatar does not control all MapUnits, we only add it our internal tracker
             // but do not release it from the world - that must be done outside this method
@@ -231,8 +238,8 @@ namespace Ultima5Redux.MapUnits
             CurrentAvatarState = mapUnit.BoardedAvatarState;
             CurrentBoardedMapUnit = mapUnit;
             CurrentBoardedMapUnit.IsOccupiedByAvatar = true;
-            
-            //mapUnits.ClearMapUnit(mapUnit);
+
+            mapUnit.UseFourDirections = _bUseExtendedSprites;
             
             if (!(mapUnit is Frigate)) return;
 

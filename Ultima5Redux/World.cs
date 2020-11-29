@@ -43,7 +43,7 @@ namespace Ultima5Redux
         ///     Constructor
         /// </summary>
         /// <param name="ultima5Directory">ultima 5 data and save game directory</param>
-        public World(string ultima5Directory)
+        public World(string ultima5Directory, bool bUseExtendedSprites = false)
         {
             U5Directory = ultima5Directory;
 
@@ -90,7 +90,8 @@ namespace Ultima5Redux
                 new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences, NpcRef, InvRef, DataOvlRef);
+            State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences, 
+                NpcRef, InvRef, DataOvlRef, bUseExtendedSprites);
         }
 
         /// <summary>
@@ -860,7 +861,7 @@ namespace Ultima5Redux
 
                 // todo: get string from data file
                 return "A TRAPDOOR!";
-            }
+            } 
 
             // we have evaluated and now know there is not a further fall (think Blackthorne's palace)
             IsPendingFall = false;

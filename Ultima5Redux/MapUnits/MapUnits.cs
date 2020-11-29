@@ -16,6 +16,7 @@ namespace Ultima5Redux.MapUnits
         private const int MAX_MAP_CHARACTERS = 0x20;
 
         private readonly DataOvlReference _dataOvlReference;
+        private readonly bool _bUseExtendedSprites;
         private readonly Avatar _masterAvatarMapUnit;
         private readonly DataChunk _overworldDataChunk;
         private readonly List<MapUnit> _overworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
@@ -59,6 +60,7 @@ namespace Ultima5Redux.MapUnits
         ///     The initial map you are beginning on. It's important to know because there is only
         ///     one TheSmallMapCharacterState loaded in the save file at load time
         /// </param>
+        /// <param name="bUseExtendedSprites"></param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
         /// <param name="dataOvlReference"></param>
         public MapUnits(TileReferences tileRefs, NonPlayerCharacterReferences npcRefs,
@@ -66,7 +68,7 @@ namespace Ultima5Redux.MapUnits
             DataChunk underworldMapUnitStatesDataChunk, DataChunk charStatesDataChunk,
             DataChunk nonPlayerCharacterMovementLists, DataChunk nonPlayerCharacterMovementOffsets,
             TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
-            LargeMap.Maps initialMap, DataOvlReference dataOvlReference,
+            LargeMap.Maps initialMap, DataOvlReference dataOvlReference, bool bUseExtendedSprites,
             SmallMapReferences.SingleMapReference.Location currentSmallMap =
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
@@ -76,6 +78,7 @@ namespace Ultima5Redux.MapUnits
 
             _currentMapType = initialMap;
             _dataOvlReference = dataOvlReference;
+            _bUseExtendedSprites = bUseExtendedSprites;
             _tileRefs = tileRefs;
             _timeOfDay = timeOfDay;
             _playerCharacterRecords = playerCharacterRecords;
@@ -155,9 +158,34 @@ namespace Ultima5Redux.MapUnits
             GetMapUnits(LargeMap.Maps.Overworld)[0] = _masterAvatarMapUnit;
             GetMapUnits(LargeMap.Maps.Underworld)[0] = _masterAvatarMapUnit;
 
+            SetAllExtendedSprites();
+            
             _currentMapType = initialMap;
         }
 
+        /// <summary>
+        /// Force all map units to use or not use extended sprites based on _bUseExtendedSprites field 
+        /// </summary>
+        private void SetAllExtendedSprites()
+        {
+            foreach (MapUnit mapUnit in _overworldMapUnits)
+            {
+                mapUnit.UseFourDirections = _bUseExtendedSprites;
+            }
+            foreach (MapUnit mapUnit in _underworldMapUnits)
+            {
+                mapUnit.UseFourDirections = _bUseExtendedSprites;
+            }
+
+            if (_smallMapUnitStates == null) return;
+            
+            foreach (MapUnit mapUnit in _smallWorldMapUnits)
+            {
+                mapUnit.UseFourDirections = _bUseExtendedSprites;
+            }
+            
+        }
+        
         public List<MapUnit> CurrentMapUnits => GetMapUnits(_currentMapType);
 
         /// <summary>
@@ -274,7 +302,6 @@ namespace Ultima5Redux.MapUnits
                     if (bCheckBaseToo && mapUnit.GetType().BaseType == typeof(T)) return (T) mapUnit;
                     // the map unit is at the right position AND is the correct type
                     if (mapUnit.GetType() == typeof(T)) return (T) mapUnit;
-                    //return mapUnit.GetType() == typeof(T) ? (T) mapUnit : null;
                 }
             }
 
@@ -358,6 +385,7 @@ namespace Ultima5Redux.MapUnits
             List<MapUnit> mapUnits = GetMapUnits(map);
             Debug.Assert(nIndex < mapUnits.Count);
             mapUnits[nIndex] = mapUnit;
+            mapUnit.UseFourDirections = _bUseExtendedSprites;
             return true;
         }
 
@@ -428,7 +456,7 @@ namespace Ultima5Redux.MapUnits
                 {
                     MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs,
                         SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement,
-                        mapUnitState, _dataOvlReference);
+                        mapUnitState, _dataOvlReference, _bUseExtendedSprites);
 
                     mapUnits.Add(theAvatar);
                     continue;
@@ -498,7 +526,7 @@ namespace Ultima5Redux.MapUnits
                 {
                     MapUnitState theAvatarMapState = _smallMapUnitStates.GetCharacterState(0);
                     MapUnit theAvatar = Avatar.CreateAvatar(_tileRefs, location, mapUnitMovement, theAvatarMapState,
-                        _dataOvlReference);
+                        _dataOvlReference, _bUseExtendedSprites);
                     theAvatar.MapUnitPosition.X = theAvatarMapState.X;
                     theAvatar.MapUnitPosition.Y = theAvatarMapState.Y;
                     theAvatar.MapLocation = location;
@@ -591,6 +619,9 @@ namespace Ultima5Redux.MapUnits
                 newUnit = new EmptyMapUnit();
             }
 
+            // force to use extended sprites if they exist
+            newUnit.UseFourDirections = _bUseExtendedSprites;
+            
             return newUnit;
         }
 

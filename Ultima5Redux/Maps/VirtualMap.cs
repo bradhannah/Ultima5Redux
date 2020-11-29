@@ -83,12 +83,13 @@ namespace Ultima5Redux.Maps
         /// <param name="initialMap"></param>
         /// <param name="currentSmallMapReference"></param>
         /// <param name="dataOvlReference"></param>
+        /// <param name="bUseExtendedSprites"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
             LargeMap.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
-            DataOvlReference dataOvlReference)
+            DataOvlReference dataOvlReference, bool bUseExtendedSprites)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -117,7 +118,7 @@ namespace Ultima5Redux.Maps
                 state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks,
                 state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
                 state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets,
-                timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, mapLocation);
+                timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, bUseExtendedSprites, mapLocation);
 
             switch (initialMap)
             {

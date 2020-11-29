@@ -234,10 +234,11 @@ namespace Ultima5Redux
         /// <param name="npcRefs"></param>
         /// <param name="inventoryReferences"></param>
         /// <param name="dataOvlReference"></param>
+        /// <param name="bUseExtendedSprites"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences, 
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
-            DataOvlReference dataOvlReference)
+            DataOvlReference dataOvlReference, bool bUseExtendedSprites)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
@@ -245,7 +246,7 @@ namespace Ultima5Redux
 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
                 underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates, 
-                inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference);
+                inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);
