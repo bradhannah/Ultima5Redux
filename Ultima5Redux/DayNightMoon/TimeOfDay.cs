@@ -8,12 +8,6 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
-        private readonly DataChunk _currentDayDataChunk;
-        private readonly DataChunk _currentHourDataChunk;
-        private readonly DataChunk _currentMinuteDataChunk;
-        private readonly DataChunk _currentMonthDataChunk;
-        private readonly DataChunk _currentYearDataChunk;
-
         /// <summary>
         ///     Dictionary of all change trackers and if time has changed since last check
         /// </summary>
@@ -36,12 +30,20 @@ namespace Ultima5Redux.DayNightMoon
             DataChunk currentHourDataChunk,
             DataChunk currentMinuteDataChunk)
         {
-            _currentYearDataChunk = currentYearDataChunk;
-            _currentMonthDataChunk = currentMonthDataChunk;
-            _currentDayDataChunk = currentDayDataChunk;
-            _currentHourDataChunk = currentHourDataChunk;
-            _currentMinuteDataChunk = currentMinuteDataChunk;
+            Year = currentYearDataChunk.GetChunkAsUint16();
+            Month = currentMonthDataChunk.GetChunkAsByte();
+            Day = currentDayDataChunk.GetChunkAsByte();
+            Hour = currentHourDataChunk.GetChunkAsByte();
+            Minute = currentMinuteDataChunk.GetChunkAsByte();
         }
+
+        private ushort _nYear;
+        private byte _nMonth;
+        private byte _nDay;
+        private byte _nHour;
+        private byte _nMinute;
+        
+        
 
         /// <summary>
         ///     Gets a string describing the current time of day
@@ -73,41 +75,41 @@ namespace Ultima5Redux.DayNightMoon
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public ushort Year
         {
-            get => _currentYearDataChunk.GetChunkAsUint16();
-            set => _currentYearDataChunk.SetChunkAsUint16(value);
+            get => _nYear;
+            set => _nYear = value;
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public byte Month
         {
-            get => _currentMonthDataChunk.GetChunkAsByte();
-            set => _currentMonthDataChunk.SetChunkAsByte(value);
+            get => _nMonth;
+            set => _nMonth = value;
         }
 
         public byte Day
         {
-            get => _currentDayDataChunk.GetChunkAsByte();
-            set => _currentDayDataChunk.SetChunkAsByte(value);
+            get => _nDay;
+            set => _nDay = value;
         }
 
         public byte Hour
         {
-            get => _currentHourDataChunk.GetChunkAsByte();
+            get => _nHour;
             set
             {
                 Debug.Assert(value <= 23);
-                _currentHourDataChunk.SetChunkAsByte(value);
+                _nHour = value;
             }
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public byte Minute
         {
-            get => _currentMinuteDataChunk.GetChunkAsByte();
+            get => _nMinute;
             set
             {
                 Debug.Assert(value <= 59);
-                _currentMinuteDataChunk.SetChunkAsByte(value);
+                _nMinute = value;
             }
         }
 
