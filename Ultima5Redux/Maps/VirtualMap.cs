@@ -509,8 +509,9 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="bNoStaircases"></param>
+        /// <param name="forcedAvatarState"></param>
         /// <returns>true if you can move onto the tile</returns>
-        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
+        private bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
         {
             if (xy.X < 0 || xy.Y < 0) return false;
 
@@ -530,9 +531,16 @@ namespace Ultima5Redux.Maps
                                      !_timeOfDay.IsDayLight;
             
             // we check both the tile reference below as well as the map unit that occupies the tile
-            bool bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable)
-                             || (mapUnit?.KeyTileReference.IsPassable(forcedAvatarState) ?? false)
-                             && !bPortcullisDown;
+            bool bIsWalkable;
+            // if the MapUnit is null then we do a basic evaluation 
+            if (mapUnit is null)
+            {
+                bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable) && !bPortcullisDown;;
+            }
+            else // otherwise we need to evaluate if the vehicle can moved to the tile
+            {
+                bIsWalkable = mapUnit.KeyTileReference.IsPassable(forcedAvatarState);
+            }
             
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
             // return !bIsNpcTile && bIsWalkable && !bIsAvatarTile;

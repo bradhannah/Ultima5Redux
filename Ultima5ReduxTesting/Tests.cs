@@ -873,6 +873,21 @@ namespace Ultima5ReduxTesting
         }
         
         [Test]
+        public void Test_CheckedBoardedTileSkiffMoveOntoSkiff()
+        {
+            // World world = new World(SaveDirectory);
+            World world = new World(this.ActualSaveDirectory+@"\b_skiff");
+
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Debug.Assert(avatar.IsAvatarOnBoardedThing);
+            Debug.Assert(avatar.CurrentBoardedMapUnit != null);
+
+            world.TryToMove(VirtualMap.Direction.Down, false, true, out World.TryToMoveResult moveResult);
+            Debug.Assert(moveResult == World.TryToMoveResult.Blocked);
+            _ = "";
+        }
+        
+        [Test]
         public void Test_CheckedBoardedTileFrigate()
         {
             // World world = new World(SaveDirectory);
