@@ -983,8 +983,8 @@ namespace Ultima5Redux.Maps
                     if (xy.X + i < 0 || xy.X + i >= NumberOfRowTiles || xy.Y + j < 0 || xy.Y + j >= NumberOfColumnTiles)
                         continue;
                     TileReference tileRef = GetTileReference(xy.X + i, xy.Y + j);
-                    // only look at non-upright sprites
-                    if (tileRef.IsUpright) continue;
+                    // only look at non-upright sprites AND if it's a guessable tile
+                    if (tileRef.IsUpright || !tileRef.IsGuessableFloor) continue;
 
                     int nTile = tileRef.Index;
                     if (tileCountDictionary.ContainsKey(nTile))

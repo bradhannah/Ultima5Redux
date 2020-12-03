@@ -54,6 +54,8 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public bool IsHorse_Passable;
 
+        [DataMember] public bool IsGuessableFloor;
+
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
         // ReSharper disable once MemberCanBePrivate.Global

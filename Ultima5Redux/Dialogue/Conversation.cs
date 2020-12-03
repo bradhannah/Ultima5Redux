@@ -481,7 +481,7 @@ namespace Ultima5Redux.Dialogue
                         await AwaitResponse();
                         string avatarNameResponse = GetResponse();
                         // did they actually provide the Avatars name?
-                        if (avatarNameResponse.ToLower() == _gameStateRef.AvatarsName.ToLower())
+                        if (string.Equals(avatarNameResponse, _gameStateRef.AvatarsName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             // i met them
                             _gameStateRef.SetMetNpc(Npc);
@@ -517,6 +517,7 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Gold:
                         EnqueueToOutputBuffer(item);
+                        _gameStateRef.Gold -= (ushort)item.ItemAdditionalData;
                         break;
                     case TalkScript.TalkCommand.JoinParty:
                         if (_gameStateRef.CharacterRecords.IsFullParty())
