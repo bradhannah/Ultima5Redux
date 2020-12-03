@@ -3,8 +3,6 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Ultima5Redux;
 using System.Collections.Generic;
-using System.Media;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
@@ -17,6 +15,10 @@ using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
+// ReSharper disable UnusedVariable
+// ReSharper disable RedundantAssignment
+// ReSharper disable NotAccessedVariable
+// ReSharper disable RedundantArgumentDefaultValue
 
 namespace Ultima5ReduxTesting
 {
@@ -30,7 +32,6 @@ namespace Ultima5ReduxTesting
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return @"/Users/bradhannah/games/u5/Gold";
                 return @"C:\games\ultima5tests\Britain2";
-                //return @"C:\games\ultima_5\Gold";
             }
         }
         
@@ -41,15 +42,12 @@ namespace Ultima5ReduxTesting
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return @"/Users/bradhannah/games/u5tests";
                 return @"C:\games\ultima5tests";
-                //return @"C:\games\ultima_5\Gold";
             }
         }
 
         [Test]
         public void AllSmallMapsLoadTest()
         {
-
-            // World world = new World(SaveDirectory);
             World world = new World(ActualSaveDirectory+@"\Britain");
             _ = "";
             foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
@@ -64,7 +62,6 @@ namespace Ultima5ReduxTesting
         [Test]
         public void test_LoadTrinsicSmallMapsLoadTest()
         {
-            // World world = new World(SaveDirectory);
             World world = new World(ActualSaveDirectory+@"\Britain");
             _ = "";
 
@@ -77,7 +74,6 @@ namespace Ultima5ReduxTesting
         [Test]
         public void test_LoadMinocBuyFrigateAndCheck()
         {
-            // World world = new World(SaveDirectory);
             World world = new World(ActualSaveDirectory+@"\Britain");
             _ = "";
 
@@ -89,12 +85,10 @@ namespace Ultima5ReduxTesting
                 VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
                     world.DataOvlRef);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
-                //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 LargeMap.Maps.Overworld,
                 dockLocation, 0);
 
             Frigate frigate2 = world.State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<Frigate>(LargeMap.Maps.Overworld,
-                //SmallMapReferences.SingleMapReference.Location.Ararat,
                 dockLocation, 0);
 
             Debug.Assert(
@@ -126,12 +120,10 @@ namespace Ultima5ReduxTesting
                 VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
                     world.DataOvlRef);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
-                //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 LargeMap.Maps.Overworld,
                 dockLocation, 0);
 
             Skiff skiff = world.State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<Skiff>(LargeMap.Maps.Overworld,
-                //SmallMapReferences.SingleMapReference.Location.Ararat,
                 dockLocation, 0);
 
             Debug.Assert(
@@ -151,7 +143,6 @@ namespace Ultima5ReduxTesting
         [Test]
         public void test_LoadSkaraBraeSmallMapsLoadTest()
         {
-            // World world = new World(SaveDirectory);
             World world = new World(ActualSaveDirectory+@"\Britain");
             _ = "";
 
@@ -167,11 +158,8 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             Trace.Write("Starting ");
-            //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
-            {
-                world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
-            }
+            world.State.TheVirtualMap.LoadSmallMap(
+                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
             int i = (24 * (60 / 2));
             while (i > 0)
             {
@@ -180,7 +168,6 @@ namespace Ultima5ReduxTesting
             }
 
             TestContext.Out.Write("Ending ");
-            //System.Console.WriteLine("Ending ");//+smr.MapLocation + " on floor " + smr.Floor);
 
             Assert.True(true);
         }
@@ -234,8 +221,6 @@ namespace Ultima5ReduxTesting
             Trace.Write("Starting ");
 
             world.State.TheVirtualMap.LoadLargeMap(LargeMap.Maps.Overworld);
-
-            //List<SeaFaringVessel> vessels = world.State.TheVirtualMap.TheMapUnits.GetAllSeaFaringVessels();
         }
 
         [Test]
@@ -329,7 +314,6 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
 
-            //for (int i = 0; i < 8; i++)
             foreach (MoonPhaseReferences.MoonPhases phase in Enum.GetValues(typeof(MoonPhaseReferences.MoonPhases)))
             {
                 if (phase == MoonPhaseReferences.MoonPhases.NoMoon) continue;
@@ -427,14 +411,6 @@ namespace Ultima5ReduxTesting
 
             MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(world.DataOvlRef);
 
-            // TimeOfDay tod = new TimeOfDay(world.State.GetDataChunk(GameState.DataChunkName.CURRENT_YEAR),
-            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MONTH),
-            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_DAY),
-            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_HOUR),
-            //     world.State.GetDataChunk(GameState.DataChunkName.CURRENT_MINUTE));
-
-            // tod.Day = 2;
-            // tod.Hour = 4;
             world.State.TheTimeOfDay.Day = 25;
             world.State.TheTimeOfDay.Hour = 4;
 
@@ -478,10 +454,10 @@ namespace Ultima5ReduxTesting
             NonPlayerCharacterReference smithTheHorseRef = iolosHutRefs[4];
 
             world.CreateConversationAndBegin(smithTheHorseRef,
-                new Conversation.EnqueuedScriptItem(OnUpdateOfEnqueuedScriptItem));
+                OnUpdateOfEnqueuedScriptItem);
         }
 
-        private void OnUpdateOfEnqueuedScriptItem(Conversation conversation)
+        private static void OnUpdateOfEnqueuedScriptItem(Conversation conversation)
         {
 
         }
@@ -518,17 +494,15 @@ namespace Ultima5ReduxTesting
             NonPlayerCharacterReference delwynRef = minocNpcRef[9];
 
             Conversation convo = world.CreateConversationAndBegin(delwynRef,
-                new Conversation.EnqueuedScriptItem(OnUpdateOfEnqueuedScriptItemHandleDelwyn));
+                OnUpdateOfEnqueuedScriptItemHandleDelwyn);
             convo.BeginConversation();
             convo.AddUserResponse("yes");
             convo.AddUserResponse("yes");
             convo.AddUserResponse("yes");
             convo.AddUserResponse("bye");
 
-            //convo.EnqueuedScriptItemCallback -= OnUpdateOfEnqueuedScriptItemHandleDelwyn;
-
             Conversation convo2 = world.CreateConversationAndBegin(delwynRef,
-                new Conversation.EnqueuedScriptItem(OnUpdateOfEnqueuedScriptItemHandleDelwyn));
+                OnUpdateOfEnqueuedScriptItemHandleDelwyn);
             convo2.BeginConversation();
             convo2.AddUserResponse("yes");
             convo2.AddUserResponse("yes");
@@ -539,7 +513,6 @@ namespace Ultima5ReduxTesting
         private void OnUpdateOfEnqueuedScriptItemHandleDelwyn(Conversation conversation)
         {
             TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
-            //string userResponse;
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.PlainString:
@@ -592,7 +565,6 @@ namespace Ultima5ReduxTesting
                     // conversation.AddUserResponse(userResponse);
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
-                    //Console.Write(conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));
                     break;
                 case TalkScript.TalkCommand.UserInputNotRecognized:
                     break;
@@ -607,7 +579,8 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
             BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Minoc,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith, null) as BlackSmith;
-            
+
+            Debug.Assert(blacksmith != null, nameof(blacksmith) + " != null");
             string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
             string purchaseStr = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
 
@@ -646,8 +619,6 @@ namespace Ultima5ReduxTesting
                 NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null);
 
             string myOppressionTest = barKeeper.GetGossipResponse("oppr", true);
-
-            //int price = barKeeper.GetPrice(Healer.RemedyTypes.Heal);
         }
         
         [Test]
@@ -656,7 +627,6 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
             MagicSeller magicSeller = (MagicSeller)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location.Cove,
                 NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null);
-            //( magicSeller). //SmallMapReferences.SingleMapReference.Location.Cove);
             List<Reagent> reagents = magicSeller.GetReagentsForSale();
 
             int price1 = reagents[0].GetAdjustedBuyPrice(world.State.CharacterRecords,
@@ -670,7 +640,6 @@ namespace Ultima5ReduxTesting
             buything = magicSeller.GetReagentBuyingOutput(reagents[2]);
             buything = magicSeller.GetReagentBuyingOutput(reagents[3]);
             buything = magicSeller.GetReagentBuyingOutput(reagents[4]);
-            
         }
 
         [Test]
@@ -718,9 +687,7 @@ namespace Ultima5ReduxTesting
         [Test]
         public void EnterBuilding()
         {
-
-            // World world = new World(SaveDirectory);
-            World world = new World(@"C:\games\ultima_5_late\Britain");
+            World world = new World(ActualSaveDirectory+@"\Britain");
             _ = "";
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
@@ -733,7 +700,7 @@ namespace Ultima5ReduxTesting
         {
 
             // World world = new World(SaveDirectory);
-            World world = new World(@"C:\games\ultima_5_late\Bucden1");
+            World world = new World(ActualSaveDirectory+@"\Bucden1");
             _ = "";
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
@@ -769,7 +736,7 @@ namespace Ultima5ReduxTesting
         {
 
             // World world = new World(SaveDirectory);
-            World world = new World(@"C:\games\ultima_5_late\Britain3");
+            World world = new World(ActualSaveDirectory+@"\Britain3");
             _ = "";
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
@@ -802,7 +769,7 @@ namespace Ultima5ReduxTesting
         public void Test_MakeAHorse()
         {
             // World world = new World(SaveDirectory);
-            World world = new World(@"C:\games\ultima_5_late\Britain");
+            World world = new World(ActualSaveDirectory+@"\Britain");
             _ = "";
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
@@ -818,8 +785,6 @@ namespace Ultima5ReduxTesting
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
 
             string retStr = world.TryToMove(VirtualMap.Direction.Down, false, false, out World.TryToMoveResult result, true);
-            //Debug.Assert(retStr != "");
-            //Debug.Assert(result == World.TryToMoveResult.Moved);
             // make sure it is using the extended sprite
             Debug.Assert(world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit.BoardedTileReference.Index == 515);
         }
@@ -868,7 +833,7 @@ namespace Ultima5ReduxTesting
 
         [Test] public void Test_CheckUseCarpet()
         {
-            World world = new World(this.ActualSaveDirectory+@"\Bucden3");
+            World world = new World(ActualSaveDirectory+@"\Bucden3");
 
             int nCarpets = world.State.PlayerInventory.MagicCarpets;
             world.TryToUseAnInventoryItem(
@@ -881,7 +846,6 @@ namespace Ultima5ReduxTesting
         [Test]
         public void Test_CheckedBoardedTileHorse()
         {
-            // World world = new World(SaveDirectory);
             World world = new World(this.ActualSaveDirectory+@"\b_horse");
 
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;

@@ -648,7 +648,7 @@ namespace Ultima5Redux.MapUnits
                 MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0)
             };
 
-            AddNewMapUnit(LargeMap.Maps.Overworld, magicCarpet, nIndex);
+            AddNewMapUnit(_currentMapType, magicCarpet, nIndex);
             return magicCarpet;
         }
 
