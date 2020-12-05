@@ -9,8 +9,11 @@ namespace Ultima5Redux.Maps
     {
         //private const int MAX_X_COLS = 11, MAX_Y_ROWS = 11;
 
-        public override int XTILES { get; } = 11;
-        public override int YTILES { get; } = 11;
+        static public int XTILES => 11;
+        static public int YTILES => 11;
+
+        public override int NumOfXTiles => XTILES;
+        public override int NumOfYTiles => YTILES;
 
         private const int ROW_BYTES = 32;
         // https://github.com/andrewschultz/rpg-mapping-tools/wiki/Ultima-V-Dungeon-File-Format

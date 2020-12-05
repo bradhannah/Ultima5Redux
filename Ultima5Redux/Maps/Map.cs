@@ -19,8 +19,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private List<List<Node>> _aStarNodes;
 
-        public abstract int XTILES { get; }
-        public abstract int YTILES { get; }
+        public abstract int NumOfXTiles { get; }
+        public abstract int NumOfYTiles { get; }
 
         
         // ReSharper disable once NotAccessedField.Global
@@ -33,6 +33,8 @@ namespace Ultima5Redux.Maps
         {
             TileOverrides = tileOverrides;
             CurrentSingleMapReference = mapRef;
+
+            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
 
             // for now combat maps don't have overrides
             if (mapRef != null) _xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);

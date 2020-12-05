@@ -16,12 +16,15 @@ namespace Ultima5Redux.Maps
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public override int
+        public static int
             YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public override int 
+        public static int 
             XTILES => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+
+        public override int NumOfXTiles => XTILES;
+        public override int NumOfYTiles => YTILES;
 
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
