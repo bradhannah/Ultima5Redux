@@ -34,16 +34,13 @@ namespace Ultima5Redux.Maps
             TileOverrides = tileOverrides;
             CurrentSingleMapReference = mapRef;
 
-            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-
             // for now combat maps don't have overrides
             if (mapRef != null) _xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
         }
 
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
 
-        public byte[][] TheMap { get; protected set; }
-        public bool[][] VisibleOnMap { get; }
+        public abstract byte[][] TheMap { get; protected set; }
 
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
@@ -53,6 +50,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         protected abstract float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy);
 
+        
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>

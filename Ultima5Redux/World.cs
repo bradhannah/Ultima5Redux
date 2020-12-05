@@ -373,19 +373,19 @@ namespace Ultima5Redux
         /// <param name="chairDirection"></param>
         /// <returns></returns>
         /// <exception cref="Ultima5ReduxException"></exception>
-        private TileReference GetChairNewDirection(VirtualMap.Direction chairDirection)
+        private TileReference GetChairNewDirection(Point2D.Direction chairDirection)
         {
             switch (chairDirection)
             {
-                case VirtualMap.Direction.Up:
+                case Point2D.Direction.Up:
                     return SpriteTileReferences.GetTileReferenceByName("ChairBackForward");
-                case VirtualMap.Direction.Down:
+                case Point2D.Direction.Down:
                     return SpriteTileReferences.GetTileReferenceByName("ChairBackBack");
-                case VirtualMap.Direction.Left:
+                case Point2D.Direction.Left:
                     return SpriteTileReferences.GetTileReferenceByName("ChairBackRight");
-                case VirtualMap.Direction.Right:
+                case Point2D.Direction.Right:
                     return SpriteTileReferences.GetTileReferenceByName("ChairBackLeft");
-                case VirtualMap.Direction.None:
+                case Point2D.Direction.None:
                 default:
                     throw new Ultima5ReduxException("Asked for a chair direction that I don't recognize");
             }
@@ -398,10 +398,10 @@ namespace Ultima5Redux
         /// <param name="direction">the direction of the thing the avatar wants to push</param>
         /// <param name="bPushedAThing">was a thing actually pushed?</param>
         /// <returns>the string to output to the user</returns>
-        public string PushAThing(Point2D avatarXy, VirtualMap.Direction direction, out bool bPushedAThing)
+        public string PushAThing(Point2D avatarXy, Point2D.Direction direction, out bool bPushedAThing)
         {
             bPushedAThing = false;
-            Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(avatarXy, direction);
+            Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
 
             TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
 
@@ -412,7 +412,7 @@ namespace Ultima5Redux
             bPushedAThing = true;
 
             // we get the thing one tile further than the thing to see if we have room to push it forward
-            Point2D oneMoreTileAdjusted = MapUnitMovement.GetAdjustedPos(adjustedPos, direction);
+            Point2D oneMoreTileAdjusted = adjustedPos.GetAdjustedPosition(direction);
             TileReference oneMoreTileReference = State.TheVirtualMap.GetTileReference(oneMoreTileAdjusted);
 
             // if I'm sitting and the proceeding tile is an upright tile then I can't swap things 
@@ -705,7 +705,7 @@ namespace Ultima5Redux
         /// <param name="direction">direction to go</param>
         /// <param name="xAdjust">output X adjustment</param>
         /// <param name="yAdjust">output Y adjustment</param>
-        private void GetAdjustments(VirtualMap.Direction direction, out int xAdjust, out int yAdjust)
+        private void GetAdjustments(Point2D.Direction direction, out int xAdjust, out int yAdjust)
         {
             xAdjust = 0;
             yAdjust = 0;
@@ -714,21 +714,21 @@ namespace Ultima5Redux
 
             switch (direction)
             {
-                case VirtualMap.Direction.Down:
+                case Point2D.Direction.Down:
                     if (State.TheVirtualMap.CurrentPosition.Y < State.TheVirtualMap.NumberOfRowTiles - 1 ||
                         State.TheVirtualMap.IsLargeMap) yAdjust = 1;
                     break;
-                case VirtualMap.Direction.Up:
+                case Point2D.Direction.Up:
                     if (State.TheVirtualMap.CurrentPosition.Y > 0 || State.TheVirtualMap.IsLargeMap) yAdjust = -1;
                     break;
-                case VirtualMap.Direction.Right:
+                case Point2D.Direction.Right:
                     if (State.TheVirtualMap.CurrentPosition.X < State.TheVirtualMap.NumberOfColumnTiles - 1 ||
                         State.TheVirtualMap.IsLargeMap) xAdjust = 1;
                     break;
-                case VirtualMap.Direction.Left:
+                case Point2D.Direction.Left:
                     if (State.TheVirtualMap.CurrentPosition.X > 0 || State.TheVirtualMap.IsLargeMap) xAdjust = -1;
                     break;
-                case VirtualMap.Direction.None:
+                case Point2D.Direction.None:
                     // do nothing, no adjustment
                     break;
                 default:
@@ -746,7 +746,7 @@ namespace Ultima5Redux
         /// <param name="tryToMoveResult">outputs the result of the attempt</param>
         /// <param name="bManualMovement">true if movement is manual</param>
         /// <returns>output string (may be empty)</returns>
-        public string TryToMove(VirtualMap.Direction direction, bool bKlimb, bool bFreeMove,
+        public string TryToMove(Point2D.Direction direction, bool bKlimb, bool bFreeMove,
             out TryToMoveResult tryToMoveResult, bool bManualMovement = true)
         {
             string retStr;
@@ -759,11 +759,11 @@ namespace Ultima5Redux
             // would we be leaving a small map if we went forward?
             if (!State.TheVirtualMap.IsLargeMap && (
                 State.TheVirtualMap.CurrentPosition.Y == nTilesPerMapRow - 1 &&
-                direction == VirtualMap.Direction.Down ||
-                State.TheVirtualMap.CurrentPosition.Y == 0 && direction == VirtualMap.Direction.Up ||
+                direction == Point2D.Direction.Down ||
+                State.TheVirtualMap.CurrentPosition.Y == 0 && direction == Point2D.Direction.Up ||
                 State.TheVirtualMap.CurrentPosition.X == nTilesPerMapCol - 1 &&
-                direction == VirtualMap.Direction.Right ||
-                State.TheVirtualMap.CurrentPosition.X == 0 && direction == VirtualMap.Direction.Left))
+                direction == Point2D.Direction.Right ||
+                State.TheVirtualMap.CurrentPosition.X == 0 && direction == Point2D.Direction.Left))
             {
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space

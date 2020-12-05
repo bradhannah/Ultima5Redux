@@ -9,8 +9,9 @@ namespace Ultima5Redux.Maps
     {
         //private const int MAX_X_COLS = 11, MAX_Y_ROWS = 11;
 
-        static public int XTILES => 11;
-        static public int YTILES => 11;
+        public static int XTILES => 11;
+        public static int YTILES => 11;
+        public override byte[][] TheMap { get; protected set; }
 
         public override int NumOfXTiles => XTILES;
         public override int NumOfYTiles => YTILES;
@@ -114,6 +115,7 @@ namespace Ultima5Redux.Maps
         {
             return 1;
         }
+        
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         private unsafe struct MapRow

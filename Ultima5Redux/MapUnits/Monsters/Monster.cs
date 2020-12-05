@@ -16,13 +16,13 @@ namespace Ultima5Redux.MapUnits.Monsters
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference) : base(npcRef,
             mapUnitState,
             smallMapTheSmallMapCharacterState, mapUnitMovement, playerCharacterRecords, tileReferences,
-            location, dataOvlReference, VirtualMap.Direction.None)
+            location, dataOvlReference, Point2D.Direction.None)
         {
         }
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         public override string BoardXitName => "Hostile creates don't not like to be boarded!";

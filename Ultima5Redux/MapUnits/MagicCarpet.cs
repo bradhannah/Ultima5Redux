@@ -8,40 +8,40 @@ namespace Ultima5Redux.MapUnits
     {
         public MagicCarpet(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
-            VirtualMap.Direction direction) : base(null, mapUnitState, null, 
+            Point2D.Direction direction) : base(null, mapUnitState, null, 
             mapUnitMovement, null, tileReferences,
             location, dataOvlReference, direction)
         {
         }
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>
             {
-                {VirtualMap.Direction.None, "Carpet2"},
-                {VirtualMap.Direction.Left, "Carpet2"},
-                {VirtualMap.Direction.Down, "Carpet2"},
-                {VirtualMap.Direction.Right, "Carpet2"},
-                {VirtualMap.Direction.Up, "Carpet2"}
+                {Point2D.Direction.None, "Carpet2"},
+                {Point2D.Direction.Left, "Carpet2"},
+                {Point2D.Direction.Down, "Carpet2"},
+                {Point2D.Direction.Right, "Carpet2"},
+                {Point2D.Direction.Up, "Carpet2"}
             };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>
             {
-                {VirtualMap.Direction.None, "RidingMagicCarpetLeft"},
-                {VirtualMap.Direction.Left, "RidingMagicCarpetLeft"},
-                {VirtualMap.Direction.Down, "RidingMagicCarpetLeft"},
-                {VirtualMap.Direction.Right, "RidingMagicCarpetRight"},
-                {VirtualMap.Direction.Up, "RidingMagicCarpetRight"}
+                {Point2D.Direction.None, "RidingMagicCarpetLeft"},
+                {Point2D.Direction.Left, "RidingMagicCarpetLeft"},
+                {Point2D.Direction.Down, "RidingMagicCarpetLeft"},
+                {Point2D.Direction.Right, "RidingMagicCarpetRight"},
+                {Point2D.Direction.Up, "RidingMagicCarpetRight"}
             };
         
-        protected override Dictionary<VirtualMap.Direction, string> FourDirectionToTileNameBoarded  =>
-            new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded  =>
+            new Dictionary<Point2D.Direction, string>
             {
-                {VirtualMap.Direction.None, "RidingMagicCarpetLeft"},
-                {VirtualMap.Direction.Left, "RidingMagicCarpetLeft"},
-                {VirtualMap.Direction.Down, "RidingMagicCarpetDown"},
-                {VirtualMap.Direction.Right, "RidingMagicCarpetRight"},
-                {VirtualMap.Direction.Up, "RidingMagicCarpetUp"}
+                {Point2D.Direction.None, "RidingMagicCarpetLeft"},
+                {Point2D.Direction.Left, "RidingMagicCarpetLeft"},
+                {Point2D.Direction.Down, "RidingMagicCarpetDown"},
+                {Point2D.Direction.Right, "RidingMagicCarpetRight"},
+                {Point2D.Direction.Up, "RidingMagicCarpetUp"}
             };
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;

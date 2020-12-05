@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Ultima5Redux.Maps
@@ -13,12 +14,12 @@ namespace Ultima5Redux.Maps
         ///     Total tiles per column
         /// </summary>
         public static int YTILES => 32;
+        public override byte[][] TheMap { get; protected set; }
 
         public override int NumOfXTiles => XTILES;
         public override int NumOfYTiles => YTILES;
 
         private readonly SmallMapReferences.SingleMapReference _mapRef;
-
 
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
@@ -82,5 +83,7 @@ namespace Ultima5Redux.Maps
 
             return fCost;
         }
+        
+ 
     }
 }

@@ -15,6 +15,8 @@ namespace Ultima5Redux.Maps
         private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
 
+        public override byte[][] TheMap { get; protected set; }
+
         // ReSharper disable once MemberCanBePrivate.Global
         public static int
             YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
@@ -127,5 +129,6 @@ namespace Ultima5Redux.Maps
         {
             return 1;
         }
-    }
+        
+   }
 }

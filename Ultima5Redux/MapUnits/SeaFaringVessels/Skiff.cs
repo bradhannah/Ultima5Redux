@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
     {
         public Skiff(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, VirtualMap.Direction direction) :
+            DataOvlReference dataOvlReference, Point2D.Direction direction) :
             base(mapUnitState, null, mapUnitMovement, tileReferences, location,
                 dataOvlReference, direction)
         {
@@ -24,17 +24,17 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 {SmallMapReferences.SingleMapReference.Location.Jhelom, 400}
             };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>
             {
-                {VirtualMap.Direction.None, "SkiffLeft"},
-                {VirtualMap.Direction.Left, "SkiffLeft"},
-                {VirtualMap.Direction.Down, "SkiffDown"},
-                {VirtualMap.Direction.Right, "SkiffRight"},
-                {VirtualMap.Direction.Up, "SkiffUp"}
+                {Point2D.Direction.None, "SkiffLeft"},
+                {Point2D.Direction.Left, "SkiffLeft"},
+                {Point2D.Direction.Down, "SkiffDown"},
+                {Point2D.Direction.Right, "SkiffRight"},
+                {Point2D.Direction.Up, "SkiffUp"}
             };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Skiff;
 
         public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby(Avatar.AvatarState.Regular));

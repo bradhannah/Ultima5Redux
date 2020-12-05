@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {
@@ -74,6 +75,12 @@ namespace Ultima5Redux
 
     public class Point2D
     {
+        /// <summary>
+        ///     4 way direction
+        /// </summary>
+        public enum Direction { Up, Down, Left, Right, None }
+
+        
         public Point2D(int x, int y)
         {
             X = x;
@@ -83,6 +90,43 @@ namespace Ultima5Redux
         public int X { get; set; }
         public int Y { get; set; }
 
+        public Point2D GetAdjustedPosition(Direction direction, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
+        {
+            Point2D adjustedPos = GetAdjustedPosition(direction);
+            if (adjustedPos.X < nMinX || adjustedPos.X > nMaxX || adjustedPos.Y < nMinY || adjustedPos.Y > nMaxY)
+                return null;
+
+            return adjustedPos;
+        }
+
+        public Point2D GetAdjustedPosition(Direction direction, int nSpaces = 1)
+        {
+            Point2D adjustedPos = Copy();
+
+            switch (direction)
+            {
+                case Direction.None:
+                    // no movement
+                    break;
+                case Direction.Right:
+                    adjustedPos.X += nSpaces;
+                    break;
+                case Direction.Up:
+                    adjustedPos.Y -= nSpaces;
+                    break;
+                case Direction.Left:
+                    adjustedPos.X -= nSpaces;
+                    break;
+                case Direction.Down:
+                    adjustedPos.Y += nSpaces;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            return adjustedPos;
+        }
+        
         public bool WithinN(Point2D xy, int nWithin)
         {
             bool bWithinX = Math.Abs(xy.X - X) <= nWithin;
@@ -139,5 +183,6 @@ namespace Ultima5Redux
         {
             return !(point1 == point2);
         }
+
     }
 }

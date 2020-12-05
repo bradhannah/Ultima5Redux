@@ -18,7 +18,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference) : base(npcRef, mapUnitState, smallMapTheSmallMapCharacterState,
             mapUnitMovement, playerCharacterRecords, tileReferences, location, dataOvlReference,
-            VirtualMap.Direction.None)
+            Point2D.Direction.None)
         {
             bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
 
@@ -45,11 +45,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         public override TileReference NonBoardedTileReference => KeyTileReference;
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<VirtualMap.Direction, string>();
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>();
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<VirtualMap.Direction, string>();
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>();
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 

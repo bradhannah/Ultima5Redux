@@ -101,29 +101,24 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        internal static Point2D GetAdjustedPos(Point2D xy, VirtualMap.Direction direction)
-        {
-            return GetAdjustedPos(xy, GetDirection(direction));
-        }
-
-        private static MovementCommandDirection GetDirection(VirtualMap.Direction virtualMapDirection)
-        {
-            switch (virtualMapDirection)
-            {
-                case VirtualMap.Direction.Right:
-                    return MovementCommandDirection.East;
-                case VirtualMap.Direction.Up:
-                    return MovementCommandDirection.North;
-                case VirtualMap.Direction.Left:
-                    return MovementCommandDirection.West;
-                case VirtualMap.Direction.Down:
-                    return MovementCommandDirection.South;
-                case VirtualMap.Direction.None:
-                default:
-                    throw new Ultima5ReduxException(
-                        $"Cannot convert {virtualMapDirection} to MovementCommandDirection");
-            }
-        }
+        // private static MovementCommandDirection GetDirection(Point2D.Direction virtualMapDirection)
+        // {
+        //     switch (virtualMapDirection)
+        //     {
+        //         case Point2D.Direction.Right:
+        //             return MovementCommandDirection.East;
+        //         case Point2D.Direction.Up:
+        //             return MovementCommandDirection.North;
+        //         case Point2D.Direction.Left:
+        //             return MovementCommandDirection.West;
+        //         case Point2D.Direction.Down:
+        //             return MovementCommandDirection.South;
+        //         case Point2D.Direction.None:
+        //         default:
+        //             throw new Ultima5ReduxException(
+        //                 $"Cannot convert {virtualMapDirection} to MovementCommandDirection");
+        //     }
+        // }
 
         /// <summary>
         ///     Provides an adjust xy coordinate based on a given direction

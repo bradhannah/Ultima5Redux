@@ -204,19 +204,19 @@ namespace Ultima5Redux.Data
             return _strMap[strObj.GetType()].StringList[(int) strObj];
         }
 
-        public string GetDirectionString(VirtualMap.Direction direction)
+        public string GetDirectionString(Point2D.Direction direction)
         {
             switch (direction)
             {
-                case VirtualMap.Direction.Up:
+                case Point2D.Direction.Up:
                     return GetString(DataOvlReference.TravelStrings.NORTH);
-                case VirtualMap.Direction.Down:
+                case Point2D.Direction.Down:
                     return GetString(DataOvlReference.TravelStrings.SOUTH);
-                case VirtualMap.Direction.Left:
+                case Point2D.Direction.Left:
                     return GetString(DataOvlReference.TravelStrings.WEST);
-                case VirtualMap.Direction.Right:
+                case Point2D.Direction.Right:
                     return GetString(DataOvlReference.TravelStrings.EAST);
-                case VirtualMap.Direction.None:
+                case Point2D.Direction.None:
                     return "";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);

@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
     {
         public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, VirtualMap.Direction direction) :
+            DataOvlReference dataOvlReference, Point2D.Direction direction) :
             base(mapUnitState, null, mapUnitMovement, tileReferences, location,
                 dataOvlReference, direction)
         {
@@ -35,27 +35,27 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 {SmallMapReferences.SingleMapReference.Location.Jhelom, 1200}
             };
 
-        private readonly Dictionary<VirtualMap.Direction, string> _sailsFurledTiles = new Dictionary<VirtualMap.Direction, string>
+        private readonly Dictionary<Point2D.Direction, string> _sailsFurledTiles = new Dictionary<Point2D.Direction, string>
         {
-            {VirtualMap.Direction.None, "ShipNoSailsUp"},
-            {VirtualMap.Direction.Left, "ShipNoSailsLeft"},
-            {VirtualMap.Direction.Down, "ShipNoSailsDown"},
-            {VirtualMap.Direction.Right, "ShipNoSailsRight"},
-            {VirtualMap.Direction.Up, "ShipNoSailsUp"}
+            {Point2D.Direction.None, "ShipNoSailsUp"},
+            {Point2D.Direction.Left, "ShipNoSailsLeft"},
+            {Point2D.Direction.Down, "ShipNoSailsDown"},
+            {Point2D.Direction.Right, "ShipNoSailsRight"},
+            {Point2D.Direction.Up, "ShipNoSailsUp"}
         };
         
-        private readonly Dictionary<VirtualMap.Direction, string> _sailsHoistedTiles = new Dictionary<VirtualMap.Direction, string>
+        private readonly Dictionary<Point2D.Direction, string> _sailsHoistedTiles = new Dictionary<Point2D.Direction, string>
         {
-            {VirtualMap.Direction.None, "ShipSailsUp"},
-            {VirtualMap.Direction.Left, "ShipSailsLeft"},
-            {VirtualMap.Direction.Down, "ShipSailsDown"},
-            {VirtualMap.Direction.Right, "ShipSailsRight"},
-            {VirtualMap.Direction.Up, "ShipSailsUp"}
+            {Point2D.Direction.None, "ShipSailsUp"},
+            {Point2D.Direction.Left, "ShipSailsLeft"},
+            {Point2D.Direction.Down, "ShipSailsDown"},
+            {Point2D.Direction.Right, "ShipSailsRight"},
+            {Point2D.Direction.Up, "ShipSailsUp"}
         };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName => _sailsFurledTiles;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
     
         public override string BoardXitName =>

@@ -58,17 +58,17 @@ namespace Ultima5Redux.MapUnits
             set => base.KeyTileReference = value;
         }
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
-            = new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+            = new Dictionary<Point2D.Direction, string>
             {
-                {VirtualMap.Direction.None, "BasicAvatar"},
-                {VirtualMap.Direction.Left, "BasicAvatar"},
-                {VirtualMap.Direction.Down, "BasicAvatar"},
-                {VirtualMap.Direction.Right, "BasicAvatar"},
-                {VirtualMap.Direction.Up, "BasicAvatar"}
+                {Point2D.Direction.None, "BasicAvatar"},
+                {Point2D.Direction.Left, "BasicAvatar"},
+                {Point2D.Direction.Down, "BasicAvatar"},
+                {Point2D.Direction.Right, "BasicAvatar"},
+                {Point2D.Direction.Up, "BasicAvatar"}
             };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
         public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
         public override string BoardXitName => "You can't board the Avatar you silly goose!";
@@ -76,8 +76,8 @@ namespace Ultima5Redux.MapUnits
         public override bool IsActive => true;
 
         internal AvatarState CurrentAvatarState { get; private set; }
-        private VirtualMap.Direction PreviousDirection { get; set; } = VirtualMap.Direction.None;
-        public VirtualMap.Direction CurrentDirection { get; private set; }
+        private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
+        public Point2D.Direction CurrentDirection { get; private set; }
 
         public bool AreSailsHoisted => IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate &&
                                        frigate.SailsHoisted;
@@ -120,7 +120,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="direction">the direction </param>
         /// <returns>true if Avatar moved, false if they only changed direction</returns>
-        public bool Move(VirtualMap.Direction direction)
+        public bool Move(Point2D.Direction direction)
         {
             bool bChangeTile = true;
             // if there are only left and right sprites then we don't switch directions unless they actually
@@ -128,7 +128,7 @@ namespace Ultima5Redux.MapUnits
             // for the vehicle
             bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections??false;
             if (_onlyLeftRight[CurrentAvatarState] && !bUseFourDirections)
-                if (direction != VirtualMap.Direction.Left && direction != VirtualMap.Direction.Right)
+                if (direction != Point2D.Direction.Left && direction != Point2D.Direction.Right)
                     bChangeTile = false;
 
             // we only track changes in tile if we are changing the direction of the sprite, otherwise we don't track

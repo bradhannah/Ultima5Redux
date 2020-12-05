@@ -26,7 +26,7 @@ namespace Ultima5Redux.MapUnits
             TheMapUnitState = null;
             TheSmallMapCharacterState = null;
             Movement = null;
-            Direction = VirtualMap.Direction.None;
+            Direction = Point2D.Direction.None;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Ultima5Redux.MapUnits
             SmallMapCharacterState smallMapTheSmallMapCharacterState,
             MapUnitMovement mapUnitMovement, PlayerCharacterRecords playerCharacterRecords,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlRef, VirtualMap.Direction direction)
+            DataOvlReference dataOvlRef, Point2D.Direction direction)
         {
             DataOvlRef = dataOvlRef;
             TileReferences = tileReferences;
@@ -86,16 +86,16 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         public MapUnitState TheMapUnitState { get; protected set; }
 
-        protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; }
-        protected abstract Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; }
+        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
 
-        protected virtual Dictionary<VirtualMap.Direction, string> FourDirectionToTileNameBoarded  =>
+        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded  =>
             DirectionToTileNameBoarded;
         
         public abstract Avatar.AvatarState BoardedAvatarState { get; }
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsOccupiedByAvatar { get; protected internal set; }
-        public VirtualMap.Direction Direction { get; set; }
+        public Point2D.Direction Direction { get; set; }
 
         public bool UseFourDirections { get; set; } = false;
         

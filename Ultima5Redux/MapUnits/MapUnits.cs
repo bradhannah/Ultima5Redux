@@ -633,7 +633,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="nIndex"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Local
-        internal MagicCarpet CreateMagicCarpet(Point2D xy, VirtualMap.Direction direction, out int nIndex)
+        internal MagicCarpet CreateMagicCarpet(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
 
@@ -659,7 +659,7 @@ namespace Ultima5Redux.MapUnits
 
             MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
             Horse horse = new Horse(mapUnitState, Movements.GetMovement(nIndex),
-                _tileRefs, _currentLocation, _dataOvlReference, VirtualMap.Direction.Right)
+                _tileRefs, _currentLocation, _dataOvlReference, Point2D.Direction.Right)
             {
                 MapUnitPosition = mapUnitPosition
             };
@@ -676,7 +676,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="direction"></param>
         /// <param name="nIndex"></param>
         /// <returns></returns>
-        private Frigate CreateFrigate(Point2D xy, VirtualMap.Direction direction, out int nIndex)
+        private Frigate CreateFrigate(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
 
@@ -705,7 +705,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="direction"></param>
         /// <param name="nIndex"></param>
         /// <returns></returns>
-        private Skiff CreateSkiff(Point2D xy, VirtualMap.Direction direction, out int nIndex)
+        private Skiff CreateSkiff(Point2D xy, Point2D.Direction direction, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
             if (nIndex == -1) return null;
@@ -729,7 +729,7 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once UnusedMethodReturnValue.Global
         public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            return CreateFrigate(VirtualMap.GetLocationOfDock(location, _dataOvlReference), VirtualMap.Direction.Right,
+            return CreateFrigate(VirtualMap.GetLocationOfDock(location, _dataOvlReference), Point2D.Direction.Right,
                 out _);
         }
 
@@ -741,7 +741,7 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once UnusedMethodReturnValue.Global
         public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            return CreateSkiff(VirtualMap.GetLocationOfDock(location, _dataOvlReference), VirtualMap.Direction.Right,
+            return CreateSkiff(VirtualMap.GetLocationOfDock(location, _dataOvlReference), Point2D.Direction.Right,
                 out _);
         }
 

@@ -9,41 +9,41 @@ namespace Ultima5Redux.MapUnits
     {
         public Horse(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
-            VirtualMap.Direction direction)
+            Point2D.Direction direction)
             : base(null, mapUnitState, null, mapUnitMovement, null, tileReferences,
                 location, dataOvlReference, direction)
         {
             KeyTileReference = NonBoardedTileReference;
         }
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>
             {
-                {VirtualMap.Direction.None, "HorseLeft"},
-                {VirtualMap.Direction.Left, "HorseLeft"},
-                {VirtualMap.Direction.Down, "HorseLeft"},
-                {VirtualMap.Direction.Right, "HorseRight"},
-                {VirtualMap.Direction.Up, "HorseRight"}
+                {Point2D.Direction.None, "HorseLeft"},
+                {Point2D.Direction.Left, "HorseLeft"},
+                {Point2D.Direction.Down, "HorseLeft"},
+                {Point2D.Direction.Right, "HorseRight"},
+                {Point2D.Direction.Up, "HorseRight"}
             };
 
-        protected override Dictionary<VirtualMap.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>
             {
-                {VirtualMap.Direction.None, "RidingHorseLeft"},
-                {VirtualMap.Direction.Left, "RidingHorseLeft"},
-                {VirtualMap.Direction.Down, "RidingHorseLeft"},
-                {VirtualMap.Direction.Right, "RidingHorseRight"},
-                {VirtualMap.Direction.Up, "RidingHorseRight"}
+                {Point2D.Direction.None, "RidingHorseLeft"},
+                {Point2D.Direction.Left, "RidingHorseLeft"},
+                {Point2D.Direction.Down, "RidingHorseLeft"},
+                {Point2D.Direction.Right, "RidingHorseRight"},
+                {Point2D.Direction.Up, "RidingHorseRight"}
             };
         
-        protected override Dictionary<VirtualMap.Direction, string> FourDirectionToTileNameBoarded  =>
-            new Dictionary<VirtualMap.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded  =>
+            new Dictionary<Point2D.Direction, string>
                 {
-                {VirtualMap.Direction.None, "RidingHorseLeft"},
-                {VirtualMap.Direction.Left, "RidingHorseLeft"},
-                {VirtualMap.Direction.Down, "RidingHorseDown"},
-                {VirtualMap.Direction.Right, "RidingHorseRight"},
-                {VirtualMap.Direction.Up, "RidingHorseUp"}
+                {Point2D.Direction.None, "RidingHorseLeft"},
+                {Point2D.Direction.Left, "RidingHorseLeft"},
+                {Point2D.Direction.Down, "RidingHorseDown"},
+                {Point2D.Direction.Right, "RidingHorseRight"},
+                {Point2D.Direction.Up, "RidingHorseUp"}
             };
 
 

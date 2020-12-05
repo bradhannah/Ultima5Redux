@@ -19,11 +19,6 @@ namespace Ultima5Redux.Maps
 {
     public class VirtualMap
     {
-        /// <summary>
-        ///     4 way direction
-        /// </summary>
-        public enum Direction { Up, Down, Left, Right, None }
-
         private readonly DataOvlReference _dataOvlReference;
 
         // ReSharper disable once NotAccessedField.Local
@@ -123,7 +118,8 @@ namespace Ultima5Redux.Maps
             switch (initialMap)
             {
                 case LargeMap.Maps.Small:
-                    if (currentSmallMapReference == null) throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
+                    if (currentSmallMapReference == null)
+                        throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
                     LoadSmallMap(currentSmallMapReference);
                     break;
                 case LargeMap.Maps.Overworld:
@@ -200,23 +196,26 @@ namespace Ultima5Redux.Maps
 
         public MapUnits.MapUnits TheMapUnits { get; }
 
-        public bool IsLandNearby() => IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
+        public bool IsLandNearby() =>
+            IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
         public bool IsLandNearby(Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Down), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Up), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Left), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, Direction.Right), bNoStairCases, avatarState);
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
 
-        public bool IsLandNearby(Avatar.AvatarState avatarState) => IsTileFreeToTravelLocal(Direction.Down, avatarState) 
-                                                                    || IsTileFreeToTravelLocal(Direction.Up, avatarState)
-                                                                    || IsTileFreeToTravelLocal(Direction.Left, avatarState) 
-                                                                    || IsTileFreeToTravelLocal(Direction.Right, avatarState);
+        public bool IsLandNearby(Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState)
+            || IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState)
+            || IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState)
+            || IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
 
-        private bool IsTileFreeToTravelLocal(Direction direction, Avatar.AvatarState avatarState) => 
-            IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction), true, avatarState);
-        private bool IsTileFreeToTravelLocal(Direction direction, Point2D xy, Avatar.AvatarState avatarState) => 
-            IsTileFreeToTravel(MapUnitMovement.GetAdjustedPos(xy, direction), true, avatarState);
+        private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
+
+        private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Point2D xy, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(xy.GetAdjustedPosition(direction), true, avatarState);
 
         public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
         public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
@@ -461,7 +460,8 @@ namespace Ultima5Redux.Maps
         /// <returns>the NPC or null if one does not exist</returns>
         public List<MapUnit> GetMapUnitOnTile(Point2D xy)
         {
-            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitByLocation( LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
+            List<MapUnit> mapUnits =
+                TheMapUnits.GetMapUnitByLocation(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
 
             return mapUnits;
         }
@@ -501,7 +501,7 @@ namespace Ultima5Redux.Maps
             return GetTileReference(npc.MapUnitPosition.XY).Index == _tileReferences.GetTileNumberByName("LeftBed");
         }
 
-        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) => 
+        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) =>
             IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
         /// <summary>
@@ -528,20 +528,21 @@ namespace Ultima5Redux.Maps
 
             // if it's nighttime then the portcullises go down and you cannot pass
             bool bPortcullisDown = _tileReferences.GetTileNumberByName("BrickWallArchway") == tileReference.Index &&
-                                     !_timeOfDay.IsDayLight;
-            
+                                   !_timeOfDay.IsDayLight;
+
             // we check both the tile reference below as well as the map unit that occupies the tile
             bool bIsWalkable;
             // if the MapUnit is null then we do a basic evaluation 
             if (mapUnit is null)
             {
-                bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable) && !bPortcullisDown;;
+                bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable) && !bPortcullisDown;
+                ;
             }
             else // otherwise we need to evaluate if the vehicle can moved to the tile
             {
                 bIsWalkable = mapUnit.KeyTileReference.IsPassable(forcedAvatarState);
             }
-            
+
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
             // return !bIsNpcTile && bIsWalkable && !bIsAvatarTile;
             return bIsWalkable && !bIsAvatarTile;
@@ -858,14 +859,14 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public Direction GetStairsDirection(Point2D xy)
+        public Point2D.Direction GetStairsDirection(Point2D xy)
         {
             // we are making a BIG assumption at this time that a stair case ONLY ever has a single
             // entrance point, and solid walls on all other sides... hopefully this is true
-            if (!GetTileReference(xy.X - 1, xy.Y).IsSolidSprite) return Direction.Left;
-            if (!GetTileReference(xy.X + 1, xy.Y).IsSolidSprite) return Direction.Right;
-            if (!GetTileReference(xy.X, xy.Y - 1).IsSolidSprite) return Direction.Up;
-            if (!GetTileReference(xy.X, xy.Y + 1).IsSolidSprite) return Direction.Down;
+            if (!GetTileReference(xy.X - 1, xy.Y).IsSolidSprite) return Point2D.Direction.Left;
+            if (!GetTileReference(xy.X + 1, xy.Y).IsSolidSprite) return Point2D.Direction.Right;
+            if (!GetTileReference(xy.X, xy.Y - 1).IsSolidSprite) return Point2D.Direction.Up;
+            if (!GetTileReference(xy.X, xy.Y + 1).IsSolidSprite) return Point2D.Direction.Down;
             throw new Ultima5ReduxException("Can't get stair direction - something is amiss....");
         }
 
@@ -876,32 +877,32 @@ namespace Ultima5Redux.Maps
         /// <returns>stair sprite</returns>
         public int GetStairsSprite(Point2D xy)
         {
-            bool bGoingUp = IsStairGoingUp(xy); 
-            Direction direction = GetStairsDirection(xy);
+            bool bGoingUp = IsStairGoingUp(xy);
+            Point2D.Direction direction = GetStairsDirection(xy);
             int nSpriteNum = -1;
             switch (direction)
             {
-                case Direction.Up:
+                case Point2D.Direction.Up:
                     nSpriteNum = bGoingUp
                         ? _tileReferences.GetTileReferenceByName("StairsNorth").Index
                         : _tileReferences.GetTileReferenceByName("StairsSouth").Index;
                     break;
-                case Direction.Down:
+                case Point2D.Direction.Down:
                     nSpriteNum = bGoingUp
                         ? _tileReferences.GetTileReferenceByName("StairsSouth").Index
                         : _tileReferences.GetTileReferenceByName("StairsNorth").Index;
                     break;
-                case Direction.Left:
+                case Point2D.Direction.Left:
                     nSpriteNum = bGoingUp
                         ? _tileReferences.GetTileReferenceByName("StairsWest").Index
                         : _tileReferences.GetTileReferenceByName("StairsEast").Index;
                     break;
-                case Direction.Right:
+                case Point2D.Direction.Right:
                     nSpriteNum = bGoingUp
                         ? _tileReferences.GetTileReferenceByName("StairsEast").Index
                         : _tileReferences.GetTileReferenceByName("StairsWest").Index;
                     break;
-                case Direction.None:
+                case Point2D.Direction.None:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -1119,5 +1120,44 @@ namespace Ultima5Redux.Maps
         }
 
         internal enum LadderOrStairDirection { Up, Down }
+
+
+        public bool[][] VisibleOnMap { get; protected set; }
+
+        public void RecalculateVisibleTiles()
+        {
+            VisibleOnMap = Utils.Init2DBoolArray(CurrentMap.NumOfXTiles, CurrentMap.NumOfYTiles);
+            _testForVisibility = Utils.Init2DBoolArray(CurrentMap.NumOfXTiles, CurrentMap.NumOfYTiles);;
+            FloodFillSmallMap(TheMapUnits.AvatarMapUnit.MapUnitPosition.XY);
+        }
+
+        private bool[][] _testForVisibility;
+        
+        private void FloodFillSmallMap(Point2D xy)//, bool bForceNotVisible = false)
+        {
+            if (xy == null) return; // out of bounds
+            //if (bForceNotVisible) return; 
+            if (_testForVisibility[xy.X][xy.Y]) return; // already did it
+            _testForVisibility[xy.X][xy.Y] = true;
+            
+            // if it blocks light then we make it visible but do not make subsequent tiles visible
+            bool bBlocksLight = GetTileReference(xy).BlocksLight;
+
+            // if we are this far then we are certain that we will make this tile visible
+            VisibleOnMap[xy.X][xy.Y] = true;
+
+            // if the tile blocks the light then we don't calculate the surrounding tiles
+            if (bBlocksLight) return;
+
+            Point2D getAdjustedPos(Point2D.Direction direction) => xy.GetAdjustedPosition(direction,
+                CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1);
+            
+            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Down));
+            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Up));
+            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Left));
+            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Right));
+        }
     }
+
+
 }
