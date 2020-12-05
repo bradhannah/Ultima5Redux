@@ -8,12 +8,12 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Total tiles per row
         /// </summary>
-        public const int XTILES = 32;
+        public override int XTILES => 32;
 
         /// <summary>
         ///     Total tiles per column
         /// </summary>
-        public const int YTILES = 32;
+        public override int YTILES => 32;
 
         private readonly SmallMapReferences.SingleMapReference _mapRef;
 
@@ -26,13 +26,13 @@ namespace Ultima5Redux.Maps
         /// <param name="spriteTileReferences"></param>
         /// <param name="tileOverrides"></param>
         public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference mapRef,
-            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(u5Directory, tileOverrides, mapRef)
+            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides, mapRef)
         {
             _mapRef = mapRef;
 
             // load the map into memory
             TheMap = LoadSmallMapFile(Path.Combine(u5Directory, mapRef.MapFilename), mapRef.FileOffset);
-
+            
             InitializeAStarMap(spriteTileReferences);
         }
 

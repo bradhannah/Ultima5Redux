@@ -19,13 +19,17 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private List<List<Node>> _aStarNodes;
 
+        public abstract int XTILES { get; }
+        public abstract int YTILES { get; }
+
+        
         // ReSharper disable once NotAccessedField.Global
         // ReSharper disable once MemberCanBePrivate.Global
         protected TileOverrides TileOverrides;
 
         private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
 
-        protected Map(string u5Directory, TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
+        protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
         {
             TileOverrides = tileOverrides;
             CurrentSingleMapReference = mapRef;
@@ -37,6 +41,7 @@ namespace Ultima5Redux.Maps
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
 
         public byte[][] TheMap { get; protected set; }
+        public bool[][] VisibleOnMap { get; }
 
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles

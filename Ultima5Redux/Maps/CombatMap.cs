@@ -7,7 +7,10 @@ namespace Ultima5Redux.Maps
 {
     public class CombatMap : Map
     {
-        private const int MAX_X_COLS = 11, MAX_Y_ROWS = 11;
+        //private const int MAX_X_COLS = 11, MAX_Y_ROWS = 11;
+
+        public override int XTILES { get; } = 11;
+        public override int YTILES { get; } = 11;
 
         private const int ROW_BYTES = 32;
         // https://github.com/andrewschultz/rpg-mapping-tools/wiki/Ultima-V-Dungeon-File-Format
@@ -48,7 +51,7 @@ namespace Ultima5Redux.Maps
         /// <param name="mapRef">specific combat map reference</param>
         /// <param name="tileOverrides"></param>
         public CombatMap(string u5Directory, CombatMapReference.SingleCombatMapReference mapRef,
-            TileOverrides tileOverrides) : base(u5Directory, tileOverrides, null)
+            TileOverrides tileOverrides) : base(tileOverrides, null)
         {
             string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);
 
@@ -71,13 +74,13 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="byteList">the raw data</param>
         /// <returns>2D byte map</returns>
-        private static byte[][] ReadCombatBytesIntoByteArray(List<byte> byteList)
+        private byte[][] ReadCombatBytesIntoByteArray(List<byte> byteList)
         {
-            byte[][] combatMap = Utils.Init2DByteArray(MAX_Y_ROWS, MAX_X_COLS);
+            byte[][] combatMap = Utils.Init2DByteArray(XTILES, YTILES);
 
-            for (int i = 0; i < MAX_Y_ROWS; i++)
+            for (int i = 0; i < XTILES; i++)
             {
-                byteList.CopyTo(i * ROW_BYTES, combatMap[i], 0, MAX_X_COLS);
+                byteList.CopyTo(i * ROW_BYTES, combatMap[i], 0, XTILES);
             }
 
             return combatMap;

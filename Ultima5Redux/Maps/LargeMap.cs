@@ -16,14 +16,12 @@ namespace Ultima5Redux.Maps
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public const int
-            TILES_PER_MAP_ROW =
-                TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
+        public override int
+            YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public const int
-            TILES_PER_MAP_COL =
-                TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+        public override int 
+            XTILES => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
@@ -31,8 +29,7 @@ namespace Ultima5Redux.Maps
         /// <param name="u5Directory"></param>
         /// <param name="mapChoice"></param>
         /// <param name="tileOverrides"></param>
-        public LargeMap(string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(u5Directory,
-            tileOverrides,
+        public LargeMap(string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(tileOverrides,
             SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
             switch (mapChoice)
@@ -80,7 +77,7 @@ namespace Ultima5Redux.Maps
             }
 
             // declare the actual full map 4096*4096 tiles, with 255 (16*16) total chunks
-            byte[][] theMap = Utils.Init2DByteArray(TILES_PER_MAP_ROW, TILES_PER_MAP_COL);
+            byte[][] theMap = Utils.Init2DByteArray(YTILES, XTILES);
 
             // counter for the serial chunks from brit.dat
             int britDatChunkCount = 0;
