@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
 using Ultima5Redux.Data;
@@ -1143,19 +1144,35 @@ namespace Ultima5Redux.Maps
             // if it blocks light then we make it visible but do not make subsequent tiles visible
             bool bBlocksLight = GetTileReference(xy).BlocksLight;
 
+            // if we are on a tile that doesn't block light then we automatically see things in every direction
+            if (!bBlocksLight)
+            {
+                SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
+                SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
+                SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
+                SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
+            }
+
             // if we are this far then we are certain that we will make this tile visible
-            VisibleOnMap[xy.X][xy.Y] = true;
+            SetVisibleTile(xy);
 
             // if the tile blocks the light then we don't calculate the surrounding tiles
             if (bBlocksLight) return;
 
-            Point2D getAdjustedPos(Point2D.Direction direction) => xy.GetAdjustedPosition(direction,
-                CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1);
-            
-            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Down));
-            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Up));
-            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Left));
-            FloodFillSmallMap(getAdjustedPos(Point2D.Direction.Right));
+            FloodFillSmallMap(GetAdjustedPos(Point2D.Direction.Down, xy));
+            FloodFillSmallMap(GetAdjustedPos(Point2D.Direction.Up, xy));
+            FloodFillSmallMap(GetAdjustedPos(Point2D.Direction.Left, xy));
+            FloodFillSmallMap(GetAdjustedPos(Point2D.Direction.Right, xy));
+        }
+
+        private Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy) => 
+            xy.GetAdjustedPosition(direction, CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1);
+
+        private void SetVisibleTile(Point2D visbleTilePos)
+        {
+            if (visbleTilePos == null) return;
+            if (!visbleTilePos.IsOutOfRange(CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1)) 
+                VisibleOnMap[visbleTilePos.X][visbleTilePos.Y] = true;
         }
     }
 

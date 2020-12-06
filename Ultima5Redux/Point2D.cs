@@ -90,13 +90,15 @@ namespace Ultima5Redux
         public int X { get; set; }
         public int Y { get; set; }
 
+        public bool IsOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
+        {
+            return (X < nMinX || X > nMaxX || Y < nMinY || Y > nMaxY);
+        }
+        
         public Point2D GetAdjustedPosition(Direction direction, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
         {
             Point2D adjustedPos = GetAdjustedPosition(direction);
-            if (adjustedPos.X < nMinX || adjustedPos.X > nMaxX || adjustedPos.Y < nMinY || adjustedPos.Y > nMaxY)
-                return null;
-
-            return adjustedPos;
+            return adjustedPos.IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : adjustedPos;
         }
 
         public Point2D GetAdjustedPosition(Direction direction, int nSpaces = 1)
