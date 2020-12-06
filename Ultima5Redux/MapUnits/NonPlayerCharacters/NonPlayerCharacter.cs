@@ -399,7 +399,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
             // check to see if the random direction is within the correct distance
             if (direction != MapUnitMovement.MovementCommandDirection.None &&
-                !scheduledPosition.XY.WithinN(adjustedPosition, nMaxDistance))
+                !scheduledPosition.XY.IsWithinN(adjustedPosition, nMaxDistance))
                 throw new Ultima5ReduxException(
                     "GetWanderCharacterPosition has told us to go outside of our expected maximum area");
             // can we even travel onto the tile?

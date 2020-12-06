@@ -594,7 +594,7 @@ namespace Ultima5Redux.Maps
 
             // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
             if (IsTileFreeToTravel(adjustedPosition, bNoStaircases) &&
-                scheduledPosition.WithinN(adjustedPosition, nMaxDistance)) return adjustedPosition;
+                scheduledPosition.IsWithinN(adjustedPosition, nMaxDistance)) return adjustedPosition;
 
             return null;
         }
@@ -1142,7 +1142,10 @@ namespace Ultima5Redux.Maps
             _testForVisibility[xy.X][xy.Y] = true;
             
             // if it blocks light then we make it visible but do not make subsequent tiles visible
-            bool bBlocksLight = GetTileReference(xy).BlocksLight;
+            TileReference tileReference = GetTileReference(xy);
+            bool bBlocksLight = tileReference.BlocksLight && 
+                                !(tileReference.IsWindow && 
+                                    TheMapUnits.AvatarMapUnit.MapUnitPosition.XY.IsWithinNFourDirections(xy));
 
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)

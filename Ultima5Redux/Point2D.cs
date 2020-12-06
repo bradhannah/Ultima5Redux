@@ -129,11 +129,17 @@ namespace Ultima5Redux
             return adjustedPos;
         }
         
-        public bool WithinN(Point2D xy, int nWithin)
+        public bool IsWithinN(Point2D xy, int nWithin)
         {
             bool bWithinX = Math.Abs(xy.X - X) <= nWithin;
             bool bWithinY = Math.Abs(xy.Y - Y) <= nWithin;
             return bWithinX && bWithinY;
+        }
+
+        // is the point given point in one of the four directions given?
+        public bool IsWithinNFourDirections(Point2D xy)
+        {
+            return Math.Abs(DistanceBetween(xy) - 1) < 0.01;
         }
 
         public double DistanceBetween(Point2D xy)
