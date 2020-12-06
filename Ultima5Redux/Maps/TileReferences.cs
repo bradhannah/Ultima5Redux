@@ -13,6 +13,9 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private readonly U5StringRef _u5StringRef;
 
+        private readonly Dictionary<int, int> _npcOnTopMapWithFood;
+        private readonly Dictionary<int, int> _npcOnTopMap;
+        
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -29,6 +32,20 @@ namespace Ultima5Redux.Maps
                 tileRef.Index = i;
                 TileReferenceByStringDictionary.Add(tileRef.Name, tileRef);
             }
+
+            _npcOnTopMapWithFood = new Dictionary<int, int>
+            {
+                [GetTileNumberByName("ChairBackForward")] = GetTileNumberByName("SitChairDown1"),
+                [GetTileNumberByName("ChairBackBack")] = GetTileNumberByName("SitChairUp1")
+            };
+            _npcOnTopMap = new Dictionary<int, int>
+            {
+                [GetTileNumberByName("ChairBackForward")] = GetTileNumberByName("SitChairDown"),
+                [GetTileNumberByName("ChairBackLeft")] = GetTileNumberByName("SitChairLeft"),
+                [GetTileNumberByName("ChairBackBack")] = GetTileNumberByName("SitChairUp"),
+                [GetTileNumberByName("ChairBackRight")] = GetTileNumberByName("SitChairRight")
+            };
+
         }
 
         /// <summary>
@@ -422,30 +439,18 @@ namespace Ultima5Redux.Maps
             {
                 // this is trickier than you would think because the chair can 
                 // be in multiple directions
-                Dictionary<int, int> npcOnTopMapWithFood = new Dictionary<int, int>
-                {
-                    [GetTileNumberByName("ChairBackForward")] = GetTileNumberByName("SitChairDown1"),
-                    [GetTileNumberByName("ChairBackBack")] = GetTileNumberByName("SitChairUp1")
-                };
-                Dictionary<int, int> npcOnTopMap = new Dictionary<int, int>
-                {
-                    [GetTileNumberByName("ChairBackForward")] = GetTileNumberByName("SitChairDown"),
-                    [GetTileNumberByName("ChairBackLeft")] = GetTileNumberByName("SitChairLeft"),
-                    [GetTileNumberByName("ChairBackBack")] = GetTileNumberByName("SitChairUp"),
-                    [GetTileNumberByName("ChairBackRight")] = GetTileNumberByName("SitChairRight")
-                };
 
                 if (!bIsNPCTile && !bIsAvatarTile) return nNewSprite;
 
                 if (bIsFoodNearby)
                 {
-                    if (npcOnTopMapWithFood.ContainsKey(nSprite)) nNewSprite = npcOnTopMapWithFood[nSprite];
+                    if (_npcOnTopMapWithFood.ContainsKey(nSprite)) nNewSprite = _npcOnTopMapWithFood[nSprite];
                 }
                 else
                 {
                     // if there is a mapping of the current sprite for an alternate sprite when an NPC is on it
                     // then remap the sprite
-                    if (npcOnTopMap.ContainsKey(nSprite)) nNewSprite = npcOnTopMap[nSprite];
+                    if (_npcOnTopMap.ContainsKey(nSprite)) nNewSprite = _npcOnTopMap[nSprite];
                 }
             }
             else if (IsLadder(nSprite)) // on a ladder

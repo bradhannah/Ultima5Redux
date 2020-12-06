@@ -226,7 +226,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private List<MapUnit> GetMapUnits(LargeMap.Maps map)
+        internal List<MapUnit> GetMapUnits(LargeMap.Maps map)
         {
             switch (map)
             {
@@ -316,8 +316,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
         /// <returns>MapUnit or null if non exist at location</returns>
-        public List<MapUnit> GetMapUnitByLocation(
-            LargeMap.Maps map, Point2D xy, int nFloor)
+        public List<MapUnit> GetMapUnitByLocation(LargeMap.Maps map, Point2D xy, int nFloor)
         {
             List<MapUnit> mapUnits = new List<MapUnit>();
 

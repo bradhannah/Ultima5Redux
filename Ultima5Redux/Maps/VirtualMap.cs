@@ -62,6 +62,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private int[][] _overrideMap;
 
+        public bool ShowOuterSmallMapTiles => _bTouchedOuterBorder;
+        
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
@@ -939,9 +941,19 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsMapUnitOccupiedTile(Point2D xy)
         {
-            // this method isn't super efficient, may want to optimize in the future
-            //if (IsLargeMap) return false;
-            return GetMapUnitOnTile(xy).Count > 0;
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnits(LargeMapOverUnder);
+            for (int index = 0; index < mapUnits.Count; index++)
+            {
+                // sometimes characters are null because they don't exist - and that is OK
+                if (!mapUnits[index].IsActive) continue; 
+
+                MapUnitPosition mapUnitPosition = mapUnits[index].MapUnitPosition; 
+                if (mapUnitPosition.X == xy.X && mapUnitPosition.Y == xy.Y &&
+                    mapUnitPosition.Floor == CurrentPosition.Floor)
+                    return true;
+            }
+
+            return false;
         }
 
         public bool ContainsSearchableThings(Point2D xy)
@@ -1124,11 +1136,13 @@ namespace Ultima5Redux.Maps
 
 
         public bool[][] VisibleOnMap { get; protected set; }
-
+        private bool _bTouchedOuterBorder = false;
+        
         public void RecalculateVisibleTiles()
         {
             VisibleOnMap = Utils.Init2DBoolArray(CurrentMap.NumOfXTiles, CurrentMap.NumOfYTiles);
             _testForVisibility = Utils.Init2DBoolArray(CurrentMap.NumOfXTiles, CurrentMap.NumOfYTiles);;
+            _bTouchedOuterBorder = false;
             FloodFillSmallMap(TheMapUnits.AvatarMapUnit.MapUnitPosition.XY);
         }
 
@@ -1136,7 +1150,11 @@ namespace Ultima5Redux.Maps
         
         private void FloodFillSmallMap(Point2D xy)//, bool bForceNotVisible = false)
         {
-            if (xy == null) return; // out of bounds
+            if (xy == null)
+            {
+                _bTouchedOuterBorder = true;
+                return; // out of bounds
+            }
             //if (bForceNotVisible) return; 
             if (_testForVisibility[xy.X][xy.Y]) return; // already did it
             _testForVisibility[xy.X][xy.Y] = true;
@@ -1150,14 +1168,14 @@ namespace Ultima5Redux.Maps
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
             {
-                SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
-                SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
-                SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
-                SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
+                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
+                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
+                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
+                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
             }
 
             // if we are this far then we are certain that we will make this tile visible
-            SetVisibleTile(xy);
+            _bTouchedOuterBorder |= SetVisibleTile(xy);
 
             // if the tile blocks the light then we don't calculate the surrounding tiles
             if (bBlocksLight) return;
@@ -1171,11 +1189,17 @@ namespace Ultima5Redux.Maps
         private Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy) => 
             xy.GetAdjustedPosition(direction, CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1);
 
-        private void SetVisibleTile(Point2D visbleTilePos)
+        /// <summary>
+        /// Attempts to set the visible tile flag 
+        /// </summary>
+        /// <param name="visbleTilePos"></param>
+        /// <returns>true if the coordinate is out of bounds</returns>
+        private bool SetVisibleTile(Point2D visbleTilePos)
         {
-            if (visbleTilePos == null) return;
+            if (visbleTilePos == null) return true;
             if (!visbleTilePos.IsOutOfRange(CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1)) 
                 VisibleOnMap[visbleTilePos.X][visbleTilePos.Y] = true;
+            return false;
         }
     }
 
