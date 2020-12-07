@@ -1147,15 +1147,14 @@ namespace Ultima5Redux.Maps
         }
 
         private bool[][] _testForVisibility;
-        
-        private void FloodFillSmallMap(Point2D xy)//, bool bForceNotVisible = false)
+
+        private void FloodFillSmallMap(Point2D xy)
         {
             if (xy == null)
             {
                 _bTouchedOuterBorder = true;
                 return; // out of bounds
             }
-            //if (bForceNotVisible) return; 
             if (_testForVisibility[xy.X][xy.Y]) return; // already did it
             _testForVisibility[xy.X][xy.Y] = true;
             
@@ -1168,10 +1167,10 @@ namespace Ultima5Redux.Maps
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
             {
-                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
-                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
-                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
-                _bTouchedOuterBorder |= SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
+                SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
+                SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
+                SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
+                SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
             }
 
             // if we are this far then we are certain that we will make this tile visible
@@ -1186,8 +1185,84 @@ namespace Ultima5Redux.Maps
             FloodFillSmallMap(GetAdjustedPos(Point2D.Direction.Right, xy));
         }
 
-        private Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy) => 
-            xy.GetAdjustedPosition(direction, CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1);
+        private int _nVisibleInEachDirectionOfAvatar = 10;
+        private int _nVisibleLargeMapTiles;
+        private Point2D _avatarXyPos;
+        private Point2D _topLeftExtent;
+        private Point2D _bottomRightExtent;
+        
+        public void RecalculateVisibleTilesLargeMap()
+        {
+            _nVisibleLargeMapTiles = _nVisibleInEachDirectionOfAvatar * 2 + 1;
+
+            VisibleOnMap = Utils.Init2DBoolArray(CurrentMap.NumOfXTiles, CurrentMap.NumOfYTiles);
+            _testForVisibility = Utils.Init2DBoolArray(CurrentMap.NumOfXTiles, CurrentMap.NumOfYTiles);
+            _bTouchedOuterBorder = false;
+            
+            _avatarXyPos = TheMapUnits.AvatarMapUnit.MapUnitPosition.XY;
+            _topLeftExtent = new Point2D(_avatarXyPos.X - _nVisibleInEachDirectionOfAvatar, _avatarXyPos.Y - _nVisibleInEachDirectionOfAvatar);
+            _bottomRightExtent = new Point2D(_avatarXyPos.X + _nVisibleInEachDirectionOfAvatar, _avatarXyPos.Y + _nVisibleInEachDirectionOfAvatar);
+            
+            FloodFillLargeMap(TheMapUnits.AvatarMapUnit.MapUnitPosition.XY);
+        }
+
+        private Point2D GetAdjustedPosLargeMap(Point2D.Direction direction, Point2D xy)
+        {
+            if (xy.X + CurrentMap.NumOfXTiles <= _topLeftExtent.X + CurrentMap.NumOfXTiles || xy.X + CurrentMap.NumOfXTiles <= _bottomRightExtent.X)
+                return null;
+            if (xy.Y + CurrentMap.NumOfXTiles <= _topLeftExtent.Y + CurrentMap.NumOfXTiles || xy.Y + CurrentMap.NumOfXTiles <= _bottomRightExtent.Y)
+                return null;            
+            return xy.GetAdjustedPosition(direction, _bottomRightExtent.X, _bottomRightExtent.Y, 
+                _topLeftExtent.X, _topLeftExtent.Y);
+        }
+
+
+        private void FloodFillLargeMap(Point2D xy)
+        {
+            if (xy == null)
+            {
+                _bTouchedOuterBorder = true;
+                return; // out of bounds
+            }
+            
+            xy.X %= CurrentMap.NumOfXTiles;
+            xy.Y %= CurrentMap.NumOfXTiles;
+
+            if (_testForVisibility[xy.X][xy.Y]) return; // already did it
+            _testForVisibility[xy.X][xy.Y] = true;
+            
+            // if it blocks light then we make it visible but do not make subsequent tiles visible
+            TileReference tileReference = GetTileReference(xy);
+            bool bBlocksLight = tileReference.BlocksLight && 
+                                !(tileReference.IsWindow && 
+                                  TheMapUnits.AvatarMapUnit.MapUnitPosition.XY.IsWithinNFourDirections(xy));
+
+            // if we are on a tile that doesn't block light then we automatically see things in every direction
+            if (!bBlocksLight)
+            {
+                SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
+                SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
+                SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
+                SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
+            }
+
+            // if we are this far then we are certain that we will make this tile visible
+            _bTouchedOuterBorder |= SetVisibleTile(xy);
+
+            // if the tile blocks the light then we don't calculate the surrounding tiles
+            if (bBlocksLight) return;
+
+            FloodFillLargeMap(GetAdjustedPosLargeMap(Point2D.Direction.Down, xy));
+            FloodFillLargeMap(GetAdjustedPosLargeMap(Point2D.Direction.Up, xy));
+            FloodFillLargeMap(GetAdjustedPosLargeMap(Point2D.Direction.Left, xy));
+            FloodFillLargeMap(GetAdjustedPosLargeMap(Point2D.Direction.Right, xy));
+        }
+
+        private Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
+        {
+            return xy.GetAdjustedPosition(direction, CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles - 1);
+        }
+
 
         /// <summary>
         /// Attempts to set the visible tile flag 

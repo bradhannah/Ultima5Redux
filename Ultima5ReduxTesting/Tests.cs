@@ -914,9 +914,9 @@ namespace Ultima5ReduxTesting
         
         [Test] public void Test_ForceVisibleRecalculationInLargeMap()
         {
-            World world = new World(this.ActualSaveDirectory+@"\britain");
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
-            world.State.TheVirtualMap.RecalculateVisibleTiles();
+            world.State.TheVirtualMap.RecalculateVisibleTilesLargeMap();
         }
 
      }
