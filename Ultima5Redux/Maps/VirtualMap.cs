@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
@@ -1203,7 +1204,7 @@ namespace Ultima5Redux.Maps
             _topLeftExtent = new Point2D(_avatarXyPos.X - _nVisibleInEachDirectionOfAvatar, _avatarXyPos.Y - _nVisibleInEachDirectionOfAvatar);
             _bottomRightExtent = new Point2D(_avatarXyPos.X + _nVisibleInEachDirectionOfAvatar, _avatarXyPos.Y + _nVisibleInEachDirectionOfAvatar);
             
-            FloodFillLargeMap(TheMapUnits.AvatarMapUnit.MapUnitPosition.XY);
+            FloodFillLargeMap(TheMapUnits.AvatarMapUnit.MapUnitPosition.XY, true);
         }
 
         private Point2D GetAdjustedPosLargeMap(Point2D.Direction direction, Point2D xy)
@@ -1217,8 +1218,20 @@ namespace Ultima5Redux.Maps
         }
 
 
-        private void FloodFillLargeMap(Point2D xy)
+        private void FloodFillLargeMap(Point2D xy, bool bFirst = false)
         {
+            if (bFirst)
+            {
+                Debug.Assert(xy != null);
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        SetVisibleTile(new Point2D(xy.X + i, xy.Y + j));
+                    }
+                }
+            }
+            
             if (xy == null)
             {
                 _bTouchedOuterBorder = true;
@@ -1233,17 +1246,24 @@ namespace Ultima5Redux.Maps
             
             // if it blocks light then we make it visible but do not make subsequent tiles visible
             TileReference tileReference = GetTileReference(xy);
-            bool bBlocksLight = tileReference.BlocksLight && 
+            bool bBlocksLight = tileReference.BlocksLight && !bFirst && 
                                 !(tileReference.IsWindow && 
                                   TheMapUnits.AvatarMapUnit.MapUnitPosition.XY.IsWithinNFourDirections(xy));
 
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
             {
-                SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
-                SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
-                SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
-                SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
+                SetVisibleTile(new Point2D(xy.X - 1, xy.Y));
+                SetVisibleTile(new Point2D(xy.X + 1, xy.Y));
+                SetVisibleTile(new Point2D(xy.X, xy.Y - 1));
+                SetVisibleTile(new Point2D(xy.X, xy.Y + 1));
+                if (bFirst)
+                {
+                    SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1));
+                    SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1));
+                    SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1));
+                    SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1));
+                }
             }
 
             // if we are this far then we are certain that we will make this tile visible
@@ -1256,6 +1276,13 @@ namespace Ultima5Redux.Maps
             FloodFillLargeMap(GetAdjustedPosLargeMap(Point2D.Direction.Up, xy));
             FloodFillLargeMap(GetAdjustedPosLargeMap(Point2D.Direction.Left, xy));
             FloodFillLargeMap(GetAdjustedPosLargeMap(Point2D.Direction.Right, xy));
+            if (bFirst)
+            {
+                FloodFillLargeMap(new Point2D(xy.X - 1, xy.Y - 1));
+                FloodFillLargeMap(new Point2D(xy.X + 1, xy.Y + 1));
+                FloodFillLargeMap(new Point2D(xy.X - 1, xy.Y + 1));
+                FloodFillLargeMap(new Point2D(xy.X + 1, xy.Y - 1));
+            }
         }
 
         private Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
