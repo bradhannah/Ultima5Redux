@@ -90,6 +90,11 @@ namespace Ultima5Redux
         public int X { get; set; }
         public int Y { get; set; }
 
+        public Point2D GetPoint2DOrNullOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
+        {
+            return IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
+        }
+        
         public bool IsOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
         {
             return (X < nMinX || X > nMaxX || Y < nMinY || Y > nMaxY);
@@ -127,6 +132,14 @@ namespace Ultima5Redux
             }
 
             return adjustedPos;
+        }
+
+        public void AdjustXAndYToMax(int nMax)
+        {
+            X %= nMax;
+            if (X < 0) X += nMax;
+            Y %= nMax;
+            if (Y < 0) Y += nMax;
         }
         
         public bool IsWithinN(Point2D xy, int nWithin)
