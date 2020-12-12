@@ -136,10 +136,12 @@ namespace Ultima5Redux
 
         public void AdjustXAndYToMax(int nMax)
         {
-            X %= nMax;
             if (X < 0) X += nMax;
-            Y %= nMax;
+            if (X >= nMax) X -= nMax;
+            X %= nMax;
             if (Y < 0) Y += nMax;
+            if (Y >= nMax) Y -= nMax;
+            Y %= nMax;
         }
         
         public bool IsWithinN(Point2D xy, int nWithin)

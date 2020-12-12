@@ -916,6 +916,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(128, 0));
             world.State.TheVirtualMap.RecalculateVisibleTilesLargeMap();
         }
 

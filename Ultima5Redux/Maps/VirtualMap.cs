@@ -189,7 +189,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Are we currently on a large map?
         /// </summary>
-        public bool IsLargeMap { get; private set; }
+        public bool IsLargeMap => LargeMapOverUnder != LargeMap.Maps.Small;//{ get; private set; }
 
         public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
 
@@ -256,7 +256,7 @@ namespace Ultima5Redux.Maps
                 Utils.Init2DArray<Queue<InventoryItem>>(CurrentSmallMap.TheMap[0].Length,
                     CurrentSmallMap.TheMap.Length);
 
-            IsLargeMap = false;
+            //IsLargeMap = false;
             LargeMapOverUnder = (LargeMap.Maps) (-1);
 
             TheMapUnits.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small);
@@ -290,7 +290,7 @@ namespace Ultima5Redux.Maps
                 Utils.Init2DArray<Queue<InventoryItem>>(CurrentLargeMap.TheMap[0].Length,
                     CurrentLargeMap.TheMap.Length);
 
-            IsLargeMap = true;
+            //IsLargeMap = true;
             LargeMapOverUnder = map;
 
             TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map);
@@ -1171,14 +1171,24 @@ namespace Ultima5Redux.Maps
             FloodFillMap(TheMapUnits.AvatarMapUnit.MapUnitPosition.XY, true);
         }
 
+        /// <summary>
+        /// Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
+        /// current extends
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="xy"></param>
+        /// <returns></returns>
         private Point2D GetAdjustedPosLargeMap(Point2D.Direction direction, Point2D xy)
         {
-            if (xy.X + CurrentMap.NumOfXTiles <= _topLeftExtent.X + CurrentMap.NumOfXTiles || xy.X + CurrentMap.NumOfXTiles <= _bottomRightExtent.X)
+            int nPositiveX = xy.X + CurrentMap.NumOfXTiles;
+            int nPositiveY = xy.Y + CurrentMap.NumOfYTiles;
+            
+            if (nPositiveX <= _topLeftExtent.X + CurrentMap.NumOfXTiles || xy.X >= _bottomRightExtent.X)
                 return null;
-            if (xy.Y + CurrentMap.NumOfXTiles <= _topLeftExtent.Y + CurrentMap.NumOfXTiles || xy.Y + CurrentMap.NumOfXTiles <= _bottomRightExtent.Y)
-                return null;            
-            return xy.GetAdjustedPosition(direction, _bottomRightExtent.X, _bottomRightExtent.Y, 
-                _topLeftExtent.X, _topLeftExtent.Y);
+            if (nPositiveY <= _topLeftExtent.Y + CurrentMap.NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
+                return null;
+
+            return xy.GetAdjustedPosition(direction);
         }
 
         /// <summary>
@@ -1186,7 +1196,7 @@ namespace Ultima5Redux.Maps
         /// current position
         /// </summary>
         /// <param name="xy"></param>
-        /// <param name="bFirst">is this the initial call to the method?</param>
+        /// <param name="bFirst">is this the initial call to the method?</param>    
         private void FloodFillMap(Point2D xy, bool bFirst = false)
         {
             if (xy == null)
@@ -1195,22 +1205,25 @@ namespace Ultima5Redux.Maps
                 return; // out of bounds
             }
 
-            if (LargeMapOverUnder != LargeMap.Maps.Small) 
-                xy.AdjustXAndYToMax(CurrentMap.NumOfXTiles);
-                
-            if (_testForVisibility[xy.X][xy.Y]) return; // already did it
-            _testForVisibility[xy.X][xy.Y] = true;
+            Point2D adjustedXy = xy.Copy();
+
+            // let's check to make sure it is within bounds
+            if (IsLargeMap)
+                adjustedXy.AdjustXAndYToMax(CurrentMap.NumOfXTiles);
+
+            if (_testForVisibility[adjustedXy.X][adjustedXy.Y]) return; // already did it
+            _testForVisibility[adjustedXy.X][adjustedXy.Y] = true;
             
             // if it blocks light then we make it visible but do not make subsequent tiles visible
-            TileReference tileReference = GetTileReference(xy);
+            TileReference tileReference = GetTileReference(adjustedXy);
             bool bBlocksLight = tileReference.BlocksLight && !bFirst && 
                                 !(tileReference.IsWindow && 
-                                  TheMapUnits.AvatarMapUnit.MapUnitPosition.XY.IsWithinNFourDirections(xy));
+                                  TheMapUnits.AvatarMapUnit.MapUnitPosition.XY.IsWithinNFourDirections(adjustedXy));
 
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
             {
-                SetSurroundingTilesVisible(xy, true);
+                SetSurroundingTilesVisible(adjustedXy, true);
             }
 
             // if we are this far then we are certain that we will make this tile visible
@@ -1219,10 +1232,10 @@ namespace Ultima5Redux.Maps
             // if the tile blocks the light then we don't calculate the surrounding tiles
             if (bBlocksLight) return;
 
-            if (LargeMapOverUnder != LargeMap.Maps.Small)
+            if (IsLargeMap)
             {
-                FloodFillMap(GetAdjustedPosLargeMap(Point2D.Direction.Down, xy));
                 FloodFillMap(GetAdjustedPosLargeMap(Point2D.Direction.Up, xy));
+                FloodFillMap(GetAdjustedPosLargeMap(Point2D.Direction.Down, xy));
                 FloodFillMap(GetAdjustedPosLargeMap(Point2D.Direction.Left, xy));
                 FloodFillMap(GetAdjustedPosLargeMap(Point2D.Direction.Right, xy));
             }
@@ -1234,9 +1247,9 @@ namespace Ultima5Redux.Maps
                 FloodFillMap(GetAdjustedPos(Point2D.Direction.Right, xy));
             }
 
-
             if (!bFirst) return;
-            
+
+            // if it is the first call (avatar tile) then we always check the diagonals as well 
             FloodFillMap(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles -1 ));
             FloodFillMap(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles -1 ));
             FloodFillMap(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(CurrentMap.NumOfXTiles - 1, CurrentMap.NumOfYTiles -1 ));
