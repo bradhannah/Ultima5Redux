@@ -56,10 +56,10 @@ namespace Ultima5Redux
         /// <summary>
         ///     Which map am I currently on?
         /// </summary>
-        internal LargeMap.Maps InitialMap =>
+        internal Map.Maps InitialMap =>
             Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
-                ? Floor == 0xFF ? LargeMap.Maps.Underworld : LargeMap.Maps.Overworld
-                : LargeMap.Maps.Small;
+                ? Floor == 0xFF ? Map.Maps.Underworld : Map.Maps.Overworld
+                : Map.Maps.Small;
         
         /// <summary>
         ///     Players total gold

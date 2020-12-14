@@ -28,7 +28,7 @@ namespace Ultima5Redux
         private readonly int _nInitialFloor;
         private readonly int _nInitialX;
         private readonly int _nInitialY;
-        private readonly LargeMap.Maps _initialMap;
+        private readonly Map.Maps _initialMap;
         
         public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 

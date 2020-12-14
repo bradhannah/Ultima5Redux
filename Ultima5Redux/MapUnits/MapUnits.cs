@@ -38,7 +38,7 @@ namespace Ultima5Redux.MapUnits
         private readonly MapUnitStates _underworldMapUnitStates;
         private SmallMapReferences.SingleMapReference.Location _currentLocation;
 
-        private LargeMap.Maps _currentMapType;
+        private Map.Maps _currentMapType;
 
         //public List<NonPlayerCharacterReference> NonPlayerCharacterReferencesList { get; private set; }
         private MapUnitStates _currentMapUnitStates;
@@ -68,7 +68,7 @@ namespace Ultima5Redux.MapUnits
             DataChunk underworldMapUnitStatesDataChunk, DataChunk charStatesDataChunk,
             DataChunk nonPlayerCharacterMovementLists, DataChunk nonPlayerCharacterMovementOffsets,
             TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
-            LargeMap.Maps initialMap, DataOvlReference dataOvlReference, bool bUseExtendedSprites,
+            Map.Maps initialMap, DataOvlReference dataOvlReference, bool bUseExtendedSprites,
             SmallMapReferences.SingleMapReference.Location currentSmallMap =
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
@@ -90,7 +90,7 @@ namespace Ultima5Redux.MapUnits
 
             // if the small map is being loaded, then we pull from disk and load the over and underworld from
             // saved.ool
-            if (initialMap == LargeMap.Maps.Small)
+            if (initialMap == Map.Maps.Small)
             {
                 // small, overworld and underworld always have saved Animation states so we load them in at the beginning
                 _smallMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
@@ -108,7 +108,7 @@ namespace Ultima5Redux.MapUnits
                 // and the selected large map is pulled directly from the active state (saved.gam @ 0x6b8)
                 _smallMapUnitStates = null;
 
-                if (initialMap == LargeMap.Maps.Overworld)
+                if (initialMap == Map.Maps.Overworld)
                 {
                     _overworldMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
                     _underworldMapUnitStates = new MapUnitStates(_underworldDataChunk, tileRefs);
@@ -132,20 +132,20 @@ namespace Ultima5Redux.MapUnits
             NPCRefs = npcRefs;
 
             // we only load the large maps once and they always exist on disk
-            LoadLargeMap(LargeMap.Maps.Overworld, true);
-            LoadLargeMap(LargeMap.Maps.Underworld, true);
+            LoadLargeMap(Map.Maps.Overworld, true);
+            LoadLargeMap(Map.Maps.Underworld, true);
 
             // if the small map is the initial map, then load it 
             // otherwise we force the correct states to either the over or underworld
             switch (initialMap)
             {
-                case LargeMap.Maps.Small:
+                case Map.Maps.Small:
                     LoadSmallMap(currentSmallMap, true);
                     break;
-                case LargeMap.Maps.Overworld:
+                case Map.Maps.Overworld:
                     _currentMapUnitStates = _overworldMapUnitStates;
                     break;
-                case LargeMap.Maps.Underworld:
+                case Map.Maps.Underworld:
                     _currentMapUnitStates = _underworldMapUnitStates;
                     break;
                 default:
@@ -155,8 +155,8 @@ namespace Ultima5Redux.MapUnits
             // We will reassign each AvatarMapUnit to the active one. This will ensure that when the Avatar
             // has boarded something, it should carry between maps
             _masterAvatarMapUnit = AvatarMapUnit;
-            GetMapUnits(LargeMap.Maps.Overworld)[0] = _masterAvatarMapUnit;
-            GetMapUnits(LargeMap.Maps.Underworld)[0] = _masterAvatarMapUnit;
+            GetMapUnits(Map.Maps.Overworld)[0] = _masterAvatarMapUnit;
+            GetMapUnits(Map.Maps.Underworld)[0] = _masterAvatarMapUnit;
 
             SetAllExtendedSprites();
             
@@ -213,11 +213,11 @@ namespace Ultima5Redux.MapUnits
             {
                 switch (_currentMapType)
                 {
-                    case LargeMap.Maps.Small:
+                    case Map.Maps.Small:
                         return _smallMapUnitStates;
-                    case LargeMap.Maps.Overworld:
+                    case Map.Maps.Overworld:
                         return _overworldMapUnitStates;
-                    case LargeMap.Maps.Underworld:
+                    case Map.Maps.Underworld:
                         return _underworldMapUnitStates;
                     default:
                         throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" +
@@ -226,15 +226,15 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        internal List<MapUnit> GetMapUnits(LargeMap.Maps map)
+        internal List<MapUnit> GetMapUnits(Map.Maps map)
         {
             switch (map)
             {
-                case LargeMap.Maps.Small:
+                case Map.Maps.Small:
                     return _smallWorldMapUnits;
-                case LargeMap.Maps.Overworld:
+                case Map.Maps.Overworld:
                     return _overworldMapUnits;
-                case LargeMap.Maps.Underworld:
+                case Map.Maps.Underworld:
                     return _underworldMapUnits;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -249,7 +249,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapType"></param>
         /// <param name="bLoadFromDisk"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, LargeMap.Maps mapType,
+        private void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
             bool bLoadFromDisk)
         {
             _currentMapType = mapType;
@@ -259,11 +259,11 @@ namespace Ultima5Redux.MapUnits
 
             switch (mapType)
             {
-                case LargeMap.Maps.Small:
+                case Map.Maps.Small:
                     LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
                     break;
-                case LargeMap.Maps.Overworld:
-                case LargeMap.Maps.Underworld:
+                case Map.Maps.Overworld:
+                case Map.Maps.Underworld:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
@@ -279,12 +279,12 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapRef"></param>
         /// <param name="mapType">Is it a small map, overworld or underworld</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, LargeMap.Maps mapType)
+        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType)
         {
             SetCurrentMapType(mapRef, mapType, false);
         }
 
-        public T GetSpecificMapUnitByLocation<T>(LargeMap.Maps map,
+        public T GetSpecificMapUnitByLocation<T>(Map.Maps map,
             //SmallMapReferences.SingleMapReference.Location location, 
             Point2D xy,
             int nFloor, bool bCheckBaseToo = false) where T : MapUnit
@@ -316,7 +316,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
         /// <returns>MapUnit or null if non exist at location</returns>
-        public List<MapUnit> GetMapUnitByLocation(LargeMap.Maps map, Point2D xy, int nFloor)
+        public List<MapUnit> GetMapUnitByLocation(Map.Maps map, Point2D xy, int nFloor)
         {
             List<MapUnit> mapUnits = new List<MapUnit>();
 
@@ -340,7 +340,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnit"></param>
         /// <returns>true if successful, false if no room was found</returns>
         // ReSharper disable once UnusedMethodReturnValue.Local
-        private bool AddNewMapUnit(LargeMap.Maps map, MapUnit mapUnit)
+        private bool AddNewMapUnit(Map.Maps map, MapUnit mapUnit)
         {
             int nIndex = FindNextFreeMapUnitIndex(map);
             return AddNewMapUnit(map, mapUnit, nIndex);
@@ -377,7 +377,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnit"></param>
         /// <param name="nIndex"></param>
         /// <returns></returns>
-        private bool AddNewMapUnit(LargeMap.Maps map, MapUnit mapUnit, int nIndex)
+        private bool AddNewMapUnit(Map.Maps map, MapUnit mapUnit, int nIndex)
         {
             if (nIndex == -1) return false;
 
@@ -394,7 +394,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="map"></param>
         /// <returns>>= 0 is an index, or -1 means no room found</returns>
-        private int FindNextFreeMapUnitIndex(LargeMap.Maps map)
+        private int FindNextFreeMapUnitIndex(Map.Maps map)
         {
             int nIndex = 0;
             foreach (MapUnit mapUnit in GetMapUnits(map))
@@ -415,22 +415,22 @@ namespace Ultima5Redux.MapUnits
         /// <param name="map"></param>
         /// <param name="bInitialLoad"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void LoadLargeMap(LargeMap.Maps map, bool bInitialLoad)
+        private void LoadLargeMap(Map.Maps map, bool bInitialLoad)
         {
             List<MapUnit> mapUnits;
 
             // the over and underworld animation states are already loaded and can stick around
             switch (map)
             {
-                case LargeMap.Maps.Overworld:
+                case Map.Maps.Overworld:
                     _currentMapUnitStates = _overworldMapUnitStates;
                     mapUnits = _overworldMapUnits;
                     break;
-                case LargeMap.Maps.Underworld:
+                case Map.Maps.Underworld:
                     _currentMapUnitStates = _underworldMapUnitStates;
                     mapUnits = _underworldMapUnits;
                     break;
-                case LargeMap.Maps.Small:
+                case Map.Maps.Small:
                     throw new Ultima5ReduxException("You asked for a Small map when loading a large one");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
@@ -492,9 +492,9 @@ namespace Ultima5Redux.MapUnits
                 // datachunk because it would have otherwise been loaded from saved.gam the first time
                 // Note: yes, this is all very confusing - I am confused, but hopefully the abstraction layers
                 //       make it consumable
-                if (_currentMapType != LargeMap.Maps.Small)
+                if (_currentMapType != Map.Maps.Small)
                 {
-                    if (_currentMapType == LargeMap.Maps.Overworld)
+                    if (_currentMapType == Map.Maps.Overworld)
                         _overworldMapUnitStates.ReassignNewDataChunk(_overworldDataChunk);
                     else
                         _underworldMapUnitStates.ReassignNewDataChunk(_underworldDataChunk);
@@ -651,7 +651,7 @@ namespace Ultima5Redux.MapUnits
             return magicCarpet;
         }
 
-        public Horse CreateHorse(MapUnitPosition mapUnitPosition, LargeMap.Maps map, out int nIndex)
+        public Horse CreateHorse(MapUnitPosition mapUnitPosition, Map.Maps map, out int nIndex)
         {
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
             if (nIndex == -1) return null;
@@ -693,7 +693,7 @@ namespace Ultima5Redux.MapUnits
             frigate.SkiffsAboard = 1;
             frigate.KeyTileReference = _tileRefs.GetTileReferenceByName("ShipNoSailsLeft");
 
-            AddNewMapUnit(LargeMap.Maps.Overworld, frigate, nIndex);
+            AddNewMapUnit(Map.Maps.Overworld, frigate, nIndex);
             return frigate;
         }
 
@@ -717,7 +717,7 @@ namespace Ultima5Redux.MapUnits
             // set position of frigate in the world
             Point2D skiffLocation = xy;
             skiff.MapUnitPosition = new MapUnitPosition(skiffLocation.X, skiffLocation.Y, 0);
-            AddNewMapUnit(LargeMap.Maps.Overworld, skiff, nIndex);
+            AddNewMapUnit(Map.Maps.Overworld, skiff, nIndex);
             return skiff;
         }
 

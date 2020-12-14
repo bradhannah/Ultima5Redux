@@ -136,7 +136,7 @@ namespace Ultima5Redux.DayNightMoon
             return _moongateBuriedAtPositionDictionary[position];
         }
 
-        public MoonPhaseReferences.MoonPhases GetMoonPhaseByPosition(Point2D position, LargeMap.Maps map)
+        public MoonPhaseReferences.MoonPhases GetMoonPhaseByPosition(Point2D position, Map.Maps map)
         {
             if (!IsMoonstoneBuried(position, map))
                 throw new Ultima5ReduxException("Can't get a moonphase for a stone that ain't there at " + position);
@@ -159,9 +159,9 @@ namespace Ultima5Redux.DayNightMoon
             return (MoonPhaseReferences.MoonPhases) nPos;
         }
 
-        public bool IsMoonstoneBuried(Point2D position, LargeMap.Maps map)
+        public bool IsMoonstoneBuried(Point2D position, Map.Maps map)
         {
-            return IsMoonstoneBuried(new Point3D(position.X, position.Y, map == LargeMap.Maps.Overworld ? 0 : 0xFF));
+            return IsMoonstoneBuried(new Point3D(position.X, position.Y, map == Map.Maps.Overworld ? 0 : 0xFF));
         }
     }
 }

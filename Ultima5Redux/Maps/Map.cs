@@ -8,6 +8,8 @@ namespace Ultima5Redux.Maps
 {
     public abstract class Map
     {
+        public enum Maps { Small = -1, Overworld, Underworld, Combat }
+
         /// <summary>
         ///     A* algorithm helper class
         /// </summary>
@@ -192,5 +194,6 @@ namespace Ultima5Redux.Maps
                 }
             }
         }
+
     }
 }

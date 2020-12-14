@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
 using Ultima5Redux.Data;
@@ -29,7 +27,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
-        private readonly Dictionary<LargeMap.Maps, LargeMap> _largeMaps = new Dictionary<LargeMap.Maps, LargeMap>(2);
+        private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
 
         /// <summary>
         ///     Details of where the moongates are
@@ -87,7 +85,7 @@ namespace Ultima5Redux.Maps
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
-            LargeMap.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
+            Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites)
         {
             // let's make sure they are using the correct combination
@@ -104,8 +102,8 @@ namespace Ultima5Redux.Maps
             _inventoryReferences = inventoryReferences;
             _dataOvlReference = dataOvlReference;
 
-            _largeMaps.Add(LargeMap.Maps.Overworld, overworldMap);
-            _largeMaps.Add(LargeMap.Maps.Underworld, underworldMap);
+            _largeMaps.Add(Map.Maps.Overworld, overworldMap);
+            _largeMaps.Add(Map.Maps.Underworld, underworldMap);
 
             SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation
                                                                          ?? SmallMapReferences.SingleMapReference
@@ -121,13 +119,13 @@ namespace Ultima5Redux.Maps
 
             switch (initialMap)
             {
-                case LargeMap.Maps.Small:
+                case Map.Maps.Small:
                     if (currentSmallMapReference == null)
                         throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
                     LoadSmallMap(currentSmallMapReference);
                     break;
-                case LargeMap.Maps.Overworld:
-                case LargeMap.Maps.Underworld:
+                case Map.Maps.Overworld:
+                case Map.Maps.Underworld:
                     LoadLargeMap(initialMap);
                     break;
                 default:
@@ -159,6 +157,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         public LargeMap CurrentLargeMap { get; private set; }
+        
+        public CombatMap CurrentCombatMap { get; private set; }
 
         /// <summary>
         ///     The abstracted Map object for the current map
@@ -169,12 +169,12 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     The persistant overworld map
         /// </summary>
-        public LargeMap OverworldMap => _largeMaps[LargeMap.Maps.Overworld];
+        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
 
         /// <summary>
         ///     The persistant underworld map
         /// </summary>
-        public LargeMap UnderworldMap => _largeMaps[LargeMap.Maps.Underworld];
+        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
 
         /// <summary>
         ///     Detailed reference of current small map
@@ -189,14 +189,14 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Are we currently on a large map?
         /// </summary>
-        public bool IsLargeMap => LargeMapOverUnder != LargeMap.Maps.Small;//{ get; private set; }
+        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small;//{ get; private set; }
 
         public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
 
         /// <summary>
         ///     If we are on a large map - then are we on overworld or underworld
         /// </summary>
-        public LargeMap.Maps LargeMapOverUnder { get; private set; } = (LargeMap.Maps) (-1);
+        public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps) (-1);
 
         public MapUnits.MapUnits TheMapUnits { get; }
 
@@ -246,6 +246,14 @@ namespace Ultima5Redux.Maps
                 new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
         }
 
+        public void LoadCombatMap(CombatMapReferences combatMapReferences)
+        {
+            CurrentSingleMapReference = SmallMapRefs.GetSingleMapByLocation(
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
+
+            //CurrentCombatMap = ;
+        }
+        
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)
         {
             CurrentSingleMapReference = singleMapReference;
@@ -257,9 +265,9 @@ namespace Ultima5Redux.Maps
                     CurrentSmallMap.TheMap.Length);
 
             //IsLargeMap = false;
-            LargeMapOverUnder = (LargeMap.Maps) (-1);
+            LargeMapOverUnder = (Map.Maps) (-1);
 
-            TheMapUnits.SetCurrentMapType(singleMapReference, LargeMap.Maps.Small);
+            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small);
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
 
@@ -270,16 +278,17 @@ namespace Ultima5Redux.Maps
         ///     Loads a large map -either overworld or underworld
         /// </summary>
         /// <param name="map"></param>
-        public void LoadLargeMap(LargeMap.Maps map)
+        public void LoadLargeMap(Map.Maps map)
         {
             CurrentLargeMap = _largeMaps[map];
             switch (map)
             {
-                case LargeMap.Maps.Underworld:
-                case LargeMap.Maps.Overworld:
+                case Map.Maps.Underworld:
+                case Map.Maps.Overworld:
                     CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
                     break;
-                case LargeMap.Maps.Small:
+                case Map.Maps.Combat:
+                case Map.Maps.Small:
                     throw new Ultima5ReduxException("You can't load a small large map!");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
@@ -290,7 +299,6 @@ namespace Ultima5Redux.Maps
                 Utils.Init2DArray<Queue<InventoryItem>>(CurrentLargeMap.TheMap[0].Length,
                     CurrentLargeMap.TheMap.Length);
 
-            //IsLargeMap = true;
             LargeMapOverUnder = map;
 
             TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map);
@@ -321,7 +329,7 @@ namespace Ultima5Redux.Maps
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
             if (!bIgnoreMoongate && IsLargeMap &&
-                _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF))
+                _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF))
             )
                 return _tileReferences.GetTileReferenceByName("Moongate");
 
@@ -329,9 +337,18 @@ namespace Ultima5Redux.Maps
             if (_overrideMap[x][y] != 0)
                 return _tileReferences.GetTileReference(_overrideMap[x][y]);
 
-            if (IsLargeMap)
-                return _tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]);
-            return _tileReferences.GetTileReference(CurrentSmallMap.TheMap[x][y]);
+            switch (LargeMapOverUnder)
+            {
+                case Map.Maps.Small:
+                    return _tileReferences.GetTileReference(CurrentSmallMap.TheMap[x][y]);
+                case Map.Maps.Overworld:
+                case Map.Maps.Underworld:
+                    return _tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]);
+                case Map.Maps.Combat:
+                    return _tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -390,12 +407,12 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public Point3D GetCurrent3DPosition()
         {
-            if (LargeMapOverUnder == LargeMap.Maps.Small)
+            if (LargeMapOverUnder == Map.Maps.Small)
                 return new Point3D(CurrentPosition.X,
                     CurrentPosition.Y, CurrentSmallMap.MapFloor);
 
             return new Point3D(CurrentPosition.X,
-                CurrentPosition.Y, LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
+                CurrentPosition.Y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF);
         }
 
         /// <summary>
@@ -1083,7 +1100,7 @@ namespace Ultima5Redux.Maps
             // 3 = Buccaneer's Den
 
             SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(
-                LargeMap.Maps.Overworld,
+                Map.Maps.Overworld,
                 //SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 GetLocationOfDock(location, _dataOvlReference), 0, true);
             return seaFaringVessel;

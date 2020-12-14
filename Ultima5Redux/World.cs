@@ -31,7 +31,7 @@ namespace Ultima5Redux
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         // ReSharper disable once UnusedMember.Local
-        private readonly CombatMapReference _combatMapRef = new CombatMapReference();
+        public readonly CombatMapReferences CombatMapRef;
         private readonly TileOverrides _tileOverrides = new TileOverrides();
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace Ultima5Redux
             SmallMapRef = new SmallMapReferences(DataOvlRef);
 
             // build the overworld map
-            OverworldMap = new LargeMap(U5Directory, LargeMap.Maps.Overworld, _tileOverrides);
+            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld, _tileOverrides);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(U5Directory, LargeMap.Maps.Underworld, _tileOverrides);
+            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld, _tileOverrides);
 
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
@@ -69,11 +69,13 @@ namespace Ultima5Redux
 
             State = new GameState(U5Directory, DataOvlRef);
 
+            CombatMapRef = new CombatMapReferences(U5Directory);
+            
             // build all combat maps from the Combat Map References
-            // foreach (CombatMapReference.SingleCombatMapReference combatMapRef in _combatMapRef.MapReferenceList)
-            // {
-            //     CombatMap combatMap = new CombatMap(_u5Directory, combatMapRef, _tileOverrides);
-            // }
+             // foreach (SingleCombatMapReference combatMapRef in CombatMapRef.MapReferenceList)
+             // {
+             //     CombatMapLegacy combatMap = new CombatMapLegacy(U5Directory, combatMapRef, _tileOverrides);
+             // }
 
             // build a "look" table for all tiles
             LookRef = new Look(U5Directory);
@@ -236,10 +238,6 @@ namespace Ultima5Redux
         public Point3D GetMoongateTeleportLocation()
         {
             Debug.Assert(State.TheVirtualMap.IsLargeMap);
-
-            // Point3D currentPos = new Point3D(State.TheVirtualMap.CurrentPosition.X,
-            //     State.TheVirtualMap.CurrentPosition.Y,
-            //     State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Overworld ? 0 : 0xFF);
 
             return State.TheMoongates.GetMoongatePosition((int) MoonPhaseRefs.GetMoonGateMoonPhase(State.TheTimeOfDay));
         }
@@ -1277,7 +1275,7 @@ namespace Ultima5Redux
 
         private bool IsAllowedToBuryMoongate()
         {
-            if (State.TheVirtualMap.LargeMapOverUnder == LargeMap.Maps.Small) return false;
+            if (State.TheVirtualMap.LargeMapOverUnder == Map.Maps.Small) return false;
             if (State.TheVirtualMap.IsAnyExposedItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
             TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
 

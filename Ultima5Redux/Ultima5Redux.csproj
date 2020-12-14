@@ -98,7 +98,9 @@
     <Compile Include="Dialogue\ShoppeKeeperDialogueReference.cs" />
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="ImportedGameState.cs" />
+    <Compile Include="Maps\CombatMap.cs" />
     <Compile Include="Maps\Sign.cs" />
+    <Compile Include="Maps\SingleCombatMapReference.cs" />
     <Compile Include="MapUnits\Avatar.cs" />
     <Compile Include="MapUnits\Horse.cs" />
     <Compile Include="MapUnits\MagicCarpet.cs" />
@@ -197,8 +199,8 @@
     <Compile Include="Dialogue\TalkScript.cs" />
     <Compile Include="Dialogue\TalkScripts.cs" />
     <Compile Include="Point3D.cs" />
-    <Compile Include="Maps\CombatMap.cs" />
-    <Compile Include="Maps\CombatMapReference.cs" />
+    <Compile Include="Maps\CombatMapLegacy.cs" />
+    <Compile Include="Maps\CombatMapReferences.cs" />
     <Compile Include="Maps\SmallMapReference.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Ultima5ReduxException.cs" />

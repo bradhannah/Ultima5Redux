@@ -109,13 +109,13 @@ namespace Ultima5Redux.Maps
                 return mapStr;
             }
 
-            public static SingleMapReference GetLargeMapSingleInstance(LargeMap.Maps map)
+            public static SingleMapReference GetLargeMapSingleInstance(Map.Maps map)
             {
-                if (map == LargeMap.Maps.Small)
+                if (map == Map.Maps.Small)
                     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
 
                 return new SingleMapReference(Location.Britannia_Underworld, 
-                    map == LargeMap.Maps.Overworld ? 0 : -1, 0);
+                    map == Map.Maps.Overworld ? 0 : -1, 0);
             }
 
             /// <summary>
