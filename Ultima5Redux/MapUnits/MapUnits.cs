@@ -282,6 +282,7 @@ namespace Ultima5Redux.MapUnits
                     LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
                     break;
                 case Map.Maps.Combat:
+                    return;
                     break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:

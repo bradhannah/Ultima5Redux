@@ -28,7 +28,7 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     Map master files. These represent .DAT, .NPC and .TLK files
             /// </summary>
-            public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon }
+            public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon, None }
 
             /// <summary>
             ///     Total number of small map locations
@@ -109,6 +109,14 @@ namespace Ultima5Redux.Maps
                 return mapStr;
             }
 
+            public static SingleMapReference GetCombatMapSingleInstance(Map.Maps map)
+            {
+                if (map == Map.Maps.Small)
+                    throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
+
+                return new SingleMapReference(Location.Combat_resting_shrine, 0, 0);
+            }
+            
             public static SingleMapReference GetLargeMapSingleInstance(Map.Maps map)
             {
                 if (map == Map.Maps.Small)
@@ -223,6 +231,7 @@ namespace Ultima5Redux.Maps
                         return SmallMapMasterFiles.Dungeon;
                     case Location.Britannia_Underworld:
                     case Location.Combat_resting_shrine:
+                        return SmallMapMasterFiles.None;
                     default: 
                         throw new Ultima5ReduxException("EH?");
                 }

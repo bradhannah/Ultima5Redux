@@ -49,6 +49,9 @@ namespace Ultima5Redux.Maps
             InitializeLocationNames();
 
             // Castle.dat
+            AddLocation(SingleMapReference.Location.Britannia_Underworld, true, 2);
+            AddLocation(SingleMapReference.Location.Combat_resting_shrine, false, 1);
+
             AddLocation(SingleMapReference.Location.Lord_Britishs_Castle, true, 5);
             AddLocation(SingleMapReference.Location.Palace_of_Blackthorn, true, 5);
             AddLocation(SingleMapReference.Location.West_Britanny, false, 1);
@@ -139,6 +142,8 @@ namespace Ultima5Redux.Maps
         {
             // get the master map file from the location info
             SingleMapReference.SmallMapMasterFiles masterMap = SingleMapReference.GetMapMasterFromLocation(location);
+            if (masterMap == SingleMapReference.SmallMapMasterFiles.None) return;
+            
             // we are going to track the order that the maps were added 
             // if the master map hasn't been seen yet, then we need to create a new index array of locations
             if (!_masterFileLocationDictionary.ContainsKey(masterMap))

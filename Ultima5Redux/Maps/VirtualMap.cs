@@ -264,13 +264,13 @@ namespace Ultima5Redux.Maps
 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference)
         {
-            CurrentSingleMapReference = SmallMapRefs.GetSingleMapByLocation(
-                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
+            CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
+                //SmallMapRefs.GetSingleMapByLocation(
+                //SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
 
             CurrentCombatMap = new CombatMap(singleCombatMapReference);
             
-            TheMapUnits.SetCurrentMapType(SmallMapRefs.GetSingleMapByLocation(
-                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0), Map.Maps.Combat);
+            TheMapUnits.SetCurrentMapType( CurrentSingleMapReference, Map.Maps.Combat);
 
         }
         
@@ -468,7 +468,6 @@ namespace Ultima5Redux.Maps
 
             NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
             (LargeMapOverUnder,
-                //CurrentSingleMapReference.MapLocation,
                 adjustedPosition, CurrentSingleMapReference.Floor);
 
             if (npc != null) return npc;
