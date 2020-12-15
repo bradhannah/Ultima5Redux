@@ -31,13 +31,13 @@ namespace Ultima5Redux.Maps
 
         private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
 
-        protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference mapRef)
+        protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference)
         {
             TileOverrides = tileOverrides;
-            CurrentSingleMapReference = mapRef;
+            CurrentSingleMapReference = singleSmallMapReference;
 
             // for now combat maps don't have overrides
-            if (mapRef != null) _xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(mapRef);
+            if (singleSmallMapReference != null) _xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(singleSmallMapReference);
         }
 
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }

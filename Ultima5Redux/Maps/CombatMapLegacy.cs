@@ -57,18 +57,18 @@ namespace Ultima5Redux.Maps
         public CombatMapLegacy(string u5Directory, SingleCombatMapReference mapRef,
             TileOverrides tileOverrides) : base(tileOverrides, null)
         {
-            // string dataFilenameAndPath = Path.Combine(u5Directory, mapRef.MapFilename);
+            // string dataFilenameAndPath = Path.Combine(u5Directory, singleSmallMapReference.MapFilename);
             //
-            // _mapRef = mapRef;
+            // _mapRef = singleSmallMapReference;
             //
             // // TOOD: reads in the data from the file - should read file into memory once and leave it there so quicker reference
-            // List<byte> mapList = Utils.GetFileAsByteList(dataFilenameAndPath, mapRef.FileOffset,
+            // List<byte> mapList = Utils.GetFileAsByteList(dataFilenameAndPath, singleSmallMapReference.FileOffset,
             //     SingleCombatMapReference.MAP_BYTE_COUNT);
             //
             // TheMap = ReadCombatBytesIntoByteArray(mapList);
             //
             // // initialize the legacy structures that describe the map details
-            // InitializeCombatMapStructures(dataFilenameAndPath, mapRef.FileOffset);
+            // InitializeCombatMapStructures(dataFilenameAndPath, singleSmallMapReference.FileOffset);
         }
 
         public string Description => _mapRef.Description;

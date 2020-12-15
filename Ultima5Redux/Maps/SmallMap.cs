@@ -19,28 +19,28 @@ namespace Ultima5Redux.Maps
         public override int NumOfXTiles => XTILES;
         public override int NumOfYTiles => YTILES;
 
-        private readonly SmallMapReferences.SingleMapReference _mapRef;
+        private readonly SmallMapReferences.SingleMapReference _singleSmallMapReference;
 
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
         /// </summary>
         /// <param name="u5Directory"></param>
-        /// <param name="mapRef"></param>
+        /// <param name="singleSmallMapReference"></param>
         /// <param name="spriteTileReferences"></param>
         /// <param name="tileOverrides"></param>
-        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference mapRef,
-            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides, mapRef)
+        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference singleSmallMapReference,
+            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides, singleSmallMapReference)
         {
-            _mapRef = mapRef;
+            _singleSmallMapReference = singleSmallMapReference;
 
             // load the map into memory
-            TheMap = LoadSmallMapFile(Path.Combine(u5Directory, mapRef.MapFilename), mapRef.FileOffset);
+            TheMap = LoadSmallMapFile(Path.Combine(u5Directory, singleSmallMapReference.MapFilename), singleSmallMapReference.FileOffset);
             
             InitializeAStarMap(spriteTileReferences);
         }
 
-        public SmallMapReferences.SingleMapReference.Location MapLocation => _mapRef.MapLocation;
-        public int MapFloor => _mapRef.Floor;
+        public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
+        public int MapFloor => _singleSmallMapReference.Floor;
 
         /// <summary>
         ///     Loads a small map into a 2D array

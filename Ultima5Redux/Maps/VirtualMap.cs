@@ -62,7 +62,7 @@ namespace Ultima5Redux.Maps
         private int[][] _overrideMap;
 
         public bool ShowOuterSmallMapTiles => _bTouchedOuterBorder;
-        
+
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
@@ -128,6 +128,8 @@ namespace Ultima5Redux.Maps
                 case Map.Maps.Underworld:
                     LoadLargeMap(initialMap);
                     break;
+                case Map.Maps.Combat:
+                    throw new Ultima5ReduxException("Can't load a Combat Map on the initialization of a virtual map");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
@@ -157,15 +159,29 @@ namespace Ultima5Redux.Maps
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         public LargeMap CurrentLargeMap { get; private set; }
-        
+
         public CombatMap CurrentCombatMap { get; private set; }
 
         /// <summary>
         ///     The abstracted Map object for the current map
         ///     Returns large or small depending on what is active
         /// </summary>
-        public Map CurrentMap => IsLargeMap ? CurrentLargeMap : (Map) CurrentSmallMap;
-
+        public Map CurrentMap
+        {
+            get
+            {
+                switch (CurrentSingleMapReference.MapLocation)
+                {
+                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
+                        return CurrentCombatMap;
+                    case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
+                        return CurrentSingleMapReference.Floor == 0 ? OverworldMap : UnderworldMap;
+                    default:
+                        return CurrentSmallMap;
+                }
+            }
+        }
+        
         /// <summary>
         ///     The persistant overworld map
         /// </summary>
@@ -246,12 +262,16 @@ namespace Ultima5Redux.Maps
                 new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
         }
 
-        public void LoadCombatMap(CombatMapReferences combatMapReferences)
+        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference)
         {
             CurrentSingleMapReference = SmallMapRefs.GetSingleMapByLocation(
                 SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
 
-            //CurrentCombatMap = ;
+            CurrentCombatMap = new CombatMap(singleCombatMapReference);
+            
+            TheMapUnits.SetCurrentMapType(SmallMapRefs.GetSingleMapByLocation(
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0), Map.Maps.Combat);
+
         }
         
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)
@@ -264,7 +284,6 @@ namespace Ultima5Redux.Maps
                 Utils.Init2DArray<Queue<InventoryItem>>(CurrentSmallMap.TheMap[0].Length,
                     CurrentSmallMap.TheMap.Length);
 
-            //IsLargeMap = false;
             LargeMapOverUnder = (Map.Maps) (-1);
 
             TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small);

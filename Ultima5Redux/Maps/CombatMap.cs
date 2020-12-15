@@ -4,7 +4,7 @@
     {
         private readonly SingleCombatMapReference _singleCombatMapReference;
 
-        public CombatMap(TileOverrides tileOverrides, SingleCombatMapReference singleCombatMapReference) : base(tileOverrides, null)
+        public CombatMap(SingleCombatMapReference singleCombatMapReference) : base(null, null)
         {
             _singleCombatMapReference = singleCombatMapReference;
         }

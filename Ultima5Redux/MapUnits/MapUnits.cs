@@ -18,9 +18,18 @@ namespace Ultima5Redux.MapUnits
         private readonly DataOvlReference _dataOvlReference;
         private readonly bool _bUseExtendedSprites;
         private readonly Avatar _masterAvatarMapUnit;
+        
         private readonly DataChunk _overworldDataChunk;
         private readonly List<MapUnit> _overworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
         private readonly MapUnitStates _overworldMapUnitStates;
+
+        private readonly DataChunk _underworldDataChunk;
+        private readonly List<MapUnit> _underworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        private readonly MapUnitStates _underworldMapUnitStates;
+
+        private readonly List<MapUnit> _combatMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        private readonly MapUnitStates _combatMapUnitStates;
+        
         private readonly PlayerCharacterRecords _playerCharacterRecords;
 
         // load the MapAnimationStates once from disk, don't worry about again until you are saving to disk
@@ -29,18 +38,14 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once NotAccessedField.Local
         private readonly SmallMapCharacterStates _smallMapCharacterStates;
         private readonly MapUnitStates _smallMapUnitStates;
-
         private readonly List<MapUnit> _smallWorldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+
         private readonly TileReferences _tileRefs;
         private readonly TimeOfDay _timeOfDay;
-        private readonly DataChunk _underworldDataChunk;
-        private readonly List<MapUnit> _underworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
-        private readonly MapUnitStates _underworldMapUnitStates;
         private SmallMapReferences.SingleMapReference.Location _currentLocation;
 
         private Map.Maps _currentMapType;
 
-        //public List<NonPlayerCharacterReference> NonPlayerCharacterReferencesList { get; private set; }
         private MapUnitStates _currentMapUnitStates;
 
         /// <summary>
@@ -88,36 +93,45 @@ namespace Ultima5Redux.MapUnits
             _overworldDataChunk = overworldMapUnitStatesDataChunk;
             _underworldDataChunk = underworldMapUnitStatesDataChunk;
 
-            // if the small map is being loaded, then we pull from disk and load the over and underworld from
-            // saved.ool
-            if (initialMap == Map.Maps.Small)
+            switch (initialMap)
             {
-                // small, overworld and underworld always have saved Animation states so we load them in at the beginning
-                _smallMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
-                _smallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
+                // if the small map is being loaded, then we pull from disk and load the over and underworld from
+                // saved.ool
+                case Map.Maps.Combat:
+                    throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
+                case Map.Maps.Small:
+                    // small, overworld and underworld always have saved Animation states so we load them in at the beginning
+                    _smallMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
+                    _smallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
 
-                // we always load the over and underworld from disk immediately, no need to reload as we will track it in memory 
-                // going forward
-                _overworldMapUnitStates = new MapUnitStates(_overworldDataChunk, tileRefs);
-
-                _underworldMapUnitStates = new MapUnitStates(_underworldDataChunk, tileRefs);
-            }
-            else
-            {
-                // since it is a large map, the small map is empty because the state is lost as soon as you leave it
-                // and the selected large map is pulled directly from the active state (saved.gam @ 0x6b8)
-                _smallMapUnitStates = null;
-
-                if (initialMap == Map.Maps.Overworld)
-                {
-                    _overworldMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
-                    _underworldMapUnitStates = new MapUnitStates(_underworldDataChunk, tileRefs);
-                }
-                else
-                {
-                    _underworldMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
+                    // we always load the over and underworld from disk immediately, no need to reload as we will track it in memory 
+                    // going forward
                     _overworldMapUnitStates = new MapUnitStates(_overworldDataChunk, tileRefs);
+
+                    _underworldMapUnitStates = new MapUnitStates(_underworldDataChunk, tileRefs);
+                    break;
+                case Map.Maps.Overworld:
+                case Map.Maps.Underworld:
+                {
+                    // since it is a large map, the small map is empty because the state is lost as soon as you leave it
+                    // and the selected large map is pulled directly from the active state (saved.gam @ 0x6b8)
+                    _smallMapUnitStates = null;
+
+                    if (initialMap == Map.Maps.Overworld)
+                    {
+                        _overworldMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
+                        _underworldMapUnitStates = new MapUnitStates(_underworldDataChunk, tileRefs);
+                    }
+                    else
+                    {
+                        _underworldMapUnitStates = new MapUnitStates(activeDataChunk, tileRefs);
+                        _overworldMapUnitStates = new MapUnitStates(_overworldDataChunk, tileRefs);
+                    }
+
+                    break;
                 }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
 
             _overworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
@@ -148,6 +162,8 @@ namespace Ultima5Redux.MapUnits
                 case Map.Maps.Underworld:
                     _currentMapUnitStates = _underworldMapUnitStates;
                     break;
+                case Map.Maps.Combat:
+                    throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
@@ -176,7 +192,6 @@ namespace Ultima5Redux.MapUnits
             {
                 mapUnit.UseFourDirections = _bUseExtendedSprites;
             }
-
             if (_smallMapUnitStates == null) return;
             
             foreach (MapUnit mapUnit in _smallWorldMapUnits)
@@ -219,6 +234,8 @@ namespace Ultima5Redux.MapUnits
                         return _overworldMapUnitStates;
                     case Map.Maps.Underworld:
                         return _underworldMapUnitStates;
+                    case Map.Maps.Combat:
+                        return _combatMapUnitStates;
                     default:
                         throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" +
                                                         _currentMapType);
@@ -236,6 +253,8 @@ namespace Ultima5Redux.MapUnits
                     return _overworldMapUnits;
                 case Map.Maps.Underworld:
                     return _underworldMapUnits;
+                case Map.Maps.Combat:
+                    return _combatMapUnits;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -262,6 +281,8 @@ namespace Ultima5Redux.MapUnits
                 case Map.Maps.Small:
                     LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
                     break;
+                case Map.Maps.Combat:
+                    break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
                     break;
@@ -285,9 +306,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         public T GetSpecificMapUnitByLocation<T>(Map.Maps map,
-            //SmallMapReferences.SingleMapReference.Location location, 
-            Point2D xy,
-            int nFloor, bool bCheckBaseToo = false) where T : MapUnit
+            Point2D xy, int nFloor, bool bCheckBaseToo = false) where T : MapUnit
         {
             List<MapUnit> mapUnits = GetMapUnits(map);
 
@@ -304,7 +323,6 @@ namespace Ultima5Redux.MapUnits
                     if (mapUnit.GetType() == typeof(T)) return (T) mapUnit;
                 }
             }
-
             return null;
         }
 
@@ -359,11 +377,11 @@ namespace Ultima5Redux.MapUnits
             for (int index = 0; index < CurrentMapUnits.Count; index++)
             {
                 MapUnit mapUnit = CurrentMapUnits[index];
-                if (mapUnit == mapUnitToClear)
-                {
-                    CurrentMapUnits[index] = new EmptyMapUnit();
-                    return;
-                }
+                
+                if (mapUnit != mapUnitToClear) continue;
+                
+                CurrentMapUnits[index] = new EmptyMapUnit();
+                return;
             }
 
             throw new Ultima5ReduxException(
@@ -430,6 +448,7 @@ namespace Ultima5Redux.MapUnits
                     _currentMapUnitStates = _underworldMapUnitStates;
                     mapUnits = _underworldMapUnits;
                     break;
+                case Map.Maps.Combat:
                 case Map.Maps.Small:
                     throw new Ultima5ReduxException("You asked for a Small map when loading a large one");
                 default:
@@ -780,17 +799,16 @@ namespace Ultima5Redux.MapUnits
             retStr += " " + unboardedMapUnit.BoardXitName;
 
             // if the Avatar is on a frigate then we will check for Skiffs and exit on a skiff instead
-            if (unboardedMapUnit is Frigate avatarFrigate)
-            {
-                Debug.Assert(avatarFrigate != null, nameof(avatarFrigate) + " != null");
-                // if we have skiffs, AND do not have land close by then we deploy a skiff
-                if (avatarFrigate.SkiffsAboard > 0 && !virtualMap.IsLandNearby())
-                {
-                    MakeAndBoardSkiff();
-                    avatarFrigate.SkiffsAboard--;
-                }
-            }
+            if (!(unboardedMapUnit is Frigate avatarFrigate)) return unboardedMapUnit;
             
+            Debug.Assert(avatarFrigate != null, nameof(avatarFrigate) + " != null");
+            
+            // if we have skiffs, AND do not have land close by then we deploy a skiff
+            if (avatarFrigate.SkiffsAboard <= 0 || virtualMap.IsLandNearby()) return unboardedMapUnit;
+            
+            MakeAndBoardSkiff();
+            avatarFrigate.SkiffsAboard--;
+
             return unboardedMapUnit;
         }
 
