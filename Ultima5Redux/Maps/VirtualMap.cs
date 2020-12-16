@@ -265,13 +265,11 @@ namespace Ultima5Redux.Maps
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference)
         {
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
-                //SmallMapRefs.GetSingleMapByLocation(
-                //SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, 0);
 
             CurrentCombatMap = new CombatMap(singleCombatMapReference);
             
             TheMapUnits.SetCurrentMapType( CurrentSingleMapReference, Map.Maps.Combat);
-
+            LargeMapOverUnder = Map.Maps.Combat;
         }
         
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)
@@ -364,7 +362,7 @@ namespace Ultima5Redux.Maps
                 case Map.Maps.Underworld:
                     return _tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]);
                 case Map.Maps.Combat:
-                    return _tileReferences.GetTileReference(CurrentLargeMap.TheMap[x][y]);
+                    return _tileReferences.GetTileReference(CurrentCombatMap.TheMap[x][y]);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
