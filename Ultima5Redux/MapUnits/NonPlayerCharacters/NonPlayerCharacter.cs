@@ -8,7 +8,7 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    public class NonPlayerCharacter : MapUnit
+    public sealed class NonPlayerCharacter : MapUnit
     {
         private int _scheduleIndex = -1;
 
@@ -122,7 +122,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         ///     calculates and stores new path for NPC
         ///     Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapUnit itself
         /// </summary>
-        public virtual void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor)
+        public void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor)
         {
             MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 

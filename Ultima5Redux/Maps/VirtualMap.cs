@@ -262,14 +262,17 @@ namespace Ultima5Redux.Maps
                 new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
         }
 
-        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference)
+        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference, 
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records)
         {
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
             CurrentCombatMap = new CombatMap(singleCombatMapReference);
             
-            TheMapUnits.SetCurrentMapType( CurrentSingleMapReference, Map.Maps.Combat);
+            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
+            
+            CurrentCombatMap.CreateParty(this, entryDirection, records, _tileReferences);
         }
         
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)

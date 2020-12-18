@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -83,6 +84,25 @@ namespace Ultima5Redux.MapUnits
             mapUnitState.SetTileReference(tileReferences.GetTileReference(_tile1));
         }
 
+        public static MapUnitState CreateCombatPlayer(TileReferences tileReferences, PlayerCharacterRecord record,
+             MapUnitPosition combatPlayerPosition)
+        {
+            MapUnitState combatPlayer = new MapUnitState();
+
+            TileReference combatPlayerTileReference = tileReferences.GetTileReference(record.PrimarySpriteIndex);
+            Debug.Assert(combatPlayerTileReference != null);
+
+            combatPlayer._tile1 = combatPlayerTileReference.Index;
+            combatPlayer._tile2 = combatPlayerTileReference.Index;
+            combatPlayer.Tile1Ref = tileReferences.GetTileReference(combatPlayer._tile1);
+            combatPlayer.Tile2Ref = combatPlayer.Tile1Ref;
+
+            combatPlayer.X = (byte) combatPlayerPosition.X;
+            combatPlayer.Y = (byte) combatPlayerPosition.Y;
+            combatPlayer.Floor = (byte) combatPlayerPosition.Floor;
+            return combatPlayer;
+        }
+
         public static MapUnitState CreateAvatar(TileReferences tileReferences, MapUnitPosition avatarPosition,
             MapUnitState mapUnitState = null)
         {
@@ -91,9 +111,6 @@ namespace Ultima5Redux.MapUnits
             bool bDefaultState = mapUnitState != null;
             MapUnitState theAvatar;
             TileReference avatarTileRef;
-            // MapUnitState theAvatar = mapUnitState ?? new MapUnitState();
-            // TileReference avatarTileRef = bDefaultState ? mapUnitState.Tile1Ref :
-            //     tileReferences.GetTileReferenceByName("BasicAvatar");
 
             if (mapUnitState == null)
             {

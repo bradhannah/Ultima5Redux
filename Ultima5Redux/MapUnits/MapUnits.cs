@@ -183,6 +183,10 @@ namespace Ultima5Redux.MapUnits
         {
             _combatMapUnitStates = new MapUnitStates(_tileReferences);
             _combatMapUnits.Clear();
+            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
+            {
+                _combatMapUnits.Add(new EmptyMapUnit());
+            }
         }
 
         /// <summary>

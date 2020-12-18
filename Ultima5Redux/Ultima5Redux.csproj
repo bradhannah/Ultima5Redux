@@ -102,6 +102,7 @@
     <Compile Include="Maps\Sign.cs" />
     <Compile Include="Maps\SingleCombatMapReference.cs" />
     <Compile Include="MapUnits\Avatar.cs" />
+    <Compile Include="MapUnits\CombatPlayer.cs" />
     <Compile Include="MapUnits\Horse.cs" />
     <Compile Include="MapUnits\MagicCarpet.cs" />
     <Compile Include="MapUnits\MapUnitPosition.cs" />
