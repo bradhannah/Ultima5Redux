@@ -25,6 +25,18 @@ namespace Ultima5Redux.MapUnits
             _mapUnitStatesDataChunk = mapUnitStatesDataChunk;
         }
 
+        public MapUnitStates(TileReferences tileReferences)
+        {
+            _tileReferences = tileReferences;
+            _mapUnitStatesDataChunk = null;
+            // initialize an empty set of character states (for combat map likely)
+            for (int i = 0; i < MAX_CHARACTER_STATES; i++)
+            {
+                MapUnitState mapUnitState = new MapUnitState();
+                _mapUnitStates.Add(mapUnitState);
+            }
+        }
+
         private MapUnitStatesFiles MapUnitStatesType { get; set; }
 
         public MapUnitState GetCharacterState(int nIndex)

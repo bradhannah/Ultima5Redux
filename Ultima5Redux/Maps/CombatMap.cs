@@ -4,6 +4,8 @@
     {
         private readonly SingleCombatMapReference _singleCombatMapReference;
 
+        public SingleCombatMapReference TheMapReference => _singleCombatMapReference;
+
         public CombatMap(SingleCombatMapReference singleCombatMapReference) : base(null, null)
         {
             _singleCombatMapReference = singleCombatMapReference;

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Maps
 {
     public class SingleCombatMapReference
     {
+        private readonly List<List<Point2D>> _characterXyPositions;
+
         /// <summary>
         ///     The territory that the combat map is in. This matters most for determining data files.
         /// </summary>
@@ -13,7 +16,7 @@ namespace Ultima5Redux.Maps
         public const int XTILES = 11;
         public const int YTILES = 11;
         
-        public byte[][] TheMap;
+        public readonly byte[][] TheMap;
         
         /// <summary>
         ///     How many bytes for each combat map entry in data file
@@ -35,21 +38,48 @@ namespace Ultima5Redux.Maps
         /// <param name="mapTerritory">Britannia or Dungeon</param>
         /// <param name="nCombatMapNum">map number in data file (0,1,2,3....)</param>
         /// <param name="spriteList"></param>
-        public SingleCombatMapReference(Territory mapTerritory, int nCombatMapNum, IReadOnlyList<List<byte>> spriteList)
+        /// <param name="characterXyPositions"></param>
+        /// <param name="dataChunks"></param>
+        public SingleCombatMapReference(Territory mapTerritory, int nCombatMapNum, //IReadOnlyList<List<byte>> spriteList,
+            //List<List<Point2D>> characterXyPositions,
+            DataChunks<CombatMapReferences.DataChunkName> dataChunks)
         {
+            int nMapOffset = nCombatMapNum * MAP_BYTE_COUNT;
+            
             MapTerritory = mapTerritory;
             CombatMapNum = nCombatMapNum;
 
             // copying the array to a simpler format
             TheMap = Utils.Init2DByteArray(XTILES, YTILES);
-            for (int nRow = 0; nRow < spriteList.Count; nRow++)
+
+            for (int nRow = 0; nRow < CombatMapLegacy.XTILES; nRow++)
             {
-                List<byte> rows = spriteList[nRow];
-                for (int nCol = 0; nCol < rows.Count; nCol++)
+                DataChunk rowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Tiles for row {nRow}",
+                    nMapOffset + (0x20 * nRow), CombatMapLegacy.XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
+                List<byte> list = rowChunk.GetAsByteList();
+                for (int nCol = 0; nCol < list.Count; nCol++)
                 {
-                    TheMap[nRow][nCol] = spriteList[nRow][nCol];
+                    byte sprite = list[nCol];
+                    TheMap[nCol][nRow] = sprite; 
                 }
             }
+
+            List<List<Point2D>> playerDirections = new List<List<Point2D>>(); 
+            for (int nRow = 1; nRow <= 4; nRow++)
+            {
+                // 1=east,2=west,3=south,4=north
+                playerDirections.Add(new List<Point2D>());
+                List<byte> xPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player X positions for row #" + nRow,
+                    nMapOffset + (0x20 * nRow) + 0x11, 0x06).GetAsByteList();
+                List<byte> yPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player Y positions for row #" + nRow,
+                    nMapOffset + (0x20 * nRow) + 0x11 + 0x06, 0x06).GetAsByteList();
+                for (int i = 0; i < 6; i++)
+                {
+                    playerDirections[nRow - 1].Add(new Point2D(xPlayerPosList[i], yPlayerPosList[i]));
+                }
+            }
+            
+            
         }
 
         /// <summary>
