@@ -638,8 +638,9 @@ namespace Ultima5Redux.MapUnits
             }
             else if (_tileReferences.IsMonster(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Monster(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
-                    _timeOfDay, _playerCharacterRecords, _tileReferences, location, _dataOvlReference);
+                newUnit = new Monster();
+                //npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
+                //_timeOfDay, _playerCharacterRecords, _tileReferences, location, _dataOvlReference);
             }
             // this is where we will create monsters too
             else

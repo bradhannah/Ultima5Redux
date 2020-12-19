@@ -925,7 +925,7 @@ namespace Ultima5ReduxTesting
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
             world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRef.MapReferenceList[0],
-                SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
             
             

@@ -2,12 +2,13 @@
 using System.Security.Policy;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class CombatPlayer : MapUnit
+    public class CombatPlayer : CombatMapUnit
     {
         private readonly PlayerCharacterRecord _record;
 
@@ -17,9 +18,6 @@ namespace Ultima5Redux.MapUnits
             TileReferences = tileReferences;
             TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, _record, 
                 new MapUnitPosition(xy.X, xy.Y, 0));
-            
-            //TheMapUnitState.Tile1Ref = tileReferences.GetTileReferenceOfKeyIndex(record.PrimarySpriteIndex);
-            //MapUnitPosition.XY = xy;
         }
         
         // public CombatPlayer(MapUnitState mapUnitState,

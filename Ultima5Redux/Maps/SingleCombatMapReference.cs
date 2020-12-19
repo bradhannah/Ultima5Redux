@@ -71,13 +71,13 @@ namespace Ultima5Redux.Maps
             }
 
             // build the maps of all four directions and the respective player positions
-            for (int nRow = 1; nRow <= NUM_DIRECTIONS; nRow++)
+            for (int nRow = 1, nOffsetFactor = 0; nRow <= NUM_DIRECTIONS; nRow++, nOffsetFactor++)
             {
                 // 1=east,2=west,3=south,4=north
                 List<byte> xPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player X positions for row #" + nRow,
-                    nMapOffset + (0x20 * nRow) + 0x11, 0x06).GetAsByteList();
+                    nMapOffset + (0x20 * nOffsetFactor) + 0xB, 0x06).GetAsByteList();
                 List<byte> yPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player Y positions for row #" + nRow,
-                    nMapOffset + (0x20 * nRow) + 0x11 + 0x06, 0x06).GetAsByteList();
+                    nMapOffset + (0x20 * nOffsetFactor) + 0xB + 0x06, 0x06).GetAsByteList();
                 for (int i = 0; i < NUM_PLAYERS; i++)
                 {
                     _playerPositionsByDirection[nRow - 1].Add(new Point2D(xPlayerPosList[i], yPlayerPosList[i]));

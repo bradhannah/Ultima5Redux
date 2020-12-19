@@ -2,21 +2,23 @@
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.Monsters
 {
-    public class Monster : MapUnit
+    public class Monster : CombatMapUnit
     {
-        public Monster(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
-            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
-            TimeOfDay timeOfDay,
+        public Monster()
+        {
+            
+        }
+        
+        public Monster(MapUnitState mapUnitState,
+            MapUnitMovement mapUnitMovement,
             PlayerCharacterRecords playerCharacterRecords, TileReferences tileReferences,
-            SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference) : base(npcRef,
-            mapUnitState,
-            smallMapTheSmallMapCharacterState, mapUnitMovement, playerCharacterRecords, tileReferences,
-            location, dataOvlReference, Point2D.Direction.None)
+            SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference) : base()
         {
         }
 
