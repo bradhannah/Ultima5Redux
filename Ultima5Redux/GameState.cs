@@ -2,6 +2,7 @@
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -235,10 +236,12 @@ namespace Ultima5Redux
         /// <param name="inventoryReferences"></param>
         /// <param name="dataOvlReference"></param>
         /// <param name="bUseExtendedSprites"></param>
+        /// <param name="enemyReferences"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences, 
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
-            DataOvlReference dataOvlReference, bool bUseExtendedSprites)
+            DataOvlReference dataOvlReference, bool bUseExtendedSprites,
+            EnemyReferences enemyReferences)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
@@ -246,7 +249,8 @@ namespace Ultima5Redux
 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
                 underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates, 
-                inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites);
+                inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites,
+                enemyReferences);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);

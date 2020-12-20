@@ -7,6 +7,7 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
@@ -31,7 +32,7 @@ namespace Ultima5Redux
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         // ReSharper disable once UnusedMember.Local
-        public readonly CombatMapReferences CombatMapRef;
+        public readonly CombatMapReferences CombatMapRefs;
         private readonly TileOverrides _tileOverrides = new TileOverrides();
 
         /// <summary>
@@ -69,10 +70,12 @@ namespace Ultima5Redux
 
             State = new GameState(U5Directory, DataOvlRef);
 
-            CombatMapRef = new CombatMapReferences(U5Directory);
+            EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
+            
+            CombatMapRefs = new CombatMapReferences(U5Directory);
             
             // build all combat maps from the Combat Map References
-             // foreach (SingleCombatMapReference combatMapRef in CombatMapRef.MapReferenceList)
+             // foreach (SingleCombatMapReference combatMapRef in CombatMapRefs.MapReferenceList)
              // {
              //     CombatMapLegacy combatMap = new CombatMapLegacy(U5Directory, combatMapRef, _tileOverrides);
              // }
@@ -93,8 +96,10 @@ namespace Ultima5Redux
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences, 
-                NpcRef, InvRef, DataOvlRef, bUseExtendedSprites);
+                NpcRef, InvRef, DataOvlRef, bUseExtendedSprites, EnemyRefs);
         }
+
+        public EnemyReferences  EnemyRefs { get; }
 
         /// <summary>
         ///     The overworld map object

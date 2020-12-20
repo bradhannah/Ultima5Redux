@@ -104,11 +104,13 @@
     <Compile Include="MapUnits\Avatar.cs" />
     <Compile Include="MapUnits\CombatMapUnits\CombatMapUnit.cs" />
     <Compile Include="MapUnits\CombatMapUnits\CombatPlayer.cs" />
+    <Compile Include="MapUnits\CombatMapUnits\EnemyReference.cs" />
+    <Compile Include="MapUnits\CombatMapUnits\EnemyReferences.cs" />
     <Compile Include="MapUnits\Horse.cs" />
     <Compile Include="MapUnits\MagicCarpet.cs" />
     <Compile Include="MapUnits\MapUnitPosition.cs" />
     <Compile Include="MapUnits\EmptyMapUnit.cs" />
-    <Compile Include="MapUnits\CombatMapUnits\Monster.cs" />
+    <Compile Include="MapUnits\CombatMapUnits\Enemy.cs" />
     <Compile Include="MapUnits\MovementCommand.cs" />
     <Compile Include="MapUnits\MapUnitMovements.cs" />
     <Compile Include="MapUnits\NonPlayerCharacters\NonPlayerCharacter.cs" />

@@ -685,13 +685,30 @@ namespace Ultima5ReduxTesting
         }
         
         [Test]
-        public void EnterBuilding()
+        public void Test_EnterBuilding()
         {
             World world = new World(ActualSaveDirectory+@"\Britain");
             _ = "";
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
+            Assert.True(true);
+        }
+        
+        [Test]
+        public void Test_EnterYewAndLookAtMonster()
+        {
+            World world = new World(ActualSaveDirectory+@"\Britain");
+            _ = "";
+
+            // yew
+            world.EnterBuilding(new Point2D(58, 43), out bool bWasSuccessful);
+
+            foreach (MapUnit mapUnit in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits)
+            {
+                _ = mapUnit.NonBoardedTileReference;
+            }
+            
             Assert.True(true);
         }
         
@@ -924,11 +941,9 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
-            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRef.MapReferenceList[0],
+            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.MapReferenceList[0],
                 SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
-            
-            
         }
 
      }

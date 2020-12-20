@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
@@ -74,6 +75,7 @@ namespace Ultima5Redux.MapUnits
             DataChunk nonPlayerCharacterMovementLists, DataChunk nonPlayerCharacterMovementOffsets,
             TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
             Map.Maps initialMap, DataOvlReference dataOvlReference, bool bUseExtendedSprites,
+            EnemyReferences enemyReferences,
             SmallMapReferences.SingleMapReference.Location currentSmallMap =
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
@@ -146,15 +148,15 @@ namespace Ultima5Redux.MapUnits
             NPCRefs = npcRefs;
 
             // we only load the large maps once and they always exist on disk
-            LoadLargeMap(Map.Maps.Overworld, true);
-            LoadLargeMap(Map.Maps.Underworld, true);
+            LoadLargeMap(Map.Maps.Overworld, true, enemyReferences);
+            LoadLargeMap(Map.Maps.Underworld, true, enemyReferences);
 
             // if the small map is the initial map, then load it 
             // otherwise we force the correct states to either the over or underworld
             switch (initialMap)
             {
                 case Map.Maps.Small:
-                    LoadSmallMap(currentSmallMap, true);
+                    LoadSmallMap(currentSmallMap, true, enemyReferences);
                     break;
                 case Map.Maps.Overworld:
                     _currentMapUnitStates = _overworldMapUnitStates;
@@ -279,7 +281,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="bLoadFromDisk"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
-            bool bLoadFromDisk)
+            bool bLoadFromDisk, EnemyReferences enemyReferences)
         {
             _currentMapType = mapType;
             _currentLocation = mapRef.MapLocation;
@@ -289,7 +291,7 @@ namespace Ultima5Redux.MapUnits
             switch (mapType)
             {
                 case Map.Maps.Small:
-                    LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
+                    LoadSmallMap(mapRef.MapLocation, bLoadFromDisk, enemyReferences);
                     break;
                 case Map.Maps.Combat:
                     return;
@@ -311,9 +313,10 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapRef"></param>
         /// <param name="mapType">Is it a small map, overworld or underworld</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType)
+        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType, 
+            EnemyReferences enemyReferences)
         {
-            SetCurrentMapType(mapRef, mapType, false);
+            SetCurrentMapType(mapRef, mapType, false, enemyReferences);
         }
 
         public T GetSpecificMapUnitByLocation<T>(Map.Maps map,
@@ -444,7 +447,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="map"></param>
         /// <param name="bInitialLoad"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void LoadLargeMap(Map.Maps map, bool bInitialLoad)
+        private void LoadLargeMap(Map.Maps map, bool bInitialLoad, EnemyReferences enemyReferences)
         {
             List<MapUnit> mapUnits;
 
@@ -492,7 +495,7 @@ namespace Ultima5Redux.MapUnits
                 }
 
                 MapUnit newUnit = CreateNewMapUnit(mapUnitState, mapUnitMovement, bInitialLoad,
-                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld);
+                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, enemyReferences: enemyReferences);
                 // add the new character to our list of characters currently on the map
                 mapUnits.Add(newUnit);
             }
@@ -501,7 +504,8 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
+        private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad, 
+            EnemyReferences enemyReferences)
         {
             // wipe all existing characters since they cannot exist beyond the load
             _smallWorldMapUnits.Clear();
@@ -583,7 +587,7 @@ namespace Ultima5Redux.MapUnits
                 };
 
                 MapUnit mapUnit = CreateNewMapUnit(mapUnitState, mapUnitMovement,
-                    false, location, npcRef, smallMapCharacterState);
+                    false, location, npcRef, smallMapCharacterState, enemyReferences);
 
                 _smallWorldMapUnits.Add(mapUnit);
             }
@@ -601,7 +605,7 @@ namespace Ultima5Redux.MapUnits
         /// <returns></returns>
         private MapUnit CreateNewMapUnit(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, bool bInitialLoad,
             SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterReference npcRef = null,
-            SmallMapCharacterState smallMapCharacterState = null)
+            SmallMapCharacterState smallMapCharacterState = null, EnemyReferences enemyReferences = null)
         {
             MapUnit newUnit;
             TileReference tileRef = mapUnitState.Tile1Ref;
@@ -638,7 +642,8 @@ namespace Ultima5Redux.MapUnits
             }
             else if (_tileReferences.IsMonster(mapUnitState.Tile1Ref.Index))
             {
-                newUnit = new Monster();
+                Debug.Assert(enemyReferences != null);
+                newUnit = new Enemy(mapUnitState, mapUnitMovement, _tileReferences, enemyReferences.GetEnemyReference(tileRef), location, _dataOvlReference);
                 //npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
                 //_timeOfDay, _playerCharacterRecords, _tileReferences, location, _dataOvlReference);
             }

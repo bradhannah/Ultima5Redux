@@ -186,8 +186,14 @@ namespace Ultima5Redux.Data
                     typeof(DataOvlReference.WorldStrings2),
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.WORLD2).GetChunkAsStringList()
                 },
-                
-                
+                {
+                    typeof(DataOvlReference.EnemyIndividualNamesMixed),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList()
+                },
+                {
+                    typeof(DataOvlReference.EnemyOutOfCombatNamesUpper),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList()
+                },
             };
         }
 

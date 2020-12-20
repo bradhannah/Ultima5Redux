@@ -6,7 +6,7 @@ using Ultima5Redux.PlayerCharacters;
 namespace Ultima5Redux.MapUnits
 {
     //    http://wiki.ultimacodex.com/wiki/Ultima_V_Internal_Formats#SAVED.GAM
-    //    Monster Format
+    //    Enemy Format
     //offset length  purpose
     //0	1	tile
     //1	1	tile
@@ -84,6 +84,26 @@ namespace Ultima5Redux.MapUnits
             mapUnitState.SetTileReference(tileReferences.GetTileReference(_tile1));
         }
 
+        public static MapUnitState CreateMonster(TileReferences tileReferences, 
+            MapUnitPosition combatPlayerPosition, int nSprite)
+        {
+            MapUnitState combatPlayer = new MapUnitState();
+
+            TileReference combatPlayerTileReference = tileReferences.GetTileReference(nSprite);
+            Debug.Assert(combatPlayerTileReference != null);
+
+            combatPlayer._tile1 = combatPlayerTileReference.Index;
+            combatPlayer._tile2 = combatPlayerTileReference.Index;
+            combatPlayer.Tile1Ref = tileReferences.GetTileReference(combatPlayer._tile1);
+            combatPlayer.Tile2Ref = combatPlayer.Tile1Ref;
+
+            combatPlayer.X = (byte) combatPlayerPosition.X;
+            combatPlayer.Y = (byte) combatPlayerPosition.Y;
+            combatPlayer.Floor = (byte) combatPlayerPosition.Floor;
+            return combatPlayer;
+        }
+
+        
         public static MapUnitState CreateCombatPlayer(TileReferences tileReferences, PlayerCharacterRecord record,
              MapUnitPosition combatPlayerPosition)
         {

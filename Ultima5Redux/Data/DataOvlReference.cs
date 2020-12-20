@@ -9,23 +9,6 @@ namespace Ultima5Redux.Data
     /// </summary>
     public class DataOvlReference
     {
-        public enum ChitChatStrings
-        {
-            DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE,
-            GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q, PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME,
-            MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
-        }
-
-        /// <summary>
-        ///     Conversational phrase indexes
-        /// </summary>
-        public enum ChunkPhrasesConversation
-        {
-            CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
-            YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F,
-            YOU_SEE = 0x11, I_AM_CALLED = 0x12
-        }
-
         /// <summary>
         ///     Chunk names specific to the Data.ovl file
         /// </summary>
@@ -49,7 +32,7 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_HEALER2, HEALER_HEAL_PRICES, HEALER_CURE_PRICES, HEALER_RESURRECT_PRICES, X_DOCKS, Y_DOCKS,
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
-            YELLING, WORLD2
+            YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER
         }
 
         public enum Equipment
@@ -120,6 +103,22 @@ namespace Ultima5Redux.Data
             THOU_ART_EMPTY_N_HANDED_BANG_N, ITEM_COLON2
         }
 
+        public enum ChitChatStrings
+        {
+            DOST_THOU_PAY, YES_BANG, NO_BANG, GET_HORSE_OUTTA_HERE, HALF_TO_CHARITY, GUARD_DEMANDS, XX_GP_TRIBUTE,
+            GIVE_PASSWORD_BADGE, YOUR_RESPONSE_Q, PASS_FRIEND, GUARD_NO_RESPONSE, NO_RESPONSE, DONT_HURT_ME,
+            MERCH_SEE_ME_AT_SHOP1, MERCH_SEE_ME_AT_SHOP2, NOBODY_HERE, ZZZ, N_NO_RESPONSE_N
+        }
+
+        /// <summary>
+        ///     Conversational phrase indexes
+        /// </summary>
+        public enum ChunkPhrasesConversation
+        {
+            CANT_JOIN_1 = 0x02, CANT_JOIN_2 = 0x03, MY_NAME_IS = 0x05, YOUR_INTEREST = 0x07, CANNOT_HELP = 0x09,
+            YOU_RESPOND = 0x0A, WHAT_YOU_SAY = 0x0B, WHATS_YOUR_NAME = 0x0C, IF_SAY_SO = 0x0E, PLEASURE = 0x0F,
+            YOU_SEE = 0x11, I_AM_CALLED = 0x12
+        }
         public enum ExclaimStrings
         {
             NO_EFFECT_BANG_N, PUSHED_BANG_N, PULLED_BANG_N, WONT_BUDGE_BANG_N, WONT_BUDGE_BANG_N_2, ESCAPE,
@@ -803,6 +802,106 @@ namespace Ultima5Redux.Data
         // [4] = {string} "what?\n:"
         // [5] = {string} "Nothing\n"
 
+        public enum EnemyIndividualNamesMixed
+        {
+            MAGE, BARD, FIGHTER, AVATAR, VILLAGER, MERCHANT, JESTER, BARD_2, CHILD, BEGGAR, GUARD,
+            WANDERER, BLACKTHORNE, LORD_BRITISH, 
+            SEA_HORSE, SQUID, SEA_SERPENT, SHARK, GIANT_RAT, BAT, GIANT_SPIDER, GHOST, SLIME, GREMLIN,
+            MIMIC, REAPER, GAZER, 
+            CRAWLER, // appears to be unused asset, replaced by quest items 
+            GARGOYLE, INSECT_SWARM, ORC, SKELETON, PYTHON, ETTIN,
+            HEADLESS, WISP, DAEMON, DRAGON, SAND_TRAP, TROLL, MONGBAT, CORPSER, ROT_WORM, SHADOW_LORD
+        }
+        
+        //     [0] = {string} "Sea Horse"
+        // [1] = {string} "Squid"
+        // [2] = {string} "Sea Serpent"
+        // [3] = {string} "Shark"
+        // [4] = {string} "Giant Rat"
+        // [5] = {string} "Bat"
+        // [6] = {string} "Giant Spider"
+        // [7] = {string} "Ghost"
+        // [8] = {string} "Slime"
+        // [9] = {string} "Gremlin"
+        // [10] = {string} "Mimic"
+        // [11] = {string} "Reaper"
+        // [12] = {string} "Gazer"
+        // [13] = {string} "Crawler"
+        // [14] = {string} "Gargoyle"
+        // [15] = {string} "Insect Swarm"
+        // [16] = {string} "Orc"
+        // [17] = {string} "Skeleton"
+        // [18] = {string} "Python"
+        // [19] = {string} "Ettin"
+        // [20] = {string} "Headless"
+        // [21] = {string} "Wisp"
+        // [22] = {string} "Daemon"
+        // [23] = {string} "Dragon"
+        // [24] = {string} "Sand Trap"
+        // [25] = {string} "Troll"
+        // [26] = {string} "Mongbat"
+        // [27] = {string} "Corpser"
+        // [28] = {string} "Rot Worm"
+        // [29] = {string} "Shadow Lord"
+
+        public enum EnemyOutOfCombatNamesUpper
+        {
+            WIZARDS = 0, BARD, FIGHTER, X_AVATAR, VILLAGER, MERCHANT, JESTER, BARD_2, PIRATES, X, CHILD, BEGGAR, GUARD,
+            X_WANDERER, BLACKTHORNE, LORD_BRITISH, SEA_HORSES, SQUIDS, SEA_SERPENTS, SHARKS, 
+            GIANT_RATS, BATS, SPIDERS, GHOSTS, SLIME, GREMLINS,
+            MIMICS, REAPERS, GAZERS, X_QUEST_ITEMS, GARGOYLE, INSECTS, ORCS, SKELETONS, SNAKES, ETTINS,
+            HEADLESSES, WISPS, DAEMONS, DRAGONS, SAND_TRAPS, TROLLS, X_FIELDS, X_WHIRLPOOL, MONGBATS, CORPSERS, ROT_WORMS, SHADOW_LORD
+        }
+        
+    //     [0] = {string} "WIZARDS"
+    // [1] = {string} "BARD"
+    // [2] = {string} "FIGHTER"
+    // [3] = {string} "x"
+    // [4] = {string} "VILLAGER"
+    // [5] = {string} "MERCHANT"
+    // [6] = {string} "JESTER"
+    // [7] = {string} "BARD"
+    // [8] = {string} "PIRATES"
+    // [9] = {string} "x"
+    // [10] = {string} "CHILD"
+    // [11] = {string} "BEGGAR"
+    // [12] = {string} "GUARDS"
+    // [13] = {string} "x"
+    // [14] = {string} "BLACKTHORN"
+    // [15] = {string} "LORD BRITISH"
+    // [16] = {string} "SEA HORSES"
+    // [17] = {string} "SQUIDS"
+    // [18] = {string} "SEA SERPENTS"
+    // [19] = {string} "SHARKS"
+    // [20] = {string} "GIANT RATS"
+    // [21] = {string} "BATS"
+    // [22] = {string} "SPIDERS"
+    // [23] = {string} "GHOSTS"
+    // [24] = {string} "SLIME"
+    // [25] = {string} "GREMLINS"
+    // [26] = {string} "MIMICS"
+    // [27] = {string} "REAPERS"
+    // [28] = {string} "GAZERS"
+    // [29] = {string} "x"
+    // [30] = {string} "GARGOYLE"
+    // [31] = {string} "INSECTS"
+    // [32] = {string} "ORCS"
+    // [33] = {string} "SKELETONS"
+    // [34] = {string} "SNAKES"
+    // [35] = {string} "ETTINS"
+    // [36] = {string} "HEADLESSES"
+    // [37] = {string} "WISPS"
+    // [38] = {string} "DAEMONS"
+    // [39] = {string} "DRAGONS"
+    // [40] = {string} "SAND TRAPS"
+    // [41] = {string} "TROLLS"
+    // [42] = {string} "x"
+    // [43] = {string} "x"
+    // [44] = {string} "MONGBATS"
+    // [45] = {string} "CORPSERS"
+    // [46] = {string} "ROTWORMS"
+    // [47] = {string} "SHADOW LORD"
+
         /// <summary>
         ///     All the data chunks
         /// </summary>
@@ -829,6 +928,16 @@ namespace Ultima5Redux.Data
                 0x5a);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character type, monster names (44 of them)",
                 0x1d3, 0x158);
+
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)",
+                0x1d3, 0x158, 0x00, DataChunkName.MONSTER_NAMES_MIXED);
+            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_MIXED).GetChunkAsStringList();
+
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)",
+                0x32b, 0x165, 0x00, DataChunkName.MONSTER_NAMES_UPPER);
+            strs2 = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
+
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
                 "Character type, monster names in capital letters (44 of them)", 0x32b, 0x165);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Unknown", 0x490, 0x33);
@@ -1085,7 +1194,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x6a1c, 0xce);
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Random texts", 0x6aea, 0xec, 0, DataChunkName.WORLD2);
-            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.WORLD2).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Stat lines (z-stats?)", 0x6d08, 0x43);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Ultima IV", 0x6d48, 0xb);

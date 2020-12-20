@@ -6,6 +6,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
@@ -20,6 +21,7 @@ namespace Ultima5Redux.Maps
     public class VirtualMap
     {
         private readonly DataOvlReference _dataOvlReference;
+        private readonly EnemyReferences _enemyReferences;
 
         // ReSharper disable once NotAccessedField.Local
         private readonly InventoryReferences _inventoryReferences;
@@ -81,12 +83,14 @@ namespace Ultima5Redux.Maps
         /// <param name="currentSmallMapReference"></param>
         /// <param name="dataOvlReference"></param>
         /// <param name="bUseExtendedSprites"></param>
+        /// <param name="enemyReferences"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
             Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
-            DataOvlReference dataOvlReference, bool bUseExtendedSprites)
+            DataOvlReference dataOvlReference, bool bUseExtendedSprites,
+            EnemyReferences enemyReferences)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -101,6 +105,7 @@ namespace Ultima5Redux.Maps
             _moongates = moongates;
             _inventoryReferences = inventoryReferences;
             _dataOvlReference = dataOvlReference;
+            _enemyReferences = enemyReferences;
 
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
@@ -115,7 +120,8 @@ namespace Ultima5Redux.Maps
                 state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks,
                 state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
                 state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets,
-                timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, bUseExtendedSprites, mapLocation);
+                timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, bUseExtendedSprites, 
+                enemyReferences, mapLocation );
 
             switch (initialMap)
             {
@@ -253,7 +259,8 @@ namespace Ultima5Redux.Maps
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
             LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
-                CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
+                CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), 
+                xy.Copy());
         }
 
         public void MoveAvatar(Point2D newPosition)
@@ -263,19 +270,21 @@ namespace Ultima5Redux.Maps
         }
 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference, 
-            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records)
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records
+            )
         {
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
             CurrentCombatMap = new CombatMap(singleCombatMapReference);
             
-            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
+            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat, _enemyReferences);
             LargeMapOverUnder = Map.Maps.Combat;
             
             CurrentCombatMap.CreateParty(this, entryDirection, records, _tileReferences);
         }
         
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference,  
+            Point2D xy = null)
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
@@ -287,7 +296,7 @@ namespace Ultima5Redux.Maps
 
             LargeMapOverUnder = (Map.Maps) (-1);
 
-            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small);
+            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, _enemyReferences);
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
 
@@ -321,7 +330,8 @@ namespace Ultima5Redux.Maps
 
             LargeMapOverUnder = map;
 
-            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map);
+            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), 
+                map, _enemyReferences);
         }
 
         public IEnumerable<InventoryItem> GetExposedInventoryItems(Point2D xy)
@@ -518,7 +528,7 @@ namespace Ultima5Redux.Maps
             List<Type> visibilePriorityOrder = new List<Type>
             {
                 typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Monster), typeof(Avatar)
+                typeof(Enemy), typeof(Avatar)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
 
