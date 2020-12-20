@@ -147,12 +147,12 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Number of total columns for current map
         /// </summary>
-        public int NumberOfColumnTiles => _overrideMap[0].Length;
+        public int NumberOfColumnTiles => CurrentMap.NumOfXTiles;//_overrideMap[0].Length;
 
         /// <summary>
         ///     Number of total rows for current map
         /// </summary>
-        public int NumberOfRowTiles => _overrideMap.Length;
+        public int NumberOfRowTiles => CurrentMap.NumOfYTiles;//_overrideMap.Length;
 
         /// <summary>
         ///     The current small map (null if on large map)
@@ -275,12 +275,16 @@ namespace Ultima5Redux.Maps
         {
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
-            CurrentCombatMap = new CombatMap(singleCombatMapReference);
+            CurrentCombatMap = new CombatMap(singleCombatMapReference, _tileReferences);
             
-            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat, _enemyReferences);
+            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
             
-            CurrentCombatMap.CreateParty(this, entryDirection, records, _tileReferences);
+            CurrentCombatMap.CreateParty(this, entryDirection, records);
+            CurrentCombatMap.CreateMonsters(this, entryDirection, 
+                _enemyReferences.GetEnemyReference(416),
+                _enemyReferences.GetEnemyReference(468), 
+                records.AvatarRecord);
         }
         
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference,  
@@ -296,7 +300,7 @@ namespace Ultima5Redux.Maps
 
             LargeMapOverUnder = (Map.Maps) (-1);
 
-            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, _enemyReferences);
+            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small);
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
 
@@ -331,7 +335,7 @@ namespace Ultima5Redux.Maps
             LargeMapOverUnder = map;
 
             TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), 
-                map, _enemyReferences);
+                map);
         }
 
         public IEnumerable<InventoryItem> GetExposedInventoryItems(Point2D xy)

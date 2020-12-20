@@ -8,7 +8,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     {
         private const int N_TOTAL_MONSTERS = 0x30;
 
-        private List<EnemyReference> _monsterReferences = new List<EnemyReference>(N_TOTAL_MONSTERS);
+        private readonly List<EnemyReference> _monsterReferences = new List<EnemyReference>(N_TOTAL_MONSTERS);
         
         public EnemyReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)
         {
@@ -22,6 +22,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public EnemyReference GetEnemyReference(TileReference tileReference)
         {
             int nIndex = (tileReference.Index - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+            return _monsterReferences[nIndex];
+        }
+        
+        public EnemyReference GetEnemyReference(int nSprite)
+        {
+            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
             return _monsterReferences[nIndex];
         }
 

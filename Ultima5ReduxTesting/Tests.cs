@@ -941,10 +941,36 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
-            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.MapReferenceList[0],
+            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
                 SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
         }
 
+        
+        
+        [Test] public void Test_LoadFirstCombatMapWithMonsters()
+        {
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
+            List<CombatMap> worldMaps = new List<CombatMap>();
+            for (int i = 0; i < 16; i++)
+            {
+                world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i),
+                    SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+                TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+                worldMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
+            }
+
+            List<CombatMap> dungMaps = new List<CombatMap>();
+            for (int i = 0; i < 16; i++)
+            {
+                world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, i),
+                    SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+                TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+                dungMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
+            }
+
+            _ = "";
+        }
+        
      }
 }

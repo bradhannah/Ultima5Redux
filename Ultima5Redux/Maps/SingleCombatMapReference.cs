@@ -20,6 +20,8 @@ namespace Ultima5Redux.Maps
         public readonly byte[][] TheMap;
         
         private readonly List<List<Point2D>> _playerPositionsByDirection = Utils.Init2DList<Point2D>(4, 6);
+        private readonly List<Point2D> _enemyPositions = new List<Point2D>(NUM_ENEMIES);
+        private readonly List<byte> _enemySprites = new List<byte>(NUM_ENEMIES);
         
         /// <summary>
         ///     How many bytes for each combat map entry in data file
@@ -27,6 +29,7 @@ namespace Ultima5Redux.Maps
         private const int MAP_BYTE_COUNT = 0x0160;
 
         private const int NUM_PLAYERS = 6;
+        private const int NUM_ENEMIES = 16;
         private const int NUM_DIRECTIONS = 4;
 
         public enum EntryDirection {East = 0, West = 1, South = 2, North = 3 }
@@ -82,6 +85,27 @@ namespace Ultima5Redux.Maps
                 {
                     _playerPositionsByDirection[nRow - 1].Add(new Point2D(xPlayerPosList[i], yPlayerPosList[i]));
                 }
+            }
+
+            // load the enemy positions and sprites
+            int nEnemyXOffset = nMapOffset + (0x20 * 6) + 0xB;
+            int nEnemyYOffset = nMapOffset + (0x20 * 7) + 0xB;
+            int nEnemySpriteOffset = nMapOffset + (0x20 * 5) + 0xB;
+            List<byte> xEnemyPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy X positions",
+                nEnemyXOffset, NUM_ENEMIES).GetAsByteList();
+            List<byte> yEnemyPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Y positions",
+                nEnemyYOffset, NUM_ENEMIES).GetAsByteList();
+            List<byte> spriteEnemyList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy sprite index" ,
+                nEnemySpriteOffset, NUM_ENEMIES).GetAsByteList();
+
+            Debug.Assert(xEnemyPosList.Count == NUM_ENEMIES);
+            Debug.Assert(yEnemyPosList.Count == NUM_ENEMIES);
+            Debug.Assert(spriteEnemyList.Count == NUM_ENEMIES);
+            
+            for (int nEnemyIndex = 0; nEnemyIndex < NUM_ENEMIES; nEnemyIndex++)
+            {
+                _enemyPositions.Add(new Point2D(xEnemyPosList[nEnemyIndex], yEnemyPosList[nEnemyIndex]));
+                _enemySprites.Add(spriteEnemyList[nEnemyIndex]);
             }
         }
 
