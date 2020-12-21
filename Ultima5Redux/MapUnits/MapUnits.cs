@@ -48,7 +48,7 @@ namespace Ultima5Redux.MapUnits
 
         private Map.Maps _currentMapType;
 
-        private MapUnitStates _currentMapUnitStates;
+//        private MapUnitStates _currentMapUnitStates;
 
         /// <summary>
         ///     Constructs the collection of all Map CurrentMapUnits in overworld, underworld and current towne
@@ -162,10 +162,10 @@ namespace Ultima5Redux.MapUnits
                     LoadSmallMap(currentSmallMap, true);
                     break;
                 case Map.Maps.Overworld:
-                    _currentMapUnitStates = _overworldMapUnitStates;
+                    //_currentMapUnitStates = _overworldMapUnitStates;
                     break;
                 case Map.Maps.Underworld:
-                    _currentMapUnitStates = _underworldMapUnitStates;
+                    //_currentMapUnitStates = _underworldMapUnitStates;
                     break;
                 case Map.Maps.Combat:
                     throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
@@ -457,11 +457,11 @@ namespace Ultima5Redux.MapUnits
             switch (map)
             {
                 case Map.Maps.Overworld:
-                    _currentMapUnitStates = _overworldMapUnitStates;
+                    //_currentMapUnitStates = _overworldMapUnitStates;
                     mapUnits = _overworldMapUnits;
                     break;
                 case Map.Maps.Underworld:
-                    _currentMapUnitStates = _underworldMapUnitStates;
+                    //_currentMapUnitStates = _underworldMapUnitStates;
                     mapUnits = _underworldMapUnits;
                     break;
                 case Map.Maps.Combat:
@@ -483,7 +483,8 @@ namespace Ultima5Redux.MapUnits
 
                 // we have retrieved the _currentMapUnitStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
-                MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(i);
+                MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(i);
+                    //_currentMapUnitStates.GetCharacterState(i);
 
                 // the party is always at zero
                 if (i == 0)
@@ -661,6 +662,36 @@ namespace Ultima5Redux.MapUnits
             return newUnit;
         }
 
+        private int AddCombatMapUnit(CombatMapUnit mapUnit)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
+            if (nIndex < 0) return -1;
+            
+            AddNewMapUnit(Map.Maps.Combat, mapUnit);
+
+            //_combatMapUnitStates.[nIndex] = mapUnit.TheMapUnitState;
+            
+            return nIndex;
+        }
+
+        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex)
+        {
+            Debug.Assert(_currentMapType == Map.Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
+            if (nIndex == -1) return null;
+            
+            MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
+
+            Enemy enemy = new Enemy(mapUnitState, Movements.GetMovement(nIndex), _tileReferences, enemyReference,
+                _currentLocation, _dataOvlReference);
+            //Point2D skiffLocation = xy;
+            enemy.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+            nIndex = AddCombatMapUnit(enemy);
+            
+            return enemy;
+        }
+        
+
         /// <summary>
         ///     Creates a new Magic Carpet and places it on the map
         /// </summary>
@@ -675,7 +706,7 @@ namespace Ultima5Redux.MapUnits
 
             if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
+            MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
 
             MagicCarpet magicCarpet = new MagicCarpet(mapUnitState, Movements.GetMovement(nIndex),
                 _tileReferences, _currentLocation, _dataOvlReference, direction)
@@ -693,7 +724,7 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
             if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
+            MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
             Horse horse = new Horse(mapUnitState, Movements.GetMovement(nIndex),
                 _tileReferences, _currentLocation, _dataOvlReference, Point2D.Direction.Right)
             {
@@ -718,7 +749,7 @@ namespace Ultima5Redux.MapUnits
 
             if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
+            MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
 
             Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex),
                 _tileReferences, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference,
@@ -746,7 +777,7 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
             if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = _currentMapUnitStates.GetCharacterState(nIndex);
+            MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
             Skiff skiff = new Skiff(mapUnitState, Movements.GetMovement(nIndex),
                 _tileReferences, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference,
                 direction);

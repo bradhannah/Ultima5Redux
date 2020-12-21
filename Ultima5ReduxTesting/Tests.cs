@@ -941,14 +941,16 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
-            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 0),
                 SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            _ = "";
         }
 
         
         
-        [Test] public void Test_LoadFirstCombatMapWithMonsters()
+        [Test] public void Test_LoadAllCombatMapsWithMonsters()
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             List<CombatMap> worldMaps = new List<CombatMap>();

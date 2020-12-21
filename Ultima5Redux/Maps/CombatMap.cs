@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.Maps
@@ -11,11 +13,14 @@ namespace Ultima5Redux.Maps
         private readonly TileReferences _tileReferences;
         public SingleCombatMapReference TheMapReference { get; }
 
-        public CombatMap(SingleCombatMapReference singleCombatMapReference, TileReferences tileReferences) : 
+        private EnemyReferences _enemyReferences;
+
+        public CombatMap(SingleCombatMapReference singleCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences) : 
             base(null, null)
         {
             _tileReferences = tileReferences;
             TheMapReference = singleCombatMapReference;
+            _enemyReferences = enemyReferences;
         }
 
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
@@ -53,17 +58,41 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        internal void CreateMonsters(VirtualMap currentVirtualMap,
+        internal void CreateEnemies(VirtualMap currentVirtualMap,
+            SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection,
             EnemyReference primaryEnemyReference, EnemyReference secondaryEnemyReference,
             PlayerCharacterRecord avatarRecord)
         {
-            int nPrimaryEnemy = 5;
+            int nPrimaryEnemy = 16;
             int nSecondaryEnemy = 2;
-
+            
             for (int nIndex = 0; nIndex < nPrimaryEnemy; nIndex++)
             {
-                
+                SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
+                    singleCombatMapReference.GetAdjustedEnemySprite(nIndex, out int nEnemySprite);
+                Point2D nEnemyPosition = singleCombatMapReference.GetEnemyPosition(nIndex);
+
+                switch (combatMapSpriteType)
+                {
+                    case SingleCombatMapReference.CombatMapSpriteType.Nothing:
+                        Debug.Assert(nEnemyPosition.X == 0 && nEnemyPosition.Y ==0);
+                        break;
+                    case SingleCombatMapReference.CombatMapSpriteType.Thing:
+                        Debug.WriteLine("It's a chest or maybe a dead body!");
+                        break;
+                    case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
+                        currentVirtualMap.TheMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nIndex),
+                            _enemyReferences.GetEnemyReference(nEnemySprite), out int _);
+                        break;
+                    case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
+                        Debug.Assert(!(nEnemyPosition.X == 0 && nEnemyPosition.Y == 0));
+                        currentVirtualMap.TheMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nIndex),
+                            primaryEnemyReference, out int _);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             
         }

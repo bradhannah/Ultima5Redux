@@ -29,6 +29,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         {
             //TileReferences = tileReferences;
             EnemyReference = enemyReference;
+            mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
             // TheMapUnitState = MapUnitState.CreateMonster(TileReferences, new MapUnitPosition(xy.X, xy.Y, 0), 
             //     enemyReference.KeyTileReference.Index);   
         }

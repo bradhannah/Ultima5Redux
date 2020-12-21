@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Maps
@@ -109,12 +110,56 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        
         public List<Point2D> GetPlayerStartPositions(EntryDirection entryDirection)
         {
             Debug.Assert((int)entryDirection >= 0 && (int)entryDirection <= NUM_DIRECTIONS);
             return _playerPositionsByDirection[(int) entryDirection];
         }
+
+        public Point2D GetEnemyPosition(int nIndex)
+        {
+            Debug.Assert(nIndex < NUM_ENEMIES && nIndex >= 0);
+            return _enemyPositions[nIndex];
+        }
+
+        private int GetRawEnemySprite(int nIndex)
+        {
+            Debug.Assert(nIndex < NUM_ENEMIES && nIndex >= 0);
+            return _enemySprites[nIndex];
+        }
+
+        public enum CombatMapSpriteType { Nothing, Thing, AutoSelected, EncounterBased}
+        public CombatMapSpriteType GetAdjustedEnemySprite(int nIndex, out int nSpriteIndex)
+        {
+            int nEnemyRawSprite = GetRawEnemySprite(nIndex);
+            nSpriteIndex = nEnemyRawSprite + 0xFF;
+            
+            // enemy sprite of 0 indicates no monster
+            if (nEnemyRawSprite == 0) return CombatMapSpriteType.Nothing;
+                
+            // it's a chest or something like it
+            if (nEnemyRawSprite >= 1 && nEnemyRawSprite <= 15) return CombatMapSpriteType.Thing;
+
+            // it's a dead body or blood spatter
+            if (nEnemyRawSprite == 30 || nEnemyRawSprite == 31) return CombatMapSpriteType.Thing;
+
+            // it's determined by the encounter 
+            if (nEnemyRawSprite == 112) return CombatMapSpriteType.EncounterBased;
+
+            // if the sprite is lower than the crown index, then we add 4
+            // OR
+            // it's a Shadow Lord, but it breaks convention
+            if (nSpriteIndex < 436 || nSpriteIndex >= 504) nSpriteIndex += 4;
+
+            if (nSpriteIndex < 320 || nSpriteIndex > 511)
+            {
+                throw new Ultima5ReduxException(
+                    $"Tried to get adjusted enemy sprite with index={nIndex} and raw sprite={nEnemyRawSprite}");
+            }
+
+            return CombatMapSpriteType.AutoSelected;
+        }
+        
         
         /// <summary>
         ///     The number of the combat map (order in data file)
