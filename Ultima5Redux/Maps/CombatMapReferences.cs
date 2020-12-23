@@ -23,8 +23,12 @@ namespace Ultima5Redux.Maps
                     {SingleCombatMapReference.Territory.Britannia, new List<SingleCombatMapReference>()},
                     {SingleCombatMapReference.Territory.Dungeon, new List<SingleCombatMapReference>()}
                 };
-        
-        //private readonly List<List<DataChunk>> _britTileMappingDataChunks = new List<List<DataChunk>>(MAPS_PER_TERRAIN);
+
+        public List<SingleCombatMapReference> GetListOfSingleCombatMapReferences(
+            SingleCombatMapReference.Territory territory)
+        {
+            return _singleCombatMapReferences[territory];
+        }
 
         public enum DataChunkName {Unused = -1 }
 
@@ -60,10 +64,5 @@ namespace Ultima5Redux.Maps
             Debug.Assert(nIndex < _singleCombatMapReferences[territory].Count);
             return _singleCombatMapReferences[territory][nIndex];
         }
-        
-        /// <summary>
-        /// The list of map references
-        /// </summary>
-        //public List<SingleCombatMapReference> MapReferenceList { get; } = new List<SingleCombatMapReference>();
     }
 }

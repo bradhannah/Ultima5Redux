@@ -11,15 +11,15 @@ namespace Ultima5Redux.Maps
     public class CombatMap : Map
     {
         private readonly TileReferences _tileReferences;
-        public SingleCombatMapReference TheMapReference { get; }
+        public SingleCombatMapReference TheCombatMapReference { get; }
 
         private EnemyReferences _enemyReferences;
 
-        public CombatMap(SingleCombatMapReference singleCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences) : 
+        public CombatMap(SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences) : 
             base(null, null)
         {
             _tileReferences = tileReferences;
-            TheMapReference = singleCombatMapReference;
+            TheCombatMapReference = singleCombatCombatMapReference;
             _enemyReferences = enemyReferences;
         }
 
@@ -27,7 +27,7 @@ namespace Ultima5Redux.Maps
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
 
         public override byte[][] TheMap {
-            get => TheMapReference.TheMap;
+            get => TheCombatMapReference.TheMap;
             protected set
             {
                 
@@ -45,7 +45,7 @@ namespace Ultima5Redux.Maps
             // clear any previous combat map units
             currentVirtualMap.TheMapUnits.InitializeCombatMapReferences();
             List<Point2D> playerStartPositions =
-                TheMapReference.GetPlayerStartPositions(entryDirection);
+                TheCombatMapReference.GetPlayerStartPositions(entryDirection);
             
             // cycle through each player and make a map unit
             for (int nPlayer = 0; nPlayer < activeRecords.GetNumberOfActiveCharacters(); nPlayer++)

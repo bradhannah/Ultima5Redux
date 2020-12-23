@@ -23,6 +23,9 @@ namespace Ultima5Redux.Maps
         private readonly List<List<Point2D>> _playerPositionsByDirection = Utils.Init2DList<Point2D>(4, 6);
         private readonly List<Point2D> _enemyPositions = new List<Point2D>(NUM_ENEMIES);
         private readonly List<byte> _enemySprites = new List<byte>(NUM_ENEMIES);
+
+        private readonly Dictionary<EntryDirection, bool> _enterDirectionDictionary =
+            new Dictionary<EntryDirection, bool>();
         
         /// <summary>
         ///     How many bytes for each combat map entry in data file
@@ -42,7 +45,13 @@ namespace Ultima5Redux.Maps
             "Basement", "Psychedelic", "Boat - Ocean", "Boat - North", "Boat - South", "Boat-Boat", "Bay"
         };
 
-        private static readonly string[] DungeonDescriptions = {"A", "B"};
+        private static readonly string[] DungeonDescriptions =
+        {
+            "Klimb Down", "Four Way with Gremlins", "Magic Barriers", "Four Ways to Nowhere", "Right Sided Hammer", 
+            "Double Portcullis", "Stone Gargoyles", "Surrounded Exit Right", "Rats Surprise!",
+            "Deaths Magic Door", "Underground Lake", "Daemon Bottom Right", "Daemon Bottom Left", "Daemon Top Right", 
+            "Daemon Top Left", "Triggered"
+        };
 
         /// <summary>
         ///     Create the reference based on territory and a map number
@@ -82,9 +91,18 @@ namespace Ultima5Redux.Maps
                     nMapOffset + (0x20 * nOffsetFactor) + 0xB, 0x06).GetAsByteList();
                 List<byte> yPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player Y positions for row #" + nRow,
                     nMapOffset + (0x20 * nOffsetFactor) + 0xB + 0x06, 0x06).GetAsByteList();
-                for (int i = 0; i < NUM_PLAYERS; i++)
+                for (int nPlayer = 0; nPlayer < NUM_PLAYERS; nPlayer++)
                 {
-                    _playerPositionsByDirection[nRow - 1].Add(new Point2D(xPlayerPosList[i], yPlayerPosList[i]));
+                    // if the X or Y value is above the number of tiles then it indicates a sprite number
+                    // which I believe is additional trigger tiles
+                    bool bIsEnterable = yPlayerPosList[nPlayer] < YTILES && xPlayerPosList[nPlayer] < XTILES;
+                    _enterDirectionDictionary[(EntryDirection) nRow - 1] = bIsEnterable;
+                    _playerPositionsByDirection[nRow - 1].Add(bIsEnterable
+                        ? new Point2D(xPlayerPosList[nPlayer], yPlayerPosList[nPlayer])
+                        : new Point2D(0, 0));
+
+                    Debug.Assert(_playerPositionsByDirection[nRow - 1][nPlayer].X <= XTILES);
+                    Debug.Assert(_playerPositionsByDirection[nRow - 1][nPlayer].Y <= YTILES);
                 }
             }
 
@@ -110,6 +128,11 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        public bool IsEnterable(EntryDirection entryDirection)
+        {
+            return _enterDirectionDictionary[entryDirection];
+        }
+        
         public List<Point2D> GetPlayerStartPositions(EntryDirection entryDirection)
         {
             Debug.Assert((int)entryDirection >= 0 && (int)entryDirection <= NUM_DIRECTIONS);
