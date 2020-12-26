@@ -36,7 +36,7 @@ namespace Ultima5Redux.Maps
         private const int NUM_ENEMIES = 16;
         private const int NUM_DIRECTIONS = 4;
 
-        public enum EntryDirection {East = 0, West = 1, South = 2, North = 3 }
+        public enum EntryDirection {East = 0, West = 1, North = 2, South = 3 }
         
         /// Descriptions of each combat map
         private static readonly string[] BritanniaDescriptions =
