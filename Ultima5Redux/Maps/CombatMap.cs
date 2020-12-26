@@ -58,43 +58,78 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        private void CreateEnemy(int nEnemyIndex, VirtualMap currentVirtualMap,
+            SingleCombatMapReference singleCombatMapReference,
+            EnemyReference enemyReference)
+        {
+            SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
+                singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
+            Point2D nEnemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
+
+            switch (combatMapSpriteType)
+            {
+                case SingleCombatMapReference.CombatMapSpriteType.Nothing:
+                    Debug.Assert(nEnemyPosition.X == 0 && nEnemyPosition.Y ==0);
+                    break;
+                case SingleCombatMapReference.CombatMapSpriteType.Thing:
+                    Debug.WriteLine("It's a chest or maybe a dead body!");
+                    break;
+                case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
+                    currentVirtualMap.TheMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                        _enemyReferences.GetEnemyReference(nEnemySprite), out int _);
+                    break;
+                case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
+                    Debug.Assert(!(nEnemyPosition.X == 0 && nEnemyPosition.Y == 0));
+                    currentVirtualMap.TheMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                        enemyReference, out int _);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
+        /// <summary>
+        /// Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
+        /// specified enemies
+        /// </summary>
+        /// <param name="currentVirtualMap"></param>
+        /// <param name="singleCombatMapReference"></param>
+        /// <param name="entryDirection"></param>
+        /// <param name="primaryEnemyReference"></param>
+        /// <param name="nPrimaryEnemies"></param>
+        /// <param name="secondaryEnemyReference"></param>
+        /// <param name="nSecondaryEnemies"></param>
+        /// <param name="avatarRecord"></param>
         internal void CreateEnemies(VirtualMap currentVirtualMap,
             SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection,
-            EnemyReference primaryEnemyReference, EnemyReference secondaryEnemyReference,
+            EnemyReference primaryEnemyReference, int nPrimaryEnemies, 
+            EnemyReference secondaryEnemyReference, int nSecondaryEnemies,
             PlayerCharacterRecord avatarRecord)
         {
-            int nPrimaryEnemy = 16;
-            int nSecondaryEnemy = 2;
-            
-            for (int nIndex = 0; nIndex < nPrimaryEnemy; nIndex++)
-            {
-                SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
-                    singleCombatMapReference.GetAdjustedEnemySprite(nIndex, out int nEnemySprite);
-                Point2D nEnemyPosition = singleCombatMapReference.GetEnemyPosition(nIndex);
+            int nEnemyIndex = 0;
 
-                switch (combatMapSpriteType)
+            // dungeons do not have encountered based enemies (but where are the dragons???)
+            if (singleCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Dungeon)
+            {
+                for (nEnemyIndex = 0; nEnemyIndex < SingleCombatMapReference.NUM_ENEMIES; nEnemyIndex++)
                 {
-                    case SingleCombatMapReference.CombatMapSpriteType.Nothing:
-                        Debug.Assert(nEnemyPosition.X == 0 && nEnemyPosition.Y ==0);
-                        break;
-                    case SingleCombatMapReference.CombatMapSpriteType.Thing:
-                        Debug.WriteLine("It's a chest or maybe a dead body!");
-                        break;
-                    case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
-                        currentVirtualMap.TheMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nIndex),
-                            _enemyReferences.GetEnemyReference(nEnemySprite), out int _);
-                        break;
-                    case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
-                        Debug.Assert(!(nEnemyPosition.X == 0 && nEnemyPosition.Y == 0));
-                        currentVirtualMap.TheMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nIndex),
-                            primaryEnemyReference, out int _);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    CreateEnemy(nEnemyIndex, currentVirtualMap, singleCombatMapReference, null);
                 }
+
+                return;
             }
+
+            Queue<int> monsterIndex = Utils.CreateRandomizedIntegerQueue(SingleCombatMapReference.NUM_ENEMIES);
             
+            for (int nIndex = 0; nIndex < nPrimaryEnemies; nIndex++, nEnemyIndex++)
+            {
+                CreateEnemy(monsterIndex.Dequeue(), currentVirtualMap, singleCombatMapReference, primaryEnemyReference);
+            }
+            for (int nIndex = 0; nIndex < nSecondaryEnemies; nIndex++, nEnemyIndex++)
+            {
+                CreateEnemy(monsterIndex.Dequeue(), currentVirtualMap, singleCombatMapReference, secondaryEnemyReference);
+            }
         }
     }
 }

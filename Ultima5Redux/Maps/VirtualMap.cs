@@ -270,8 +270,9 @@ namespace Ultima5Redux.Maps
         }
 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference, 
-            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records
-            )
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0, 
+            EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
         {
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
@@ -281,9 +282,10 @@ namespace Ultima5Redux.Maps
             LargeMapOverUnder = Map.Maps.Combat;
             
             CurrentCombatMap.CreateParty(this, entryDirection, records);
+            
             CurrentCombatMap.CreateEnemies(this, singleCombatMapReference, entryDirection, 
-                _enemyReferences.GetEnemyReference(416),
-                _enemyReferences.GetEnemyReference(468), 
+                primaryEnemyReference, nPrimaryEnemies,
+                secondaryEnemyReference, nSecondaryEnemies, 
                 records.AvatarRecord);
         }
         

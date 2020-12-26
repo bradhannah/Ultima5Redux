@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 
 namespace Ultima5Redux
 {
@@ -266,6 +267,16 @@ namespace Ultima5Redux
         public static int LittleEndianConversion(byte a, byte b)
         {
             return a | (b << 8);
+        }
+
+        public static Queue<int> CreateRandomizedIntegerQueue(int nElements)
+        {
+            List<int> intList = new List<int>(nElements);
+            for (int i = 0; i < nElements; i++) { intList.Add(i); }
+
+            Random rng = new Random();
+            Queue<int> randomizedQueue = new Queue<int>(intList.OrderBy(o => rng.Next())); 
+            return randomizedQueue;
         }
     }
 }
