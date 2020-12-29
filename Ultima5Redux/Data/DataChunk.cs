@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -322,31 +323,40 @@ namespace Ultima5Redux.Data
             return strList;
         }
 
-        /// <summary>
-        ///     Returns the data in the form of each bit represented as a boolean value
-        /// </summary>
-        /// <returns>A list of the extracted boolean values</returns>
-        public List<bool> GetAsBitmapBoolList()
+        public List<bool> GetAsBitmapBoolList(int nStart, int nLength)
         {
             // this is essentially the number 1, but we use this to show that we are ANDing on the final bit
             const byte ShiftBit = 0b000_0001;
 
-            List<bool> boolList = new List<bool>(DataLength * BITS_PER_BYTE);
+            List<bool> boolList = new List<bool>(nLength);//DataLength * BITS_PER_BYTE);
 
             // loop through all bytes, then each of their bits, creating a list of Booleans
-            for (int nByte = 0; nByte < DataLength; nByte++)
+            for (int nByte = nStart; nByte < nStart + nLength; nByte++)
             {
-                byte curByte = (byte) (RawData[nByte] + ValueModifier);
+                byte compareByte = 0x80;
+                byte curByte = (byte) (RawData[nByte] + ValueModifier); 
 
-                for (int nBit = 0; nBit < BITS_PER_BYTE; nBit++)
+                // for (int nBit = 0; nBit < BITS_PER_BYTE; nBit++)
+                for (int nBit = BITS_PER_BYTE - 1; nBit >= 0; nBit--)
                 {
-                    bool curBit = ((curByte >> nBit) & ShiftBit) == ShiftBit;
+                    //bool curBit = ((curByte >> nBit) & ShiftBit) == ShiftBit;
+                    bool curBit = (compareByte & curByte) > 0;
+                    compareByte >>= 1;
                     boolList.Add(curBit);
                     // if (isDebug) Debug.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
                 }
             }
 
             return boolList;
+        }
+        
+        /// <summary>
+        ///     Returns the data in the form of each bit represented as a boolean value
+        /// </summary>
+        /// <returns>A list of the extracted boolean values</returns>
+        public List<bool> GetAsBitmapBoolList()
+        {
+            return GetAsBitmapBoolList(0, DataLength);
         }
 
         /// <summary>
@@ -366,6 +376,13 @@ namespace Ultima5Redux.Data
 
             return data;
         }
+
+        public byte GetByte(int nIndex)
+        {
+            Debug.Assert(nIndex < RawData.Length && nIndex >= 0);
+            return RawData[nIndex];
+        }
+        
 
         public void SetChunkAsByte(byte data)
         {

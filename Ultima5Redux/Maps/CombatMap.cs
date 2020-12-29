@@ -10,10 +10,26 @@ namespace Ultima5Redux.Maps
 {
     public class CombatMap : Map
     {
-        private readonly TileReferences _tileReferences;
         public SingleCombatMapReference TheCombatMapReference { get; }
 
-        private EnemyReferences _enemyReferences;
+        // world references
+        private readonly TileReferences _tileReferences;
+        private readonly EnemyReferences _enemyReferences;
+
+        // player character information
+        private PlayerCharacterRecord _activePlayerCharacterRecord;
+        private PlayerCharacterRecords _playerCharacterRecords;
+
+        private Queue<CombatMapUnit> _initiativeQueue = new Queue<CombatMapUnit>();
+
+        private void CalculateInitiativeQueue()
+        {
+            Debug.Assert(_playerCharacterRecords != null);
+            Debug.Assert(_initiativeQueue.Count == 0);
+            
+            //_enemyReferences.AllEnemyReferences[0].
+        }
+        
 
         public CombatMap(SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences) : 
             base(null, null)
@@ -42,6 +58,8 @@ namespace Ultima5Redux.Maps
         internal void CreateParty(VirtualMap currentVirtualMap, SingleCombatMapReference.EntryDirection entryDirection,
             PlayerCharacterRecords activeRecords)
         {
+            _playerCharacterRecords = activeRecords;
+            
             // clear any previous combat map units
             currentVirtualMap.TheMapUnits.InitializeCombatMapReferences();
             List<Point2D> playerStartPositions =

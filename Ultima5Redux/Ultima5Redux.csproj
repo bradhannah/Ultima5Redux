@@ -255,6 +255,7 @@
     <Content Include="DataFiles\DataConversion\tileData.py" />
     <Content Include="DataFiles\InventoryDetails.csv" />
     <Content Include="DataFiles\MerchantStrings.csv" />
+    <Content Include="DataFiles\RawEnemyFlags.csv" />
     <Content Include="DataFiles\ShoppeKeeperMap.csv" />
     <EmbeddedResource Include="DataFiles\ShoppeKeeperMap.json">
     <CopyToOutputDirectory>Always</CopyToOutputDirectory>

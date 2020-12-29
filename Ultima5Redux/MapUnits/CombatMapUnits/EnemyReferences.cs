@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
@@ -16,6 +17,39 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             {
                 EnemyReference enemyReference = new EnemyReference(dataOvlReference, tileReferences, nMonsterIndex);
                 AllEnemyReferences.Add(enemyReference);
+            }
+
+            PrintDebugCSV();
+        }
+
+        private void PrintDebugCSV()
+        {
+            Console.Write(@"Name,AttackRange,MissileType,Friend,Thing");
+            //var dExampleBitfield = 0x8000;
+            foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
+            // for (int index = 0; index < AllEnemyReferences[0]._enemyFlags.Count; index++)
+            {
+                //Console.Write(@"," + $@"0x{dExampleBitfield:X4}");
+                Console.Write(@"," + ability);
+                //dExampleBitfield >>= 1;
+                //Console.Write(@"," + index.ToString());
+            }
+
+            Console.WriteLine();
+            
+            foreach (EnemyReference enemy in AllEnemyReferences)
+            {
+                Console.Write(enemy.KeyTileReference.Name + @"/" + enemy.GroupName + @"," + $@"0x{enemy.AttackRange:X2}");
+                Console.Write(@"," + $@"{enemy.TheMissileType}");
+                EnemyReference friend = AllEnemyReferences[enemy.FriendIndex];
+                Console.Write(@"," + $@"{friend.GroupName}");
+                Console.Write(@"," + $@"0x{enemy._nThing:X2}");
+                // Console.Write(@"," + $@"0x{enemy._nThing:X2}");
+                foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
+                {
+                    Console.Write(@"," + enemy.IsEnemyAbility(ability));
+                }
+                Console.WriteLine();
             }
         }
         

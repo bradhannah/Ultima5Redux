@@ -1,0 +1,49 @@
+﻿Name,AttackRange,MissileType,Friend,Thing,Bludgeons,PossessCharm,Undead,DivideOnHit,Immortal,PoisonAtRange,StealsFood,NoCorpse,RangedMagic,Teleport,DisappearsOnDeath,Invisibility,GatesInDaemon,Poison,InfectWithPlague
+Wizard1/WIZARDS,0x07,Blue,SKELETONS,0x02,False,False,False,False,False,False,False,False,True,False,False,False,False,False,False
+Bard1/BARD,0x03,Arrow,BARD,0x05,False,False,False,False,False,False,False,False,False,True,False,False,False,False,False
+Fighter1/FIGHTER,0x01,None,BARD,0x08,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Avatar1/x,0x01,None,x,0x04,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+TownsPerson1/VILLAGER,0x01,None,VILLAGER,0x06,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Merchant1/MERCHANT,0x01,None,VILLAGER,0x01,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Jester1/JESTER,0x01,None,VILLAGER,0x05,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+BardPlaying1/BARD,0x01,None,VILLAGER,0x09,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+PersonStocks1/PIRATES,0x01,None,VILLAGER,0x03,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+WallPrisoner1/x,0x01,None,VILLAGER,0x07,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Child1/CHILD,0x01,None,CHILD,0x00,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Begger1/BEGGAR,0x01,None,VILLAGER,0x04,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Guard1/GUARDS,0x0F,Axe,GUARDS,0x06,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Apparation1/x,0x09,Blue,x,0x0A,False,False,False,False,True,False,False,False,True,False,True,True,False,False,False
+Blackthorn1/BLACKTHORN,0x09,Red,BLACKTHORN,0x02,False,True,False,False,True,False,False,False,True,False,True,True,True,True,False
+LordBritish1/LORD BRITISH,0x09,Blue,LORD BRITISH,0x08,False,False,False,False,True,False,False,False,True,False,True,True,False,False,False
+Seahorse1/SEA HORSES,0x05,Blue,SQUIDS,0x00,False,False,False,False,False,False,False,True,True,True,False,False,False,False,False
+Squid1/SQUIDS,0x07,Blue,SEA HORSES,0x00,False,False,False,False,False,True,False,True,False,True,False,False,False,False,False
+SeaSerpent1/SEA SERPENTS,0x09,Red,SQUIDS,0x00,False,False,False,False,False,False,False,True,False,True,False,False,False,False,False
+Shark1/SHARKS,0x01,None,SHARKS,0x01,False,False,False,False,False,False,False,True,False,False,False,False,False,False,False
+Rat1/GIANT RATS,0x01,None,SKELETONS,0x01,False,False,False,False,False,False,False,False,False,False,False,False,False,False,True
+Bat1/BATS,0x01,None,BATS,0x02,False,False,False,False,False,False,False,True,False,False,False,False,False,False,False
+Spider1/SPIDERS,0x01,None,GIANT RATS,0x02,False,False,False,False,False,True,False,False,False,False,False,False,False,False,True
+Ghost1/GHOSTS,0x01,None,SKELETONS,0x02,False,False,True,False,False,False,False,True,False,False,False,False,True,False,False
+Slime1/SLIME,0x01,None,SLIME,0x03,False,False,False,True,False,False,False,True,False,False,False,False,False,False,False
+Gremlin1/GREMLINS,0x01,None,MIMICS,0x03,False,False,False,False,False,False,True,False,False,False,False,False,False,False,False
+Mimic1/MIMICS,0x02,Green,ETTINS,0x04,True,False,False,False,False,False,False,False,False,False,False,False,False,False,True
+Reaper1/REAPERS,0x09,Blue,BATS,0x04,True,False,False,False,False,False,False,False,True,False,False,False,False,False,False
+Gazer1/GAZERS,0x05,Violet,BATS,0x04,False,True,False,False,False,False,False,False,True,False,False,False,False,False,False
+Shard/x,0x01,None,SLIME,0x04,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+StoneGargoyle1/GARGOYLE,0x09,Rock,GARGOYLE,0x05,True,False,False,True,False,False,False,False,False,False,False,False,False,False,False
+InsectSwarm1/INSECTS,0x01,None,SLIME,0x05,False,False,False,False,False,False,False,True,False,False,False,False,False,False,False
+Orc1/ORCS,0x01,None,TROLLS,0x05,True,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Skeleton1/SKELETONS,0x01,None,WIZARDS,0x04,False,False,True,False,False,False,False,False,False,False,False,False,False,False,False
+Snake1/SNAKES,0x03,Green,SPIDERS,0x06,False,False,False,False,False,True,False,False,False,False,False,False,False,False,False
+Ettin1/ETTINS,0x05,Rock,HEADLESSES,0x03,True,False,False,False,False,False,False,False,False,True,False,False,False,False,False
+Headless1/HEADLESSES,0x01,None,ETTINS,0x05,True,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Wisp1/WISPS,0x01,None,GHOSTS,0x07,False,True,False,False,False,False,False,True,False,False,True,False,False,False,False
+Daemon1/DAEMONS,0x09,Red,DRAGONS,0x00,False,True,True,False,False,False,False,True,True,False,False,False,False,True,False
+Dragon1/DRAGONS,0x09,Red,DRAGONS,0x00,False,False,False,False,False,False,False,False,False,False,False,False,False,True,False
+SandTrap1/SAND TRAPS,0x01,None,SAND TRAPS,0x07,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Troll1/TROLLS,0x05,Axe,GIANT RATS,0x08,False,False,False,False,False,False,False,False,False,True,False,False,False,False,False
+PoisonField/x,0x01,None,x,0x08,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Whirpool1/x,0x01,None,x,0x09,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+MongBat1/MONGBATS,0x01,None,MONGBATS,0x09,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+Corpser1/CORPSERS,0x01,None,CORPSERS,0x09,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
+RotWork1/ROTWORMS,0x01,None,GIANT RATS,0x00,False,False,False,False,False,False,False,False,False,False,False,False,False,False,True
+ShadowLord1/SHADOW LORD,0x09,Red,DAEMONS,0x00,False,True,True,False,False,False,False,True,True,False,True,True,True,False,True

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+// ReSharper disable InconsistentNaming
 
 namespace Ultima5Redux.Data
 {
@@ -32,7 +33,8 @@ namespace Ultima5Redux.Data
             SHOPPE_KEEPER_HEALER2, HEALER_HEAL_PRICES, HEALER_CURE_PRICES, HEALER_RESURRECT_PRICES, X_DOCKS, Y_DOCKS,
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
-            YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER
+            YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER, ENEMY_FLAGS,ENEMY_ATTACK_RANGE, ENEMY_RANGE_THING,
+            ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS
         }
 
         public enum Equipment
@@ -983,6 +985,19 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
 
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Stats", 0x13CC,
+                0x30 * 8, 0x00, DataChunkName.ENEMY_STATS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Ability Flags", 0x154C,
+                0x30 * 2, 0x00, DataChunkName.ENEMY_FLAGS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Attack Range (1-9)", 0x15AC,
+                0x30, 0x00, DataChunkName.ENEMY_ATTACK_RANGE);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Range THING", 0x15DC,
+                0x30, 0x00, DataChunkName.ENEMY_RANGE_THING);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Friends", 0x16E4,
+                0x30, 0x00, DataChunkName.ENEMY_FRIENDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy THING", 0x1714,
+                0x30, 0x00, DataChunkName.ENEMY_THING);
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Attack values", 0x160C, 0x37, 0x00,
                 DataChunkName.ATTACK_VALUES);
             // excludes extended items such as ankh and spells
