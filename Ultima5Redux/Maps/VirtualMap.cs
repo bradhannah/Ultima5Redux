@@ -536,7 +536,7 @@ namespace Ultima5Redux.Maps
             List<Type> visibilePriorityOrder = new List<Type>
             {
                 typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Enemy), typeof(Avatar)
+                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
 
@@ -562,23 +562,28 @@ namespace Ultima5Redux.Maps
         internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) =>
             IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
+        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState) =>
+            IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
+
+
         /// <summary>
         ///     Is the particular tile eligible to be moved onto
         /// </summary>
-        /// <param name="xy"></param>
+        /// <param name="currentPosition"></param>
+        /// <param name="newPosition"></param>
         /// <param name="bNoStaircases"></param>
         /// <param name="forcedAvatarState"></param>
         /// <returns>true if you can move onto the tile</returns>
-        private bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
+        internal bool IsTileFreeToTravel(Point2D currentPosition, Point2D newPosition, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
         {
-            if (xy.X < 0 || xy.Y < 0) return false;
+            if (newPosition.X < 0 || newPosition.Y < 0) return false;
 
-            bool bIsAvatarTile = CurrentPosition.XY == xy;
+            bool bIsAvatarTile = currentPosition == newPosition;
 
             // get the regular tile reference AND get the map unit (NPC, frigate etc)
             // we need to evaluate both
-            TileReference tileReference = GetTileReference(xy);
-            MapUnit mapUnit = GetTopVisibleMapUnit(xy, true);
+            TileReference tileReference = GetTileReference(newPosition);
+            MapUnit mapUnit = GetTopVisibleMapUnit(newPosition, true);
 
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
@@ -594,7 +599,6 @@ namespace Ultima5Redux.Maps
             if (mapUnit is null)
             {
                 bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable) && !bPortcullisDown;
-                ;
             }
             else // otherwise we need to evaluate if the vehicle can moved to the tile
             {

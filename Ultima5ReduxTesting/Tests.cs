@@ -938,6 +938,36 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.RecalculateVisibleTilesLargeMap();
         }
         
+        [Test] public void Test_LoadCampFireCombatMap()
+        {
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
+            
+            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                // orcs
+                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                // troll
+                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+            TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessMapUnitTurn(
+                out CombatMapUnit combatMapUnit, out string outputStr);
+            Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
+            Debug.Assert(combatMapUnit is CombatPlayer);
+            
+            if (combatMapUnit is CombatPlayer player)
+            {
+                Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
+                world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult, true);
+                world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+                world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult, true);
+                world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+                world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult, true);
+                Debug.Assert(tryToMoveResult == World.TryToMoveResult.Blocked);
+            }
+            _ = "";
+        }
+        
         [Test] public void Test_LoadFirstCombatMap()
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
@@ -954,8 +984,12 @@ namespace Ultima5ReduxTesting
                 out CombatMapUnit combatMapUnit, out string outputStr);
             Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
             Debug.Assert(combatMapUnit is CombatPlayer);
-            if (combatMapUnit is CombatPlayer player) Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
-            
+            if (combatMapUnit is CombatPlayer player)
+            {
+                Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
+                world.TryToMoveCombatMap(player, Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult,
+                    true);
+            }
             _ = "";
         }
 

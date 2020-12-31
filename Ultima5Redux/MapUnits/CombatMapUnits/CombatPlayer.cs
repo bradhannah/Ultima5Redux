@@ -18,6 +18,9 @@ namespace Ultima5Redux.MapUnits
             TileReferences = tileReferences;
             TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record, 
                 new MapUnitPosition(xy.X, xy.Y, 0));
+
+            // set the characters position 
+            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
         }
         
         // public CombatPlayer(MapUnitState mapUnitState,

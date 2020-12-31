@@ -718,18 +718,16 @@ namespace Ultima5Redux
             switch (direction)
             {
                 case Point2D.Direction.Down:
-                    if (State.TheVirtualMap.CurrentPosition.Y < State.TheVirtualMap.NumberOfRowTiles - 1 ||
-                        State.TheVirtualMap.IsLargeMap) yAdjust = 1;
+                    yAdjust = 1;
                     break;
                 case Point2D.Direction.Up:
-                    if (State.TheVirtualMap.CurrentPosition.Y > 0 || State.TheVirtualMap.IsLargeMap) yAdjust = -1;
+                    yAdjust = -1;
                     break;
                 case Point2D.Direction.Right:
-                    if (State.TheVirtualMap.CurrentPosition.X < State.TheVirtualMap.NumberOfColumnTiles - 1 ||
-                        State.TheVirtualMap.IsLargeMap) xAdjust = 1;
+                    xAdjust = 1;
                     break;
                 case Point2D.Direction.Left:
-                    if (State.TheVirtualMap.CurrentPosition.X > 0 || State.TheVirtualMap.IsLargeMap) xAdjust = -1;
+                    xAdjust = -1;
                     break;
                 case Point2D.Direction.None:
                     // do nothing, no adjustment
@@ -738,6 +736,52 @@ namespace Ultima5Redux
                     throw new Ultima5ReduxException(
                         "Requested an adjustment but didn't provide a KeyCode that represents a direction.");
             }
+        }
+
+        public string TryToMoveCombatMap(Point2D.Direction direction, out TryToMoveResult tryToMoveResult,
+            bool bManualMovement = true) => TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.ActiveCombatPlayer,
+            direction, out tryToMoveResult, bManualMovement);
+        
+        public string TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction, out TryToMoveResult tryToMoveResult, 
+            bool bManualMovement = true)
+        {
+            string retStr = DataOvlRef.StringReferences.GetDirectionString(direction);
+
+            // if we were to move, which direction would we move
+            GetAdjustments(direction, out int xAdjust, out int yAdjust);
+
+            Point2D newPosition = new Point2D(combatPlayer.MapUnitPosition.X + xAdjust, 
+                combatPlayer.MapUnitPosition.Y + yAdjust);
+
+            if (IsLeavingMap(newPosition))
+            {
+                retStr += "\nLEAVING";
+                tryToMoveResult = TryToMoveResult.OfferToExitScreen;
+                return retStr;
+            }
+            
+            // we get the newTile so that we can determine if it's passable
+            TileReference newTileReference = State.TheVirtualMap.GetTileReference(newPosition.X, newPosition.Y);
+
+            if (!State.TheVirtualMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition, false, Avatar.AvatarState.Regular))
+            {
+                retStr += "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED);
+                tryToMoveResult = TryToMoveResult.Blocked;
+                return retStr;
+            }
+
+            // todo: this is a gross way to update location information
+            State.TheVirtualMap.CurrentCombatMap.MoveActiveCombatMapUnit(newPosition);
+            
+            tryToMoveResult = TryToMoveResult.Moved;
+            retStr += "\nGood to go";
+            return retStr;
+        }
+
+        private bool IsLeavingMap(Point2D xyProposedPosition)
+        {
+            return (xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
+                State.TheVirtualMap.NumberOfRowTiles - 1));
         }
 
         /// <summary>
@@ -760,13 +804,9 @@ namespace Ultima5Redux
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
 
             // would we be leaving a small map if we went forward?
-            if (!State.TheVirtualMap.IsLargeMap && (
-                State.TheVirtualMap.CurrentPosition.Y == nTilesPerMapRow - 1 &&
-                direction == Point2D.Direction.Down ||
-                State.TheVirtualMap.CurrentPosition.Y == 0 && direction == Point2D.Direction.Up ||
-                State.TheVirtualMap.CurrentPosition.X == nTilesPerMapCol - 1 &&
-                direction == Point2D.Direction.Right ||
-                State.TheVirtualMap.CurrentPosition.X == 0 && direction == Point2D.Direction.Left))
+            if (!State.TheVirtualMap.IsLargeMap &&
+                IsLeavingMap(new Point2D(State.TheVirtualMap.CurrentPosition.X + xAdjust, 
+                    State.TheVirtualMap.CurrentPosition.Y + yAdjust)))
             {
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space
@@ -775,10 +815,9 @@ namespace Ultima5Redux
             }
 
             // calculate our new x and y values based on the adjustments
-            int newX = (State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol;
-            int newY = (State.TheVirtualMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow;
-            Point2D newPos = new Point2D(newX, newY);
-
+            Point2D newPosition = new Point2D((State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol, 
+                (State.TheVirtualMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow);
+            
             // we change the direction of the Avatar map unit
             // this will be used to determine which is the appropriate sprite to show
             bool bAvatarActuallyMoved = State.TheVirtualMap.TheMapUnits.AvatarMapUnit.Move(direction);
@@ -829,33 +868,33 @@ namespace Ultima5Redux
                     retStr = DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) +
                              DataOvlRef.StringReferences.GetDirectionString(direction);
                     break;
+                case Avatar.AvatarState.Hidden:
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             // if we have reached 0, and we are adjusting -1 then we should assume it's a round world and we are going to the opposite side
             // this should only be true if it is a RepeatMap
-            if (newX < 0)
+            if (newPosition.X < 0)
             {
                 Debug.Assert(State.TheVirtualMap.IsLargeMap,
                     "You should not reach the very end of a map +/- 1 if you are not on a repeating map");
-                newX = nTilesPerMapCol + newX;
+                newPosition.X += nTilesPerMapCol;
             }
 
-            if (newY < 0)
+            if (newPosition.Y < 0)
             {
                 Debug.Assert(State.TheVirtualMap.IsLargeMap,
                     "You should not reach the very end of a map +/- 1 if you are not on a repeating map");
-                newY = nTilesPerMapRow + newY;
+                newPosition.Y = nTilesPerMapRow + newPosition.Y;
             }
 
             // we get the newTile so that we can determine if it's passable
-            //int newTile = GetTileNumber(newX, newY);
-            TileReference newTileReference = State.TheVirtualMap.GetTileReference(newX, newY);
+            TileReference newTileReference = State.TheVirtualMap.GetTileReference(newPosition.X, newPosition.Y);
 
             if (newTileReference.Index == SpriteTileReferences.GetTileNumberByName("BrickFloorHole") && !State.TheVirtualMap.IsAvatarRidingCarpet)
             {
-                State.TheVirtualMap.UseStairs(newPos, true);
+                State.TheVirtualMap.UseStairs(newPosition, true);
                 tryToMoveResult = TryToMoveResult.Fell;
                 // we need to evaluate in the game and let the game know that they should continue to fall
                 TileReference newTileRef = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
@@ -871,13 +910,13 @@ namespace Ultima5Redux
 
             // it's passable if it's marked as passable, 
             // but we double check if the portcullis is down
-            bool bPassable = State.TheVirtualMap.IsTileFreeToTravel(new Point2D(newX, newY)); 
+            bool bPassable = State.TheVirtualMap.IsTileFreeToTravel(newPosition); 
 
             // this is insufficient in case I am in a boat
             if ((bKlimb && newTileReference.IsKlimable) || bPassable || bFreeMove )
             {
-                State.TheVirtualMap.CurrentPosition.X = newX;
-                State.TheVirtualMap.CurrentPosition.Y = newY;
+                State.TheVirtualMap.CurrentPosition.X = newPosition.X;
+                State.TheVirtualMap.CurrentPosition.Y = newPosition.Y;
             }
             else // it is not passable
             {
