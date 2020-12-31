@@ -71,17 +71,17 @@ namespace Ultima5Redux.Maps
             TheMap = Utils.Init2DByteArray(XTILES, YTILES);
 
             // get and build the map sprites 
-            // for (int nRow = 0; nRow < CombatMapLegacy.XTILES; nRow++)
-            // {
-            //     DataChunk rowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Tiles for row {nRow}",
-            //         nMapOffset + (0x20 * nRow), CombatMapLegacy.XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
-            //     List<byte> list = rowChunk.GetAsByteList();
-            //     for (int nCol = 0; nCol < list.Count; nCol++)
-            //     {
-            //         byte sprite = list[nCol];
-            //         TheMap[nCol][nRow] = sprite; 
-            //     }
-            // }
+            for (int nRow = 0; nRow < XTILES; nRow++)
+            {
+                DataChunk rowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Tiles for row {nRow}",
+                    nMapOffset + (0x20 * nRow), XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
+                List<byte> list = rowChunk.GetAsByteList();
+                for (int nCol = 0; nCol < list.Count; nCol++)
+                {
+                    byte sprite = list[nCol];
+                    TheMap[nCol][nRow] = sprite; 
+                }
+            }
 
             // build the maps of all four directions and the respective player positions
             for (int nRow = 1, nOffsetFactor = 0; nRow <= NUM_DIRECTIONS; nRow++, nOffsetFactor++)

@@ -289,7 +289,6 @@ namespace Ultima5Redux.Maps
                 records.AvatarRecord);
 
             CurrentCombatMap.InitializeInitiativeQueue();
-            CurrentCombatMap.CalculateInitiativeQueue();
         }
         
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference,  

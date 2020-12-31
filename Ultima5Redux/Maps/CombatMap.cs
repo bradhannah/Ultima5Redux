@@ -120,10 +120,59 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
+        public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks }
+        
+        public TurnResult ProcessMapUnitTurn(out CombatMapUnit affectedCombatMapUnit, out string outputStr)
+        {
+            affectedCombatMapUnit = GetCurrentCombatUnit();
+
+            if (affectedCombatMapUnit is CombatPlayer combatPlayer)
+            {
+                outputStr = "do a thing";
+                return TurnResult.RequireCharacterInput;
+            }
+
+            // either move the enemy or have them attack someone
+            outputStr = "enemy moved";
+            AdvanceToNextCombatMapUnit();
+            return TurnResult.EnemyMoved;
+        }
+
+        private CombatMapUnit GetCurrentCombatUnit()
+        {
+            // if the queue is empty then we will recalculate it before continuing
+            if (_initiativeQueue.Count == 0) CalculateInitiativeQueue();
+
+            Debug.Assert(_initiativeQueue.Count > 0);
+
+            CombatMapUnit combatMapUnit = _initiativeQueue.Peek();
+
+            return combatMapUnit;
+        }
+        
+        /// <summary>
+        /// Gets the next combat map unit that will be playing
+        /// </summary>
+        /// <returns></returns>
+        private void AdvanceToNextCombatMapUnit()
+        {
+            Debug.Assert(_initiativeQueue.Count > 0);
+
+            // we are done with this unit now, so we just toss them out
+            _initiativeQueue.Dequeue();
+
+            // if the queue is empty then we will recalculate it before continuing
+            if (_initiativeQueue.Count == 0) CalculateInitiativeQueue();
+
+            Debug.Assert(_initiativeQueue.Count > 0);
+
+            _activePlayerCharacterRecord = _initiativeQueue.Peek() is CombatPlayer player ? player.Record : null;
+        }
+        
         /// <summary>
         /// Calculates an initiative queue giving the order of all attacks or moves within a single round
         /// </summary>
-        internal void CalculateInitiativeQueue()
+        private void CalculateInitiativeQueue()
         {
             Debug.Assert(_playerCharacterRecords != null);
             Debug.Assert(_initiativeQueue.Count == 0);

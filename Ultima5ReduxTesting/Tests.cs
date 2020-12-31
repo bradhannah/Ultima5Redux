@@ -9,6 +9,7 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
@@ -943,10 +944,18 @@ namespace Ultima5ReduxTesting
             
             world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2),
                 SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                // orcs
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                // troll
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
+            CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessMapUnitTurn(
+                out CombatMapUnit combatMapUnit, out string outputStr);
+            Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
+            Debug.Assert(combatMapUnit is CombatPlayer);
+            if (combatMapUnit is CombatPlayer player) Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
+            
             _ = "";
         }
 
