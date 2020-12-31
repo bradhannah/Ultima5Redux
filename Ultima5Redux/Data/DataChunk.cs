@@ -325,10 +325,7 @@ namespace Ultima5Redux.Data
 
         public List<bool> GetAsBitmapBoolList(int nStart, int nLength)
         {
-            // this is essentially the number 1, but we use this to show that we are ANDing on the final bit
-            const byte ShiftBit = 0b000_0001;
-
-            List<bool> boolList = new List<bool>(nLength);//DataLength * BITS_PER_BYTE);
+            List<bool> boolList = new List<bool>(nLength);
 
             // loop through all bytes, then each of their bits, creating a list of Booleans
             for (int nByte = nStart; nByte < nStart + nLength; nByte++)
@@ -336,10 +333,8 @@ namespace Ultima5Redux.Data
                 byte compareByte = 0x80;
                 byte curByte = (byte) (RawData[nByte] + ValueModifier); 
 
-                // for (int nBit = 0; nBit < BITS_PER_BYTE; nBit++)
                 for (int nBit = BITS_PER_BYTE - 1; nBit >= 0; nBit--)
                 {
-                    //bool curBit = ((curByte >> nBit) & ShiftBit) == ShiftBit;
                     bool curBit = (compareByte & curByte) > 0;
                     compareByte >>= 1;
                     boolList.Add(curBit);

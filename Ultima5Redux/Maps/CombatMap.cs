@@ -13,21 +13,45 @@ namespace Ultima5Redux.Maps
     public class CombatMap : Map
     {
         public SingleCombatMapReference TheCombatMapReference { get; }
-
+        public int Round { get; private set; }
+        
         // world references
         private readonly VirtualMap _virtualMap;
         private readonly TileReferences _tileReferences;
         private readonly EnemyReferences _enemyReferences;
 
         // player character information
+        /// <summary>
+        /// Current player or enemy who is active in current round
+        /// </summary>
         private PlayerCharacterRecord _activePlayerCharacterRecord;
+        /// <summary>
+        /// All current player characters
+        /// </summary>
         private PlayerCharacterRecords _playerCharacterRecords;
+        
+        /// <summary>
+        /// Current combat map units for current combat map
+        /// </summary>
         private MapUnits.MapUnits CombatMapUnits { get; }
         
+        /// <summary>
+        /// Queue that provides order attack for all players and enemies
+        /// </summary>
         private readonly Queue<CombatMapUnit> _initiativeQueue = new Queue<CombatMapUnit>();
+        /// <summary>
+        /// A running tally of combat initiatives. This provides a running tally of initiative to provide
+        /// ongoing boosts to high dexterity map units
+        /// </summary>
         private readonly Dictionary<CombatMapUnit, int> _combatInitiativeTally = new Dictionary<CombatMapUnit, int>();
 
+        /// <summary>
+        /// Lowest player/enemy dexterity encountered
+        /// </summary>
         private int _nLowestDexterity;
+        /// <summary>
+        /// Highest player/enemy dexterity encountered
+        /// </summary>
         private int _nHighestDexterity;
         
         /// <summary>
@@ -40,12 +64,13 @@ namespace Ultima5Redux.Maps
             _combatInitiativeTally.Clear();
             _nLowestDexterity = 50;
             _nHighestDexterity = 0;
+            Round = -1;
 
             foreach (MapUnit mapUnit in CombatMapUnits.CurrentMapUnits)
             {
                 if (!IsCombatMapUnit(mapUnit)) continue;
                 
-                byte nDexterity = GetDexterity(mapUnit);
+                byte nDexterity = GetDexterity((CombatMapUnit)mapUnit);
 
                 // get the highest and lowest dexterity values to be used in ongoing tally
                 if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
@@ -55,7 +80,13 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        private byte GetDexterity(MapUnit mapUnit)
+        /// <summary>
+        /// Gets the dexterity regardless of the type of combat unit
+        /// </summary>
+        /// <param name="mapUnit"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        private byte GetDexterity(CombatMapUnit mapUnit)
         {
             byte nDexterity;
             switch (mapUnit)
@@ -72,6 +103,11 @@ namespace Ultima5Redux.Maps
             return nDexterity;
         }
 
+        /// <summary>
+        /// Is the map unit a combat map unit type?
+        /// </summary>
+        /// <param name="mapUnit"></param>
+        /// <returns></returns>
         private bool IsCombatMapUnit(MapUnit mapUnit)
         {
             switch (mapUnit)
@@ -84,11 +120,15 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
+        /// <summary>
+        /// Calculates an initiative queue giving the order of all attacks or moves within a single round
+        /// </summary>
         internal void CalculateInitiativeQueue()
         {
             Debug.Assert(_playerCharacterRecords != null);
             Debug.Assert(_initiativeQueue.Count == 0);
-
+            Round++;
+                
             // a mapping of dexterity values to an ordered list of combat map units 
             Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
             
@@ -99,7 +139,7 @@ namespace Ultima5Redux.Maps
 
                 CombatMapUnit combatMapUnit = (CombatMapUnit) mapUnit;
                 
-                int nDexterity = GetDexterity(mapUnit);
+                int nDexterity = GetDexterity(combatMapUnit);
                 int nTally = _combatInitiativeTally[combatMapUnit];
 
                 // initiative is determined by the map units dexterity + the accumulated dexterity thus far
@@ -141,7 +181,14 @@ namespace Ultima5Redux.Maps
             }
         }
         
-
+        /// <summary>
+        /// Creates CombatMap.
+        /// Note: Does not initialize the combat map units.
+        /// </summary>
+        /// <param name="virtualMap"></param>
+        /// <param name="singleCombatCombatMapReference"></param>
+        /// <param name="tileReferences"></param>
+        /// <param name="enemyReferences"></param>
         public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences) : 
             base(null, null)
         {
@@ -157,10 +204,7 @@ namespace Ultima5Redux.Maps
 
         public override byte[][] TheMap {
             get => TheCombatMapReference.TheMap;
-            protected set
-            {
-                
-            }
+            protected set { }
         }
         
         protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
@@ -168,8 +212,12 @@ namespace Ultima5Redux.Maps
             return 1.0f;
         }
         
-        internal void CreateParty(SingleCombatMapReference.EntryDirection entryDirection,
-            PlayerCharacterRecords activeRecords)
+        /// <summary>
+        /// Creates a party in the context of the combat map
+        /// </summary>
+        /// <param name="entryDirection">which direction did they enter from?</param>
+        /// <param name="activeRecords">all character records</param>
+        internal void CreateParty(SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords activeRecords)
         {
             _playerCharacterRecords = activeRecords;
             
@@ -190,8 +238,14 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        private void CreateEnemy(int nEnemyIndex, 
-            SingleCombatMapReference singleCombatMapReference,
+        /// <summary>
+        /// Creates a single enemy in the context of the combat map.
+        /// </summary>
+        /// <param name="nEnemyIndex">0 based index that reflects the combat maps enemy index list</param>
+        /// <param name="singleCombatMapReference">reference of the combat map</param>
+        /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
             EnemyReference enemyReference)
         {
             SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 

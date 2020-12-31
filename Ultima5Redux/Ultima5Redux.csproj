@@ -203,7 +203,6 @@
     <Compile Include="Dialogue\TalkScript.cs" />
     <Compile Include="Dialogue\TalkScripts.cs" />
     <Compile Include="Point3D.cs" />
-    <Compile Include="Maps\CombatMapLegacy.cs" />
     <Compile Include="Maps\CombatMapReferences.cs" />
     <Compile Include="Maps\SmallMapReference.cs" />
     <Compile Include="Constants.cs" />
