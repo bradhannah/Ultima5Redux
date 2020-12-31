@@ -43,5 +43,10 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override string BoardXitName => "Hostile creates don't not like to be boarded!";
         public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;
         public override bool IsActive => true;
+
+        public override string ToString()
+        {
+            return KeyTileReference.Name;
+        }
     }
 }

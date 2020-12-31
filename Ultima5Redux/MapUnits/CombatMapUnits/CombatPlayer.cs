@@ -10,13 +10,13 @@ namespace Ultima5Redux.MapUnits
 {
     public class CombatPlayer : CombatMapUnit
     {
-        private readonly PlayerCharacterRecord _record;
+        public PlayerCharacterRecord Record { get; }
 
         public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy)
         {
-            _record = record;
+            Record = record;
             TileReferences = tileReferences;
-            TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, _record, 
+            TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record, 
                 new MapUnitPosition(xy.X, xy.Y, 0));
         }
         
@@ -44,6 +44,9 @@ namespace Ultima5Redux.MapUnits
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
         public override bool IsActive => true;
 
-
+        public override string ToString()
+        {
+            return Record.Name;
+        }
     }
 }

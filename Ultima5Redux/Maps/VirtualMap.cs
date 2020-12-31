@@ -276,17 +276,20 @@ namespace Ultima5Redux.Maps
         {
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
-            CurrentCombatMap = new CombatMap(singleCombatMapReference, _tileReferences, _enemyReferences);
+            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, _enemyReferences);
             
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
             
-            CurrentCombatMap.CreateParty(this, entryDirection, records);
+            CurrentCombatMap.CreateParty(entryDirection, records);
             
-            CurrentCombatMap.CreateEnemies(this, singleCombatMapReference, entryDirection, 
+            CurrentCombatMap.CreateEnemies(singleCombatMapReference, entryDirection, 
                 primaryEnemyReference, nPrimaryEnemies,
                 secondaryEnemyReference, nSecondaryEnemies, 
                 records.AvatarRecord);
+
+            CurrentCombatMap.InitializeInitiativeQueue();
+            CurrentCombatMap.CalculateInitiativeQueue();
         }
         
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference,  

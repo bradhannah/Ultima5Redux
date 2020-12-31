@@ -122,7 +122,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private int GetStat(DefaultStats stat, DataOvlReference dataOvlReference, int nMonsterIndex)
         {
-            return dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_STATS).GetByte(nMonsterIndex + (int) stat);
+            const int TotalBytesPerRecord = 8;
+            return dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_STATS).GetByte(nMonsterIndex * TotalBytesPerRecord + (int) stat);
         }
     }
 }
