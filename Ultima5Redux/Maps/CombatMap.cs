@@ -136,6 +136,11 @@ namespace Ultima5Redux.Maps
 
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks }
 
+        /// <summary>
+        /// Gets the string used to describe all available weapons that will be outputed to user
+        /// </summary>
+        /// <param name="combatPlayer"></param>
+        /// <returns></returns>
         private string GetAttackWeaponsString(CombatPlayer combatPlayer)
         {
             List<CombatItem> combatItems = GetAttackWeapons(combatPlayer);
@@ -154,6 +159,11 @@ namespace Ultima5Redux.Maps
             return combatItemString;
         }
         
+        /// <summary>
+        /// Gets a list of all weapons that are available for use by given player character. The list is ordered. 
+        /// </summary>
+        /// <param name="combatPlayer"></param>
+        /// <returns>List of attack weapons OR null if none are available</returns>
         private List<CombatItem> GetAttackWeapons(CombatPlayer combatPlayer)
         {
             string weaponNames;
@@ -190,6 +200,13 @@ namespace Ultima5Redux.Maps
 
         }
         
+        /// <summary>
+        /// Attempts to processes the turn of the current combat unit - either CombatPlayer or Enemy.
+        /// Can result in advancing to next turn, or indicate user input required
+        /// </summary>
+        /// <param name="affectedCombatMapUnit"></param>
+        /// <param name="outputStr"></param>
+        /// <returns></returns>
         public TurnResult ProcessMapUnitTurn(out CombatMapUnit affectedCombatMapUnit, out string outputStr)
         {
             affectedCombatMapUnit = GetCurrentCombatUnit();
@@ -211,12 +228,21 @@ namespace Ultima5Redux.Maps
             return TurnResult.EnemyMoved;
         }
 
+        /// <summary>
+        /// Moves the active combat unit to a new map location
+        /// No additional logic is computed.
+        /// </summary>
+        /// <param name="xy"></param>
         public void MoveActiveCombatMapUnit(Point2D xy)
         {
             CombatMapUnit currentCombatUnit = GetCurrentCombatUnit();
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
         }
 
+        /// <summary>
+        /// Gets the active combat unit - either CombatPlayer or Enemy.
+        /// </summary>
+        /// <returns></returns>
         private CombatMapUnit GetCurrentCombatUnit()
         {
             // if the queue is empty then we will recalculate it before continuing
