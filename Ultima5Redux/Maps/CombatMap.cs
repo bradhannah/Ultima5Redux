@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using Ultima5Redux.Data;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.CombatItems;
+using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Maps
 {
@@ -14,11 +17,15 @@ namespace Ultima5Redux.Maps
     {
         public SingleCombatMapReference TheCombatMapReference { get; }
         public int Round { get; private set; }
+
+        public int Turn { get; private set; }
         
         // world references
         private readonly VirtualMap _virtualMap;
         private readonly TileReferences _tileReferences;
         private readonly EnemyReferences _enemyReferences;
+        private readonly InventoryReferences _inventoryReferences;
+        private readonly Inventory _inventory;
 
         // player character information
 
@@ -29,6 +36,8 @@ namespace Ultima5Redux.Maps
 
         public CombatPlayer ActiveCombatPlayer => GetCurrentCombatUnit() is CombatPlayer player ? player : null;
 
+        public Enemy ActiveEnemy => GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
+        
         /// <summary>
         /// All current player characters
         /// </summary>
@@ -69,6 +78,7 @@ namespace Ultima5Redux.Maps
             _nLowestDexterity = 50;
             _nHighestDexterity = 0;
             Round = -1;
+            Turn = 0;
 
             foreach (MapUnit mapUnit in CombatMapUnits.CurrentMapUnits)
             {
@@ -125,6 +135,60 @@ namespace Ultima5Redux.Maps
         }
 
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks }
+
+        private string GetAttackWeaponsString(CombatPlayer combatPlayer)
+        {
+            List<CombatItem> combatItems = GetAttackWeapons(combatPlayer);
+
+            if (combatItems == null) return "bare hands";
+
+            string combatItemString  = "";
+            for (int index = 0; index < combatItems.Count; index++)
+            {
+                CombatItem item = combatItems[index];
+                if (index > 0)
+                    combatItemString += ", ";
+                combatItemString += item.LongName;
+            }
+
+            return combatItemString;
+        }
+        
+        private List<CombatItem> GetAttackWeapons(CombatPlayer combatPlayer)
+        {
+            string weaponNames;
+
+            DataOvlReference.Equipment rightHandWeapon = combatPlayer.Record.Equipped.RightHand;
+
+            List<CombatItem> weapons = new List<CombatItem>();
+
+            bool bBareHands = false;
+
+            bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
+            {
+                return equipment != DataOvlReference.Equipment.Nothing &&
+                       _inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.AttackStat > 0;
+            }
+            
+            if (isAttackingCombatItem(combatPlayer.Record.Equipped.Helmet))
+                weapons.Add(_inventory.GetItemFromEquipment(combatPlayer.Record.Equipped.Helmet));
+
+            if (isAttackingCombatItem(combatPlayer.Record.Equipped.LeftHand))
+                weapons.Add(_inventory.GetItemFromEquipment(combatPlayer.Record.Equipped.LeftHand));
+            else
+                bBareHands = true;
+
+            if (isAttackingCombatItem(combatPlayer.Record.Equipped.RightHand))
+                weapons.Add(_inventory.GetItemFromEquipment(combatPlayer.Record.Equipped.RightHand));
+            else
+                bBareHands = true;
+
+            if (weapons.Count != 0) return weapons;
+            
+            Debug.Assert(bBareHands);
+            return null;
+
+        }
         
         public TurnResult ProcessMapUnitTurn(out CombatMapUnit affectedCombatMapUnit, out string outputStr)
         {
@@ -132,12 +196,17 @@ namespace Ultima5Redux.Maps
 
             if (affectedCombatMapUnit is CombatPlayer combatPlayer)
             {
-                outputStr = "do a thing";
+                outputStr = combatPlayer.Record.Name + ", armed with " + GetAttackWeaponsString(combatPlayer);  
+           
                 return TurnResult.RequireCharacterInput;
             }
 
             // either move the enemy or have them attack someone
-            outputStr = "enemy moved";
+            Debug.Assert(affectedCombatMapUnit is Enemy);
+            Enemy enemy = (Enemy) affectedCombatMapUnit;
+
+            outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
+            
             AdvanceToNextCombatMapUnit();
             return TurnResult.EnemyMoved;
         }
@@ -167,7 +236,7 @@ namespace Ultima5Redux.Maps
         public void AdvanceToNextCombatMapUnit()
         {
             Debug.Assert(_initiativeQueue.Count > 0);
-
+            Turn++;
             // we are done with this unit now, so we just toss them out
             _initiativeQueue.Dequeue();
 
@@ -239,7 +308,7 @@ namespace Ultima5Redux.Maps
                 }
             }
         }
-        
+
         /// <summary>
         /// Creates CombatMap.
         /// Note: Does not initialize the combat map units.
@@ -248,7 +317,10 @@ namespace Ultima5Redux.Maps
         /// <param name="singleCombatCombatMapReference"></param>
         /// <param name="tileReferences"></param>
         /// <param name="enemyReferences"></param>
-        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences) : 
+        /// <param name="inventoryReferences"></param>
+        /// <param name="inventory"></param>
+        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences, 
+            InventoryReferences inventoryReferences, Inventory inventory) : 
             base(null, null)
         {
             _virtualMap = virtualMap;
@@ -256,6 +328,8 @@ namespace Ultima5Redux.Maps
             _tileReferences = tileReferences;
             TheCombatMapReference = singleCombatCombatMapReference;
             _enemyReferences = enemyReferences;
+            _inventoryReferences = inventoryReferences;
+            _inventory = inventory;
         }
 
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
@@ -307,7 +381,7 @@ namespace Ultima5Redux.Maps
         private void CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
             EnemyReference enemyReference)
         {
-            SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
+             SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
             Point2D nEnemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
 
@@ -363,6 +437,7 @@ namespace Ultima5Redux.Maps
                 return;
             }
 
+            // for regular combat maps, we introduce some randomness 
             Queue<int> monsterIndex = Utils.CreateRandomizedIntegerQueue(SingleCombatMapReference.NUM_ENEMIES);
             
             for (int nIndex = 0; nIndex < nPrimaryEnemies; nIndex++, nEnemyIndex++)

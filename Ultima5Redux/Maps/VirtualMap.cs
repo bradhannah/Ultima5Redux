@@ -22,6 +22,7 @@ namespace Ultima5Redux.Maps
     {
         private readonly DataOvlReference _dataOvlReference;
         private readonly EnemyReferences _enemyReferences;
+        private readonly Inventory _inventory;
 
         // ReSharper disable once NotAccessedField.Local
         private readonly InventoryReferences _inventoryReferences;
@@ -84,13 +85,14 @@ namespace Ultima5Redux.Maps
         /// <param name="dataOvlReference"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="enemyReferences"></param>
+        /// <param name="inventory"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
             Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
-            EnemyReferences enemyReferences)
+            EnemyReferences enemyReferences, Inventory inventory)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -106,6 +108,7 @@ namespace Ultima5Redux.Maps
             _inventoryReferences = inventoryReferences;
             _dataOvlReference = dataOvlReference;
             _enemyReferences = enemyReferences;
+            _inventory = inventory;
 
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
@@ -276,7 +279,8 @@ namespace Ultima5Redux.Maps
         {
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
-            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, _enemyReferences);
+            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 
+                _enemyReferences, _inventoryReferences, _inventory);
             
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;

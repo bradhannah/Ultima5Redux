@@ -21,8 +21,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public int MoongateIndex => (int) Phase;
 
-        public override string LongName => AddSpacesBeforeCaps(Phase.ToString());
-        public override string ShortName => AddSpacesBeforeCaps(Phase.ToString());
+        public override string LongName => Utils.AddSpacesBeforeCaps(Phase.ToString());
+        public override string ShortName => Utils.AddSpacesBeforeCaps(Phase.ToString());
 
         /// <summary>
         ///     If the moonstone is buried, then it's not in your inventory
@@ -39,12 +39,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         // we will hold onto this enum for later when we assign custom sprites
         //public enum ItemTypeEnum { NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter, CrescentWaning, NoMoon }
-
-        private static string AddSpacesBeforeCaps(string str)
-        {
-            // filthy method from here: https://stackoverflow.com/questions/272633/add-spaces-before-capital-letters
-            return new string(str.SelectMany((c, i) => i > 0 && char.IsUpper(c) ? new[] {' ', c} : new[] {c})
-                .ToArray());
-        }
     }
 }

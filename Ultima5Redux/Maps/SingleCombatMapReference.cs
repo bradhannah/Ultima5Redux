@@ -120,11 +120,26 @@ namespace Ultima5Redux.Maps
             Debug.Assert(xEnemyPosList.Count == NUM_ENEMIES);
             Debug.Assert(yEnemyPosList.Count == NUM_ENEMIES);
             Debug.Assert(spriteEnemyList.Count == NUM_ENEMIES);
+
+            Dictionary<Point2D, bool> duplicatePositionDictionary = new Dictionary<Point2D, bool>();
             
             for (int nEnemyIndex = 0; nEnemyIndex < NUM_ENEMIES; nEnemyIndex++)
             {
-                _enemyPositions.Add(new Point2D(xEnemyPosList[nEnemyIndex], yEnemyPosList[nEnemyIndex]));
-                _enemySprites.Add(spriteEnemyList[nEnemyIndex]);
+                Point2D enemyPosition = new Point2D(xEnemyPosList[nEnemyIndex], yEnemyPosList[nEnemyIndex]);
+
+
+                if (duplicatePositionDictionary.ContainsKey(enemyPosition))
+                {
+                    // it's a duplicate position, so we avoid adding it again, otherwise things get screwy
+                    _enemySprites.Add(0);
+                    _enemyPositions.Add(new Point2D(0,0));
+                }
+                else
+                {
+                    _enemySprites.Add(spriteEnemyList[nEnemyIndex]);
+                    duplicatePositionDictionary.Add(enemyPosition, true);
+                    _enemyPositions.Add(enemyPosition);
+                }
             }
         }
 

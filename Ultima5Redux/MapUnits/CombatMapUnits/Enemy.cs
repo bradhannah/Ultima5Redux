@@ -13,25 +13,14 @@ namespace Ultima5Redux.MapUnits.Monsters
         
         public EnemyReference EnemyReference { get; }
         
-        // public Enemy(TileReferences tileReferences, Point2D xy, EnemyReference enemyReference) 
-        // {
-        //     TileReferences = tileReferences;
-        //     EnemyReference = enemyReference;
-        //     TheMapUnitState = MapUnitState.CreateMonster(TileReferences, new MapUnitPosition(xy.X, xy.Y, 0), 
-        //         enemyReference.KeyTileReference.Index);   
-        // }
-        
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,  
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference)
         : base(null, mapUnitState, null, mapUnitMovement, null, 
             tileReferences, location, dataOvlReference)
         {
-            //TileReferences = tileReferences;
             EnemyReference = enemyReference;
             mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
-            // TheMapUnitState = MapUnitState.CreateMonster(TileReferences, new MapUnitPosition(xy.X, xy.Y, 0), 
-            //     enemyReference.KeyTileReference.Index);   
         }
 
         

@@ -27,10 +27,17 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private const int N_RAW_BYTES = 2;
 
-        public string GroupName { get; }
         public TileReference KeyTileReference { get; }
 
         public DefaultEnemyStats TheDefaultEnemyStats { get; }
+
+        public string AllCapsPluralName { get; private set; }
+        public string MixedCaseSingularName { get; private set; }
+
+        public override string ToString()
+        {
+            return AllCapsPluralName + "-" + MixedCaseSingularName;
+        }
 
         // 0x8000 - Bludgeons (I)
         // 0x4000 - Possesses (Charm) (J) 
@@ -115,7 +122,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 TreasureNumber = GetStat(DefaultStats.Treasure, dataOvlReference, nMonsterIndex)
             };
 
-            GroupName = dataOvlReference.StringReferences.GetString((DataOvlReference.EnemyOutOfCombatNamesUpper)nMonsterIndex);
+            AllCapsPluralName = dataOvlReference.StringReferences.GetString((DataOvlReference.EnemyOutOfCombatNamesUpper)nMonsterIndex);
+            MixedCaseSingularName = dataOvlReference.StringReferences.GetString((DataOvlReference.EnemyOutOfCombatNamesUpper)nMonsterIndex);
+            
             int nKeySpriteIndex = N_FIRST_SPRITE + (nMonsterIndex * N_FRAMES_PER_SPRITE);
             KeyTileReference = tileReferences.GetTileReferenceOfKeyIndex(nKeySpriteIndex);
         }

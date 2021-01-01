@@ -928,14 +928,12 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Weapon strings (10 of them)", 0xF8, 0x81);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Ring and amulet strings (5 of them)", 0x179,
                 0x5a);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character type, monster names (44 of them)",
-                0x1d3, 0x158);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)",
                 0x1d3, 0x158, 0x00, DataChunkName.MONSTER_NAMES_MIXED);
             SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_MIXED).GetChunkAsStringList();
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)",
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (upper case)",
                 0x32b, 0x165, 0x00, DataChunkName.MONSTER_NAMES_UPPER);
             strs2 = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
 

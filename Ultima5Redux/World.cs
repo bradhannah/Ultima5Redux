@@ -774,7 +774,7 @@ namespace Ultima5Redux
             State.TheVirtualMap.CurrentCombatMap.MoveActiveCombatMapUnit(newPosition);
             
             tryToMoveResult = TryToMoveResult.Moved;
-            retStr += "\nGood to go";
+            //retStr += "\nGood to go";
             return retStr;
         }
 

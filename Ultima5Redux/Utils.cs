@@ -9,6 +9,13 @@ namespace Ultima5Redux
 {
     public static class Utils
     {
+        public static string AddSpacesBeforeCaps(string str)
+        {
+            // filthy method from here: https://stackoverflow.com/questions/272633/add-spaces-before-capital-letters
+            return new string(str.SelectMany((c, i) => i > 0 && char.IsUpper(c) ? new[] {' ', c} : new[] {c})
+                .ToArray());
+        }
+
         public static byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
         {
             return Init2DArray<byte>(numberOfRows, numberOfCols);
