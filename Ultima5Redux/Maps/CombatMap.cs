@@ -137,70 +137,6 @@ namespace Ultima5Redux.Maps
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks }
 
         /// <summary>
-        /// Gets the string used to describe all available weapons that will be outputed to user
-        /// </summary>
-        /// <param name="combatPlayer"></param>
-        /// <returns></returns>
-        private string GetAttackWeaponsString(CombatPlayer combatPlayer)
-        {
-            List<CombatItem> combatItems = GetAttackWeapons(combatPlayer);
-
-            if (combatItems == null) return "bare hands";
-
-            string combatItemString  = "";
-            for (int index = 0; index < combatItems.Count; index++)
-            {
-                CombatItem item = combatItems[index];
-                if (index > 0)
-                    combatItemString += ", ";
-                combatItemString += item.LongName;
-            }
-
-            return combatItemString;
-        }
-        
-        /// <summary>
-        /// Gets a list of all weapons that are available for use by given player character. The list is ordered. 
-        /// </summary>
-        /// <param name="combatPlayer"></param>
-        /// <returns>List of attack weapons OR null if none are available</returns>
-        private List<CombatItem> GetAttackWeapons(CombatPlayer combatPlayer)
-        {
-            string weaponNames;
-
-            DataOvlReference.Equipment rightHandWeapon = combatPlayer.Record.Equipped.RightHand;
-
-            List<CombatItem> weapons = new List<CombatItem>();
-
-            bool bBareHands = false;
-
-            bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
-            {
-                return equipment != DataOvlReference.Equipment.Nothing &&
-                       _inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.AttackStat > 0;
-            }
-            
-            if (isAttackingCombatItem(combatPlayer.Record.Equipped.Helmet))
-                weapons.Add(_inventory.GetItemFromEquipment(combatPlayer.Record.Equipped.Helmet));
-
-            if (isAttackingCombatItem(combatPlayer.Record.Equipped.LeftHand))
-                weapons.Add(_inventory.GetItemFromEquipment(combatPlayer.Record.Equipped.LeftHand));
-            else
-                bBareHands = true;
-
-            if (isAttackingCombatItem(combatPlayer.Record.Equipped.RightHand))
-                weapons.Add(_inventory.GetItemFromEquipment(combatPlayer.Record.Equipped.RightHand));
-            else
-                bBareHands = true;
-
-            if (weapons.Count != 0) return weapons;
-            
-            Debug.Assert(bBareHands);
-            return null;
-
-        }
-        
-        /// <summary>
         /// Attempts to processes the turn of the current combat unit - either CombatPlayer or Enemy.
         /// Can result in advancing to next turn, or indicate user input required
         /// </summary>
@@ -213,7 +149,7 @@ namespace Ultima5Redux.Maps
 
             if (affectedCombatMapUnit is CombatPlayer combatPlayer)
             {
-                outputStr = combatPlayer.Record.Name + ", armed with " + GetAttackWeaponsString(combatPlayer);  
+                outputStr = combatPlayer.Record.Name + ", armed with " + combatPlayer.GetAttackWeaponsString(_inventory);  
            
                 return TurnResult.RequireCharacterInput;
             }
