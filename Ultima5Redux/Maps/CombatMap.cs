@@ -475,5 +475,10 @@ namespace Ultima5Redux.Maps
                 CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference);
             }
         }
+
+        // public CombatMapUnit GetCombatUnit(Point2D unitPosition)
+        // {
+        //     CombatMapUnits.GetMapUnitByLocation(Maps.Combat, unitPosition, 0);
+        // }
     }
 }

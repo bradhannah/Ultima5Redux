@@ -34,7 +34,7 @@ namespace Ultima5Redux.Data
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
             YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER, ENEMY_FLAGS,ENEMY_ATTACK_RANGE, ENEMY_RANGE_THING,
-            ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS
+            ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE_STRINGS
         }
 
         public enum Equipment
@@ -855,55 +855,85 @@ namespace Ultima5Redux.Data
             HEADLESSES, WISPS, DAEMONS, DRAGONS, SAND_TRAPS, TROLLS, X_FIELDS, X_WHIRLPOOL, MONGBATS, CORPSERS, ROT_WORMS, SHADOW_LORD
         }
         
-    //     [0] = {string} "WIZARDS"
-    // [1] = {string} "BARD"
-    // [2] = {string} "FIGHTER"
-    // [3] = {string} "x"
-    // [4] = {string} "VILLAGER"
-    // [5] = {string} "MERCHANT"
-    // [6] = {string} "JESTER"
-    // [7] = {string} "BARD"
-    // [8] = {string} "PIRATES"
-    // [9] = {string} "x"
-    // [10] = {string} "CHILD"
-    // [11] = {string} "BEGGAR"
-    // [12] = {string} "GUARDS"
-    // [13] = {string} "x"
-    // [14] = {string} "BLACKTHORN"
-    // [15] = {string} "LORD BRITISH"
-    // [16] = {string} "SEA HORSES"
-    // [17] = {string} "SQUIDS"
-    // [18] = {string} "SEA SERPENTS"
-    // [19] = {string} "SHARKS"
-    // [20] = {string} "GIANT RATS"
-    // [21] = {string} "BATS"
-    // [22] = {string} "SPIDERS"
-    // [23] = {string} "GHOSTS"
-    // [24] = {string} "SLIME"
-    // [25] = {string} "GREMLINS"
-    // [26] = {string} "MIMICS"
-    // [27] = {string} "REAPERS"
-    // [28] = {string} "GAZERS"
-    // [29] = {string} "x"
-    // [30] = {string} "GARGOYLE"
-    // [31] = {string} "INSECTS"
-    // [32] = {string} "ORCS"
-    // [33] = {string} "SKELETONS"
-    // [34] = {string} "SNAKES"
-    // [35] = {string} "ETTINS"
-    // [36] = {string} "HEADLESSES"
-    // [37] = {string} "WISPS"
-    // [38] = {string} "DAEMONS"
-    // [39] = {string} "DRAGONS"
-    // [40] = {string} "SAND TRAPS"
-    // [41] = {string} "TROLLS"
-    // [42] = {string} "x"
-    // [43] = {string} "x"
-    // [44] = {string} "MONGBATS"
-    // [45] = {string} "CORPSERS"
-    // [46] = {string} "ROTWORMS"
-    // [47] = {string} "SHADOW LORD"
+        //     [0] = {string} "WIZARDS"
+        // [1] = {string} "BARD"
+        // [2] = {string} "FIGHTER"
+        // [3] = {string} "x"
+        // [4] = {string} "VILLAGER"
+        // [5] = {string} "MERCHANT"
+        // [6] = {string} "JESTER"
+        // [7] = {string} "BARD"
+        // [8] = {string} "PIRATES"
+        // [9] = {string} "x"
+        // [10] = {string} "CHILD"
+        // [11] = {string} "BEGGAR"
+        // [12] = {string} "GUARDS"
+        // [13] = {string} "x"
+        // [14] = {string} "BLACKTHORN"
+        // [15] = {string} "LORD BRITISH"
+        // [16] = {string} "SEA HORSES"
+        // [17] = {string} "SQUIDS"
+        // [18] = {string} "SEA SERPENTS"
+        // [19] = {string} "SHARKS"
+        // [20] = {string} "GIANT RATS"
+        // [21] = {string} "BATS"
+        // [22] = {string} "SPIDERS"
+        // [23] = {string} "GHOSTS"
+        // [24] = {string} "SLIME"
+        // [25] = {string} "GREMLINS"
+        // [26] = {string} "MIMICS"
+        // [27] = {string} "REAPERS"
+        // [28] = {string} "GAZERS"
+        // [29] = {string} "x"
+        // [30] = {string} "GARGOYLE"
+        // [31] = {string} "INSECTS"
+        // [32] = {string} "ORCS"
+        // [33] = {string} "SKELETONS"
+        // [34] = {string} "SNAKES"
+        // [35] = {string} "ETTINS"
+        // [36] = {string} "HEADLESSES"
+        // [37] = {string} "WISPS"
+        // [38] = {string} "DAEMONS"
+        // [39] = {string} "DRAGONS"
+        // [40] = {string} "SAND TRAPS"
+        // [41] = {string} "TROLLS"
+        // [42] = {string} "x"
+        // [43] = {string} "x"
+        // [44] = {string} "MONGBATS"
+        // [45] = {string} "CORPSERS"
+        // [46] = {string} "ROTWORMS"
+        // [47] = {string} "SHADOW LORD"
 
+        public enum BattleStrings
+        {
+            _FAILED_BANG_N, _MISSED_BANG_N, _POSSESSED_BANG_N, _REAPPEARS_BANG, _DISAPPEARS_BANG, _GATES_IN_A_DAEMON_BANG_N, _GRAZED_BANG_N,
+            _KILLED_BANG_N, _SLEPT_BANG_N, _DRAGGED_UNDER_BANG_N, _HIT_BANG_N, _BARELY_WOUNDED_BANG_N, _LIGHTLY_WOUNDED_BANG_N, HEAVILY_WOUNDED_BANG_N,
+            _CRITICAL_BANG_N, _INTERFERES_BANG_N, AIM_BANG_, AIM_BANG_2, NOTHING_BANG_N, COLON_N, ATTACK_DASH, ATTACK_DASH_2
+        }
+        //     [0] = {string} "Failed!\n"
+        // [1] = {string} " missed!\n"
+        // [2] = {string} " possessed!\n"
+        // [3] = {string} " reappears!"
+        // [4] = {string} " disappears!"
+        // [5] = {string} " gates in a daemon!\n"
+        // [6] = {string} " grazed!\n"
+        // [7] = {string} " killed!\n"
+        // [8] = {string} " slept!\n"
+        // [9] = {string} " dragged under!\n"
+        // [10] = {string} " hit!\n"
+        // [11] = {string} " barely wounded!\n"
+        // [12] = {string} " lightly wounded!\n"
+        // [13] = {string} " heavily wounded!\n"
+        // [14] = {string} " critical!\n"
+        // [15] = {string} " interferes!\n"
+        // [16] = {string} "Aim! "
+        // [17] = {string} "Aim! "
+        // [18] = {string} "Nothing!\n"
+        // [19] = {string} ":\n"
+        // [20] = {string} "Attack-"
+        // [21] = {string} "Attack-"
+    
+    
         /// <summary>
         ///     All the data chunks
         /// </summary>
@@ -931,11 +961,9 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)",
                 0x1d3, 0x158, 0x00, DataChunkName.MONSTER_NAMES_MIXED);
-            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_MIXED).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (upper case)",
                 0x32b, 0x165, 0x00, DataChunkName.MONSTER_NAMES_UPPER);
-            strs2 = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
 
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
@@ -966,8 +994,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", 0xa4d,
                 0x111 + 0x3a, 0, DataChunkName.LOCATION_NAMES);
 
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "City names (in caps) (26 of them)", 0xa4d, 0x111);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Dungeon names (8 of them)", 0xb5e, 0x3a);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue names (8 of them)", 0xb98, 0x48);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Virtue mantras (8 of them)", 0xbe0, 0x1e);
@@ -1089,7 +1115,6 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2661, 0x9);
 
             // the following are reindexed. The file has some gunk in the middle of the strings which is indescript.
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Text strings (some unknown in the middle)", 0x266a, 0x269);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Travel Related Strings", 0x266a, 0xE1, 0x00,
                 DataChunkName.TRAVEL); // tweaked
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x2750, 0x28); // tweaked
@@ -1354,12 +1379,14 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory warnings", 0x97EA, 0x1c5, 0,
                 DataChunkName.EQUIPPING);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle messages", 0x99ba, 0xfe);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle Strings", 0x99B0, 0x108, 0, DataChunkName.BATTLE_STRINGS);
+            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE_STRINGS).GetChunkAsStringList();
+            
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Buying wine dialog", 0x9ab8, 0x22c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
                 "4 character short form NPC questions, all quest related ", 0x9ce4, 0x9c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
-                "Character names, perhaps resitance people (hints?)", 0x9d80, 0x220);
+                "Character names, perhaps resistance people (hints?)", 0x9d80, 0x220);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Strings related to intro", 0xa020, 0x5a);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Character creation related strings", 0xa07a,
                 0xa6);

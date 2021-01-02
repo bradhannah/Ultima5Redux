@@ -131,10 +131,10 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     The characters current position on the map
         /// </summary>
-        internal MapUnitPosition MapUnitPosition
+        public MapUnitPosition MapUnitPosition
         {
             get => _mapMapUnitPosition;
-            set
+            internal set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 // this is a bit redundant but we have a backing field and also store the XY positions
