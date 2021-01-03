@@ -12,6 +12,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     {
         public abstract CharacterStats Stats { get; }
 
+        public abstract string Name { get; }
+        
         protected CombatMapUnit()
         {
             
@@ -28,19 +30,31 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             
         }
         
-        public enum HitState { Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead }
+        public enum HitState { Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead }
         
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput)
         {
             const int BareHandAttack = 3;
             bool bIsHit = IsHit(enemyCombatMapUnit);
 
             int nAttack = GetAttackDamage(enemyCombatMapUnit, weapon);
-            if (!bIsHit || nAttack == 0) return HitState.Missed;
+            if (!bIsHit)
+            {
+                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd().Replace("!"," ")
+                    + enemyCombatMapUnit.Name + "!";
+                return HitState.Missed;
+            }
+
+            if (nAttack == 0)
+            {
+                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd().Replace("!"," ")
+                              + enemyCombatMapUnit.Name + "!";
+                return HitState.Grazed;
+            }
 
             enemyCombatMapUnit.Stats.CurrentHp -= nAttack;
             
-            return GetState(enemyCombatMapUnit);
+            return GetState(enemyCombatMapUnit, out stateOutput);
         }
 
         private bool IsHit(CombatMapUnit enemyCombatMapUnit)
@@ -57,26 +71,42 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             int nMaxDamage = weapon.AttackStat;
             nMaxDamage += Stats.Strength;
-            nMaxDamage = Math.Min(nMaxDamage, 255);
+            nMaxDamage = Math.Min(nMaxDamage, 99);
             return 0;
         }
 
-        HitState GetState(CombatMapUnit enemyCombatMapUnit)
+        HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {
             int nCriticalThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
             int nHeavyThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
             int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
-
+            //BattleStrings
             if (enemyCombatMapUnit.Stats.CurrentHp <= 0)
+            {
+                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._KILLED_BANG_N);
                 return HitState.Dead;
+            }
             if (enemyCombatMapUnit.Stats.CurrentHp < 24)
+            {
+                stateOutput = " fleeing!";
                 return HitState.Fleeing;
+            }
             if (enemyCombatMapUnit.Stats.CurrentHp < nCriticalThreshold)
+            {
+                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
                 return HitState.CriticallyWounded;
+            }
             if (enemyCombatMapUnit.Stats.CurrentHp < nHeavyThreshold)
+            {
+                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings.HEAVILY_WOUNDED_BANG_N);
                 return HitState.HeavilyWounded;
+            }
             if (enemyCombatMapUnit.Stats.CurrentHp < nLightThreshold)
+            {
+                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._LIGHTLY_WOUNDED_BANG_N);
                 return HitState.LightlyWounded;
+            }
+            stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._BARELY_WOUNDED_BANG_N);
             return HitState.BarelyWounded;
         }
 

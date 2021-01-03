@@ -15,10 +15,13 @@ namespace Ultima5Redux.MapUnits
     {
         public PlayerCharacterRecord Record { get; }
 
+        public override string Name => Record.Name;
+
         public override CharacterStats Stats => Record.Stats;
 
-        public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy)
+        public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy, DataOvlReference dataOvlReference)
         {
+            DataOvlRef = dataOvlReference;
             Record = record;
             TileReferences = tileReferences;
             TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record, 

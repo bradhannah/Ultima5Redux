@@ -150,7 +150,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 if (item.SpecificEquipment == equipment) return item;
             }
 
-            throw new Ultima5ReduxException("Requested " + equipment + " but is not a combat type");
+            return null;
+            //throw new Ultima5ReduxException("Requested " + equipment + " but is not a combat type");
         }
 
         public void RefreshInventory()
@@ -159,11 +160,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ReadyItems.Clear();
             UseItems.Clear();
             
-            // _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Grapple", _gameStateByteArray, 0x209,
-            //     sizeof(byte));
-            // _ = DataChunk.CreateDataChunk(DataChunk.DataFormatType.Byte, "Magic Carpet", _gameStateByteArray, 0x20A,
-            //     sizeof(byte));
-
             ProtectiveArmour = new Armours(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(ProtectiveArmour.GenericItemList);
             ReadyItems.AddRange(ProtectiveArmour.AllCombatItems);

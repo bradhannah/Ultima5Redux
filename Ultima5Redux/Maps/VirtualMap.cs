@@ -280,7 +280,7 @@ namespace Ultima5Redux.Maps
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 
-                _enemyReferences, _inventoryReferences, _inventory);
+                _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference);
             
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;

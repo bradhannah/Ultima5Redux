@@ -10,8 +10,9 @@ namespace Ultima5Redux.MapUnits.Monsters
 {
     public class Enemy : CombatMapUnit
     {
-        
         public EnemyReference EnemyReference { get; }
+
+        public override string Name => EnemyReference.MixedCaseSingularName;
 
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,  
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,

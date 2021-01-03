@@ -26,6 +26,7 @@ namespace Ultima5Redux.Maps
         private readonly EnemyReferences _enemyReferences;
         private readonly InventoryReferences _inventoryReferences;
         private readonly Inventory _inventory;
+        private readonly DataOvlReference _dataOvlReference;
 
         // player character information
 
@@ -281,8 +282,9 @@ namespace Ultima5Redux.Maps
         /// <param name="enemyReferences"></param>
         /// <param name="inventoryReferences"></param>
         /// <param name="inventory"></param>
+        /// <param name="dataOvlReference"></param>
         public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences, 
-            InventoryReferences inventoryReferences, Inventory inventory) : 
+            InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference) : 
             base(null, null)
         {
             _virtualMap = virtualMap;
@@ -292,6 +294,7 @@ namespace Ultima5Redux.Maps
             _enemyReferences = enemyReferences;
             _inventoryReferences = inventoryReferences;
             _inventory = inventory;
+            _dataOvlReference = dataOvlReference;
         }
 
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
@@ -328,7 +331,7 @@ namespace Ultima5Redux.Maps
                 PlayerCharacterRecord record = activeRecords.Records[nPlayer];
 
                 CombatPlayer combatPlayer = new CombatPlayer(record, _tileReferences, 
-                    playerStartPositions[nPlayer]);
+                    playerStartPositions[nPlayer], _dataOvlReference);
                 CombatMapUnits.CurrentMapUnits[nPlayer] = combatPlayer;
             }
         }
