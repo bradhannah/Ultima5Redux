@@ -15,6 +15,8 @@ namespace Ultima5Redux.MapUnits
     {
         public PlayerCharacterRecord Record { get; }
 
+        public override CharacterStats Stats => Record.Stats;
+
         public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy)
         {
             Record = record;
@@ -98,6 +100,6 @@ namespace Ultima5Redux.MapUnits
             Debug.Assert(bBareHands);
             return null;
         }
-        
+
     }
 }

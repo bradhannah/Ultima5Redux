@@ -19,6 +19,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             AttackStat = GetAttack(dataOvlRef, (int) specificEquipment);
             DefendStat = GetDefense(dataOvlRef, (int) specificEquipment);
+            int nRange = GetRange(dataOvlRef, (int) specificEquipment);
+            Range = nRange == 0 ? 1 : nRange;
+            EquipmentName = GetEquipmentString(dataOvlRef, (int) specificEquipment);
             RequiredStrength = GetRequiredStrength(dataOvlRef, (int) specificEquipment);
             SpecificEquipment = specificEquipment;
             InitializePrices(dataOvlRef);
@@ -29,8 +32,10 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public int RequiredStrength { get; }
         public int AttackStat { get; }
         public int DefendStat { get; }
+        public int Range { get; }
+        public string EquipmentName { get; }
 
-        public static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
+        private static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
             List<byte> attackValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList();
@@ -38,7 +43,16 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             return attackValueList[nIndex];
         }
 
-        public static int GetDefense(DataOvlReference dataOvlRef, int nIndex)
+        private static int GetRange(DataOvlReference dataOvlRef, int nIndex)
+        {
+            List<byte> rangeValueList =
+                dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_RANGE_VALUES).GetAsByteList();
+            if (nIndex >= rangeValueList.Count) return 0;
+            return rangeValueList[nIndex];
+            
+        }
+
+        private static int GetDefense(DataOvlReference dataOvlRef, int nIndex)
         {
             List<byte> defenseValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList();
@@ -46,7 +60,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             return defenseValueList[nIndex];
         }
 
-        public static int GetRequiredStrength(DataOvlReference dataOvlRef, int nIndex)
+        private static int GetRequiredStrength(DataOvlReference dataOvlRef, int nIndex)
         {
             List<byte> requiredStrengthValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REQ_STRENGTH_EQUIP).GetAsByteList();
@@ -54,7 +68,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             return requiredStrengthValueList[nIndex];
         }
 
-        public static string GetEquipmentString(DataOvlReference dataOvlRef, int nString)
+        private static string GetEquipmentString(DataOvlReference dataOvlRef, int nString)
         {
             List<string> equipmentNames = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIP_INDEXES)
                 .GetAsStringListFromIndexes();

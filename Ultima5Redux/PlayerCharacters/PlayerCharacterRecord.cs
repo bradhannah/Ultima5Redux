@@ -6,7 +6,7 @@ using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public class PlayerCharacterRecord
+    public partial class PlayerCharacterRecord
     {
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M' }
 
@@ -229,27 +229,6 @@ namespace Ultima5Redux.PlayerCharacters
                 return Helmet == equipment || Armor == equipment || LeftHand == equipment || RightHand == equipment ||
                        Ring == equipment || Amulet == equipment;
             }
-        }
-
-
-        public class CharacterStats
-        {
-            private int _currentHp;
-            public int Strength { get; set; }
-            public int Dexterity { get; set; }
-            public int Intelligence { get; set; }
-            public int CurrentMp { get; set; }
-
-            public int CurrentHp
-            {
-                get => Status == CharacterStatus.Dead ? 0 : _currentHp;
-                set => _currentHp = Math.Max(0,value);
-            }
-
-            public int MaximumHp { get; set; }
-            public int ExperiencePoints { get; set; }
-            public int Level { get; set; }
-            public CharacterStatus Status { get; set; }
         }
     }
 }

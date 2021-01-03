@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits.Monsters
     {
         
         public EnemyReference EnemyReference { get; }
-        
+
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,  
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference)
@@ -21,8 +21,17 @@ namespace Ultima5Redux.MapUnits.Monsters
         {
             EnemyReference = enemyReference;
             mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
-        }
 
+            Stats.Level = 1;
+            Stats.Dexterity = EnemyReference.TheDefaultEnemyStats.Dexterity;
+            Stats.Intelligence = EnemyReference.TheDefaultEnemyStats.Intelligence;
+            Stats.Strength = EnemyReference.TheDefaultEnemyStats.Strength;
+            Stats.Status = PlayerCharacterRecord.CharacterStatus.Good;
+            Stats.CurrentHp = EnemyReference.TheDefaultEnemyStats.HitPoints;
+            Stats.MaximumHp = Stats.CurrentHp;
+            Stats.ExperiencePoints = 0;
+            Stats.CurrentMp = 0;
+        }
         
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
 
@@ -37,5 +46,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         {
             return KeyTileReference.Name;
         }
+
+        public override CharacterStats Stats { get; } = new CharacterStats();
     }
 }

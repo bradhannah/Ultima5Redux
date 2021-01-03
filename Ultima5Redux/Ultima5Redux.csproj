@@ -173,6 +173,7 @@
     <Compile Include="PlayerCharacters\Inventory\SpecialItem.cs" />
     <Compile Include="PlayerCharacters\Inventory\SpecialItems.cs" />
     <Compile Include="PlayerCharacters\Inventory\Utils.cs" />
+    <Compile Include="PlayerCharacters\CharacterStats.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecord.cs" />
     <Compile Include="PlayerCharacters\PlayerCharacterRecords.cs" />
     <Compile Include="MapUnits\MapUnitState.cs" />
