@@ -13,14 +13,18 @@ namespace Ultima5Redux.MapUnits
 {
     public class CombatPlayer : CombatMapUnit
     {
+        private readonly Inventory _inventory;
         public PlayerCharacterRecord Record { get; }
 
+        public override int Defense => _inventory.GetCharacterTotalDefense(Record);
         public override string Name => Record.Name;
 
         public override CharacterStats Stats => Record.Stats;
 
-        public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy, DataOvlReference dataOvlReference)
+        public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy, DataOvlReference dataOvlReference,
+            Inventory inventory)
         {
+            _inventory = inventory;
             DataOvlRef = dataOvlReference;
             Record = record;
             TileReferences = tileReferences;
@@ -51,9 +55,9 @@ namespace Ultima5Redux.MapUnits
         /// Gets the string used to describe all available weapons that will be outputted to user
         /// </summary>
         /// <returns></returns>
-        public string GetAttackWeaponsString(Inventory inventory)
+        public string GetAttackWeaponsString()
         {
-            List<CombatItem> combatItems = GetAttackWeapons(inventory);
+            List<CombatItem> combatItems = GetAttackWeapons();
 
             if (combatItems == null) return "bare hands";
 
@@ -73,7 +77,7 @@ namespace Ultima5Redux.MapUnits
         /// Gets a list of all weapons that are available for use by given player character. The list is ordered. 
         /// </summary>
         /// <returns>List of attack weapons OR null if none are available</returns>
-        public List<CombatItem> GetAttackWeapons(Inventory inventory)
+        public List<CombatItem> GetAttackWeapons()
         {
             List<CombatItem> weapons = new List<CombatItem>();
 
@@ -82,19 +86,19 @@ namespace Ultima5Redux.MapUnits
             bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
             {
                 return equipment != DataOvlReference.Equipment.Nothing &&
-                       inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.AttackStat > 0;
+                       _inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.AttackStat > 0;
             }
             
             if (isAttackingCombatItem(Record.Equipped.Helmet))
-                weapons.Add(inventory.GetItemFromEquipment(Record.Equipped.Helmet));
+                weapons.Add(_inventory.GetItemFromEquipment(Record.Equipped.Helmet));
 
             if (isAttackingCombatItem(Record.Equipped.LeftHand))
-                weapons.Add(inventory.GetItemFromEquipment(Record.Equipped.LeftHand));
+                weapons.Add(_inventory.GetItemFromEquipment(Record.Equipped.LeftHand));
             else
                 bBareHands = true;
 
             if (isAttackingCombatItem(Record.Equipped.RightHand))
-                weapons.Add(inventory.GetItemFromEquipment(Record.Equipped.RightHand));
+                weapons.Add(_inventory.GetItemFromEquipment(Record.Equipped.RightHand));
             else
                 bBareHands = true;
 

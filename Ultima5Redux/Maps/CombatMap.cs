@@ -150,7 +150,7 @@ namespace Ultima5Redux.Maps
 
             if (affectedCombatMapUnit is CombatPlayer combatPlayer)
             {
-                outputStr = combatPlayer.Record.Name + ", armed with " + combatPlayer.GetAttackWeaponsString(_inventory);  
+                outputStr = combatPlayer.Record.Name + ", armed with " + combatPlayer.GetAttackWeaponsString();  
            
                 return TurnResult.RequireCharacterInput;
             }
@@ -182,6 +182,16 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         private CombatMapUnit GetCurrentCombatUnit()
         {
+
+            while (_initiativeQueue.Count > 0)
+                //_initiativeQueue.Peek()?.Stats.CurrentHp ?? 0 <= 0)
+            {
+                if (_initiativeQueue.Peek().Stats.CurrentHp > 0)
+                    break;
+                
+                _ = _initiativeQueue.Dequeue();
+            }
+            
             // if the queue is empty then we will recalculate it before continuing
             if (_initiativeQueue.Count == 0) CalculateInitiativeQueue();
 
@@ -190,6 +200,11 @@ namespace Ultima5Redux.Maps
             CombatMapUnit combatMapUnit = _initiativeQueue.Peek();
 
             return combatMapUnit;
+        }
+
+        public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
+        {
+            combatMapUnit.Stats.CurrentHp = 0;
         }
         
         /// <summary>
@@ -331,7 +346,7 @@ namespace Ultima5Redux.Maps
                 PlayerCharacterRecord record = activeRecords.Records[nPlayer];
 
                 CombatPlayer combatPlayer = new CombatPlayer(record, _tileReferences, 
-                    playerStartPositions[nPlayer], _dataOvlReference);
+                    playerStartPositions[nPlayer], _dataOvlReference, _inventory);
                 CombatMapUnits.CurrentMapUnits[nPlayer] = combatPlayer;
             }
         }

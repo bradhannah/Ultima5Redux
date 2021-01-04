@@ -10,7 +10,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public abstract class CombatMapUnit : MapUnit
     {
+        private readonly Random _random = new Random();
+
         public abstract CharacterStats Stats { get; }
+        
+        public abstract int Defense { get; }
 
         public abstract string Name { get; }
         
@@ -34,7 +38,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         
         public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput)
         {
-            const int BareHandAttack = 3;
             bool bIsHit = IsHit(enemyCombatMapUnit);
 
             int nAttack = GetAttackDamage(enemyCombatMapUnit, weapon);
@@ -59,8 +62,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private bool IsHit(CombatMapUnit enemyCombatMapUnit)
         {
-            Random ran = new Random();
-            return (enemyCombatMapUnit.Stats.Dexterity + 128) >= (ran.Next() % 256);
+            return (enemyCombatMapUnit.Stats.Dexterity + 128) >= (_random.Next() % 256);
         }
         
         // bool Creature::isHit(int hit_offset) {
@@ -69,10 +71,20 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
         {
-            int nMaxDamage = weapon.AttackStat;
+            const int BareHandAttack = 3;
+
+            // start with the weapons attack value
+            int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
+            // add the characters strength
             nMaxDamage += Stats.Strength;
-            nMaxDamage = Math.Min(nMaxDamage, 99);
-            return 0;
+            // subtract the defense of unit being attacked
+            nMaxDamage -= enemyCombatMapUnit.Defense;
+            // choose 0-max damage as attack value
+            int nDamage = _random.Next() % nMaxDamage;
+            // 99 is max damage no matter what
+            nDamage = Math.Min(nDamage, 99);
+            
+            return nDamage;
         }
 
         HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)

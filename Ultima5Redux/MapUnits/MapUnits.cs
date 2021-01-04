@@ -683,7 +683,6 @@ namespace Ultima5Redux.MapUnits
 
             Enemy enemy = new Enemy(mapUnitState, Movements.GetMovement(nIndex), _tileReferences, enemyReference,
                 _currentLocation, _dataOvlReference);
-            //Point2D skiffLocation = xy;
             enemy.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
             nIndex = AddCombatMapUnit(enemy);
             
