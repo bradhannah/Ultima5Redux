@@ -76,7 +76,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         /// Gets a list of all weapons that are available for use by given player character. The list is ordered. 
         /// </summary>
-        /// <returns>List of attack weapons OR null if none are available</returns>
+        /// <returns>List of attack weapons</returns>
         public List<CombatItem> GetAttackWeapons()
         {
             List<CombatItem> weapons = new List<CombatItem>();
@@ -102,10 +102,13 @@ namespace Ultima5Redux.MapUnits
             else
                 bBareHands = true;
 
-            if (weapons.Count != 0) return weapons;
+            if (weapons.Count == 0)
+            {
+                Debug.Assert(bBareHands);
+                weapons.Add(_inventory.GetItemFromEquipment(DataOvlReference.Equipment.BareHands));
+            }
             
-            Debug.Assert(bBareHands);
-            return null;
+            return weapons;
         }
 
     }

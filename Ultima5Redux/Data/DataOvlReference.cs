@@ -39,7 +39,7 @@ namespace Ultima5Redux.Data
 
         public enum Equipment
         {
-            LeatherHelm = 0, ChainCoif = 1, IronHelm = 2, SpikedHelm = 3, SmallShield = 4, LargeShield = 5,
+            BareHands = -2, LeatherHelm = 0, ChainCoif = 1, IronHelm = 2, SpikedHelm = 3, SmallShield = 4, LargeShield = 5,
             SpikedShield = 6, MagicShield = 7, JewelShield = 8, ClothArmour = 9, LeatherArmour = 10, Ringmail = 11,
             ScaleMail = 12, ChainMail = 13, PlateMail = 14, MysticArmour = 15, Dagger = 16, Sling = 17, Club = 18,
             FlamingOil = 19, MainGauche = 20, Spear = 21, ThrowingAxe = 22, ShortSword = 23, Mace = 24,

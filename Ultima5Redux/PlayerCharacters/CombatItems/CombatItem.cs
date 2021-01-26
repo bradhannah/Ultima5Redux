@@ -12,6 +12,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
     {
         public readonly DataOvlReference.Equipment SpecificEquipment;
 
+        public const int BareHandsIndex = -2;
+
         protected CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef,
             int nQuantity, int nOffset, int nSpriteNum)
             : base(nQuantity, GetEquipmentString(dataOvlRef, (int) specificEquipment),
@@ -37,23 +39,28 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
+            if (nIndex == BareHandsIndex) return 3;
+
             List<byte> attackValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList();
-            if (nIndex >= attackValueList.Count) return 0;
-            return attackValueList[nIndex];
+            return nIndex >= attackValueList.Count ? 0 : attackValueList[nIndex];
         }
 
         private static int GetRange(DataOvlReference dataOvlRef, int nIndex)
         {
+            if (nIndex == BareHandsIndex) return 1;
+
             List<byte> rangeValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_RANGE_VALUES).GetAsByteList();
-            if (nIndex >= rangeValueList.Count) return 0;
+            if (nIndex >= rangeValueList.Count) return 1;
             return rangeValueList[nIndex];
             
         }
 
         private static int GetDefense(DataOvlReference dataOvlRef, int nIndex)
         {
+            if (nIndex == BareHandsIndex) return 0;
+
             List<byte> defenseValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList();
             if (nIndex >= defenseValueList.Count) return 0;
@@ -62,6 +69,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private static int GetRequiredStrength(DataOvlReference dataOvlRef, int nIndex)
         {
+            if (nIndex == BareHandsIndex) return 0;
+            
             List<byte> requiredStrengthValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REQ_STRENGTH_EQUIP).GetAsByteList();
             if (nIndex >= requiredStrengthValueList.Count) return 0;
@@ -70,6 +79,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private static string GetEquipmentString(DataOvlReference dataOvlRef, int nString)
         {
+            if (nString == BareHandsIndex) return "Bare Hands";
             List<string> equipmentNames = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIP_INDEXES)
                 .GetAsStringListFromIndexes();
             return nString == 0xFF ? " " : equipmentNames[nString];
@@ -77,6 +87,12 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private void InitializePrices(DataOvlReference dataOvlRef)
         {
+            if (SpecificEquipment == DataOvlReference.Equipment.BareHands)
+            {
+                BasePrice = 0;
+                return;
+            }
+
             BasePrice = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIPMENT_BASE_PRICE)
                 .GetChunkAsUint16List()[
                     (int) SpecificEquipment];

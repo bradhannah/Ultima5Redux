@@ -15,6 +15,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
             // we need to actually add shields because they can be equipped as weapons
             // but you should not expose shields twice in the UI
+            AddWeapon(Weapon.WeaponTypeEnum.BareHands, Weapon.WeaponTypeSpriteEnum.BareHands,
+                DataOvlReference.Equipment.BareHands);
             AddWeapon(Weapon.WeaponTypeEnum.SmallShield, Weapon.WeaponTypeSpriteEnum.SmallShield,
                 DataOvlReference.Equipment.SmallShield);
             AddWeapon(Weapon.WeaponTypeEnum.LargeShield, Weapon.WeaponTypeSpriteEnum.LargeShield,
@@ -91,7 +93,18 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         private void AddWeapon(Weapon.WeaponTypeEnum weapon, Weapon.WeaponTypeSpriteEnum weaponSprite,
             DataOvlReference.Equipment equipment)
         {
-            Weapon newWeapon = new Weapon(weapon, weaponSprite, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
+            Weapon newWeapon;
+
+            if (equipment == DataOvlReference.Equipment.BareHands)
+            {
+                newWeapon = new Weapon(weapon, weaponSprite, equipment, DataOvlRef, 262);
+            }
+            else
+            {
+                newWeapon = new Weapon(weapon, weaponSprite, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
+            }
+
+            
             Items.Add(weapon, newWeapon);
             ItemsFromEquipment.Add(equipment, newWeapon);
         }
