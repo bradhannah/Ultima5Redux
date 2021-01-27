@@ -52,5 +52,9 @@ namespace Ultima5Redux.MapUnits
             .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
 
         public override bool IsActive => true;
+
+        public override bool IsAttackable => false;
+
+        public override string FriendlyName => BoardXitName;
     }
 }

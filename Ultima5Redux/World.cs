@@ -309,6 +309,19 @@ namespace Ultima5Redux
                    + thingYouFound;
         }
 
+        public string TryToAttack(Point2D xy, out bool bCanAttack, out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference)
+        {
+            bCanAttack = false;
+            mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
+            singleCombatMapReference = null;
+            
+            if (mapUnit == null || mapUnit.IsAttackable)
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.NOTHING_TO_ATTACK);
+
+            bCanAttack = true;
+            return mapUnit.FriendlyName + "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.AdditionalStrings.STARS_CONFLICT_STARS_N_N);
+        }
+
         /// <summary>
         ///     Gets a thing from the world, adding it the inventory and providing output for console
         /// </summary>

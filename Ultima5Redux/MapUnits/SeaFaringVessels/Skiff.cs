@@ -39,6 +39,9 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby(Avatar.AvatarState.Regular));
 
+        public override bool IsAttackable => false;
+        public override string FriendlyName => BoardXitName;
+        
         public override string BoardXitName => DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();
 

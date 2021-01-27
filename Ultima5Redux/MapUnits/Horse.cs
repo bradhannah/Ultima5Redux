@@ -53,6 +53,10 @@ namespace Ultima5Redux.MapUnits
             .GetString(DataOvlReference.SleepTransportStrings.HORSE_N).Trim();
 
         public override bool IsActive => true;
+        
+        public override bool IsAttackable => false;
+
+        public override string FriendlyName => BoardXitName;
 
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, int>

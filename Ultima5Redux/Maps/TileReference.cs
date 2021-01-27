@@ -34,6 +34,9 @@ namespace Ultima5Redux.Maps
         [DataMember] public bool IsGuessableFloor;
         [DataMember] public bool BlocksLight;
         [DataMember] public bool IsWindow;
+        [DataMember] public SingleCombatMapReference.BritanniaCombatMaps CombatMapIndex;
+        [DataMember] public bool IsLandEnemyPassable;
+        [DataMember] public bool IsWaterEnemyPassable;
         	
 
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;

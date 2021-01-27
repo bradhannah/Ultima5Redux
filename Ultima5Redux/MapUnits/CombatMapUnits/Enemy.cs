@@ -44,11 +44,14 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;
         public override bool IsActive => true;
 
+        public override bool IsAttackable => true;
+        public override string FriendlyName => Name;
+
         public override string ToString()
         {
             return KeyTileReference.Name;
         }
 
-        public override CharacterStats Stats { get; } = new CharacterStats();
+        public sealed override CharacterStats Stats { get; } = new CharacterStats();
     }
 }

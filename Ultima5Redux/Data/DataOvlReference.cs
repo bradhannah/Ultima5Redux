@@ -34,7 +34,7 @@ namespace Ultima5Redux.Data
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
             YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER, ENEMY_FLAGS,ENEMY_ATTACK_RANGE, ENEMY_RANGE_THING,
-            ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE_STRINGS
+            ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE, ADDITIONAL
         }
 
         public enum Equipment
@@ -932,8 +932,13 @@ namespace Ultima5Redux.Data
         // [19] = {string} ":\n"
         // [20] = {string} "Attack-"
         // [21] = {string} "Attack-"
-    
-    
+
+
+        public enum AdditionalStrings
+        {
+            THE_SCEPTRE_IS_RECLAIMED_BANG_N, A_RING_HAS_VANISHED_BANG_N, STARS_CONFLICT_STARS_N_N
+        }
+        
         /// <summary>
         ///     All the data chunks
         /// </summary>
@@ -1379,8 +1384,8 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Inventory warnings", 0x97EA, 0x1c5, 0,
                 DataChunkName.EQUIPPING);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle Strings", 0x99B0, 0x108, 0, DataChunkName.BATTLE_STRINGS);
-            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE_STRINGS).GetChunkAsStringList();
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle Strings", 0x99B0, 0x108, 0, DataChunkName.BATTLE);
+            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE).GetChunkAsStringList();
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Buying wine dialog", 0x9ab8, 0x22c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
@@ -1394,6 +1399,8 @@ namespace Ultima5Redux.Data
                 0x00, DataChunkName.KEYPRESS_COMMANDS);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Anti piracy messages", 0xa3c0, 0x170);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Final random strings", 0xa416, 0x44, 0, DataChunkName.ADDITIONAL);
+
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Nil", 0xA530, 0x1820);
             //dataChunks.PrintEverything();
 

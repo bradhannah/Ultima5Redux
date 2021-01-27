@@ -41,10 +41,31 @@ namespace Ultima5Redux.Maps
         /// Descriptions of each combat map
         private static readonly string[] BritanniaDescriptions =
         {
-            "Camp Fire", "Swamp", "Glade", "Treed", "Desert", "Clean Tree", "Mountains", "Big Bridge", "Brick",
-            "Basement", "Psychedelic", "Boat - Ocean", "Boat - North", "Boat - South", "Boat-Boat", "Bay"
+            "Camp Fire", //0 
+            "Swamp", //1
+            "Glade", //2
+            "Treed", //3
+            "Desert", //4
+            "Clean Tree", //5 
+            "Mountains",  //6
+            "Big Bridge", //7
+            "Brick", //8
+            "Basement", //9
+            "Psychedelic",  //10
+            "Boat - Ocean", //11
+            "Boat - North", //12
+            "Boat - South", //13
+            "Boat-Boat",  //14
+            "Bay" //15
         };
-
+        
+        public enum BritanniaCombatMaps 
+        {
+            None = -2, BoatCalc = -1, CampFire = 0, Swamp = 1, Glade = 2, Treed = 3, Desert = 4, CleanTree = 5, Mountains = 6, 
+            BigBridge = 7, Brick = 8, Basement = 9, Psychedelic = 10, BoatOcean = 11, BoatNorth = 12, BoatSouth = 13, 
+            BoatBoat = 14, Bay = 15
+        };
+        
         private static readonly string[] DungeonDescriptions =
         {
             "Klimb Down", "Four Way with Gremlins", "Magic Barriers", "Four Ways to Nowhere", "Right Sided Hammer", 

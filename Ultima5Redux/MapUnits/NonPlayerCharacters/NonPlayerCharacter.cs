@@ -55,6 +55,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         public override string BoardXitName => "Board them? You hardly know them!";
 
+        public override bool IsAttackable => true;
+        
+        public override string FriendlyName => NPCRef.FriendlyName;
+        
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>

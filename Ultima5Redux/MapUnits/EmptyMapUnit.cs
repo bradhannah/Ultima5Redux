@@ -22,5 +22,11 @@ namespace Ultima5Redux.MapUnits
         public override string BoardXitName => "EMPTY";
 
         public override bool IsActive => false;
+        
+        public override bool IsAttackable => false;
+        
+        public override string FriendlyName => BoardXitName;
+
+
     }
 }

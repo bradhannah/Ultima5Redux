@@ -74,6 +74,10 @@ namespace Ultima5Redux.MapUnits
         public override string BoardXitName => "You can't board the Avatar you silly goose!";
 
         public override bool IsActive => true;
+        
+        public override bool IsAttackable => false;
+        
+        public override string FriendlyName => "Avatar";
 
         internal AvatarState CurrentAvatarState { get; private set; }
         private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;

@@ -92,6 +92,10 @@ namespace Ultima5Redux.MapUnits
         protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded  =>
             DirectionToTileNameBoarded;
         
+        public abstract bool IsAttackable { get; }
+        
+        public abstract string FriendlyName { get; }
+        
         public abstract Avatar.AvatarState BoardedAvatarState { get; }
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsOccupiedByAvatar { get; protected internal set; }
