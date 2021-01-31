@@ -10,6 +10,8 @@ namespace Ultima5Redux.Maps
 {
     public class InitiativeQueue
     {
+        private const int MIN_TURNS_IN_QUEUE = 6;
+        
         private readonly MapUnits.MapUnits _combatMapUnits;
         private readonly PlayerCharacterRecords _playerCharacterRecords;
         public int Round { get; private set; }
@@ -90,74 +92,114 @@ namespace Ultima5Redux.Maps
                 _combatInitiativeTally.Add((CombatMapUnit)mapUnit, 0);
             }
         }
-        
-          /// <summary>
+
+        /// <summary>
         /// Calculates an initiative queue giving the order of all attacks or moves within a single round
         /// </summary>
-        private void CalculateNewInitiativeQueue()
+        internal void CalculateNextInitiativeQueue()
         {
-            Debug.Assert(_playerCharacterRecords != null);
-            //Debug.Assert(_initiativeQueue.Count == 0);
-            Queue<CombatMapUnit> newInitiativeQueue = new Queue<CombatMapUnit>();
-            _initiativeQueue.Enqueue(newInitiativeQueue);
-            
-            //Round++;
-                
-            // a mapping of dexterity values to an ordered list of combat map units 
-            Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
-            
-            // go through each combat map unit and place them in priority order based on their dexterity values 
-            foreach (MapUnit mapUnit in _combatMapUnits.CurrentMapUnits)
+            while (true)
             {
-                if (!IsCombatMapUnit(mapUnit)) continue;
+                Debug.Assert(_playerCharacterRecords != null);
+                //Debug.Assert(_initiativeQueue.Count == 0);
+                Queue<CombatMapUnit> newInitiativeQueue = new Queue<CombatMapUnit>();
+                _initiativeQueue.Enqueue(newInitiativeQueue);
 
-                CombatMapUnit combatMapUnit = (CombatMapUnit) mapUnit;
-                
-                int nDexterity = combatMapUnit.Dexterity;
-                int nTally = _combatInitiativeTally[combatMapUnit];
+                //Round++;
 
-                // initiative is determined by the map units dexterity + the accumulated dexterity thus far
-                int nInitiative = nDexterity + nTally;
+                // a mapping of dexterity values to an ordered list of combat map units 
+                Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
 
-                void addToDexterityToCombatUnits(int nInitiativeIndex, CombatMapUnit combatMapUnitToAdd)
+                // go through each combat map unit and place them in priority order based on their dexterity values 
+                foreach (MapUnit mapUnit in _combatMapUnits.CurrentMapUnits)
                 {
-                    if (!dexterityToCombatUnits.ContainsKey(nInitiativeIndex))
-                        dexterityToCombatUnits.Add(nInitiativeIndex, new List<CombatMapUnit>());
-                    
-                    dexterityToCombatUnits[nInitiativeIndex].Add(combatMapUnitToAdd);
+                    if (!IsCombatMapUnit(mapUnit)) continue;
+
+                    CombatMapUnit combatMapUnit = (CombatMapUnit) mapUnit;
+
+                    int nDexterity = combatMapUnit.Dexterity;
+                    int nTally = _combatInitiativeTally[combatMapUnit];
+
+                    // initiative is determined by the map units dexterity + the accumulated dexterity thus far
+                    int nInitiative = nDexterity + nTally;
+
+                    void addToDexterityToCombatUnits(int nInitiativeIndex, CombatMapUnit combatMapUnitToAdd)
+                    {
+                        if (!dexterityToCombatUnits.ContainsKey(nInitiativeIndex)) dexterityToCombatUnits.Add(nInitiativeIndex, new List<CombatMapUnit>());
+
+                        dexterityToCombatUnits[nInitiativeIndex].Add(combatMapUnitToAdd);
+                    }
+
+                    // our stored initiative tally cannot exceed the highest dexterity 
+                    if (nInitiative > _nLowestDexterity)
+                    {
+                        _combatInitiativeTally[combatMapUnit] = nInitiative % _nLowestDexterity;
+
+                        // if you have exceeded the dexterity count and get a free hit this round
+                        addToDexterityToCombatUnits(nInitiative - _nLowestDexterity, combatMapUnit);
+                    }
+                    else
+                    {
+                        _combatInitiativeTally[combatMapUnit] = nInitiative;
+                        // add the combat map unit to working dexterity map based on the modded (smaller) initiative value
+                    }
+
+                    // this hit will use the larger initiative value giving you first in line access to attack
+                    addToDexterityToCombatUnits(nInitiative, combatMapUnit);
                 }
-                
-                // our stored initiative tally cannot exceed the highest dexterity 
-                if (nInitiative > _nLowestDexterity)
+
+                // now that we have the order of all attacks, let's put them in a FIFO queue
+                foreach (int nInitiative in dexterityToCombatUnits.Keys.OrderByDescending(initiative => initiative))
                 {
-                    _combatInitiativeTally[combatMapUnit] = nInitiative % _nLowestDexterity;
+                    foreach (CombatMapUnit combatMapUnit in dexterityToCombatUnits[nInitiative])
+                    {
+                        if (_initiativeQueue.Count <= 0) throw new Ultima5ReduxException("Tried to queue a CombatMapUnit but there is no active queue");
 
-                    // if you have exceeded the dexterity count and get a free hit this round
-                    addToDexterityToCombatUnits(nInitiative - _nLowestDexterity, combatMapUnit);
+                        newInitiativeQueue.Enqueue(combatMapUnit);
+                        //Peek().Enqueue(combatMapUnit);
+                    }
                 }
-                else
+
+                // if there are not at least the minimum number of turns in the queue, then we recursively call this method
+                // to continue population. We are assuming each turn results in at least a single additional turn
+                if (!IsAtLeastNTurnsInQueue(MIN_TURNS_IN_QUEUE))
                 {
-                    _combatInitiativeTally[combatMapUnit] = nInitiative;
-                    // add the combat map unit to working dexterity map based on the modded (smaller) initiative value
+                    continue;
                 }
 
-                // this hit will use the larger initiative value giving you first in line access to attack
-                addToDexterityToCombatUnits(nInitiative, combatMapUnit);
-            }
-
-            // now that we have the order of all attacks, let's put them in a FIFO queue
-            foreach (int nInitiative in dexterityToCombatUnits.Keys.OrderByDescending(initiative => initiative))
-            {
-                foreach (CombatMapUnit combatMapUnit in dexterityToCombatUnits[nInitiative])
-                {
-                    if (_initiativeQueue.Count <= 0)
-                        throw new Ultima5ReduxException("Tried to queue a CombatMapUnit but there is no active queue");
-
-                    newInitiativeQueue.Enqueue(combatMapUnit);;
-                    //Peek().Enqueue(combatMapUnit);
-                }
+                break;
             }
         }
+
+        internal List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
+        {
+            int nTally = 0;
+            List<CombatMapUnit> combatMapUnits = new List<CombatMapUnit>(nUnits);
+            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
+            {
+                foreach (CombatMapUnit combatMapUnit in mapUnits)
+                {
+                    combatMapUnits.Add(combatMapUnit);
+                    nTally++;
+                    if (nTally == nUnits) return combatMapUnits;
+                }
+            }
+            throw new Ultima5ReduxException("Tried to get " + nUnits + " CombatMapUnits, but only had " + nTally +
+                                            " in queues");
+        }
+
+        private bool IsAtLeastNTurnsInQueue(int nMin)
+          {
+              int nTally = 0;
+              foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
+              {
+                  nTally += mapUnits.Count();
+                  // do a check inside the minimize the number of iterations once the minimum is met
+                  if (nTally >= nMin) return true;
+              }
+
+              return (nTally >= nMin);
+          }
           
           /// <summary>
           /// Gets the active combat unit - either CombatPlayer or Enemy.
@@ -185,7 +227,7 @@ namespace Ultima5Redux.Maps
               }
             
               // if the queue is empty then we will recalculate it before continuing
-              if (_initiativeQueue.Count == 0) CalculateNewInitiativeQueue();
+              if (_initiativeQueue.Count == 0) CalculateNextInitiativeQueue();
 
               Debug.Assert(_initiativeQueue.Count > 0);
               Debug.Assert(_initiativeQueue.Peek().Count > 0);
@@ -215,7 +257,7 @@ namespace Ultima5Redux.Maps
               }
 
               // if the queue is empty then we will recalculate it before continuing
-              if (_initiativeQueue.Count == 0) CalculateNewInitiativeQueue();
+              if (_initiativeQueue.Count == 0) CalculateNextInitiativeQueue();
 
               Debug.Assert(_initiativeQueue.Count > 0);
               return GetCurrentCombatUnit();

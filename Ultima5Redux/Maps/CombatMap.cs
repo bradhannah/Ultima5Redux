@@ -105,6 +105,16 @@ namespace Ultima5Redux.Maps
             
             ActivePlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
         }
+        
+        public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
+        {
+            // if there aren't the minimum number of turns, then we force it to add additional turns to at least
+            // the stated number of units
+            if (_initiativeQueue.TotalTurnsInQueue < nUnits)
+                _initiativeQueue.CalculateNextInitiativeQueue();
+            
+            return _initiativeQueue.GetTopNCombatMapUnits(nUnits);
+        }
 
         internal void InitializeInitiativeQueue()
         {
