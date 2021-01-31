@@ -23,7 +23,9 @@ namespace Ultima5Redux.MapUnits
 
         public override bool IsAttackable => true;
         public override string FriendlyName => Record.Name;
- 
+
+        public override int Dexterity => (byte) Record.Stats.Dexterity;
+
         public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy, DataOvlReference dataOvlReference,
             Inventory inventory)
         {

@@ -18,6 +18,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public abstract string Name { get; }
         
+        public abstract int Dexterity { get; }
+        
         protected CombatMapUnit()
         {
             

@@ -47,6 +47,8 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override bool IsAttackable => true;
         public override string FriendlyName => Name;
 
+        public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
+
         public override string ToString()
         {
             return KeyTileReference.Name;
