@@ -20,6 +20,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         
         public abstract int Dexterity { get; }
         
+        public CombatMapUnit PreviousAttackTarget { get; private set; }
+        
         protected CombatMapUnit()
         {
             
@@ -41,6 +43,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput)
         {
             bool bIsHit = IsHit(enemyCombatMapUnit);
+
+            PreviousAttackTarget = enemyCombatMapUnit;
 
             int nAttack = GetAttackDamage(enemyCombatMapUnit, weapon);
             if (!bIsHit)

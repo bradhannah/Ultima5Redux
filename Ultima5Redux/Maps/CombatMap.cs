@@ -25,7 +25,7 @@ namespace Ultima5Redux.Maps
         private readonly Inventory _inventory;
         private readonly DataOvlReference _dataOvlReference;
 
-        private InitiativeQueue _initiativeQueue; //= new InitiativeQueue();
+        private InitiativeQueue _initiativeQueue; 
 
         public int Turn => _initiativeQueue.Turn;
         public int Round => _initiativeQueue.Round;

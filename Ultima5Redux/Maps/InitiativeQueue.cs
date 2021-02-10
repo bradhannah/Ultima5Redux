@@ -25,7 +25,7 @@ namespace Ultima5Redux.Maps
         /// Queue that provides order attack for all players and enemies
         /// </summary>
         private readonly Queue<Queue<CombatMapUnit>> _initiativeQueue = new Queue<Queue<CombatMapUnit>>(); 
-            //QueueQueue<CombatMapUnit>();
+            
         /// <summary>
         /// A running tally of combat initiatives. This provides a running tally of initiative to provide
         /// ongoing boosts to high dexterity map units
