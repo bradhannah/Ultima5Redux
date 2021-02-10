@@ -30,6 +30,9 @@ namespace Ultima5Redux.Maps
         public int Turn => _initiativeQueue.Turn;
         public int Round => _initiativeQueue.Round;
 
+        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().Count();
+        public bool AreEnemiesLeft => NumberOfEnemies > 0; 
+
         // player character information
 
         /// <summary>
@@ -41,7 +44,7 @@ namespace Ultima5Redux.Maps
 
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
         
-        /// <summary>
+        /// <summary> 
         /// All current player characters
         /// </summary>
         private PlayerCharacterRecords _playerCharacterRecords;
@@ -80,7 +83,7 @@ namespace Ultima5Redux.Maps
             AdvanceToNextCombatMapUnit();
             return TurnResult.EnemyMoved;
         }
-
+        
         /// <summary>
         /// Moves the active combat unit to a new map location
         /// No additional logic is computed.
@@ -92,19 +95,17 @@ namespace Ultima5Redux.Maps
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
         }
 
-      
-
         public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
         {
             combatMapUnit.Stats.CurrentHp = 0;
         }
 
-        public void AdvanceToNextCombatMapUnit()
+       public void AdvanceToNextCombatMapUnit()
         {
             CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
             
             ActivePlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
-        }
+        } 
         
         public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
         {

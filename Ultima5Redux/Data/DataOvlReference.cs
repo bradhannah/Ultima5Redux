@@ -34,7 +34,7 @@ namespace Ultima5Redux.Data
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
             YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER, ENEMY_FLAGS,ENEMY_ATTACK_RANGE, ENEMY_RANGE_THING,
-            ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE, ADDITIONAL
+            ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE, ADDITIONAL, BATTLE2
         }
 
         public enum Equipment
@@ -904,6 +904,35 @@ namespace Ultima5Redux.Data
         // [46] = {string} "ROTWORMS"
         // [47] = {string} "SHADOW LORD"
 
+        public enum Battle2Strings
+        {
+            N_BATTLE_IS_LOST_BANG, N_VICTORY_BANG_N, _TELEPORTS_BANG_N, THY_SWORD_HATH_SHATTERED_BANG_N, 
+            _VANISHES_BANG, _DIVIDES_BANG_N, _IS_POISONED_BANG_N, _REGURGITATED_BANG_N, Q_DQ, Q_DQ2, Q_DQ3,
+            N_N_YOUR_RESPONSE_Q_N_COLON, N_N, N_N2, _IS_SLICED_IN_HALF_BANG_, _DIE_BANG_DQ_, N_N3, N_N4, 
+            N_THOU_ART_SUBDUED_AND_BLINDFOLDED_BANG, N_N_STRONG_GUARDS_DRAG_THEE_AWAY_BANG
+        }
+
+    //     [0] = {string} "\nBATTLE IS LOST!"
+    // [1] = {string} "\nVICTORY!\n"
+    // [2] = {string} " teleports!\n"
+    // [3] = {string} "Thy sword hath shattered!\n"
+    // [4] = {string} " vanishes!"
+    // [5] = {string} " divides!\n"
+    // [6] = {string} " is poisoned!\n"
+    // [7] = {string} " regurgitated!\n"
+    // [8] = {string} "?""
+    // [9] = {string} "?""
+    // [10] = {string} "?""
+    // [11] = {string} "\n\nYour response?\n:"
+    // [12] = {string} "\n\n"
+    // [13] = {string} "\n\n"
+    // [14] = {string} " is sliced in half! "
+    // [15] = {string} " die!" "
+    // [16] = {string} "\n\n"
+    // [17] = {string} "\n\n"
+    // [18] = {string} "\nThou art subdued and blindfolded!"
+    // [19] = {string} "\n\nStrong guards drag thee away!"
+        
         public enum BattleStrings
         {
             _FAILED_BANG_N, _MISSED_BANG_N, _POSSESSED_BANG_N, _REAPPEARS_BANG, _DISAPPEARS_BANG, _GATES_IN_A_DAEMON_BANG_N, _GRAZED_BANG_N,
@@ -1244,8 +1273,9 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "NPC Files", 0x6d56, 0x2e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Responses to keystroke actions", 0x6d84,
                 0x179);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Victory/Lost Messages", 0x6efe, 0x1e);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things that happened to you", 0x6f1c, 0xf4);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle messages", 0x6efe, 0x112, 0x00, DataChunkName.BATTLE2);
+            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE2).GetChunkAsStringList();
+            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things that happened to you", 0x6f1c, 0xf4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "MISC file names", 0x7010, 0x1a);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Unknown String", 0x702A, 0Xa);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things said in jail", 0x7034, 0xb4);
@@ -1257,7 +1287,7 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Strings about wishing well", 0x721c, 0x36);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
                 "wishing for one of these keywords at a wishing well gets you a horse", 0x7252,
-                0x32); // in the original defintion
+                0x32); // in the original definition
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
                 "Response Strings after wishing in wishing well", 0x7284, 0x27);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Fountain strings", 0x72ac, 0x54);
@@ -1270,7 +1300,6 @@ namespace Ultima5Redux.Data
 //            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22, 0x00, DataChunkName.VISION1);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x750A,
                 0x205, 0x00, DataChunkName.VISION2);
-            //someStrings = GetDataChunk(DataChunkName.VISION2).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Drinking Strings", 0x76ef, 0x71);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Level up apparition strings", 0x7760, 0x94);
@@ -1385,7 +1414,6 @@ namespace Ultima5Redux.Data
                 DataChunkName.EQUIPPING);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle Strings", 0x99B0, 0x108, 0, DataChunkName.BATTLE);
-            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE).GetChunkAsStringList();
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Buying wine dialog", 0x9ab8, 0x22c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,

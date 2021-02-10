@@ -20,8 +20,7 @@ namespace Ultima5Redux.Maps
 
         public int TurnsLeftsInRound => _initiativeQueue?.Peek()?.Count ?? 0;
 
-        public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue => combatMapUnitQueue.Count);
-
+        public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue => combatMapUnitQueue.Where((combatMapUnit => combatMapUnit.Stats.CurrentHp > 0)).Count());
         /// <summary>
         /// Queue that provides order attack for all players and enemies
         /// </summary>
@@ -101,11 +100,8 @@ namespace Ultima5Redux.Maps
             while (true)
             {
                 Debug.Assert(_playerCharacterRecords != null);
-                //Debug.Assert(_initiativeQueue.Count == 0);
                 Queue<CombatMapUnit> newInitiativeQueue = new Queue<CombatMapUnit>();
                 _initiativeQueue.Enqueue(newInitiativeQueue);
-
-                //Round++;
 
                 // a mapping of dexterity values to an ordered list of combat map units 
                 Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
@@ -156,7 +152,6 @@ namespace Ultima5Redux.Maps
                         if (_initiativeQueue.Count <= 0) throw new Ultima5ReduxException("Tried to queue a CombatMapUnit but there is no active queue");
 
                         newInitiativeQueue.Enqueue(combatMapUnit);
-                        //Peek().Enqueue(combatMapUnit);
                     }
                 }
 
@@ -179,11 +174,16 @@ namespace Ultima5Redux.Maps
             {
                 foreach (CombatMapUnit combatMapUnit in mapUnits)
                 {
-                    combatMapUnits.Add(combatMapUnit);
-                    nTally++;
+                    if (combatMapUnit.Stats.CurrentHp > 0)
+                    {
+                        combatMapUnits.Add(combatMapUnit);
+                        nTally++;
+                    }
+
                     if (nTally == nUnits) return combatMapUnits;
                 }
             }
+
             throw new Ultima5ReduxException("Tried to get " + nUnits + " CombatMapUnits, but only had " + nTally +
                                             " in queues");
         }
@@ -193,7 +193,7 @@ namespace Ultima5Redux.Maps
               int nTally = 0;
               foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
               {
-                  nTally += mapUnits.Count();
+                  nTally += mapUnits.Count(combatMapUnit => combatMapUnit.Stats.CurrentHp > 0);
                   // do a check inside the minimize the number of iterations once the minimum is met
                   if (nTally >= nMin) return true;
               }
@@ -207,10 +207,8 @@ namespace Ultima5Redux.Maps
           /// <returns></returns>
           internal CombatMapUnit GetCurrentCombatUnit()
           {
-
               while (_initiativeQueue.Count > 0)
-                  //_initiativeQueue.Peek()?.Stats.CurrentHp ?? 0 <= 0)
-              {
+              { 
                   if (_initiativeQueue.Peek().Count == 0)
                   {
                       _initiativeQueue.Dequeue();
@@ -222,8 +220,9 @@ namespace Ultima5Redux.Maps
                   
                   if (_initiativeQueue.Peek().Peek().Stats.CurrentHp > 0)
                       break;
-                
-                  //_ = _initiativeQueue.Dequeue();
+                  // if the combat map unit is dead then we pop them off and move on
+                  else
+                      _ = _initiativeQueue.Peek().Dequeue();
               }
             
               // if the queue is empty then we will recalculate it before continuing
@@ -261,7 +260,6 @@ namespace Ultima5Redux.Maps
 
               Debug.Assert(_initiativeQueue.Count > 0);
               return GetCurrentCombatUnit();
-              //_initiativeQueue.Peek().Peek();
           }
     }
 }

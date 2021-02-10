@@ -662,6 +662,15 @@ namespace Ultima5ReduxTesting
                 NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null);
             string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
         }
+
+
+        [Test]
+        public void Test_SimpleStringTest()
+        {
+            World world = new World(SaveDirectory);
+            string str = world.DataOvlRef.StringReferences.GetString(DataOvlReference.Battle2Strings.N_VICTORY_BANG_N);
+
+        }
         
         [Test]
         public void Test_ShipwrightDialogue()
