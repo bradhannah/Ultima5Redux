@@ -31,7 +31,9 @@ namespace Ultima5Redux.Maps
         public int Round => _initiativeQueue.Round;
 
         public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().Count();
-        public bool AreEnemiesLeft => NumberOfEnemies > 0; 
+        public bool AreEnemiesLeft => NumberOfEnemies > 0;
+
+        public bool InEscapeMode { get; set; } = false;
 
         // player character information
 
@@ -266,9 +268,36 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        // public CombatMapUnit GetCombatUnit(Point2D unitPosition)
-        // {
-        //     CombatMapUnits.GetMapUnitByLocation(Maps.Combat, unitPosition, 0);
-        // }
+        public CombatMapUnit GetCombatUnit(Point2D unitPosition)
+        {
+            MapUnit mapUnit = _virtualMap.GetTopVisibleMapUnit(unitPosition, true);
+
+            if (mapUnit is CombatMapUnit unit) return unit;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Makes the next available character escape
+        /// </summary>
+        /// <param name="escapedPlayer">the player who escaped, or null if none left</param>
+        /// <returns>true if a player escaped, false if none were found</returns>
+        public bool NextCharacterEscape(out CombatPlayer escapedPlayer)
+        {
+            foreach (MapUnit mapUnit in CombatMapUnits.CurrentMapUnits)
+            {
+                if (!(mapUnit is CombatPlayer)) continue;
+                
+                CombatPlayer combatPlayer = (CombatPlayer) mapUnit;
+                if (combatPlayer.PlayerHasEscaped) continue;
+                    
+                combatPlayer.PlayerHasEscaped = true;
+                escapedPlayer = combatPlayer;
+                return true;
+            }
+
+            escapedPlayer = null;
+            return false;
+        }
     }
 }
