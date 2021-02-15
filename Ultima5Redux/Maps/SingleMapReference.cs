@@ -76,6 +76,23 @@ namespace Ultima5Redux.Maps
             /// </summary>
             public Location MapLocation { get; }
 
+            public Map.Maps MapType
+            {
+                get
+                {
+                    switch (MapLocation)
+                    {
+                        case Location.Combat_resting_shrine:
+                            return Map.Maps.Combat;
+                        case Location.Britannia_Underworld:
+                            return Floor == 0 ? Map.Maps.Overworld : Map.Maps.Underworld;
+                        default:
+                            return Map.Maps.Small;
+                    }
+                }
+            }
+            
+
             /// <summary>
             ///     The master file
             /// </summary>
@@ -99,6 +116,7 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException("Bad MasterFile");
                 }
             }
+
 
             public override string ToString()
             {

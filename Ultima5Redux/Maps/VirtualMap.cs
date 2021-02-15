@@ -68,9 +68,9 @@ namespace Ultima5Redux.Maps
 
         private Map PreCombatMap { get; set; }
 
-        private MapUnitPosition PreMapUnitPosition { get; set; } = new MapUnitPosition();
+        private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
         
-        private Map.Maps PreMaps { get; set; }
+        //private Map.Maps PreMaps { get; set; }
         
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
@@ -290,17 +290,10 @@ namespace Ultima5Redux.Maps
                     break;
                 case LargeMap largeMap:
                 case SmallMap smallMap:
-                    LargeMapOverUnder = PreMaps;
+                    LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
-                    //CurrentMap = PreCombatMap;
-                    //CurrentPosition = PreMapUnitPosition;
-                    //CurrentPosition.MapLocation = PreMapUnitPosition.MapLocation;
-                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, PreMaps, false, true);
+                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false, true);
                     PreCombatMap = null;
-                    // CurrentPosition.Floor = PreMapUnitPosition.Floor;
-                    // CurrentPosition.X = PreMapUnitPosition.X;
-                    // CurrentPosition.Y = PreMapUnitPosition.Y;
-
                     break;
                 default:
                     throw new Ultima5ReduxException(
@@ -352,8 +345,7 @@ namespace Ultima5Redux.Maps
             CurrentCombatMap.InitializeInitiativeQueue();
         }
         
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference,  
-            Point2D xy = null)
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
