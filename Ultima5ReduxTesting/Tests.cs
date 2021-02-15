@@ -1027,7 +1027,22 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        
+        [Test] public void Test_LoadCombatMapThenBack()
+        {
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
+            
+            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                // orcs
+                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                // troll
+                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+            TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
+            
+            _ = "";
+        }
         
         [Test] public void Test_LoadAllCombatMapsWithMonsters()
         {

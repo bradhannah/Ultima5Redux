@@ -66,6 +66,12 @@ namespace Ultima5Redux.Maps
 
         public bool ShowOuterSmallMapTiles => _bTouchedOuterBorder;
 
+        private Map PreCombatMap { get; set; }
+
+        private MapUnitPosition PreMapUnitPosition { get; set; } = new MapUnitPosition();
+        
+        private Map.Maps PreMaps { get; set; }
+        
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
@@ -144,7 +150,11 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public MapUnitPosition CurrentPosition => TheMapUnits.CurrentAvatarPosition;
+        public MapUnitPosition CurrentPosition
+        {
+            get => TheMapUnits.CurrentAvatarPosition;
+            set => TheMapUnits.CurrentAvatarPosition = value;
+        }
 
         //set => TheMapUnits.CurrentAvatarPosition = value;
         /// <summary>
@@ -272,11 +282,58 @@ namespace Ultima5Redux.Maps
                 new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
         }
 
+        public void ReturnToPreviousMapAfterCombat()
+        {
+            switch (PreCombatMap)
+            {
+                case CombatMap combatMap:
+                    break;
+                case LargeMap largeMap:
+                case SmallMap smallMap:
+                    LargeMapOverUnder = PreMaps;
+                    CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
+                    //CurrentMap = PreCombatMap;
+                    //CurrentPosition = PreMapUnitPosition;
+                    //CurrentPosition.MapLocation = PreMapUnitPosition.MapLocation;
+                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, PreMaps, false, true);
+                    PreCombatMap = null;
+                    // CurrentPosition.Floor = PreMapUnitPosition.Floor;
+                    // CurrentPosition.X = PreMapUnitPosition.X;
+                    // CurrentPosition.Y = PreMapUnitPosition.Y;
+
+                    break;
+                default:
+                    throw new Ultima5ReduxException(
+                        "Attempting to return to previous map after combat with an unsupported map type: " +
+                        PreCombatMap?.GetType() ?? "NULL");
+            }
+        }
+        /// <summary>
+        /// Loads a combat map as the current map
+        /// Saves the previous map state, for post combat
+        /// </summary>
+        /// <param name="singleCombatMapReference"></param>
+        /// <param name="entryDirection"></param>
+        /// <param name="records"></param>
+        /// <param name="primaryEnemyReference"></param>
+        /// <param name="nPrimaryEnemies"></param>
+        /// <param name="secondaryEnemyReference"></param>
+        /// <param name="nSecondaryEnemies"></param>
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference, 
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0, 
             EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
         {
+            // if the PreCombatMap is not set OR the existing map is not already a combat map then
+            // we set the PreCombatMap so we know which map to return to
+            if (PreCombatMap == null || !(CurrentMap is CombatMap))
+            {
+                PreCombatMap = CurrentMap;
+                PreMapUnitPosition.Floor = CurrentPosition.Floor;
+                PreMapUnitPosition.X = CurrentPosition.X;
+                PreMapUnitPosition.Y = CurrentPosition.Y;
+            }
+
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 

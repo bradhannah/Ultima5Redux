@@ -283,8 +283,8 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapType"></param>
         /// <param name="bLoadFromDisk"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
-            bool bLoadFromDisk)
+        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
+            bool bLoadFromDisk, bool bSkipLoadSmallMap = false)
         {
             _currentMapType = mapType;
             _currentLocation = mapRef.MapLocation;
@@ -294,7 +294,7 @@ namespace Ultima5Redux.MapUnits
             switch (mapType)
             {
                 case Map.Maps.Small:
-                    LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
+                    if (!bSkipLoadSmallMap) LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
                     break;
                 case Map.Maps.Combat:
                     return;
@@ -307,6 +307,7 @@ namespace Ultima5Redux.MapUnits
 
             AvatarMapUnit.MapLocation = mapRef.MapLocation;
             AvatarMapUnit.MapUnitPosition.Floor = mapRef.Floor;
+            //if (AvatarMapUnit
         }
 
         /// <summary>
