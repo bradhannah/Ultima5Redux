@@ -289,9 +289,9 @@ namespace Ultima5Redux.Maps
                 if (!(mapUnit is CombatPlayer)) continue;
                 
                 CombatPlayer combatPlayer = (CombatPlayer) mapUnit;
-                if (combatPlayer.PlayerHasEscaped) continue;
+                if (combatPlayer.HasEscaped) continue;
                     
-                combatPlayer.PlayerHasEscaped = true;
+                MakePlayerEscape(combatPlayer);
                 escapedPlayer = combatPlayer;
                 return true;
             }
@@ -299,5 +299,14 @@ namespace Ultima5Redux.Maps
             escapedPlayer = null;
             return false;
         }
+
+        public void MakePlayerEscape(CombatPlayer combatPlayer)
+        {
+            Debug.Assert(!combatPlayer.HasEscaped);
+                    
+            combatPlayer.HasEscaped = true;
+        }
+
     }
+    
 }

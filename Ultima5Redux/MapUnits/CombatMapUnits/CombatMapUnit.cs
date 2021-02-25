@@ -22,6 +22,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         
         public CombatMapUnit PreviousAttackTarget { get; private set; }
         
+        public bool HasEscaped { get; set; } = false;
+        
         protected CombatMapUnit()
         {
             

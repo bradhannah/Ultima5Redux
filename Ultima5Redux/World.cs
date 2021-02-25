@@ -769,6 +769,10 @@ namespace Ultima5Redux
             if (IsLeavingMap(newPosition))
             {
                 retStr += "\nLEAVING";
+
+                State.TheVirtualMap.CurrentCombatMap.MakePlayerEscape(combatPlayer);
+                //State.TheVirtualMap.CurrentCombatMap.MoveActiveCombatMapUnit(newPosition);
+                
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 return retStr;
             }

@@ -51,8 +51,6 @@ namespace Ultima5Redux.MapUnits
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
         public override bool IsActive => true;
 
-        public bool PlayerHasEscaped { get; set; } = false;
-
         public override string ToString()
         {
             return Record.Name;

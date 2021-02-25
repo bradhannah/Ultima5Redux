@@ -599,6 +599,12 @@ namespace Ultima5Redux.Maps
                 if (bExcludeAvatar && type == typeof(Avatar)) continue;
                 foreach (MapUnit mapUnit in mapUnits)
                 {
+                    if (!mapUnit.IsActive) continue;
+                    // if it's a combat unit but they dead or gone then we skip
+                    if (mapUnit is CombatMapUnit combatMapUnit)
+                    {
+                        if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0) continue;
+                    } 
                     // if we find the first highest priority item, then we simply return it
                     if (mapUnit.GetType() == type) return mapUnit;
                 }
@@ -635,7 +641,7 @@ namespace Ultima5Redux.Maps
 
             // get the regular tile reference AND get the map unit (NPC, frigate etc)
             // we need to evaluate both
-            TileReference tileReference = GetTileReference(newPosition);
+             TileReference tileReference = GetTileReference(newPosition);
             MapUnit mapUnit = GetTopVisibleMapUnit(newPosition, true);
 
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
