@@ -31,6 +31,8 @@ namespace Ultima5Redux.Maps
         public int Round => _initiativeQueue.Round;
 
         public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().Count();
+        public int NumberOfVisiblePlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().Count(combatPlayer => combatPlayer.IsActive);
+
         public bool AreEnemiesLeft => NumberOfEnemies > 0;
 
         public bool InEscapeMode { get; set; } = false;

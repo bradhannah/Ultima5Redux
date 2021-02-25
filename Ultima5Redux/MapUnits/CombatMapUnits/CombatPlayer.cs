@@ -49,7 +49,7 @@ namespace Ultima5Redux.MapUnits
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
-        public override bool IsActive => true;
+        public override bool IsActive => !HasEscaped;
 
         public override string ToString()
         {
