@@ -991,14 +991,41 @@ namespace Ultima5ReduxTesting
             Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
             Debug.Assert(combatMapUnit is CombatPlayer);
 
-            //CombatPlayer player = (CombatPlayer)comb
-            
-            //Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
             world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult, true);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
             world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult, true);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
             world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult, true);
+            _ = "";
+        }
+        
+        [Test] public void Test_EscapeCombatMap()
+        {
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 4),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+
+            CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessMapUnitTurn(
+                out CombatMapUnit combatMapUnit, out string outputStr);
+            Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
+            Debug.Assert(combatMapUnit is CombatPlayer);
+
+            world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult, true);
+            world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+            world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult, true);
+            world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+            world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult, true);
+
+            do
+            {
+                world.State.TheVirtualMap.CurrentCombatMap.NextCharacterEscape(out CombatPlayer combatPlayer);
+                CombatPlayer newCombatPlayer = world.State.TheVirtualMap.CurrentCombatMap.ActiveCombatPlayer;
+                
+                if (combatPlayer == null) break;
+            } while (true);
+            
             _ = "";
         }
         

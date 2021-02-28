@@ -121,6 +121,41 @@ namespace Ultima5Redux.Maps
             return _initiativeQueue.GetTopNCombatMapUnits(nUnits);
         }
 
+        private int GetCombatMapUnitIndex(CombatMapUnit combatMapUnit)
+        {
+            if (combatMapUnit == null) return -1;
+            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.Count(); i++)
+            {
+                if (CombatMapUnits.CurrentMapUnits[i] == combatMapUnit) return i;
+            }
+
+            return -1;
+        }
+
+        public Enemy GetFirstEnemy(CombatItem combatItem)
+        {
+            return GetNextEnemy(null, combatItem);
+        }
+        
+        public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
+        {
+            int nOffset = GetCombatMapUnitIndex(currentEnemy);
+            // -1 indicates it wasn't found, so could be dead or null. We set it to the beginning
+            if (nOffset == -1) nOffset = 0;
+            
+            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
+
+            for (int i = 0; i < nMapUnits; i++)
+            {
+                // we start at the next position, and wrap around ensuring we have hit all possible enemies
+                int nIndex = (i + nOffset + 1) % nMapUnits;
+                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
+                
+                if (ActiveCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
+            }
+            return null;
+        }
+
         internal void InitializeInitiativeQueue()
         {
             _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords);

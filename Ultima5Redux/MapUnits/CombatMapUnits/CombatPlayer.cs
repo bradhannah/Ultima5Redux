@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Policy;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -115,6 +117,10 @@ namespace Ultima5Redux.MapUnits
             
             return weapons;
         }
+
+        public bool CanReachForAttack(Enemy enemy, CombatItem item) =>
+             (Math.Abs(enemy.MapUnitPosition.X - MapUnitPosition.X) <= item.Range 
+                && Math.Abs(enemy.MapUnitPosition.Y - MapUnitPosition.Y) <= item.Range);
 
     }
 }

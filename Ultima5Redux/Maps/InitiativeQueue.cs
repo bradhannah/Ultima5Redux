@@ -96,11 +96,15 @@ namespace Ultima5Redux.Maps
         /// <summary>
         /// Calculates an initiative queue giving the order of all attacks or moves within a single round
         /// </summary>
-        internal void CalculateNextInitiativeQueue()
+        /// <returns>true if was able to calculate an initiative queue with minimum number of items, false
+        /// if it is not full (should be zero!)</returns>
+        internal bool CalculateNextInitiativeQueue()
         {
             while (true)
             {
                 Debug.Assert(_playerCharacterRecords != null);
+                int nStartingItems = GetNumberOfTurnsInQueue();
+
                 Queue<CombatMapUnit> newInitiativeQueue = new Queue<CombatMapUnit>();
                 _initiativeQueue.Enqueue(newInitiativeQueue);
 
@@ -160,11 +164,19 @@ namespace Ultima5Redux.Maps
                 // to continue population. We are assuming each turn results in at least a single additional turn
                 if (!IsAtLeastNTurnsInQueue(MIN_TURNS_IN_QUEUE))
                 {
+                    if (nStartingItems == GetNumberOfTurnsInQueue())
+                    {
+                        Debug.Assert(nStartingItems == 0);
+                        return false;
+                    }
+
                     continue;
                 }
 
                 break;
             }
+
+            return true;
         }
 
         internal List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
@@ -211,6 +223,17 @@ namespace Ultima5Redux.Maps
 
               return (nTally >= nMin);
           }
+
+        private int GetNumberOfTurnsInQueue()
+        {
+            int nTally = 0;
+            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
+            {
+                nTally += mapUnits.Count(CombatMapUnitIsPresent);
+            }
+
+            return nTally;
+        }
           
           /// <summary>
           /// Gets the active combat unit - either CombatPlayer or Enemy.
@@ -239,6 +262,8 @@ namespace Ultima5Redux.Maps
               // if the queue is empty then we will recalculate it before continuing
               if (_initiativeQueue.Count == 0) CalculateNextInitiativeQueue();
 
+              if (_initiativeQueue.Peek().Count == 0) return null;
+              
               Debug.Assert(_initiativeQueue.Count > 0);
               Debug.Assert(_initiativeQueue.Peek().Count > 0);
 
