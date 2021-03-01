@@ -49,6 +49,9 @@ namespace Ultima5Redux.MapUnits.Monsters
 
         public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
 
+        // temporary until I read them in dynamically (somehow!?)
+        public int Experience = 3; 
+
         public override string ToString()
         {
             return KeyTileReference.Name;
