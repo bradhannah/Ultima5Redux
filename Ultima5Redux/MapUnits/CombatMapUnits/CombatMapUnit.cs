@@ -2,6 +2,7 @@
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -23,6 +24,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public CombatMapUnit PreviousAttackTarget { get; private set; }
         
         public bool HasEscaped { get; set; } = false;
+
+        public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
         
         protected CombatMapUnit()
         {
@@ -63,7 +66,17 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 return HitState.Grazed;
             }
 
+            // we track extra stats
+            enemyCombatMapUnit.CombatStats.TotalDamageTaken += Math.Min(nAttack, enemyCombatMapUnit.Stats.CurrentHp);
+            CombatStats.TotalDamageGiven += Math.Min(nAttack, enemyCombatMapUnit.Stats.CurrentHp);
+
             enemyCombatMapUnit.Stats.CurrentHp -= nAttack;
+
+            if (enemyCombatMapUnit.Stats.CurrentHp <= 0)
+            {
+                CombatStats.TotalKills++;
+                CombatStats.AdditionalExperience += ((Enemy) enemyCombatMapUnit).Experience;
+            }
             
             return GetState(enemyCombatMapUnit, out stateOutput);
         }

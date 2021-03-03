@@ -24,7 +24,7 @@ namespace Ultima5Redux.Maps
         private readonly InventoryReferences _inventoryReferences;
         private readonly Inventory _inventory;
         private readonly DataOvlReference _dataOvlReference;
-
+        
         private InitiativeQueue _initiativeQueue; 
 
         public int Turn => _initiativeQueue.Turn;
@@ -60,6 +60,8 @@ namespace Ultima5Redux.Maps
 
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks }
 
+        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().ToList();
+        
         /// <summary>
         /// Attempts to processes the turn of the current combat unit - either CombatPlayer or Enemy.
         /// Can result in advancing to next turn, or indicate user input required
@@ -211,7 +213,7 @@ namespace Ultima5Redux.Maps
             
             // clear any previous combat map units
             CombatMapUnits.InitializeCombatMapReferences();
-            
+
             List<Point2D> playerStartPositions =
                 TheCombatMapReference.GetPlayerStartPositions(entryDirection);
             

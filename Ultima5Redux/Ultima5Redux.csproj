@@ -105,6 +105,7 @@
     <Compile Include="MapUnits\Avatar.cs" />
     <Compile Include="MapUnits\CombatMapUnits\CombatMapUnit.cs" />
     <Compile Include="MapUnits\CombatMapUnits\CombatPlayer.cs" />
+    <Compile Include="MapUnits\CombatMapUnits\PlayerCombatStats.cs" />
     <Compile Include="MapUnits\CombatMapUnits\EnemyReference.cs" />
     <Compile Include="MapUnits\CombatMapUnits\EnemyReferences.cs" />
     <Compile Include="MapUnits\Horse.cs" />
