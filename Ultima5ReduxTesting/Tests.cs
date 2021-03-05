@@ -947,6 +947,22 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.RecalculateVisibleTilesLargeMap();
         }
         
+        
+        
+        [Test] public void Test_LookupPrimaryAndSecondaryEnemyReferences()
+        {
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
+
+            EnemyReference enemyReference =
+                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448));
+            
+            world.State.TheVirtualMap.LoadCombatMap(
+                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, enemyReference );
+
+            EnemyReference secondEnemyReference = world.EnemyRefs.GetEnemyReference(enemyReference.FriendIndex);
+        }
+        
         [Test] public void Test_LoadCampFireCombatMap()
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");

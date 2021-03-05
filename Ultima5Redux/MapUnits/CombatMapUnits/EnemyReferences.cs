@@ -65,5 +65,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return AllEnemyReferences[nIndex];
         }
 
+        public EnemyReference GetFriendReference(EnemyReference enemyReference)
+        {
+            return AllEnemyReferences[enemyReference.FriendIndex];
+        }
+
     }
 }

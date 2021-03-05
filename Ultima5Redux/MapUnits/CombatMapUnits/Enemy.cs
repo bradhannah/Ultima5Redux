@@ -11,7 +11,7 @@ namespace Ultima5Redux.MapUnits.Monsters
     public class Enemy : CombatMapUnit
     {
         public EnemyReference EnemyReference { get; }
-
+        
         public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
         public override string Name => EnemyReference.MixedCaseSingularName;
 

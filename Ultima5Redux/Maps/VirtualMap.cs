@@ -23,6 +23,7 @@ namespace Ultima5Redux.Maps
         private readonly DataOvlReference _dataOvlReference;
         private readonly EnemyReferences _enemyReferences;
         private readonly Inventory _inventory;
+        private readonly CombatMapReferences _combatMapRefs;
 
         // ReSharper disable once NotAccessedField.Local
         private readonly InventoryReferences _inventoryReferences;
@@ -71,7 +72,7 @@ namespace Ultima5Redux.Maps
         private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
         
         //private Map.Maps PreMaps { get; set; }
-        
+
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
@@ -92,13 +93,14 @@ namespace Ultima5Redux.Maps
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="enemyReferences"></param>
         /// <param name="inventory"></param>
+        /// <param name="combatMapRefs"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
             Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
-            EnemyReferences enemyReferences, Inventory inventory)
+            EnemyReferences enemyReferences, Inventory inventory, CombatMapReferences combatMapRefs)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -115,6 +117,7 @@ namespace Ultima5Redux.Maps
             _dataOvlReference = dataOvlReference;
             _enemyReferences = enemyReferences;
             _inventory = inventory;
+            _combatMapRefs = combatMapRefs;
 
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
@@ -301,6 +304,32 @@ namespace Ultima5Redux.Maps
                         PreCombatMap?.GetType() ?? "NULL");
             }
         }
+
+        /// <summary>
+        /// Loads a combat map, but aut
+        /// </summary>
+        /// <param name="singleCombatMapReference"></param>
+        /// <param name="entryDirection"></param>
+        /// <param name="records"></param>
+        /// <param name="enemyReference"></param>
+        public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference enemyReference)
+        {
+            EnemyReference primaryEnemyReference;
+            int nPrimaryEnemies = 1;
+            EnemyReference secondaryEnemyReference;
+            int nSecondaryEnemies = 1;
+
+            primaryEnemyReference = enemyReference;
+            secondaryEnemyReference = _enemyReferences.GetFriendReference(primaryEnemyReference);
+            
+            LoadCombatMap(singleCombatMapReference, entryDirection, records,
+                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);
+            
+            return;
+        }
+        
         /// <summary>
         /// Loads a combat map as the current map
         /// Saves the previous map state, for post combat
@@ -326,7 +355,7 @@ namespace Ultima5Redux.Maps
                 PreMapUnitPosition.X = CurrentPosition.X;
                 PreMapUnitPosition.Y = CurrentPosition.Y;
             }
-
+            
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
 
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 
@@ -611,6 +640,12 @@ namespace Ultima5Redux.Maps
             }
 
             return null;
+        }
+        
+        public SingleCombatMapReference GetCombatMapReferenceByPosition(Point2D xy, SingleCombatMapReference.Territory territory)
+        {
+            TileReference tileReference = GetTileReference(xy);
+            return _combatMapRefs.GetSingleCombatMapReference(territory, (int)tileReference.CombatMapIndex);
         }
 
         public bool IsNPCInBed(NonPlayerCharacter npc)
