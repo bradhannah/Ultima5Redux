@@ -326,8 +326,6 @@ namespace Ultima5Redux.Maps
             
             LoadCombatMap(singleCombatMapReference, entryDirection, records,
                 primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);
-            
-            return;
         }
         
         /// <summary>

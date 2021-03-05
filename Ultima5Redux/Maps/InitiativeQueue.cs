@@ -186,7 +186,9 @@ namespace Ultima5Redux.Maps
 
             while (!IsAtLeastNTurnsInQueue(nUnits))
             {
-                CalculateNextInitiativeQueue();
+                // if we can't calculate any further initiatives then we break out
+                if (!CalculateNextInitiativeQueue())
+                    break;
             }
             
             foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
@@ -203,8 +205,11 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-            throw new Ultima5ReduxException("Tried to get " + nUnits + " CombatMapUnits, but only had " + nTally +
-                                            " in queues");
+            // we will return what we have which is likely zero
+            return combatMapUnits;
+
+            // throw new Ultima5ReduxException("Tried to get " + nUnits + " CombatMapUnits, but only had " + nTally +
+            //                                 " in queues");
         }
 
         private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit) =>
