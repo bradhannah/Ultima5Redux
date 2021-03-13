@@ -14,13 +14,16 @@ namespace Ultima5Redux.Maps
         
         private readonly MapUnits.MapUnits _combatMapUnits;
         private readonly PlayerCharacterRecords _playerCharacterRecords;
+
+        private PlayerCharacterRecord _activePlayerCharacterRecord = null;
+        
         public int Round { get; private set; }
 
         public int Turn { get; private set; }
 
         public int TurnsLeftsInRound => _initiativeQueue?.Peek()?.Count ?? 0;
 
-        public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue => combatMapUnitQueue.Where((CombatMapUnitIsPresent)).Count());
+        public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue => combatMapUnitQueue.Where((CombatMapUnitIsPresentAndActive)).Count());
         /// <summary>
         /// Queue that provides order attack for all players and enemies
         /// </summary>
@@ -46,6 +49,11 @@ namespace Ultima5Redux.Maps
             _combatMapUnits = combatMapUnits;
             _playerCharacterRecords = playerCharacterRecords;
             InitializeInitiativeQueue();
+        }
+
+        public void SetActivePlayerCharacter(PlayerCharacterRecord record)
+        {
+            _activePlayerCharacterRecord = record;
         }
         
         /// <summary>
@@ -195,8 +203,12 @@ namespace Ultima5Redux.Maps
             {
                 foreach (CombatMapUnit combatMapUnit in mapUnits)
                 {
-                    if (CombatMapUnitIsPresent(combatMapUnit))
+                    if (CombatMapUnitIsPresentAndActive(combatMapUnit))
                     {
+                        if (combatMapUnit is CombatPlayer player)
+                        {
+                            if (!CombatPlayerIsActive(player)) continue;
+                        }
                         combatMapUnits.Add(combatMapUnit);
                         nTally++;
                     }
@@ -212,16 +224,33 @@ namespace Ultima5Redux.Maps
             //                                 " in queues");
         }
 
-        private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit) =>
-            !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0;
+        private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit)
+        {
+            return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0;
+        }
+
+        private bool CombatMapUnitIsPresentAndActive(CombatMapUnit combatMapUnit)
+        {
+            if (combatMapUnit is CombatPlayer player)
+            {
+                return CombatPlayerIsActive(player) && CombatMapUnitIsPresent(combatMapUnit);
+            }
+
+            return CombatMapUnitIsPresent(combatMapUnit);
+        }
         
-        
+        private bool CombatPlayerIsActive(CombatPlayer player)
+        {
+            return _activePlayerCharacterRecord == null || player.Record == _activePlayerCharacterRecord;
+        }
+            
         private bool IsAtLeastNTurnsInQueue(int nMin)
           {
               int nTally = 0;
+              
               foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
               {
-                  nTally += mapUnits.Count(CombatMapUnitIsPresent);
+                  nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
                   // do a check inside the minimize the number of iterations once the minimum is met
                   if (nTally >= nMin) return true;
               }
@@ -234,7 +263,7 @@ namespace Ultima5Redux.Maps
             int nTally = 0;
             foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
             {
-                nTally += mapUnits.Count(CombatMapUnitIsPresent);
+                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
             }
 
             return nTally;
@@ -257,7 +286,7 @@ namespace Ultima5Redux.Maps
                   }
                   // we know that there is something in the queue at this point
                   
-                  if (CombatMapUnitIsPresent(_initiativeQueue.Peek().Peek()))//.Stats.CurrentHp > 0)
+                  if (CombatMapUnitIsPresentAndActive(_initiativeQueue.Peek().Peek()))
                       break;
                   // if the combat map unit is dead then we pop them off and move on
                   else

@@ -1037,7 +1037,7 @@ namespace Ultima5ReduxTesting
             do
             {
                 world.State.TheVirtualMap.CurrentCombatMap.NextCharacterEscape(out CombatPlayer combatPlayer);
-                CombatPlayer newCombatPlayer = world.State.TheVirtualMap.CurrentCombatMap.ActiveCombatPlayer;
+                CombatPlayer newCombatPlayer = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
                 
                 if (combatPlayer == null) break;
             } while (true);

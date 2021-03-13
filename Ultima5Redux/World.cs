@@ -752,7 +752,7 @@ namespace Ultima5Redux
         }
 
         public string TryToMoveCombatMap(Point2D.Direction direction, out TryToMoveResult tryToMoveResult,
-            bool bManualMovement = true) => TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.ActiveCombatPlayer,
+            bool bManualMovement = true) => TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer,
             direction, out tryToMoveResult, bManualMovement);
         
         public string TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction, out TryToMoveResult tryToMoveResult, 

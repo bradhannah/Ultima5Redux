@@ -42,9 +42,9 @@ namespace Ultima5Redux.Maps
         /// <summary>
         /// Current player or enemy who is active in current round
         /// </summary>
-        public PlayerCharacterRecord ActivePlayerCharacterRecord { get; private set; }
+        public PlayerCharacterRecord CurrentPlayerCharacterRecord { get; private set; }
 
-        public CombatPlayer ActiveCombatPlayer => _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
+        public CombatPlayer CurrentCombatPlayer => _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
 
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
         
@@ -106,11 +106,21 @@ namespace Ultima5Redux.Maps
             combatMapUnit.Stats.CurrentHp = 0;
         }
 
+        public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record)
+        {
+            foreach (CombatPlayer player in CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>())
+            {
+                if (player.Record == record) return player;
+            }
+
+            return null;
+        }
+
        public void AdvanceToNextCombatMapUnit()
         {
             CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
             
-            ActivePlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
+            CurrentPlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
         } 
         
         public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
@@ -134,6 +144,11 @@ namespace Ultima5Redux.Maps
             return -1;
         }
 
+        public void SetActivePlayerCharacter(PlayerCharacterRecord record)
+        {
+            _initiativeQueue.SetActivePlayerCharacter(record);
+        }
+        
         public Enemy GetFirstEnemy(CombatItem combatItem)
         {
             return GetNextEnemy(null, combatItem);
@@ -153,7 +168,7 @@ namespace Ultima5Redux.Maps
                 int nIndex = (i + nOffset + 1) % nMapUnits;
                 if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
                 
-                if (ActiveCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
+                if (CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
             }
             return null;
         }
