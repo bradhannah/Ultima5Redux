@@ -101,7 +101,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             // subtract the defense of unit being attacked
             nMaxDamage -= enemyCombatMapUnit.Defense;
             // choose 0-max damage as attack value
-            int nDamage = _random.Next() % nMaxDamage;
+            int nDamage = nMaxDamage <= 0 ? 0 : _random.Next() % nMaxDamage;
             // 99 is max damage no matter what
             nDamage = Math.Min(nDamage, 99);
             
