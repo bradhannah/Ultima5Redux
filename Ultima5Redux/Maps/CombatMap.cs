@@ -101,22 +101,12 @@ namespace Ultima5Redux.Maps
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
         }
 
-        public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
-        {
-            combatMapUnit.Stats.CurrentHp = 0;
-        }
+        public void KillCombatMapUnit(CombatMapUnit combatMapUnit) => combatMapUnit.Stats.CurrentHp = 0;
 
-        public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record)
-        {
-            foreach (CombatPlayer player in CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>())
-            {
-                if (player.Record == record) return player;
-            }
+        public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) => 
+            CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().FirstOrDefault(player => player.Record == record);
 
-            return null;
-        }
-
-       public void AdvanceToNextCombatMapUnit()
+        public void AdvanceToNextCombatMapUnit()
         {
             CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
             
@@ -144,16 +134,10 @@ namespace Ultima5Redux.Maps
             return -1;
         }
 
-        public void SetActivePlayerCharacter(PlayerCharacterRecord record)
-        {
-            _initiativeQueue.SetActivePlayerCharacter(record);
-        }
-        
-        public Enemy GetFirstEnemy(CombatItem combatItem)
-        {
-            return GetNextEnemy(null, combatItem);
-        }
-        
+        public void SetActivePlayerCharacter(PlayerCharacterRecord record) => _initiativeQueue.SetActivePlayerCharacter(record);
+
+        public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
+
         public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
         {
             int nOffset = GetCombatMapUnitIndex(currentEnemy);
