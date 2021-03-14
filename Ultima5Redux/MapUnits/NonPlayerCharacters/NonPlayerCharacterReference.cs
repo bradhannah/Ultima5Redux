@@ -173,6 +173,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         /// <summary>
+        /// Is the NPC dead?
+        /// </summary>
+        public bool IsDead
+        {
+            get => !_gameStateRef.NpcIsAlive(this);
+            set => _gameStateRef.SetNpcIsDead(this, value);
+        }
+
+        /// <summary>
         ///     Return true if the dialog is not part of a standard dialog tree like a guard or shopkeeper
         /// </summary>
         /// <param name="dialogType">The dialog type that yu want to compare</param>

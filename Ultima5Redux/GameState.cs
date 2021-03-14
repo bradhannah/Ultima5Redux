@@ -15,9 +15,9 @@ namespace Ultima5Redux
 {
     public class GameState
     {
-        ///     2D array of flag indicating if an NPC is dead [MasterMap][npc#]
+        ///     2D array of flag indicating if an NPC is dead [MasterMap][npcRef#]
         private readonly bool[][] _npcIsDeadArray;
-        ///     2D array of flag indicating if an NPC is met [MasterMap][npc#]
+        ///     2D array of flag indicating if an NPC is met [MasterMap][npcRef#]
         private readonly bool[][] _npcIsMetArray;
         ///     A random number generator - capable of seeding in future
         private readonly Random _ran = new Random();
@@ -184,43 +184,39 @@ namespace Ultima5Redux
         /// <summary>
         ///     Is NPC alive?
         /// </summary>
-        /// <param name="npc">NPC object</param>
+        /// <param name="npcRef">NPC object</param>
         /// <returns>true if NPC is alive</returns>
-        public bool NpcIsAlive(NonPlayerCharacterReference npc)
+        public bool NpcIsAlive(NonPlayerCharacterReference npcRef)
         {
             // the array isDead because LB stores 0=alive, 1=dead
             // I think it's easier to evaluate if they are alive
-            return _npcIsDeadArray[npc.MapLocationId][npc.DialogIndex] == false;
+            return _npcIsDeadArray[npcRef.MapLocationId][npcRef.DialogIndex] == false;
         }
 
-        /// <summary>
-        ///     Sets the flag to indicate the NPC is met
-        /// </summary>
-        /// <param name="npc"></param>
-        public void SetMetNpc(NonPlayerCharacterReference npc)
+        public void SetNpcIsDead(NonPlayerCharacterReference npcRef, bool bIsDead)
         {
-            _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = true;
+            _npcIsDeadArray[npcRef.MapLocationId][npcRef.DialogIndex] = bIsDead;
         }
 
 
         /// <summary>
         ///     Has the NPC met the avatar yet?
         /// </summary>
-        /// <param name="npc"></param>
+        /// <param name="npcRef"></param>
         /// <returns></returns>
-        public bool NpcHasMetAvatar(NonPlayerCharacterReference npc)
+        public bool NpcHasMetAvatar(NonPlayerCharacterReference npcRef)
         {
-            return _npcIsMetArray[npc.MapLocationId][npc.DialogIndex];
+            return _npcIsMetArray[npcRef.MapLocationId][npcRef.DialogIndex];
         }
 
         /// <summary>
         ///     Set a flag to determine if Avatar has met an NPC
         /// </summary>
-        /// <param name="npc"></param>
+        /// <param name="npcRef"></param>
         /// <param name="bHasMet"></param>
-        public void SetNpcHasMetAvatar(NonPlayerCharacterReference npc, bool bHasMet)
+        public void SetNpcHasMetAvatar(NonPlayerCharacterReference npcRef, bool bHasMet)
         {
-            _npcIsMetArray[npc.MapLocationId][npc.DialogIndex] = bHasMet;
+            _npcIsMetArray[npcRef.MapLocationId][npcRef.DialogIndex] = bHasMet;
         }
 
         /// <summary>

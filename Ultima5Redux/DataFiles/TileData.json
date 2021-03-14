@@ -3987,7 +3987,7 @@
       "IsGuessableFloor": false,
       "BlocksLight": false,
       "IsWindow": false,
-      "CombatMapIndex": "None"
+      "CombatMapIndex": "Brick"
    },
    "133": {
       "Name": "Manacles",

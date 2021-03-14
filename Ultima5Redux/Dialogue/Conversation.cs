@@ -484,7 +484,7 @@ namespace Ultima5Redux.Dialogue
                         if (string.Equals(avatarNameResponse, _gameStateRef.AvatarsName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             // i met them
-                            _gameStateRef.SetMetNpc(Npc);
+                            _gameStateRef.SetNpcHasMetAvatar(Npc, true);
                             EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                                 GetConversationStr(DataOvlReference.ChunkPhrasesConversation.PLEASURE)));
                         }

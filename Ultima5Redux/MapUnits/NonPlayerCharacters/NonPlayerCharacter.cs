@@ -112,14 +112,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     Moves the NPC to the appropriate floor and location based on the their expected location and position
         /// </summary>
-        private void MoveNpcToDefaultScheduledPosition(TimeOfDay tod)
+        private void MoveNpcToDefaultScheduledPosition(TimeOfDay timeOfDay)
         {
-            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod);
+            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
 
-            Move(npcXy, tod, false);
+            Move(npcXy, timeOfDay, false);
         }
 
         /// <summary>
@@ -130,6 +130,18 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
             MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
+            // a little hacky - if they are dead then we just place them at 0,0 which is understood to be the 
+            // location for NPCs that aren't present on the map
+            if (NPCRef.IsDead)
+            {
+                if (npcXy.X != 0 || npcXy.Y != 0)
+                {
+                    npcXy.X = 0;
+                    npcXy.Y = 0;
+                    Move(npcXy, timeOfDay, false);
+                }
+            }
+            
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
 
