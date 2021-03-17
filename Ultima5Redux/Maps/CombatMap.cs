@@ -138,6 +138,29 @@ namespace Ultima5Redux.Maps
 
         public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
 
+        public Enemy GetClosestEnemyInRange(CombatItem combatItem)
+        {
+            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
+
+            double dBestDistanceToAttack = 150f;
+            Enemy bestEnemy = null;
+            
+            for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
+            {
+                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
+                if (!CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) continue;
+                
+                double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(CurrentCombatPlayer.MapUnitPosition.XY);
+                if (dDistance < dBestDistanceToAttack)
+                {
+                    dBestDistanceToAttack = dDistance;
+                    bestEnemy = enemy;
+                }
+            }
+            
+            return bestEnemy;
+        }
+        
         public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
         {
             int nOffset = GetCombatMapUnitIndex(currentEnemy);
