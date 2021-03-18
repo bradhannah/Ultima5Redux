@@ -108,6 +108,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return nDamage;
         }
 
+        
+        public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
+            (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange 
+             && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
+
         HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {
             int nCriticalThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 2; /* (MaximumHp / 4) */

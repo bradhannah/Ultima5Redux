@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.Data;
@@ -27,6 +28,14 @@ namespace Ultima5Redux.Maps
         private readonly DataOvlReference _dataOvlReference;
         
         private InitiativeQueue _initiativeQueue; 
+
+        public override int NumOfXTiles => SingleCombatMapReference.XTILES;
+        public override int NumOfYTiles => SingleCombatMapReference.YTILES;
+
+        public override byte[][] TheMap {
+            get => TheCombatMapReference.TheMap;
+            protected set { }
+        }
 
         public int Turn => _initiativeQueue.Turn;
         public int Round => _initiativeQueue.Round;
@@ -64,6 +73,31 @@ namespace Ultima5Redux.Maps
         public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().ToList();
         
         /// <summary>
+        /// Creates CombatMap.
+        /// Note: Does not initialize the combat map units.
+        /// </summary>
+        /// <param name="virtualMap"></param>
+        /// <param name="singleCombatCombatMapReference"></param>
+        /// <param name="tileReferences"></param>
+        /// <param name="enemyReferences"></param>
+        /// <param name="inventoryReferences"></param>
+        /// <param name="inventory"></param>
+        /// <param name="dataOvlReference"></param>
+        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences, 
+            InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference) : 
+            base(null, null)
+        {
+            _virtualMap = virtualMap;
+            CombatMapUnits = _virtualMap.TheMapUnits;
+            _tileReferences = tileReferences;
+            TheCombatMapReference = singleCombatCombatMapReference;
+            _enemyReferences = enemyReferences;
+            _inventoryReferences = inventoryReferences;
+            _inventory = inventory;
+            _dataOvlReference = dataOvlReference;
+        }
+        
+        /// <summary>
         /// Attempts to processes the turn of the current combat unit - either CombatPlayer or Enemy.
         /// Can result in advancing to next turn, or indicate user input required
         /// </summary>
@@ -85,6 +119,20 @@ namespace Ultima5Redux.Maps
             Debug.Assert(affectedCombatMapUnit is Enemy);
             Enemy enemy = (Enemy) affectedCombatMapUnit;
 
+            // do they already have a previous target that is in range? They like to beat on the same opponent till
+            // they are dead
+            if (enemy.PreviousAttackTarget.IsAttackable && enemy.CanReachForAttack(enemy.PreviousAttackTarget))
+            {
+                //enemy.Attack(enemy.PreviousAttackTarget, )
+                outputStr = "";
+                return TurnResult.EnemyAttacks;
+            }
+            
+            // if enemy is within range of someone, 
+            //  then attack
+            // else
+            //  move closer OR pass turn
+            
             outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
             
             AdvanceToNextCombatMapUnit();
@@ -187,39 +235,8 @@ namespace Ultima5Redux.Maps
             _initiativeQueue.InitializeInitiativeQueue();
         }
 
-        /// <summary>
-        /// Creates CombatMap.
-        /// Note: Does not initialize the combat map units.
-        /// </summary>
-        /// <param name="virtualMap"></param>
-        /// <param name="singleCombatCombatMapReference"></param>
-        /// <param name="tileReferences"></param>
-        /// <param name="enemyReferences"></param>
-        /// <param name="inventoryReferences"></param>
-        /// <param name="inventory"></param>
-        /// <param name="dataOvlReference"></param>
-        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences, 
-            InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference) : 
-            base(null, null)
-        {
-            _virtualMap = virtualMap;
-            CombatMapUnits = _virtualMap.TheMapUnits;
-            _tileReferences = tileReferences;
-            TheCombatMapReference = singleCombatCombatMapReference;
-            _enemyReferences = enemyReferences;
-            _inventoryReferences = inventoryReferences;
-            _inventory = inventory;
-            _dataOvlReference = dataOvlReference;
-        }
 
-        public override int NumOfXTiles => SingleCombatMapReference.XTILES;
-        public override int NumOfYTiles => SingleCombatMapReference.YTILES;
 
-        public override byte[][] TheMap {
-            get => TheCombatMapReference.TheMap;
-            protected set { }
-        }
-        
         protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
         {
             return 1.0f;

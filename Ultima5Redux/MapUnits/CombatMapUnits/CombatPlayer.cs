@@ -28,6 +28,12 @@ namespace Ultima5Redux.MapUnits
 
         public override int Dexterity => (byte) Record.Stats.Dexterity;
 
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;
+        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
+        public override string BoardXitName => "GET OFF ME YOU BRUTE!";
+        public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
+
         public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy, DataOvlReference dataOvlReference,
             Inventory inventory)
         {
@@ -46,12 +52,6 @@ namespace Ultima5Redux.MapUnits
         {
             
         }
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
-        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
-        public override string BoardXitName => "GET OFF ME YOU BRUTE!";
-        public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
 
         public override string ToString()
         {
@@ -118,9 +118,8 @@ namespace Ultima5Redux.MapUnits
             return weapons;
         }
 
-        public bool CanReachForAttack(Enemy enemy, CombatItem item) =>
-             (Math.Abs(enemy.MapUnitPosition.X - MapUnitPosition.X) <= item.Range 
-                && Math.Abs(enemy.MapUnitPosition.Y - MapUnitPosition.Y) <= item.Range);
+        public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
+            CanReachForAttack(opponentCombatMapUnit, item.Range);
 
     }
 }

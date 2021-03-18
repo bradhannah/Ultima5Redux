@@ -348,7 +348,7 @@ namespace Ultima5Redux.Maps
                  primaryEnemyReference, 1, null, 0,
                  npcRef);
         }
-        
+
         /// <summary>
         /// Loads a combat map as the current map
         /// Saves the previous map state, for post combat
@@ -360,6 +360,7 @@ namespace Ultima5Redux.Maps
         /// <param name="nPrimaryEnemies"></param>
         /// <param name="secondaryEnemyReference"></param>
         /// <param name="nSecondaryEnemies"></param>
+        /// <param name="npcRef"></param>
         private void LoadCombatMap(SingleCombatMapReference singleCombatMapReference, 
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference, int nPrimaryEnemies, 
@@ -416,7 +417,7 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     Loads a large map -either overworld or underworld
+        /// Loads a large map -either overworld or underworld
         /// </summary>
         /// <param name="map"></param>
         public void LoadLargeMap(Map.Maps map)

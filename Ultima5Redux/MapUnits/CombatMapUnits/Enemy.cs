@@ -44,7 +44,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;
         public override bool IsActive => true;
 
-        public override bool IsAttackable => true;
+        public override bool IsAttackable => Stats.CurrentHp > 0;
         public override string FriendlyName => Name;
 
         public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
@@ -58,5 +58,10 @@ namespace Ultima5Redux.MapUnits.Monsters
         }
 
         public sealed override CharacterStats Stats { get; } = new CharacterStats();
+
+        public bool CanReachForAttack(CombatMapUnit combatMapUnit)
+        {
+            return CanReachForAttack(combatMapUnit, EnemyReference.AttackRange);
+        }
     }
 }
