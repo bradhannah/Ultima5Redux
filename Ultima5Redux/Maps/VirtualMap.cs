@@ -321,6 +321,8 @@ namespace Ultima5Redux.Maps
             EnemyReference secondaryEnemyReference;
             int nSecondaryEnemies = 1;
 
+            if (enemyReference.IsNpc) nSecondaryEnemies = 0;
+            
             primaryEnemyReference = enemyReference;
             secondaryEnemyReference = _enemyReferences.GetFriendReference(primaryEnemyReference);
             

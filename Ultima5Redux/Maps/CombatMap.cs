@@ -316,6 +316,13 @@ namespace Ultima5Redux.Maps
                 return;
             }
 
+            // if there is only a single enemy then we always give them first position (such as NPC fights)
+            if (nPrimaryEnemies == 1 && nSecondaryEnemies == 0)
+            {
+                CreateEnemy(0, singleCombatMapReference, primaryEnemyReference);
+                return;
+            }
+
             // for regular combat maps, we introduce some randomness 
             Queue<int> monsterIndex = Utils.CreateRandomizedIntegerQueue(SingleCombatMapReference.NUM_ENEMIES);
             

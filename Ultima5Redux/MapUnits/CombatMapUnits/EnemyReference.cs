@@ -27,6 +27,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private const int N_RAW_BYTES = 2;
 
+        public bool IsNpc => KeyTileReference.IsNPC;
+        
         public TileReference KeyTileReference { get; }
 
         public DefaultEnemyStats TheDefaultEnemyStats { get; }
