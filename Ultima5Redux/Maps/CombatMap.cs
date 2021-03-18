@@ -7,6 +7,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.Monsters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -258,7 +259,7 @@ namespace Ultima5Redux.Maps
         /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
-            EnemyReference enemyReference)
+            EnemyReference enemyReference, NonPlayerCharacterReference npcRef)
         {
              SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
@@ -274,12 +275,12 @@ namespace Ultima5Redux.Maps
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
                     CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        _enemyReferences.GetEnemyReference(nEnemySprite), out int _);
+                        _enemyReferences.GetEnemyReference(nEnemySprite), out int _, npcRef);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(nEnemyPosition.X == 0 && nEnemyPosition.Y == 0));
                     CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        enemyReference, out int _);
+                        enemyReference, out int _, npcRef);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -297,11 +298,12 @@ namespace Ultima5Redux.Maps
         /// <param name="secondaryEnemyReference"></param>
         /// <param name="nSecondaryEnemies"></param>
         /// <param name="avatarRecord"></param>
+        /// <param name="npcRef"></param>
         internal void CreateEnemies( SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection,
             EnemyReference primaryEnemyReference, int nPrimaryEnemies, 
             EnemyReference secondaryEnemyReference, int nSecondaryEnemies,
-            PlayerCharacterRecord avatarRecord)
+            PlayerCharacterRecord avatarRecord, NonPlayerCharacterReference npcRef)
         {
             int nEnemyIndex = 0;
 
@@ -310,16 +312,18 @@ namespace Ultima5Redux.Maps
             {
                 for (nEnemyIndex = 0; nEnemyIndex < SingleCombatMapReference.NUM_ENEMIES; nEnemyIndex++)
                 {
-                    CreateEnemy(nEnemyIndex, singleCombatMapReference, null);
+                    CreateEnemy(nEnemyIndex, singleCombatMapReference, primaryEnemyReference, npcRef);
                 }
 
                 return;
             }
+            
+            if (npcRef != null) Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0 );
 
             // if there is only a single enemy then we always give them first position (such as NPC fights)
             if (nPrimaryEnemies == 1 && nSecondaryEnemies == 0)
             {
-                CreateEnemy(0, singleCombatMapReference, primaryEnemyReference);
+                CreateEnemy(0, singleCombatMapReference, primaryEnemyReference, npcRef);
                 return;
             }
 
@@ -328,11 +332,11 @@ namespace Ultima5Redux.Maps
             
             for (int nIndex = 0; nIndex < nPrimaryEnemies; nIndex++, nEnemyIndex++)
             {
-                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, primaryEnemyReference);
+                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, primaryEnemyReference, null);
             }
             for (int nIndex = 0; nIndex < nSecondaryEnemies; nIndex++, nEnemyIndex++)
             {
-                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference);
+                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference, null);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Ultima5Redux.Data;
@@ -329,6 +330,24 @@ namespace Ultima5Redux.Maps
             LoadCombatMap(singleCombatMapReference, entryDirection, records,
                 primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);
         }
+
+        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0,
+            EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
+        {
+            LoadCombatMap(singleCombatMapReference, entryDirection, records,
+                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies, null);
+        }
+
+        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
+        {
+            LoadCombatMap(singleCombatMapReference, entryDirection, records,
+                 primaryEnemyReference, 1, null, 0,
+                 npcRef);
+        }
         
         /// <summary>
         /// Loads a combat map as the current map
@@ -341,11 +360,14 @@ namespace Ultima5Redux.Maps
         /// <param name="nPrimaryEnemies"></param>
         /// <param name="secondaryEnemyReference"></param>
         /// <param name="nSecondaryEnemies"></param>
-        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference, 
+        private void LoadCombatMap(SingleCombatMapReference singleCombatMapReference, 
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0, 
-            EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
+            EnemyReference primaryEnemyReference, int nPrimaryEnemies, 
+            EnemyReference secondaryEnemyReference, int nSecondaryEnemies,
+            NonPlayerCharacterReference npcRef)
         {
+            if (npcRef != null) Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0, "when assigning an NPC, you must have single enemy");
+            
             // if the PreCombatMap is not set OR the existing map is not already a combat map then
             // we set the PreCombatMap so we know which map to return to
             if (PreCombatMap == null || !(CurrentMap is CombatMap))
@@ -369,8 +391,8 @@ namespace Ultima5Redux.Maps
             CurrentCombatMap.CreateEnemies(singleCombatMapReference, entryDirection, 
                 primaryEnemyReference, nPrimaryEnemies,
                 secondaryEnemyReference, nSecondaryEnemies, 
-                records.AvatarRecord);
-
+                records.AvatarRecord, npcRef);
+            
             CurrentCombatMap.InitializeInitiativeQueue();
         }
         

@@ -674,7 +674,7 @@ namespace Ultima5Redux.MapUnits
             return nIndex;
         }
 
-        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex)
+        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex, NonPlayerCharacterReference npcRef)
         {
             Debug.Assert(_currentMapType == Map.Maps.Combat);
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
@@ -685,6 +685,7 @@ namespace Ultima5Redux.MapUnits
             Enemy enemy = new Enemy(mapUnitState, Movements.GetMovement(nIndex), _tileReferences, enemyReference,
                 _currentLocation, _dataOvlReference);
             enemy.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+            enemy.NPCRef = npcRef;
             nIndex = AddCombatMapUnit(enemy);
             
             return enemy;

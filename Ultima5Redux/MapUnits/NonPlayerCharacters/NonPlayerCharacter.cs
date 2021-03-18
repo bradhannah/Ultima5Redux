@@ -69,6 +69,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // if they are in our party then we don't include them in the map 
                 if (IsInParty) return false;
 
+                if (NPCRef.IsDead) return false;
+
                 // if they are in 0,0 then I am certain they are not real
                 if (MapUnitPosition.X == 0 && MapUnitPosition.Y == 0) return false;
 

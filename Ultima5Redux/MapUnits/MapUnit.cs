@@ -168,7 +168,7 @@ namespace Ultima5Redux.MapUnits
         ///     Reference to current NPC (if it's an NPC at all!)
         /// </summary>
         // ReSharper disable once MemberCanBeProtected.Global
-        public NonPlayerCharacterReference NPCRef { get; }
+        public NonPlayerCharacterReference NPCRef { get; set; }
 
         public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
 
