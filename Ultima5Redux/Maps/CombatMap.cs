@@ -117,26 +117,35 @@ namespace Ultima5Redux.Maps
 
             // either move the enemy or have them attack someone
             Debug.Assert(affectedCombatMapUnit is Enemy);
-            Enemy enemy = (Enemy) affectedCombatMapUnit;
+            Enemy enemy = affectedCombatMapUnit as Enemy;
 
             // do they already have a previous target that is in range? They like to beat on the same opponent till
             // they are dead
-            if (enemy.PreviousAttackTarget.IsAttackable && enemy.CanReachForAttack(enemy.PreviousAttackTarget))
+            bool bIsAttackable = enemy.PreviousAttackTarget?.IsAttackable ?? false;
+            bool bIsReachable = enemy.PreviousAttackTarget != null && enemy.CanReachForAttack(enemy.PreviousAttackTarget);
+            if (bIsAttackable && bIsReachable)
             {
-                //enemy.Attack(enemy.PreviousAttackTarget, )
-                outputStr = "";
+                outputStr = "BAM, attacking the thing I attacked before!";
                 return TurnResult.EnemyAttacks;
             }
-            
+
             // if enemy is within range of someone, 
-            //  then attack
-            // else
-            //  move closer OR pass turn
+            CombatPlayer bestCombatPlayer = GetClosestCombatPlayerInRange(enemy);
             
-            outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
+            // there is no one in range - so we best be moving!
+            if (bestCombatPlayer == null)
+            {
+                outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
             
+                AdvanceToNextCombatMapUnit();
+                return TurnResult.EnemyMoved;
+            }
+            
+            outputStr = "Boom, attacking a new thing!";
+
             AdvanceToNextCombatMapUnit();
-            return TurnResult.EnemyMoved;
+            return TurnResult.EnemyAttacks;
+           
         }
         
         /// <summary>
@@ -187,6 +196,28 @@ namespace Ultima5Redux.Maps
 
         public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
 
+        private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)
+        {
+            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
+
+            double dBestDistanceToAttack = 150f;
+            CombatPlayer bestCombatPlayer = null;
+            
+            for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
+            {
+                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is CombatPlayer combatPlayer)) continue;
+                if (!enemy.CanReachForAttack(combatPlayer, enemy.EnemyReference.AttackRange)) continue;
+                
+                double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(combatPlayer.MapUnitPosition.XY);
+                if (!(dDistance < dBestDistanceToAttack)) continue;
+
+                dBestDistanceToAttack = dDistance;
+                bestCombatPlayer = combatPlayer;
+            }
+            
+            return bestCombatPlayer;
+        }
+        
         public Enemy GetClosestEnemyInRange(CombatItem combatItem)
         {
             int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
@@ -200,11 +231,10 @@ namespace Ultima5Redux.Maps
                 if (!CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) continue;
                 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(CurrentCombatPlayer.MapUnitPosition.XY);
-                if (dDistance < dBestDistanceToAttack)
-                {
-                    dBestDistanceToAttack = dDistance;
-                    bestEnemy = enemy;
-                }
+                if (!(dDistance < dBestDistanceToAttack)) continue;
+
+                dBestDistanceToAttack = dDistance;
+                bestEnemy = enemy;
             }
             
             return bestEnemy;
