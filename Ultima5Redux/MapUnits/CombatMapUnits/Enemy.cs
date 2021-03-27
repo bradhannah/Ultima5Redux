@@ -13,7 +13,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         public EnemyReference EnemyReference { get; }
         
         public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
-        public override string Name => EnemyReference.MixedCaseSingularName;
+        public override string Name => EnemyReference.MixedCaseSingularName.Trim();
 
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,  
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
@@ -48,6 +48,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override string FriendlyName => Name;
 
         public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
+        public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
 
         // temporary until I read them in dynamically (somehow!?)
         public int Experience = 3; 

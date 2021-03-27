@@ -20,6 +20,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract string Name { get; }
         
         public abstract int Dexterity { get; }
+
+        public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
         
         public CombatMapUnit PreviousAttackTarget { get; private set; }
         
@@ -44,24 +46,24 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
         
         public enum HitState { Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead }
-        
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput)
+
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput)
         {
             bool bIsHit = IsHit(enemyCombatMapUnit);
 
             PreviousAttackTarget = enemyCombatMapUnit;
 
-            int nAttack = GetAttackDamage(enemyCombatMapUnit, weapon);
+            int nAttack = GetAttackDamage(enemyCombatMapUnit, nAttackMax);
             if (!bIsHit)
             {
-                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd().Replace("!"," ")
-                    + enemyCombatMapUnit.Name + "!";
+                stateOutput = FriendlyName + DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd().Replace("!"," ")
+                              + enemyCombatMapUnit.Name + "!";
                 return HitState.Missed;
             }
 
             if (nAttack == 0)
             {
-                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd().Replace("!"," ")
+                stateOutput = FriendlyName + DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd().Replace("!"," ")
                               + enemyCombatMapUnit.Name + "!";
                 return HitState.Grazed;
             }
@@ -81,6 +83,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return GetState(enemyCombatMapUnit, out stateOutput);
         }
 
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput)
+        {
+            return Attack(enemyCombatMapUnit, weapon.AttackStat, out stateOutput);
+        }
+
         private bool IsHit(CombatMapUnit enemyCombatMapUnit)
         {
             return (enemyCombatMapUnit.Stats.Dexterity + 128) >= (_random.Next() % 256);
@@ -90,12 +97,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         //     return (hit_offset + 128) >= xu4_random(0x100) ? true : false;
         // }
 
-        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
+        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, int nMaxDamage)
         {
-            const int BareHandAttack = 3;
-
             // start with the weapons attack value
-            int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
+            //int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
             // add the characters strength
             nMaxDamage += Stats.Strength;
             // subtract the defense of unit being attacked
@@ -107,44 +112,62 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             
             return nDamage;
         }
+        
+        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
+        {
+            const int BareHandAttack = 3;
+
+            int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
+
+            return GetAttackDamage(enemyCombatMapUnit, nMaxDamage);
+        }
 
         
         public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange 
              && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
+        public bool MoveToClosestAttackableCombatMapUnit(CombatMapUnit combatMapUnit)
+        {
+            bool bCharmed = Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
+
+            return true;
+        }
+        
         HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {
             int nCriticalThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
             int nHeavyThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
             int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
+            stateOutput = enemyCombatMapUnit.FriendlyName;
+            
             //BattleStrings
             if (enemyCombatMapUnit.Stats.CurrentHp <= 0)
             {
-                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._KILLED_BANG_N);
+                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._KILLED_BANG_N);
                 return HitState.Dead;
             }
             if (enemyCombatMapUnit.Stats.CurrentHp < 24)
             {
-                stateOutput = " fleeing!";
+                stateOutput += " fleeing!";
                 return HitState.Fleeing;
             }
             if (enemyCombatMapUnit.Stats.CurrentHp < nCriticalThreshold)
             {
-                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
+                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
                 return HitState.CriticallyWounded;
             }
             if (enemyCombatMapUnit.Stats.CurrentHp < nHeavyThreshold)
             {
-                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings.HEAVILY_WOUNDED_BANG_N);
+                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings.HEAVILY_WOUNDED_BANG_N);
                 return HitState.HeavilyWounded;
             }
             if (enemyCombatMapUnit.Stats.CurrentHp < nLightThreshold)
             {
-                stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._LIGHTLY_WOUNDED_BANG_N);
+                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._LIGHTLY_WOUNDED_BANG_N);
                 return HitState.LightlyWounded;
             }
-            stateOutput = DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._BARELY_WOUNDED_BANG_N);
+            stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._BARELY_WOUNDED_BANG_N);
             return HitState.BarelyWounded;
         }
 

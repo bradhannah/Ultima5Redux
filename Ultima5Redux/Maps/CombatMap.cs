@@ -115,36 +115,35 @@ namespace Ultima5Redux.Maps
                 return TurnResult.RequireCharacterInput;
             }
 
-            // either move the enemy or have them attack someone
+            // Everything after is ENEMY logic!
+            // either move the ENEMY or have them attack someone
             Debug.Assert(affectedCombatMapUnit is Enemy);
             Enemy enemy = affectedCombatMapUnit as Enemy;
 
-            // do they already have a previous target that is in range? They like to beat on the same opponent till
-            // they are dead
-            bool bIsAttackable = enemy.PreviousAttackTarget?.IsAttackable ?? false;
-            bool bIsReachable = enemy.PreviousAttackTarget != null && enemy.CanReachForAttack(enemy.PreviousAttackTarget);
+            // if enemy is within range of someone, 
+            CombatMapUnit bestCombatPlayer = enemy?.PreviousAttackTarget ?? GetClosestCombatPlayerInRange(enemy);
+            
+            // we determine if the best combat player is close enough to attack or not
+            bool bIsAttackable = bestCombatPlayer?.IsAttackable ?? false;
+            bool bIsReachable = bestCombatPlayer != null && enemy.CanReachForAttack(bestCombatPlayer);
+            
+            Debug.Assert(bestCombatPlayer?.IsAttackable ?? true);
+            
             if (bIsAttackable && bIsReachable)
             {
-                outputStr = "BAM, attacking the thing I attacked before!";
+                enemy.Attack(bestCombatPlayer, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
+                    out outputStr);
+                AdvanceToNextCombatMapUnit();
                 return TurnResult.EnemyAttacks;
             }
 
-            // if enemy is within range of someone, 
-            CombatPlayer bestCombatPlayer = GetClosestCombatPlayerInRange(enemy);
+            outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
             
-            // there is no one in range - so we best be moving!
-            if (bestCombatPlayer == null)
-            {
-                outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
+            enemy.MoveToClosestAttackableCombatMapUnit(enemy);
             
-                AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyMoved;
-            }
-            
-            outputStr = "Boom, attacking a new thing!";
-
             AdvanceToNextCombatMapUnit();
-            return TurnResult.EnemyAttacks;
+            return TurnResult.EnemyMoved;
+            
            
         }
         
