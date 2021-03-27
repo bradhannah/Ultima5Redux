@@ -47,6 +47,10 @@ namespace Ultima5Redux.Maps
 
         public bool InEscapeMode { get; set; } = false;
 
+        protected override bool IsRepeatingMap => false;
+        
+        public override bool ShowOuterSmallMapTiles => false;
+
         // player character information
 
         /// <summary>
@@ -85,7 +89,7 @@ namespace Ultima5Redux.Maps
         /// <param name="dataOvlReference"></param>
         public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences, 
             InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference) : 
-            base(null, null)
+            base(null, null, tileReferences)
         {
             _virtualMap = virtualMap;
             CombatMapUnits = _virtualMap.TheMapUnits;
@@ -143,8 +147,6 @@ namespace Ultima5Redux.Maps
             
             AdvanceToNextCombatMapUnit();
             return TurnResult.EnemyMoved;
-            
-           
         }
         
         /// <summary>
@@ -266,7 +268,7 @@ namespace Ultima5Redux.Maps
 
 
 
-        protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
+        protected override float GetAStarWeight(Point2D xy)
         {
             return 1.0f;
         }

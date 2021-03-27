@@ -932,10 +932,10 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_ForceVisibleRecalculationInBucDen()
         {
             World world = new World(this.ActualSaveDirectory+@"\bucden1");
-            
-            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            Point2D startSpot = new Point2D(159, 20);
+            world.EnterBuilding(startSpot, out bool bWasSuccessful);
 
-            world.State.TheVirtualMap.RecalculateVisibleTiles();
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
             _ = "";
         }
         
@@ -944,7 +944,7 @@ namespace Ultima5ReduxTesting
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
             world.State.TheVirtualMap.MoveAvatar(new Point2D(128, 0));
-            world.State.TheVirtualMap.RecalculateVisibleTilesLargeMap();
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
         }
         
         

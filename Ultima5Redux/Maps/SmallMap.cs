@@ -19,7 +19,11 @@ namespace Ultima5Redux.Maps
         public override int NumOfXTiles => XTILES;
         public override int NumOfYTiles => YTILES;
 
+        public override bool ShowOuterSmallMapTiles => true;
+
         private readonly SmallMapReferences.SingleMapReference _singleSmallMapReference;
+
+        protected override bool IsRepeatingMap => false;
 
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
@@ -29,14 +33,15 @@ namespace Ultima5Redux.Maps
         /// <param name="spriteTileReferences"></param>
         /// <param name="tileOverrides"></param>
         public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference singleSmallMapReference,
-            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides, singleSmallMapReference)
+            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides, singleSmallMapReference,
+            spriteTileReferences)
         {
             _singleSmallMapReference = singleSmallMapReference;
 
             // load the map into memory
             TheMap = LoadSmallMapFile(Path.Combine(u5Directory, singleSmallMapReference.MapFilename), singleSmallMapReference.FileOffset);
             
-            InitializeAStarMap(spriteTileReferences);
+            InitializeAStarMap();
         }
 
         public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
@@ -61,17 +66,16 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
         /// </summary>
-        /// <param name="spriteTileReferences"></param>
         /// <param name="xy"></param>
         /// <returns></returns>
-        protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
+        protected override float GetAStarWeight(Point2D xy)
         {
-            bool isPreferredIndex(int nSprite) => nSprite == spriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
-                                                  spriteTileReferences.IsPath(nSprite);
+            bool isPreferredIndex(int nSprite) => nSprite == SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
+                                                  SpriteTileReferences.IsPath(nSprite);
 
             const int fDefaultDeduction = 2;
             
-            TileReference unused = spriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+            TileReference unused = SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
 
             float fCost = 10;
 
@@ -83,7 +87,6 @@ namespace Ultima5Redux.Maps
 
             return fCost;
         }
-        
- 
+
     }
 }

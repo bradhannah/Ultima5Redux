@@ -52,13 +52,13 @@ namespace Ultima5Redux
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
 
+            SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
+
             // build the overworld map
-            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld, _tileOverrides);
+            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld, _tileOverrides, SpriteTileReferences);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld, _tileOverrides);
-
-            SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
+            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld, _tileOverrides, SpriteTileReferences);
 
             InvRef = new InventoryReferences();
 

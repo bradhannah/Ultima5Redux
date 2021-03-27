@@ -25,6 +25,13 @@ namespace Ultima5Redux.Maps
 
         public override int NumOfXTiles => XTILES;
         public override int NumOfYTiles => YTILES;
+        
+        private Point2D _topLeftExtent;
+        private Point2D _bottomRightExtent;
+        
+        protected override bool IsRepeatingMap => true;
+
+        public override bool ShowOuterSmallMapTiles => false;
 
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
@@ -32,8 +39,9 @@ namespace Ultima5Redux.Maps
         /// <param name="u5Directory"></param>
         /// <param name="mapChoice"></param>
         /// <param name="tileOverrides"></param>
-        public LargeMap(string u5Directory, Maps mapChoice, TileOverrides tileOverrides) : base(tileOverrides,
-            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
+        /// <param name="tileReferences"></param>
+        public LargeMap(string u5Directory, Maps mapChoice, TileOverrides tileOverrides, TileReferences tileReferences) : base(tileOverrides,
+            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice), tileReferences)
         {
             switch (mapChoice)
             {
@@ -122,10 +130,46 @@ namespace Ultima5Redux.Maps
 
             return theMap;
         }
+        
+        public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
+        {
+            NVisibleLargeMapTiles = _nVisibleInEachDirectionOfAvatar * 2 + 1;
 
-        protected override float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy)
+            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            TestForVisibility = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            TouchedOuterBorder = false;
+            
+            AvatarXyPos = initialFloodFillPosition;
+            
+            _topLeftExtent = new Point2D(AvatarXyPos.X - _nVisibleInEachDirectionOfAvatar, AvatarXyPos.Y - _nVisibleInEachDirectionOfAvatar);
+            _bottomRightExtent = new Point2D(AvatarXyPos.X + _nVisibleInEachDirectionOfAvatar, AvatarXyPos.Y + _nVisibleInEachDirectionOfAvatar);
+            
+            FloodFillMap(AvatarXyPos, true);
+        }
+
+        protected override float GetAStarWeight(Point2D xy)
         {
             return 1;
+        }
+
+        /// <summary>
+        /// Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
+        /// current extends
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        protected override Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
+        {
+            int nPositiveX = xy.X + NumOfXTiles;
+            int nPositiveY = xy.Y + NumOfYTiles;
+            
+            if (nPositiveX <= _topLeftExtent.X + NumOfXTiles || xy.X >= _bottomRightExtent.X)
+                return null;
+            if (nPositiveY <= _topLeftExtent.Y + NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
+                return null;
+
+            return xy.GetAdjustedPosition(direction);
         }
         
    }

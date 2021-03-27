@@ -24,16 +24,18 @@ namespace Ultima5Redux.Maps
         public abstract int NumOfXTiles { get; }
         public abstract int NumOfYTiles { get; }
 
-        
         // ReSharper disable once NotAccessedField.Global
         // ReSharper disable once MemberCanBePrivate.Global
         protected TileOverrides TileOverrides;
+        protected readonly TileReferences SpriteTileReferences;
 
         private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
 
-        protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference)
+        protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference, 
+            TileReferences spriteTileReferences)
         {
             TileOverrides = tileOverrides;
+            SpriteTileReferences = spriteTileReferences;
             CurrentSingleMapReference = singleSmallMapReference;
 
             // for now combat maps don't have overrides
@@ -47,17 +49,128 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
         /// </summary>
-        /// <param name="spriteTileReferences"></param>
         /// <param name="xy"></param>
         /// <returns></returns>
-        protected abstract float GetAStarWeight(TileReferences spriteTileReferences, Point2D xy);
+        protected abstract float GetAStarWeight(Point2D xy);
 
+        public abstract bool ShowOuterSmallMapTiles { get; }
         
+        #region FLOOD FILL
+        // FLOOD FILL STUFF
+        public bool[][] VisibleOnMap { get; protected set; }
+        protected bool[][] TestForVisibility;
+        protected int _nVisibleInEachDirectionOfAvatar = 10;
+        protected int NVisibleLargeMapTiles;
+        protected Point2D AvatarXyPos;
+        protected bool TouchedOuterBorder = false;
+        protected abstract bool IsRepeatingMap { get; }
+
+        /// <summary>
+        /// Attempts to set the visible tile flag 
+        /// </summary>
+        /// <param name="visibleTilePos"></param>
+        /// <returns>true if the coordinate is out of bounds</returns>
+        private bool SetVisibleTile(Point2D visibleTilePos)
+        {
+            if (visibleTilePos == null) return true;
+            if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1)) 
+                VisibleOnMap[visibleTilePos.X][visibleTilePos.Y] = true;
+            return false;
+        }
+        
+        private void SetSurroundingTilesVisible(Point2D xy, bool bIncludeDiagonal)
+        {
+            SetVisibleTile(new Point2D(xy.X - 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            SetVisibleTile(new Point2D(xy.X + 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            SetVisibleTile(new Point2D(xy.X, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            SetVisibleTile(new Point2D(xy.X, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            if (!bIncludeDiagonal) return;
+            SetVisibleTile(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            SetVisibleTile(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+        }
+        
+          /// <summary>
+        /// Recursive method for determining which tiles are visible and which are hidden based on the Avatar's
+        /// current position
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bFirst">is this the initial call to the method?</param>    
+          protected void FloodFillMap(Point2D xy, bool bFirst = false)
+        {
+            if (xy == null)
+            {
+                TouchedOuterBorder = true;
+                return; // out of bounds
+            }
+
+            Point2D adjustedXy = xy.Copy();
+
+            // let's check to make sure it is within bounds
+            if (IsRepeatingMap)
+                adjustedXy.AdjustXAndYToMax(NumOfXTiles);
+
+            if (TestForVisibility[adjustedXy.X][adjustedXy.Y]) return; // already did it
+            TestForVisibility[adjustedXy.X][adjustedXy.Y] = true;
+            
+            // if it blocks light then we make it visible but do not make subsequent tiles visible
+            TileReference tileReference = SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
+            //GetTileReference(adjustedXy);
+            bool bBlocksLight = tileReference.BlocksLight && !bFirst && 
+                                !(tileReference.IsWindow && 
+                                  AvatarXyPos.IsWithinNFourDirections(adjustedXy));
+
+            // if we are on a tile that doesn't block light then we automatically see things in every direction
+            if (!bBlocksLight)
+            {
+                SetSurroundingTilesVisible(adjustedXy, true);
+            }
+
+            // if we are this far then we are certain that we will make this tile visible
+            TouchedOuterBorder |= SetVisibleTile(xy);
+
+            // if the tile blocks the light then we don't calculate the surrounding tiles
+            if (bBlocksLight) return;
+
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Up, xy));
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Down, xy));
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Left, xy));
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Right, xy));
+
+            if (!bFirst) return;
+
+            // if it is the first call (avatar tile) then we always check the diagonals as well 
+            FloodFillMap(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            FloodFillMap(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            FloodFillMap(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            FloodFillMap(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+        }
+          
+          protected virtual Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
+          {
+              return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
+          }
+
+          
+        public virtual void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
+        {
+            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            TestForVisibility = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);;
+            TouchedOuterBorder = false;
+            AvatarXyPos = initialFloodFillPosition;
+            
+            FloodFillMap(initialFloodFillPosition, true);
+        }
+
+      
+        
+        #endregion
+
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
-        /// <param name="spriteTileReferences"></param>
-        protected void InitializeAStarMap(TileReferences spriteTileReferences)
+        protected void InitializeAStarMap()
         {
             Debug.Assert(TheMap != null);
             Debug.Assert(TheMap.Length > 0);
@@ -71,19 +184,19 @@ namespace Ultima5Redux.Maps
             {
                 for (int y = 0; y < nYTiles; y++)
                 {
-                    TileReference currentTile = spriteTileReferences.GetTileReference(TheMap[x][y]);
+                    TileReference currentTile = SpriteTileReferences.GetTileReference(TheMap[x][y]);
 
                     bool bIsWalkable =
                         currentTile.IsWalking_Passable || currentTile.Index ==
-                                                       spriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                                       || currentTile.Index == spriteTileReferences
+                                                       SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
+                                                       || currentTile.Index == SpriteTileReferences
                                                            .GetTileReferenceByName("RegularDoorView").Index
-                                                       || currentTile.Index == spriteTileReferences
+                                                       || currentTile.Index == SpriteTileReferences
                                                            .GetTileReferenceByName("LockedDoor").Index
-                                                       || currentTile.Index == spriteTileReferences
+                                                       || currentTile.Index == SpriteTileReferences
                                                            .GetTileReferenceByName("LockedDoorView").Index;
 
-                    float fWeight = GetAStarWeight(spriteTileReferences, new Point2D(x, y));
+                    float fWeight = GetAStarWeight(new Point2D(x, y));
 
                     Node node = new Node(new Vector2(x, y), bIsWalkable, fWeight);
                     _aStarNodes[x].Add(node);
