@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -28,6 +30,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool HasEscaped { get; set; } = false;
 
         public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
+
+        public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
         
         protected CombatMapUnit()
         {
@@ -127,12 +131,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange 
              && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
-        public bool MoveToClosestAttackableCombatMapUnit(CombatMapUnit combatMapUnit)
-        {
-            bool bCharmed = Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
-
-            return true;
-        }
+      
         
         HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {

@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using Ultima5Redux.Data;
+using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.Monsters;
@@ -99,6 +101,8 @@ namespace Ultima5Redux.Maps
             _inventoryReferences = inventoryReferences;
             _inventory = inventory;
             _dataOvlReference = dataOvlReference;
+
+            InitializeAStarMap();
         }
         
         /// <summary>
@@ -124,7 +128,16 @@ namespace Ultima5Redux.Maps
             Debug.Assert(affectedCombatMapUnit is Enemy);
             Enemy enemy = affectedCombatMapUnit as Enemy;
 
-            // if enemy is within range of someone, 
+            // if the enemy is charmed then the player get's to control them instead!
+            if (enemy.IsCharmed)
+            {
+                // the player get's to control the enemy!
+                outputStr = enemy.FriendlyName + ":";  
+           
+                return TurnResult.RequireCharacterInput;
+            }
+
+            // if enemy is within range of someone then they will have a bestCombatPlayer to attack 
             CombatMapUnit bestCombatPlayer = enemy?.PreviousAttackTarget ?? GetClosestCombatPlayerInRange(enemy);
             
             // we determine if the best combat player is close enough to attack or not
@@ -133,6 +146,7 @@ namespace Ultima5Redux.Maps
             
             Debug.Assert(bestCombatPlayer?.IsAttackable ?? true);
             
+            // if the best combat player is attackable and reachable, then we do just that!
             if (bIsAttackable && bIsReachable)
             {
                 enemy.Attack(bestCombatPlayer, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
@@ -141,9 +155,10 @@ namespace Ultima5Redux.Maps
                 return TurnResult.EnemyAttacks;
             }
 
+            // we have exhausted all potential attacking possibilities, so instead we will just move 
             outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
             
-            enemy.MoveToClosestAttackableCombatMapUnit(enemy);
+            MoveToClosestAttackableCombatMapUnit(enemy);
             
             AdvanceToNextCombatMapUnit();
             return TurnResult.EnemyMoved;
@@ -197,6 +212,47 @@ namespace Ultima5Redux.Maps
 
         public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
 
+        // private CombatMapUnit GetClosestAppropriateCombatMapUnit(CombatMapUnit attackingCombatMapUnit)
+        // {
+        //     int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
+        //
+        //     double dBestDistanceToAttack = 150f;
+        //     CombatPlayer bestCombatPlayer = null;
+        //
+        //     bool bIsCharmed = attackingCombatMapUnit.IsCharmed;
+        //     
+        //     for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
+        //     {
+        //         if (bIsCharmed)
+        //         {
+        //             // do them all
+        //         } else if (attackingCombatMapUnit is Enemy)
+        //         {
+        //             // attack only combat players
+        //         } else if (attackingCombatMapUnit is CombatPlayer combatPlayer)
+        //         {
+        //             // attack only enemies
+        //             if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
+        //             
+        //             if (!attackingCombatMapUnit.CanReachForAttack(enemy, combatPlayer.ref)) continue;
+        //         
+        //             double dDistance = attackingCombatMapUnit.MapUnitPosition.XY.DistanceBetween(combatPlayer.MapUnitPosition.XY);
+        //             if (!(dDistance < dBestDistanceToAttack)) continue;
+        //
+        //             dBestDistanceToAttack = dDistance;
+        //             bestCombatPlayer = combatPlayer;
+        //         }
+        //
+        //         throw new Ultima5ReduxException("Asked to get closest combat unit with type: " +
+        //                                         attackingCombatMapUnit.GetType());
+        //         
+        //         
+        //
+        //     }
+        //     
+        //     return bestCombatPlayer;
+        // }
+        
         private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)
         {
             int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
@@ -299,6 +355,45 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        /// <summary>
+        /// Moves the combat map unit to the CombatPlayer for whom they can reach in the fewest number of steps
+        /// </summary>
+        /// <param name="combatMapUnit">the combat map unit that wants to attack a combat player</param>
+        /// <returns>The combat player that they are heading towards</returns>
+        public CombatPlayer MoveToClosestAttackableCombatMapUnit(CombatMapUnit combatMapUnit)
+        {
+            bool bCharmed = combatMapUnit.IsCharmed;
+            Vector2 combatMapUnitVector =
+                new Vector2(combatMapUnit.MapUnitPosition.XY.X, combatMapUnit.MapUnitPosition.XY.Y);
+            int nMinMoves = -1;
+            Stack<Node> preferredRoute = null;
+            CombatPlayer preferredAttackVictim = null;
+            
+            foreach (CombatPlayer combatPlayer in AllCombatPlayers)
+            {
+                Stack<Node> theWay = AStar.FindPath(combatMapUnitVector ,
+                    new Vector2(combatPlayer.MapUnitPosition.XY.X, combatPlayer.MapUnitPosition.XY.Y));
+                int nMoves = theWay.Count;
+                if (nMinMoves == -1 || nMoves < nMinMoves)
+                {
+                    nMinMoves = nMoves;
+                    preferredRoute = theWay;
+                    preferredAttackVictim = combatPlayer;
+                }
+            }
+
+            if (nMinMoves == -1 || preferredRoute == null)
+            {
+                return null;
+            }
+
+            Vector2 nextVector = preferredRoute.Pop().Position;
+            
+            MoveActiveCombatMapUnit(new Point2D((int)nextVector.X, (int)nextVector.Y));
+            
+            return preferredAttackVictim;
+        }
+        
         /// <summary>
         /// Creates a single enemy in the context of the combat map.
         /// </summary>
