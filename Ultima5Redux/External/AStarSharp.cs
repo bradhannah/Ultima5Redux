@@ -10,7 +10,7 @@ namespace Ultima5Redux.External
         // Change this depending on what the desired size is for each element in the grid
         internal const int NODE_SIZE = 1;
 
-        public readonly bool Walkable; //{ get; set; }
+        public bool Walkable { get; set; }
         public readonly float Weight;
         public float Cost;
 

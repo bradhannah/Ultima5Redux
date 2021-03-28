@@ -186,15 +186,7 @@ namespace Ultima5Redux.Maps
                 {
                     TileReference currentTile = SpriteTileReferences.GetTileReference(TheMap[x][y]);
 
-                    bool bIsWalkable =
-                        currentTile.IsWalking_Passable || currentTile.Index ==
-                                                       SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                                       || currentTile.Index == SpriteTileReferences
-                                                           .GetTileReferenceByName("RegularDoorView").Index
-                                                       || currentTile.Index == SpriteTileReferences
-                                                           .GetTileReferenceByName("LockedDoor").Index
-                                                       || currentTile.Index == SpriteTileReferences
-                                                           .GetTileReferenceByName("LockedDoorView").Index;
+                    bool bIsWalkable = IsTileWalkable(currentTile);
 
                     float fWeight = GetAStarWeight(new Point2D(x, y));
 
@@ -204,6 +196,37 @@ namespace Ultima5Redux.Maps
             }
 
             AStar = new AStar(_aStarNodes);
+        }
+
+        protected void RecalculateWalkableTile(Point2D xy)
+        {
+            SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy)));
+        }
+
+        public void SetWalkableTile(Point2D xy, bool bWalkable)
+        {
+            Debug.Assert(xy.X < _aStarNodes.Count && xy.Y < _aStarNodes[0].Count);
+            _aStarNodes[xy.X][xy.Y].Walkable = bWalkable;
+        }
+
+        protected virtual bool IsTileWalkable(TileReference currentTile)
+        {
+            bool bIsWalkable =
+                currentTile.IsWalking_Passable || currentTile.Index ==
+                                               SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
+                                               || currentTile.Index == SpriteTileReferences
+                                                   .GetTileReferenceByName("RegularDoorView").Index
+                                               || currentTile.Index == SpriteTileReferences
+                                                   .GetTileReferenceByName("LockedDoor").Index
+                                               || currentTile.Index == SpriteTileReferences
+                                                   .GetTileReferenceByName("LockedDoorView").Index;
+
+            return bIsWalkable;
+        }
+
+        protected TileReference GetTileReference(Point2D xy)
+        {
+            return SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
         }
 
         public bool IsXYOverride(Point2D xy)

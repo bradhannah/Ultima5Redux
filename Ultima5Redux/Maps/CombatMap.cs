@@ -155,27 +155,44 @@ namespace Ultima5Redux.Maps
                 return TurnResult.EnemyAttacks;
             }
 
-            // we have exhausted all potential attacking possibilities, so instead we will just move 
-            outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
-            
-            MoveToClosestAttackableCombatMapUnit(enemy);
-            
+            CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatMapUnit(enemy);
+
+            if (pursuedCombatMapUnit != null)
+            {
+                // we have exhausted all potential attacking possibilities, so instead we will just move 
+                outputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
+            }
+            else
+            {
+                outputStr = enemy.EnemyReference.MixedCaseSingularName + " is unable to move or attack.";
+            }
+
             AdvanceToNextCombatMapUnit();
             return TurnResult.EnemyMoved;
         }
         
         /// <summary>
         /// Moves the active combat unit to a new map location
-        /// No additional logic is computed.
         /// </summary>
         /// <param name="xy"></param>
         public void MoveActiveCombatMapUnit(Point2D xy)
         {
             CombatMapUnit currentCombatUnit = _initiativeQueue.GetCurrentCombatUnit();
+            
+            // reset the a star walking rules
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY);
+            
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+
+            // this tile is no longer allowed to be walked upon
+            SetWalkableTile(xy, false);
         }
 
-        public void KillCombatMapUnit(CombatMapUnit combatMapUnit) => combatMapUnit.Stats.CurrentHp = 0;
+        public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
+        {
+            combatMapUnit.Stats.CurrentHp = 0;   
+            RecalculateVisibleTiles(combatMapUnit.MapUnitPosition.XY);
+        }
 
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) => 
             CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().FirstOrDefault(player => player.Record == record);
@@ -371,9 +388,10 @@ namespace Ultima5Redux.Maps
             
             foreach (CombatPlayer combatPlayer in AllCombatPlayers)
             {
+                // get the shortest path to the unit
                 Stack<Node> theWay = AStar.FindPath(combatMapUnitVector ,
                     new Vector2(combatPlayer.MapUnitPosition.XY.X, combatPlayer.MapUnitPosition.XY.Y));
-                int nMoves = theWay.Count;
+                int nMoves = theWay?.Count ?? -1;
                 if (nMinMoves == -1 || nMoves < nMinMoves)
                 {
                     nMinMoves = nMoves;
