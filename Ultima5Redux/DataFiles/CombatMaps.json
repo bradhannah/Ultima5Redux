@@ -1,0 +1,518 @@
+﻿{
+  "Britannia": [
+    {
+      "Index": 0,
+      "Description": "Camp Fire"
+    },
+    {
+      "Index": 1,
+      "Description": "Swamp"
+    },
+    {
+      "Index": 2,
+      "Description": "Glade"
+    },
+    {
+      "Index": 3,
+      "Description": "Treed"
+    },
+    {
+      "Index": 4,
+      "Description": "Desert"
+    },
+    {
+      "Index": 5,
+      "Description": "Clean Tree"
+    },
+    {
+      "Index": 6,
+      "Description": "Mountains"
+    },
+    {
+      "Index": 7,
+      "Description": "Big Bridge"
+    },
+    {
+      "Index": 8,
+      "Description": "Brick"
+    },
+    {
+      "Index": 9,
+      "Description": "Basement"
+    },
+    {
+      "Index": 10,
+      "Description": "Psychedelic"
+    },
+    {
+      "Index": 11,
+      "Description": "Boat - Ocean"
+    },
+    {
+      "Index": 12,
+      "Description": "Boat - North"
+    },
+    {
+      "Index": 13,
+      "Description": "Boat - South"
+    },
+    {
+      "Index": 14,
+      "Description": "Boat-Boat"
+    },
+    {
+      "Index": 15,
+      "Description": "Bay"
+    }
+  ],
+  "Dungeon": [
+    {
+      "Index": 0,
+      "Description": "Klimb Down"
+    },
+    {
+      "Index": 1,
+      "Description": "Four Way with Gremlins"
+    },
+    {
+      "Index": 2,
+      "Description": "Magic Barriers"
+    },
+    {
+      "Index": 3,
+      "Description": "Four Ways to Nowhere"
+    },
+    {
+      "Index": 4,
+      "Description": "Right Sided Hammer"
+    },
+    {
+      "Index": 5,
+      "Description": "Double Portcullis"
+    },
+    {
+      "Index": 6,
+      "Description": "Stone Gargoyles"
+    },
+    {
+      "Index": 7,
+      "Description": "Surrounded Exit Right"
+    },
+    {
+      "Index": 8,
+      "Description": "Rats Surprise!"
+    },
+    {
+      "Index": 9,
+      "Description": "Deaths Magic Door"
+    },
+    {
+      "Index": 10,
+      "Description": "Underground Lake"
+    },
+    {
+      "Index": 11,
+      "Description": "Daemon Bottom Right"
+    },
+    {
+      "Index": 12,
+      "Description": "Daemon Bottom Left"
+    },
+    {
+      "Index": 13,
+      "Description": "Daemon Top Right"
+    },
+    {
+      "Index": 14,
+      "Description": "Daemon Top Left"
+    },
+    {
+      "Index": 15,
+      "Description": "Triggered"
+    },
+    {
+      "Index": 16,
+      "Description": "DUNGEON-16"
+    },
+    {
+      "Index": 17,
+      "Description": "DUNGEON-17"
+    },
+    {
+      "Index": 18,
+      "Description": "DUNGEON-18"
+    },
+    {
+      "Index": 19,
+      "Description": "DUNGEON-19"
+    },
+    {
+      "Index": 20,
+      "Description": "DUNGEON-20"
+    },
+    {
+      "Index": 21,
+      "Description": "DUNGEON-21"
+    },
+    {
+      "Index": 22,
+      "Description": "DUNGEON-22"
+    },
+    {
+      "Index": 23,
+      "Description": "DUNGEON-23"
+    },
+    {
+      "Index": 24,
+      "Description": "DUNGEON-24"
+    },
+    {
+      "Index": 25,
+      "Description": "DUNGEON-25"
+    },
+    {
+      "Index": 26,
+      "Description": "DUNGEON-26"
+    },
+    {
+      "Index": 27,
+      "Description": "DUNGEON-27"
+    },
+    {
+      "Index": 28,
+      "Description": "DUNGEON-28"
+    },
+    {
+      "Index": 29,
+      "Description": "DUNGEON-29"
+    },
+    {
+      "Index": 30,
+      "Description": "DUNGEON-30"
+    },
+    {
+      "Index": 31,
+      "Description": "DUNGEON-31"
+    },
+    {
+      "Index": 32,
+      "Description": "DUNGEON-32"
+    },
+    {
+      "Index": 33,
+      "Description": "DUNGEON-33"
+    },
+    {
+      "Index": 34,
+      "Description": "DUNGEON-34"
+    },
+    {
+      "Index": 35,
+      "Description": "DUNGEON-35"
+    },
+    {
+      "Index": 36,
+      "Description": "DUNGEON-36"
+    },
+    {
+      "Index": 37,
+      "Description": "DUNGEON-37"
+    },
+    {
+      "Index": 38,
+      "Description": "DUNGEON-38"
+    },
+    {
+      "Index": 39,
+      "Description": "DUNGEON-39"
+    },
+    {
+      "Index": 40,
+      "Description": "DUNGEON-40"
+    },
+    {
+      "Index": 41,
+      "Description": "DUNGEON-41"
+    },
+    {
+      "Index": 42,
+      "Description": "DUNGEON-42"
+    },
+    {
+      "Index": 43,
+      "Description": "DUNGEON-43"
+    },
+    {
+      "Index": 44,
+      "Description": "DUNGEON-44"
+    },
+    {
+      "Index": 45,
+      "Description": "DUNGEON-45"
+    },
+    {
+      "Index": 46,
+      "Description": "DUNGEON-46"
+    },
+    {
+      "Index": 47,
+      "Description": "DUNGEON-47"
+    },
+    {
+      "Index": 48,
+      "Description": "DUNGEON-48"
+    },
+    {
+      "Index": 49,
+      "Description": "DUNGEON-49"
+    },
+    {
+      "Index": 50,
+      "Description": "DUNGEON-50"
+    },
+    {
+      "Index": 51,
+      "Description": "DUNGEON-51"
+    },
+    {
+      "Index": 52,
+      "Description": "DUNGEON-52"
+    },
+    {
+      "Index": 53,
+      "Description": "DUNGEON-53"
+    },
+    {
+      "Index": 54,
+      "Description": "DUNGEON-54"
+    },
+    {
+      "Index": 55,
+      "Description": "DUNGEON-55"
+    },
+    {
+      "Index": 56,
+      "Description": "DUNGEON-56"
+    },
+    {
+      "Index": 57,
+      "Description": "DUNGEON-57"
+    },
+    {
+      "Index": 58,
+      "Description": "DUNGEON-58"
+    },
+    {
+      "Index": 59,
+      "Description": "DUNGEON-59"
+    },
+    {
+      "Index": 60,
+      "Description": "DUNGEON-60"
+    },
+    {
+      "Index": 61,
+      "Description": "DUNGEON-61"
+    },
+    {
+      "Index": 62,
+      "Description": "DUNGEON-62"
+    },
+    {
+      "Index": 63,
+      "Description": "DUNGEON-63"
+    },
+    {
+      "Index": 64,
+      "Description": "DUNGEON-64"
+    },
+    {
+      "Index": 65,
+      "Description": "DUNGEON-65"
+    },
+    {
+      "Index": 66,
+      "Description": "DUNGEON-66"
+    },
+    {
+      "Index": 67,
+      "Description": "DUNGEON-67"
+    },
+    {
+      "Index": 68,
+      "Description": "DUNGEON-68"
+    },
+    {
+      "Index": 69,
+      "Description": "DUNGEON-69"
+    },
+    {
+      "Index": 70,
+      "Description": "DUNGEON-70"
+    },
+    {
+      "Index": 71,
+      "Description": "DUNGEON-71"
+    },
+    {
+      "Index": 72,
+      "Description": "DUNGEON-72"
+    },
+    {
+      "Index": 73,
+      "Description": "DUNGEON-73"
+    },
+    {
+      "Index": 74,
+      "Description": "DUNGEON-74"
+    },
+    {
+      "Index": 75,
+      "Description": "DUNGEON-75"
+    },
+    {
+      "Index": 76,
+      "Description": "DUNGEON-76"
+    },
+    {
+      "Index": 77,
+      "Description": "DUNGEON-77"
+    },
+    {
+      "Index": 78,
+      "Description": "DUNGEON-78"
+    },
+    {
+      "Index": 79,
+      "Description": "DUNGEON-79"
+    },
+    {
+      "Index": 80,
+      "Description": "DUNGEON-80"
+    },
+    {
+      "Index": 81,
+      "Description": "DUNGEON-81"
+    },
+    {
+      "Index": 82,
+      "Description": "DUNGEON-82"
+    },
+    {
+      "Index": 83,
+      "Description": "DUNGEON-83"
+    },
+    {
+      "Index": 84,
+      "Description": "DUNGEON-84"
+    },
+    {
+      "Index": 85,
+      "Description": "DUNGEON-85"
+    },
+    {
+      "Index": 86,
+      "Description": "DUNGEON-86"
+    },
+    {
+      "Index": 87,
+      "Description": "DUNGEON-87"
+    },
+    {
+      "Index": 88,
+      "Description": "DUNGEON-88"
+    },
+    {
+      "Index": 89,
+      "Description": "DUNGEON-89"
+    },
+    {
+      "Index": 90,
+      "Description": "DUNGEON-90"
+    },
+    {
+      "Index": 91,
+      "Description": "DUNGEON-91"
+    },
+    {
+      "Index": 92,
+      "Description": "DUNGEON-92"
+    },
+    {
+      "Index": 93,
+      "Description": "DUNGEON-93"
+    },
+    {
+      "Index": 94,
+      "Description": "DUNGEON-94"
+    },
+    {
+      "Index": 95,
+      "Description": "DUNGEON-95"
+    },
+    {
+      "Index": 96,
+      "Description": "DUNGEON-96"
+    },
+    {
+      "Index": 97,
+      "Description": "DUNGEON-97"
+    },
+    {
+      "Index": 98,
+      "Description": "DUNGEON-98"
+    },
+    {
+      "Index": 99,
+      "Description": "DUNGEON-99"
+    },
+    {
+      "Index": 100,
+      "Description": "DUNGEON-100"
+    },
+    {
+      "Index": 101,
+      "Description": "DUNGEON-101"
+    },
+    {
+      "Index": 102,
+      "Description": "DUNGEON-102"
+    },
+    {
+      "Index": 103,
+      "Description": "DUNGEON-103"
+    },
+    {
+      "Index": 104,
+      "Description": "DUNGEON-104"
+    },
+    {
+      "Index": 105,
+      "Description": "DUNGEON-105"
+    },
+    {
+      "Index": 106,
+      "Description": "DUNGEON-106"
+    },
+    {
+      "Index": 107,
+      "Description": "DUNGEON-107"
+    },
+    {
+      "Index": 108,
+      "Description": "DUNGEON-108"
+    },
+    {
+      "Index": 109,
+      "Description": "DUNGEON-109"
+    },
+    {
+      "Index": 110,
+      "Description": "DUNGEON-110"
+    },
+    {
+      "Index": 111,
+      "Description": "DUNGEON-111"
+    }
+  ]
+}

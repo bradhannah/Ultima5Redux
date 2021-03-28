@@ -62,6 +62,47 @@ namespace Ultima5Redux.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///  &quot;Britannia&quot;: [
+        ///    {
+        ///      &quot;Index&quot;: 0,
+        ///      &quot;Description&quot;: &quot;Camp Fire&quot;
+        ///    },
+        ///    {
+        ///      &quot;Index&quot;: 1,
+        ///      &quot;Description&quot;: &quot;Swamp&quot;
+        ///    },
+        ///    {
+        ///      &quot;Index&quot;: 2,
+        ///      &quot;Description&quot;: &quot;Glade&quot;
+        ///    },
+        ///    {
+        ///      &quot;Index&quot;: 3,
+        ///      &quot;Description&quot;: &quot;Treed&quot;
+        ///    },
+        ///    {
+        ///      &quot;Index&quot;: 4,
+        ///      &quot;Description&quot;: &quot;Desert&quot;
+        ///    },
+        ///    {
+        ///      &quot;Index&quot;: 5,
+        ///      &quot;Description&quot;: &quot;Clean Tree&quot;
+        ///    },
+        ///    {
+        ///      &quot;Index&quot;: 6,
+        ///      &quot;Description&quot;: &quot;Mountains&quot;
+        ///    },
+        ///    {
+        ///      &quot;Index&quot;: 7,
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string CombatMaps {
+            get {
+                return ResourceManager.GetString("CombatMaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;Reagent&quot;: [
         ///      {
         ///         &quot;ItemName&quot;: &quot;SulfurAsh&quot;,
@@ -85,40 +126,31 @@ namespace Ultima5Redux.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;0&quot;: {
-        ///    &quot;_location&quot;: &quot;Britain&quot;
+        ///    &quot;Location&quot;: &quot;Britain&quot;,
+        ///    &quot;ShoppeKeeperType&quot;: &quot;Blacksmith&quot;
         ///  },
         ///  &quot;1&quot;: {
-        ///    &quot;_location&quot;: &quot;Jhelom&quot;
+        ///    &quot;Location&quot;: &quot;Jhelom&quot;,
+        ///    &quot;ShoppeKeeperType&quot;: &quot;Blacksmith&quot;
         ///  },
         ///  &quot;2&quot;: {
-        ///    &quot;_location&quot;: &quot;Yew&quot;
+        ///    &quot;Location&quot;: &quot;Yew&quot;,
+        ///    &quot;ShoppeKeeperType&quot;: &quot;Blacksmith&quot;
         ///  },
         ///  &quot;3&quot;: {
-        ///    &quot;_location&quot;: &quot;Minoc&quot;
+        ///    &quot;Location&quot;: &quot;Minoc&quot;,
+        ///    &quot;ShoppeKeeperType&quot;: &quot;Blacksmith&quot;
         ///  },
         ///  &quot;4&quot;: {
-        ///    &quot;_location&quot;: &quot;Trinsic&quot;
+        ///    &quot;Location&quot;: &quot;Trinsic&quot;,
+        ///    &quot;ShoppeKeeperType&quot;: &quot;Blacksmith&quot;
         ///  },
         ///  &quot;5&quot;: {
-        ///    &quot;_location&quot;: &quot;Lord_Britishs_Castle&quot;
+        ///    &quot;Location&quot;: &quot;Lord_Britishs_Castle&quot;,
+        ///    &quot;ShoppeKeeperType&quot;: &quot;Blacksmith&quot;
         ///  },
         ///  &quot;6&quot;: {
-        ///    &quot;_location&quot;: &quot;Buccaneers_Den&quot;
-        ///  },
-        ///  &quot;7&quot;: {
-        ///    &quot;_location&quot;: &quot;Bordermarch&quot;
-        ///  },
-        ///  &quot;8&quot;: {
-        ///    &quot;_location&quot;: &quot;Buccaneers_Den&quot;
-        ///  },
-        ///  &quot;9&quot;: {
-        ///    &quot;_location&quot;: &quot;Moonglow&quot;
-        ///  },
-        ///  &quot;10&quot;: {
-        ///    &quot;_location&quot;: &quot;Britain&quot;
-        ///  },
-        ///  &quot;11&quot;: {
-        /// [rest of string was truncated]&quot;;.
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ShoppeKeeperMap {
             get {
@@ -135,17 +167,16 @@ namespace Ultima5Redux.Properties {
         ///      &quot;IsBoat_Passable&quot;: true,
         ///      &quot;IsSkiff_Passable&quot;: true,
         ///      &quot;IsCarpet_Passable&quot;: true,
+        ///      &quot;IsHorse_Passable&quot;: true,
         ///      &quot;IsKlimable&quot;: false,
         ///      &quot;IsOpenable&quot;: false,
+        ///      &quot;IsLandEnemyPassable&quot;: false,
+        ///      &quot;IsWaterEnemyPassable&quot;: false,
         ///      &quot;SpeedFactor&quot;: 1,
         ///      &quot;IsPartOfAnimation&quot;: false,
         ///      &quot;AnimationIndex&quot;: 0,
         ///      &quot;IsUpright&quot;: true,
-        ///      &quot;FlatTileSubstitionIndex&quot;: 5,
-        ///      &quot;FlatTileSubstitionName&quot;: &quot;Grass&quot;,
-        ///      &quot;IsEnemy&quot;: false,
-        ///      &quot;IsNPC&quot;: false,
-        ///      &quot;IsBuil [rest of string was truncated]&quot;;.
+        ///      &quot;FlatTileSubstitutionIndex [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TileData {
             get {

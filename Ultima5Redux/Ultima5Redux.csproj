@@ -251,6 +251,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DataFiles\CombatMaps.csv" />
+    <EmbeddedResource Include="DataFiles\CombatMaps.json" />
     <Content Include="DataFiles\Credits.txt" />
     <EmbeddedResource Include="DataFiles\InventoryDetails.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

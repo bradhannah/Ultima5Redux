@@ -8,6 +8,7 @@ namespace Ultima5Redux.Maps
 {
     public class SingleCombatMapReference
     {
+        private readonly CombatMapReferences.CombatMapData _combatMapData;
         // private readonly List<List<Point2D>> _characterXyPositions;
 
         /// <summary>
@@ -39,25 +40,25 @@ namespace Ultima5Redux.Maps
         public enum EntryDirection {East = 0, West = 1, North = 2, South = 3 }
         
         /// Descriptions of each combat map
-        private static readonly string[] BritanniaDescriptions =
-        {
-            "Camp Fire", //0 
-            "Swamp", //1
-            "Glade", //2
-            "Treed", //3
-            "Desert", //4
-            "Clean Tree", //5 
-            "Mountains",  //6
-            "Big Bridge", //7
-            "Brick", //8
-            "Basement", //9
-            "Psychedelic",  //10
-            "Boat - Ocean", //11
-            "Boat - North", //12
-            "Boat - South", //13
-            "Boat-Boat",  //14
-            "Bay" //15
-        };
+        // private static readonly string[] BritanniaDescriptions =
+        // {
+        //     "Camp Fire", //0 
+        //     "Swamp", //1
+        //     "Glade", //2
+        //     "Treed", //3
+        //     "Desert", //4
+        //     "Clean Tree", //5 
+        //     "Mountains",  //6
+        //     "Big Bridge", //7
+        //     "Brick", //8
+        //     "Basement", //9
+        //     "Psychedelic",  //10
+        //     "Boat - Ocean", //11
+        //     "Boat - North", //12
+        //     "Boat - South", //13
+        //     "Boat-Boat",  //14
+        //     "Bay" //15
+        // };
         
         public enum BritanniaCombatMaps 
         {
@@ -66,13 +67,13 @@ namespace Ultima5Redux.Maps
             BoatBoat = 14, Bay = 15
         };
         
-        private static readonly string[] DungeonDescriptions =
-        {
-            "Klimb Down", "Four Way with Gremlins", "Magic Barriers", "Four Ways to Nowhere", "Right Sided Hammer", 
-            "Double Portcullis", "Stone Gargoyles", "Surrounded Exit Right", "Rats Surprise!",
-            "Deaths Magic Door", "Underground Lake", "Daemon Bottom Right", "Daemon Bottom Left", "Daemon Top Right", 
-            "Daemon Top Left", "Triggered"
-        };
+        // private static readonly string[] DungeonDescriptions =
+        // {
+        //     "Klimb Down", "Four Way with Gremlins", "Magic Barriers", "Four Ways to Nowhere", "Right Sided Hammer", 
+        //     "Double Portcullis", "Stone Gargoyles", "Surrounded Exit Right", "Rats Surprise!",
+        //     "Deaths Magic Door", "Underground Lake", "Daemon Bottom Right", "Daemon Bottom Left", "Daemon Top Right", 
+        //     "Daemon Top Left", "Triggered"
+        // };
 
         /// <summary>
         ///     Create the reference based on territory and a map number
@@ -80,9 +81,11 @@ namespace Ultima5Redux.Maps
         /// <param name="mapTerritory">Britannia or Dungeon</param>
         /// <param name="nCombatMapNum">map number in data file (0,1,2,3....)</param>
         /// <param name="dataChunks"></param>
+        /// <param name="combatMapData"></param>
         public SingleCombatMapReference(Territory mapTerritory, int nCombatMapNum,
-            DataChunks<CombatMapReferences.DataChunkName> dataChunks)
+            DataChunks<CombatMapReferences.DataChunkName> dataChunks, CombatMapReferences.CombatMapData combatMapData)
         {
+            _combatMapData = combatMapData;
             int nMapOffset = nCombatMapNum * MAP_BYTE_COUNT;
             
             MapTerritory = mapTerritory;
@@ -229,10 +232,10 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Brief description of the combat map
         /// </summary>
-        public string Description =>
-            MapTerritory == Territory.Britannia
-                ? BritanniaDescriptions[CombatMapNum]
-                : DungeonDescriptions[CombatMapNum];
+        public string Description => _combatMapData.Description;
+            // MapTerritory == Territory.Britannia
+            //     ? BritanniaDescriptions[CombatMapNum]
+            //     : DungeonDescriptions[CombatMapNum];
 
         /// <summary>
         ///     Territory of the combat map
