@@ -48,7 +48,7 @@ namespace Ultima5Redux.PlayerCharacters
             Stats.CurrentHp = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Current hit points",
                 rawRecordByteList, (int) CharacterRecordOffsets.CurrentHP, sizeof(ushort)).GetChunkAsUint16List()[0];
             Stats.MaximumHp = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List, "Maximum hit points",
-                rawRecordByteList, (int) CharacterRecordOffsets.MaximimumHP, sizeof(ushort)).GetChunkAsUint16List()[0];
+                rawRecordByteList, (int) CharacterRecordOffsets.MaximumHP, sizeof(ushort)).GetChunkAsUint16List()[0];
             Stats.ExperiencePoints = DataChunk.CreateDataChunk(DataChunk.DataFormatType.UINT16List,
                     "Maximum hit points", rawRecordByteList, (int) CharacterRecordOffsets.ExperiencePoints,
                     sizeof(ushort))
@@ -200,9 +200,9 @@ namespace Ultima5Redux.PlayerCharacters
         private enum CharacterRecordOffsets
         {
             Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D,
-            Intelligence = 0x0E, CurrentMP = 0x0F, CurrentHP = 0x10, MaximimumHP = 0x12, ExperiencePoints = 0x14,
-            Level = 0x16, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B, Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E,
-            InnParty = 0x1F, MonthsSinceStayingAtInn = 0x17, Unknown2 = 0x18
+            Intelligence = 0x0E, CurrentMP = 0x0F, CurrentHP = 0x10, MaximumHP = 0x12, ExperiencePoints = 0x14,
+            Level = 0x16, MonthsSinceStayingAtInn = 0x17, Unknown2 = 0x18, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B, 
+            Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F
         }
 
         public class CharacterEquipped

@@ -84,7 +84,7 @@ namespace Ultima5Redux.Maps
             _combatInitiativeTally.Clear();
             _nLowestDexterity = 50;
             _nHighestDexterity = 0;
-            Round = -1;
+            Round = 0;
             Turn = 0;
 
             foreach (MapUnit mapUnit in _combatMapUnits.CurrentMapUnits)

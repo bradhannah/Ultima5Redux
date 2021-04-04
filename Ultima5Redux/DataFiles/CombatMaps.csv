@@ -15,22 +15,22 @@ Britannia,12,Boat - North
 Britannia,13,Boat - South
 Britannia,14,Boat-Boat
 Britannia,15,Bay
-Dungeon,0,Klimb Down
-Dungeon,1,Four Way with Gremlins
-Dungeon,2,Magic Barriers
-Dungeon,3,Four Ways to Nowhere
-Dungeon,4,Right Sided Hammer
-Dungeon,5,Double Portcullis
-Dungeon,6,Stone Gargoyles
-Dungeon,7,Surrounded Exit Right
-Dungeon,8,Rats Surprise!
-Dungeon,9,Deaths Magic Door
-Dungeon,10,Underground Lake
-Dungeon,11,Daemon Bottom Right
-Dungeon,12,Daemon Bottom Left
-Dungeon,13,Daemon Top Right
-Dungeon,14,Daemon Top Left
-Dungeon,15,Triggered
+Dungeon,0,DUNGEON-0-Klimb Down
+Dungeon,1,DUNGEON-1-Four Way with Gremlins
+Dungeon,2,DUNGEON-2-Magic Barriers
+Dungeon,3,DUNGEON-3-Four Ways to Nowhere
+Dungeon,4,DUNGEON-4-Right Sided Hammer
+Dungeon,5,DUNGEON-5-Double Portcullis
+Dungeon,6,DUNGEON-6-Stone Gargoyles
+Dungeon,7,DUNGEON-7-Surrounded Exit Right
+Dungeon,8,DUNGEON-8-Rats Surprise!
+Dungeon,9,DUNGEON-9-Deaths Magic Door
+Dungeon,10,DUNGEON-10-Underground Lake
+Dungeon,11,DUNGEON-11-Daemon Bottom Right
+Dungeon,12,DUNGEON-12-Daemon Bottom Left
+Dungeon,13,DUNGEON-13-Daemon Top Right
+Dungeon,14,DUNGEON-14-Daemon Top Left
+Dungeon,15,DUNGEON-15-Triggered
 Dungeon,16,DUNGEON-16
 Dungeon,17,DUNGEON-17
 Dungeon,18,DUNGEON-18

@@ -68,67 +68,67 @@
   "Dungeon": [
     {
       "Index": 0,
-      "Description": "Klimb Down"
+      "Description": "DUNGEON-0-Klimb Down"
     },
     {
       "Index": 1,
-      "Description": "Four Way with Gremlins"
+      "Description": "DUNGEON-1-Four Way with Gremlins"
     },
     {
       "Index": 2,
-      "Description": "Magic Barriers"
+      "Description": "DUNGEON-2-Magic Barriers"
     },
     {
       "Index": 3,
-      "Description": "Four Ways to Nowhere"
+      "Description": "DUNGEON-3-Four Ways to Nowhere"
     },
     {
       "Index": 4,
-      "Description": "Right Sided Hammer"
+      "Description": "DUNGEON-4-Right Sided Hammer"
     },
     {
       "Index": 5,
-      "Description": "Double Portcullis"
+      "Description": "DUNGEON-5-Double Portcullis"
     },
     {
       "Index": 6,
-      "Description": "Stone Gargoyles"
+      "Description": "DUNGEON-6-Stone Gargoyles"
     },
     {
       "Index": 7,
-      "Description": "Surrounded Exit Right"
+      "Description": "DUNGEON-7-Surrounded Exit Right"
     },
     {
       "Index": 8,
-      "Description": "Rats Surprise!"
+      "Description": "DUNGEON-8-Rats Surprise!"
     },
     {
       "Index": 9,
-      "Description": "Deaths Magic Door"
+      "Description": "DUNGEON-9-Deaths Magic Door"
     },
     {
       "Index": 10,
-      "Description": "Underground Lake"
+      "Description": "DUNGEON-10-Underground Lake"
     },
     {
       "Index": 11,
-      "Description": "Daemon Bottom Right"
+      "Description": "DUNGEON-11-Daemon Bottom Right"
     },
     {
       "Index": 12,
-      "Description": "Daemon Bottom Left"
+      "Description": "DUNGEON-12-Daemon Bottom Left"
     },
     {
       "Index": 13,
-      "Description": "Daemon Top Right"
+      "Description": "DUNGEON-13-Daemon Top Right"
     },
     {
       "Index": 14,
-      "Description": "Daemon Top Left"
+      "Description": "DUNGEON-14-Daemon Top Left"
     },
     {
       "Index": 15,
-      "Description": "Triggered"
+      "Description": "DUNGEON-15-Triggered"
     },
     {
       "Index": 16,

@@ -257,7 +257,6 @@
     <EmbeddedResource Include="DataFiles\InventoryDetails.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="DataFiles\DataConversion\tileData.py" />
     <Content Include="DataFiles\InventoryDetails.csv" />
     <Content Include="DataFiles\MerchantStrings.csv" />
     <Content Include="DataFiles\RawEnemyFlags.csv" />
