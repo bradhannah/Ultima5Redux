@@ -76,7 +76,30 @@ namespace Ultima5Redux.Maps
 
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks }
 
+        public enum CombatMapUnitEnum { All, CombatPlayer, Enemy };
+
+        public List<CombatMapUnit> GetActiveCombatMapUnitsByType(CombatMapUnitEnum combatMapUnitEnum)
+        {
+            switch (combatMapUnitEnum)
+            {
+                case CombatMapUnitEnum.All:
+                    return AllVisibleAttackableCombatMapUnits;
+                case CombatMapUnitEnum.CombatPlayer:
+                    return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive).ToList();
+                case CombatMapUnitEnum.Enemy:
+                    return AllEnemiesGeneric.Where(enemy => enemy.IsActive).ToList();;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(combatMapUnitEnum), combatMapUnitEnum, null);
+            }
+        }
+
         public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().ToList();
+        private List<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers.Cast<CombatMapUnit>().ToList();
+        private List<CombatMapUnit> AllEnemiesGeneric => AllEnemies.Cast<CombatMapUnit>().ToList();
+        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().ToList();
+
+        public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
+            CombatMapUnits.CurrentMapUnits.Where(combatMapUnit => combatMapUnit.IsAttackable && combatMapUnit.IsActive).OfType<CombatMapUnit>().ToList();
         
         /// <summary>
         /// Creates CombatMap.
@@ -155,7 +178,7 @@ namespace Ultima5Redux.Maps
                 return TurnResult.EnemyAttacks;
             }
 
-            CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatMapUnit(enemy);
+            CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatPlayer(enemy);
 
             if (pursuedCombatMapUnit != null)
             {
@@ -269,6 +292,58 @@ namespace Ultima5Redux.Maps
         //     
         //     return bestCombatPlayer;
         // }
+
+
+        public CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit) =>
+            MoveToClosestAttackableCombatMapUnit(activeCombatUnit, CombatMapUnitEnum.CombatPlayer) as CombatPlayer;
+
+        public Enemy MoveToClosestAttackableEnemy() => MoveToClosestAttackableEnemy(CurrentCombatPlayer);
+
+        public Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit) =>
+            MoveToClosestAttackableCombatMapUnit(activeMapUnit, CombatMapUnitEnum.Enemy) as Enemy;
+        
+        /// <summary>
+        /// Moves the combat map unit to the CombatPlayer for whom they can reach in the fewest number of steps
+        /// </summary>
+        /// <param name="activeCombatUnit">the combat map unit that wants to attack a combat player</param>
+        /// <param name="preferredAttackTarget">the type of target you will target</param>
+        /// <returns>The combat player that they are heading towards</returns>
+        public CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit, CombatMapUnitEnum preferredAttackTarget)
+        {
+            const int NoPath = 0xFFFF;
+            bool bCharmed = activeCombatUnit.IsCharmed;
+            Vector2 combatMapUnitVector =
+                new Vector2(activeCombatUnit.MapUnitPosition.XY.X, activeCombatUnit.MapUnitPosition.XY.Y);
+            int nMinMoves = 0xFFFF;
+            Stack<Node> preferredRoute = null;
+            CombatMapUnit preferredAttackVictim = null;
+            foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
+            {
+                // get the shortest path to the unit
+                Stack<Node> theWay = AStar.FindPath(combatMapUnitVector ,
+                    new Vector2(combatMapUnit.MapUnitPosition.XY.X, combatMapUnit.MapUnitPosition.XY.Y));
+                int nMoves = theWay?.Count ?? NoPath;
+                if (nMoves < nMinMoves)
+                {
+                    nMinMoves = nMoves;
+                    preferredRoute = theWay;
+                    preferredAttackVictim = combatMapUnit;
+                }
+            }
+
+            if (nMinMoves == NoPath)
+            {
+                return null;
+            }
+
+            Debug.Assert(preferredRoute != null, nameof(preferredRoute) + " != null");
+            
+            Vector2 nextVector = preferredRoute.Pop().Position;
+            
+            MoveActiveCombatMapUnit(new Point2D((int)nextVector.X, (int)nextVector.Y));
+            
+            return preferredAttackVictim;
+        }
         
         private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)
         {
@@ -281,7 +356,8 @@ namespace Ultima5Redux.Maps
             {
                 if (!(CombatMapUnits.CurrentMapUnits[nIndex] is CombatPlayer combatPlayer)) continue;
                 if (!enemy.CanReachForAttack(combatPlayer, enemy.EnemyReference.AttackRange)) continue;
-                
+                if (!CombatMapUnits.CurrentMapUnits[nIndex].IsActive) continue;
+
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(combatPlayer.MapUnitPosition.XY);
                 if (!(dDistance < dBestDistanceToAttack)) continue;
 
@@ -303,6 +379,7 @@ namespace Ultima5Redux.Maps
             {
                 if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
                 if (!CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) continue;
+                if (!CombatMapUnits.CurrentMapUnits[nIndex].IsActive) continue;
                 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(CurrentCombatPlayer.MapUnitPosition.XY);
                 if (!(dDistance < dBestDistanceToAttack)) continue;
@@ -313,6 +390,12 @@ namespace Ultima5Redux.Maps
             
             return bestEnemy;
         }
+
+        //
+        // public CombatMapUnit GetClosestCombatMapUnitInRange(CombatMapUnitEnum combatUnitEnum)
+        // {
+        //     
+        // }
         
         public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
         {
@@ -372,46 +455,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        /// <summary>
-        /// Moves the combat map unit to the CombatPlayer for whom they can reach in the fewest number of steps
-        /// </summary>
-        /// <param name="combatMapUnit">the combat map unit that wants to attack a combat player</param>
-        /// <returns>The combat player that they are heading towards</returns>
-        public CombatPlayer MoveToClosestAttackableCombatMapUnit(CombatMapUnit combatMapUnit)
-        {
-            bool bCharmed = combatMapUnit.IsCharmed;
-            Vector2 combatMapUnitVector =
-                new Vector2(combatMapUnit.MapUnitPosition.XY.X, combatMapUnit.MapUnitPosition.XY.Y);
-            int nMinMoves = -1;
-            Stack<Node> preferredRoute = null;
-            CombatPlayer preferredAttackVictim = null;
-            
-            foreach (CombatPlayer combatPlayer in AllCombatPlayers)
-            {
-                // get the shortest path to the unit
-                Stack<Node> theWay = AStar.FindPath(combatMapUnitVector ,
-                    new Vector2(combatPlayer.MapUnitPosition.XY.X, combatPlayer.MapUnitPosition.XY.Y));
-                int nMoves = theWay?.Count ?? -1;
-                if (nMinMoves == -1 || nMoves < nMinMoves)
-                {
-                    nMinMoves = nMoves;
-                    preferredRoute = theWay;
-                    preferredAttackVictim = combatPlayer;
-                }
-            }
-
-            if (nMinMoves == -1 || preferredRoute == null)
-            {
-                return null;
-            }
-
-            Vector2 nextVector = preferredRoute.Pop().Position;
-            
-            MoveActiveCombatMapUnit(new Point2D((int)nextVector.X, (int)nextVector.Y));
-            
-            return preferredAttackVictim;
-        }
-        
         /// <summary>
         /// Creates a single enemy in the context of the combat map.
         /// </summary>

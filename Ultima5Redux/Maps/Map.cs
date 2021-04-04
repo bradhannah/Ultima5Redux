@@ -19,7 +19,7 @@ namespace Ultima5Redux.Maps
         ///     All A* nodes for the current map
         ///     Accessed by [x][y]
         /// </summary>
-        private List<List<Node>> _aStarNodes;
+        protected List<List<Node>> AStarNodes;
 
         public abstract int NumOfXTiles { get; }
         public abstract int NumOfYTiles { get; }
@@ -178,7 +178,7 @@ namespace Ultima5Redux.Maps
             int nYTiles = TheMap.Length;
 
             // load the A-Star compatible map into memory
-            _aStarNodes = Utils.Init2DList<Node>(nXTiles, nYTiles);
+            AStarNodes = Utils.Init2DList<Node>(nXTiles, nYTiles);
 
             for (int x = 0; x < nXTiles; x++)
             {
@@ -191,11 +191,11 @@ namespace Ultima5Redux.Maps
                     float fWeight = GetAStarWeight(new Point2D(x, y));
 
                     Node node = new Node(new Vector2(x, y), bIsWalkable, fWeight);
-                    _aStarNodes[x].Add(node);
+                    AStarNodes[x].Add(node);
                 }
             }
 
-            AStar = new AStar(_aStarNodes);
+            AStar = new AStar(AStarNodes);
         }
 
         protected void RecalculateWalkableTile(Point2D xy)
@@ -205,8 +205,8 @@ namespace Ultima5Redux.Maps
 
         public void SetWalkableTile(Point2D xy, bool bWalkable)
         {
-            Debug.Assert(xy.X < _aStarNodes.Count && xy.Y < _aStarNodes[0].Count);
-            _aStarNodes[xy.X][xy.Y].Walkable = bWalkable;
+            Debug.Assert(xy.X < AStarNodes.Count && xy.Y < AStarNodes[0].Count);
+            AStarNodes[xy.X][xy.Y].Walkable = bWalkable;
         }
 
         protected virtual bool IsTileWalkable(TileReference currentTile)

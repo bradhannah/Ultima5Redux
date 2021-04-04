@@ -42,7 +42,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         public override string BoardXitName => "Hostile creates don't not like to be boarded!";
         public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;
-        public override bool IsActive => true;
+        public override bool IsActive => Stats.CurrentHp > 0;
 
         public override bool IsAttackable => Stats.CurrentHp > 0;
         public override string FriendlyName => Name;

@@ -9,7 +9,6 @@ namespace Ultima5Redux.Maps
     public class SingleCombatMapReference
     {
         private readonly CombatMapReferences.CombatMapData _combatMapData;
-        // private readonly List<List<Point2D>> _characterXyPositions;
 
         /// <summary>
         ///     The territory that the combat map is in. This matters most for determining data files.
@@ -39,27 +38,6 @@ namespace Ultima5Redux.Maps
 
         public enum EntryDirection {East = 0, West = 1, North = 2, South = 3 }
         
-        /// Descriptions of each combat map
-        // private static readonly string[] BritanniaDescriptions =
-        // {
-        //     "Camp Fire", //0 
-        //     "Swamp", //1
-        //     "Glade", //2
-        //     "Treed", //3
-        //     "Desert", //4
-        //     "Clean Tree", //5 
-        //     "Mountains",  //6
-        //     "Big Bridge", //7
-        //     "Brick", //8
-        //     "Basement", //9
-        //     "Psychedelic",  //10
-        //     "Boat - Ocean", //11
-        //     "Boat - North", //12
-        //     "Boat - South", //13
-        //     "Boat-Boat",  //14
-        //     "Bay" //15
-        // };
-        
         public enum BritanniaCombatMaps 
         {
             None = -2, BoatCalc = -1, CampFire = 0, Swamp = 1, Glade = 2, Treed = 3, Desert = 4, CleanTree = 5, Mountains = 6, 
@@ -67,14 +45,6 @@ namespace Ultima5Redux.Maps
             BoatBoat = 14, Bay = 15
         };
         
-        // private static readonly string[] DungeonDescriptions =
-        // {
-        //     "Klimb Down", "Four Way with Gremlins", "Magic Barriers", "Four Ways to Nowhere", "Right Sided Hammer", 
-        //     "Double Portcullis", "Stone Gargoyles", "Surrounded Exit Right", "Rats Surprise!",
-        //     "Deaths Magic Door", "Underground Lake", "Daemon Bottom Right", "Daemon Bottom Left", "Daemon Top Right", 
-        //     "Daemon Top Left", "Triggered"
-        // };
-
         /// <summary>
         ///     Create the reference based on territory and a map number
         /// </summary>
@@ -202,11 +172,16 @@ namespace Ultima5Redux.Maps
             // it's a chest or something like it
             if (nEnemyRawSprite >= 1 && nEnemyRawSprite <= 15) return CombatMapSpriteType.Thing;
 
-            // it's a dead body or blood spatter
-            if (nEnemyRawSprite == 30 || nEnemyRawSprite == 31) return CombatMapSpriteType.Thing;
-
-            // it's determined by the encounter 
-            if (nEnemyRawSprite == 112) return CombatMapSpriteType.EncounterBased;
+            switch (nEnemyRawSprite)
+            {
+                // it's a dead body or blood spatter
+                case 30:
+                case 31:
+                    return CombatMapSpriteType.Thing;
+                // it's determined by the encounter 
+                case 112:
+                    return CombatMapSpriteType.EncounterBased;
+            }
 
             // if the sprite is lower than the crown index, then we add 4
             // OR
@@ -233,9 +208,6 @@ namespace Ultima5Redux.Maps
         ///     Brief description of the combat map
         /// </summary>
         public string Description => _combatMapData.Description;
-            // MapTerritory == Territory.Britannia
-            //     ? BritanniaDescriptions[CombatMapNum]
-            //     : DungeonDescriptions[CombatMapNum];
 
         /// <summary>
         ///     Territory of the combat map
