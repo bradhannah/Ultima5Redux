@@ -939,8 +939,9 @@ namespace Ultima5Redux.Maps
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
         internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy)
         {
-            Stack<Node> nodeStack = CurrentMap.AStar.FindPath(new Vector2(currentXy.X, currentXy.Y),
-                new Vector2(targetXy.X, targetXy.Y));
+            Stack<Node> nodeStack = CurrentMap.AStar.FindPath(currentXy, targetXy);
+                //new Vector2(currentXy.X, currentXy.Y),
+                //new Vector2(targetXy.X, targetXy.Y));
 
             return nodeStack?.Count ?? 0;
         }

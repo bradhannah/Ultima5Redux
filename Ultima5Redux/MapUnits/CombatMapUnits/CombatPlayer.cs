@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Policy;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
@@ -19,6 +20,9 @@ namespace Ultima5Redux.MapUnits
         public PlayerCharacterRecord Record { get; }
 
         public override int Defense => _inventory.GetCharacterTotalDefense(Record);
+
+        public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.Range);
+        
         public override string Name => Record.Name;
 
         public override CharacterStats Stats => Record.Stats;

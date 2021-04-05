@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 
@@ -8,7 +9,7 @@ namespace Ultima5Redux.External
     public class Node
     {
         // Change this depending on what the desired size is for each element in the grid
-        internal const int NODE_SIZE = 1;
+        //internal const int NODE_SIZE = 1;
 
         public bool Walkable { get; set; }
         public readonly float Weight;
@@ -16,9 +17,9 @@ namespace Ultima5Redux.External
 
         public float DistanceToTarget;
         public Node Parent;
-        public Vector2 Position;
+        public Point2D Position;
 
-        public Node(Vector2 pos, bool walkable, float weight = 1)
+        public Node(Point2D pos, bool walkable, float weight = 1)
         {
             Parent = null;
             Position = pos;
@@ -52,13 +53,74 @@ namespace Ultima5Redux.External
 
         private int GridCols => _grid.Count;
 
-        public Stack<Node> FindPath(Vector2 startVector, Vector2 endVector)
+        public string GetWalkableDebug()
         {
+            string debugOut = "";
+            for (int i = 0; i < GridCols; i++)
+            {
+                for (int j = 0; j < GridRows; j++)
+                {
+                    debugOut +=_grid[i][j].Walkable ? "O" : "X";
+                }
+
+                debugOut += "\n";
+            }
+
+            return debugOut;
+        }
+
+        public void SetWalkable(Point2D position, bool bWalkable)
+        {
+            _grid[position.X][position.Y].Walkable = bWalkable;
+        }
+
+        /// <summary>
+        /// Finds the best path based on surrounding tiles around a single end position
+        /// For example, below the 0 represents the end position, while the Xs represent the tiles that will be checked
+        /// XXXXX
+        /// X 0 X
+        /// XXXXX
+        /// This can be used to help find the best path to get in range of an attack 
+        /// </summary>
+        /// <param name="startPosition"></param>
+        /// <param name="endPosition"></param>
+        /// <param name="nUnitsOut"></param>
+        /// <returns>a stack of nodes if a path is found, otherwise null if no path is found</returns>
+        public Stack<Node> FindBestPathForSurroundingTiles(Point2D startPosition, Point2D endPosition, int nUnitsOut)
+        {
+            int nXExtent = _grid.Count - 1;
+            int nYExtent = _grid[0].Count - 1;
+
+            List<Point2D> points = endPosition.GetConstrainedSurroundingPoints(nUnitsOut, nXExtent, nYExtent);
+
+            int nBestPathNodes = 0xFFFF;
+            Stack<Node> bestPath = null;
+            foreach (Point2D point in points)
+            {
+                Stack<Node> nodes = FindPath(startPosition, point);
+                if (nodes?.Count < nBestPathNodes)
+                {
+                    nBestPathNodes = nodes.Count;
+                    bestPath = nodes;
+                }
+            }
+
+            return nBestPathNodes == 0xFFFF ? null : bestPath;
+        }
+        
+        
+        
+        public Stack<Node> FindPath(Point2D startPosition, Point2D endPosition)
+        {
+            if (!_grid[endPosition.X][endPosition.Y].Walkable)
+            {
+                // if you pass in a non-walkable tile then we don't waste our time calculating
+                return null;
+            }
+            
             Node start =
-                new Node(new Vector2((int) (startVector.X / Node.NODE_SIZE), (int) (startVector.Y / Node.NODE_SIZE)),
-                    true);
-            Node end = new Node(new Vector2((int) (endVector.X / Node.NODE_SIZE), (int) (endVector.Y / Node.NODE_SIZE)),
-                true);
+                new Node( startPosition, true);
+            Node end = new Node( endPosition, true);
 
             Stack<Node> path = new Stack<Node>();
             List<Node> openList = new List<Node>();
@@ -109,8 +171,8 @@ namespace Ultima5Redux.External
         {
             List<Node> temp = new List<Node>();
 
-            int row = (int) n.Position.Y;
-            int col = (int) n.Position.X;
+            int row = n.Position.Y;
+            int col = n.Position.X;
 
             if (row + 1 < GridRows) temp.Add(_grid[col][row + 1]);
             if (row - 1 >= 0) temp.Add(_grid[col][row - 1]);

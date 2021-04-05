@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private void PrintDebugCSV()
         {
-            Console.Write(@"Name,AttackRange,MissileType,Friend,Thing");
+            Console.Write(@"Name,ClosestAttackRange,MissileType,Friend,Thing");
             //var dExampleBitfield = 0x8000;
             foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
             // for (int index = 0; index < AllEnemyReferences[0]._enemyFlags.Count; index++)

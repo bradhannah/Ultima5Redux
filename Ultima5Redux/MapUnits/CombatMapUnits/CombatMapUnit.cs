@@ -18,6 +18,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract CharacterStats Stats { get; }
         
         public abstract int Defense { get; }
+        
+        public abstract int ClosestAttackRange { get; }
 
         public abstract string Name { get; }
         
@@ -131,8 +133,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange 
              && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
-      
-        
         HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {
             int nCriticalThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 2; /* (MaximumHp / 4) */

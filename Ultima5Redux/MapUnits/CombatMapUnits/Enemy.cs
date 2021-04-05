@@ -15,6 +15,8 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
         public override string Name => EnemyReference.MixedCaseSingularName.Trim();
 
+        public override int ClosestAttackRange => EnemyReference.AttackRange;
+
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,  
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference)

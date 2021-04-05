@@ -1124,6 +1124,14 @@ namespace Ultima5ReduxTesting
 
             _ = "";
         }
+
+        [Test] public void Test_GetSurroundingPoints()
+        {
+            Point2D p1 = new Point2D(5, 5);
+            List<Point2D> points = p1.GetConstrainedSurroundingPoints(1, 10,10);
+            List<Point2D> points2 = p1.GetConstrainedSurroundingPoints(4, 6, 6);
+            Debug.WriteLine("DERP");
+        }
         
      }
 }

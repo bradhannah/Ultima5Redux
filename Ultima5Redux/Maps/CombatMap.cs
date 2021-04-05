@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
 using Ultima5Redux.Data;
@@ -42,7 +43,7 @@ namespace Ultima5Redux.Maps
         public int Turn => _initiativeQueue.Turn;
         public int Round => _initiativeQueue.Round;
 
-        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().Count();
+        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().Count(enemy => enemy.IsActive);
         public int NumberOfVisiblePlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().Count(combatPlayer => combatPlayer.IsActive);
 
         public bool AreEnemiesLeft => NumberOfEnemies > 0;
@@ -191,6 +192,7 @@ namespace Ultima5Redux.Maps
             }
 
             AdvanceToNextCombatMapUnit();
+            
             return TurnResult.EnemyMoved;
         }
         
@@ -214,6 +216,7 @@ namespace Ultima5Redux.Maps
         public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
         {
             combatMapUnit.Stats.CurrentHp = 0;   
+            RecalculateWalkableTile(combatMapUnit.MapUnitPosition.XY);
             RecalculateVisibleTiles(combatMapUnit.MapUnitPosition.XY);
         }
 
@@ -312,16 +315,15 @@ namespace Ultima5Redux.Maps
         {
             const int NoPath = 0xFFFF;
             bool bCharmed = activeCombatUnit.IsCharmed;
-            Vector2 combatMapUnitVector =
-                new Vector2(activeCombatUnit.MapUnitPosition.XY.X, activeCombatUnit.MapUnitPosition.XY.Y);
+
             int nMinMoves = 0xFFFF;
             Stack<Node> preferredRoute = null;
             CombatMapUnit preferredAttackVictim = null;
             foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
             {
                 // get the shortest path to the unit
-                Stack<Node> theWay = AStar.FindPath(combatMapUnitVector ,
-                    new Vector2(combatMapUnit.MapUnitPosition.XY.X, combatMapUnit.MapUnitPosition.XY.Y));
+                Stack<Node> theWay = AStar.FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
+                    combatMapUnit.MapUnitPosition.XY, activeCombatUnit.ClosestAttackRange);
                 int nMoves = theWay?.Count ?? NoPath;
                 if (nMoves < nMinMoves)
                 {
@@ -338,10 +340,10 @@ namespace Ultima5Redux.Maps
 
             Debug.Assert(preferredRoute != null, nameof(preferredRoute) + " != null");
             
-            Vector2 nextVector = preferredRoute.Pop().Position;
+            Point2D nextVector = preferredRoute.Pop().Position;
             
-            MoveActiveCombatMapUnit(new Point2D((int)nextVector.X, (int)nextVector.Y));
-            
+            MoveActiveCombatMapUnit(nextVector);
+
             return preferredAttackVictim;
         }
         
@@ -451,6 +453,10 @@ namespace Ultima5Redux.Maps
 
                 CombatPlayer combatPlayer = new CombatPlayer(record, _tileReferences, 
                     playerStartPositions[nPlayer], _dataOvlReference, _inventory);
+
+                // make sure the tile that the player occupies is not walkable
+                AStar.SetWalkable(playerStartPositions[nPlayer], false);
+
                 CombatMapUnits.CurrentMapUnits[nPlayer] = combatPlayer;
             }
         }
@@ -461,18 +467,22 @@ namespace Ultima5Redux.Maps
         /// <param name="nEnemyIndex">0 based index that reflects the combat maps enemy index list</param>
         /// <param name="singleCombatMapReference">reference of the combat map</param>
         /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
+        /// <param name="npcRef"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
             EnemyReference enemyReference, NonPlayerCharacterReference npcRef)
         {
              SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
-            Point2D nEnemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
-
+            Point2D enemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
+            
+            // make sure the tile that the enemy occupies is not walkable
+            AStar.SetWalkable(enemyPosition, false);
+            
             switch (combatMapSpriteType)
             {
                 case SingleCombatMapReference.CombatMapSpriteType.Nothing:
-                    Debug.Assert(nEnemyPosition.X == 0 && nEnemyPosition.Y ==0);
+                    Debug.Assert(enemyPosition.X == 0 && enemyPosition.Y ==0);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.Thing:
                     Debug.WriteLine("It's a chest or maybe a dead body!");
@@ -482,7 +492,7 @@ namespace Ultima5Redux.Maps
                         _enemyReferences.GetEnemyReference(nEnemySprite), out int _, npcRef);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
-                    Debug.Assert(!(nEnemyPosition.X == 0 && nEnemyPosition.Y == 0));
+                    Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
                     CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         enemyReference, out int _, npcRef);
                     break;
@@ -583,6 +593,11 @@ namespace Ultima5Redux.Maps
             combatPlayer.HasEscaped = true;
         }
 
+        public string GetWalkableDebug()
+        {
+            return AStar.GetWalkableDebug();
+        }
+        
     }
     
 }

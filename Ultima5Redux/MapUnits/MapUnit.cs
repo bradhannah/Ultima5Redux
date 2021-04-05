@@ -246,9 +246,9 @@ namespace Ultima5Redux.MapUnits
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<Node> nodeStack = currentMap.AStar.FindPath(
-                new Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
-                new Vector2(targetXy.X, targetXy.Y));
+            Stack<Node> nodeStack = currentMap.AStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
+                //new Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
+                //new Vector2(targetXy.X, targetXy.Y));
 
             MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
             MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;
@@ -261,8 +261,8 @@ namespace Ultima5Redux.MapUnits
             // builds the movement list that is compatible with the original U5 movement instruction queue stored in the state file
             foreach (Node node in nodeStack)
             {
-                Point2D newPosition = Vector2ToPoint2D(node.Position);
-                newDirection = GetCommandDirection(prevPosition, newPosition);
+                //Point2D newPosition = Vector2ToPoint2D(node.Position);
+                newDirection = GetCommandDirection(prevPosition, node.Position);
 
                 // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction
                 // that has N iterations (ie. move East 5 times)
@@ -279,7 +279,7 @@ namespace Ultima5Redux.MapUnits
                 }
 
                 prevDirection = newDirection;
-                prevPosition = newPosition;
+                prevPosition = node.Position;
             }
 
             if (nInARow > 0)

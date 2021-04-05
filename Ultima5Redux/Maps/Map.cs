@@ -190,7 +190,9 @@ namespace Ultima5Redux.Maps
 
                     float fWeight = GetAStarWeight(new Point2D(x, y));
 
-                    Node node = new Node(new Vector2(x, y), bIsWalkable, fWeight);
+                    Node node = new Node(new Point2D(x, y),
+                        //new Vector2(x, y),
+                        bIsWalkable, fWeight);
                     AStarNodes[x].Add(node);
                 }
             }
