@@ -1132,6 +1132,20 @@ namespace Ultima5ReduxTesting
             List<Point2D> points2 = p1.GetConstrainedSurroundingPoints(4, 6, 6);
             Debug.WriteLine("DERP");
         }
-        
+
+        [Test] public void Test_GetEscapablePoints()
+        {
+            World world = new World(this.ActualSaveDirectory+@"\b_carpet");
+            
+            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 15),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                // orcs
+                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                // troll
+                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+
+            List<Point2D> points= world.State.TheVirtualMap.CurrentMap.GetEscapablePoints(new Point2D(12,12));
+            _ = "";
+        }
      }
 }
