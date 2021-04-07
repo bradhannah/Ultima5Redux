@@ -97,7 +97,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="bFirst">is this the initial call to the method?</param>    
-          protected void FloodFillMap(Point2D xy, bool bFirst = false)
+        protected void FloodFillMap(Point2D xy, bool bFirst = false)
         {
             if (xy == null)
             {
@@ -116,7 +116,7 @@ namespace Ultima5Redux.Maps
             
             // if it blocks light then we make it visible but do not make subsequent tiles visible
             TileReference tileReference = SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
-            //GetTileReference(adjustedXy);
+
             bool bBlocksLight = tileReference.BlocksLight && !bFirst && 
                                 !(tileReference.IsWindow && 
                                   AvatarXyPos.IsWithinNFourDirections(adjustedXy));
@@ -147,11 +147,10 @@ namespace Ultima5Redux.Maps
             FloodFillMap(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
         }
           
-          protected virtual Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
-          {
-              return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
-          }
-
+        protected virtual Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
+        {
+          return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
+        }
           
         public virtual void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
         {
@@ -162,8 +161,6 @@ namespace Ultima5Redux.Maps
             
             FloodFillMap(initialFloodFillPosition, true);
         }
-
-      
         
         #endregion
 
@@ -239,6 +236,54 @@ namespace Ultima5Redux.Maps
         public TileOverride GetTileOverride(Point2D xy)
         {
             return _xyOverrides[xy];
+        }
+
+        /// <summary>
+        /// Gets the best escape route based on current position
+        /// </summary>
+        /// <param name="fromPosition"></param>
+        /// <returns>path to exit, or null if none exist</returns>
+        public Stack<Node> GetEscapeRoute(Point2D fromPosition)
+        {
+            List<Point2D> points = GetEscapablePoints(fromPosition);
+
+            int nShortestPath = 0xFFFF;
+            Stack<Node> shortestPath = null;
+            
+            foreach (Point2D destinationPoint in points)
+            {
+                Stack<Node> currentPath = AStar.FindPath(fromPosition, destinationPoint);
+                if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
+
+                nShortestPath = currentPath.Count;
+                shortestPath = currentPath;
+            }
+
+            return shortestPath;
+        }
+
+        /// <summary>
+        /// Gets all tiles that are at the edge of the screen and are escapable based on the given position
+        /// </summary>
+        /// <param name="fromPosition"></param>
+        /// <returns>a list of all potential positions</returns>
+        public List<Point2D> GetEscapablePoints(Point2D fromPosition)
+        {
+            _ = fromPosition;
+            List<Point2D> points = new List<Point2D>();
+
+            for (int nIndex = 0; nIndex < NumOfXTiles; nIndex++)
+            {
+                if (GetTileReference(new Point2D(nIndex,0)).IsWalking_Passable) points.Add(new Point2D(nIndex, 0));
+                if (GetTileReference(new Point2D(nIndex, NumOfYTiles - 1)).IsWalking_Passable) points.Add(new Point2D(nIndex, NumOfYTiles - 1));
+                
+                if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
+                
+                if (GetTileReference(new Point2D(0, nIndex)).IsWalking_Passable) points.Add(new Point2D(0, nIndex));
+                if (GetTileReference(new Point2D(NumOfXTiles - 1, nIndex)).IsWalking_Passable) points.Add(new Point2D(NumOfXTiles - 1, nIndex));
+            }
+            
+            return points;
         }
 
         /// <summary>

@@ -79,7 +79,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             CombatStats.TotalDamageGiven += Math.Min(nAttack, enemyCombatMapUnit.Stats.CurrentHp);
 
             enemyCombatMapUnit.Stats.CurrentHp -= nAttack;
-
+            
             if (enemyCombatMapUnit.Stats.CurrentHp <= 0)
             {
                 CombatStats.TotalKills++;
@@ -133,41 +133,82 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange 
              && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
-        HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
+        internal HitState CurrentHitState
         {
-            int nCriticalThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
-            int nHeavyThreshold = enemyCombatMapUnit.Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
-            int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
+            get
+            {
+                int nCriticalThreshold = Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
+                int nHeavyThreshold = Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
+                int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
+
+                if (Stats.CurrentHp <= 0)
+                {
+                    return HitState.Dead;
+                }
+                if (Stats.CurrentHp < 24)
+                {
+                    return HitState.Fleeing;
+                }
+                if (Stats.CurrentHp < nCriticalThreshold)
+                {
+                    return HitState.CriticallyWounded;
+                }
+                if (Stats.CurrentHp < nHeavyThreshold)
+                {
+                    return HitState.HeavilyWounded;
+                }
+                if (Stats.CurrentHp < nLightThreshold)
+                {
+                    return HitState.LightlyWounded;
+                }
+                return HitState.BarelyWounded;
+            }
+        }
+        
+        public HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
+        {
             stateOutput = enemyCombatMapUnit.FriendlyName;
-            
-            //BattleStrings
-            if (enemyCombatMapUnit.Stats.CurrentHp <= 0)
+
+            HitState enemyHitState = enemyCombatMapUnit.CurrentHitState;
+            switch (enemyHitState)
             {
-                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._KILLED_BANG_N);
-                return HitState.Dead;
+                case HitState.Grazed:
+                    stateOutput += " grazed!";
+                    break;
+                case HitState.Missed:
+                    stateOutput += " missed!";
+                    break;
+                case HitState.BarelyWounded:
+                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._BARELY_WOUNDED_BANG_N);
+                    break;
+                case HitState.LightlyWounded:
+                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._LIGHTLY_WOUNDED_BANG_N);
+                    break;
+                case HitState.HeavilyWounded:
+                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings.HEAVILY_WOUNDED_BANG_N);
+                    break;
+                case HitState.CriticallyWounded:
+                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
+                    break;
+                case HitState.Fleeing:
+                    if (enemyCombatMapUnit is Enemy enemy)
+                    {
+                        stateOutput += " fleeing!";
+                        enemy.IsFleeing = true;
+                    }
+                    else
+                    {
+                        stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
+                    }
+                    break;
+                case HitState.Dead:
+                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._KILLED_BANG_N);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            if (enemyCombatMapUnit.Stats.CurrentHp < 24)
-            {
-                stateOutput += " fleeing!";
-                return HitState.Fleeing;
-            }
-            if (enemyCombatMapUnit.Stats.CurrentHp < nCriticalThreshold)
-            {
-                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
-                return HitState.CriticallyWounded;
-            }
-            if (enemyCombatMapUnit.Stats.CurrentHp < nHeavyThreshold)
-            {
-                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings.HEAVILY_WOUNDED_BANG_N);
-                return HitState.HeavilyWounded;
-            }
-            if (enemyCombatMapUnit.Stats.CurrentHp < nLightThreshold)
-            {
-                stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._LIGHTLY_WOUNDED_BANG_N);
-                return HitState.LightlyWounded;
-            }
-            stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._BARELY_WOUNDED_BANG_N);
-            return HitState.BarelyWounded;
+
+            return enemyHitState;
         }
 
         //        /**

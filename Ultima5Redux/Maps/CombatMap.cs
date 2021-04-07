@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Numerics;
 using Ultima5Redux.Data;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
@@ -75,7 +71,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private MapUnits.MapUnits CombatMapUnits { get; }
 
-        public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks }
+        public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks, EnemyWandered, EnemyEscaped }
 
         public enum CombatMapUnitEnum { All, CombatPlayer, Enemy };
 
@@ -161,6 +157,38 @@ namespace Ultima5Redux.Maps
                 return TurnResult.RequireCharacterInput;
             }
 
+            if (enemy.IsFleeing)
+            {
+                if (enemy.MapUnitPosition.X == 0 || enemy.MapUnitPosition.X == NumOfXTiles - 1 ||
+                    enemy.MapUnitPosition.Y == 0 || enemy.MapUnitPosition.Y == NumOfYTiles - 1)
+                {
+                    enemy.Stats.CurrentHp = 0;
+                    outputStr = enemy.FriendlyName + " escaped!";
+                    return TurnResult.EnemyEscaped;
+                }
+                
+                TileReference tileReference = enemy.FleeingPath != null ? GetTileReference(enemy.FleeingPath.Peek().Position) : null;
+                CombatMapUnit combatMapUnit =
+                    enemy.FleeingPath != null ? GetCombatUnit(enemy.FleeingPath.Peek().Position) : null;
+                bool bIsTileWalkable = tileReference != null && combatMapUnit == null && IsTileWalkable(tileReference); 
+                if (enemy.FleeingPath == null || !bIsTileWalkable)
+                {
+                    enemy.FleeingPath = GetEscapeRoute(enemy.MapUnitPosition.XY);
+                    if (enemy.FleeingPath == null)
+                    {
+                        // no path
+                        outputStr = enemy.FriendlyName + "WANDXERED?D?ED?";
+                        return TurnResult.EnemyWandered;
+                    }
+                }
+
+                Point2D nextStep = enemy.FleeingPath.Pop().Position;
+                MoveActiveCombatMapUnit(nextStep);
+                outputStr = enemy.EnemyReference.MixedCaseSingularName + " fleeing!";
+                AdvanceToNextCombatMapUnit();
+                return TurnResult.EnemyMoved;
+            }
+
             // if enemy is within range of someone then they will have a bestCombatPlayer to attack 
             CombatMapUnit bestCombatPlayer = enemy?.PreviousAttackTarget ?? GetClosestCombatPlayerInRange(enemy);
             
@@ -173,8 +201,26 @@ namespace Ultima5Redux.Maps
             // if the best combat player is attackable and reachable, then we do just that!
             if (bIsAttackable && bIsReachable)
             {
-                enemy.Attack(bestCombatPlayer, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
+                CombatMapUnit.HitState hitState = enemy.Attack(bestCombatPlayer, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
                     out outputStr);
+                switch (hitState)
+                {
+                    case CombatMapUnit.HitState.Missed:
+                    case CombatMapUnit.HitState.Grazed:
+                    case CombatMapUnit.HitState.BarelyWounded:
+                    case CombatMapUnit.HitState.LightlyWounded:
+                    case CombatMapUnit.HitState.HeavilyWounded:
+                    case CombatMapUnit.HitState.CriticallyWounded:
+                        break;
+                    case CombatMapUnit.HitState.Fleeing:
+                        enemy.IsFleeing = true;
+                        break;
+                    case CombatMapUnit.HitState.Dead:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
                 AdvanceToNextCombatMapUnit();
                 return TurnResult.EnemyAttacks;
             }
@@ -393,12 +439,6 @@ namespace Ultima5Redux.Maps
             return bestEnemy;
         }
 
-        //
-        // public CombatMapUnit GetClosestCombatMapUnitInRange(CombatMapUnitEnum combatUnitEnum)
-        // {
-        //     
-        // }
-        
         public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
         {
             int nOffset = GetCombatMapUnitIndex(currentEnemy);
@@ -423,8 +463,6 @@ namespace Ultima5Redux.Maps
             _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords);
             _initiativeQueue.InitializeInitiativeQueue();
         }
-
-
 
         protected override float GetAStarWeight(Point2D xy)
         {
@@ -464,7 +502,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         /// Creates a single enemy in the context of the combat map.
         /// </summary>
-        /// <param name="nEnemyIndex">0 based index that reflects the combat maps enemy index list</param>
+        /// <param name="nEnemyIndex">0 based index that refcts the combat maps enemy index list</param>
         /// <param name="singleCombatMapReference">reference of the combat map</param>
         /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
         /// <param name="npcRef"></param>

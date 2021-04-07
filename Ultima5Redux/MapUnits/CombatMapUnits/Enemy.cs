@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -16,6 +17,10 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override string Name => EnemyReference.MixedCaseSingularName.Trim();
 
         public override int ClosestAttackRange => EnemyReference.AttackRange;
+
+        public bool IsFleeing { get; set; } = false;
+
+        public Stack<Node> FleeingPath { get; set; } = null;
 
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,  
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
