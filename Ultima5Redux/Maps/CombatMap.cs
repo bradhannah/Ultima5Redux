@@ -124,19 +124,22 @@ namespace Ultima5Redux.Maps
 
             InitializeAStarMap();
         }
-        
+
         /// <summary>
         /// Attempts to processes the turn of the current combat unit - either CombatPlayer or Enemy.
         /// Can result in advancing to next turn, or indicate user input required
         /// </summary>
-        /// <param name="affectedCombatMapUnit"></param>
+        /// <param name="activeCombatMapUnit">the combat unit that is taking the action</param>
+        /// <param name="targetedCombatMapUnit">an optional unit that is being affected by the active combat unit</param>
         /// <param name="outputStr"></param>
         /// <returns></returns>
-        public TurnResult ProcessMapUnitTurn(out CombatMapUnit affectedCombatMapUnit, out string outputStr)
+        public TurnResult ProcessMapUnitTurn(out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit, out string outputStr)
         {
-            affectedCombatMapUnit = _initiativeQueue.GetCurrentCombatUnit();
-
-            if (affectedCombatMapUnit is CombatPlayer combatPlayer)
+            activeCombatMapUnit = _initiativeQueue.GetCurrentCombatUnit();
+            
+            targetedCombatMapUnit = null;
+            
+            if (activeCombatMapUnit is CombatPlayer combatPlayer)
             {
                 outputStr = combatPlayer.Record.Name + ", armed with " + combatPlayer.GetAttackWeaponsString();  
            
@@ -145,8 +148,8 @@ namespace Ultima5Redux.Maps
 
             // Everything after is ENEMY logic!
             // either move the ENEMY or have them attack someone
-            Debug.Assert(affectedCombatMapUnit is Enemy);
-            Enemy enemy = affectedCombatMapUnit as Enemy;
+            Debug.Assert(activeCombatMapUnit is Enemy);
+            Enemy enemy = activeCombatMapUnit as Enemy;
 
             // if the enemy is charmed then the player get's to control them instead!
             if (enemy.IsCharmed)
@@ -210,6 +213,7 @@ namespace Ultima5Redux.Maps
             {
                 CombatMapUnit.HitState hitState = enemy.Attack(bestCombatPlayer, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
                     out outputStr);
+                targetedCombatMapUnit = bestCombatPlayer;
                 switch (hitState)
                 {
                     case CombatMapUnit.HitState.Missed:
