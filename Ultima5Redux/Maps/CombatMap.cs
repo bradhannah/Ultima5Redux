@@ -157,13 +157,15 @@ namespace Ultima5Redux.Maps
                 return TurnResult.RequireCharacterInput;
             }
 
+            // the enemy is badly wounded and is going to try to escape
             if (enemy.IsFleeing)
             {
+                // if the enemy is on an outer tile, then they are free exit and end their turn
                 if (enemy.MapUnitPosition.X == 0 || enemy.MapUnitPosition.X == NumOfXTiles - 1 ||
                     enemy.MapUnitPosition.Y == 0 || enemy.MapUnitPosition.Y == NumOfYTiles - 1)
                 {
                     enemy.Stats.CurrentHp = 0;
-                    outputStr = enemy.FriendlyName + " escaped!";
+                    outputStr = enemy.EnemyReference.MixedCaseSingularName + " escaped!";
                     return TurnResult.EnemyEscaped;
                 }
                 
@@ -171,22 +173,27 @@ namespace Ultima5Redux.Maps
                 CombatMapUnit combatMapUnit =
                     enemy.FleeingPath != null ? GetCombatUnit(enemy.FleeingPath.Peek().Position) : null;
                 bool bIsTileWalkable = tileReference != null && combatMapUnit == null && IsTileWalkable(tileReference); 
+                // does the monster not yet have a flee path OR
+                // does the enemy have a flee path already established that is now block OR
                 if (enemy.FleeingPath == null || !bIsTileWalkable)
                 {
                     enemy.FleeingPath = GetEscapeRoute(enemy.MapUnitPosition.XY);
+                    // if the enemy is unable to calculate an exit path
                     if (enemy.FleeingPath == null)
                     {
-                        // no path
-                        outputStr = enemy.FriendlyName + "WANDXERED?D?ED?";
-                        return TurnResult.EnemyWandered;
+                        // if I decide to do something, then I will do it here
                     }
                 }
 
-                Point2D nextStep = enemy.FleeingPath.Pop().Position;
-                MoveActiveCombatMapUnit(nextStep);
-                outputStr = enemy.EnemyReference.MixedCaseSingularName + " fleeing!";
-                AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyMoved;
+                // if there is a path then follow it, otherwise fall through and attack like normal
+                if (enemy.FleeingPath?.Count > 0)
+                {
+                    Point2D nextStep = enemy.FleeingPath.Pop().Position;
+                    MoveActiveCombatMapUnit(nextStep);
+                    outputStr = enemy.EnemyReference.MixedCaseSingularName + " fleeing!";
+                    AdvanceToNextCombatMapUnit();
+                    return TurnResult.EnemyMoved;
+                }
             }
 
             // if enemy is within range of someone then they will have a bestCombatPlayer to attack 
