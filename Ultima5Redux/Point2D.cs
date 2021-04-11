@@ -203,6 +203,7 @@ namespace Ultima5Redux
 
             return points;
         }
+        
 
         public Point2D Copy()
         {

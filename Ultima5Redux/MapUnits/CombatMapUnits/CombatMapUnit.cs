@@ -34,6 +34,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
 
         public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
+
+        public abstract string SingularName { get; }
+        public abstract string PluralName { get; }
         
         protected CombatMapUnit()
         {
@@ -53,9 +56,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         
         public enum HitState { Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead }
 
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput)
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput, bool bForceHit = false)
         {
-            bool bIsHit = IsHit(enemyCombatMapUnit);
+            bool bIsHit = IsHit(enemyCombatMapUnit) || bForceHit;
 
             PreviousAttackTarget = enemyCombatMapUnit;
 
@@ -63,14 +66,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             if (!bIsHit)
             {
                 stateOutput = FriendlyName + DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd().Replace("!"," ")
-                              + enemyCombatMapUnit.Name + "!";
+                              + enemyCombatMapUnit.FriendlyName + "!";
                 return HitState.Missed;
             }
 
             if (nAttack == 0)
             {
                 stateOutput = FriendlyName + DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd().Replace("!"," ")
-                              + enemyCombatMapUnit.Name + "!";
+                              + enemyCombatMapUnit.FriendlyName + "!";
                 return HitState.Grazed;
             }
 

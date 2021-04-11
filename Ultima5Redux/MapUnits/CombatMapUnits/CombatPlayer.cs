@@ -32,6 +32,8 @@ namespace Ultima5Redux.MapUnits
 
         public override int Dexterity => (byte) Record.Stats.Dexterity;
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;
+        public override string SingularName => FriendlyName;
+        public override string PluralName => FriendlyName;
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;

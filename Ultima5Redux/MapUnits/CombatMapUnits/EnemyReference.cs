@@ -111,10 +111,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             // the friend index technically starts at the Mage, and skips 4 animations frames per enemy
             //const int StartFriendIndex = 320;
             FriendIndex =
-                //(
                 dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_FRIENDS).GetByte(nMonsterIndex);
-                 //* 4)
-                //+ StartFriendIndex;
             
             _nThing = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_THING).GetByte(nMonsterIndex);
 
@@ -131,8 +128,21 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             };
 
             AllCapsPluralName = dataOvlReference.StringReferences.GetString((DataOvlReference.EnemyOutOfCombatNamesUpper)nMonsterIndex);
-            MixedCaseSingularName = dataOvlReference.StringReferences.GetString((DataOvlReference.EnemyOutOfCombatNamesUpper)nMonsterIndex);
             
+            // the following is a super gross hack to account for the fact that they leave 4 of singular names out of the ordered list
+            int nMixedCaseIndex = nMonsterIndex;
+            if (nMonsterIndex > 8) nMixedCaseIndex += -2;
+            if (nMonsterIndex > 41) nMixedCaseIndex += -2;
+
+            if (nMonsterIndex == 8 || nMonsterIndex == 9 || nMonsterIndex == 42 || nMonsterIndex == 43)
+            {
+                MixedCaseSingularName = "x";
+            }
+            else
+            {
+                MixedCaseSingularName = dataOvlReference.StringReferences.GetString((DataOvlReference.EnemyIndividualNamesMixed)nMixedCaseIndex);
+            }
+
             int nKeySpriteIndex = N_FIRST_SPRITE + (nMonsterIndex * N_FRAMES_PER_SPRITE);
             KeyTileReference = tileReferences.GetTileReferenceOfKeyIndex(nKeySpriteIndex);
         }

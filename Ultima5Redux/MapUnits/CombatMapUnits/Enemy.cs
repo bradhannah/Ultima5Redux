@@ -52,10 +52,12 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override bool IsActive => Stats.CurrentHp > 0;
 
         public override bool IsAttackable => Stats.CurrentHp > 0;
-        public override string FriendlyName => Name;
+        public override string FriendlyName => SingularName;
 
         public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
+        public override string SingularName => EnemyReference.MixedCaseSingularName;
+        public override string PluralName => EnemyReference.AllCapsPluralName;
 
         // temporary until I read them in dynamically (somehow!?)
         public int Experience = 3; 

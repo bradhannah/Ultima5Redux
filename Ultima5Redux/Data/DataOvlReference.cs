@@ -815,36 +815,54 @@ namespace Ultima5Redux.Data
             HEADLESS, WISP, DAEMON, DRAGON, SAND_TRAP, TROLL, MONGBAT, CORPSER, ROT_WORM, SHADOW_LORD
         }
         
-        //     [0] = {string} "Sea Horse"
-        // [1] = {string} "Squid"
-        // [2] = {string} "Sea Serpent"
-        // [3] = {string} "Shark"
-        // [4] = {string} "Giant Rat"
-        // [5] = {string} "Bat"
-        // [6] = {string} "Giant Spider"
-        // [7] = {string} "Ghost"
-        // [8] = {string} "Slime"
-        // [9] = {string} "Gremlin"
-        // [10] = {string} "Mimic"
-        // [11] = {string} "Reaper"
-        // [12] = {string} "Gazer"
-        // [13] = {string} "Crawler"
-        // [14] = {string} "Gargoyle"
-        // [15] = {string} "Insect Swarm"
-        // [16] = {string} "Orc"
-        // [17] = {string} "Skeleton"
-        // [18] = {string} "Python"
-        // [19] = {string} "Ettin"
-        // [20] = {string} "Headless"
-        // [21] = {string} "Wisp"
-        // [22] = {string} "Daemon"
-        // [23] = {string} "Dragon"
-        // [24] = {string} "Sand Trap"
-        // [25] = {string} "Troll"
-        // [26] = {string} "Mongbat"
-        // [27] = {string} "Corpser"
-        // [28] = {string} "Rot Worm"
-        // [29] = {string} "Shadow Lord"
+    //     [0] = {string} "Mage"
+    // [1] = {string} "Bard"
+    // [2] = {string} "Fighter"
+    // [3] = {string} "Avatar"
+    // [4] = {string} "Villager"
+    // [5] = {string} "Merchant"
+    // [6] = {string} "Jester"
+    // [7] = {string} "Bard"
+    // *
+    // *
+    // [8] = {string} "Child"
+    // [9] = {string} "Beggar"
+    // [10] = {string} "Guard"
+    // [11] = {string} "Wanderer"
+    // [12] = {string} "Blackthorn"
+    // [13] = {string} "Lord British"
+    // [14] = {string} "Sea Horse"
+    // [15] = {string} "Squid"
+    // [16] = {string} "Sea Serpent"
+    // [17] = {string} "Shark"
+    // [18] = {string} "Giant Rat"
+    // [19] = {string} "Bat"
+    // [20] = {string} "Giant Spider"
+    // [21] = {string} "Ghost"
+    // [22] = {string} "Slime"
+    // [23] = {string} "Gremlin"
+    // [24] = {string} "Mimic"
+    // [25] = {string} "Reaper"
+    // [26] = {string} "Gazer"
+    // [27] = {string} "Crawler"
+    // [28] = {string} "Gargoyle"
+    // [29] = {string} "Insect Swarm"
+    // [30] = {string} "Orc"
+    // [31] = {string} "Skeleton"
+    // [32] = {string} "Python"
+    // [33] = {string} "Ettin"
+    // [34] = {string} "Headless"
+    // [35] = {string} "Wisp"
+    // [36] = {string} "Daemon"
+    // [37] = {string} "Dragon"
+    // [38] = {string} "Sand Trap"
+    // [39] = {string} "Troll"
+    // *
+    // *
+    // [40] = {string} "Mongbat"
+    // [41] = {string} "Corpser"
+    // [42] = {string} "Rot Worm"
+    // [43] = {string} "Shadow Lord"
 
         public enum EnemyOutOfCombatNamesUpper
         {
@@ -995,9 +1013,11 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)",
                 0x1d3, 0x158, 0x00, DataChunkName.MONSTER_NAMES_MIXED);
+            //SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_MIXED).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (upper case)",
                 0x32b, 0x165, 0x00, DataChunkName.MONSTER_NAMES_UPPER);
+            SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
 
             
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,

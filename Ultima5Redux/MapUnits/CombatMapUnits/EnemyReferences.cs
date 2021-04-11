@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private void PrintDebugCSV()
         {
-            Console.Write(@"Name,ClosestAttackRange,MissileType,Friend,Thing");
+            Console.Write(@"Name,Plural,Singular,ClosestAttackRange,MissileType,Friend,Thing");
             //var dExampleBitfield = 0x8000;
             foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
             // for (int index = 0; index < AllEnemyReferences[0]._enemyFlags.Count; index++)
@@ -39,7 +39,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             
             foreach (EnemyReference enemy in AllEnemyReferences)
             {
-                Console.Write(enemy.KeyTileReference.Name + @"/" + enemy.AllCapsPluralName + @"," + $@"0x{enemy.AttackRange:X2}");
+                Console.Write(enemy.KeyTileReference.Name + @"," + enemy.AllCapsPluralName + @"," + enemy.MixedCaseSingularName + @"," + $@"0x{enemy.AttackRange:X2}");
                 Console.Write(@"," + $@"{enemy.TheMissileType}");
                 EnemyReference friend = AllEnemyReferences[enemy.FriendIndex];
                 Console.Write(@"," + $@"{friend.AllCapsPluralName}");
