@@ -760,6 +760,9 @@ namespace Ultima5Redux
         {
             string retStr = DataOvlRef.StringReferences.GetDirectionString(direction);
 
+            CombatMap currentCombatMap = State.TheVirtualMap.CurrentCombatMap;
+            Debug.Assert(currentCombatMap != null);
+            
             // if we were to move, which direction would we move
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
 
@@ -770,7 +773,7 @@ namespace Ultima5Redux
             {
                 retStr += "\nLEAVING";
 
-                State.TheVirtualMap.CurrentCombatMap.MakePlayerEscape(combatPlayer);
+                currentCombatMap.MakePlayerEscape(combatPlayer);
                 
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 return retStr;
@@ -787,10 +790,12 @@ namespace Ultima5Redux
             }
 
             // todo: this is a gross way to update location information
-            State.TheVirtualMap.CurrentCombatMap.MoveActiveCombatMapUnit(newPosition);
+            currentCombatMap.MoveActiveCombatMapUnit(newPosition);
             
             tryToMoveResult = TryToMoveResult.Moved;
-            //retStr += "\nGood to go";
+
+            currentCombatMap.AdvanceToNextCombatMapUnit();
+
             return retStr;
         }
 
