@@ -213,7 +213,7 @@ namespace Ultima5Redux.Maps
                     preAttackOutputStr += " with " + weapon.LongName + "!";
 
                     // do the attack logic
-                    targetedHitState = opponentCombatMapUnit.Attack(opponentCombatMapUnit, weapon, out string stateOutput);
+                    targetedHitState = combatPlayer.Attack(opponentCombatMapUnit, weapon, out string stateOutput);
                     
                     // if the player attacks, but misses with a range weapon the we need see if they
                     // accidentally hit someone else
