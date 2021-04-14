@@ -359,8 +359,10 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-            // if enemy is within range of someone then they will have a bestCombatPlayer to attack 
-            CombatMapUnit bestCombatPlayer = enemy?.PreviousAttackTarget ?? GetClosestCombatPlayerInRange(enemy);
+            // if enemy is within range of someone then they will have a bestCombatPlayer to attack
+            // if their old target is now out of range, they won't hesitate to attack someone who is
+            bool bPreviousTargetInRange = enemy.PreviousAttackTarget != null && enemy.CanReachForAttack(enemy.PreviousAttackTarget);
+            CombatMapUnit bestCombatPlayer = bPreviousTargetInRange ? enemy.PreviousAttackTarget : GetClosestCombatPlayerInRange(enemy);
             
             // we determine if the best combat player is close enough to attack or not
             bool bIsAttackable = bestCombatPlayer?.IsAttackable ?? false;
@@ -378,7 +380,10 @@ namespace Ultima5Redux.Maps
                     case CombatMapUnit.HitState.Missed:
                         // oh oh - the enemy missed
                         if (enemy.EnemyReference.TheMissileType == EnemyReference.MissileType.None)
+                        {
+                            targetedCombatMapUnit = bestCombatPlayer;
                             break;
+                        }
 
                         Debug.Assert(enemy.EnemyReference.AttackRange > 1,
                             "Cannot have a ranged weapon if no missile type set");
