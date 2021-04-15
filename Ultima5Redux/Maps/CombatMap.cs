@@ -201,6 +201,7 @@ namespace Ultima5Redux.Maps
                             AdvanceToNextCombatMapUnit();
                         }
 
+                        missedPoint = actionPosition;
                         targetedHitState = CombatMapUnit.HitState.Missed; 
                         return TurnResult.CombatPlayerMissed; //true;
                     }
