@@ -182,7 +182,7 @@ namespace Ultima5Redux.Maps
                     CombatItem weapon;
                     
                     // the top most unit is NOT a combat unit, so they hit nothing!
-                    if (!(opponentMapUnit is CombatMapUnit opponentCombatMapUnit))
+                    if (!(opponentMapUnit is CombatMapUnit opponentCombatMapUnit)) 
                     {
                         preAttackOutputStr += "nothing with ";
                         if (_currentCombatItemQueue == null)
@@ -215,41 +215,44 @@ namespace Ultima5Redux.Maps
 
                     // do the attack logic
                     targetedHitState = combatPlayer.Attack(opponentCombatMapUnit, weapon, out string stateOutput);
+                    postAttackOutputStr = stateOutput;
                     
                     // if the player attacks, but misses with a range weapon the we need see if they
                     // accidentally hit someone else
+                    bool bMissedButHit = false;
                     if (targetedHitState == CombatMapUnit.HitState.Missed && weapon.Range > 1)
                     {
-                        
+                        TurnResult turnResult = HandleRangedMissed(combatPlayer, 
+                            opponentCombatMapUnit.MapUnitPosition.XY, out targetedCombatMapUnit,
+                            weapon.AttackStat, out missedPoint, out string addStr);
+                        postAttackOutputStr += addStr;
+
+                        if (turnResult == TurnResult.EnemyMissedButHit)
+                        {
+                            bMissedButHit = true;
+                        }
+                    }
+                    else
+                    {
+                        // we know they attacked this particular opponent at this point
+                        targetedCombatMapUnit = opponentCombatMapUnit;
                     }
                     
-                    // we know they attacked this particular opponent at this point
-                    targetedCombatMapUnit = opponentCombatMapUnit;
-                    
-                    HandleHitState(targetedHitState, opponentCombatMapUnit);
-                    postAttackOutputStr = stateOutput;
+                    HandleHitState(targetedHitState, targetedCombatMapUnit);
 
                     if (_currentCombatItemQueue == null || _currentCombatItemQueue.Count == 0)
                     {
                         AdvanceToNextCombatMapUnit();
                     }
 
-                    // if (IsVictorious && !_bReportedVictory)
-                    // {
-                    //     _bReportedVictory = true;
-                    //     preAttackOutputStr += "\n" + StringHelpers
-                    //         .GetOrigString(DataOvlReference.Battle2Strings.N_VICTORY_BANG_N).Trim();
-                    //     //WriteOutput("\n"+StringHelpers.GetOrigString(DataOvlReference.Battle2Strings.N_VICTORY_BANG_N).Trim(), false, true);
-                    // }
+                    if (bMissedButHit) return TurnResult.CombatPlayerMissedButHit;
+                    
                     return targetedHitState != CombatMapUnit.HitState.Missed
                         ? TurnResult.CombatPlayerHit
                         : TurnResult.CombatPlayerMissed;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-//            return true;
-
         }
 
         private void HandleHitState(CombatMapUnit.HitState hitState, CombatMapUnit affectedCombatMapUnit)
@@ -274,7 +277,6 @@ namespace Ultima5Redux.Maps
                     }
                     break;
                 case CombatMapUnit.HitState.Dead:
-                    //KillCombatUnit(affectedCombatMapUnit);
                     if (affectedCombatMapUnit is Enemy deadEnemy)
                     {
                         // if the enemy was an NPC then we kill them!
@@ -288,7 +290,7 @@ namespace Ultima5Redux.Maps
                     throw new ArgumentOutOfRangeException(nameof(hitState), hitState, null);
             }
         }
-        
+
         /// <summary>
         /// Attempts to processes the turn of the current combat unit - either CombatPlayer or Enemy.
         /// Can result in advancing to next turn, or indicate user input required
@@ -296,6 +298,7 @@ namespace Ultima5Redux.Maps
         /// <param name="activeCombatMapUnit">the combat unit that is taking the action</param>
         /// <param name="targetedCombatMapUnit">an optional unit that is being affected by the active combat unit</param>
         /// <param name="preAttackOutputStr"></param>
+        /// <param name="postAttackOutputStr"></param>
         /// <param name="missedPoint">if the target is empty or missed then this gives the point that the attack landed</param>
         /// <returns></returns>
         public TurnResult ProcessEnemyTurn(out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit, 
@@ -436,7 +439,6 @@ namespace Ultima5Redux.Maps
         {
             if (CurrentCombatPlayer is null)
             {
-                //_currentCombatItemQueue = null;
                 ClearCurrentCombatItemQueue();
                 return;
             }
@@ -444,7 +446,6 @@ namespace Ultima5Redux.Maps
             List <CombatItem> combatItems =
                 CurrentCombatPlayer.GetAttackWeapons();
             BuildCombatItemQueue(combatItems);
-            //_currentCombatItemQueue = new Queue<CombatItem>(combatItems);
         }
 
 
@@ -468,17 +469,15 @@ namespace Ultima5Redux.Maps
                 AdvanceToNextCombatMapUnit();
                 return TurnResult.EnemyMissed;
             }
-            else
-            {
-                outputStr += "\nBut they accidentally hit another!"; 
-                // we attack the thing we accidentally hit
-                attackingCombatMapUnit.Attack(targetedCombatMapUnit,
-                    nAttackMax,
-                    out string missedAttackOutputStr, true);
-                outputStr += "\n\n" + missedAttackOutputStr;
-                AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyMissedButHit;
-            }
+
+            outputStr += "\nBut they accidentally hit another!"; 
+            // we attack the thing we accidentally hit
+            CombatMapUnit.HitState hitState = attackingCombatMapUnit.Attack(targetedCombatMapUnit,
+                nAttackMax, out string missedAttackOutputStr, true);
+            
+            outputStr += "\n" + missedAttackOutputStr;
+            AdvanceToNextCombatMapUnit();
+            return TurnResult.EnemyMissedButHit;
         }
 
         private Point2D GetRandomSurroundingPointThatIsnt(Point2D surroundThisPoint, Point2D notThisPoint)
