@@ -784,7 +784,7 @@ namespace Ultima5Redux
 
             if (!State.TheVirtualMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition, false, Avatar.AvatarState.Regular))
             {
-                retStr += "\n" + DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED);
+                retStr = retStr.TrimEnd() + " - " + DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED);
                 tryToMoveResult = TryToMoveResult.Blocked;
                 return retStr;
             }

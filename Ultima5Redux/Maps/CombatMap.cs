@@ -60,6 +60,8 @@ namespace Ultima5Redux.Maps
 
         public CombatPlayer CurrentCombatPlayer => _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
 
+        public CombatMapUnit CurrentCombatMapUnit => _initiativeQueue.GetCurrentCombatUnit();
+        
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
         
         /// <summary> 
@@ -236,6 +238,7 @@ namespace Ultima5Redux.Maps
                     {
                         // we know they attacked this particular opponent at this point
                         targetedCombatMapUnit = opponentCombatMapUnit;
+                        missedPoint = targetedCombatMapUnit.MapUnitPosition.XY;
                     }
                     
                     HandleHitState(targetedHitState, targetedCombatMapUnit);
@@ -458,7 +461,7 @@ namespace Ultima5Redux.Maps
             missedPoint = null;
 
             Point2D newAttackPosition = GetRandomSurroundingPointThatIsnt(attackPosition,
-                attackingCombatMapUnit.MapUnitPosition.XY);
+                attackPosition);//attackingCombatMapUnit.MapUnitPosition.XY);
             Debug.Assert(newAttackPosition != null);
 
             targetedCombatMapUnit = GetCombatUnit(newAttackPosition);
