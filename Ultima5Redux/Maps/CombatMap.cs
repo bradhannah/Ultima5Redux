@@ -179,8 +179,16 @@ namespace Ultima5Redux.Maps
                     return TurnResult.NoAction;
                 case SelectionAction.Attack:
                     preAttackOutputStr = "Attack ";
-                    MapUnit opponentMapUnit = GetCombatUnit(actionPosition); 
+                    MapUnit opponentMapUnit = GetCombatUnit(actionPosition);
 
+                    // you have tried to attack yourself!?
+                    if (opponentMapUnit == combatPlayer)
+                    {
+                        preAttackOutputStr = preAttackOutputStr.TrimEnd() + "... yourself? ";
+                        preAttackOutputStr += "\nYou think better of it and skip your turn.";
+                        return TurnResult.NoAction;
+                    }
+                    
                     CombatItem weapon;
                     
                     // the top most unit is NOT a combat unit, so they hit nothing!
