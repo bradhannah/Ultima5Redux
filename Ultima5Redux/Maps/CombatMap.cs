@@ -870,6 +870,7 @@ namespace Ultima5Redux.Maps
             Debug.Assert(!combatPlayer.HasEscaped);
                     
             combatPlayer.HasEscaped = true;
+            AdvanceToNextCombatMapUnit();
         }
 
         public string GetWalkableDebug()
