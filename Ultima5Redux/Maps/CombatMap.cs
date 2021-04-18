@@ -502,8 +502,6 @@ namespace Ultima5Redux.Maps
             return randomSurroundingPoint;
         }
         
-        
-        
         /// <summary>
         /// Moves the active combat unit to a new map location
         /// </summary>
@@ -686,7 +684,7 @@ namespace Ultima5Redux.Maps
                 // we start at the next position, and wrap around ensuring we have hit all possible enemies
                 int nIndex = (i + nOffset + 1) % nMapUnits;
                 if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
-                
+                if (!enemy.IsActive) continue;
                 if (CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
             }
             return null;
