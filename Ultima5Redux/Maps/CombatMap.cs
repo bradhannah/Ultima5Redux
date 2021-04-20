@@ -148,12 +148,21 @@ namespace Ultima5Redux.Maps
         }
         
         public enum SelectionAction {None, Magic, Attack}
+
         private Queue<CombatItem> _currentCombatItemQueue;
 
         public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
         public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
-        public void ClearCurrentCombatItemQueue() => _currentCombatItemQueue.Clear();
+
+        private void ClearCurrentCombatItemQueue()
+        {
+            if (_currentCombatItemQueue == null)
+                _currentCombatItemQueue = new Queue<CombatItem>();
+            else
+                _currentCombatItemQueue.Clear();
+        }
+
         public void BuildCombatItemQueue(List<CombatItem> combatItems) => _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
 
         public TurnResult ProcessCombatPlayerTurn(SelectionAction selectedAction, Point2D actionPosition, 
