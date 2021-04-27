@@ -152,6 +152,7 @@ namespace Ultima5Redux.Maps
         private Queue<CombatItem> _currentCombatItemQueue;
 
         public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
+        public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
         public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
 
@@ -551,7 +552,9 @@ namespace Ultima5Redux.Maps
             CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
             
             CurrentPlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
-            
+
+            _bPlayerHasChanged = true;
+
             RefreshCurrentCombatPlayer();
         } 
         
@@ -576,7 +579,25 @@ namespace Ultima5Redux.Maps
             return -1;
         }
 
-        public void SetActivePlayerCharacter(PlayerCharacterRecord record) => _initiativeQueue.SetActivePlayerCharacter(record);
+        private bool _bPlayerHasChanged = true;
+        public bool GetHasPlayerChangedSinceLastCheckAndReset()
+        {
+            if (!_bPlayerHasChanged) return false;
+            _bPlayerHasChanged = false;
+            return true;
+        }
+
+        public void SetActivePlayerCharacter(PlayerCharacterRecord record)
+        {
+            if (CurrentCombatPlayer.Record != record)
+            {
+                
+            }
+
+            _initiativeQueue.SetActivePlayerCharacter(record);
+            _bPlayerHasChanged = true;
+            RefreshCurrentCombatPlayer();
+        }
 
         public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
 

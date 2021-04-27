@@ -54,6 +54,7 @@ namespace Ultima5Redux.Maps
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)
         {
             _activePlayerCharacterRecord = record;
+            Turn += 1; 
         }
         
         /// <summary>
