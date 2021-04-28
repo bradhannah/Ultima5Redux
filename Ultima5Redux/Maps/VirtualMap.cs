@@ -1098,6 +1098,9 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsHorizDoor(Point2D xy)
         {
+            if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
+            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
+            
             return GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC
                    || GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC;
         }
