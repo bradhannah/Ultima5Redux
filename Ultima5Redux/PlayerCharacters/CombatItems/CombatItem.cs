@@ -14,6 +14,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public const int BareHandsIndex = -2;
 
+        public enum MissileType
+        {
+            None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock
+        }
+
         protected CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef,
             int nQuantity, int nOffset, int nSpriteNum)
             : base(nQuantity, GetEquipmentString(dataOvlRef, (int) specificEquipment),
@@ -22,6 +27,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             AttackStat = GetAttack(dataOvlRef, (int) specificEquipment);
             DefendStat = GetDefense(dataOvlRef, (int) specificEquipment);
             int nRange = GetRange(dataOvlRef, (int) specificEquipment);
+            Missile = GetMissileType(specificEquipment, nRange);
             Range = nRange == 0 ? 1 : nRange;
             EquipmentName = GetEquipmentString(dataOvlRef, (int) specificEquipment);
             RequiredStrength = GetRequiredStrength(dataOvlRef, (int) specificEquipment);
@@ -36,6 +42,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public int DefendStat { get; }
         public int Range { get; }
         public string EquipmentName { get; }
+        public MissileType Missile { get; }
 
         private static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
@@ -65,6 +72,22 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList();
             if (nIndex >= defenseValueList.Count) return 0;
             return defenseValueList[nIndex];
+        }
+
+        private static MissileType GetMissileType(DataOvlReference.Equipment equipment, int nRange)
+        {
+            switch (equipment)
+            {
+                case DataOvlReference.Equipment.Sling:
+                    return MissileType.Rock;
+                case DataOvlReference.Equipment.FlamingOil:
+                    return MissileType.Red;
+                case DataOvlReference.Equipment.ThrowingAxe:
+                case DataOvlReference.Equipment.MagicAxe:
+                    return MissileType.Axe;
+            }
+
+            return nRange == 0 ? MissileType.None : MissileType.Arrow;
         }
 
         private static int GetRequiredStrength(DataOvlReference dataOvlRef, int nIndex)
@@ -121,5 +144,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 (int) (BasePrice - BasePrice * 0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity));
             return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
         }
+
     }
 }

@@ -168,7 +168,8 @@ namespace Ultima5Redux.Maps
 
         public TurnResult ProcessCombatPlayerTurn(SelectionAction selectedAction, Point2D actionPosition, 
             out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit, 
-            out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint, out CombatMapUnit.HitState targetedHitState)
+            out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint, 
+            out CombatMapUnit.HitState targetedHitState)
         {
             targetedCombatMapUnit = null;
             missedPoint = null;
@@ -404,7 +405,7 @@ namespace Ultima5Redux.Maps
                 {
                     case CombatMapUnit.HitState.Missed:
                         // oh oh - the enemy missed
-                        if (enemy.EnemyReference.TheMissileType == EnemyReference.MissileType.None)
+                        if (enemy.EnemyReference.TheMissileType == CombatItem.MissileType.None)
                         {
                             targetedCombatMapUnit = bestCombatPlayer;
                             break;

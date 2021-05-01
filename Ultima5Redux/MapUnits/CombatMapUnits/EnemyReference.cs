@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.CombatItems;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
@@ -63,15 +64,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Teleport, DisappearsOnDeath, Invisibility, GatesInDaemon, Poison, InfectWithPlague
         }
 
-        public enum MissileType
-        {
-            None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock
-        }
-        
         private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new Dictionary<EnemyAbility, bool>();  
 
         public int AttackRange { get; }
-        public MissileType TheMissileType { get; }
+        public CombatItem.MissileType TheMissileType { get; }
         public int FriendIndex { get; }
         
         internal byte _nThing;
@@ -103,9 +99,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_ATTACK_RANGE).GetByte(nMonsterIndex);
             
             if (AttackRange == 1) 
-                TheMissileType = MissileType.None; 
+                TheMissileType = CombatItem.MissileType.None; 
             else
-                TheMissileType = (MissileType)dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_RANGE_THING)
+                TheMissileType = (CombatItem.MissileType)dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_RANGE_THING)
                     .GetByte(nMonsterIndex);
             
             // the friend index technically starts at the Mage, and skips 4 animations frames per enemy
