@@ -10587,7 +10587,7 @@
       "IsGuessableFloor": false,
       "BlocksLight": false,
       "IsWindow": false,
-      "CombatMapIndex": "None"
+      "CombatMapIndex": "Brick"
    },
    "353": {
       "Name": "PersonStocks2",
@@ -10617,7 +10617,7 @@
       "IsGuessableFloor": false,
       "BlocksLight": false,
       "IsWindow": false,
-      "CombatMapIndex": "None"
+      "CombatMapIndex": "Brick"
    },
    "354": {
       "Name": "PersonStocks3",
@@ -10647,7 +10647,7 @@
       "IsGuessableFloor": false,
       "BlocksLight": false,
       "IsWindow": false,
-      "CombatMapIndex": "None"
+      "CombatMapIndex": "Brick"
    },
    "355": {
       "Name": "PersonStocks4",
@@ -10677,7 +10677,7 @@
       "IsGuessableFloor": false,
       "BlocksLight": false,
       "IsWindow": false,
-      "CombatMapIndex": "None"
+      "CombatMapIndex": "Brick"
    },
    "356": {
       "Name": "WallPrisoner1",
@@ -14730,7 +14730,7 @@
       "CombatMapIndex": "None"
    },
    "491": {
-      "Name": "ColdField",
+      "Name": "ElectricField",
       "Description": "",
       "IsWalking_Passable": true,
       "IsBoat_Passable": false,
@@ -15632,6 +15632,36 @@
    "521": {
       "Name": "HittableRangeCombatHighlightBox",
       "Description": "Square box indicating attack range highlight box",
+      "IsWalking_Passable": false,
+      "IsBoat_Passable": false,
+      "IsSkiff_Passable": false,
+      "IsCarpet_Passable": false,
+      "IsHorse_Passable": false,
+      "IsKlimable": false,
+      "IsOpenable": false,
+      "IsLandEnemyPassable": false,
+      "IsWaterEnemyPassable": false,
+      "SpeedFactor": 1,
+      "IsPartOfAnimation": false,
+      "AnimationIndex": 0,
+      "IsUpright": true,
+      "FlatTileSubstitutionIndex": -1,
+      "FlatTileSubstitutionName": "None",
+      "IsEnemy": false,
+      "IsNPC": false,
+      "IsBuilding": false,
+      "DontDraw": false,
+      "IsPushable": false,
+      "IsTalkOverable": false,
+      "IsBoardable": false,
+      "IsGuessableFloor": false,
+      "BlocksLight": false,
+      "IsWindow": false,
+      "CombatMapIndex": "None"
+   },
+   "522": {
+      "Name": "Arrow",
+      "Description": "Arrow graphic used in combat",
       "IsWalking_Passable": false,
       "IsBoat_Passable": false,
       "IsSkiff_Passable": false,
