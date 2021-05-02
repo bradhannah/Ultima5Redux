@@ -75,8 +75,8 @@ namespace Ultima5Redux.Maps
         private MapUnits.MapUnits CombatMapUnits { get; }
 
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks, EnemyWandered, 
-            EnemyEscaped, EnemyMissed, EnemyMissedButHit, CombatPlayerMissed, CombatPlayerMissedButHit,
-            CombatPlayerHit, NoAction
+            EnemyEscaped, EnemyMissed, EnemyGrazed, EnemyMissedButHit, CombatPlayerMissed, CombatPlayerMissedButHit,
+            CombatPlayerHit, CombatPlayerGrazed, NoAction 
         }
 
         public enum CombatMapUnitEnum { All, CombatPlayer, Enemy };
@@ -268,6 +268,8 @@ namespace Ultima5Redux.Maps
                     }
 
                     if (bMissedButHit) return TurnResult.CombatPlayerMissedButHit;
+
+                    if (targetedHitState == CombatMapUnit.HitState.Grazed) return TurnResult.CombatPlayerGrazed;
                     
                     return targetedHitState != CombatMapUnit.HitState.Missed
                         ? TurnResult.CombatPlayerHit
@@ -355,6 +357,7 @@ namespace Ultima5Redux.Maps
                 {
                     enemy.Stats.CurrentHp = 0;
                     preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " escaped!";
+                    AdvanceToNextCombatMapUnit();
                     return TurnResult.EnemyEscaped;
                 }
                 
@@ -437,7 +440,7 @@ namespace Ultima5Redux.Maps
                 }
                 
                 AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyAttacks;
+                return hitState == CombatMapUnit.HitState.Grazed ? TurnResult.EnemyGrazed : TurnResult.EnemyAttacks;
             }
 
             CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatPlayer(enemy);
