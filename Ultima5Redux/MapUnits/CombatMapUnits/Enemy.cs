@@ -71,7 +71,7 @@ namespace Ultima5Redux.MapUnits.Monsters
 
         public bool CanReachForAttack(CombatMapUnit combatMapUnit)
         {
-            return CanReachForAttack(combatMapUnit, EnemyReference.AttackRange);
+            return CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
         }
     }
 }

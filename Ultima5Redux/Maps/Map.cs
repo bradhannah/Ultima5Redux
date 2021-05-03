@@ -15,6 +15,9 @@ namespace Ultima5Redux.Maps
         /// </summary>
         internal AStar AStar;
 
+        // protected Dictionary<WalkableType, AStar> aStarDictionary = new Dictionary<WalkableType, AStar>();
+        // protected Dictionary<
+
         /// <summary>
         ///     All A* nodes for the current map
         ///     Accessed by [x][y]
@@ -30,6 +33,8 @@ namespace Ultima5Redux.Maps
         protected readonly TileReferences SpriteTileReferences;
 
         private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
+
+        public enum WalkableType { StandardWalking, CombatLand, CombatWater }
 
         protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference, 
             TileReferences spriteTileReferences)
@@ -238,53 +243,7 @@ namespace Ultima5Redux.Maps
             return _xyOverrides[xy];
         }
 
-        /// <summary>
-        /// Gets the best escape route based on current position
-        /// </summary>
-        /// <param name="fromPosition"></param>
-        /// <returns>path to exit, or null if none exist</returns>
-        public Stack<Node> GetEscapeRoute(Point2D fromPosition)
-        {
-            List<Point2D> points = GetEscapablePoints(fromPosition);
 
-            int nShortestPath = 0xFFFF;
-            Stack<Node> shortestPath = null;
-            
-            foreach (Point2D destinationPoint in points)
-            {
-                Stack<Node> currentPath = AStar.FindPath(fromPosition, destinationPoint);
-                if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
-
-                nShortestPath = currentPath.Count;
-                shortestPath = currentPath;
-            }
-
-            return shortestPath;
-        }
-
-        /// <summary>
-        /// Gets all tiles that are at the edge of the screen and are escapable based on the given position
-        /// </summary>
-        /// <param name="fromPosition"></param>
-        /// <returns>a list of all potential positions</returns>
-        public List<Point2D> GetEscapablePoints(Point2D fromPosition)
-        {
-            _ = fromPosition;
-            List<Point2D> points = new List<Point2D>();
-
-            for (int nIndex = 0; nIndex < NumOfXTiles; nIndex++)
-            {
-                if (GetTileReference(new Point2D(nIndex,0)).IsWalking_Passable) points.Add(new Point2D(nIndex, 0));
-                if (GetTileReference(new Point2D(nIndex, NumOfYTiles - 1)).IsWalking_Passable) points.Add(new Point2D(nIndex, NumOfYTiles - 1));
-                
-                if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
-                
-                if (GetTileReference(new Point2D(0, nIndex)).IsWalking_Passable) points.Add(new Point2D(0, nIndex));
-                if (GetTileReference(new Point2D(NumOfXTiles - 1, nIndex)).IsWalking_Passable) points.Add(new Point2D(NumOfXTiles - 1, nIndex));
-            }
-            
-            return points;
-        }
 
         /// <summary>
         ///     Filthy little map to assign single letter to map elements

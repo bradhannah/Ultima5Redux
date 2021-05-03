@@ -126,7 +126,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
-            CanReachForAttack(opponentCombatMapUnit, item.Range);
+            CanReachForMeleeAttack(opponentCombatMapUnit, item.Range);
 
     }
 }

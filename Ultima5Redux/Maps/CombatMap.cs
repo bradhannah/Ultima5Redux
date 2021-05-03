@@ -76,7 +76,7 @@ namespace Ultima5Redux.Maps
 
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks, EnemyWandered, 
             EnemyEscaped, EnemyMissed, EnemyGrazed, EnemyMissedButHit, CombatPlayerMissed, CombatPlayerMissedButHit,
-            CombatPlayerHit, CombatPlayerGrazed, NoAction 
+            CombatPlayerHit, CombatPlayerGrazed, CombatPlayerBlocked, NoAction 
         }
 
         public enum CombatMapUnitEnum { All, CombatPlayer, Enemy };
@@ -166,6 +166,27 @@ namespace Ultima5Redux.Maps
 
         public void BuildCombatItemQueue(List<CombatItem> combatItems) => _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
 
+        private bool IsRangedPathBlocked(Point2D attackingPoint, Point2D opponentMapUnit, out Point2D firstBlockPoint)
+        {
+            // get the points between the player and opponent
+            List<Point2D> points = attackingPoint.Raytrace(opponentMapUnit);
+            // for (int i = 1; i < points.Count - 2; i++)
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                Point2D point = points[i];
+                TileReference tileRef = GetTileReference(point);
+                if (tileRef.IsLandEnemyPassable || tileRef.IsWaterEnemyPassable) continue;
+                
+                // we can't penetrate this thing and need to give up
+                firstBlockPoint = point;
+                return true;
+            }
+
+            firstBlockPoint = null;
+            return false;
+        }
+        
+        
         public TurnResult ProcessCombatPlayerTurn(SelectionAction selectedAction, Point2D actionPosition, 
             out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit, 
             out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint, 
@@ -234,6 +255,26 @@ namespace Ultima5Redux.Maps
 
                     preAttackOutputStr += " with " + weapon.LongName + "!";
 
+                    // let's first make sure that any range weapons do not hit a wall first!
+                    if (weapon.Range > 1)
+                    {
+                        bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
+                            opponentMapUnit.MapUnitPosition.XY,
+                            out missedPoint);
+                        if (bIsBlocked)
+                        {
+                            postAttackOutputStr =
+                                combatPlayer.FriendlyName + _dataOvlReference.StringReferences
+                                                              .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
+                                                              .TrimEnd().Replace("!", " ")
+                                                          + opponentMapUnit.FriendlyName + " because it was blocked!";
+
+                            AdvanceToNextCombatMapUnit();
+                            targetedHitState = CombatMapUnit.HitState.Missed;
+                            return TurnResult.CombatPlayerBlocked;
+                        }
+                    }
+                    
                     // do the attack logic
                     targetedHitState = combatPlayer.Attack(opponentCombatMapUnit, weapon, out string stateOutput);
                     postAttackOutputStr = stateOutput;
@@ -364,12 +405,18 @@ namespace Ultima5Redux.Maps
                 TileReference tileReference = enemy.FleeingPath != null ? GetTileReference(enemy.FleeingPath.Peek().Position) : null;
                 CombatMapUnit combatMapUnit =
                     enemy.FleeingPath != null ? GetCombatUnit(enemy.FleeingPath.Peek().Position) : null;
-                bool bIsTileWalkable = tileReference != null && combatMapUnit == null && IsTileWalkable(tileReference); 
+                // bool bIsTileWalkable = tileReference != null && combatMapUnit == null && IsTileWalkable(tileReference); 
+                bool bIsTileWalkable =
+                    tileReference != null && (combatMapUnit == null && enemy.EnemyReference.IsWaterEnemy
+                        ? tileReference.IsWaterEnemyPassable : tileReference.IsLandEnemyPassable);//IsTileWalkable(tileReference); 
+                
+                
                 // does the monster not yet have a flee path OR
                 // does the enemy have a flee path already established that is now block OR
                 if (enemy.FleeingPath == null || !bIsTileWalkable)
                 {
-                    enemy.FleeingPath = GetEscapeRoute(enemy.MapUnitPosition.XY);
+                    enemy.FleeingPath = GetEscapeRoute(enemy.MapUnitPosition.XY, 
+                        enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand);
                     // if the enemy is unable to calculate an exit path
                     if (enemy.FleeingPath == null)
                     {
@@ -677,7 +724,11 @@ namespace Ultima5Redux.Maps
             for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
             {
                 if (!(CombatMapUnits.CurrentMapUnits[nIndex] is CombatPlayer combatPlayer)) continue;
-                if (!enemy.CanReachForAttack(combatPlayer, enemy.EnemyReference.AttackRange)) continue;
+                if (enemy.EnemyReference.AttackRange == 1 && !enemy.CanReachForMeleeAttack(combatPlayer, enemy.EnemyReference.AttackRange)) continue;
+                if (enemy.EnemyReference.AttackRange > 1)
+                {
+                    if (IsRangedPathBlocked(enemy.MapUnitPosition.XY,  combatPlayer.MapUnitPosition.XY, out _)) continue;
+                }
                 if (!CombatMapUnits.CurrentMapUnits[nIndex].IsActive) continue;
 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(combatPlayer.MapUnitPosition.XY);
@@ -700,7 +751,13 @@ namespace Ultima5Redux.Maps
             for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
             {
                 if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
-                if (!CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) continue;
+                // if (!CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) continue;
+                if (combatItem.Range == 1 && !CurrentCombatPlayer.CanReachForMeleeAttack(enemy, combatItem.Range)) continue;
+                if (combatItem.Range > 1)
+                {
+                    if (IsRangedPathBlocked(CurrentCombatPlayer.MapUnitPosition.XY,  enemy.MapUnitPosition.XY, out _)) continue;
+                }
+                
                 if (!CombatMapUnits.CurrentMapUnits[nIndex].IsActive) continue;
                 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(CurrentCombatPlayer.MapUnitPosition.XY);
@@ -911,7 +968,77 @@ namespace Ultima5Redux.Maps
         {
             return AStar.GetWalkableDebug();
         }
-        
+
+        /// <summary>
+        /// Gets the best escape route based on current position
+        /// </summary>
+        /// <param name="fromPosition"></param>
+        /// <param name="walkableType"></param>
+        /// <returns>path to exit, or null if none exist</returns>
+        public Stack<Node> GetEscapeRoute(Point2D fromPosition, WalkableType walkableType)
+        {
+            List<Point2D> points = GetEscapablePoints(fromPosition, walkableType);
+
+            int nShortestPath = 0xFFFF;
+            Stack<Node> shortestPath = null;
+            
+            foreach (Point2D destinationPoint in points)
+            {
+                Stack<Node> currentPath = AStar.FindPath(fromPosition, destinationPoint);
+                if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
+
+                nShortestPath = currentPath.Count;
+                shortestPath = currentPath;
+            }
+
+            return shortestPath;
+        }
+
+        /// <summary>
+        /// Gets all tiles that are at the edge of the screen and are escapable based on the given position
+        /// </summary>
+        /// <param name="fromPosition"></param>
+        /// <param name="walkableType"></param>
+        /// <returns>a list of all potential positions</returns>
+        public List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
+        {
+            _ = fromPosition;
+            List<Point2D> points = new List<Point2D>();
+
+            for (int nIndex = 0; nIndex < NumOfXTiles; nIndex++)
+            {
+                Point2D top = new Point2D(nIndex, 0);
+                Point2D bottom = new Point2D(nIndex, NumOfYTiles - 1);
+                Point2D left = new Point2D(0, nIndex);
+                Point2D right = new Point2D(NumOfXTiles - 1, nIndex);
+
+                switch (walkableType)
+                {
+                    case WalkableType.CombatLand:
+                        if (GetTileReference(top).IsLandEnemyPassable) points.Add(top);
+                        if (GetTileReference(bottom).IsLandEnemyPassable) points.Add(bottom);
+                
+                        if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
+                
+                        if (GetTileReference(left).IsLandEnemyPassable) points.Add(left);
+                        if (GetTileReference(right).IsLandEnemyPassable) points.Add(right);
+                        break;
+                    case WalkableType.CombatWater:
+                        if (GetTileReference(top).IsWaterEnemyPassable) points.Add(top);
+                        if (GetTileReference(bottom).IsWaterEnemyPassable) points.Add(bottom);
+                
+                        if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
+                
+                        if (GetTileReference(left).IsWaterEnemyPassable) points.Add(left);
+                        if (GetTileReference(right).IsWaterEnemyPassable) points.Add(right);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(walkableType), walkableType, null);
+                }
+            }
+            
+            return points;
+        }
     }
     
 }

@@ -132,8 +132,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         
-        public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
-            (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange 
+        public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
+            (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange
              && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
         internal HitState CurrentHitState

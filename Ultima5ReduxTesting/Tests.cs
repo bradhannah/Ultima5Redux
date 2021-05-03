@@ -1144,7 +1144,7 @@ namespace Ultima5ReduxTesting
                 // troll
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
 
-            List<Point2D> points= world.State.TheVirtualMap.CurrentMap.GetEscapablePoints(new Point2D(12,12));
+            List<Point2D> points= world.State.TheVirtualMap.CurrentCombatMap.GetEscapablePoints(new Point2D(12,12), CombatMap.WalkableType.CombatLand);
             _ = "";
         }
      }

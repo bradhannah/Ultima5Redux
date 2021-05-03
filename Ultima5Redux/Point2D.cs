@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
@@ -202,6 +203,55 @@ namespace Ultima5Redux
             addDown(X + nUnitsOut);
 
             return points;
+        }
+
+        /// <summary>
+        /// Provides a list of intersecting points between two points
+        /// </summary>
+        /// <param name="endPoint">the end point you want to point to</param>
+        /// <returns>A list of intersecting points</returns>
+        public List<Point2D> Raytrace(Point2D endPoint) => Raytrace(this, endPoint);
+        
+        /// <summary>
+        /// Provides a list of intersecting points between two points
+        /// </summary>
+        /// <param name="startPoint">start point</param>
+        /// <param name="endPoint">end point</param>
+        /// <returns>A list of intersecting points</returns>
+        /// <remarks>stolen from http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html and reworked</remarks>
+        public static List<Point2D> Raytrace(Point2D startPoint, Point2D endPoint)
+        {
+            int dx = Math.Abs(endPoint.X - startPoint.X);
+            int dy = Math.Abs(endPoint.Y - startPoint.Y);
+            int x = startPoint.X;
+            int y = startPoint.Y;
+            int n = 1 + dx + dy;
+            int x_inc = (endPoint.X > startPoint.X) ? 1 : -1;
+            int y_inc = (endPoint.Y > startPoint.Y) ? 1 : -1;
+            int error = dx - dy;
+            dx *= 2;
+            dy *= 2;
+
+            List<Point2D> intersectingPoints = new List<Point2D>(); 
+
+            for (; n > 0; --n)
+            {
+                //visit(x, y);
+                intersectingPoints.Add(new Point2D(x, y));
+
+                if (error > 0)
+                {
+                    x += x_inc;
+                    error -= dy;
+                }
+                else
+                {
+                    y += y_inc;
+                    error += dx;
+                }
+            }
+
+            return intersectingPoints;
         }
         
 
