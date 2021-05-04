@@ -211,7 +211,7 @@ namespace Ultima5Redux.Maps
                 {
                     TileReference currentTile = SpriteTileReferences.GetTileReference(TheMap[x][y]);
 
-                    bool bIsWalkable = IsTileWalkable(currentTile);
+                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType);
 
                     float fWeight = GetAStarWeight(new Point2D(x, y));
 
@@ -229,7 +229,7 @@ namespace Ultima5Redux.Maps
         
         protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
         {
-            SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy)), walkableType);
+            SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy), walkableType), walkableType);
         }
 
         public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
@@ -238,8 +238,13 @@ namespace Ultima5Redux.Maps
             _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
         }
 
-        protected virtual bool IsTileWalkable(TileReference currentTile)
+        protected virtual bool IsTileWalkable(TileReference currentTile, WalkableType walkableType)
         {
+            if (walkableType == WalkableType.CombatWater)
+            {
+                return currentTile.IsWaterEnemyPassable;
+            }
+
             bool bIsWalkable =
                 currentTile.IsWalking_Passable || currentTile.Index ==
                                                SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index

@@ -588,17 +588,6 @@ namespace Ultima5Redux.Maps
 
             WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
             SetWalkableTile(xy, false, walkableType);
-            
-            // if (currentCombatUnit is Enemy enemy)
-            // {
-            //     SetWalkableTile(xy, false, enemy.EnemyReference.IsWaterEnemy ? 
-            //         WalkableType.CombatWater : WalkableType.CombatLand);
-            // }
-            // else
-            // {
-            //     // this tile is no longer allowed to be walked upon
-            //     SetWalkableTile(xy, false, WalkableType.CombatLand);
-            // }
         }
         
         public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
@@ -714,7 +703,7 @@ namespace Ultima5Redux.Maps
             foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
             {
                 // get the shortest path to the unit
-                AStar aStar = GetAStarByMapUnit(combatMapUnit);//aStarDictionary[bIsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand];
+                AStar aStar = GetAStarByMapUnit(activeCombatUnit);//aStarDictionary[bIsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand];
                 Stack<Node> theWay = aStar.FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
                     combatMapUnit.MapUnitPosition.XY, activeCombatUnit.ClosestAttackRange);
                 int nMoves = theWay?.Count ?? NoPath;
@@ -728,6 +717,9 @@ namespace Ultima5Redux.Maps
 
             if (nMinMoves == NoPath)
             {
+                // if there is no path, then lets do some dirty checks to see if we can at least move closer
+                
+                
                 return null;
             }
 
