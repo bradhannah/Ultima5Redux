@@ -695,17 +695,20 @@ namespace Ultima5Redux.Maps
             int nMinMoves = 0xFFFF;
             Stack<Node> preferredRoute = null;
             CombatMapUnit preferredAttackVictim = null;
-            bool bIsWaterEnemy = false;
-            if (activeCombatUnit is Enemy enemy)
-            {
-                bIsWaterEnemy = enemy.EnemyReference.IsWaterEnemy;
-            }
+
+            AStar aStar = GetAStarByMapUnit(activeCombatUnit);
+
+            List<Point2D> potentialTargetsPoints = new List<Point2D>();
+            
             foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
             {
+                Point2D combatMapUnitXY = combatMapUnit.MapUnitPosition.XY;
+                
+                potentialTargetsPoints.Add(combatMapUnitXY);
+                
                 // get the shortest path to the unit
-                AStar aStar = GetAStarByMapUnit(activeCombatUnit);//aStarDictionary[bIsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand];
                 Stack<Node> theWay = aStar.FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
-                    combatMapUnit.MapUnitPosition.XY, activeCombatUnit.ClosestAttackRange);
+                    combatMapUnitXY, activeCombatUnit.ClosestAttackRange);
                 int nMoves = theWay?.Count ?? NoPath;
                 if (nMoves < nMinMoves)
                 {
@@ -715,19 +718,80 @@ namespace Ultima5Redux.Maps
                 }
             }
 
+            Point2D activeCombatUnitXY = activeCombatUnit.MapUnitPosition.XY;
+            
             if (nMinMoves == NoPath)
             {
                 // if there is no path, then lets do some dirty checks to see if we can at least move closer
                 
+                // get the surrounding points around current active unit
+                List <Point2D> surroundingPoints = 
+                    activeCombatUnitXY.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
+
+                double fShortestPath = 999f;//activeCombatUnitXY.DistanceBetween();
+                Point2D bestOpponentPoint = null;
+                // cycle through all potential targets and determine and pick the closest available target
+                foreach (Point2D point in potentialTargetsPoints)
+                {
+                    double fDistance = point.DistanceBetween(activeCombatUnitXY);
+                    if (fDistance < fShortestPath)
+                    {
+                        fShortestPath = fDistance;
+                        bestOpponentPoint = point.Copy();
+                    }
+                }
+
+                // there is not best point, so give up - also, this shouldn't really happen, but not 
+                // worth crashing over if it does
+                if (bestOpponentPoint == null)
+                    return null;
+
+                // we start with the shortest path being the current tiles distance to the best enemies tile
+                fShortestPath = activeCombatUnitXY.DistanceBetween(bestOpponentPoint);
                 
-                return null;
+                Point2D nextBestMovePoint = null;
+                 List<Point2D> wanderablePoints = new List<Point2D>();
+                // go through of each surrounding points and find the shortest path based to an opponent
+                // on the free tiles
+                foreach (Point2D point in surroundingPoints)
+                {
+                    // if it isn't walkable then we skip it
+                    if (!GetAStarByMapUnit(activeCombatUnit).GetWalkable(point)) continue;
+                    // keep track of the points we could wander to if we don't find a good path
+                    wanderablePoints.Add(point);
+                    double fDistance = point.DistanceBetween(bestOpponentPoint);
+                    if (fDistance < fShortestPath)
+                    {
+                        fShortestPath = fDistance;
+                        nextBestMovePoint = point;
+                    }
+                }
+
+                if (nextBestMovePoint == null)
+                {
+                    Random ran = new Random();
+
+                    // only a 50% chance they will wander
+                    if (ran.Next() % 2 == 0) return null;
+                    
+                    // wander logic - we are already the closest to the selected enemy
+                    int nChoices = wanderablePoints.Count;
+                    int nRandomChoice = ran.Next() % nChoices;
+                    nextBestMovePoint = wanderablePoints[nRandomChoice];
+                    
+                    //return null;
+                }
+
+                // we think we found the next best path
+                preferredRoute = new Stack<Node>();
+                preferredRoute.Push(aStar.GetNode(nextBestMovePoint));
             }
 
             Debug.Assert(preferredRoute != null, nameof(preferredRoute) + " != null");
             
-            Point2D nextVector = preferredRoute.Pop().Position;
+            Point2D nextPosition = preferredRoute.Pop().Position;
             
-            MoveActiveCombatMapUnit(nextVector);
+            MoveActiveCombatMapUnit(nextPosition);
 
             return preferredAttackVictim;
         }

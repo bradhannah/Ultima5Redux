@@ -71,9 +71,19 @@ namespace Ultima5Redux.External
 
         public void SetWalkable(Point2D position, bool bWalkable)
         {
-            _grid[position.X][position.Y].Walkable = bWalkable;
+            GetNode(position).Walkable = bWalkable;
         }
 
+        public bool GetWalkable(Point2D position) => GetNode(position).Walkable;
+
+        public Node GetNode(Point2D position)
+        {
+            if (position.X >= _grid.Count || position.Y >= _grid[position.X].Count)
+                throw new Ultima5ReduxException("Tried to get a node with position=" + position +
+                                                " but didn't exist in the astar grid");
+            return _grid[position.X][position.Y];
+        }
+        
         /// <summary>
         /// Finds the best path based on surrounding tiles around a single end position
         /// For example, below the 0 represents the end position, while the Xs represent the tiles that will be checked
