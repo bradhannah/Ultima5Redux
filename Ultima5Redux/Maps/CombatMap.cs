@@ -706,9 +706,10 @@ namespace Ultima5Redux.Maps
                 
                 potentialTargetsPoints.Add(combatMapUnitXY);
                 
-                // get the shortest path to the unit
+                // get the shortest path to the unit - we ignore the range value because by calling this method we are insisting
+                // that they move
                 Stack<Node> theWay = aStar.FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
-                    combatMapUnitXY, activeCombatUnit.ClosestAttackRange);
+                    combatMapUnitXY, 1);//activeCombatUnit.ClosestAttackRange);
                 int nMoves = theWay?.Count ?? NoPath;
                 if (nMoves < nMinMoves)
                 {
@@ -726,7 +727,7 @@ namespace Ultima5Redux.Maps
                 
                 // get the surrounding points around current active unit
                 List <Point2D> surroundingPoints = 
-                    activeCombatUnitXY.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
+                    activeCombatUnitXY.GetConstrainedFourDirectionSurroundingPoints(NumOfXTiles - 1, NumOfYTiles - 1);
 
                 double fShortestPath = 999f;//activeCombatUnitXY.DistanceBetween();
                 Point2D bestOpponentPoint = null;
@@ -769,6 +770,7 @@ namespace Ultima5Redux.Maps
 
                 if (nextBestMovePoint == null)
                 {
+                    if (wanderablePoints.Count == 0) return null;
                     Random ran = new Random();
 
                     // only a 50% chance they will wander

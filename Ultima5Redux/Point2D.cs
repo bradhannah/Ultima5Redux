@@ -166,6 +166,24 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        /// Gets the north, south, east and west points within the zero (only positive) based extents provided
+        /// </summary>
+        /// <param name="nXExtent"></param>
+        /// <param name="nYExtent"></param>
+        /// <returns>a list of valid points</returns>
+        public List<Point2D> GetConstrainedFourDirectionSurroundingPoints(int nXExtent, int nYExtent)
+        {
+            List<Point2D> points = new List<Point2D>();
+            
+            if (X - 1 >= 0) points.Add(new Point2D(X - 1, Y));
+            if (Y - 1 >= 0) points.Add(new Point2D(X, Y - 1));
+            if (X + 1 <= nXExtent) points.Add(new Point2D(X + 1, Y));
+            if (Y + 1 <= nYExtent) points.Add(new Point2D(X, Y + 1));
+
+            return points;
+        }
+
+        /// <summary>
         /// Gets a list of points that surround a particular point at "n units out". If you outside points
         /// exceed the given points then it will add the points of the outermost yet valid points
         /// </summary>
