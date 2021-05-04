@@ -149,6 +149,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_STATS).GetByte(nMonsterIndex * TotalBytesPerRecord + (int) stat);
         }
 
-        public bool IsWaterEnemy => _monsterIndex >= 384 && _monsterIndex < 400;
+        public bool IsWaterEnemy => KeyTileReference.Index >= 384 && KeyTileReference.Index < 400;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.Monsters;
 
 namespace Ultima5Redux.Maps
 {
@@ -57,8 +59,25 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
             }
+            
+            InitializeAStarMap(WalkableType.StandardWalking);
+            InitializeAStarMap(WalkableType.CombatWater);
         }
 
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            switch (mapUnit)
+            {
+                case Enemy enemy:
+                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
+                case CombatPlayer _:
+                    return WalkableType.StandardWalking;
+                default:
+                    return WalkableType.StandardWalking;
+            }
+        }
+
+        
         // ReSharper disable once UnusedMember.Global
         public void PrintMap()
         {

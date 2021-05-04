@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.Monsters;
 
 namespace Ultima5Redux.Maps
 {
@@ -41,7 +43,7 @@ namespace Ultima5Redux.Maps
             // load the map into memory
             TheMap = LoadSmallMapFile(Path.Combine(u5Directory, singleSmallMapReference.MapFilename), singleSmallMapReference.FileOffset);
             
-            InitializeAStarMap();
+            InitializeAStarMap(WalkableType.StandardWalking);
         }
 
         public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
@@ -63,6 +65,20 @@ namespace Ultima5Redux.Maps
             return Utils.TransposeArray(smallMap);
         }
 
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            switch (mapUnit)
+            {
+                case Enemy enemy:
+                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
+                case CombatPlayer _:
+                    return WalkableType.StandardWalking;
+                default:
+                    return WalkableType.StandardWalking;
+            }
+        }
+
+        
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
         /// </summary>

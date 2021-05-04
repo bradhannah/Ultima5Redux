@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 
@@ -128,7 +129,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         ///     calculates and stores new path for NPC
         ///     Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapUnit itself
         /// </summary>
-        public void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor)
+        public void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor, AStar aStar)
         {
             MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
@@ -222,7 +223,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                             npcXy.XY, MapUnitPosition.XY);
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
-                        bool bPathBuilt = BuildPath(virtualMap.CurrentMap, this, xy);
+                        bool bPathBuilt = BuildPath(virtualMap.CurrentMap, this, xy, aStar);
                         // if a path was successfully built, then we have no need to build another path since this is the "best" path
                         if (bPathBuilt) return;
                     }
@@ -271,7 +272,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.MerchantThing:
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
-                        BuildPath(virtualMap.CurrentMap, this, npcXy.XY);
+                        BuildPath(virtualMap.CurrentMap, this, npcXy.XY, aStar);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Wander:
@@ -282,13 +283,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                         // we check to see how many moves it would take to get to their destination, if it takes
                         // more than the allotted amount then we first build a path to the destination
                         // note: because you are technically within X tiles doesn't mean you can access it
-                        int nMoves = virtualMap.GetTotalMovesToLocation(MapUnitPosition.XY, npcXy.XY);
+                        int nMoves = virtualMap.GetTotalMovesToLocation(MapUnitPosition.XY, npcXy.XY,
+                            Map.WalkableType.StandardWalking);
                         // 
                         if (nMoves <= nWanderTiles)
                             WanderWithinN(virtualMap, timeOfDay, nWanderTiles);
                         else
                             // move to the correct position
-                            BuildPath(virtualMap.CurrentMap, this, npcXy.XY);
+                            BuildPath(virtualMap.CurrentMap, this, npcXy.XY, aStar);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         // if the avatar is close by then move away from him, otherwise return to original path, one move at a time
@@ -302,11 +304,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 }
         }
 
-        public override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
+        public override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
         {
             // if there is no next available movement then we gotta recalculate and see if they should move
             if (!Movement.IsNextCommandAvailable())
-                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor);
+                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor, aStar);
 
             // if this NPC has a command in the buffer, so let's execute!
             if (!Movement.IsNextCommandAvailable()) return;

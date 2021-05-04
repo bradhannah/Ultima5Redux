@@ -891,7 +891,8 @@ namespace Ultima5Redux.Maps
             // to make it more familiar, we will transfer to an ordered list
             foreach (Point2D xy in sortedPoints.Values)
             {
-                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy) > 0;
+                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy,
+                    Map.WalkableType.StandardWalking) > 0;
                 // we first make sure that the path even exists before we add it to the list
                 if (bPathBuilt) bestChoiceList.Add(xy);
             }
@@ -922,7 +923,8 @@ namespace Ultima5Redux.Maps
             // to make it more familiar, we will transfer to an ordered list
             foreach (Point2D xy in sortedPoints.Values)
             {
-                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy) > 0;
+                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy,
+                    Map.WalkableType.StandardWalking) > 0;
                 // we first make sure that the path even exists before we add it to the list
                 if (bPathBuilt) bestChoiceList.Add(xy);
             }
@@ -935,11 +937,12 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="currentXy"></param>
         /// <param name="targetXy">where the character would move</param>
+        /// <param name="walkableType"></param>
         /// <returns>the number of moves to the targetXy</returns>
         /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
-        internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy)
+        internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, Map.WalkableType walkableType)
         {
-            Stack<Node> nodeStack = CurrentMap.AStar.FindPath(currentXy, targetXy);
+            Stack<Node> nodeStack = CurrentMap.GetAStarByWalkableType(walkableType).FindPath(currentXy, targetXy);
                 //new Vector2(currentXy.X, currentXy.Y),
                 //new Vector2(targetXy.X, targetXy.Y));
 
@@ -954,7 +957,8 @@ namespace Ultima5Redux.Maps
             // go through each of the NPCs on the map
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.Where(mapChar => mapChar.IsActive))
             {
-                mapUnit.CompleteNextMove(this, _timeOfDay);
+               
+                mapUnit.CompleteNextMove(this, _timeOfDay, CurrentMap.GetAStarByMapUnit(mapUnit));
             }
         }
 

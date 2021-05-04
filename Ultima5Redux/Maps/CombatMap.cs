@@ -128,7 +128,8 @@ namespace Ultima5Redux.Maps
             _inventory = inventory;
             _dataOvlReference = dataOvlReference;
 
-            InitializeAStarMap();
+            InitializeAStarMap(WalkableType.CombatLand);
+            InitializeAStarMap(WalkableType.CombatWater);
         }
 
         public string GetCombatPlayerOutputText()
@@ -580,19 +581,38 @@ namespace Ultima5Redux.Maps
             CombatMapUnit currentCombatUnit = _initiativeQueue.GetCurrentCombatUnit();
             
             // reset the a star walking rules
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY);
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLand);
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatWater);
             
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
 
-            // this tile is no longer allowed to be walked upon
-            SetWalkableTile(xy, false);
+            WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
+            SetWalkableTile(xy, false, walkableType);
+            
+            // if (currentCombatUnit is Enemy enemy)
+            // {
+            //     SetWalkableTile(xy, false, enemy.EnemyReference.IsWaterEnemy ? 
+            //         WalkableType.CombatWater : WalkableType.CombatLand);
+            // }
+            // else
+            // {
+            //     // this tile is no longer allowed to be walked upon
+            //     SetWalkableTile(xy, false, WalkableType.CombatLand);
+            // }
         }
-
+        
         public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
         {
-            combatMapUnit.Stats.CurrentHp = 0;   
-            RecalculateWalkableTile(combatMapUnit.MapUnitPosition.XY);
-            RecalculateVisibleTiles(combatMapUnit.MapUnitPosition.XY);
+            combatMapUnit.Stats.CurrentHp = 0;
+            if (combatMapUnit is Enemy enemy)
+            {
+                RecalculateWalkableTile(combatMapUnit.MapUnitPosition.XY, enemy.EnemyReference.IsWaterEnemy ?
+                    WalkableType.CombatWater : WalkableType.CombatLand);
+            }
+            else
+            {
+                RecalculateVisibleTiles(combatMapUnit.MapUnitPosition.XY);
+            }
         }
 
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) => 
@@ -686,10 +706,16 @@ namespace Ultima5Redux.Maps
             int nMinMoves = 0xFFFF;
             Stack<Node> preferredRoute = null;
             CombatMapUnit preferredAttackVictim = null;
+            bool bIsWaterEnemy = false;
+            if (activeCombatUnit is Enemy enemy)
+            {
+                bIsWaterEnemy = enemy.EnemyReference.IsWaterEnemy;
+            }
             foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
             {
                 // get the shortest path to the unit
-                Stack<Node> theWay = AStar.FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
+                AStar aStar = GetAStarByMapUnit(combatMapUnit);//aStarDictionary[bIsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand];
+                Stack<Node> theWay = aStar.FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
                     combatMapUnit.MapUnitPosition.XY, activeCombatUnit.ClosestAttackRange);
                 int nMoves = theWay?.Count ?? NoPath;
                 if (nMoves < nMinMoves)
@@ -801,6 +827,19 @@ namespace Ultima5Redux.Maps
             return 1.0f;
         }
         
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            switch (mapUnit)
+            {
+                case Enemy enemy:
+                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand;
+                case CombatPlayer _:
+                    return WalkableType.CombatLand;
+                default:
+                    return WalkableType.StandardWalking;
+            }
+        }
+        
         /// <summary>
         /// Creates a party in the context of the combat map
         /// </summary>
@@ -812,7 +851,7 @@ namespace Ultima5Redux.Maps
             
             // clear any previous combat map units
             CombatMapUnits.InitializeCombatMapReferences();
-
+            
             List<Point2D> playerStartPositions =
                 TheCombatMapReference.GetPlayerStartPositions(entryDirection);
             
@@ -825,7 +864,8 @@ namespace Ultima5Redux.Maps
                     playerStartPositions[nPlayer], _dataOvlReference, _inventory);
 
                 // make sure the tile that the player occupies is not walkable
-                AStar.SetWalkable(playerStartPositions[nPlayer], false);
+                //aStarDictionary[WalkableType.CombatLand].
+                GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
 
                 CombatMapUnits.CurrentMapUnits[nPlayer] = combatPlayer;
             }
@@ -845,10 +885,8 @@ namespace Ultima5Redux.Maps
              SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType = 
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
             Point2D enemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
-            
-            // make sure the tile that the enemy occupies is not walkable
-            AStar.SetWalkable(enemyPosition, false);
-            
+
+            Enemy enemy = null;
             switch (combatMapSpriteType)
             {
                 case SingleCombatMapReference.CombatMapSpriteType.Nothing:
@@ -858,18 +896,29 @@ namespace Ultima5Redux.Maps
                     Debug.WriteLine("It's a chest or maybe a dead body!");
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
-                    CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         _enemyReferences.GetEnemyReference(nEnemySprite), out int _, npcRef);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
-                    CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         enemyReference, out int _, npcRef);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            // make sure the tile that the enemy occupies is not walkable
+            // we do both land and water in case there are overlappig tiles (which there shouldn't be!?)
+            SetWalkable(enemyPosition, false);
         }
+
+        private void SetWalkable(Point2D position, bool bWalkable)
+        {
+            GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(position, false);
+            GetAStarByWalkableType(WalkableType.CombatWater).SetWalkable(position, false);
+        }
+        
 
         /// <summary>
         /// Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
@@ -964,10 +1013,10 @@ namespace Ultima5Redux.Maps
             AdvanceToNextCombatMapUnit();
         }
 
-        public string GetWalkableDebug()
-        {
-            return AStar.GetWalkableDebug();
-        }
+        // public string GetWalkableDebug()
+        // {
+        //     return AStar.GetWalkableDebug();
+        // }
 
         /// <summary>
         /// Gets the best escape route based on current position
@@ -984,7 +1033,7 @@ namespace Ultima5Redux.Maps
             
             foreach (Point2D destinationPoint in points)
             {
-                Stack<Node> currentPath = AStar.FindPath(fromPosition, destinationPoint);
+                Stack<Node> currentPath = GetAStarByWalkableType(walkableType).FindPath(fromPosition, destinationPoint);
                 if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
 
                 nShortestPath = currentPath.Count;

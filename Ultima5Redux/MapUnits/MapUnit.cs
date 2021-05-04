@@ -182,7 +182,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         public abstract bool IsActive { get; }
 
-        public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay)
+        public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
         {
             // by default the thing doesn't move on it's own
         }
@@ -237,7 +237,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnit">where the character is presently</param>
         /// <param name="targetXy">where you want them to go</param>
         /// <returns>returns true if a path was found, false if it wasn't</returns>
-        protected static bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy)
+        protected static bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy, AStar aStar)
         {
             if (mapUnit.MapUnitPosition.XY == targetXy)
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name +
@@ -246,7 +246,9 @@ namespace Ultima5Redux.MapUnits
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<Node> nodeStack = currentMap.AStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
+            Stack<Node> nodeStack = 
+                //currentMap.AStar
+                aStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
                 //new Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
                 //new Vector2(targetXy.X, targetXy.Y));
 

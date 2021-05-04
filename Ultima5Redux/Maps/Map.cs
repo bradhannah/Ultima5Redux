@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using Ultima5Redux.External;
+using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.Monsters;
 
 namespace Ultima5Redux.Maps
 {
@@ -13,16 +15,16 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     A* algorithm helper class
         /// </summary>
-        internal AStar AStar;
+        //internal AStar AStar;
 
-        // protected Dictionary<WalkableType, AStar> aStarDictionary = new Dictionary<WalkableType, AStar>();
-        // protected Dictionary<
+        private Dictionary<WalkableType, AStar> _aStarDictionary = new Dictionary<WalkableType, AStar>();
+        private Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new Dictionary<WalkableType, List<List<Node>>>();
 
         /// <summary>
         ///     All A* nodes for the current map
         ///     Accessed by [x][y]
         /// </summary>
-        protected List<List<Node>> AStarNodes;
+        //protected List<List<Node>> AStarNodes;
 
         public abstract int NumOfXTiles { get; }
         public abstract int NumOfYTiles { get; }
@@ -57,6 +59,26 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         protected abstract float GetAStarWeight(Point2D xy);
+
+        protected abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
+
+        public AStar GetAStarByMapUnit(MapUnit mapUnit)
+        {
+            WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
+            
+            return GetAStarByWalkableType(walkableType);
+        }
+        
+        public AStar GetAStarByWalkableType(WalkableType walkableType)
+        {
+            if (!_aStarDictionary.ContainsKey(walkableType))
+            {
+                throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
+                                                this.GetType());
+            }
+
+            return _aStarDictionary[walkableType];
+        }
 
         public abstract bool ShowOuterSmallMapTiles { get; }
         
@@ -172,7 +194,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
-        protected void InitializeAStarMap()
+        protected void InitializeAStarMap(WalkableType walkableType)
         {
             Debug.Assert(TheMap != null);
             Debug.Assert(TheMap.Length > 0);
@@ -180,7 +202,8 @@ namespace Ultima5Redux.Maps
             int nYTiles = TheMap.Length;
 
             // load the A-Star compatible map into memory
-            AStarNodes = Utils.Init2DList<Node>(nXTiles, nYTiles);
+            List<List<Node>> aStarNodesLists = Utils.Init2DList<Node>(nXTiles, nYTiles);
+            _aStarNodes.Add(walkableType, aStarNodesLists);
 
             for (int x = 0; x < nXTiles; x++)
             {
@@ -195,22 +218,24 @@ namespace Ultima5Redux.Maps
                     Node node = new Node(new Point2D(x, y),
                         //new Vector2(x, y),
                         bIsWalkable, fWeight);
-                    AStarNodes[x].Add(node);
+                    aStarNodesLists[x].Add(node);
                 }
             }
 
-            AStar = new AStar(AStarNodes);
+            _aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
+            //AStar = ;
         }
 
-        protected void RecalculateWalkableTile(Point2D xy)
+        
+        protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
         {
-            SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy)));
+            SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy)), walkableType);
         }
 
-        public void SetWalkableTile(Point2D xy, bool bWalkable)
+        public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
         {
-            Debug.Assert(xy.X < AStarNodes.Count && xy.Y < AStarNodes[0].Count);
-            AStarNodes[xy.X][xy.Y].Walkable = bWalkable;
+            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
+            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
         }
 
         protected virtual bool IsTileWalkable(TileReference currentTile)
