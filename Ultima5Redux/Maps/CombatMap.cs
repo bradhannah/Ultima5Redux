@@ -531,10 +531,18 @@ namespace Ultima5Redux.Maps
             missedPoint = null;
 
             Point2D newAttackPosition = GetRandomSurroundingPointThatIsnt(attackPosition,
-                attackPosition);//attackingCombatMapUnit.MapUnitPosition.XY);
+                attackPosition);
             Debug.Assert(newAttackPosition != null);
-
+            
             targetedCombatMapUnit = GetCombatUnit(newAttackPosition);
+
+            // We will check the raycast and determine if the missed shot in fact actually gets blocked - 
+            // doing it in here will ensure that no damage is computed against an enemy if they are targeted
+            if (IsRangedPathBlocked(attackPosition, newAttackPosition, out missedPoint))
+            {
+                AdvanceToNextCombatMapUnit();
+                return TurnResult.EnemyMissed;
+            }
 
             if (targetedCombatMapUnit == null)
             {
@@ -729,7 +737,7 @@ namespace Ultima5Redux.Maps
                 List <Point2D> surroundingPoints = 
                     activeCombatUnitXY.GetConstrainedFourDirectionSurroundingPoints(NumOfXTiles - 1, NumOfYTiles - 1);
 
-                double fShortestPath = 999f;//activeCombatUnitXY.DistanceBetween();
+                double fShortestPath = 999f;
                 Point2D bestOpponentPoint = null;
                 // cycle through all potential targets and determine and pick the closest available target
                 foreach (Point2D point in potentialTargetsPoints)
@@ -780,8 +788,6 @@ namespace Ultima5Redux.Maps
                     int nChoices = wanderablePoints.Count;
                     int nRandomChoice = ran.Next() % nChoices;
                     nextBestMovePoint = wanderablePoints[nRandomChoice];
-                    
-                    //return null;
                 }
 
                 // we think we found the next best path
