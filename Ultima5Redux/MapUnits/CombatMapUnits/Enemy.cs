@@ -69,7 +69,7 @@ namespace Ultima5Redux.MapUnits.Monsters
 
         public sealed override CharacterStats Stats { get; } = new CharacterStats();
 
-        public bool CanReachForAttack(CombatMapUnit combatMapUnit)
+        public bool CanReachForMeleeAttack(CombatMapUnit combatMapUnit)
         {
             return CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
         }
