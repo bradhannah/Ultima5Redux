@@ -60,7 +60,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override string PluralName => EnemyReference.AllCapsPluralName;
 
         // temporary until I read them in dynamically (somehow!?)
-        public int Experience = 3; 
+        public override int Experience => 3;
 
         public override string ToString()
         {

@@ -34,6 +34,7 @@ namespace Ultima5Redux.MapUnits
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;
         public override string SingularName => FriendlyName;
         public override string PluralName => FriendlyName;
+        public override int Experience => 0;
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;

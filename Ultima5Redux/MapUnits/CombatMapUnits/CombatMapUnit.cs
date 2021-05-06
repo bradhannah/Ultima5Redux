@@ -37,6 +37,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public abstract string SingularName { get; }
         public abstract string PluralName { get; }
+
+        public abstract int Experience { get; }
         
         protected CombatMapUnit()
         {
@@ -82,13 +84,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             CombatStats.TotalDamageGiven += Math.Min(nAttack, enemyCombatMapUnit.Stats.CurrentHp);
 
             enemyCombatMapUnit.Stats.CurrentHp -= nAttack;
-            
+
+            // we only add experience to kills against other enemies
             if (enemyCombatMapUnit.Stats.CurrentHp <= 0)
             {
                 CombatStats.TotalKills++;
-                CombatStats.AdditionalExperience += ((Enemy) enemyCombatMapUnit).Experience;
+                CombatStats.AdditionalExperience += enemyCombatMapUnit.Experience;
             }
-            
+
             return GetState(enemyCombatMapUnit, out stateOutput);
         }
 

@@ -63,6 +63,8 @@ namespace Ultima5Redux.Maps
         public CombatMapUnit CurrentCombatMapUnit => _initiativeQueue.GetCurrentCombatUnit();
         
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
+
+        public PlayerCharacterRecord SelectedCombatPlayerRecord => _initiativeQueue.ActivePlayerCharacterRecord;
         
         /// <summary> 
         /// All current player characters
@@ -439,7 +441,7 @@ namespace Ultima5Redux.Maps
             // if enemy is within range of someone then they will have a bestCombatPlayer to attack
             // if their old target is now out of range, they won't hesitate to attack someone who is
             bool bPreviousTargetInRange = enemy.PreviousAttackTarget != null && (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget) 
-                || IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _));
+                || !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _));
             CombatMapUnit bestCombatPlayer = bPreviousTargetInRange ? enemy.PreviousAttackTarget : GetClosestCombatPlayerInRange(enemy);
             
             // we determine if the best combat player is close enough to attack or not
@@ -477,19 +479,22 @@ namespace Ultima5Redux.Maps
                     case CombatMapUnit.HitState.LightlyWounded:
                     case CombatMapUnit.HitState.HeavilyWounded:
                     case CombatMapUnit.HitState.CriticallyWounded:
+                    case CombatMapUnit.HitState.Dead:
                         targetedCombatMapUnit = bestCombatPlayer;
                         break;
                     case CombatMapUnit.HitState.Fleeing:
+                        targetedCombatMapUnit = bestCombatPlayer;
                         enemy.IsFleeing = true;
                         break;
-                    case CombatMapUnit.HitState.Dead:
-                        break;
+                    case CombatMapUnit.HitState.None:
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
                 
                 AdvanceToNextCombatMapUnit();
-                return hitState == CombatMapUnit.HitState.Grazed ? TurnResult.EnemyGrazed : TurnResult.EnemyAttacks;
+                if (hitState == CombatMapUnit.HitState.Grazed)
+                    return TurnResult.EnemyGrazed;
+                return TurnResult.EnemyAttacks;
             }
 
             CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatPlayer(enemy);
@@ -658,10 +663,10 @@ namespace Ultima5Redux.Maps
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)
         {
-            if (CurrentCombatPlayer.Record != record)
-            {
-                
-            }
+            // if (CurrentCombatPlayer.Record != record)
+            // {
+            //     
+            // }
 
             _initiativeQueue.SetActivePlayerCharacter(record);
             _bPlayerHasChanged = true;

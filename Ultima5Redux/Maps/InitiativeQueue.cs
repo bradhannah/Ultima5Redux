@@ -16,6 +16,8 @@ namespace Ultima5Redux.Maps
         private readonly PlayerCharacterRecords _playerCharacterRecords;
 
         private PlayerCharacterRecord _activePlayerCharacterRecord = null;
+
+        public PlayerCharacterRecord ActivePlayerCharacterRecord => _activePlayerCharacterRecord;
         
         public int Round { get; private set; }
 
