@@ -811,62 +811,51 @@ namespace Ultima5Redux.Maps
             return preferredAttackVictim;
         }
         
+        private bool IsCombatMapUnitInRange(CombatMapUnit attackingUnit, CombatMapUnit opponentCombatMapUnit, int nRange)
+        {
+            if (!opponentCombatMapUnit.IsActive) return false;
+            if (!opponentCombatMapUnit.IsAttackable) return false;
+            if (nRange == 1 && !attackingUnit.CanReachForMeleeAttack(opponentCombatMapUnit, nRange)) return false;
+            if (nRange > 1)
+            {
+                if (IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY,  opponentCombatMapUnit.MapUnitPosition.XY, out _)) return false;
+            }
+
+            return true;
+        }
+
+        private T GetClosestCombatMapUnitInRange<T>(CombatMapUnit attackingUnit, int nRange) where T : CombatMapUnit 
+        {
+            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
+
+            double dBestDistanceToAttack = 150f;
+            T bestOpponent = null;
+            
+            for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
+            {
+                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is T enemy)) continue;
+                if (!IsCombatMapUnitInRange(attackingUnit, enemy, nRange)) continue;
+                
+                double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(attackingUnit.MapUnitPosition.XY);
+                if (!(dDistance < dBestDistanceToAttack)) continue;
+
+                dBestDistanceToAttack = dDistance;
+                bestOpponent = enemy;
+            }
+            
+            return bestOpponent;
+        }
+
+        public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem)
+        {
+            return GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer, combatItem.Range);
+        }
+
         private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)
         {
-            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
-
-            double dBestDistanceToAttack = 150f;
-            CombatPlayer bestCombatPlayer = null;
-            
-            for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
-            {
-                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is CombatPlayer combatPlayer)) continue;
-                if (!combatPlayer.IsAttackable) continue;
-                if (enemy.EnemyReference.AttackRange == 1 && !enemy.CanReachForMeleeAttack(combatPlayer, enemy.EnemyReference.AttackRange)) continue;
-                if (enemy.EnemyReference.AttackRange > 1)
-                {
-                    if (IsRangedPathBlocked(enemy.MapUnitPosition.XY,  combatPlayer.MapUnitPosition.XY, out _)) continue;
-                }
-                if (!CombatMapUnits.CurrentMapUnits[nIndex].IsActive) continue;
-
-                double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(combatPlayer.MapUnitPosition.XY);
-                if (!(dDistance < dBestDistanceToAttack)) continue;
-
-                dBestDistanceToAttack = dDistance;
-                bestCombatPlayer = combatPlayer;
-            }
-            
-            return bestCombatPlayer;
+            return GetClosestCombatMapUnitInRange<CombatPlayer>(enemy, enemy.EnemyReference.AttackRange);
         }
-        
-        public Enemy GetClosestEnemyInRange(CombatItem combatItem)
-        {
-            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
 
-            double dBestDistanceToAttack = 150f;
-            Enemy bestEnemy = null;
-            
-            for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
-            {
-                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
-                // if (!CurrentCombatPlayer.CanReachForMeleeAttack(enemy, combatItem)) continue;
-                if (combatItem.Range == 1 && !CurrentCombatPlayer.CanReachForMeleeAttack(enemy, combatItem.Range)) continue;
-                if (combatItem.Range > 1)
-                {
-                    if (IsRangedPathBlocked(CurrentCombatPlayer.MapUnitPosition.XY,  enemy.MapUnitPosition.XY, out _)) continue;
-                }
-                
-                if (!CombatMapUnits.CurrentMapUnits[nIndex].IsActive) continue;
-                
-                double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(CurrentCombatPlayer.MapUnitPosition.XY);
-                if (!(dDistance < dBestDistanceToAttack)) continue;
-
-                dBestDistanceToAttack = dDistance;
-                bestEnemy = enemy;
-            }
-            
-            return bestEnemy;
-        }
 
         public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
         {
