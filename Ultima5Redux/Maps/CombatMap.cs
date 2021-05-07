@@ -440,8 +440,9 @@ namespace Ultima5Redux.Maps
 
             // if enemy is within range of someone then they will have a bestCombatPlayer to attack
             // if their old target is now out of range, they won't hesitate to attack someone who is
-            bool bPreviousTargetInRange = enemy.PreviousAttackTarget != null && (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget) 
-                || !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _));
+            bool bPreviousTargetInRange = enemy.PreviousAttackTarget != null && enemy.PreviousAttackTarget.Stats.CurrentHp > 0 && 
+                                          (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget) 
+                                            || !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _));
             CombatMapUnit bestCombatPlayer = bPreviousTargetInRange ? enemy.PreviousAttackTarget : GetClosestCombatPlayerInRange(enemy);
             
             // we determine if the best combat player is close enough to attack or not
@@ -484,7 +485,7 @@ namespace Ultima5Redux.Maps
                         break;
                     case CombatMapUnit.HitState.Fleeing:
                         targetedCombatMapUnit = bestCombatPlayer;
-                        enemy.IsFleeing = true;
+                        //enemy.IsFleeing = true;
                         break;
                     case CombatMapUnit.HitState.None:
                     default:

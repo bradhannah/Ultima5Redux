@@ -171,6 +171,28 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        public string GetPlayerSelectedMessage(DataOvlReference dataOvlReference, bool bPlayerEscaped, out bool bIsSelectable)
+        {
+            bIsSelectable = false;
+            if (bPlayerEscaped) return "Invalid!";
+            
+            switch (Stats.Status)
+            {
+                case CharacterStatus.Good:
+                case CharacterStatus.Poisoned:
+                    bIsSelectable = true;
+                    return Name;
+                case CharacterStatus.Charmed:
+                    return $"Invalid! {Name} is charmed!";
+                case CharacterStatus.Asleep:
+                    return $"Invalid! {Name} is asleep!";
+                case CharacterStatus.Dead:
+                    return $"Invalid! {Name} is a late player character! He is no longer!";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private enum DataChunkName { Unused }
         //        offset length      purpose range
         //0           9           character name      zero-terminated string
