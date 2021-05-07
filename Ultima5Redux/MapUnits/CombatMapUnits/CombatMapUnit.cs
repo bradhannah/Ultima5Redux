@@ -102,7 +102,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private bool IsHit(CombatMapUnit enemyCombatMapUnit)
         {
-            return (enemyCombatMapUnit.Stats.Dexterity + 128) >= (_random.Next() % 256);
+            const int nHitOffset = 128;
+            int randomNum = _random.Next() % 256;
+            return (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
         }
         
         // bool Creature::isHit(int hit_offset) {
