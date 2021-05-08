@@ -899,6 +899,64 @@ namespace Ultima5Redux.Maps
 
             return bestChoiceList;
         }
+        
+        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, Point2D tilePosInMap,
+        bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
+        {
+            int nSprite = tileReference.Index; 
+            bool bIsMirror = _tileReferences.IsUnbrokenMirror(nSprite);
+            bDrawCharacterOnTile = false;
+            
+            if (bIsMirror)
+            {
+                // if the avatar is south of the mirror then show his image
+                Point2D expectedAvatarPos = new Point2D(tilePosInMap.X, tilePosInMap.Y + 1);
+                if (expectedAvatarPos == CurrentPosition.XY)
+                {
+                    return _tileReferences.GetTileNumberByName("MirrorAvatar");
+                }
+            }
+            
+            bool bIsDoorTile = _tileReferences.IsDoor(nSprite); // is it a door?
+            // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
+            bool bIsChair = _tileReferences.IsChair(nSprite);
+            // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
+            bool bIsLadder = _tileReferences.IsLadder(nSprite);
+            // is it the human sleeping side of the bed?
+            bool bIsHeadOfBed = _tileReferences.IsHeadOfBed(nSprite); 
+            // we need to check these before they get "corrected"
+            // is it the stocks
+            bool bIsStocks = _tileReferences.IsStocks(nSprite); 
+            bool bIsManacles = _tileReferences.IsManacles(nSprite); // is it shackles/manacles
+
+            // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
+            bool bIsFoodNearby = _tileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
+
+            bool bIsStaircase = _tileReferences.IsStaircase(nSprite); // is it a staircase
+
+            int nNewSpriteIndex; //= nSprite;
+            
+            if (bIsStaircase)
+            {
+                nNewSpriteIndex = GetStairsSprite(tilePosInMap);
+            }
+            else
+            {
+                nNewSpriteIndex = _tileReferences.GetCorrectSprite(nSprite,
+                    bIsMapUnitOccupiedTile, bIsAvatarTile,
+                    bIsFoodNearby, _state.TheTimeOfDay.IsDayLight);
+            }
+
+            if (nNewSpriteIndex == -2)
+            {
+                nNewSpriteIndex = GuessTile(tilePosInMap);
+            }
+
+            bDrawCharacterOnTile = (!bIsChair && !bIsLadder && !bIsHeadOfBed && !bIsStocks && !bIsManacles) &&
+                                   bIsMapUnitOccupiedTile;
+            
+            return nNewSpriteIndex;
+        }
 
         /// <summary>
         ///     Gets the best possible stair or ladder locations from the current position to the given ladder/stair direction
