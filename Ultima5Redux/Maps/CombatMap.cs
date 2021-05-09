@@ -134,6 +134,16 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatWater);
         }
 
+        protected override bool IsTileWalkable(TileReference currentTile, WalkableType walkableType)
+        {
+            if (walkableType == WalkableType.CombatWater) return currentTile.IsWaterEnemyPassable;
+
+            return currentTile.IsWalking_Passable || currentTile.Index ==
+                                                  SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
+                                                  || currentTile.Index == SpriteTileReferences
+                                                      .GetTileReferenceByName("RegularDoorView").Index;
+        }
+        
         public string GetCombatPlayerOutputText()
         {
             CombatPlayer combatPlayer = GetCurrentCombatPlayer();
@@ -408,10 +418,9 @@ namespace Ultima5Redux.Maps
                 TileReference tileReference = enemy.FleeingPath != null ? GetTileReference(enemy.FleeingPath.Peek().Position) : null;
                 CombatMapUnit combatMapUnit =
                     enemy.FleeingPath != null ? GetCombatUnit(enemy.FleeingPath.Peek().Position) : null;
-                // bool bIsTileWalkable = tileReference != null && combatMapUnit == null && IsTileWalkable(tileReference); 
                 bool bIsTileWalkable =
                     tileReference != null && (combatMapUnit == null && enemy.EnemyReference.IsWaterEnemy
-                        ? tileReference.IsWaterEnemyPassable : tileReference.IsLandEnemyPassable);//IsTileWalkable(tileReference); 
+                        ? tileReference.IsWaterEnemyPassable : tileReference.IsLandEnemyPassable); 
                 
                 
                 // does the monster not yet have a flee path OR
@@ -445,14 +454,10 @@ namespace Ultima5Redux.Maps
                                             || !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _));
             CombatMapUnit bestCombatPlayer = bPreviousTargetInRange ? enemy.PreviousAttackTarget : GetClosestCombatPlayerInRange(enemy);
             
-            // we determine if the best combat player is close enough to attack or not
-            //bool bIsAttackable = bestCombatPlayer?.IsAttackable ?? false;
-            //bool bIsReachable = bestCombatPlayer != null && enemy.CanReachForMeleeAttack(bestCombatPlayer);
-            
             Debug.Assert(bestCombatPlayer?.IsAttackable ?? true);
             
             // if the best combat player is attackable and reachable, then we do just that!
-            if (bestCombatPlayer != null)//bIsAttackable && bIsReachable)
+            if (bestCombatPlayer != null)
             {
                 CombatMapUnit.HitState hitState = enemy.Attack(bestCombatPlayer, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
                     out postAttackOutputStr);
@@ -485,7 +490,6 @@ namespace Ultima5Redux.Maps
                         break;
                     case CombatMapUnit.HitState.Fleeing:
                         targetedCombatMapUnit = bestCombatPlayer;
-                        //enemy.IsFleeing = true;
                         break;
                     case CombatMapUnit.HitState.None:
                     default:
@@ -498,12 +502,15 @@ namespace Ultima5Redux.Maps
                 return TurnResult.EnemyAttacks;
             }
 
-            CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatPlayer(enemy);
+            CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatPlayer(enemy, out bool bMoved);
 
-            if (pursuedCombatMapUnit != null)
+            if (bMoved)
             {
                 // we have exhausted all potential attacking possibilities, so instead we will just move 
                 preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
+                if (pursuedCombatMapUnit != null)
+                    preAttackOutputStr += "\nThey really seem to have it in for " + pursuedCombatMapUnit.FriendlyName +
+                                          "!";
             }
             else
             {
@@ -664,11 +671,6 @@ namespace Ultima5Redux.Maps
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)
         {
-            // if (CurrentCombatPlayer.Record != record)
-            // {
-            //     
-            // }
-
             _initiativeQueue.SetActivePlayerCharacter(record);
             _bPlayerHasChanged = true;
             RefreshCurrentCombatPlayer();
@@ -676,21 +678,24 @@ namespace Ultima5Redux.Maps
 
         public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
 
-        public CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit) =>
-            MoveToClosestAttackableCombatMapUnit(activeCombatUnit, CombatMapUnitEnum.CombatPlayer) as CombatPlayer;
+        public CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit, out bool bMoved) =>
+            MoveToClosestAttackableCombatMapUnit(activeCombatUnit, CombatMapUnitEnum.CombatPlayer, out bMoved) as CombatPlayer;
 
-        public Enemy MoveToClosestAttackableEnemy(out string outputStr) => MoveToClosestAttackableEnemy(CurrentCombatPlayer, out outputStr);
+        public Enemy MoveToClosestAttackableEnemy(out string outputStr, out bool bMoved) => 
+            MoveToClosestAttackableEnemy(CurrentCombatPlayer, out outputStr, out bMoved);
 
-        public Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit, out string outputStr)
+        public Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit, out string outputStr, out bool bMoved)
         {
-            Enemy enemy = MoveToClosestAttackableCombatMapUnit(activeMapUnit, CombatMapUnitEnum.Enemy) as Enemy;
+            Enemy enemy = MoveToClosestAttackableCombatMapUnit(activeMapUnit, CombatMapUnitEnum.Enemy, out bMoved) as Enemy;
+            outputStr = "";
             if (enemy == null)
             {
-                outputStr = "Unable to target or advance on enemy.";
+                if (bMoved) outputStr = $"{activeMapUnit.FriendlyName} moved.\nUnable to target enemy.";
+                else outputStr = $"Unable to target or advance on enemy.";
             }
             else
             {
-                outputStr = CurrentCombatPlayer.FriendlyName + " advances on " + enemy.FriendlyName;
+                outputStr = $"{CurrentCombatPlayer.FriendlyName} advances on {enemy.FriendlyName}";
             }
             AdvanceToNextCombatMapUnit();
             return enemy;
@@ -701,11 +706,14 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="activeCombatUnit">the combat map unit that wants to attack a combat player</param>
         /// <param name="preferredAttackTarget">the type of target you will target</param>
+        /// <param name="bMoved">did the CombatMapUnit move</param>
         /// <returns>The combat player that they are heading towards</returns>
-        public CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit, CombatMapUnitEnum preferredAttackTarget)
+        public CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit, 
+            CombatMapUnitEnum preferredAttackTarget, out bool bMoved)
         {
             const int NoPath = 0xFFFF;
             bool bCharmed = activeCombatUnit.IsCharmed;
+            bMoved = false;
 
             int nMinMoves = 0xFFFF;
             Stack<Node> preferredRoute = null;
@@ -723,8 +731,9 @@ namespace Ultima5Redux.Maps
                 
                 // get the shortest path to the unit - we ignore the range value because by calling this method we are insisting
                 // that they move
-                Stack<Node> theWay = aStar.FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
-                    combatMapUnitXY, 1);//activeCombatUnit.ClosestAttackRange);
+                Stack<Node> theWay = aStar.FindPath(activeCombatUnit.MapUnitPosition.XY, combatMapUnitXY);
+                    //FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
+                    //combatMapUnitXY, 1);//activeCombatUnit.ClosestAttackRange);
                 int nMoves = theWay?.Count ?? NoPath;
                 if (nMoves < nMinMoves)
                 {
@@ -807,6 +816,7 @@ namespace Ultima5Redux.Maps
             Point2D nextPosition = preferredRoute.Pop().Position;
             
             MoveActiveCombatMapUnit(nextPosition);
+            bMoved = true;
 
             return preferredAttackVictim;
         }
@@ -970,7 +980,7 @@ namespace Ultima5Redux.Maps
             }
 
             // make sure the tile that the enemy occupies is not walkable
-            // we do both land and water in case there are overlappig tiles (which there shouldn't be!?)
+            // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
             SetWalkable(enemyPosition, false);
         }
 
