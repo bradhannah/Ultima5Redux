@@ -313,6 +313,15 @@ namespace Ultima5Redux.Maps
                         PreCombatMap?.GetType() ?? "NULL");
             }
         }
+        
+        private void ClearOverridenTiles(Map map)
+        {
+            _overrideMap = Utils.Init2DArray<int>(map.TheMap[0].Length, map.TheMap.Length);
+            _exposedSearchItems =
+                Utils.Init2DArray<Queue<InventoryItem>>(map.TheMap[0].Length,
+                    map.TheMap.Length);
+        }
+
 
         /// <summary>
         /// Loads a combat map, but aut
@@ -391,6 +400,8 @@ namespace Ultima5Redux.Maps
 
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 
                 _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference);
+
+            ClearOverridenTiles(CurrentCombatMap);            
             
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
@@ -410,10 +421,7 @@ namespace Ultima5Redux.Maps
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
-            _overrideMap = Utils.Init2DArray<int>(CurrentSmallMap.TheMap[0].Length, CurrentSmallMap.TheMap.Length);
-            _exposedSearchItems =
-                Utils.Init2DArray<Queue<InventoryItem>>(CurrentSmallMap.TheMap[0].Length,
-                    CurrentSmallMap.TheMap.Length);
+            ClearOverridenTiles(CurrentSmallMap);            
 
             LargeMapOverUnder = (Map.Maps) (-1);
 
@@ -444,10 +452,7 @@ namespace Ultima5Redux.Maps
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
             }
 
-            _overrideMap = Utils.Init2DArray<int>(CurrentLargeMap.TheMap[0].Length, CurrentLargeMap.TheMap.Length);
-            _exposedSearchItems =
-                Utils.Init2DArray<Queue<InventoryItem>>(CurrentLargeMap.TheMap[0].Length,
-                    CurrentLargeMap.TheMap.Length);
+            ClearOverridenTiles(CurrentLargeMap);            
 
             LargeMapOverUnder = map;
 

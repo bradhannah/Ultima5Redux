@@ -105,7 +105,7 @@ namespace Ultima5Redux.Maps
 
         public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
             CombatMapUnits.CurrentMapUnits.Where(combatMapUnit => combatMapUnit.IsAttackable && combatMapUnit.IsActive).OfType<CombatMapUnit>().ToList();
-        
+
         /// <summary>
         /// Creates CombatMap.
         /// Note: Does not initialize the combat map units.
