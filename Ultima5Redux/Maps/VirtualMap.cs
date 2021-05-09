@@ -156,7 +156,15 @@ namespace Ultima5Redux.Maps
 
         public MapUnitPosition CurrentPosition
         {
-            get => TheMapUnits.CurrentAvatarPosition;
+            get
+            {
+                if (CurrentMap is CombatMap combatMap)
+                {
+                    return combatMap.CurrentCombatMapUnit.MapUnitPosition;
+                }
+                return TheMapUnits.CurrentAvatarPosition; 
+                
+            }
             set => TheMapUnits.CurrentAvatarPosition = value;
         }
 
