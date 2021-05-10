@@ -711,6 +711,10 @@ namespace Ultima5Redux
 
             State.TheVirtualMap.SetOverridingTileReferece(SpriteTileReferences.GetTileReferenceByName("BrickFloor"),
                 xy);
+            
+            Map currentMap = State.TheVirtualMap.CurrentMap;
+            currentMap.SetOpenDoor(xy);
+            
             bWasSuccessful = true;
             return DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.OPENED);
         }

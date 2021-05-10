@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Numerics;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
@@ -17,8 +18,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         //internal AStar AStar;
 
-        private Dictionary<WalkableType, AStar> _aStarDictionary = new Dictionary<WalkableType, AStar>();
-        private Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new Dictionary<WalkableType, List<List<Node>>>();
+        private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new Dictionary<WalkableType, AStar>();
+        private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new Dictionary<WalkableType, List<List<Node>>>();
 
         /// <summary>
         ///     All A* nodes for the current map
@@ -37,6 +38,8 @@ namespace Ultima5Redux.Maps
         private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
 
         public enum WalkableType { StandardWalking, CombatLand, CombatWater }
+
+        private readonly Dictionary<Point2D, int> _openDoors = new Dictionary<Point2D, int>();
 
         protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference, 
             TileReferences spriteTileReferences)
@@ -74,7 +77,7 @@ namespace Ultima5Redux.Maps
             if (!_aStarDictionary.ContainsKey(walkableType))
             {
                 throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
-                                                this.GetType());
+                                                GetType());
             }
 
             return _aStarDictionary[walkableType];
@@ -86,7 +89,7 @@ namespace Ultima5Redux.Maps
         // FLOOD FILL STUFF
         public bool[][] VisibleOnMap { get; protected set; }
         protected bool[][] TestForVisibility;
-        protected int _nVisibleInEachDirectionOfAvatar = 10;
+        protected readonly int VisibleInEachDirectionOfAvatar = 10;
         protected int NVisibleLargeMapTiles;
         protected Point2D AvatarXyPos;
         protected bool TouchedOuterBorder = false;
@@ -188,6 +191,28 @@ namespace Ultima5Redux.Maps
             
             FloodFillMap(initialFloodFillPosition, true);
         }
+
+        public void SetOpenDoor(Point2D xy)
+        {
+            TileReference tileReference = GetTileReference(xy);
+            Debug.Assert(SpriteTileReferences.IsDoor(tileReference.Index), "you tried to set an open door on a tile that is not an open door");
+            
+            _openDoors.Add(xy, 10);
+            
+            if (IsAStarMap(WalkableType.CombatLand)) SetWalkableTile(xy, true, WalkableType.CombatLand);
+            if (IsAStarMap(WalkableType.StandardWalking)) SetWalkableTile(xy, true, WalkableType.StandardWalking);
+        }
+
+        public bool IsOpenDoor(Point2D xy) => _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
+
+        public void CloseDoor(Point2D xy)
+        {
+            TileReference tileReference = GetTileReference(xy);
+            Debug.Assert(SpriteTileReferences.IsDoor(tileReference.Index), "you tried to set an open door on a tile that is not an open door");
+            Debug.Assert(_openDoors.ContainsKey(xy), "tried to close a door that wasn't open");
+
+            _openDoors.Remove(xy);
+        }
         
         #endregion
 
@@ -223,13 +248,14 @@ namespace Ultima5Redux.Maps
             }
 
             _aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
-            //AStar = ;
         }
 
-        
+        public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
+
         protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
         {
-            SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy), walkableType), walkableType);
+            SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
+            // SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy), walkableType), walkableType);
         }
 
         public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
@@ -238,21 +264,28 @@ namespace Ultima5Redux.Maps
             _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
         }
 
-        protected virtual bool IsTileWalkable(TileReference currentTile, WalkableType walkableType)
+        protected bool IsTileWalkable(Point2D xy, WalkableType walkableType)
+        {
+            if (IsOpenDoor(xy)) return true;
+            TileReference tileReference = GetTileReference(xy);
+            return (IsTileWalkable(tileReference, walkableType));
+        }
+        
+        protected virtual bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
             if (walkableType == WalkableType.CombatWater)
             {
-                return currentTile.IsWaterEnemyPassable;
+                return tileReference.IsWaterEnemyPassable;
             }
 
             bool bIsWalkable =
-                currentTile.IsWalking_Passable || currentTile.Index ==
+                tileReference.IsWalking_Passable || tileReference.Index ==
                                                SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                               || currentTile.Index == SpriteTileReferences
+                                               || tileReference.Index == SpriteTileReferences
                                                    .GetTileReferenceByName("RegularDoorView").Index
-                                               || currentTile.Index == SpriteTileReferences
+                                               || tileReference.Index == SpriteTileReferences
                                                    .GetTileReferenceByName("LockedDoor").Index
-                                               || currentTile.Index == SpriteTileReferences
+                                               || tileReference.Index == SpriteTileReferences
                                                    .GetTileReferenceByName("LockedDoorView").Index;
 
             return bIsWalkable;
@@ -272,6 +305,13 @@ namespace Ultima5Redux.Maps
         {
             return _xyOverrides[xy];
         }
+
+        // public void SetTileOverride(Point2D xy, TileReference tileReference)
+        // {
+        //     TileOverride tileOverride = new TileOverride();
+        //     tileOverride.
+        //     _xyOverrides.Add(xy, tileReference);
+        // }
 
 
 

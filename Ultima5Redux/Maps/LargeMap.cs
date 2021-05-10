@@ -152,7 +152,7 @@ namespace Ultima5Redux.Maps
         
         public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
         {
-            NVisibleLargeMapTiles = _nVisibleInEachDirectionOfAvatar * 2 + 1;
+            NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
 
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
             TestForVisibility = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
@@ -160,8 +160,8 @@ namespace Ultima5Redux.Maps
             
             AvatarXyPos = initialFloodFillPosition;
             
-            _topLeftExtent = new Point2D(AvatarXyPos.X - _nVisibleInEachDirectionOfAvatar, AvatarXyPos.Y - _nVisibleInEachDirectionOfAvatar);
-            _bottomRightExtent = new Point2D(AvatarXyPos.X + _nVisibleInEachDirectionOfAvatar, AvatarXyPos.Y + _nVisibleInEachDirectionOfAvatar);
+            _topLeftExtent = new Point2D(AvatarXyPos.X - VisibleInEachDirectionOfAvatar, AvatarXyPos.Y - VisibleInEachDirectionOfAvatar);
+            _bottomRightExtent = new Point2D(AvatarXyPos.X + VisibleInEachDirectionOfAvatar, AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
             
             FloodFillMap(AvatarXyPos, true);
         }

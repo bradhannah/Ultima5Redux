@@ -134,13 +134,13 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatWater);
         }
 
-        protected override bool IsTileWalkable(TileReference currentTile, WalkableType walkableType)
+        protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
-            if (walkableType == WalkableType.CombatWater) return currentTile.IsWaterEnemyPassable;
+            if (walkableType == WalkableType.CombatWater) return tileReference.IsWaterEnemyPassable;
 
-            return currentTile.IsWalking_Passable || currentTile.Index ==
+            return tileReference.IsWalking_Passable || tileReference.Index ==
                                                   SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                                  || currentTile.Index == SpriteTileReferences
+                                                  || tileReference.Index == SpriteTileReferences
                                                       .GetTileReferenceByName("RegularDoorView").Index;
         }
         
@@ -187,8 +187,10 @@ namespace Ultima5Redux.Maps
             for (int i = 0; i < points.Count - 1; i++)
             {
                 Point2D point = points[i];
-                TileReference tileRef = GetTileReference(point);
-                if (tileRef.IsLandEnemyPassable || tileRef.IsWaterEnemyPassable) continue;
+                if (IsTileWalkable(point, WalkableType.CombatLand) || IsTileWalkable(point, WalkableType.CombatWater))
+                    continue;
+                // TileReference tileRef = GetTileReference(point);
+                // if (tileRef.IsLandEnemyPassable || tileRef.IsWaterEnemyPassable) continue;
                 
                 // we can't penetrate this thing and need to give up
                 firstBlockPoint = point;
@@ -362,6 +364,9 @@ namespace Ultima5Redux.Maps
                         {
                             deadEnemy.NPCRef.IsDead = true;
                         }
+                        
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater);
                     }
                     break;
                 default:
@@ -612,19 +617,19 @@ namespace Ultima5Redux.Maps
             SetWalkableTile(xy, false, walkableType);
         }
         
-        public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
-        {
-            combatMapUnit.Stats.CurrentHp = 0;
-            if (combatMapUnit is Enemy enemy)
-            {
-                RecalculateWalkableTile(combatMapUnit.MapUnitPosition.XY, enemy.EnemyReference.IsWaterEnemy ?
-                    WalkableType.CombatWater : WalkableType.CombatLand);
-            }
-            else
-            {
-                RecalculateVisibleTiles(combatMapUnit.MapUnitPosition.XY);
-            }
-        }
+        // public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
+        // {
+        //     combatMapUnit.Stats.CurrentHp = 0;
+        //     if (combatMapUnit is Enemy enemy)
+        //     {
+        //         RecalculateWalkableTile(combatMapUnit.MapUnitPosition.XY, enemy.EnemyReference.IsWaterEnemy ?
+        //             WalkableType.CombatWater : WalkableType.CombatLand);
+        //     }
+        //     else
+        //     {
+        //         RecalculateVisibleTiles(combatMapUnit.MapUnitPosition.XY);
+        //     }
+        // }
 
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) => 
             CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().FirstOrDefault(player => player.Record == record);
