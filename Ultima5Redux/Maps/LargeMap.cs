@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.Monsters;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
@@ -155,7 +156,14 @@ namespace Ultima5Redux.Maps
             NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
 
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-            TestForVisibility = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            //TestForVisibility = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            TestForVisibility = new List<bool[][]>();
+            // reinitialize the array for all potential party members
+            for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
+            {
+                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+            }
+            
             TouchedOuterBorder = false;
             
             AvatarXyPos = initialFloodFillPosition;

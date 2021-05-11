@@ -6,6 +6,7 @@ using System.Numerics;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.Monsters;
+using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
@@ -88,7 +89,7 @@ namespace Ultima5Redux.Maps
         #region FLOOD FILL
         // FLOOD FILL STUFF
         public bool[][] VisibleOnMap { get; protected set; }
-        protected bool[][] TestForVisibility;
+        protected List<bool[][]> TestForVisibility;
         protected readonly int VisibleInEachDirectionOfAvatar = 10;
         protected int NVisibleLargeMapTiles;
         protected Point2D AvatarXyPos;
@@ -120,14 +121,15 @@ namespace Ultima5Redux.Maps
             SetVisibleTile(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
             SetVisibleTile(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
         }
-        
-          /// <summary>
+
+        /// <summary>
         /// Recursive method for determining which tiles are visible and which are hidden based on the Avatar's
         /// current position
         /// </summary>
         /// <param name="xy"></param>
-        /// <param name="bFirst">is this the initial call to the method?</param>    
-        protected void FloodFillMap(Point2D xy, bool bFirst = false)
+        /// <param name="bFirst">is this the initial call to the method?</param>
+        /// <param name="nCharacterIndex"></param>    
+        protected void FloodFillMap(Point2D xy, bool bFirst, int nCharacterIndex = 0)
         {
             if (xy == null)
             {
@@ -141,15 +143,17 @@ namespace Ultima5Redux.Maps
             if (IsRepeatingMap)
                 adjustedXy.AdjustXAndYToMax(NumOfXTiles);
 
-            if (TestForVisibility[adjustedXy.X][adjustedXy.Y]) return; // already did it
-            TestForVisibility[adjustedXy.X][adjustedXy.Y] = true;
+            if (TestForVisibility[nCharacterIndex][adjustedXy.X][adjustedXy.Y]) return; // already did it
+            TestForVisibility[nCharacterIndex][adjustedXy.X][adjustedXy.Y] = true;
             
             // if it blocks light then we make it visible but do not make subsequent tiles visible
             TileReference tileReference = SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
 
-            bool bBlocksLight = tileReference.BlocksLight && !bFirst && 
-                                !(tileReference.IsWindow && 
-                                  AvatarXyPos.IsWithinNFourDirections(adjustedXy));
+            bool bBlocksLight = 
+                tileReference.BlocksLight // if it says it blocks light AND 
+                && !bFirst                // it is not the first tile (aka the one you are on) AND
+                && !IsOpenDoor(xy)        // it's not an open door 
+                && !(tileReference.IsWindow && AvatarXyPos.IsWithinNFourDirections(adjustedXy));  //  you are not next to a window
 
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
@@ -163,18 +167,18 @@ namespace Ultima5Redux.Maps
             // if the tile blocks the light then we don't calculate the surrounding tiles
             if (bBlocksLight) return;
 
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Up, xy));
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Down, xy));
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Left, xy));
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Right, xy));
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Up, xy), false);
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Down, xy), false);
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Left, xy), false);
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Right, xy), false);
 
             if (!bFirst) return;
 
             // if it is the first call (avatar tile) then we always check the diagonals as well 
-            FloodFillMap(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
-            FloodFillMap(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
-            FloodFillMap(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
-            FloodFillMap(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ));
+            FloodFillMap(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
+            FloodFillMap(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
+            FloodFillMap(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
+            FloodFillMap(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
         }
           
         protected virtual Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
@@ -185,7 +189,13 @@ namespace Ultima5Redux.Maps
         public virtual void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
         {
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-            TestForVisibility = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);;
+            TestForVisibility = new List<bool[][]>();
+            // reinitialize the array for all potential party members
+            for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
+            {
+                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+            }
+            
             TouchedOuterBorder = false;
             AvatarXyPos = initialFloodFillPosition;
             
