@@ -183,14 +183,11 @@ namespace Ultima5Redux.Maps
         {
             // get the points between the player and opponent
             List<Point2D> points = attackingPoint.Raytrace(opponentMapUnit);
-            // for (int i = 1; i < points.Count - 2; i++)
             for (int i = 0; i < points.Count - 1; i++)
             {
                 Point2D point = points[i];
                 if (IsTileWalkable(point, WalkableType.CombatLand) || IsTileWalkable(point, WalkableType.CombatWater))
                     continue;
-                // TileReference tileRef = GetTileReference(point);
-                // if (tileRef.IsLandEnemyPassable || tileRef.IsWaterEnemyPassable) continue;
                 
                 // we can't penetrate this thing and need to give up
                 firstBlockPoint = point;
@@ -425,7 +422,9 @@ namespace Ultima5Redux.Maps
                     enemy.FleeingPath != null ? GetCombatUnit(enemy.FleeingPath.Peek().Position) : null;
                 bool bIsTileWalkable =
                     tileReference != null && (combatMapUnit == null && enemy.EnemyReference.IsWaterEnemy
-                        ? tileReference.IsWaterEnemyPassable : tileReference.IsLandEnemyPassable); 
+                        ? IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatWater)
+                        : IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatLand));
+                //tileReference.IsWaterEnemyPassable : tileReference.IsLandEnemyPassable); 
                 
                 
                 // does the monster not yet have a flee path OR
@@ -454,9 +453,15 @@ namespace Ultima5Redux.Maps
 
             // if enemy is within range of someone then they will have a bestCombatPlayer to attack
             // if their old target is now out of range, they won't hesitate to attack someone who is
-            bool bPreviousTargetInRange = enemy.PreviousAttackTarget != null && enemy.PreviousAttackTarget.Stats.CurrentHp > 0 && 
-                                            (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget) 
-                                            || !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _));
+            bool bPreviousTargetPresent =
+                enemy.PreviousAttackTarget != null && enemy.PreviousAttackTarget.Stats.CurrentHp > 0;
+            bool bPreviousTargetInRange;
+            // if it is a melee attacked then check for melee attack distance otherwise check for ranged blockage and distance
+            if (enemy.EnemyReference.AttackRange == 1)
+                bPreviousTargetInRange = bPreviousTargetPresent && (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget));
+            else         
+                bPreviousTargetInRange = bPreviousTargetPresent && !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _);
+            
             CombatMapUnit bestCombatPlayer = bPreviousTargetInRange ? enemy.PreviousAttackTarget : GetClosestCombatPlayerInRange(enemy);
             
             Debug.Assert(bestCombatPlayer?.IsAttackable ?? true);
@@ -616,20 +621,6 @@ namespace Ultima5Redux.Maps
             WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
             SetWalkableTile(xy, false, walkableType);
         }
-        
-        // public void KillCombatMapUnit(CombatMapUnit combatMapUnit)
-        // {
-        //     combatMapUnit.Stats.CurrentHp = 0;
-        //     if (combatMapUnit is Enemy enemy)
-        //     {
-        //         RecalculateWalkableTile(combatMapUnit.MapUnitPosition.XY, enemy.EnemyReference.IsWaterEnemy ?
-        //             WalkableType.CombatWater : WalkableType.CombatLand);
-        //     }
-        //     else
-        //     {
-        //         RecalculateVisibleTiles(combatMapUnit.MapUnitPosition.XY);
-        //     }
-        // }
 
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) => 
             CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().FirstOrDefault(player => player.Record == record);
@@ -1137,29 +1128,13 @@ namespace Ultima5Redux.Maps
                 Point2D left = new Point2D(0, nIndex);
                 Point2D right = new Point2D(NumOfXTiles - 1, nIndex);
 
-                switch (walkableType)
-                {
-                    case WalkableType.CombatLand:
-                        if (GetTileReference(top).IsLandEnemyPassable) points.Add(top);
-                        if (GetTileReference(bottom).IsLandEnemyPassable) points.Add(bottom);
+                if (IsTileWalkable(top, walkableType)) points.Add(top);
+                if (IsTileWalkable(bottom, walkableType)) points.Add(bottom);
                 
-                        if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
+                if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
                 
-                        if (GetTileReference(left).IsLandEnemyPassable) points.Add(left);
-                        if (GetTileReference(right).IsLandEnemyPassable) points.Add(right);
-                        break;
-                    case WalkableType.CombatWater:
-                        if (GetTileReference(top).IsWaterEnemyPassable) points.Add(top);
-                        if (GetTileReference(bottom).IsWaterEnemyPassable) points.Add(bottom);
-                
-                        if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
-                
-                        if (GetTileReference(left).IsWaterEnemyPassable) points.Add(left);
-                        if (GetTileReference(right).IsWaterEnemyPassable) points.Add(right);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(walkableType), walkableType, null);
-                }
+                if (IsTileWalkable(left, walkableType)) points.Add(left);
+                if (IsTileWalkable(right, walkableType)) points.Add(right);
             }
             
             return points;
