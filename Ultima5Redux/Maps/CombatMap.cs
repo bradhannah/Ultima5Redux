@@ -134,7 +134,7 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatWater);
         }
         
-        public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
+        public override void RecalculateVisibleTiles(Point2D _)
         {
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
             TestForVisibility = new List<bool[][]>();
@@ -145,7 +145,7 @@ namespace Ultima5Redux.Maps
                 // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
                 AvatarXyPos = combatPlayers[i].MapUnitPosition.XY;//initialFloodFillPosition;
                 TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-                FloodFillMap(initialFloodFillPosition, true, i);
+                FloodFillMap(AvatarXyPos, true, i);
             }
             
             TouchedOuterBorder = false;
