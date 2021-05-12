@@ -901,7 +901,7 @@ namespace Ultima5Redux.Maps
 
         internal void InitializeInitiativeQueue()
         {
-            _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords);
+            _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords, this);
             _initiativeQueue.InitializeInitiativeQueue();
             RefreshCurrentCombatPlayer();
         }
