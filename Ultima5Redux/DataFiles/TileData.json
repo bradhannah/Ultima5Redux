@@ -2305,7 +2305,7 @@
     "IsTalkOverable": false,
     "IsBoardable": false,
     "IsGuessableFloor": false,
-    "BlocksLight": true,
+    "BlocksLight": false,
     "IsWindow": false,
     "CombatMapIndex": "None"
   },
