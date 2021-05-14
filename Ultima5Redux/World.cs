@@ -699,6 +699,8 @@ namespace Ultima5Redux
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
             bool isDoorInDirection = tileReference.IsOpenable;
+            
+            AdvanceTime(2);
 
             if (!isDoorInDirection)
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.NOTHING_TO_OPEN);
