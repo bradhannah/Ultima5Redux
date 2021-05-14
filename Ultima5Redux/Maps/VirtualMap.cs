@@ -60,11 +60,14 @@ namespace Ultima5Redux.Maps
         ///     Exposed searched or loot items
         /// </summary>
         private Queue<InventoryItem>[][] _exposedSearchItems;
+        private Queue<InventoryItem>[][] _pushedExposedSearchItems;
 
         /// <summary>
         ///     override map is responsible for overriding tiles that would otherwise be static
         /// </summary>
         private int[][] _overrideMap;
+
+        private int[][] _pushedOverrideMap;
 
         //public bool ShowOuterSmallMapTiles => _bTouchedOuterBorder;
 
@@ -302,6 +305,8 @@ namespace Ultima5Redux.Maps
                     break;
                 case LargeMap largeMap:
                 case SmallMap smallMap:
+                    _exposedSearchItems = _pushedExposedSearchItems;
+                    _overrideMap = _pushedOverrideMap;
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
                     TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false, true);
@@ -401,6 +406,8 @@ namespace Ultima5Redux.Maps
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 
                 _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference);
 
+            _pushedExposedSearchItems = _exposedSearchItems;
+            _pushedOverrideMap = _overrideMap;
             ClearOverridenTiles(CurrentCombatMap);            
             
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);

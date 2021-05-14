@@ -46,10 +46,13 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private int _nHighestDexterity;
 
-        public InitiativeQueue(MapUnits.MapUnits combatMapUnits, PlayerCharacterRecords playerCharacterRecords )
+        private CombatMap _combatMap;
+
+        public InitiativeQueue(MapUnits.MapUnits combatMapUnits, PlayerCharacterRecords playerCharacterRecords, CombatMap combatMap)
         {
             _combatMapUnits = combatMapUnits;
             _playerCharacterRecords = playerCharacterRecords;
+            _combatMap = combatMap;
             InitializeInitiativeQueue();
         }
 
@@ -229,6 +232,11 @@ namespace Ultima5Redux.Maps
 
         private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit)
         {
+            // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
+            if (_combatMap.VisibleOnMap != null)
+                if (!_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
+                    return false;
+
             return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0;
         }
 
