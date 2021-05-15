@@ -96,6 +96,11 @@ namespace Ultima5Redux.Maps
         protected bool TouchedOuterBorder = false;
         protected abstract bool IsRepeatingMap { get; }
 
+        internal void ClearOpenDoors()
+        {
+            _openDoors.Clear();
+        }
+        
         /// <summary>
         /// Attempts to set the visible tile flag 
         /// </summary>

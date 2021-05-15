@@ -343,6 +343,7 @@ namespace Ultima5Redux
              MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
                  State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
 
+             PassTime();
 
             // wall sconces - BORROWED!
             if (tileReference.Index == SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
@@ -377,8 +378,6 @@ namespace Ultima5Redux
                 return ThouDostFind(invItem.FindDescription);
                 //
             }
-
-            PassTime();
 
             return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.NOTHING_TO_GET);
         }

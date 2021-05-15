@@ -325,6 +325,7 @@ namespace Ultima5Redux.Maps
             _exposedSearchItems =
                 Utils.Init2DArray<Queue<InventoryItem>>(map.TheMap[0].Length,
                     map.TheMap.Length);
+            CurrentMap.ClearOpenDoors();
         }
 
 
@@ -408,7 +409,7 @@ namespace Ultima5Redux.Maps
 
             _pushedExposedSearchItems = _exposedSearchItems;
             _pushedOverrideMap = _overrideMap;
-            ClearOverridenTiles(CurrentCombatMap);            
+            ClearOverridenTiles(CurrentCombatMap);
             
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
@@ -428,7 +429,7 @@ namespace Ultima5Redux.Maps
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
-            ClearOverridenTiles(CurrentSmallMap);            
+            ClearOverridenTiles(CurrentSmallMap);
 
             LargeMapOverUnder = (Map.Maps) (-1);
 
