@@ -44,6 +44,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public string EquipmentName { get; }
         public MissileType Missile { get; }
 
+        public override string InventoryReferenceString => SpecificEquipment.ToString();
+
         private static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
             if (nIndex == BareHandsIndex) return 3;

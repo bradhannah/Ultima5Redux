@@ -16,15 +16,18 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private readonly Moongates _moongates;
         private readonly MoonPhaseReferences _moonPhaseReferences;
         private readonly GameState _state;
+        private readonly InventoryReferences _inventoryReferences;
 
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,
-            MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state)
+            MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state,
+            InventoryReferences inventoryReferences)
         {
             _gameStateByteArray = gameStateByteArray;
             _dataOvlRef = dataOvlRef;
             _moonPhaseReferences = moonPhaseReferences;
             _moongates = moongates;
             _state = state;
+            _inventoryReferences = inventoryReferences;
             RefreshInventory();
         }
 
@@ -166,13 +169,16 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             CombatItems.AddRange(ProtectiveArmour.AllCombatItems);
 
             TheWeapons = new Weapons(_dataOvlRef, _gameStateByteArray);
+            AllItems.AddRange(TheWeapons.GenericItemList);
             ReadyItems.AddRange(TheWeapons.AllCombatItems);
             CombatItems.AddRange(TheWeapons.AllCombatItems);
 
             MagicScrolls = new Scrolls(_dataOvlRef, _gameStateByteArray);
+            AllItems.AddRange(MagicScrolls.GenericItemList);
             UseItems.AddRange(MagicScrolls.GenericItemList);
 
             MagicPotions = new Potions(_dataOvlRef, _gameStateByteArray);
+            AllItems.AddRange(MagicPotions.GenericItemList);
             UseItems.AddRange(MagicPotions.GenericItemList);
 
             SpecializedItems = new SpecialItems(_dataOvlRef, _gameStateByteArray);
@@ -198,6 +204,49 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             UseItems.AddRange(TheMoonstones.GenericItemList);
 
             TheProvisions = new Provisions(_dataOvlRef, _state);
+            AllItems.AddRange(TheProvisions.GenericItemList);
+
+            UpdateAllInventoryReferences();
         }
+
+        private void UpdateAllInventoryReferences()
+        {
+            foreach (InventoryItem item in AllItems)
+            {
+                switch (item)
+                {
+                    case LordBritishArtifact artifact:
+                    case ShadowlordShard shard:
+                    case Potion magicPotion:
+                    case Scroll magicScroll:
+                    case SpecialItem specializedItem:
+                    case Moonstone moonstone:
+                    case Provision provision:
+                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                            InventoryReferences.InventoryReferenceType.Item,
+                            item.InventoryReferenceString);
+                        break;
+                    case Spell magicSpell:
+                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                            InventoryReferences.InventoryReferenceType.Spell,
+                            item.InventoryReferenceString);
+                        break;
+                    case Reagent spellReagent:
+                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                            InventoryReferences.InventoryReferenceType.Reagent,
+                            item.InventoryReferenceString);
+                        break;
+                    case Armour protectiveArmour:
+                    case Weapon weapon:
+                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                            InventoryReferences.InventoryReferenceType.Armament,
+                            item.InventoryReferenceString);
+                        break;
+                    default:
+                        throw new Ultima5ReduxException("Tried to update InventoryReference on " + item.GetType());
+                }
+            }
+        }
+    
     }
 }

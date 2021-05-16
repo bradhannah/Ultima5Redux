@@ -68,7 +68,7 @@ namespace Ultima5Redux
 
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
 
-            State = new GameState(U5Directory, DataOvlRef);
+            State = new GameState(U5Directory, DataOvlRef, InvRef);
 
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
             

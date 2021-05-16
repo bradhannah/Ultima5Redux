@@ -37,6 +37,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public override bool HideQuantity => false;
 
+        public override string InventoryReferenceString => ProvisionType.ToString();
+
         /// <summary>
         ///     Gets the parties current quantity of the specific provision
         /// </summary>

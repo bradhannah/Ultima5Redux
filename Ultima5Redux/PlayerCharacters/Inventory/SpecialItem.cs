@@ -28,6 +28,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public ItemTypeSpriteEnum ItemType { get; }
 
+        public override string InventoryReferenceString => ItemType.ToString();
+        
         public static ItemTypeEnum GetItemOffset(ItemTypeSpriteEnum itemTypeSpriteEnum)
         {
             ItemTypeEnum itemType = (ItemTypeEnum) Enum.Parse(typeof(ItemTypeEnum), itemTypeSpriteEnum.ToString());

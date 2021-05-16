@@ -18,5 +18,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
 
         public override bool HideQuantity => false;
+
     }
 }

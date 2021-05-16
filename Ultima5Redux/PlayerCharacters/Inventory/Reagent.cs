@@ -87,6 +87,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         public int ReagentIndex => (int) ReagentType - (int) ReagentTypeEnum.SulfurAsh;
 
+        public override string InventoryReferenceString => ReagentType.ToString();
+
+        
         /// <summary>
         ///     Get all locations that reagents are sold
         /// </summary>

@@ -32,12 +32,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public virtual string FindDescription { get; }
 
-        public InventoryReference InvRef { get; protected set; }
+        public InventoryReference InvRef { get; protected internal set; }
 
         public virtual bool IsSellable => BasePrice > 0;
 
         public virtual int BasePrice { get; protected set; } = 0;
 
+        public abstract string InventoryReferenceString { get; }
 
         public int SpriteNum { get; }
 

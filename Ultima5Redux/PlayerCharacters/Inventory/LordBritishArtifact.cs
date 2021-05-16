@@ -17,6 +17,8 @@
 
         public ArtifactType Artifact { get; }
 
+        public override string InventoryReferenceString => Artifact.ToString();
+
         public bool HasItem()
         {
             return Quantity != 0;

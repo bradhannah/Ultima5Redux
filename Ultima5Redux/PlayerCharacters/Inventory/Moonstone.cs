@@ -24,6 +24,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public override string LongName => Utils.AddSpacesBeforeCaps(Phase.ToString());
         public override string ShortName => Utils.AddSpacesBeforeCaps(Phase.ToString());
 
+        public override string InventoryReferenceString => Phase.ToString();
+        
         /// <summary>
         ///     If the moonstone is buried, then it's not in your inventory
         ///     otherwise if it is NOT buried, then it has to be in your inventory

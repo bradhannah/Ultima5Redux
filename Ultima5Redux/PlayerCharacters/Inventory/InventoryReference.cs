@@ -203,7 +203,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [JsonProperty] public string ItemNameHighlight { private get; set; }
 
-        [JsonProperty] public int MerchantIndex { get; private set; }
+        //[JsonProperty] public int MerchantIndex { get; private set; }
 
         public string[] ItemNameHighLights =>
             ItemNameHighlight.Length == 0 ? new string[0] : ItemNameHighlight.Split(',');
