@@ -1245,8 +1245,10 @@ namespace Ultima5Redux
             return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.CARPET_BANG);
         }
         
-        private string UseSpecialItem(SpecialItem spcItem, out bool bWasUsed)
+        public string UseSpecialItem(SpecialItem spcItem, out bool bWasUsed)
         {
+            PassTime();
+            
             bWasUsed = true;
             switch (spcItem.ItemType)
             {
@@ -1272,8 +1274,10 @@ namespace Ultima5Redux
             }
         }
 
-        private string UseLordBritishArtifactItem(LordBritishArtifact lordBritishArtifact)
+        public string UseLordBritishArtifactItem(LordBritishArtifact lordBritishArtifact)
         {
+            PassTime();
+            
             switch (lordBritishArtifact.Artifact)
             {
                 case LordBritishArtifact.ArtifactType.Amulet:
@@ -1302,8 +1306,10 @@ namespace Ultima5Redux
             }
         }
 
-        private string UseShadowLordShard(ShadowlordShard shadowlordShard)
+        public string UseShadowLordShard(ShadowlordShard shadowlordShard)
         {
+            PassTime();
+            
             string thouHolds(string shard)
             {
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
@@ -1326,10 +1332,11 @@ namespace Ultima5Redux
             }
         }
 
-        private string UseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried)
+        public string UseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried)
         {
             bMoonstoneBuried = false;
-
+            PassTime();
+            
             if (!IsAllowedToBuryMoongate())
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.MOONSTONE_SPACE) +
                        DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
@@ -1345,38 +1352,56 @@ namespace Ultima5Redux
 
         private bool IsAllowedToBuryMoongate()
         {
-            if (State.TheVirtualMap.LargeMapOverUnder == Map.Maps.Small) return false;
+            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld) return false;
+            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld) return false;
             if (State.TheVirtualMap.IsAnyExposedItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
             TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
 
             return SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
         }
 
-        public string TryToUseAnInventoryItem(InventoryItem item, out bool bAbleToUseItem)
+        public string TryToUsePotion(Potion potion)
         {
-            bAbleToUseItem = false;
-            string retStr;
-            if (item.GetType() == typeof(SpecialItem))
-                retStr = UseSpecialItem((SpecialItem) item, out bAbleToUseItem);
-            else if (item.GetType() == typeof(Potion))
-                retStr = "Potion\n\nPoof!";
-            else if (item.GetType() == typeof(Scroll))
-                retStr = "Scroll\n\nAllaKazam!";
-            else if (item.GetType() == typeof(LordBritishArtifact))
-                retStr = UseLordBritishArtifactItem((LordBritishArtifact) item);
-            else if (item.GetType() == typeof(ShadowlordShard))
-                retStr = UseShadowLordShard((ShadowlordShard) item);
-            else if (item.GetType() == typeof(Moonstone))
-                retStr = UseMoonstone((Moonstone) item, out bAbleToUseItem);
-            else
-                throw new Exception("You are trying to use an item that can't be used: " + item.LongName);
-
-            PassTime();
-            // temporary until we determine if there are some items we can't use
-            bAbleToUseItem = true;
             State.PlayerInventory.RefreshInventory();
-            return retStr;
+            PassTime();
+            
+            return $"Potion: {potion.Color}\n\nPoof!";
         }
+
+        public string TryToUseScroll(Scroll scroll)
+        {
+            State.PlayerInventory.RefreshInventory();
+            PassTime();
+            
+            return $"Scroll: {scroll.ScrollSpell}\n\nA-la-Kazam!";
+        }
+        
+
+        // public string TryToUseAnInventoryItem(InventoryItem item, out bool bAbleToUseItem)
+        // {
+        //     bAbleToUseItem = false; 
+        //     string retStr;
+        //     if (item.GetType() == typeof(SpecialItem))
+        //         retStr = UseSpecialItem((SpecialItem) item, out bAbleToUseItem);
+        //     else if (item.GetType() == typeof(Potion))
+        //         retStr = "Potion\n\nPoof!";
+        //     else if (item.GetType() == typeof(Scroll))
+        //         retStr = "Scroll\n\nAllaKazam!";
+        //     else if (item.GetType() == typeof(LordBritishArtifact))
+        //         retStr = UseLordBritishArtifactItem((LordBritishArtifact) item);
+        //     else if (item.GetType() == typeof(ShadowlordShard))
+        //         retStr = UseShadowLordShard((ShadowlordShard) item);
+        //     else if (item.GetType() == typeof(Moonstone))
+        //         retStr = UseMoonstone((Moonstone) item, out bAbleToUseItem);
+        //     else
+        //         throw new Exception("You are trying to use an item that can't be used: " + item.LongName);
+        //
+        //     PassTime();
+        //     // temporary until we determine if there are some items we can't use
+        //     bAbleToUseItem = true;
+        //     State.PlayerInventory.RefreshInventory();
+        //     return retStr;
+        // }
 
         /// <summary>
         /// Yell to hoist or furl the sails

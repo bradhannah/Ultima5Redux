@@ -343,7 +343,7 @@ namespace Ultima5ReduxTesting
             Debug.Assert(item != null);
             Debug.Assert(item.GetType() == typeof(Moonstone));
 
-            string useStr = world.TryToUseAnInventoryItem(item, out bWasSuccessful);
+            string useStr = world.UseMoonstone((Moonstone)item, out bWasSuccessful);
             Debug.Assert(bWasSuccessful);
         }
 
@@ -843,7 +843,7 @@ namespace Ultima5ReduxTesting
             world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
             Debug.Assert(!bGotACarpet);
             
-            world.TryToUseAnInventoryItem(
+            world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
                 out bool bAbleToUseItem);
             Debug.Assert(bAbleToUseItem);
@@ -863,7 +863,7 @@ namespace Ultima5ReduxTesting
             World world = new World(ActualSaveDirectory+@"\Bucden3");
 
             int nCarpets = world.State.PlayerInventory.MagicCarpets;
-            world.TryToUseAnInventoryItem(
+            world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
                 out bool bAbleToUseItem);
             Debug.Assert(bAbleToUseItem);
