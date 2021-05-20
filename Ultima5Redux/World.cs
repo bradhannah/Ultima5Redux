@@ -1360,7 +1360,7 @@ namespace Ultima5Redux
             return SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
         }
 
-        public string TryToUsePotion(Potion potion)
+        public string TryToUsePotion(Potion potion, PlayerCharacterRecord record)
         {
             State.PlayerInventory.RefreshInventory();
             PassTime();
@@ -1368,7 +1368,7 @@ namespace Ultima5Redux
             return $"Potion: {potion.Color}\n\nPoof!";
         }
 
-        public string TryToUseScroll(Scroll scroll)
+        public string TryToUseScroll(Scroll scroll, PlayerCharacterRecord record)
         {
             State.PlayerInventory.RefreshInventory();
             PassTime();
