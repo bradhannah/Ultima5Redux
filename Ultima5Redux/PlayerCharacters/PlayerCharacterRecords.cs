@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Permissions;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -95,6 +96,16 @@ namespace Ultima5Redux.PlayerCharacters
 
             Debug.Assert(nPartyMembers > 0 && nPartyMembers <= 6);
             return nPartyMembers;
+        }
+
+        public int GetIndexOfPlayerCharacterRecord(PlayerCharacterRecord record)
+        {
+            for (int i = 0; i < Records.Count; i++ )
+            {
+                if (Records[i] == record) return i;
+            }
+
+            return -1;
         }
 
         public void HealAllPlayers()

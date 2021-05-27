@@ -56,7 +56,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         /// Current player or enemy who is active in current round
         /// </summary>
-        public PlayerCharacterRecord CurrentPlayerCharacterRecord { get; private set; }
+        public PlayerCharacterRecord CurrentPlayerCharacterRecord => CurrentCombatPlayer?.Record; //{ get; private set; }
 
         public CombatPlayer CurrentCombatPlayer => _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
 
@@ -554,11 +554,13 @@ namespace Ultima5Redux.Maps
             if (CurrentCombatPlayer is null)
             {
                 ClearCurrentCombatItemQueue();
+                //CurrentPlayerCharacterRecord = null;
                 return;
             }
 
             List <CombatItem> combatItems =
                 CurrentCombatPlayer.GetAttackWeapons();
+                //.CurrentPlayerCharacterRecord = CurrentCombatPlayer.Record;
             BuildCombatItemQueue(combatItems);
         }
 
@@ -646,7 +648,7 @@ namespace Ultima5Redux.Maps
         {
             CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
             
-            CurrentPlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
+            //CurrentPlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
 
             _bPlayerHasChanged = true;
 
