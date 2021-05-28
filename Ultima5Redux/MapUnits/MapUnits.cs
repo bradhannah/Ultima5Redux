@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -39,7 +40,7 @@ namespace Ultima5Redux.MapUnits
 
         // ReSharper disable once NotAccessedField.Local
         private readonly SmallMapCharacterStates _smallMapCharacterStates;
-        private readonly MapUnitStates _smallMapUnitStates;
+        private MapUnitStates _smallMapUnitStates;
         private readonly List<MapUnit> _smallWorldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
 
         private readonly TileReferences _tileReferences;
@@ -524,6 +525,10 @@ namespace Ultima5Redux.MapUnits
             else
             {
                 Debug.WriteLine("Loading default character positions...");
+                
+                // set a blank map unit state because it wasn't saved to disk
+                _smallMapUnitStates = new MapUnitStates(_tileReferences);
+                
                 // if we aren't currently on a small map then we need to reassign the current large map to the correct
                 // datachunk because it would have otherwise been loaded from saved.gam the first time
                 // Note: yes, this is all very confusing - I am confused, but hopefully the abstraction layers
@@ -785,6 +790,8 @@ namespace Ultima5Redux.MapUnits
             // set position of frigate in the world
             Point2D skiffLocation = xy;
             skiff.MapUnitPosition = new MapUnitPosition(skiffLocation.X, skiffLocation.Y, 0);
+            skiff.KeyTileReference = skiff.NonBoardedTileReference;
+            
             AddNewMapUnit(Map.Maps.Overworld, skiff, nIndex);
             return skiff;
         }
