@@ -56,7 +56,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public int MagicCarpets
         {
             get => GetInventoryQuantity(InventoryThings.MagicCarpets);
-            set => SetInventoryQuantity(InventoryThings.MagicCarpets, (byte) value);
+            set
+            {
+                int nQuantity = value == 0 || value == 0xFF ? 0 : value;
+                SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity = nQuantity;
+                SetInventoryQuantity(InventoryThings.MagicCarpets, (byte)nQuantity);
+            }
         }
 
         private static byte BoolToByte(bool bBool)

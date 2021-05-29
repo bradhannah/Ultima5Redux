@@ -719,6 +719,7 @@ namespace Ultima5Redux.MapUnits
                 // set position of frigate in the world
                 MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0)
             };
+            magicCarpet.KeyTileReference = magicCarpet.NonBoardedTileReference;
 
             AddNewMapUnit(_currentMapType, magicCarpet, nIndex);
             return magicCarpet;

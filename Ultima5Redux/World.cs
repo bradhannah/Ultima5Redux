@@ -337,9 +337,6 @@ namespace Ultima5Redux
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
-            // List<MapUnit> mapUnits = State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(State.TheVirtualMap.LargeMapOverUnder, 
-            //      xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
-
              MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
                  State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
 
@@ -1376,33 +1373,6 @@ namespace Ultima5Redux
             return $"Scroll: {scroll.ScrollSpell}\n\nA-la-Kazam!";
         }
         
-
-        // public string TryToUseAnInventoryItem(InventoryItem item, out bool bAbleToUseItem)
-        // {
-        //     bAbleToUseItem = false; 
-        //     string retStr;
-        //     if (item.GetType() == typeof(SpecialItem))
-        //         retStr = UseSpecialItem((SpecialItem) item, out bAbleToUseItem);
-        //     else if (item.GetType() == typeof(Potion))
-        //         retStr = "Potion\n\nPoof!";
-        //     else if (item.GetType() == typeof(Scroll))
-        //         retStr = "Scroll\n\nAllaKazam!";
-        //     else if (item.GetType() == typeof(LordBritishArtifact))
-        //         retStr = UseLordBritishArtifactItem((LordBritishArtifact) item);
-        //     else if (item.GetType() == typeof(ShadowlordShard))
-        //         retStr = UseShadowLordShard((ShadowlordShard) item);
-        //     else if (item.GetType() == typeof(Moonstone))
-        //         retStr = UseMoonstone((Moonstone) item, out bAbleToUseItem);
-        //     else
-        //         throw new Exception("You are trying to use an item that can't be used: " + item.LongName);
-        //
-        //     PassTime();
-        //     // temporary until we determine if there are some items we can't use
-        //     bAbleToUseItem = true;
-        //     State.PlayerInventory.RefreshInventory();
-        //     return retStr;
-        // }
-
         /// <summary>
         /// Yell to hoist or furl the sails
         /// </summary>
