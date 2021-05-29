@@ -214,6 +214,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             UpdateAllInventoryReferences();
         }
 
+        // public void ConsumeItem(InventoryItem item)
+        // {
+        //     InventoryItem item = AllItems[item];
+        //     
+        // }
+        
+        
         private void UpdateAllInventoryReferences()
         {
             foreach (InventoryItem item in AllItems)

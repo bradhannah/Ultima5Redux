@@ -26,6 +26,8 @@ namespace Ultima5Redux.PlayerCharacters
         public readonly CharacterStats Stats = new CharacterStats();
         private byte _monthsSinceStayingAtInn;
 
+        private static Random _random = new Random();
+        
         /// <summary>
         ///     Creates a character record from a raw record that begins at offset 0
         /// </summary>
@@ -147,6 +149,18 @@ namespace Ultima5Redux.PlayerCharacters
                 Stats.CurrentHp = 0;
                 Stats.Status = CharacterStatus.Dead;
             }
+        }
+
+        public int CastSpellMani()
+        {
+            if (_random.Next() % 20 == 0)
+            {
+                return -1;
+            }
+            
+            int nHealPoints = Utils.GetNumberBetween(5,25);
+            Stats.CurrentHp = Math.Min(Stats.MaximumHp, Stats.CurrentHp + nHealPoints);
+            return nHealPoints;
         }
 
         public int Heal()

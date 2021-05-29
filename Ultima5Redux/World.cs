@@ -35,6 +35,9 @@ namespace Ultima5Redux
         public readonly CombatMapReferences CombatMapRefs;
         private readonly TileOverrides _tileOverrides = new TileOverrides();
 
+        private Random _random = new Random();
+
+        
         /// <summary>
         ///     Ultima 5 data and save files directory
         /// </summary>
@@ -946,8 +949,7 @@ namespace Ultima5Redux
                 Avatar avatar = State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
                 if (!bManualMovement && avatar.AreSailsHoisted)
                 {
-                    Random ran = new Random();
-                    int nDamage = ran.Next(5, 15);
+                    int nDamage = _random.Next(5, 15);
 
                     Debug.Assert(avatar.CurrentBoardedMapUnit is Frigate);
                     Frigate frigate = avatar.CurrentBoardedMapUnit as Frigate;
@@ -1357,10 +1359,63 @@ namespace Ultima5Redux
             return SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
         }
 
-        public string TryToUsePotion(Potion potion, PlayerCharacterRecord record)
+        private Dictionary<Potion.PotionColor, Spell.SpellWordsCircles> PotionColorToSpellMap =
+            new Dictionary<Potion.PotionColor, Spell.SpellWordsCircles>()
+            {
+                {Potion.PotionColor.Blue, Spell.SpellWordsCircles.An_Zu},
+                {Potion.PotionColor.Yellow, Spell.SpellWordsCircles.Mani},
+                {Potion.PotionColor.Black, Spell.SpellWordsCircles.Sanct_Lor},
+                {Potion.PotionColor.Red, Spell.SpellWordsCircles.An_Nox},
+                {Potion.PotionColor.Green, Spell.SpellWordsCircles.Nox},
+                {Potion.PotionColor.Orange, Spell.SpellWordsCircles.In_Zu},
+                {Potion.PotionColor.White, Spell.SpellWordsCircles.Wis_An_Ylem},
+                {Potion.PotionColor.Purple, Spell.SpellWordsCircles.Rel_Xen_Bet}
+            };
+        
+        public string TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded, out Spell.SpellWordsCircles spell)
         {
             State.PlayerInventory.RefreshInventory();
             PassTime();
+            
+            bSucceeded = true;
+
+            Debug.Assert(potion.Quantity > 0, $"Can't use potion {potion} because you have quantity {potion.Quantity}");
+
+            spell = PotionColorToSpellMap[potion.Color];
+            
+            switch (potion.Color)
+            {
+                case Potion.PotionColor.Blue:
+                    // awaken
+                    break;
+                case Potion.PotionColor.Yellow:
+                    // lesser heal - mani
+                    potion.Quantity--;
+                  
+                    int nHealedPoints = record.CastSpellMani();
+                    bSucceeded = nHealedPoints >= 0;
+                    return bSucceeded ? "Healed!" : "Failed!";
+                case Potion.PotionColor.Red:
+                    // cure poison
+                    break;
+                case Potion.PotionColor.Green:
+                    // poison user
+                    break;
+                case Potion.PotionColor.Orange:
+                    // sleep
+                    break;
+                case Potion.PotionColor.Purple:
+                    // turn me into a rat
+                    break;
+                case Potion.PotionColor.Black:
+                    // invisibility
+                    break;
+                case Potion.PotionColor.White:
+                    // x-ray
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             
             return $"Potion: {potion.Color}\n\nPoof!";
         }

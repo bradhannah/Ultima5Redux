@@ -554,13 +554,11 @@ namespace Ultima5Redux.Maps
             if (CurrentCombatPlayer is null)
             {
                 ClearCurrentCombatItemQueue();
-                //CurrentPlayerCharacterRecord = null;
                 return;
             }
 
             List <CombatItem> combatItems =
                 CurrentCombatPlayer.GetAttackWeapons();
-                //.CurrentPlayerCharacterRecord = CurrentCombatPlayer.Record;
             BuildCombatItemQueue(combatItems);
         }
 

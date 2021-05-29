@@ -26,10 +26,16 @@ namespace Ultima5Redux.PlayerCharacters
             Rel_Tym = 5, In_Vas_Por_Ylem = 6, Quas_An_Wis = 6, In_An = 6, Wis_An_Ylem = 6, An_Xen_Ex = 6,
             Rel_Xen_Bet = 6, Sanct_Lor = 7, Xen_Corp = 7, In_Quas_Xen = 7, In_Quas_Wis = 7, In_Nox_Hur = 7,
             In_Quas_Corp = 7, In_Mani_Corp = 8, Kal_Xen_Corp = 8, In_Vas_Grav_Corp = 8, In_Flam_Hur = 8,
-            Vas_Rel_Por = 8, An_Tym = 8
+            Vas_Rel_Por = 8, An_Tym = 8,
+            Nox = 0
         }
 
-        public enum UnpublishedSpells { An_Ylem, In_Xen_Mani, Rel_Xen_Bet, In_Quas_Corp }
+        public enum UnpublishedSpells { 
+            An_Ylem, // negate matter 
+            In_Xen_Mani, //create create life
+            Rel_Xen_Bet, // change creature small
+            In_Quas_Corp // create illusion death 
+        } 
 
         private const int SPRITE_NUM = 260;
 

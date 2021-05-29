@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,6 +10,15 @@ namespace Ultima5Redux
 {
     public static class Utils
     {
+
+        public static int GetNumberBetween(int nMin, int nMax)
+        {
+            Debug.Assert(nMin < nMax);
+            int nDiff = nMax - nMin;
+            Random ran = new Random();
+            return (ran.Next() % nDiff) + nMin;
+        }
+        
         public static string AddSpacesBeforeCaps(string str)
         {
             // filthy method from here: https://stackoverflow.com/questions/272633/add-spaces-before-capital-letters
