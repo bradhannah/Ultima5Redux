@@ -215,6 +215,8 @@ namespace Ultima5Redux.Maps
                 }
             }
         }
+
+        public bool IsCombatMap => CurrentMap is CombatMap;
         
         /// <summary>
         ///     The persistant overworld map
@@ -394,7 +396,7 @@ namespace Ultima5Redux.Maps
             
             // if the PreCombatMap is not set OR the existing map is not already a combat map then
             // we set the PreCombatMap so we know which map to return to
-            if (PreCombatMap == null || !(CurrentMap is CombatMap))
+            if (PreCombatMap == null || !IsCombatMap)
             {
                 PreCombatMap = CurrentMap;
                 PreMapUnitPosition.Floor = CurrentPosition.Floor;

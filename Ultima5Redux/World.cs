@@ -187,6 +187,9 @@ namespace Ultima5Redux
 
         public MoonPhaseReferences MoonPhaseRefs { get; }
 
+        public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
+
+        
         /// <summary>
         ///     Begins the conversation with a particular NPC
         /// </summary>
@@ -1228,6 +1231,12 @@ namespace Ultima5Redux
         /// <returns>string to print and show user</returns>
         private string UseMagicCarpet(out bool bWasUsed)
         {
+            if (IsCombatMap)
+            {
+                bWasUsed = false;
+                return DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.NOT_HERE_BANG);
+            }
+            
             bWasUsed = true;
             Debug.Assert((State.PlayerInventory.MagicCarpets > 0));
 
@@ -1359,7 +1368,7 @@ namespace Ultima5Redux
             return SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
         }
 
-        private Dictionary<Potion.PotionColor, Spell.SpellWordsCircles> PotionColorToSpellMap =
+        private readonly Dictionary<Potion.PotionColor, Spell.SpellWordsCircles> _potionColorToSpellMap =
             new Dictionary<Potion.PotionColor, Spell.SpellWordsCircles>()
             {
                 {Potion.PotionColor.Blue, Spell.SpellWordsCircles.An_Zu},
@@ -1374,6 +1383,8 @@ namespace Ultima5Redux
         
         public string TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded, out Spell.SpellWordsCircles spell)
         {
+            string retStr = potion.Color.ToString() + " Potion\n";
+            
             State.PlayerInventory.RefreshInventory();
             PassTime();
             
@@ -1381,8 +1392,11 @@ namespace Ultima5Redux
 
             Debug.Assert(potion.Quantity > 0, $"Can't use potion {potion} because you have quantity {potion.Quantity}");
 
-            spell = PotionColorToSpellMap[potion.Color];
-            
+            spell = _potionColorToSpellMap[potion.Color];
+            if (IsCombatMap) State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+
+            potion.Quantity--;
+
             switch (potion.Color)
             {
                 case Potion.PotionColor.Blue:
@@ -1390,11 +1404,12 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.Yellow:
                     // lesser heal - mani
-                    potion.Quantity--;
-                  
                     int nHealedPoints = record.CastSpellMani();
                     bSucceeded = nHealedPoints >= 0;
-                    return bSucceeded ? "Healed!" : "Failed!";
+                    retStr += bSucceeded
+                        ? DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.HEALED_BANG_N)
+                        : DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.FAILED_BANG_N);
+                    return retStr;
                 case Potion.PotionColor.Red:
                     // cure poison
                     break;
