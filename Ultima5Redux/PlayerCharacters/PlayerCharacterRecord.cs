@@ -185,6 +185,14 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        public bool Poison()
+        {
+            if (Stats.Status == CharacterStatus.Dead) return false;
+            Debug.Assert(Stats.Status == CharacterStatus.Good || Stats.Status == CharacterStatus.Poisoned);
+            Stats.Status = CharacterStatus.Poisoned;
+            return true;
+        }
+
         public string GetPlayerSelectedMessage(DataOvlReference dataOvlReference, bool bPlayerEscaped, out bool bIsSelectable)
         {
             bIsSelectable = false;

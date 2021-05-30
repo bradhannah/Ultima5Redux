@@ -1385,7 +1385,6 @@ namespace Ultima5Redux
         {
             string retStr = potion.Color.ToString() + " Potion\n";
             
-            State.PlayerInventory.RefreshInventory();
             PassTime();
             
             bSucceeded = true;
@@ -1415,7 +1414,10 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.Green:
                     // poison user
-                    break;
+                    bool bWasPoisoned = record.Poison();
+                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N);
+                    
+                    return retStr;
                 case Potion.PotionColor.Orange:
                     // sleep
                     break;
@@ -1437,7 +1439,7 @@ namespace Ultima5Redux
 
         public string TryToUseScroll(Scroll scroll, PlayerCharacterRecord record)
         {
-            State.PlayerInventory.RefreshInventory();
+            //State.PlayerInventory.RefreshInventory();
             PassTime();
             
             return $"Scroll: {scroll.ScrollSpell}\n\nA-la-Kazam!";
