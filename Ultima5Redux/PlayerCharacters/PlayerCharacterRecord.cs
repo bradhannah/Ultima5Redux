@@ -193,6 +193,13 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        public bool Sleep()
+        {
+            if (Stats.Status == CharacterStatus.Dead) return false;
+            Stats.Status = CharacterStatus.Asleep;
+            return true;
+        }
+
         public string GetPlayerSelectedMessage(DataOvlReference dataOvlReference, bool bPlayerEscaped, out bool bIsSelectable)
         {
             bIsSelectable = false;
@@ -205,11 +212,11 @@ namespace Ultima5Redux.PlayerCharacters
                     bIsSelectable = true;
                     return Name;
                 case CharacterStatus.Charmed:
-                    return $"Invalid! {Name} is charmed!";
+                    return $"Invalid!\n {Name} is charmed!";
                 case CharacterStatus.Asleep:
-                    return $"Invalid! {Name} is asleep!";
+                    return $"Invalid!\n {Name} is asleep!";
                 case CharacterStatus.Dead:
-                    return $"Invalid! {Name} is a late player character! He is no longer!";
+                    return $"Invalid!\n {Name} is a late player character! He is no longer!";
                 default:
                     throw new ArgumentOutOfRangeException();
             }

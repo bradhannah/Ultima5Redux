@@ -34,7 +34,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
 
         public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
-
+        public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
         public abstract string SingularName { get; }
         public abstract string PluralName { get; }
 

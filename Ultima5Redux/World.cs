@@ -1421,6 +1421,8 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.Orange:
                     // sleep
+                    bool bWasPutToSleep = record.Sleep();
+                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N);
                     break;
                 case Potion.PotionColor.Purple:
                     // turn me into a rat

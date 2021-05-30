@@ -78,7 +78,7 @@ namespace Ultima5Redux.Maps
 
         public enum TurnResult { RequireCharacterInput, EnemyMoved, EnemyAttacks, EnemyWandered, 
             EnemyEscaped, EnemyMissed, EnemyGrazed, EnemyMissedButHit, CombatPlayerMissed, CombatPlayerMissedButHit,
-            CombatPlayerHit, CombatPlayerGrazed, CombatPlayerBlocked, NoAction 
+            CombatPlayerHit, CombatPlayerGrazed, CombatPlayerBlocked, NoAction, Sleeping
         }
 
         public enum CombatMapUnitEnum { All, CombatPlayer, Enemy };
@@ -143,7 +143,7 @@ namespace Ultima5Redux.Maps
             for (int i = 0; i < combatPlayers.Count ; i++)
             {
                 // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
-                AvatarXyPos = combatPlayers[i].MapUnitPosition.XY;//initialFloodFillPosition;
+                AvatarXyPos = combatPlayers[i].MapUnitPosition.XY;
                 TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
                 FloodFillMap(AvatarXyPos, true, i);
             }
@@ -421,6 +421,12 @@ namespace Ultima5Redux.Maps
                 return TurnResult.RequireCharacterInput;
             }
 
+            if (enemy.IsSleeping)
+            {
+                preAttackOutputStr = enemy.FriendlyName + ": Sleeping";  
+                return TurnResult.Sleeping;
+            }
+
             // the enemy is badly wounded and is going to try to escape
             if (enemy.IsFleeing)
             {
@@ -441,7 +447,6 @@ namespace Ultima5Redux.Maps
                     tileReference != null && (combatMapUnit == null && enemy.EnemyReference.IsWaterEnemy
                         ? IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatWater)
                         : IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatLand));
-                //tileReference.IsWaterEnemyPassable : tileReference.IsLandEnemyPassable); 
                 
                 
                 // does the monster not yet have a flee path OR
@@ -646,8 +651,6 @@ namespace Ultima5Redux.Maps
         {
             CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
             
-            //CurrentPlayerCharacterRecord = combatMapUnit is CombatPlayer player ? player.Record : null;
-
             _bPlayerHasChanged = true;
 
             RefreshCurrentCombatPlayer();
@@ -1096,12 +1099,7 @@ namespace Ultima5Redux.Maps
             combatPlayer.HasEscaped = true;
             AdvanceToNextCombatMapUnit();
         }
-
-        // public string GetWalkableDebug()
-        // {
-        //     return AStar.GetWalkableDebug();
-        // }
-
+        
         /// <summary>
         /// Gets the best escape route based on current position
         /// </summary>
