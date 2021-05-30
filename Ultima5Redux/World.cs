@@ -1368,20 +1368,20 @@ namespace Ultima5Redux
             return SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
         }
 
-        private readonly Dictionary<Potion.PotionColor, Spell.SpellWordsCircles> _potionColorToSpellMap =
-            new Dictionary<Potion.PotionColor, Spell.SpellWordsCircles>()
+        private readonly Dictionary<Potion.PotionColor, Spell.SpellWords> _potionColorToSpellMap =
+            new Dictionary<Potion.PotionColor, Spell.SpellWords>()
             {
-                {Potion.PotionColor.Blue, Spell.SpellWordsCircles.An_Zu},
-                {Potion.PotionColor.Yellow, Spell.SpellWordsCircles.Mani},
-                {Potion.PotionColor.Black, Spell.SpellWordsCircles.Sanct_Lor},
-                {Potion.PotionColor.Red, Spell.SpellWordsCircles.An_Nox},
-                {Potion.PotionColor.Green, Spell.SpellWordsCircles.Nox},
-                {Potion.PotionColor.Orange, Spell.SpellWordsCircles.In_Zu},
-                {Potion.PotionColor.White, Spell.SpellWordsCircles.Wis_An_Ylem},
-                {Potion.PotionColor.Purple, Spell.SpellWordsCircles.Rel_Xen_Bet}
+                {Potion.PotionColor.Blue, Spell.SpellWords.An_Zu},
+                {Potion.PotionColor.Yellow, Spell.SpellWords.Mani},
+                {Potion.PotionColor.Black, Spell.SpellWords.Sanct_Lor},
+                {Potion.PotionColor.Red, Spell.SpellWords.An_Nox},
+                {Potion.PotionColor.Green, Spell.SpellWords.An_Nox},
+                {Potion.PotionColor.Orange, Spell.SpellWords.In_Zu},
+                {Potion.PotionColor.White, Spell.SpellWords.Wis_An_Ylem},
+                {Potion.PotionColor.Purple, Spell.SpellWords.Rel_Xen_Bet}
             };
         
-        public string TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded, out Spell.SpellWordsCircles spell)
+        public string TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded, out Spell.SpellWords spell)
         {
             string retStr = potion.Color.ToString() + " Potion\n";
             
@@ -1408,16 +1408,17 @@ namespace Ultima5Redux
                     retStr += bSucceeded
                         ? DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.HEALED_BANG_N)
                         : DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.FAILED_BANG_N);
-                    return retStr;
+                    break;
                 case Potion.PotionColor.Red:
                     // cure poison
+                    record.Cure();
+                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N);
                     break;
                 case Potion.PotionColor.Green:
                     // poison user
                     bool bWasPoisoned = record.Poison();
                     retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N);
-                    
-                    return retStr;
+                    break;
                 case Potion.PotionColor.Orange:
                     // sleep
                     break;
@@ -1434,7 +1435,8 @@ namespace Ultima5Redux
                     throw new ArgumentOutOfRangeException();
             }
             
-            return $"Potion: {potion.Color}\n\nPoof!";
+            return retStr;
+            // return $"Potion: {potion.Color}\n\nPoof!";
         }
 
         public string TryToUseScroll(Scroll scroll, PlayerCharacterRecord record)

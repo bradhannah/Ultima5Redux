@@ -36,7 +36,7 @@ namespace Ultima5Redux.PlayerCharacters
                 {"Wis", "Knowledge"},
                 {"Xen", "Creature"},
                 {"Ylem", "Matter"},
-                {"Zu", "Sleep"}
+                {"Zu", "Sleep"},
             };
 
         public Spells(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef, gameStateByteArray)
@@ -52,6 +52,11 @@ namespace Ultima5Redux.PlayerCharacters
 
         private void AddSpell(Spell.SpellWords spellWord, DataOvlReference.SpellStrings spellStr)
         {
+            if (spellWord == Spell.SpellWords.Nox)
+            {
+                Items[spellWord] = new Spell(spellWord, 0, "Nox", "Nox");
+                return;
+            }
             Items[spellWord] = new Spell(spellWord, GameStateByteArray[(int) spellWord],
                 DataOvlRef.StringReferences.GetString(spellStr),
                 DataOvlRef.StringReferences.GetString(spellStr));

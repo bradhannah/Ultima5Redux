@@ -843,6 +843,14 @@
          "ItemSpriteExposed": 260,
          "ItemDescription": "Perhaps the most difficult of spells, An Tym appears to stop time itself. For eons, scholars of thaumaturgy have tried to learn the secret of controlling the universe, and the more they discovered, the more convinced they became that they could never control this power even if they understood it. It is a tribute to the brilliance and creativity of Britannian minds that experts, undaunted by their failures, simply turned the problem around and found a way to achieve every advantage of briefly controlling time without actually controlling it at all. Those capable of this spell will witness their foes paralyzed in mid-motion. After a few moments, all returns to normal, just as though time had actually stopped and started up again. However, the caster's party remains active throughout the spell. An Tym requires a mixture of mandrake root, well-preserved blood moss and a garlic clove.",
          "ItemDescriptionAttribution": "The Book of Lore (Ultima V)"
+      },
+      {
+         "ItemName": "Nox",
+         "ItemNameHighlight": "Nox",
+         "ItemSprite": "260",
+         "ItemSpriteExposed": 260,
+         "ItemDescription": "This tends to leave the caster feeling worse than they started!",
+         "ItemDescriptionAttribution": "The Book of Brad"
       }
    ],
    "Item": [

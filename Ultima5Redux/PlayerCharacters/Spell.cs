@@ -14,7 +14,7 @@ namespace Ultima5Redux.PlayerCharacters
             In_Sanct_Grav, Uus_Por, Des_Por, Wis_Quas, In_Bet_Xen, An_Ex_Por, In_Ex_Por, Vas_Mani, In_Zu, Rel_Tym,
             In_Vas_Por_Ylem, Quas_An_Wis, In_An, Wis_An_Ylem, An_Xen_Ex, Rel_Xen_Bet, Sanct_Lor, Xen_Corp, In_Quas_Xen,
             In_Quas_Wis, In_Nox_Hur, In_Quas_Corp, In_Mani_Corp, Kal_Xen_Corp, In_Vas_Grav_Corp, In_Flam_Hur,
-            Vas_Rel_Por, An_Tym
+            Vas_Rel_Por, An_Tym, Nox
         }
 
         public enum SpellWordsCircles
@@ -66,9 +66,7 @@ namespace Ultima5Redux.PlayerCharacters
                 sb.Append(Spells.GetLiteralTranslation(str) + " ");
             }
 
-            //Debug.Write("SpellString: " + spellStr); ;
-            //return spellStr;
-            return sb.ToString().TrimEnd(); //Spells.GetLiteralTranslation(spellStr);
+            return sb.ToString().TrimEnd(); 
         }
     }
 }
