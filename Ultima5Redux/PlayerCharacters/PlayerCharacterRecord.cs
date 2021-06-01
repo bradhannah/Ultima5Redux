@@ -195,8 +195,15 @@ namespace Ultima5Redux.PlayerCharacters
 
         public bool Sleep()
         {
-            if (Stats.Status == CharacterStatus.Dead) return false;
+            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Poisoned) return false;
             Stats.Status = CharacterStatus.Asleep;
+            return true;
+        }
+
+        public bool WakeUp()
+        {
+            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Asleep) return false;
+            Stats.Status = CharacterStatus.Good;
             return true;
         }
 

@@ -65,6 +65,14 @@ namespace Ultima5Redux.MapUnits
         {
             return Record.Name;
         }
+        
+        public override TileReference KeyTileReference
+        {
+            get =>
+                Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep ? TileReferences.GetTileReferenceByName("DeadBody") : 
+                    TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
+            set => base.KeyTileReference = value;
+        }
 
         /// <summary>
         /// Gets the string used to describe all available weapons that will be outputted to user

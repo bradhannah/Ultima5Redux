@@ -1400,6 +1400,8 @@ namespace Ultima5Redux
             {
                 case Potion.PotionColor.Blue:
                     // awaken
+                    record.WakeUp();
+                    retStr += "Awoken!";
                     break;
                 case Potion.PotionColor.Yellow:
                     // lesser heal - mani
