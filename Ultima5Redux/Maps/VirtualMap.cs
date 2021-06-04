@@ -409,8 +409,13 @@ namespace Ultima5Redux.Maps
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 
                 _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference);
 
-            _pushedExposedSearchItems = _exposedSearchItems;
-            _pushedOverrideMap = _overrideMap;
+            // we only want to push the exposed items and override map if we are on a small or large map 
+            // not if we are going combat to combat map (think Debug)
+            if (_exposedSearchItems.Length > CurrentCombatMap.NumOfXTiles)
+            {
+                _pushedExposedSearchItems = _exposedSearchItems;
+                _pushedOverrideMap = _overrideMap;
+            }
             ClearOverridenTiles(CurrentCombatMap);
             
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
