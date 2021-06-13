@@ -219,5 +219,17 @@ namespace Ultima5Redux.PlayerCharacters
                 record.Stats.CurrentHp -= ran.Next(1, 9);
             }
         }
+
+        /// <summary>
+        /// When you exit combat you revert from being a Rat to a real boy!
+        /// </summary>
+        public void ClearRatStatuses()
+        {
+            foreach (PlayerCharacterRecord record in Records.Where(record =>
+                record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Rat))
+            {
+                record.TurnIntoNotARat();
+            }
+        }
     }
 }

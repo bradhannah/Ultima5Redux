@@ -1428,6 +1428,7 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.Purple:
                     // turn me into a rat
+                    record.TurnIntoRat();
                     break;
                 case Potion.PotionColor.Black:
                     // invisibility
