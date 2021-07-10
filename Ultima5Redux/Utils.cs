@@ -69,9 +69,9 @@ namespace Ultima5Redux
             return theArray;
         }
 
-        public static bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols)
+        public static bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols, bool bDefault = false)
         {
-            return Init2DArray<bool>(numberOfRows, numberOfCols);
+            return Init2DArray<bool>(numberOfRows, numberOfCols, bDefault);
         }
 
         public static T[][] TransposeArray<T>(T[][] ts)

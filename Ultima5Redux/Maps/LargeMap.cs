@@ -153,6 +153,12 @@ namespace Ultima5Redux.Maps
         
         public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
         {
+            if (XRayMode)
+            {
+                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                return;
+            }
+            
             NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
 
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);

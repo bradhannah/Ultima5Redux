@@ -342,15 +342,13 @@ namespace Ultima5Redux.Maps
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference enemyReference)
         {
-            EnemyReference primaryEnemyReference;
             int nPrimaryEnemies = 1;
-            EnemyReference secondaryEnemyReference;
             int nSecondaryEnemies = 1;
 
             if (enemyReference.IsNpc) nSecondaryEnemies = 0;
             
-            primaryEnemyReference = enemyReference;
-            secondaryEnemyReference = _enemyReferences.GetFriendReference(primaryEnemyReference);
+            EnemyReference primaryEnemyReference = enemyReference;
+            EnemyReference secondaryEnemyReference = _enemyReferences.GetFriendReference(primaryEnemyReference);
             
             LoadCombatMap(singleCombatMapReference, entryDirection, records,
                 primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);

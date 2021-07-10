@@ -50,13 +50,13 @@ namespace Ultima5Redux.Maps
         protected override bool IsRepeatingMap => false;
         
         public override bool ShowOuterSmallMapTiles => false;
-
+        
         // player character information
 
         /// <summary>
         /// Current player or enemy who is active in current round
         /// </summary>
-        public PlayerCharacterRecord CurrentPlayerCharacterRecord => CurrentCombatPlayer?.Record; //{ get; private set; }
+        public PlayerCharacterRecord CurrentPlayerCharacterRecord => CurrentCombatPlayer?.Record; 
 
         public CombatPlayer CurrentCombatPlayer => _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
 
@@ -134,9 +134,21 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatWater);
         }
         
+        /// <summary>
+        /// Recalculates which tiles are visible based on position of players in map and the current map
+        /// </summary>
+        /// <param name="_"></param>
         public override void RecalculateVisibleTiles(Point2D _)
         {
+            // if we are in an overworld combat map then everything is always visible (I think!?)
+            if (TheCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Britannia || XRayMode)
+            {
+                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                return;
+            }
+
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            
             TestForVisibility = new List<bool[][]>();
             // reinitialize the array for all potential party members
             List<CombatPlayer> combatPlayers = AllCombatPlayers;

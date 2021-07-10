@@ -42,6 +42,8 @@ namespace Ultima5Redux.Maps
 
         private readonly Dictionary<Point2D, int> _openDoors = new Dictionary<Point2D, int>();
 
+        public bool XRayMode { get; set; } = false;
+
         protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference, 
             TileReferences spriteTileReferences)
         {
@@ -94,6 +96,7 @@ namespace Ultima5Redux.Maps
         protected int NVisibleLargeMapTiles;
         protected Point2D AvatarXyPos;
         protected bool TouchedOuterBorder = false;
+
         protected abstract bool IsRepeatingMap { get; }
 
         internal void ClearOpenDoors()
@@ -193,6 +196,13 @@ namespace Ultima5Redux.Maps
           
         public virtual void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
         {
+            // XRay Mode makes sure you can see every tile
+            if (XRayMode)
+            {
+                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                return;
+            }
+            
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
             TestForVisibility = new List<bool[][]>();
             // reinitialize the array for all potential party members

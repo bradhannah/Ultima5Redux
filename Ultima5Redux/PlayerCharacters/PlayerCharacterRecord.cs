@@ -105,25 +105,15 @@ namespace Ultima5Redux.PlayerCharacters
             set => _monthsSinceStayingAtInn = (byte) (value % byte.MaxValue);
         }
 
-        public int PrimarySpriteIndex
-        {
-            get
+        public int PrimarySpriteIndex =>
+            Class switch
             {
-                switch (Class)
-                {
-                    case CharacterClass.Avatar:
-                        return 284;
-                    case CharacterClass.Bard:
-                        return 324;
-                    case CharacterClass.Fighter:
-                        return 328;
-                    case CharacterClass.Mage:
-                        return 320;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+                CharacterClass.Avatar => 284,
+                CharacterClass.Bard => 324,
+                CharacterClass.Fighter => 328,
+                CharacterClass.Mage => 320,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
         public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
             (SmallMapReferences.SingleMapReference.Location) InnOrParty;

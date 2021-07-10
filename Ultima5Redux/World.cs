@@ -1423,8 +1423,7 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.Orange:
                     // sleep
-                    bool bWasPutToSleep = record.Sleep();
-                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N);
+                    retStr += CastSleep(record, out bool _);
                     break;
                 case Potion.PotionColor.Purple:
                     // turn me into a rat
@@ -1435,6 +1434,15 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.White:
                     // x-ray
+                    bSucceeded = _random.Next() % 2 == 0;
+                    if (bSucceeded)
+                    {
+                        retStr += "X-Ray!";
+                        break;
+                    }
+                    
+                    // if you fail with the x-ray then 
+                    retStr += CastSleep(record, out bool _);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -1444,6 +1452,12 @@ namespace Ultima5Redux
             // return $"Potion: {potion.Color}\n\nPoof!";
         }
 
+        private string CastSleep(PlayerCharacterRecord record, out bool bWasPutToSleep)
+        {
+            bWasPutToSleep = record.Sleep();
+            return DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N);
+        }
+        
         public string TryToUseScroll(Scroll scroll, PlayerCharacterRecord record)
         {
             //State.PlayerInventory.RefreshInventory();
