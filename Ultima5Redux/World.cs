@@ -1375,7 +1375,7 @@ namespace Ultima5Redux
                 {Potion.PotionColor.Yellow, Spell.SpellWords.Mani},
                 {Potion.PotionColor.Black, Spell.SpellWords.Sanct_Lor},
                 {Potion.PotionColor.Red, Spell.SpellWords.An_Nox},
-                {Potion.PotionColor.Green, Spell.SpellWords.An_Nox},
+                {Potion.PotionColor.Green, Spell.SpellWords.Nox},
                 {Potion.PotionColor.Orange, Spell.SpellWords.In_Zu},
                 {Potion.PotionColor.White, Spell.SpellWords.Wis_An_Ylem},
                 {Potion.PotionColor.Purple, Spell.SpellWords.Rel_Xen_Bet}
@@ -1432,9 +1432,12 @@ namespace Ultima5Redux
                 case Potion.PotionColor.Purple:
                     // turn me into a rat
                     record.TurnIntoRat();
+                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.POOF_BANG_N);
                     break;
                 case Potion.PotionColor.Black:
                     // invisibility
+                    record.TurnInvisible();
+                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.INVISIBLE_BANG_N);
                     break;
                 case Potion.PotionColor.White:
                     // x-ray

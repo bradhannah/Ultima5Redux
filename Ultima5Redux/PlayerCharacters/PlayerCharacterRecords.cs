@@ -223,13 +223,17 @@ namespace Ultima5Redux.PlayerCharacters
         /// <summary>
         /// When you exit combat you revert from being a Rat to a real boy!
         /// </summary>
-        public void ClearRatStatuses()
+        public void ClearCombatStatuses()
         {
             foreach (PlayerCharacterRecord record in Records.Where(record => record.IsRat)) 
-                //record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Rat))
             {
                 record.TurnIntoNotARat();
             }
+            foreach (PlayerCharacterRecord record in Records.Where(record => record.IsInvisible))
+            {
+                record.TurnVisible();
+            }
+
         }
     }
 }

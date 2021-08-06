@@ -19,7 +19,8 @@ namespace Ultima5Redux.PlayerCharacters
 
         public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
 
-        public bool IsRat { get; set; } = false;
+        public bool IsRat { get; private set; } = false;
+        public bool IsInvisible { get; private set; } = false; 
 
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
@@ -155,6 +156,18 @@ namespace Ultima5Redux.PlayerCharacters
             return nHealPoints;
         }
 
+        public bool TurnInvisible()
+        {
+            //285 Apparition
+            IsInvisible = true;
+            return true;
+        }
+
+        public void TurnVisible()
+        {
+            IsInvisible = false;
+        }
+        
         public int Heal()
         {
             int nCurrentHp = Stats.CurrentHp;
@@ -171,7 +184,6 @@ namespace Ultima5Redux.PlayerCharacters
         public void TurnIntoRat()
         {
             IsRat = true;
-            //Stats.Status = CharacterStatus.Rat;
         }
         
         public bool Cure()

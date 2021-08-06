@@ -70,6 +70,10 @@ namespace Ultima5Redux.MapUnits
         {
             get 
             {
+                if (Record.IsInvisible)
+                {
+                    return TileReferences.GetTileReferenceByName("Apparition");
+                }
                 if (Record.IsRat)
                 {
                     return TileReferences.GetTileReferenceByName("Rat1");
@@ -147,5 +151,6 @@ namespace Ultima5Redux.MapUnits
         public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
             CanReachForMeleeAttack(opponentCombatMapUnit, item.Range);
 
+        public override bool IsInvisible => Record.IsInvisible;
     }
 }

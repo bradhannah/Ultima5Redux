@@ -491,10 +491,14 @@ namespace Ultima5Redux.Maps
                 enemy.PreviousAttackTarget != null && enemy.PreviousAttackTarget.Stats.CurrentHp > 0;
             bool bPreviousTargetInRange;
             // if it is a melee attacked then check for melee attack distance otherwise check for ranged blockage and distance
+            bool bPreviousTargetUnattackable = enemy.PreviousAttackTarget != null && 
+                                               (enemy.PreviousAttackTarget.IsInvisible || enemy.PreviousAttackTarget.IsCharmed);
             if (enemy.EnemyReference.AttackRange == 1)
-                bPreviousTargetInRange = bPreviousTargetPresent && (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget));
+                bPreviousTargetInRange = bPreviousTargetPresent && !bPreviousTargetUnattackable &&
+                                         (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget));
             else         
-                bPreviousTargetInRange = bPreviousTargetPresent && !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _);
+                bPreviousTargetInRange = bPreviousTargetPresent && !bPreviousTargetUnattackable &&  
+                                         !IsRangedPathBlocked(enemy.MapUnitPosition.XY, enemy.PreviousAttackTarget.MapUnitPosition.XY, out _);
             
             CombatMapUnit bestCombatPlayer = bPreviousTargetInRange ? enemy.PreviousAttackTarget : GetClosestCombatPlayerInRange(enemy);
             
@@ -873,6 +877,8 @@ namespace Ultima5Redux.Maps
             {
                 if (!(CombatMapUnits.CurrentMapUnits[nIndex] is T enemy)) continue;
                 if (!IsCombatMapUnitInRange(attackingUnit, enemy, nRange)) continue;
+                // if the enemy unit is invisible or charmed then they should not be targeted
+                if (enemy.IsInvisible || enemy.IsCharmed) continue;
                 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(attackingUnit.MapUnitPosition.XY);
                 if (!(dDistance < dBestDistanceToAttack)) continue;

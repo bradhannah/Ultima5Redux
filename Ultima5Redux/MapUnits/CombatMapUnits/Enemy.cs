@@ -73,5 +73,7 @@ namespace Ultima5Redux.MapUnits.Monsters
         {
             return CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
         }
+
+        public override bool IsInvisible => false;
     }
 }

@@ -296,7 +296,7 @@ namespace Ultima5Redux.MapUnits
             {
                 case Map.Maps.Small:
                     if (!bSkipLoadSmallMap) LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
-                    _playerCharacterRecords.ClearRatStatuses();
+                    _playerCharacterRecords.ClearCombatStatuses();
                     break;
                 case Map.Maps.Combat:
                     return;
