@@ -225,8 +225,8 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         public void ClearRatStatuses()
         {
-            foreach (PlayerCharacterRecord record in Records.Where(record =>
-                record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Rat))
+            foreach (PlayerCharacterRecord record in Records.Where(record => record.IsRat)) 
+                //record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Rat))
             {
                 record.TurnIntoNotARat();
             }

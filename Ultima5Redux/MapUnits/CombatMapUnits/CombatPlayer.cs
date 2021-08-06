@@ -68,14 +68,20 @@ namespace Ultima5Redux.MapUnits
         
         public override TileReference KeyTileReference
         {
-            get =>
-                Stats.Status switch
+            get 
+            {
+                if (Record.IsRat)
                 {
-                    PlayerCharacterRecord.CharacterStatus.Asleep => TileReferences.GetTileReferenceByName("DeadBody"),
-                    PlayerCharacterRecord.CharacterStatus.Rat => TileReferences.GetTileReferenceByName("Rat1"),
-                    _ => TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
+                    return TileReferences.GetTileReferenceByName("Rat1");
+                }
+                switch(Stats.Status) 
+                {
+                    case PlayerCharacterRecord.CharacterStatus.Asleep: return TileReferences.GetTileReferenceByName(
+                        "DeadBody");
+                    default: return TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
                 };
-            set => base.KeyTileReference = value;
+        }
+        set => base.KeyTileReference = value;
         }
 
         /// <summary>

@@ -17,7 +17,9 @@ namespace Ultima5Redux.PlayerCharacters
             InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01
         } // otherwise it is at an inn at Settlement # in byte value
 
-        public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D', Rat = 'R' }
+        public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
+
+        public bool IsRat { get; set; } = false;
 
         private const int NAME_LENGTH = 8;
         protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
@@ -162,13 +164,14 @@ namespace Ultima5Redux.PlayerCharacters
 
         public void TurnIntoNotARat()
         {
-            Debug.Assert(Stats.Status == CharacterStatus.Rat);
+            Debug.Assert(IsRat);
             Stats.Status = CharacterStatus.Good;
         }
 
         public void TurnIntoRat()
         {
-            Stats.Status = CharacterStatus.Rat;
+            IsRat = true;
+            //Stats.Status = CharacterStatus.Rat;
         }
         
         public bool Cure()
@@ -215,7 +218,6 @@ namespace Ultima5Redux.PlayerCharacters
             
             switch (Stats.Status)
             {
-                case CharacterStatus.Rat:
                 case CharacterStatus.Good:
                 case CharacterStatus.Poisoned:
                     bIsSelectable = true;

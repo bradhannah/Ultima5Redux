@@ -1414,12 +1414,16 @@ namespace Ultima5Redux
                 case Potion.PotionColor.Red:
                     // cure poison
                     record.Cure();
-                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N);
+                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.POISON_CURED_BANG_N);
                     break;
                 case Potion.PotionColor.Green:
                     // poison user
                     bool bWasPoisoned = record.Poison();
-                    retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N);
+                    if (bWasPoisoned)
+                        retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                            .POISONED_BANG_N);
+                    else
+                        retStr += DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.NO_EFFECT_BANG);
                     break;
                 case Potion.PotionColor.Orange:
                     // sleep
