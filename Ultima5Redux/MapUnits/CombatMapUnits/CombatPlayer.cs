@@ -78,12 +78,13 @@ namespace Ultima5Redux.MapUnits
                 {
                     return TileReferences.GetTileReferenceByName("Rat1");
                 }
+
                 switch(Stats.Status) 
                 {
-                    case PlayerCharacterRecord.CharacterStatus.Asleep: return TileReferences.GetTileReferenceByName(
-                        "DeadBody");
+                    case PlayerCharacterRecord.CharacterStatus.Dead: 
+                    case PlayerCharacterRecord.CharacterStatus.Asleep: 
+                        return TileReferences.GetTileReferenceByName("DeadBody");
                     default: return TileReferences.GetTileReferenceOfKeyIndex(base.KeyTileReference.Index);
-                        //TheMapUnitState.Tile1Ref.Index);
                 };
         }
         set => base.KeyTileReference = value;
