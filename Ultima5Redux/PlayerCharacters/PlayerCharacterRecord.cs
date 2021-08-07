@@ -178,7 +178,7 @@ namespace Ultima5Redux.PlayerCharacters
         public void TurnIntoNotARat()
         {
             Debug.Assert(IsRat);
-            Stats.Status = CharacterStatus.Good;
+            IsRat = false;
         }
 
         public void TurnIntoRat()

@@ -82,7 +82,8 @@ namespace Ultima5Redux.MapUnits
                 {
                     case PlayerCharacterRecord.CharacterStatus.Asleep: return TileReferences.GetTileReferenceByName(
                         "DeadBody");
-                    default: return TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
+                    default: return TileReferences.GetTileReferenceOfKeyIndex(base.KeyTileReference.Index);
+                        //TheMapUnitState.Tile1Ref.Index);
                 };
         }
         set => base.KeyTileReference = value;

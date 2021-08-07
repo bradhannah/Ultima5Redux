@@ -233,7 +233,19 @@ namespace Ultima5Redux.PlayerCharacters
             {
                 record.TurnVisible();
             }
-
         }
+
+        /// <summary>
+        /// Are there at least one player based on current combat statuses that can be seen by the enemy?
+        /// </summary>
+        public bool AtLeastOnePlayerSeenOnCombatMap
+        {
+            get
+            {
+                List<PlayerCharacterRecord>playerCharacterRecordsInParty = Records.Where(record => record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty).ToList();
+                return playerCharacterRecordsInParty.Any(record => !record.IsInvisible) &&
+                       playerCharacterRecordsInParty.Any(record => record.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
+            }
+        } 
     }
 }

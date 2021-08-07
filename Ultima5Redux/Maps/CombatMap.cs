@@ -439,8 +439,11 @@ namespace Ultima5Redux.Maps
                 return TurnResult.Sleeping;
             }
 
-            // the enemy is badly wounded and is going to try to escape
-            if (enemy.IsFleeing)
+            bool bAtLeastOnePlayerSeenOnCombatMap = _playerCharacterRecords.AtLeastOnePlayerSeenOnCombatMap;
+            
+            // the enemy is badly wounded and is going to try to escape OR
+            // if no players are visible on the current combat map
+            if (enemy.IsFleeing || !bAtLeastOnePlayerSeenOnCombatMap)
             {
                 // if the enemy is on an outer tile, then they are free exit and end their turn
                 if (enemy.MapUnitPosition.X == 0 || enemy.MapUnitPosition.X == NumOfXTiles - 1 ||
@@ -459,7 +462,6 @@ namespace Ultima5Redux.Maps
                     tileReference != null && (combatMapUnit == null && enemy.EnemyReference.IsWaterEnemy
                         ? IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatWater)
                         : IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatLand));
-                
                 
                 // does the monster not yet have a flee path OR
                 // does the enemy have a flee path already established that is now block OR

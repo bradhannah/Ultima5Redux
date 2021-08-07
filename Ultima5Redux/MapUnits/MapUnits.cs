@@ -291,12 +291,12 @@ namespace Ultima5Redux.MapUnits
             _currentLocation = mapRef.MapLocation;
 
             // I may need make an additional save of state before wiping these MapUnits out
+            _playerCharacterRecords.ClearCombatStatuses();
 
             switch (mapType)
             {
                 case Map.Maps.Small:
                     if (!bSkipLoadSmallMap) LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
-                    _playerCharacterRecords.ClearCombatStatuses();
                     break;
                 case Map.Maps.Combat:
                     return;
