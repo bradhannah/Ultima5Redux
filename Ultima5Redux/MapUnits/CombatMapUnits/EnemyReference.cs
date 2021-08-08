@@ -64,11 +64,65 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Teleport, DisappearsOnDeath, Invisibility, GatesInDaemon, Poison, InfectWithPlague
         }
 
+        private List<int> _enemyExp = new List<int>()
+        {
+            3, // Wizard1/WIZARDS
+            4,// Bard1/BARD
+            6,// Fighter1/FIGHTER
+            0,// Avatar1/x
+            3,// TownsPerson1/VILLAGER
+            3,// Merchant1/MERCHANT
+            3,// Jester1/JESTER
+            3,// BardPlaying1/BARD
+            0,// PersonStocks1/PIRATES
+            0,// WallPrisoner1/x
+            2,// Child1/CHILD
+            2,// Begger1/BEGGAR
+            25,// Guard1/GUARDS
+            0, // Apparation1/x
+            0,// Blackthorn1/BLACKTHORN
+            0,// LordBritish1/LORD BRITISH
+            8,// Seahorse1/SEA HORSES
+            13,// Squid1/SQUIDS
+            18,// SeaSerpent1/SEA SERPENTS
+            6,// Shark1/SHARKS
+            3,// Rat1/GIANT RATS
+            2,// Bat1/BATS
+            3,// Spider1/SPIDERS
+            6,// Ghost1/GHOSTS
+            3,// Slime1/SLIME
+            3,// Gremlin1/GREMLINS
+            8,// Mimic1/MIMICS
+            11,// Reaper1/REAPERS
+            6,// Gazer1/GAZERS
+            0,// Shard/x
+            11,// StoneGargoyle1/GARGOYLE
+            2,// InsectSwarm1/INSECTS
+            3,// Orc1/ORCS
+            6,// Skeleton1/SKELETONS
+            3,// Snake1/SNAKES
+            8,// Ettin1/ETTINS
+            6,// Headless1/HEADLESSES
+            11,// Wisp1/WISPS
+            13,// Daemon1/DAEMONS
+            25,// Dragon1/DRAGONS
+            21,// SandTrap1/SAND TRAPS
+            4,// Troll1/TROLLS
+            0,// PoisonField/x
+            0,// Whirpool1/x
+            6,// MongBat1/MONGBATS
+            11,// Corpser1/CORPSERS
+            2,// RotWork1/ROTWORMS
+            25// ShadowLord1/SHADOW LORD
+        };
+
         private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new Dictionary<EnemyAbility, bool>();  
 
         public int AttackRange { get; }
         public CombatItem.MissileType TheMissileType { get; }
         public int FriendIndex { get; }
+
+        public int Experience => _enemyExp[_monsterIndex]; 
         
         internal byte _nThing;
 
