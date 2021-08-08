@@ -155,9 +155,10 @@ namespace Ultima5Redux.Maps
             for (int i = 0; i < combatPlayers.Count ; i++)
             {
                 // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
-                AvatarXyPos = combatPlayers[i].MapUnitPosition.XY;
+                //AvatarXyPos = combatPlayers[i].MapUnitPosition.XY;
                 TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-                FloodFillMap(AvatarXyPos, true, i);
+                FloodFillMap(combatPlayers[i].MapUnitPosition.XY, true, i, combatPlayers[i].MapUnitPosition.XY,
+                    true);
             }
             
             TouchedOuterBorder = false;

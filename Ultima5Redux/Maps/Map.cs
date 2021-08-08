@@ -136,14 +136,19 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <param name="bFirst">is this the initial call to the method?</param>
-        /// <param name="nCharacterIndex"></param>    
-        protected void FloodFillMap(Point2D xy, bool bFirst, int nCharacterIndex = 0)
+        /// <param name="nCharacterIndex"></param>
+        /// <param name="overrideAvatarPos"></param>
+        /// <param name="bAlwaysLookThroughWindows"></param>    
+        protected void FloodFillMap(Point2D xy, bool bFirst, int nCharacterIndex = 0, Point2D overrideAvatarPos = null,
+            bool bAlwaysLookThroughWindows = false)
         {
             if (xy == null)
             {
                 TouchedOuterBorder = true;
                 return; // out of bounds
             }
+
+            Point2D characterPosition = overrideAvatarPos == null ? AvatarXyPos : overrideAvatarPos;
 
             Point2D adjustedXy = xy.Copy();
 
@@ -161,7 +166,8 @@ namespace Ultima5Redux.Maps
                 tileReference.BlocksLight // if it says it blocks light AND 
                 && !bFirst                // it is not the first tile (aka the one you are on) AND
                 && !IsOpenDoor(xy)        // it's not an open door 
-                && !(tileReference.IsWindow && AvatarXyPos.IsWithinNFourDirections(adjustedXy));  //  you are not next to a window
+                && !(tileReference.IsWindow && (characterPosition.IsWithinNFourDirections(adjustedXy) ||
+                    bAlwaysLookThroughWindows));  //  you are not next to a window
 
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
@@ -175,18 +181,18 @@ namespace Ultima5Redux.Maps
             // if the tile blocks the light then we don't calculate the surrounding tiles
             if (bBlocksLight) return;
 
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Up, xy), false);
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Down, xy), false);
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Left, xy), false);
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Right, xy), false);
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Up, xy), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Down, xy), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Left, xy), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
+            FloodFillMap(GetAdjustedPos(Point2D.Direction.Right, xy), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
 
             if (!bFirst) return;
 
             // if it is the first call (avatar tile) then we always check the diagonals as well 
-            FloodFillMap(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
-            FloodFillMap(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
-            FloodFillMap(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
-            FloodFillMap(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false);
+            FloodFillMap(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
+            FloodFillMap(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
+            FloodFillMap(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
+            FloodFillMap(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles -1 ), false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
         }
           
         protected virtual Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
