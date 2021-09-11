@@ -631,6 +631,7 @@ namespace Ultima5Redux.Maps
             if (nNextCombatMapUnitIndex == -1) return null;
             Enemy newEnemy = CreateEnemy(nNextCombatMapUnitIndex, TheCombatMapReference, enemy.EnemyReference, null);
             newEnemy.MapUnitPosition = new MapUnitPosition(newEnemyPosition.X, newEnemyPosition.Y, 0);
+            _initiativeQueue.AddCombatMapUnitToQueue(newEnemy);
             return newEnemy;
         }
 
@@ -1134,25 +1135,21 @@ namespace Ultima5Redux.Maps
             GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(position, false);
             GetAStarByWalkableType(WalkableType.CombatWater).SetWalkable(position, false);
         }
-        
+
 
         /// <summary>
         /// Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
         /// specified enemies
         /// </summary>
         /// <param name="singleCombatMapReference"></param>
-        /// <param name="entryDirection"></param>
         /// <param name="primaryEnemyReference"></param>
         /// <param name="nPrimaryEnemies"></param>
         /// <param name="secondaryEnemyReference"></param>
         /// <param name="nSecondaryEnemies"></param>
-        /// <param name="avatarRecord"></param>
         /// <param name="npcRef"></param>
         internal void CreateEnemies( SingleCombatMapReference singleCombatMapReference,
-            SingleCombatMapReference.EntryDirection entryDirection,
             EnemyReference primaryEnemyReference, int nPrimaryEnemies, 
-            EnemyReference secondaryEnemyReference, int nSecondaryEnemies,
-            PlayerCharacterRecord avatarRecord, NonPlayerCharacterReference npcRef)
+            EnemyReference secondaryEnemyReference, int nSecondaryEnemies, NonPlayerCharacterReference npcRef)
         {
             int nEnemyIndex = 0;
 

@@ -103,8 +103,14 @@ namespace Ultima5Redux.Maps
                 if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
                 if (_nHighestDexterity < nDexterity) _nHighestDexterity = nDexterity;
 
-                _combatInitiativeTally.Add((CombatMapUnit)mapUnit, 0);
+                AddCombatMapUnitToQueue((CombatMapUnit)mapUnit);
+                //_combatInitiativeTally.Add((CombatMapUnit)mapUnit, 0);
             }
+        }
+
+        public void AddCombatMapUnitToQueue(CombatMapUnit combatMapUnit)
+        {
+            _combatInitiativeTally.Add(combatMapUnit, 0);
         }
 
         /// <summary>
@@ -117,7 +123,7 @@ namespace Ultima5Redux.Maps
             while (true)
             {
                 Debug.Assert(_playerCharacterRecords != null);
-                int nStartingItems = GetNumberOfTurnsInQueue();
+                int nStartingItems = GetNumberOfTurnsInQueue(); 
 
                 Queue<CombatMapUnit> newInitiativeQueue = new Queue<CombatMapUnit>();
                 _initiativeQueue.Enqueue(newInitiativeQueue);
@@ -134,10 +140,10 @@ namespace Ultima5Redux.Maps
 
                     int nDexterity = combatMapUnit.Dexterity;
                     // if the combat unit is no longer in the tally then skip 
-                    if (!_combatInitiativeTally.ContainsKey(combatMapUnit))
-                    {
-                        continue;
-                    }
+                    // if (!_combatInitiativeTally.ContainsKey(combatMapUnit))
+                    // {
+                    //     continue;
+                    // }
                     int nTally = _combatInitiativeTally[combatMapUnit];
 
                     // initiative is determined by the map units dexterity + the accumulated dexterity thus far

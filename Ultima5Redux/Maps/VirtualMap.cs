@@ -421,10 +421,9 @@ namespace Ultima5Redux.Maps
             
             CurrentCombatMap.CreateParty(entryDirection, records);
             
-            CurrentCombatMap.CreateEnemies(singleCombatMapReference, entryDirection, 
+            CurrentCombatMap.CreateEnemies(singleCombatMapReference, 
                 primaryEnemyReference, nPrimaryEnemies,
-                secondaryEnemyReference, nSecondaryEnemies, 
-                records.AvatarRecord, npcRef);
+                secondaryEnemyReference, nSecondaryEnemies, npcRef);
             
             CurrentCombatMap.InitializeInitiativeQueue();
         }
