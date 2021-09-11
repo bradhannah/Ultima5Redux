@@ -133,4 +133,7 @@
   <data name="CombatMaps" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\DataFiles\CombatMaps.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="AdditionalEnemyFlags" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\DataFiles\AdditionalEnemyFlags.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

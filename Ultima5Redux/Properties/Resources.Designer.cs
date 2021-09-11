@@ -61,6 +61,38 @@ namespace Ultima5Redux.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  {
+        ///    &quot;Name&quot;: &quot;Wizard1/WIZARDS&quot;,
+        ///    &quot;Experience&quot;: 3,
+        ///    &quot;IsWaterEnemy&quot;: false,
+        ///    &quot;DoNotMove&quot;: false,
+        ///    &quot;CanFlyOverWater&quot;: false,
+        ///    &quot;CanPassThroughWalls&quot;: false
+        ///  },
+        ///  {
+        ///    &quot;Name&quot;: &quot;Bard1/BARD&quot;,
+        ///    &quot;Experience&quot;: 4,
+        ///    &quot;IsWaterEnemy&quot;: false,
+        ///    &quot;DoNotMove&quot;: false,
+        ///    &quot;CanFlyOverWater&quot;: false,
+        ///    &quot;CanPassThroughWalls&quot;: false
+        ///  },
+        ///  {
+        ///    &quot;Name&quot;: &quot;Fighter1/FIGHTER&quot;,
+        ///    &quot;Experience&quot;: 6,
+        ///    &quot;IsWaterEnemy&quot;: false,
+        ///    &quot;DoNotMove&quot;: false,
+        ///    &quot;CanFlyOverWater&quot;: false,
+        ///     [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AdditionalEnemyFlags {
+            get {
+                return ResourceManager.GetString("AdditionalEnemyFlags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;Britannia&quot;: [
         ///    {
@@ -160,23 +192,24 @@ namespace Ultima5Redux.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///   &quot;0&quot;: {
-        ///      &quot;Name&quot;: &quot;Explosion&quot;,
-        ///      &quot;Description&quot;: &quot;&quot;,
-        ///      &quot;IsWalking_Passable&quot;: true,
-        ///      &quot;IsBoat_Passable&quot;: true,
-        ///      &quot;IsSkiff_Passable&quot;: true,
-        ///      &quot;IsCarpet_Passable&quot;: true,
-        ///      &quot;IsHorse_Passable&quot;: true,
-        ///      &quot;IsKlimable&quot;: false,
-        ///      &quot;IsOpenable&quot;: false,
-        ///      &quot;IsLandEnemyPassable&quot;: false,
-        ///      &quot;IsWaterEnemyPassable&quot;: false,
-        ///      &quot;SpeedFactor&quot;: 1,
-        ///      &quot;IsPartOfAnimation&quot;: false,
-        ///      &quot;AnimationIndex&quot;: 0,
-        ///      &quot;IsUpright&quot;: true,
-        ///      &quot;FlatTileSubstitutionIndex [rest of string was truncated]&quot;;.
+        ///  &quot;0&quot;: {
+        ///    &quot;Name&quot;: &quot;Explosion&quot;,
+        ///    &quot;Description&quot;: &quot;&quot;,
+        ///    &quot;IsWalking_Passable&quot;: true,
+        ///    &quot;IsBoat_Passable&quot;: true,
+        ///    &quot;IsSkiff_Passable&quot;: true,
+        ///    &quot;IsCarpet_Passable&quot;: true,
+        ///    &quot;IsHorse_Passable&quot;: true,
+        ///    &quot;IsKlimable&quot;: false,
+        ///    &quot;IsOpenable&quot;: false,
+        ///    &quot;IsLandEnemyPassable&quot;: false,
+        ///    &quot;IsWaterEnemyPassable&quot;: false,
+        ///    &quot;SpeedFactor&quot;: 1,
+        ///    &quot;IsPartOfAnimation&quot;: false,
+        ///    &quot;AnimationIndex&quot;: 0,
+        ///    &quot;IsUpright&quot;: true,
+        ///    &quot;FlatTileSubstitutionIndex&quot;: 5,
+        ///    &quot;FlatTileSubstitutionN [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TileData {
             get {

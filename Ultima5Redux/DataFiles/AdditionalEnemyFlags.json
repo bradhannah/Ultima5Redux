@@ -1,0 +1,386 @@
+[
+  {
+    "Name": "Wizard1/WIZARDS",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Bard1/BARD",
+    "Experience": 4,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Fighter1/FIGHTER",
+    "Experience": 6,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Avatar1/x",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "TownsPerson1/VILLAGER",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Merchant1/MERCHANT",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Jester1/JESTER",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "BardPlaying1/BARD",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "PersonStocks1/PIRATES",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": true,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "WallPrisoner1/x",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": true,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Child1/CHILD",
+    "Experience": 2,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Begger1/BEGGAR",
+    "Experience": 2,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Guard1/GUARDS",
+    "Experience": 25,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Apparation1/x",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Blackthorn1/BLACKTHORN",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "LordBritish1/LORD BRITISH",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Seahorse1/SEA HORSES",
+    "Experience": 8,
+    "IsWaterEnemy": true,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Squid1/SQUIDS",
+    "Experience": 13,
+    "IsWaterEnemy": true,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "SeaSerpent1/SEA SERPENTS",
+    "Experience": 18,
+    "IsWaterEnemy": true,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Shark1/SHARKS",
+    "Experience": 6,
+    "IsWaterEnemy": true,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Rat1/GIANT RATS",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Bat1/BATS",
+    "Experience": 2,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": true,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Spider1/SPIDERS",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Ghost1/GHOSTS",
+    "Experience": 6,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": true,
+    "CanPassThroughWalls": true
+  },
+  {
+    "Name": "Slime1/SLIME",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Gremlin1/GREMLINS",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Mimic1/MIMICS",
+    "Experience": 8,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Reaper1/REAPERS",
+    "Experience": 11,
+    "IsWaterEnemy": false,
+    "DoNotMove": true,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Gazer1/GAZERS",
+    "Experience": 6,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": true,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Shard/x",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": true,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "StoneGargoyle1/GARGOYLE",
+    "Experience": 11,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "InsectSwarm1/INSECTS",
+    "Experience": 2,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": true,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Orc1/ORCS",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Skeleton1/SKELETONS",
+    "Experience": 6,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Snake1/SNAKES",
+    "Experience": 3,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Ettin1/ETTINS",
+    "Experience": 8,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Headless1/HEADLESSES",
+    "Experience": 6,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Wisp1/WISPS",
+    "Experience": 11,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": true,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Daemon1/DAEMONS",
+    "Experience": 13,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Dragon1/DRAGONS",
+    "Experience": 25,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": true,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "SandTrap1/SAND TRAPS",
+    "Experience": 21,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Troll1/TROLLS",
+    "Experience": 4,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "PoisonField/x",
+    "Experience": 0,
+    "IsWaterEnemy": false,
+    "DoNotMove": true,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Whirpool1/x",
+    "Experience": 0,
+    "IsWaterEnemy": true,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "MongBat1/MONGBATS",
+    "Experience": 6,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": true,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "Corpser1/CORPSERS",
+    "Experience": 11,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "RotWork1/ROTWORMS",
+    "Experience": 2,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  },
+  {
+    "Name": "ShadowLord1/SHADOW LORD",
+    "Experience": 25,
+    "IsWaterEnemy": false,
+    "DoNotMove": false,
+    "CanFlyOverWater": false,
+    "CanPassThroughWalls": false
+  }
+]

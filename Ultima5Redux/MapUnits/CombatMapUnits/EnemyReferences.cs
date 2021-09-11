@@ -1,21 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.Properties;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public class EnemyReferences
     {
-        private const int N_TOTAL_MONSTERS = 0x30;
+        private class AdditionalEnemyFlagList
+        {
+            public readonly List<AdditionalEnemyFlags> AllAdditionalEnemyFlags;
 
+            public AdditionalEnemyFlagList()
+            {
+                AllAdditionalEnemyFlags =
+                    JsonConvert.DeserializeObject<List<AdditionalEnemyFlags>>(Resources.AdditionalEnemyFlags);
+            }
+        }
+        
+        [JsonObject(MemberSerialization.OptIn)] public class AdditionalEnemyFlags
+        {
+            [JsonProperty] public string Name { get; set; }
+            [JsonProperty] public int Experience { get; set; }
+            [JsonProperty] public bool IsWaterEnemy { get; set; }
+            [JsonProperty] public bool DoNotMove { get; set; }
+            [JsonProperty] public bool CanFlyOverWater { get; set; }
+            [JsonProperty] public bool CanPassThroughWalls { get; set; }
+        }
+
+        private const int N_TOTAL_MONSTERS = 0x30;
+        
         public List<EnemyReference> AllEnemyReferences { get; } = new List<EnemyReference>(N_TOTAL_MONSTERS);
 
         public EnemyReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)
         {
+            AdditionalEnemyFlagList additionalEnemyFlagList = new AdditionalEnemyFlagList();
+            
             for (int nMonsterIndex = 0; nMonsterIndex < N_TOTAL_MONSTERS; nMonsterIndex++)
             {
-                EnemyReference enemyReference = new EnemyReference(dataOvlReference, tileReferences, nMonsterIndex);
+                EnemyReference enemyReference = new EnemyReference(dataOvlReference, tileReferences, nMonsterIndex, additionalEnemyFlagList.AllAdditionalEnemyFlags[nMonsterIndex]);
                 AllEnemyReferences.Add(enemyReference);
             }
 

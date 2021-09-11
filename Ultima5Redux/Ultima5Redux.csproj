@@ -254,6 +254,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DataFiles\AdditionalEnemyFlags.csv" />
+    <EmbeddedResource Include="DataFiles\AdditionalEnemyFlags.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="DataFiles\CombatMaps.csv" />
     <EmbeddedResource Include="DataFiles\CombatMaps.json" />
     <Content Include="DataFiles\Credits.txt" />

@@ -481,9 +481,9 @@ namespace Ultima5Redux.Maps
 
             bool bAtLeastOnePlayerSeenOnCombatMap = _playerCharacterRecords.AtLeastOnePlayerSeenOnCombatMap;
             
-            // the enemy is badly wounded and is going to try to escape OR
-            // if no players are visible on the current combat map
-            if (enemy.IsFleeing || !bAtLeastOnePlayerSeenOnCombatMap)
+            // the enemy is badly wounded and is going to try to escape OR if no players are visible on the current combat map
+            // HOWEVER if the enemy is immobile (like Reaper) then they will just keep attacking and skip the escape
+            if ((enemy.IsFleeing || !bAtLeastOnePlayerSeenOnCombatMap) && !enemy.EnemyReference.DoesNotMove)
             {
                 // if the enemy is on an outer tile, then they are free exit and end their turn
                 if (enemy.MapUnitPosition.X == 0 || enemy.MapUnitPosition.X == NumOfXTiles - 1 ||
@@ -589,12 +589,21 @@ namespace Ultima5Redux.Maps
                 }
 
                 AdvanceToNextCombatMapUnit();
-                if (hitState == CombatMapUnit.HitState.Grazed)
-                    return TurnResult.EnemyGrazed;
-                return TurnResult.EnemyAttacks;
+                return hitState == CombatMapUnit.HitState.Grazed ? TurnResult.EnemyGrazed : TurnResult.EnemyAttacks;
             }
 
-            CombatMapUnit pursuedCombatMapUnit = MoveToClosestAttackableCombatPlayer(enemy, out bool bMoved);
+            // if (enemy.EnemyReference.DoesNotMove)
+            // {
+            //     preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " passed.";
+            //     return TurnResult.NoAction;
+            // }
+            
+            CombatMapUnit pursuedCombatMapUnit = null;
+            bool bMoved = false;
+            if (!enemy.EnemyReference.DoesNotMove)
+            {
+                pursuedCombatMapUnit = MoveToClosestAttackableCombatPlayer(enemy, out bMoved);                
+            }
 
             if (bMoved)
             {
