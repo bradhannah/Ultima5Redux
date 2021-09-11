@@ -172,7 +172,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 Intelligence = GetStat(DefaultStats.Intelligence, dataOvlReference, nMonsterIndex),
                 Armour = GetStat(DefaultStats.Armour, dataOvlReference, nMonsterIndex),
                 Damage = GetStat(DefaultStats.Damage, dataOvlReference, nMonsterIndex),
-                HitPoints = GetStat(DefaultStats.Hitpoints, dataOvlReference, nMonsterIndex),
+                HitPoints = 40,//GetStat(DefaultStats.Hitpoints, dataOvlReference, nMonsterIndex),
                 MaxPerMap = GetStat(DefaultStats.MaxPerMap, dataOvlReference, nMonsterIndex),
                 TreasureNumber = GetStat(DefaultStats.Treasure, dataOvlReference, nMonsterIndex)
             };

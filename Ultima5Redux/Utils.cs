@@ -10,7 +10,20 @@ namespace Ultima5Redux
 {
     public static class Utils
     {
+        private static readonly Random Ran = new Random();
 
+        /// <summary>
+        ///     Using the random number generator, provides 1 in howMany odds of returning true
+        /// </summary>
+        /// <param name="howMany">1 in howMany odds of returning true</param>
+        /// <returns>true if odds are beat</returns>
+        public static bool OneInXOdds(int howMany)
+        {
+            // if ran%howMany is zero then we beat the odds
+            int nextRan = Ran.Next();
+            return nextRan % howMany == 0;
+        }
+        
         public static int GetNumberBetween(int nMin, int nMax)
         {
             Debug.Assert(nMin < nMax);

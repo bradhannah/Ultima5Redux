@@ -133,6 +133,11 @@ namespace Ultima5Redux.Maps
                     CombatMapUnit combatMapUnit = (CombatMapUnit) mapUnit;
 
                     int nDexterity = combatMapUnit.Dexterity;
+                    // if the combat unit is no longer in the tally then skip 
+                    if (!_combatInitiativeTally.ContainsKey(combatMapUnit))
+                    {
+                        continue;
+                    }
                     int nTally = _combatInitiativeTally[combatMapUnit];
 
                     // initiative is determined by the map units dexterity + the accumulated dexterity thus far

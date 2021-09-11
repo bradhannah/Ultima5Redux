@@ -13,7 +13,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public abstract class CombatMapUnit : MapUnit
     {
-        private readonly Random _random = new Random();
+        private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
 
         public abstract CharacterStats Stats { get; }
         
@@ -60,9 +60,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         
         public enum HitState { Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None }
 
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput, bool bForceHit = false)
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput, out string debugStr, bool bForceHit = false)
         {
-            bool bIsHit = IsHit(enemyCombatMapUnit) || bForceHit;
+            bool bIsHit = IsHit(enemyCombatMapUnit, out debugStr) || bForceHit;
 
             PreviousAttackTarget = enemyCombatMapUnit;
 
@@ -97,16 +97,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return GetState(enemyCombatMapUnit, out stateOutput);
         }
 
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput)
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput, out string debugStr)
         {
-            return Attack(enemyCombatMapUnit, weapon.AttackStat, out stateOutput);
+            return Attack(enemyCombatMapUnit, weapon.AttackStat, out stateOutput, out debugStr);
         }
 
-        private bool IsHit(CombatMapUnit enemyCombatMapUnit)
+        private bool IsHit(CombatMapUnit enemyCombatMapUnit, out string debugStr)
         {
             const int nHitOffset = 128;
-            int randomNum = _random.Next() % 256;
-            return (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
+            int randomNum = _random.Next(255);// % 256;
+            bool bWasHit = (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
+            debugStr =
+                $"Ran:{randomNum} Dex:{enemyCombatMapUnit.Stats.Dexterity} Dex+128:{enemyCombatMapUnit.Stats.Dexterity + 128} Hit:{bWasHit}";
+            return bWasHit;
         }
         
         // bool Creature::isHit(int hit_offset) {
