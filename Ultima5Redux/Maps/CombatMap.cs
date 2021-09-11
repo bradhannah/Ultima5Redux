@@ -134,6 +134,8 @@ namespace Ultima5Redux.Maps
 
             InitializeAStarMap(WalkableType.CombatLand);
             InitializeAStarMap(WalkableType.CombatWater);
+            InitializeAStarMap(WalkableType.CombatFlyThroughWalls);
+            InitializeAStarMap(WalkableType.CombatLandAndWater);
         }
         
         /// <summary>
@@ -168,14 +170,26 @@ namespace Ultima5Redux.Maps
 
         protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
-            if (walkableType == WalkableType.CombatWater) return tileReference.IsWaterEnemyPassable;
-
-            return tileReference.IsWalking_Passable || tileReference.Index ==
-                                                  SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                                  || tileReference.Index == SpriteTileReferences
-                                                      .GetTileReferenceByName("RegularDoorView").Index;
+            switch (walkableType)
+            {
+                case WalkableType.CombatWater:
+                    return tileReference.IsWaterEnemyPassable;
+                case WalkableType.CombatFlyThroughWalls:
+                    // if you can fly through walls, then you can fly through anything except people and enemies
+                    return true;
+                case WalkableType.CombatLandAndWater:
+                    return IsWalkingPassable(tileReference) || tileReference.IsWaterEnemyPassable;
+                case WalkableType.CombatLand:
+                    return IsWalkingPassable(tileReference);
+                default:
+                    throw new Ultima5ReduxException("Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
+            }
         }
-        
+
+        private bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable || 
+                                                                       tileReference.Index == SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index || 
+                                                                       tileReference.Index == SpriteTileReferences.GetTileReferenceByName("RegularDoorView").Index;
+
         public string GetCombatPlayerOutputText()
         {
             CombatPlayer combatPlayer = GetCurrentCombatPlayer();
@@ -211,6 +225,12 @@ namespace Ultima5Redux.Maps
 
         public void BuildCombatItemQueue(List<CombatItem> combatItems) => _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
 
+        private bool IsTileRangePathBlocked(Point2D xy)
+        {
+            TileReference tileReference = GetTileReference(xy);
+            return !tileReference.RangeWeapon_Passable;
+        }
+
         private bool IsRangedPathBlocked(Point2D attackingPoint, Point2D opponentMapUnit, out Point2D firstBlockPoint)
         {
             // get the points between the player and opponent
@@ -218,7 +238,7 @@ namespace Ultima5Redux.Maps
             for (int i = 0; i < points.Count - 1; i++)
             {
                 Point2D point = points[i];
-                if (IsTileWalkable(point, WalkableType.CombatLand) || IsTileWalkable(point, WalkableType.CombatWater))
+                if (!IsTileRangePathBlocked(point))
                     continue;
                 
                 // we can't penetrate this thing and need to give up
@@ -423,6 +443,8 @@ namespace Ultima5Redux.Maps
                         
                         RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);
                         RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatFlyThroughWalls);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLandAndWater);
                     }
                     break;
                 default:
@@ -498,17 +520,21 @@ namespace Ultima5Redux.Maps
                 TileReference tileReference = enemy.FleeingPath != null ? GetTileReference(enemy.FleeingPath.Peek().Position) : null;
                 CombatMapUnit combatMapUnit =
                     enemy.FleeingPath != null ? GetCombatUnit(enemy.FleeingPath.Peek().Position) : null;
-                bool bIsTileWalkable =
-                    tileReference != null && (combatMapUnit == null && enemy.EnemyReference.IsWaterEnemy
-                        ? IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatWater)
-                        : IsTileWalkable(enemy.MapUnitPosition.XY, WalkableType.CombatLand));
-                
+                bool bIsTileWalkable = false;
+                Debug.Assert(tileReference != null);
+
+                WalkableType walkableType = GetWalkableTypeByEnemy(enemy);
+
+                if (combatMapUnit == null)
+                {
+                    bIsTileWalkable = IsTileWalkable(enemy.MapUnitPosition.XY, walkableType);
+                }
+
                 // does the monster not yet have a flee path OR
                 // does the enemy have a flee path already established that is now block OR
                 if (enemy.FleeingPath == null || !bIsTileWalkable)
                 {
-                    enemy.FleeingPath = GetEscapeRoute(enemy.MapUnitPosition.XY, 
-                        enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand);
+                    enemy.FleeingPath = GetEscapeRoute(enemy.MapUnitPosition.XY, walkableType);
                     // if the enemy is unable to calculate an exit path
                     if (enemy.FleeingPath == null)
                     {
@@ -591,12 +617,6 @@ namespace Ultima5Redux.Maps
                 AdvanceToNextCombatMapUnit();
                 return hitState == CombatMapUnit.HitState.Grazed ? TurnResult.EnemyGrazed : TurnResult.EnemyAttacks;
             }
-
-            // if (enemy.EnemyReference.DoesNotMove)
-            // {
-            //     preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " passed.";
-            //     return TurnResult.NoAction;
-            // }
             
             CombatMapUnit pursuedCombatMapUnit = null;
             bool bMoved = false;
@@ -621,6 +641,20 @@ namespace Ultima5Redux.Maps
             AdvanceToNextCombatMapUnit();
             
             return TurnResult.EnemyMoved;
+        }
+
+        private WalkableType GetWalkableTypeByEnemy(Enemy enemy)
+        {
+            WalkableType walkableType;
+            if (enemy.EnemyReference.IsWaterEnemy)
+                walkableType = WalkableType.CombatWater;
+            else if (enemy.EnemyReference.CanPassThroughWalls)
+                walkableType = WalkableType.CombatFlyThroughWalls;
+            else if (enemy.EnemyReference.CanFlyOverWater)
+                walkableType = WalkableType.CombatLandAndWater;
+            else
+                walkableType = WalkableType.CombatLand;
+            return walkableType;
         }
 
         /// <summary>
@@ -658,7 +692,9 @@ namespace Ultima5Redux.Maps
                 // the check for IsTileWalkable may be redundant, but just in case
                 // we create a list of potential free spaces around the enemy
                 bool bIsAStarWalkable = GetAStarByMapUnit(enemy).GetWalkable(point);
-                if (IsTileWalkable(point, WalkableType.CombatLand) && bIsAStarWalkable)
+                if (IsTileWalkable(point, GetWalkableTypeByEnemy(enemy)) 
+                    //WalkableType.CombatLand) 
+                    && bIsAStarWalkable)
                 {
                     emptySpacePoints.Add(point);
                 }
@@ -762,6 +798,8 @@ namespace Ultima5Redux.Maps
             // reset the a star walking rules
             RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLand);
             RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatWater);
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatFlyThroughWalls);
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLandAndWater);
             
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
 
@@ -829,13 +867,13 @@ namespace Ultima5Redux.Maps
 
         public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
 
-        public CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit, out bool bMoved) =>
+        private CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit, out bool bMoved) =>
             MoveToClosestAttackableCombatMapUnit(activeCombatUnit, CombatMapUnitEnum.CombatPlayer, out bMoved) as CombatPlayer;
 
         public Enemy MoveToClosestAttackableEnemy(out string outputStr, out bool bMoved) => 
             MoveToClosestAttackableEnemy(CurrentCombatPlayer, out outputStr, out bMoved);
 
-        public Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit, out string outputStr, out bool bMoved)
+        private Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit, out string outputStr, out bool bMoved)
         {
             Enemy enemy = MoveToClosestAttackableCombatMapUnit(activeMapUnit, CombatMapUnitEnum.Enemy, out bMoved) as Enemy;
             outputStr = "";
@@ -859,7 +897,7 @@ namespace Ultima5Redux.Maps
         /// <param name="preferredAttackTarget">the type of target you will target</param>
         /// <param name="bMoved">did the CombatMapUnit move</param>
         /// <returns>The combat player that they are heading towards</returns>
-        public CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit, 
+        private CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit, 
             CombatMapUnitEnum preferredAttackTarget, out bool bMoved)
         {
             const int NoPath = 0xFFFF;
@@ -883,8 +921,6 @@ namespace Ultima5Redux.Maps
                 // get the shortest path to the unit - we ignore the range value because by calling this method we are insisting
                 // that they move
                 Stack<Node> theWay = aStar.FindPath(activeCombatUnit.MapUnitPosition.XY, combatMapUnitXY);
-                    //FindBestPathForSurroundingTiles(activeCombatUnit.MapUnitPosition.XY,
-                    //combatMapUnitXY, 1);//activeCombatUnit.ClosestAttackRange);
                 int nMoves = theWay?.Count ?? NoPath;
                 if (nMoves < nMinMoves)
                 {
@@ -1056,7 +1092,8 @@ namespace Ultima5Redux.Maps
             switch (mapUnit)
             {
                 case Enemy enemy:
-                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand;
+                    return GetWalkableTypeByEnemy(enemy);
+                    // return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand;
                 case CombatPlayer _:
                     return WalkableType.CombatLand;
                 default:
@@ -1135,14 +1172,16 @@ namespace Ultima5Redux.Maps
 
             // make sure the tile that the enemy occupies is not walkable
             // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
-            SetWalkable(enemyPosition, false);
+            SetNotWalkableDueToCombatMapUnit(enemyPosition);
             return enemy;
         }
 
-        private void SetWalkable(Point2D position, bool bWalkable)
+        private void SetNotWalkableDueToCombatMapUnit(Point2D position)
         {
             GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(position, false);
             GetAStarByWalkableType(WalkableType.CombatWater).SetWalkable(position, false);
+            GetAStarByWalkableType(WalkableType.CombatFlyThroughWalls).SetWalkable(position, false);
+            GetAStarByWalkableType(WalkableType.CombatLandAndWater).SetWalkable(position, false);
         }
 
 

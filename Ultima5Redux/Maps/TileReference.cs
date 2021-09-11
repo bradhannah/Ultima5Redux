@@ -14,6 +14,7 @@ namespace Ultima5Redux.Maps
         [DataMember] public int FlatTileSubstitutionIndex;
         [DataMember] public string FlatTileSubstitutionName;
         [DataMember] public int Index;
+        [DataMember] public bool RangeWeapon_Passable;
         [DataMember] public bool IsBoardable;
         [DataMember] public bool IsBoat_Passable;
         [DataMember] public bool IsBuilding;
@@ -47,6 +48,8 @@ namespace Ultima5Redux.Maps
         public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC;
 
         public bool IsSolidSprite => !IsWalking_Passable;
+
+        public bool IsRangeWeaponPassable => RangeWeapon_Passable;
 
         public bool IsPassable(Avatar.AvatarState avatarState)
         {

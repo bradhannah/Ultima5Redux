@@ -20,7 +20,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
         
-        [JsonObject(MemberSerialization.OptIn)] public class AdditionalEnemyFlags
+        [JsonObject(MemberSerialization.OptIn)] 
+        public class AdditionalEnemyFlags
         {
             [JsonProperty] public string Name { get; set; }
             [JsonProperty] public int Experience { get; set; }
@@ -68,8 +69,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 Console.Write(@"," + $@"{enemy.TheMissileType}");
                 EnemyReference friend = AllEnemyReferences[enemy.FriendIndex];
                 Console.Write(@"," + $@"{friend.AllCapsPluralName}");
-                Console.Write(@"," + $@"0x{enemy._nThing:X2}");
-                // Console.Write(@"," + $@"0x{enemy._nThing:X2}");
+                //Console.Write(@"," + $@"0x{enemy._nThing:X2}");
                 foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
                 {
                     Console.Write(@"," + enemy.IsEnemyAbility(ability));

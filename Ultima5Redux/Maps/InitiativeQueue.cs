@@ -85,7 +85,6 @@ namespace Ultima5Redux.Maps
         /// </summary>
         internal void InitializeInitiativeQueue()
         {
-            //Debug.Assert(_virtualMap.LargeMapOverUnder == Maps.Combat);
             _initiativeQueue.Clear();
             _combatInitiativeTally.Clear();
             _nLowestDexterity = 50;
@@ -104,7 +103,6 @@ namespace Ultima5Redux.Maps
                 if (_nHighestDexterity < nDexterity) _nHighestDexterity = nDexterity;
 
                 AddCombatMapUnitToQueue((CombatMapUnit)mapUnit);
-                //_combatInitiativeTally.Add((CombatMapUnit)mapUnit, 0);
             }
         }
 

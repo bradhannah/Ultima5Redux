@@ -38,7 +38,7 @@ namespace Ultima5Redux.Maps
 
         private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
 
-        public enum WalkableType { StandardWalking, CombatLand, CombatWater }
+        public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
 
         private readonly Dictionary<Point2D, int> _openDoors = new Dictionary<Point2D, int>();
 
