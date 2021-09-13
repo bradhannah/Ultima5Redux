@@ -102,6 +102,8 @@
     <Compile Include="External\AStarSharp.cs" />
     <Compile Include="ImportedGameState.cs" />
     <Compile Include="Maps\CombatMap.cs" />
+    <Compile Include="Maps\DungeonCombatMapReference.cs" />
+    <Compile Include="Maps\DungeonCombatMapReferences.cs" />
     <Compile Include="Maps\InitiativeQueue.cs" />
     <Compile Include="Maps\Sign.cs" />
     <Compile Include="Maps\SingleCombatMapReference.cs" />
@@ -264,6 +266,8 @@
     <EmbeddedResource Include="DataFiles\InventoryDetails.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="DataFiles\DungeonCombatMapDetails.csv" />
+    <Content Include="DataFiles\DungeonCombatMapReferences.csv" />
     <Content Include="DataFiles\InventoryDetails.csv" />
     <Content Include="DataFiles\MerchantStrings.csv" />
     <Content Include="DataFiles\RawEnemyFlags.csv" />

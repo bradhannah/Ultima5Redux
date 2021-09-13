@@ -29,6 +29,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             [JsonProperty] public bool DoNotMove { get; set; }
             [JsonProperty] public bool CanFlyOverWater { get; set; }
             [JsonProperty] public bool CanPassThroughWalls { get; set; }
+            [JsonProperty] public bool ActivelyAttacks { get; set; }
         }
 
         private const int N_TOTAL_MONSTERS = 0x30;
@@ -45,7 +46,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 AllEnemyReferences.Add(enemyReference);
             }
 
-            PrintDebugCSV();
+            //PrintDebugCSV();
         }
 
         private void PrintDebugCSV()

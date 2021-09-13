@@ -46,7 +46,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Build the combat map reference
         /// </summary>
-        public CombatMapReferences(string u5Directory)
+        public CombatMapReferences(string u5Directory, TileReferences tileReferences)
         {
             Dictionary<SingleCombatMapReference.Territory, List<CombatMapData>> combatMapDataJson =
                 JsonConvert.DeserializeObject<Dictionary<SingleCombatMapReference.Territory, List<CombatMapData>>>(Resources.CombatMaps);
@@ -66,14 +66,14 @@ namespace Ultima5Redux.Maps
                 // create the map reference based on the static data
                 _singleCombatMapReferences[SingleCombatMapReference.Territory.Britannia].Add(
                     new SingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
-                        nMap, _britDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Britannia][nMap]));
+                        nMap, _britDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Britannia][nMap], tileReferences));
             }
 
             for (int nMap = 0; nMap < 112; nMap++)
             {
                 _singleCombatMapReferences[SingleCombatMapReference.Territory.Dungeon].Add(
                     new SingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
-                    nMap, _dungeonDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Dungeon][nMap]));
+                    nMap, _dungeonDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Dungeon][nMap], tileReferences));
             }
         }
 

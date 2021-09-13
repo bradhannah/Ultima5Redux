@@ -62,12 +62,12 @@ namespace Ultima5Redux.Dialogue
             IEnumerable<string> rawShoppeStrings =
                 _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData).GetChunkAsStringList().StringList;
             CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
-            int i = 0;
+            //int i = 0;
             foreach (string rawShoppeString in rawShoppeStrings)
             {
                 string convertedStr =
                     compressedWordReference.ReplaceRawMerchantStringsWithCompressedWords(rawShoppeString);
-                Console.WriteLine(i++ + @"," + @"""" + convertedStr.Replace('\n', '_').Replace('"', '+') + @"""");
+                //Console.WriteLine(i++ + @"," + @"""" + convertedStr.Replace('\n', '_').Replace('"', '+') + @"""");
                 _merchantStrings.Add(convertedStr);
             }
         }

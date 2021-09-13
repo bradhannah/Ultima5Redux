@@ -75,7 +75,10 @@ namespace Ultima5Redux
 
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
             
-            CombatMapRefs = new CombatMapReferences(U5Directory);
+            CombatMapRefs = new CombatMapReferences(U5Directory, SpriteTileReferences);
+
+            DungeonCombatMapRefs = new DungeonCombatMapReferences();
+            DungeonCombatMapRefs.BuildDynamically(CombatMapRefs, SpriteTileReferences);
             
             // build all combat maps from the Combat Map References
              // foreach (SingleCombatMapReference combatMapRef in CombatMapRefs.MapReferenceList)
@@ -97,6 +100,7 @@ namespace Ultima5Redux
             ShoppeKeeperDialogueReference =
                 new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
 
+            
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences, 
                 NpcRef, InvRef, DataOvlRef, bUseExtendedSprites, EnemyRefs, CombatMapRefs);
@@ -189,7 +193,8 @@ namespace Ultima5Redux
 
         public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
 
-        
+        public DungeonCombatMapReferences DungeonCombatMapRefs { get; }
+            
         /// <summary>
         ///     Begins the conversation with a particular NPC
         /// </summary>

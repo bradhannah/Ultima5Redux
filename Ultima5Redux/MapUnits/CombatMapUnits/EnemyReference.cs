@@ -155,6 +155,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool DoesNotMove => _additionalEnemyFlags.DoNotMove;
         public bool CanFlyOverWater => _additionalEnemyFlags.CanFlyOverWater;
         public bool CanPassThroughWalls => _additionalEnemyFlags.CanPassThroughWalls;
-
+        public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
     }
 }

@@ -36,7 +36,7 @@ namespace Ultima5Redux.Maps
         private const int NUM_PLAYERS = 6;
         private const int NUM_DIRECTIONS = 4;
 
-        public enum EntryDirection {East = 0, West = 1, North = 2, South = 3 }
+        public enum EntryDirection {East = 0, West = 1, South = 2, North = 3 }
         
         public enum BritanniaCombatMaps 
         {
@@ -44,7 +44,7 @@ namespace Ultima5Redux.Maps
             BigBridge = 7, Brick = 8, Basement = 9, Psychedelic = 10, BoatOcean = 11, BoatNorth = 12, BoatSouth = 13, 
             BoatBoat = 14, Bay = 15
         };
-        
+
         /// <summary>
         ///     Create the reference based on territory and a map number
         /// </summary>
@@ -52,14 +52,17 @@ namespace Ultima5Redux.Maps
         /// <param name="nCombatMapNum">map number in data file (0,1,2,3....)</param>
         /// <param name="dataChunks"></param>
         /// <param name="combatMapData"></param>
+        /// <param name="tileReferences"></param>
         public SingleCombatMapReference(Territory mapTerritory, int nCombatMapNum,
-            DataChunks<CombatMapReferences.DataChunkName> dataChunks, CombatMapReferences.CombatMapData combatMapData)
+            DataChunks<CombatMapReferences.DataChunkName> dataChunks, CombatMapReferences.CombatMapData combatMapData,
+            TileReferences tileReferences)
         {
             _combatMapData = combatMapData;
             int nMapOffset = nCombatMapNum * MAP_BYTE_COUNT;
             
             MapTerritory = mapTerritory;
             CombatMapNum = nCombatMapNum;
+            const int nBytesPerRow = 0x20;
 
             // copying the array to a simpler format
             TheMap = Utils.Init2DByteArray(XTILES, YTILES);
@@ -68,7 +71,7 @@ namespace Ultima5Redux.Maps
             for (int nRow = 0; nRow < XTILES; nRow++)
             {
                 DataChunk rowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Tiles for row {nRow}",
-                    nMapOffset + (0x20 * nRow), XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
+                    nMapOffset + (nBytesPerRow * nRow), XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
                 List<byte> list = rowChunk.GetAsByteList();
                 for (int nCol = 0; nCol < list.Count; nCol++)
                 {
@@ -82,9 +85,9 @@ namespace Ultima5Redux.Maps
             {
                 // 1=east,2=west,3=south,4=north
                 List<byte> xPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player X positions for row #" + nRow,
-                    nMapOffset + (0x20 * nOffsetFactor) + 0xB, 0x06).GetAsByteList();
+                    nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB, 0x06).GetAsByteList();
                 List<byte> yPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player Y positions for row #" + nRow,
-                    nMapOffset + (0x20 * nOffsetFactor) + 0xB + 0x06, 0x06).GetAsByteList();
+                    nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB + 0x06, 0x06).GetAsByteList();
                 for (int nPlayer = 0; nPlayer < NUM_PLAYERS; nPlayer++)
                 {
                     // if the X or Y value is above the number of tiles then it indicates a sprite number
@@ -101,9 +104,9 @@ namespace Ultima5Redux.Maps
             }
 
             // load the enemy positions and sprites
-            int nEnemyXOffset = nMapOffset + (0x20 * 6) + 0xB;
-            int nEnemyYOffset = nMapOffset + (0x20 * 7) + 0xB;
-            int nEnemySpriteOffset = nMapOffset + (0x20 * 5) + 0xB;
+            int nEnemyXOffset = nMapOffset + (nBytesPerRow * 6) + 0xB;
+            int nEnemyYOffset = nMapOffset + (nBytesPerRow * 7) + 0xB;
+            int nEnemySpriteOffset = nMapOffset + (nBytesPerRow * 5) + 0xB;
             List<byte> xEnemyPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy X positions",
                 nEnemyXOffset, NUM_ENEMIES).GetAsByteList();
             List<byte> yEnemyPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Y positions",
@@ -121,7 +124,6 @@ namespace Ultima5Redux.Maps
             {
                 Point2D enemyPosition = new Point2D(xEnemyPosList[nEnemyIndex], yEnemyPosList[nEnemyIndex]);
 
-
                 if (duplicatePositionDictionary.ContainsKey(enemyPosition))
                 {
                     // it's a duplicate position, so we avoid adding it again, otherwise things get screwy
@@ -135,11 +137,106 @@ namespace Ultima5Redux.Maps
                     _enemyPositions.Add(enemyPosition);
                 }
             }
+            
+            List<Point2D> _triggerPositions = new List<Point2D>(XTILES);
+            List<TileReference> _triggerTileReferences = new List<TileReference>(XTILES);
+            Dictionary<Point2D, List<PointAndTileReference>> _triggerPointToTileReferences =
+                new Dictionary<Point2D, List<PointAndTileReference>>();
+
+            // load the trigger positions
+            // these are the Points that a player character hits and causes a triggering event
+            const int nTriggerPositions = 8;
+            List<byte> triggerXPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger X positions",
+                nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList();
+            List<byte> triggerYPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Y positions",
+                nMapOffset + nBytesPerRow * 9 + YTILES, nTriggerPositions).GetAsByteList();
+            for (int i = 0; i < nTriggerPositions; i++)
+            {
+                _triggerPositions.Add(new Point2D(triggerXPositions[i], triggerYPositions[i]));
+            }
+            
+            // Gather all replacement tile references when trigger occurs
+            List<byte> triggerTileIndexes = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger tile indexes",
+                nMapOffset + XTILES, nTriggerPositions).GetAsByteList();
+            foreach (byte nIndex in triggerTileIndexes)
+            {
+                _triggerTileReferences.Add(tileReferences.GetTileReference(nIndex + 0xFF));
+            }
+            
+            // Gather all positions that change as a result of a trigger
+            // the results are split into two different sections
+            List<byte> triggerResultXPositions = new List<byte>();
+            List<byte> triggerResultYPositions = new List<byte>();
+            triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result X position #1",
+                nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList());
+            triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result Y position #1",
+                nMapOffset + nBytesPerRow * 9 + YTILES, nTriggerPositions).GetAsByteList());
+            triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result X position #2",
+                nMapOffset + nBytesPerRow * 10 + XTILES, nTriggerPositions).GetAsByteList());
+            triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result Y position #2",
+                nMapOffset + nBytesPerRow * 10 + YTILES, nTriggerPositions).GetAsByteList());
+            for (int i = 0; i < nTriggerPositions; i++)
+            {
+                TileReference newTriggeredTileReference = _triggerTileReferences[i];
+                // if the index is 255 (was 0) then we know it is indicating it shouldn't used
+                if (newTriggeredTileReference.Index == 0xFF) continue;
+
+                // grab the two Points that will change as a result of landing on the trigger tile
+                Point2D pos1 = new Point2D(triggerResultXPositions[i], triggerResultYPositions[i]);
+                Point2D pos2 = new Point2D(triggerResultXPositions[i + nTriggerPositions], triggerResultYPositions[i + nTriggerPositions]);
+                Point2D triggeredPosition = _triggerPositions[i];
+
+                
+                // if the trigger position has not been recorded yet, then we initialize the list
+                // we use a List because every tile has a minimum of 2 changes, but can result in a lot more
+                if (!_triggerPointToTileReferences.ContainsKey(triggeredPosition))
+                    _triggerPointToTileReferences.Add(triggeredPosition, new List<PointAndTileReference>());
+                
+                _triggerPointToTileReferences[triggeredPosition].Add(new PointAndTileReference(pos1, _triggerTileReferences[i]));
+                _triggerPointToTileReferences[triggeredPosition].Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
+            }
+
+            ((Action)(() => { }))();
+
         }
 
-        public bool IsEnterable(EntryDirection entryDirection)
+        private readonly struct PointAndTileReference
         {
-            return _enterDirectionDictionary[entryDirection];
+            public PointAndTileReference(Point2D point, TileReference tileReference)
+            {
+                Point = point;
+                TheTileReference = tileReference;
+            }
+            private Point2D Point { get; }
+            private TileReference TheTileReference { get; }
+        }
+        //
+        // public bool IsEnterable(EntryDirection entryDirection)
+        // {
+        //     return _enterDirectionDictionary[entryDirection];
+        // }
+        public int GetNumberOfTileReferencesOnMap(TileReference tileReference)
+        {
+            int nTotal = 0;
+            for (int x = 0; x < XTILES; x++)
+            {
+                for (int y = 0; y < YTILES; y++)
+                {
+                    if (TheMap[x][y] == tileReference.Index) nTotal++;
+                }
+            }
+
+            return nTotal;
+        }
+
+        public bool DoesTileReferenceOccurOnMap(TileReference tileReference) =>
+            GetNumberOfTileReferencesOnMap(tileReference) > 0;
+
+        public bool IsEntryDirectionValid(EntryDirection entryDirection)
+        {
+            List<Point2D> points = GetPlayerStartPositions(entryDirection);
+            if (points[0].X <= 0) return false;
+            return true;
         }
         
         public List<Point2D> GetPlayerStartPositions(EntryDirection entryDirection)

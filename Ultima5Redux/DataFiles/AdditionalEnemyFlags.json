@@ -5,7 +5,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Bard1/BARD",
@@ -13,7 +14,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Fighter1/FIGHTER",
@@ -21,7 +23,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Avatar1/x",
@@ -29,7 +32,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "TownsPerson1/VILLAGER",
@@ -37,7 +41,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Merchant1/MERCHANT",
@@ -45,7 +50,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Jester1/JESTER",
@@ -53,7 +59,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "BardPlaying1/BARD",
@@ -61,7 +68,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "PersonStocks1/PIRATES",
@@ -69,7 +77,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": false
   },
   {
     "Name": "WallPrisoner1/x",
@@ -77,7 +86,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": false
   },
   {
     "Name": "Child1/CHILD",
@@ -85,7 +95,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Begger1/BEGGAR",
@@ -93,7 +104,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Guard1/GUARDS",
@@ -101,7 +113,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Apparation1/x",
@@ -109,7 +122,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Blackthorn1/BLACKTHORN",
@@ -117,7 +131,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "LordBritish1/LORD BRITISH",
@@ -125,7 +140,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Seahorse1/SEA HORSES",
@@ -133,7 +149,8 @@
     "IsWaterEnemy": true,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Squid1/SQUIDS",
@@ -141,7 +158,8 @@
     "IsWaterEnemy": true,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "SeaSerpent1/SEA SERPENTS",
@@ -149,7 +167,8 @@
     "IsWaterEnemy": true,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Shark1/SHARKS",
@@ -157,7 +176,8 @@
     "IsWaterEnemy": true,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Rat1/GIANT RATS",
@@ -165,7 +185,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Bat1/BATS",
@@ -173,7 +194,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Spider1/SPIDERS",
@@ -181,7 +203,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Ghost1/GHOSTS",
@@ -189,7 +212,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
-    "CanPassThroughWalls": true
+    "CanPassThroughWalls": true,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Slime1/SLIME",
@@ -197,7 +221,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Gremlin1/GREMLINS",
@@ -205,7 +230,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Mimic1/MIMICS",
@@ -213,7 +239,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Reaper1/REAPERS",
@@ -221,7 +248,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Gazer1/GAZERS",
@@ -229,7 +257,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Shard/x",
@@ -237,7 +266,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "StoneGargoyle1/GARGOYLE",
@@ -245,7 +275,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "InsectSwarm1/INSECTS",
@@ -253,7 +284,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Orc1/ORCS",
@@ -261,7 +293,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Skeleton1/SKELETONS",
@@ -269,7 +302,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Snake1/SNAKES",
@@ -277,7 +311,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Ettin1/ETTINS",
@@ -285,7 +320,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Headless1/HEADLESSES",
@@ -293,7 +329,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Wisp1/WISPS",
@@ -301,7 +338,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Daemon1/DAEMONS",
@@ -309,7 +347,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Dragon1/DRAGONS",
@@ -317,7 +356,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "SandTrap1/SAND TRAPS",
@@ -325,7 +365,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Troll1/TROLLS",
@@ -333,7 +374,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "PoisonField/x",
@@ -341,7 +383,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": false
   },
   {
     "Name": "Whirpool1/x",
@@ -349,7 +392,8 @@
     "IsWaterEnemy": true,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": false
   },
   {
     "Name": "MongBat1/MONGBATS",
@@ -357,7 +401,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "Corpser1/CORPSERS",
@@ -365,7 +410,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "RotWork1/ROTWORMS",
@@ -373,7 +419,8 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   },
   {
     "Name": "ShadowLord1/SHADOW LORD",
@@ -381,6 +428,7 @@
     "IsWaterEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
-    "CanPassThroughWalls": false
+    "CanPassThroughWalls": false,
+    "ActivelyAttacks": true
   }
 ]
