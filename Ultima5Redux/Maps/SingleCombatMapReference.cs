@@ -160,7 +160,9 @@ namespace Ultima5Redux.Maps
                 nMapOffset + XTILES, nTriggerPositions).GetAsByteList();
             foreach (byte nIndex in triggerTileIndexes)
             {
-                _triggerTileReferences.Add(tileReferences.GetTileReference(nIndex + 0xFF));
+                _triggerTileReferences.Add(tileReferences.GetTileReference(nIndex
+                )); 
+                //+ 0xFF));
             }
             
             // Gather all positions that change as a result of a trigger
@@ -170,16 +172,16 @@ namespace Ultima5Redux.Maps
             triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result X position #1",
                 nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList());
             triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result Y position #1",
-                nMapOffset + nBytesPerRow * 9 + YTILES, nTriggerPositions).GetAsByteList());
+                nMapOffset + nBytesPerRow * 9 + (XTILES * 2), nTriggerPositions).GetAsByteList());
             triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result X position #2",
                 nMapOffset + nBytesPerRow * 10 + XTILES, nTriggerPositions).GetAsByteList());
             triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result Y position #2",
-                nMapOffset + nBytesPerRow * 10 + YTILES, nTriggerPositions).GetAsByteList());
+                nMapOffset + nBytesPerRow * 10 + (XTILES * 2), nTriggerPositions).GetAsByteList());
             for (int i = 0; i < nTriggerPositions; i++)
             {
                 TileReference newTriggeredTileReference = _triggerTileReferences[i];
                 // if the index is 255 (was 0) then we know it is indicating it shouldn't used
-                if (newTriggeredTileReference.Index == 0xFF) continue;
+                if (newTriggeredTileReference.Index == 0x0) continue;
 
                 // grab the two Points that will change as a result of landing on the trigger tile
                 Point2D pos1 = new Point2D(triggerResultXPositions[i], triggerResultYPositions[i]);
@@ -189,11 +191,13 @@ namespace Ultima5Redux.Maps
                 
                 // if the trigger position has not been recorded yet, then we initialize the list
                 // we use a List because every tile has a minimum of 2 changes, but can result in a lot more
+                ///// NOTE!!!!! Check this again - it may be putting duplicates in
                 if (!_triggerPointToTileReferences.ContainsKey(triggeredPosition))
                     _triggerPointToTileReferences.Add(triggeredPosition, new List<PointAndTileReference>());
                 
                 _triggerPointToTileReferences[triggeredPosition].Add(new PointAndTileReference(pos1, _triggerTileReferences[i]));
-                _triggerPointToTileReferences[triggeredPosition].Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
+                if (pos1 != pos2)
+                    _triggerPointToTileReferences[triggeredPosition].Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
             }
 
             ((Action)(() => { }))();
