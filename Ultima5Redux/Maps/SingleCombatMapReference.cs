@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Maps
 {
+    [JsonObject(MemberSerialization.OptIn)] 
     public class SingleCombatMapReference
     {
         private readonly CombatMapReferences.CombatMapData _combatMapData;
+        private readonly TileReferences _tileReferences;
 
         /// <summary>
         ///     The territory that the combat map is in. This matters most for determining data files.
@@ -44,6 +47,14 @@ namespace Ultima5Redux.Maps
             BigBridge = 7, Brick = 8, Basement = 9, Psychedelic = 10, BoatOcean = 11, BoatNorth = 12, BoatSouth = 13, 
             BoatBoat = 14, Bay = 15
         };
+        
+        public enum Dungeon {Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31,
+            Shame = 32, Hythloth = 33, Doom = 34} 
+    
+        public string GetAsCSVLine() => $"{Index}, {Name}, {DungeonLocation}, {DirEastLeft}, {DirWestRight}, {DirWestRight}, {DirSouthDown}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
+
+        public static string GetCSVHeader() => "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirWestRight, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
+        
 
         /// <summary>
         ///     Create the reference based on territory and a map number
@@ -58,6 +69,7 @@ namespace Ultima5Redux.Maps
             TileReferences tileReferences)
         {
             _combatMapData = combatMapData;
+            _tileReferences = tileReferences;
             int nMapOffset = nCombatMapNum * MAP_BYTE_COUNT;
             
             MapTerritory = mapTerritory;
@@ -214,11 +226,12 @@ namespace Ultima5Redux.Maps
             private Point2D Point { get; }
             private TileReference TheTileReference { get; }
         }
-        //
-        // public bool IsEnterable(EntryDirection entryDirection)
-        // {
-        //     return _enterDirectionDictionary[entryDirection];
-        // }
+        
+        public bool IsEnterable(EntryDirection entryDirection)
+        {
+            return _enterDirectionDictionary[entryDirection];
+        }
+        
         public int GetNumberOfTileReferencesOnMap(TileReference tileReference)
         {
             int nTotal = 0;
@@ -322,6 +335,30 @@ namespace Ultima5Redux.Maps
         /// <remarks>this needs to rewritten when we understand how the data files refer to Combat Maps</remarks>
         public byte Id => (byte) MapTerritory;
 
-   
+        public int Index => CombatMapNum;
+        public string Name => MapTerritory == Territory.Britannia ? Description : "Dungeon-" + CombatMapNum;
+        public Dungeon DungeonLocation => Dungeon.Covetous;
+        public bool DirEastLeft => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.East);
+        public bool DirWestRight => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.West);
+        public bool DirNorthUp => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.North);
+        public bool DirSouthDown => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.South);
+        public bool OtherStart => false;
+        public bool LaddersUp => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderUp"));
+        public bool LaddersDown => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderDown"));
+        public bool HasTriggers => true;
+
+        public bool HasRegularDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("RegularDoor"))
+                                      || DoesTileReferenceOccurOnMap(
+                                          _tileReferences.GetTileReferenceByName("LockedDoor"))
+                                      || DoesTileReferenceOccurOnMap(
+                                          _tileReferences.GetTileReferenceByName("RegularDoorView"))
+                                      || DoesTileReferenceOccurOnMap(
+                                          _tileReferences.GetTileReferenceByName("LockedDoorView"));
+        public bool HasMagicDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor")) 
+                                    || DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
+
+        public bool SpecialEnemyComputation => false;
+        public bool IsBroke => false;
+        public string Notes => "No Notes";
     }
 }

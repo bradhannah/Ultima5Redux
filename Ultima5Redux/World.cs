@@ -77,15 +77,6 @@ namespace Ultima5Redux
             
             CombatMapRefs = new CombatMapReferences(U5Directory, SpriteTileReferences);
 
-            DungeonCombatMapRefs = new DungeonCombatMapReferences();
-            DungeonCombatMapRefs.BuildDynamically(CombatMapRefs, SpriteTileReferences);
-            
-            // build all combat maps from the Combat Map References
-             // foreach (SingleCombatMapReference combatMapRef in CombatMapRefs.MapReferenceList)
-             // {
-             //     CombatMapLegacy combatMap = new CombatMapLegacy(U5Directory, combatMapRef, _tileOverrides);
-             // }
-
             // build a "look" table for all tiles
             LookRef = new Look(U5Directory);
 
@@ -193,8 +184,6 @@ namespace Ultima5Redux
 
         public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
 
-        public DungeonCombatMapReferences DungeonCombatMapRefs { get; }
-            
         /// <summary>
         ///     Begins the conversation with a particular NPC
         /// </summary>
