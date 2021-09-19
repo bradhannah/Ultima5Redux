@@ -51,9 +51,11 @@ namespace Ultima5Redux.Maps
         public enum Dungeon {Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31,
             Shame = 32, Hythloth = 33, Doom = 34} 
     
-        public string GetAsCSVLine() => $"{Index}, {Name}, {DungeonLocation}, {DirEastLeft}, {DirWestRight}, {DirWestRight}, {DirSouthDown}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
+        public string GetAsCSVLine() => $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.East)}, " +
+                                        $"{IsValidDirection(EntryDirection.West)}, {IsValidDirection(EntryDirection.North)}, " +
+                                        $"{IsValidDirection(EntryDirection.South)}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
 
-        public static string GetCSVHeader() => "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirWestRight, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
+        public static string GetCSVHeader() => "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirNorthUp, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
         
 
         /// <summary>
@@ -253,6 +255,15 @@ namespace Ultima5Redux.Maps
         {
             List<Point2D> points = GetPlayerStartPositions(entryDirection);
             if (points[0].X <= 0) return false;
+
+            List<Point2D> characterPositions = new List<Point2D>();
+            // we walk through each of the character positions and if one is repeated then we know it's not valid
+            foreach (Point2D point in points)
+            {
+                if (characterPositions.Contains(point)) return false;
+                characterPositions.Add(point);
+            }
+            
             return true;
         }
         
@@ -310,6 +321,17 @@ namespace Ultima5Redux.Maps
 
             return CombatMapSpriteType.AutoSelected;
         }
+
+        public List<EntryDirection> GetEntryDirections()
+        {
+            List<EntryDirection> validEntryDirections = new List<EntryDirection>();
+            foreach (EntryDirection entryDirection in Enum.GetValues(typeof(EntryDirection)))
+            {
+                if (IsValidDirection(entryDirection)) validEntryDirections.Add(entryDirection);
+            }
+
+            return validEntryDirections;
+        }
         
         
         /// <summary>
@@ -338,10 +360,7 @@ namespace Ultima5Redux.Maps
         public int Index => CombatMapNum;
         public string Name => MapTerritory == Territory.Britannia ? Description : "Dungeon-" + CombatMapNum;
         public Dungeon DungeonLocation => Dungeon.Covetous;
-        public bool DirEastLeft => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.East);
-        public bool DirWestRight => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.West);
-        public bool DirNorthUp => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.North);
-        public bool DirSouthDown => IsEntryDirectionValid(SingleCombatMapReference.EntryDirection.South);
+        public bool IsValidDirection(EntryDirection entryDirection) =>IsEntryDirectionValid(entryDirection); 
         public bool OtherStart => false;
         public bool LaddersUp => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderUp"));
         public bool LaddersDown => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderDown"));
