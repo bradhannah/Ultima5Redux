@@ -36,7 +36,7 @@ namespace Ultima5Redux.Maps
         protected TileOverrides TileOverrides;
         protected readonly TileReferences SpriteTileReferences;
 
-        private readonly Dictionary<Point2D, TileOverride> _xyOverrides;
+        protected abstract Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
 
         public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
 
@@ -44,18 +44,11 @@ namespace Ultima5Redux.Maps
 
         public bool XRayMode { get; set; } = false;
 
-        protected Map(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference, 
-            TileReferences spriteTileReferences)
+        protected Map(TileOverrides tileOverrides, TileReferences spriteTileReferences)
         {
             TileOverrides = tileOverrides;
             SpriteTileReferences = spriteTileReferences;
-            CurrentSingleMapReference = singleSmallMapReference;
-
-            // for now combat maps don't have overrides
-            if (singleSmallMapReference != null) _xyOverrides = tileOverrides.GetTileXYOverridesBySingleMap(singleSmallMapReference);
         }
-
-        public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
 
         public abstract byte[][] TheMap { get; protected set; }
 
@@ -322,26 +315,28 @@ namespace Ultima5Redux.Maps
             return bIsWalkable;
         }
 
-        protected TileReference GetTileReference(Point2D xy)
+        public TileReference GetTileReference(Point2D xy)
         {
+            if (IsXYOverride(xy)) return SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
+            
             return SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
         }
 
         public bool IsXYOverride(Point2D xy)
         {
-            return _xyOverrides != null && _xyOverrides.ContainsKey(xy);
+            return XYOverrides != null && XYOverrides.ContainsKey(xy);
         }
 
         public TileOverride GetTileOverride(Point2D xy)
         {
-            return _xyOverrides[xy];
+            return XYOverrides[xy];
         }
 
         // public void SetTileOverride(Point2D xy, TileReference tileReference)
         // {
         //     TileOverride tileOverride = new TileOverride();
         //     tileOverride.
-        //     _xyOverrides.Add(xy, tileReference);
+        //     XYOverrides.Add(xy, tileReference);
         // }
 
 

@@ -1,92 +1,7 @@
 ﻿{
-  "0": [
+  "Britannia": [
     {
-      "X": 45,
-      "Y": 62,
-      "Z": 0,
-      "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Iolos hut"
-    }
-  ],
-  "2": [
-    {
-      "X": 13,
-      "Y": 19,
-      "Z": 0,
-      "SpriteNum": 48,
-      "SpriteName": "OutsidePath1",
-      "Comment": "Britain lamps"
-    },
-    {
-      "X": 17,
-      "Y": 19,
-      "Z": 0,
-      "SpriteNum": 48,
-      "SpriteName": "OutsidePath1",
-      "Comment": "Britain lamps"
-    },
-    {
-      "X": 17,
-      "Y": 11,
-      "Z": 0,
-      "SpriteNum": 50,
-      "SpriteName": "OutsidePath3",
-      "Comment": "Britain lamps"
-    },
-    {
-      "X": 13,
-      "Y": 11,
-      "Z": 0,
-      "SpriteNum": 50,
-      "SpriteName": "OutsidePath3",
-      "Comment": "Britain lamps"
-    },
-    {
-      "X": 13,
-      "Y": 8,
-      "Z": 0,
-      "SpriteNum": 49,
-      "SpriteName": "OutsidePath4",
-      "Comment": "Britain signs"
-    },
-    {
-      "X": 17,
-      "Y": 8,
-      "Z": 0,
-      "SpriteNum": 51,
-      "SpriteName": "OutsidePath2",
-      "Comment": "Britain signs"
-    }
-  ],
-  "3": [
-    {
-      "X": 13,
-      "Y": 12,
-      "Z": 0,
-      "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Jhelom"
-    },
-    {
-      "X": 17,
-      "Y": 12,
-      "Z": 0,
-      "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Jhelom"
-    },
-    {
-      "X": 17,
-      "Y": 12,
-      "Z": 1,
-      "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Jhelom"
-    }
-  ],
-  "30": [
-    {
+      "MapNumber": 30,
       "X": 13,
       "Y": 25,
       "Z": 0,
@@ -95,6 +10,7 @@
       "Comment": "Lycaeum"
     },
     {
+      "MapNumber": 30,
       "X": 17,
       "Y": 25,
       "Z": 0,
@@ -103,6 +19,7 @@
       "Comment": "Lycaeum"
     },
     {
+      "MapNumber": 30,
       "X": 23,
       "Y": 13,
       "Z": 0,
@@ -111,6 +28,7 @@
       "Comment": "Lycaeum"
     },
     {
+      "MapNumber": 30,
       "X": 23,
       "Y": 15,
       "Z": 0,
@@ -119,6 +37,7 @@
       "Comment": "Lycaeum"
     },
     {
+      "MapNumber": 30,
       "X": 14,
       "Y": 7,
       "Z": 1,
@@ -127,6 +46,7 @@
       "Comment": "Lycaeum"
     },
     {
+      "MapNumber": 30,
       "X": 16,
       "Y": 7,
       "Z": 1,
@@ -135,6 +55,7 @@
       "Comment": "Lycaeum"
     },
     {
+      "MapNumber": 30,
       "X": 20,
       "Y": 15,
       "Z": 2,
@@ -143,12 +64,141 @@
       "Comment": "Lycaeum"
     },
     {
+      "MapNumber": 30,
       "X": 23,
       "Y": 15,
       "Z": 2,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
       "Comment": "Lycaeum"
+    },
+    {
+      "MapNumber": 3,
+      "X": 13,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Jhelom"
+    },
+    {
+      "MapNumber": 3,
+      "X": 17,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Jhelom"
+    },
+    {
+      "MapNumber": 3,
+      "X": 17,
+      "Y": 12,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Jhelom"
+    },
+    {
+      "MapNumber": 0,
+      "X": 45,
+      "Y": 62,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Iolos hut"
+    },
+    {
+      "MapNumber": 2,
+      "X": 13,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 48,
+      "SpriteName": "OutsidePath1",
+      "Comment": "Britain lamps"
+    },
+    {
+      "MapNumber": 2,
+      "X": 17,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 48,
+      "SpriteName": "OutsidePath1",
+      "Comment": "Britain lamps"
+    },
+    {
+      "MapNumber": 2,
+      "X": 17,
+      "Y": 11,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3",
+      "Comment": "Britain lamps"
+    },
+    {
+      "MapNumber": 2,
+      "X": 13,
+      "Y": 11,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3",
+      "Comment": "Britain lamps"
+    },
+    {
+      "MapNumber": 2,
+      "X": 13,
+      "Y": 8,
+      "Z": 0,
+      "SpriteNum": 49,
+      "SpriteName": "OutsidePath2",
+      "Comment": "Britain signs"
+    },
+    {
+      "MapNumber": 2,
+      "X": 17,
+      "Y": 8,
+      "Z": 0,
+      "SpriteNum": 51,
+      "SpriteName": "OutsidePath4",
+      "Comment": "Britain signs"
+    }
+  ],
+  "CombatBritannia": [
+    {
+      "MapNumber": 11,
+      "X": 3,
+      "Y": 4,
+      "Z": 0,
+      "SpriteNum": 197,
+      "SpriteName": "StairsEast",
+      "Comment": "Downward stairs on boats"
+    },
+    {
+      "MapNumber": 11,
+      "X": 3,
+      "Y": 6,
+      "Z": 0,
+      "SpriteNum": 197,
+      "SpriteName": "StairsEast",
+      "Comment": "Downward stairs on boats"
+    },
+    {
+      "MapNumber": 11,
+      "X": 8,
+      "Y": 4,
+      "Z": 0,
+      "SpriteNum": 197,
+      "SpriteName": "StairsEast",
+      "Comment": "Downward stairs on boats"
+    },
+    {
+      "MapNumber": 11,
+      "X": 8,
+      "Y": 6,
+      "Z": 0,
+      "SpriteNum": 197,
+      "SpriteName": "StairsEast",
+      "Comment": "Downward stairs on boats"
     }
   ]
 }

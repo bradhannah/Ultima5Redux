@@ -25,6 +25,7 @@ namespace Ultima5Redux.Maps
         private readonly EnemyReferences _enemyReferences;
         private readonly Inventory _inventory;
         private readonly CombatMapReferences _combatMapRefs;
+        private readonly TileOverrides _tileOverrides;
 
         // ReSharper disable once NotAccessedField.Local
         private readonly InventoryReferences _inventoryReferences;
@@ -71,7 +72,7 @@ namespace Ultima5Redux.Maps
 
         //public bool ShowOuterSmallMapTiles => _bTouchedOuterBorder;
 
-        private Map PreCombatMap { get; set; }
+        private RegularMap PreCombatMap { get; set; }
 
         private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
         
@@ -98,13 +99,15 @@ namespace Ultima5Redux.Maps
         /// <param name="enemyReferences"></param>
         /// <param name="inventory"></param>
         /// <param name="combatMapRefs"></param>
+        /// <param name="tileOverrides"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
             Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
-            EnemyReferences enemyReferences, Inventory inventory, CombatMapReferences combatMapRefs)
+            EnemyReferences enemyReferences, Inventory inventory, CombatMapReferences combatMapRefs,
+            TileOverrides tileOverrides)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -122,6 +125,7 @@ namespace Ultima5Redux.Maps
             _enemyReferences = enemyReferences;
             _inventory = inventory;
             _combatMapRefs = combatMapRefs;
+            _tileOverrides = tileOverrides;
 
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
@@ -195,7 +199,7 @@ namespace Ultima5Redux.Maps
         public LargeMap CurrentLargeMap { get; private set; }
 
         public CombatMap CurrentCombatMap { get; private set; }
-
+        
         /// <summary>
         ///     The abstracted Map object for the current map
         ///     Returns large or small depending on what is active
@@ -231,7 +235,25 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Detailed reference of current small map
         /// </summary>
-        public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; private set; }
+        public SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        {
+            get
+            {
+                if (_currentSingleMapReference.MapLocation == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine) 
+                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+                if (_currentSingleMapReference != null)
+                {
+                    return _currentSingleMapReference;
+                }
+
+                throw new Ultima5ReduxException(
+                    "Tried to get a single map reference that isn't large, small or combat");
+            }
+            private set => _currentSingleMapReference = value;
+        }
+
+        private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+        //{ get; private set; }
 
         /// <summary>
         ///     All small map references
@@ -303,8 +325,8 @@ namespace Ultima5Redux.Maps
         {
             switch (PreCombatMap)
             {
-                case CombatMap combatMap:
-                    break;
+                // case CombatMap combatMap:
+                //     break;
                 case LargeMap largeMap:
                 case SmallMap smallMap:
                     _exposedSearchItems = _pushedExposedSearchItems;
@@ -396,16 +418,17 @@ namespace Ultima5Redux.Maps
             // we set the PreCombatMap so we know which map to return to
             if (PreCombatMap == null || !IsCombatMap)
             {
-                PreCombatMap = CurrentMap;
+                Debug.Assert(CurrentMap is RegularMap, "You can't load a combat map when you are already in a combat map");
+                PreCombatMap = (RegularMap)CurrentMap;
                 PreMapUnitPosition.Floor = CurrentPosition.Floor;
                 PreMapUnitPosition.X = CurrentPosition.X;
                 PreMapUnitPosition.Y = CurrentPosition.Y;
             }
             
-            CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(Map.Maps.Combat); 
+            CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance(); 
 
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences, 
-                _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference);
+                _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference, _tileOverrides);
 
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
@@ -505,6 +528,8 @@ namespace Ultima5Redux.Maps
             if (_overrideMap[x][y] != 0)
                 return _tileReferences.GetTileReference(_overrideMap[x][y]);
 
+            return CurrentMap.GetTileReference(new Point2D(x, y));
+            
             switch (LargeMapOverUnder)
             {
                 case Map.Maps.Small:

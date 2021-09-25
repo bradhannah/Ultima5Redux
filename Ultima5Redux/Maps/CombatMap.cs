@@ -30,6 +30,7 @@ namespace Ultima5Redux.Maps
 
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
+        protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
 
         public override byte[][] TheMap {
             get => TheCombatMapReference.TheMap;
@@ -113,24 +114,26 @@ namespace Ultima5Redux.Maps
         /// Note: Does not initialize the combat map units.
         /// </summary>
         /// <param name="virtualMap"></param>
-        /// <param name="singleCombatCombatMapReference"></param>
+        /// <param name="singleCombatMapReference"></param>
         /// <param name="tileReferences"></param>
         /// <param name="enemyReferences"></param>
         /// <param name="inventoryReferences"></param>
         /// <param name="inventory"></param>
         /// <param name="dataOvlReference"></param>
-        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences, 
-            InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference) : 
-            base(null, null, tileReferences)
+        /// <param name="tileOverrides"></param>
+        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatMapReference, TileReferences tileReferences, EnemyReferences enemyReferences, 
+            InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference, TileOverrides tileOverrides) : 
+            base(tileOverrides, tileReferences)
         {
             _virtualMap = virtualMap;
             CombatMapUnits = _virtualMap.TheMapUnits;
             _tileReferences = tileReferences;
-            TheCombatMapReference = singleCombatCombatMapReference;
+            TheCombatMapReference = singleCombatMapReference;
             _enemyReferences = enemyReferences;
             _inventoryReferences = inventoryReferences;
             _inventory = inventory;
             _dataOvlReference = dataOvlReference;
+            XYOverrides = tileOverrides.GetTileXYOverrides(singleCombatMapReference);
 
             InitializeAStarMap(WalkableType.CombatLand);
             InitializeAStarMap(WalkableType.CombatWater);

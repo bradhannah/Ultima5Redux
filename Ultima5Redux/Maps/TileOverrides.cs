@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.Properties;
@@ -7,7 +8,9 @@ namespace Ultima5Redux.Maps
 {
     public class TileOverrides
     {
-        private readonly Dictionary<int, List<TileOverride>> _tileOverrides;
+        private readonly Dictionary<AllTerritories, List<TileOverride>> _tileOverrides;
+        
+        private enum AllTerritories { Britannia, Underworld, CombatBritannia, CombatDungeon}
 
         /// <summary>
         ///     Constructor loads resource and builds tables
@@ -15,94 +18,68 @@ namespace Ultima5Redux.Maps
         public TileOverrides()
         {
             string textAsset = Resources.TileOverrides;
-            _tileOverrides = JsonConvert.DeserializeObject<Dictionary<int, List<TileOverride>>>(textAsset);
-
-            // we cycle through each map
-            // we must assign the map to the tile override on the inside
-            foreach (int nMap in _tileOverrides.Keys)
-            {
-                // for each TileOverride within the current map
-                foreach (TileOverride tileOverride in _tileOverrides[nMap])
-                {
-                    // I hate that I have to assign it this way, but it seems to be the only way for now
-                    tileOverride.MapNumber = nMap;
-                    if ((tileOverride.IsOverworld ? 1 : 0) + (tileOverride.IsUnderworld ? 1 : 0) +
-                        (tileOverride.IsSmallMap ? 1 : 0) != 1)
-                        throw new Ultima5ReduxException(
-                            "You have set multiple overworld, underworld and small map flags which is a big no no");
-                }
-            }
+            _tileOverrides = JsonConvert.DeserializeObject<Dictionary<AllTerritories, List<TileOverride>>>(textAsset);
         }
+
+        private bool TileOverrideExists(AllTerritories territory, int nMapNumber, int nFloor)
+        {
+            if (!_tileOverrides.ContainsKey(territory)) return false;
+            if (!_tileOverrides[territory].Exists(s => s.MapNumber == nMapNumber)) return false;
+            return (_tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
+                .FirstOrDefault(tileOverride => nFloor == tileOverride.Position.Floor) != null);
+        }
+        
+        private List<TileOverride> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor) => 
+            !TileOverrideExists(territory, nMapNumber, nFloor) ? 
+                null : 
+                _tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber).Where(tile => nFloor == tile.Position.Floor).ToList();
+
+        private static AllTerritories GetOverrideTerritory(SingleCombatMapReference singleCombatMapReference) =>
+            singleCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Britannia
+                ? AllTerritories.CombatBritannia
+                : AllTerritories.CombatDungeon;
+
+        private static AllTerritories GetOverrideTerritory(SmallMapReferences.SingleMapReference singleMapReference) =>
+            singleMapReference.Floor == 0 ? AllTerritories.Britannia : AllTerritories.Underworld;
+        
+        public List<TileOverride> GetTileOverrides(SingleCombatMapReference singleCombatMapReference)
+            => GetTileOverrides(GetOverrideTerritory(singleCombatMapReference),
+                singleCombatMapReference.CombatMapNum, 0);
 
         /// <summary>
         ///     Gets all tile overrides by a single map location (which includes a single floor)
         /// </summary>
         /// <param name="singleMapReference"></param>
         /// <returns>a list of TileOverride object, can be empty, but never null</returns>
-        public List<TileOverride> GetTileOverridesBySingleMap(SmallMapReferences.SingleMapReference singleMapReference)
-        {
-            List<TileOverride> tileOverrideList = new List<TileOverride>();
+        public List<TileOverride> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference)
+            => GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id,
+                singleMapReference.Floor);
 
-            if (!_tileOverrides.ContainsKey((int) singleMapReference.MapLocation)) return null;
-
-            foreach (TileOverride tileOverride in _tileOverrides[(int) singleMapReference.MapLocation])
-            {
-                if (singleMapReference.Floor == tileOverride.Position.Floor) tileOverrideList.Add(tileOverride);
-            }
-
-            return tileOverrideList;
-        }
-
-        public Dictionary<Point2D, TileOverride> GetTileXYOverridesBySingleMap(
-            SmallMapReferences.SingleMapReference singleMapReference)
+        private Dictionary<Point2D, TileOverride> GetTileXYOverrides(AllTerritories territory, int nMapNumber, int nFloor)
         {
             Dictionary<Point2D, TileOverride> tileOverrideList = new Dictionary<Point2D, TileOverride>();
 
-            if (!_tileOverrides.ContainsKey((int) singleMapReference.MapLocation)) return null;
+            if (!TileOverrideExists(territory, nMapNumber, nFloor)) return null;
 
-            foreach (TileOverride tileOverride in _tileOverrides[(int) singleMapReference.MapLocation])
+            foreach (TileOverride tileOverride in GetTileOverrides(territory, nMapNumber, nFloor))
             {
-                if (singleMapReference.Floor == tileOverride.Position.Floor)
-                {
-                    Point2D xy = new Point2D(tileOverride.X, tileOverride.Y);
-                    if (tileOverrideList.ContainsKey(xy))
-                        throw new Ultima5ReduxException("You have a duplicate record in TileOverrides: " +
-                                                        singleMapReference.MapLocation + " " + xy);
-                    tileOverrideList.Add(xy, tileOverride);
-                }
+                Point2D xy = new Point2D(tileOverride.X, tileOverride.Y);
+                if (tileOverrideList.ContainsKey(xy))
+                    throw new Ultima5ReduxException("You have a duplicate record in TileOverrides: " +
+                                                    nMapNumber + " " + xy);
+                tileOverrideList.Add(xy, tileOverride);
             }
 
             return tileOverrideList;
         }
 
-        /// <summary>
-        ///     Gets a replacement sprite for a specific location and position on a map
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="position"></param>
-        /// <param name="bOverworld"></param>
-        /// <returns>TileOverride if one exists, otherwise null</returns>
-        public TileOverride GetReplacementSprite(SmallMapReferences.SingleMapReference.Location location,
-            MapUnitPosition position, bool bOverworld)
-        {
-            if (!_tileOverrides.ContainsKey((int) location)) return null;
+        public Dictionary<Point2D, TileOverride> GetTileXYOverrides(
+            SmallMapReferences.SingleMapReference singleMapReference) => GetTileXYOverrides(
+            GetOverrideTerritory(singleMapReference), singleMapReference.Id,
+            singleMapReference.Floor);
 
-            if (location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld) // it's a large map
-                foreach (TileOverride tileOverride in _tileOverrides[(int) location])
-                {
-                    if (bOverworld && tileOverride.IsOverworld && position == tileOverride.Position)
-                        return tileOverride;
-                    if (!bOverworld && tileOverride.IsUnderworld && position == tileOverride.Position)
-                        return tileOverride;
-                }
-            else // this is a small map
-                foreach (TileOverride tileOverride in _tileOverrides[(int) location])
-                {
-                    if (position == tileOverride.Position) return tileOverride;
-                }
-
-            return null;
-        }
+        public Dictionary<Point2D, TileOverride> GetTileXYOverrides(SingleCombatMapReference singleCombatMapReference) =>
+            GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum, 0);
     }
 
     /// <summary>

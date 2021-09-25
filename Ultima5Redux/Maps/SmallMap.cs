@@ -6,7 +6,7 @@ using Ultima5Redux.MapUnits.Monsters;
 
 namespace Ultima5Redux.Maps
 {
-    public class SmallMap : Map
+    public class SmallMap : RegularMap
     {
         /// <summary>
         ///     Total tiles per row

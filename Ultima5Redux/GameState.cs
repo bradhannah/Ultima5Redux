@@ -234,11 +234,13 @@ namespace Ultima5Redux
         /// <param name="dataOvlReference"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="enemyReferences"></param>
+        /// <param name="combatMapReferences"></param>
+        /// <param name="tileOverrides"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences, 
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
-            EnemyReferences enemyReferences, CombatMapReferences combatMapReferences)
+            EnemyReferences enemyReferences, CombatMapReferences combatMapReferences, TileOverrides tileOverrides)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
@@ -247,7 +249,7 @@ namespace Ultima5Redux
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
                 underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates, 
                 inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites,
-                enemyReferences, PlayerInventory, combatMapReferences);
+                enemyReferences, PlayerInventory, combatMapReferences, tileOverrides);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);

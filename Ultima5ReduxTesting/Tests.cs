@@ -649,9 +649,9 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedBuyPrice(world.State.CharacterRecords, world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
+                .GetAdjustedBuyPrice(world.State.CharacterRecords, ((RegularMap)world.State.TheVirtualMap.CurrentMap).CurrentSingleMapReference.MapLocation);
             int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
-                .GetAdjustedSellPrice(world.State.CharacterRecords, world.State.TheVirtualMap.CurrentMap.CurrentSingleMapReference.MapLocation);
+                .GetAdjustedSellPrice(world.State.CharacterRecords, ((RegularMap)world.State.TheVirtualMap.CurrentMap).CurrentSingleMapReference.MapLocation);
             Debug.Assert(nCrossbowBuy > 0);
             Debug.Assert(nCrossbowSell > 0);
 
@@ -1049,7 +1049,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
-            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2),
+            world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 11),
                 SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
                 // orcs
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,

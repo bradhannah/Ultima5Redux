@@ -7,7 +7,7 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
-    public class LargeMap : Map
+    public class LargeMap : RegularMap
     {
         private const int TILES_PER_CHUNK_X = 16; // number of tiles horizontal in each chunk
         private const int TILES_PER_CHUNK_Y = 16; // number of tiles vertically in each chunk

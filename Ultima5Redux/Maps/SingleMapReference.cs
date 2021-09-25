@@ -127,10 +127,10 @@ namespace Ultima5Redux.Maps
                 return mapStr;
             }
 
-            public static SingleMapReference GetCombatMapSingleInstance(Map.Maps map)
+            public static SingleMapReference GetCombatMapSingleInstance()
             {
-                if (map == Map.Maps.Small)
-                    throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
+                // if (map == Map.Maps.Small)
+                //     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
 
                 return new SingleMapReference(Location.Combat_resting_shrine, 0, 0);
             }
