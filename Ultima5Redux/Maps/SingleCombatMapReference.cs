@@ -1,17 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Maps
 {
-    [JsonObject(MemberSerialization.OptIn)] 
-    public class SingleCombatMapReference
+    [JsonObject(MemberSerialization.OptIn)] public class SingleCombatMapReference
     {
-        private readonly CombatMapReferences.CombatMapData _combatMapData;
-        private readonly TileReferences _tileReferences;
+        public enum BritanniaCombatMaps
+        {
+            None = -2, BoatCalc = -1, CampFire = 0, Swamp = 1, Glade = 2, Treed = 3, Desert = 4, CleanTree = 5,
+            Mountains = 6, BigBridge = 7, Brick = 8, Basement = 9, Psychedelic = 10, BoatOcean = 11, BoatNorth = 12,
+            BoatSouth = 13, BoatBoat = 14, Bay = 15
+        }
+
+        public enum CombatMapSpriteType { Nothing, Thing, AutoSelected, EncounterBased }
+
+        public enum Dungeon
+        {
+            Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31, Shame = 32, Hythloth = 33, Doom = 34
+        }
+
+        public enum EntryDirection { East = 0, West = 1, South = 2, North = 3 }
 
         /// <summary>
         ///     The territory that the combat map is in. This matters most for determining data files.
@@ -20,16 +31,7 @@ namespace Ultima5Redux.Maps
 
         public const int XTILES = 11;
         public const int YTILES = 11;
-        
-        public readonly byte[][] TheMap;
-        
-        private readonly List<List<Point2D>> _playerPositionsByDirection = Utils.Init2DList<Point2D>(4, 6);
-        private readonly List<Point2D> _enemyPositions = new List<Point2D>(NUM_ENEMIES);
-        private readonly List<byte> _enemySprites = new List<byte>(NUM_ENEMIES);
 
-        private readonly Dictionary<EntryDirection, bool> _enterDirectionDictionary =
-            new Dictionary<EntryDirection, bool>();
-        
         /// <summary>
         ///     How many bytes for each combat map entry in data file
         /// </summary>
@@ -38,25 +40,18 @@ namespace Ultima5Redux.Maps
         public const int NUM_ENEMIES = 16;
         private const int NUM_PLAYERS = 6;
         private const int NUM_DIRECTIONS = 4;
+        private readonly CombatMapReferences.CombatMapData _combatMapData;
+        private readonly List<Point2D> _enemyPositions = new List<Point2D>(NUM_ENEMIES);
+        private readonly List<byte> _enemySprites = new List<byte>(NUM_ENEMIES);
 
-        public enum EntryDirection {East = 0, West = 1, South = 2, North = 3 }
-        
-        public enum BritanniaCombatMaps 
-        {
-            None = -2, BoatCalc = -1, CampFire = 0, Swamp = 1, Glade = 2, Treed = 3, Desert = 4, CleanTree = 5, Mountains = 6, 
-            BigBridge = 7, Brick = 8, Basement = 9, Psychedelic = 10, BoatOcean = 11, BoatNorth = 12, BoatSouth = 13, 
-            BoatBoat = 14, Bay = 15
-        };
-        
-        public enum Dungeon {Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31,
-            Shame = 32, Hythloth = 33, Doom = 34} 
-    
-        public string GetAsCSVLine() => $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.East)}, " +
-                                        $"{IsValidDirection(EntryDirection.West)}, {IsValidDirection(EntryDirection.North)}, " +
-                                        $"{IsValidDirection(EntryDirection.South)}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
+        private readonly Dictionary<EntryDirection, bool> _enterDirectionDictionary =
+            new Dictionary<EntryDirection, bool>();
 
-        public static string GetCSVHeader() => "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirNorthUp, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
-        
+        private readonly List<List<Point2D>> _playerPositionsByDirection = Utils.Init2DList<Point2D>(4, 6);
+        private readonly TileReferences _tileReferences;
+
+        public readonly byte[][] TheMap;
+
 
         /// <summary>
         ///     Create the reference based on territory and a map number
@@ -73,7 +68,7 @@ namespace Ultima5Redux.Maps
             _combatMapData = combatMapData;
             _tileReferences = tileReferences;
             int nMapOffset = nCombatMapNum * MAP_BYTE_COUNT;
-            
+
             MapTerritory = mapTerritory;
             CombatMapNum = nCombatMapNum;
             const int nBytesPerRow = 0x20;
@@ -90,7 +85,7 @@ namespace Ultima5Redux.Maps
                 for (int nCol = 0; nCol < list.Count; nCol++)
                 {
                     byte sprite = list[nCol];
-                    TheMap[nCol][nRow] = sprite; 
+                    TheMap[nCol][nRow] = sprite;
                 }
             }
 
@@ -98,16 +93,18 @@ namespace Ultima5Redux.Maps
             for (int nRow = 1, nOffsetFactor = 0; nRow <= NUM_DIRECTIONS; nRow++, nOffsetFactor++)
             {
                 // 1=east,2=west,3=south,4=north
-                List<byte> xPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player X positions for row #" + nRow,
+                List<byte> xPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                    "Player X positions for row #" + nRow,
                     nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB, 0x06).GetAsByteList();
-                List<byte> yPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Player Y positions for row #" + nRow,
+                List<byte> yPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                    "Player Y positions for row #" + nRow,
                     nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB + 0x06, 0x06).GetAsByteList();
                 for (int nPlayer = 0; nPlayer < NUM_PLAYERS; nPlayer++)
                 {
                     // if the X or Y value is above the number of tiles then it indicates a sprite number
                     // which I believe is additional trigger tiles
                     bool bIsEnterable = yPlayerPosList[nPlayer] < YTILES && xPlayerPosList[nPlayer] < XTILES;
-                    _enterDirectionDictionary[(EntryDirection) nRow - 1] = bIsEnterable;
+                    _enterDirectionDictionary[(EntryDirection)nRow - 1] = bIsEnterable;
                     _playerPositionsByDirection[nRow - 1].Add(bIsEnterable
                         ? new Point2D(xPlayerPosList[nPlayer], yPlayerPosList[nPlayer])
                         : new Point2D(0, 0));
@@ -125,7 +122,8 @@ namespace Ultima5Redux.Maps
                 nEnemyXOffset, NUM_ENEMIES).GetAsByteList();
             List<byte> yEnemyPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Y positions",
                 nEnemyYOffset, NUM_ENEMIES).GetAsByteList();
-            List<byte> spriteEnemyList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy sprite index" ,
+            List<byte> spriteEnemyList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Enemy sprite index",
                 nEnemySpriteOffset, NUM_ENEMIES).GetAsByteList();
 
             Debug.Assert(xEnemyPosList.Count == NUM_ENEMIES);
@@ -133,7 +131,7 @@ namespace Ultima5Redux.Maps
             Debug.Assert(spriteEnemyList.Count == NUM_ENEMIES);
 
             Dictionary<Point2D, bool> duplicatePositionDictionary = new Dictionary<Point2D, bool>();
-            
+
             for (int nEnemyIndex = 0; nEnemyIndex < NUM_ENEMIES; nEnemyIndex++)
             {
                 Point2D enemyPosition = new Point2D(xEnemyPosList[nEnemyIndex], yEnemyPosList[nEnemyIndex]);
@@ -142,7 +140,7 @@ namespace Ultima5Redux.Maps
                 {
                     // it's a duplicate position, so we avoid adding it again, otherwise things get screwy
                     _enemySprites.Add(0);
-                    _enemyPositions.Add(new Point2D(0,0));
+                    _enemyPositions.Add(new Point2D(0, 0));
                 }
                 else
                 {
@@ -151,7 +149,7 @@ namespace Ultima5Redux.Maps
                     _enemyPositions.Add(enemyPosition);
                 }
             }
-            
+
             List<Point2D> _triggerPositions = new List<Point2D>(XTILES);
             List<TileReference> _triggerTileReferences = new List<TileReference>(XTILES);
             Dictionary<Point2D, List<PointAndTileReference>> _triggerPointToTileReferences =
@@ -160,36 +158,43 @@ namespace Ultima5Redux.Maps
             // load the trigger positions
             // these are the Points that a player character hits and causes a triggering event
             const int nTriggerPositions = 8;
-            List<byte> triggerXPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger X positions",
+            List<byte> triggerXPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Trigger X positions",
                 nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList();
-            List<byte> triggerYPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Y positions",
+            List<byte> triggerYPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Trigger Y positions",
                 nMapOffset + nBytesPerRow * 9 + YTILES, nTriggerPositions).GetAsByteList();
             for (int i = 0; i < nTriggerPositions; i++)
             {
                 _triggerPositions.Add(new Point2D(triggerXPositions[i], triggerYPositions[i]));
             }
-            
+
             // Gather all replacement tile references when trigger occurs
-            List<byte> triggerTileIndexes = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger tile indexes",
+            List<byte> triggerTileIndexes = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Trigger tile indexes",
                 nMapOffset + XTILES, nTriggerPositions).GetAsByteList();
             foreach (byte nIndex in triggerTileIndexes)
             {
                 _triggerTileReferences.Add(tileReferences.GetTileReference(nIndex
-                )); 
+                ));
                 //+ 0xFF));
             }
-            
+
             // Gather all positions that change as a result of a trigger
             // the results are split into two different sections
             List<byte> triggerResultXPositions = new List<byte>();
             List<byte> triggerResultYPositions = new List<byte>();
-            triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result X position #1",
+            triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Trigger Result X position #1",
                 nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList());
-            triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result Y position #1",
+            triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Trigger Result Y position #1",
                 nMapOffset + nBytesPerRow * 9 + (XTILES * 2), nTriggerPositions).GetAsByteList());
-            triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result X position #2",
+            triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Trigger Result X position #2",
                 nMapOffset + nBytesPerRow * 10 + XTILES, nTriggerPositions).GetAsByteList());
-            triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Trigger Result Y position #2",
+            triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Trigger Result Y position #2",
                 nMapOffset + nBytesPerRow * 10 + (XTILES * 2), nTriggerPositions).GetAsByteList());
             for (int i = 0; i < nTriggerPositions; i++)
             {
@@ -199,41 +204,87 @@ namespace Ultima5Redux.Maps
 
                 // grab the two Points that will change as a result of landing on the trigger tile
                 Point2D pos1 = new Point2D(triggerResultXPositions[i], triggerResultYPositions[i]);
-                Point2D pos2 = new Point2D(triggerResultXPositions[i + nTriggerPositions], triggerResultYPositions[i + nTriggerPositions]);
+                Point2D pos2 = new Point2D(triggerResultXPositions[i + nTriggerPositions],
+                    triggerResultYPositions[i + nTriggerPositions]);
                 Point2D triggeredPosition = _triggerPositions[i];
 
-                
                 // if the trigger position has not been recorded yet, then we initialize the list
                 // we use a List because every tile has a minimum of 2 changes, but can result in a lot more
                 ///// NOTE!!!!! Check this again - it may be putting duplicates in
                 if (!_triggerPointToTileReferences.ContainsKey(triggeredPosition))
                     _triggerPointToTileReferences.Add(triggeredPosition, new List<PointAndTileReference>());
-                
-                _triggerPointToTileReferences[triggeredPosition].Add(new PointAndTileReference(pos1, _triggerTileReferences[i]));
+
+                _triggerPointToTileReferences[triggeredPosition]
+                    .Add(new PointAndTileReference(pos1, _triggerTileReferences[i]));
                 if (pos1 != pos2)
-                    _triggerPointToTileReferences[triggeredPosition].Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
+                    _triggerPointToTileReferences[triggeredPosition]
+                        .Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
             }
 
             ((Action)(() => { }))();
-
         }
 
-        private readonly struct PointAndTileReference
-        {
-            public PointAndTileReference(Point2D point, TileReference tileReference)
-            {
-                Point = point;
-                TheTileReference = tileReference;
-            }
-            private Point2D Point { get; }
-            private TileReference TheTileReference { get; }
-        }
-        
+
+        /// <summary>
+        ///     The number of the combat map (order in data file)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public int CombatMapNum { get; }
+
+        /// <summary>
+        ///     Brief description of the combat map
+        /// </summary>
+        public string Description => _combatMapData.Description;
+
+        /// <summary>
+        ///     Territory of the combat map
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public Territory MapTerritory { get; }
+
+        /// <summary>
+        ///     Generated
+        /// </summary>
+        /// <remarks>this needs to rewritten when we understand how the data files refer to Combat Maps</remarks>
+        public byte Id => (byte)MapTerritory;
+
+        public int Index => CombatMapNum;
+        public string Name => MapTerritory == Territory.Britannia ? Description : "Dungeon-" + CombatMapNum;
+        public Dungeon DungeonLocation => Dungeon.Covetous;
+        public bool OtherStart => false;
+        public bool LaddersUp => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderUp"));
+        public bool LaddersDown => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderDown"));
+        public bool HasTriggers => true;
+
+        public bool HasRegularDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("RegularDoor"))
+                                      || DoesTileReferenceOccurOnMap(
+                                          _tileReferences.GetTileReferenceByName("LockedDoor"))
+                                      || DoesTileReferenceOccurOnMap(
+                                          _tileReferences.GetTileReferenceByName("RegularDoorView"))
+                                      || DoesTileReferenceOccurOnMap(
+                                          _tileReferences.GetTileReferenceByName("LockedDoorView"));
+
+        public bool HasMagicDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor"))
+                                    || DoesTileReferenceOccurOnMap(
+                                        _tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
+
+        public bool SpecialEnemyComputation => false;
+        public bool IsBroke => false;
+        public string Notes => "No Notes";
+
+        public string GetAsCSVLine() =>
+            $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.East)}, " +
+            $"{IsValidDirection(EntryDirection.West)}, {IsValidDirection(EntryDirection.North)}, " +
+            $"{IsValidDirection(EntryDirection.South)}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
+
+        public static string GetCSVHeader() =>
+            "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirNorthUp, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
+
         public bool IsEnterable(EntryDirection entryDirection)
         {
             return _enterDirectionDictionary[entryDirection];
         }
-        
+
         public int GetNumberOfTileReferencesOnMap(TileReference tileReference)
         {
             int nTotal = 0;
@@ -263,14 +314,14 @@ namespace Ultima5Redux.Maps
                 if (characterPositions.Contains(point)) return false;
                 characterPositions.Add(point);
             }
-            
+
             return true;
         }
-        
+
         public List<Point2D> GetPlayerStartPositions(EntryDirection entryDirection)
         {
             Debug.Assert((int)entryDirection >= 0 && (int)entryDirection <= NUM_DIRECTIONS);
-            return _playerPositionsByDirection[(int) entryDirection];
+            return _playerPositionsByDirection[(int)entryDirection];
         }
 
         public Point2D GetEnemyPosition(int nIndex)
@@ -285,15 +336,14 @@ namespace Ultima5Redux.Maps
             return _enemySprites[nIndex];
         }
 
-        public enum CombatMapSpriteType { Nothing, Thing, AutoSelected, EncounterBased}
         public CombatMapSpriteType GetAdjustedEnemySprite(int nIndex, out int nSpriteIndex)
         {
             int nEnemyRawSprite = GetRawEnemySprite(nIndex);
             nSpriteIndex = nEnemyRawSprite + 0xFF;
-            
+
             // enemy sprite of 0 indicates no monster
             if (nEnemyRawSprite == 0) return CombatMapSpriteType.Nothing;
-                
+
             // it's a chest or something like it
             if (nEnemyRawSprite >= 1 && nEnemyRawSprite <= 15) return CombatMapSpriteType.Thing;
 
@@ -332,52 +382,19 @@ namespace Ultima5Redux.Maps
 
             return validEntryDirections;
         }
-        
-        
-        /// <summary>
-        ///     The number of the combat map (order in data file)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public int CombatMapNum { get; }
 
-        /// <summary>
-        ///     Brief description of the combat map
-        /// </summary>
-        public string Description => _combatMapData.Description;
+        public bool IsValidDirection(EntryDirection entryDirection) => IsEntryDirectionValid(entryDirection);
 
-        /// <summary>
-        ///     Territory of the combat map
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public Territory MapTerritory { get; }
+        private readonly struct PointAndTileReference
+        {
+            public PointAndTileReference(Point2D point, TileReference tileReference)
+            {
+                Point = point;
+                TheTileReference = tileReference;
+            }
 
-        /// <summary>
-        ///     Generated
-        /// </summary>
-        /// <remarks>this needs to rewritten when we understand how the data files refer to Combat Maps</remarks>
-        public byte Id => (byte) MapTerritory;
-
-        public int Index => CombatMapNum;
-        public string Name => MapTerritory == Territory.Britannia ? Description : "Dungeon-" + CombatMapNum;
-        public Dungeon DungeonLocation => Dungeon.Covetous;
-        public bool IsValidDirection(EntryDirection entryDirection) =>IsEntryDirectionValid(entryDirection); 
-        public bool OtherStart => false;
-        public bool LaddersUp => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderUp"));
-        public bool LaddersDown => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderDown"));
-        public bool HasTriggers => true;
-
-        public bool HasRegularDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("RegularDoor"))
-                                      || DoesTileReferenceOccurOnMap(
-                                          _tileReferences.GetTileReferenceByName("LockedDoor"))
-                                      || DoesTileReferenceOccurOnMap(
-                                          _tileReferences.GetTileReferenceByName("RegularDoorView"))
-                                      || DoesTileReferenceOccurOnMap(
-                                          _tileReferences.GetTileReferenceByName("LockedDoorView"));
-        public bool HasMagicDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor")) 
-                                    || DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
-
-        public bool SpecialEnemyComputation => false;
-        public bool IsBroke => false;
-        public string Notes => "No Notes";
+            private Point2D Point { get; }
+            private TileReference TheTileReference { get; }
+        }
     }
 }
