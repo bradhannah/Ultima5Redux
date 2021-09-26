@@ -958,7 +958,7 @@ namespace Ultima5ReduxTesting
             
             world.State.TheVirtualMap.LoadCombatMap(
                 world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
-                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, enemyReference );
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, enemyReference );
 
             EnemyReference secondEnemyReference = world.EnemyRefs.GetEnemyReference(enemyReference.FriendIndex);
         }
@@ -968,7 +968,7 @@ namespace Ultima5ReduxTesting
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
             world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
-                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, 
                 // orcs
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
@@ -1000,7 +1000,7 @@ namespace Ultima5ReduxTesting
             // right sided hammer
             world.State.TheVirtualMap.LoadCombatMap(
                 world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 4),
-                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
 
             CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
                 out CombatMapUnit combatMapUnit, out _, out string outputStr,out string postAttackOutputStr, out _);
@@ -1021,7 +1021,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadCombatMap(
                 world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 4),
-                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
 
             CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
                 out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr,out _);
@@ -1050,7 +1050,7 @@ namespace Ultima5ReduxTesting
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
             world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 11),
-                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, 
                 // orcs
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
@@ -1077,12 +1077,14 @@ namespace Ultima5ReduxTesting
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
             world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2),
-                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, 
                 // orcs
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
 
+            var thing = world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2).GetEntryDirections();
+            
             
             world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
             
@@ -1094,8 +1096,8 @@ namespace Ultima5ReduxTesting
             List<SingleCombatMapReference.EntryDirection> allDirections =
                 new List<SingleCombatMapReference.EntryDirection>()
                 {
-                    SingleCombatMapReference.EntryDirection.East, SingleCombatMapReference.EntryDirection.North,
-                    SingleCombatMapReference.EntryDirection.South, SingleCombatMapReference.EntryDirection.West
+                    SingleCombatMapReference.EntryDirection.Direction0, SingleCombatMapReference.EntryDirection.Direction3,
+                    SingleCombatMapReference.EntryDirection.Direction2, SingleCombatMapReference.EntryDirection.Direction1
                 };
             
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
@@ -1138,7 +1140,7 @@ namespace Ultima5ReduxTesting
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
             
             world.State.TheVirtualMap.LoadCombatMap(world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 15),
-                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, 
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, 
                 // orcs
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll

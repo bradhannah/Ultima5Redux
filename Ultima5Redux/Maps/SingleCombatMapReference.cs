@@ -22,7 +22,7 @@ namespace Ultima5Redux.Maps
             Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31, Shame = 32, Hythloth = 33, Doom = 34
         }
 
-        public enum EntryDirection { East = 0, West = 1, South = 2, North = 3 }
+        public enum EntryDirection { Direction0 = 0, Direction1 = 1, Direction2 = 2, Direction3 = 3, UpLadder, DownLadder }
 
         /// <summary>
         ///     The territory that the combat map is in. This matters most for determining data files.
@@ -39,7 +39,7 @@ namespace Ultima5Redux.Maps
 
         public const int NUM_ENEMIES = 16;
         private const int NUM_PLAYERS = 6;
-        private const int NUM_DIRECTIONS = 4;
+        private const int NUM_HARD_CODED_DIRECTIONS = 4;
         private readonly CombatMapReferences.CombatMapData _combatMapData;
         private readonly List<Point2D> _enemyPositions = new List<Point2D>(NUM_ENEMIES);
         private readonly List<byte> _enemySprites = new List<byte>(NUM_ENEMIES);
@@ -47,7 +47,8 @@ namespace Ultima5Redux.Maps
         private readonly Dictionary<EntryDirection, bool> _enterDirectionDictionary =
             new Dictionary<EntryDirection, bool>();
 
-        private readonly List<List<Point2D>> _playerPositionsByDirection = Utils.Init2DList<Point2D>(4, 6);
+        private int TotalDirections => Enum.GetNames(typeof(EntryDirection)).Length;
+        private readonly List<List<Point2D>> _playerPositionsByDirection = Utils.Init2DList<Point2D>(Enum.GetNames(typeof(EntryDirection)).Length, NUM_PLAYERS);
         private readonly TileReferences _tileReferences;
 
         public readonly byte[][] TheMap;
@@ -76,6 +77,8 @@ namespace Ultima5Redux.Maps
             // copying the array to a simpler format
             TheMap = Utils.Init2DByteArray(XTILES, YTILES);
 
+            Dictionary<EntryDirection, Point2D> ladders = new Dictionary<EntryDirection, Point2D>(); 
+            
             // get and build the map sprites 
             for (int nRow = 0; nRow < XTILES; nRow++)
             {
@@ -86,13 +89,17 @@ namespace Ultima5Redux.Maps
                 {
                     byte sprite = list[nCol];
                     TheMap[nCol][nRow] = sprite;
+                    
+                    if (_tileReferences.IsLadderUp(sprite)) ladders.Add(EntryDirection.UpLadder, new Point2D(nCol, nRow));
+                    if (_tileReferences.IsLadderDown(sprite)) ladders.Add(EntryDirection.DownLadder, new Point2D(nCol, nRow));
                 }
             }
 
             // build the maps of all four directions and the respective player positions
-            for (int nRow = 1, nOffsetFactor = 0; nRow <= NUM_DIRECTIONS; nRow++, nOffsetFactor++)
+            for (int nRow = 1, nOffsetFactor = 0; nRow <= NUM_HARD_CODED_DIRECTIONS; nRow++, nOffsetFactor++)
             {
-                // 1=east,2=west,3=south,4=north
+                // Supposed to be 1=east,2=west,3=south,4=north
+                // but in reality they are kind of all over!
                 List<byte> xPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                     "Player X positions for row #" + nRow,
                     nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB, 0x06).GetAsByteList();
@@ -113,6 +120,22 @@ namespace Ultima5Redux.Maps
                     Debug.Assert(_playerPositionsByDirection[nRow - 1][nPlayer].Y <= YTILES);
                 }
             }
+            
+            // we also calculate any up or down ladder positions 
+            foreach (KeyValuePair<EntryDirection, Point2D> entry in ladders)
+            {
+                Point2D ladderPoint = entry.Value;
+                int nKey = (int)entry.Key;
+
+                _enterDirectionDictionary[entry.Key] = true;
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(0,1));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(-1,0));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(1,0));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(0,-1));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(-1,-1));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(1,-1));
+            }
+            
 
             // load the enemy positions and sprites
             int nEnemyXOffset = nMapOffset + (nBytesPerRow * 6) + 0xB;
@@ -220,8 +243,6 @@ namespace Ultima5Redux.Maps
                     _triggerPointToTileReferences[triggeredPosition]
                         .Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
             }
-
-            ((Action)(() => { }))();
         }
 
 
@@ -273,9 +294,9 @@ namespace Ultima5Redux.Maps
         public string Notes => "No Notes";
 
         public string GetAsCSVLine() =>
-            $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.East)}, " +
-            $"{IsValidDirection(EntryDirection.West)}, {IsValidDirection(EntryDirection.North)}, " +
-            $"{IsValidDirection(EntryDirection.South)}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
+            $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.Direction0)}, " +
+            $"{IsValidDirection(EntryDirection.Direction1)}, {IsValidDirection(EntryDirection.Direction3)}, " +
+            $"{IsValidDirection(EntryDirection.Direction2)}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
 
         public static string GetCSVHeader() =>
             "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirNorthUp, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
@@ -305,7 +326,7 @@ namespace Ultima5Redux.Maps
         public bool IsEntryDirectionValid(EntryDirection entryDirection)
         {
             List<Point2D> points = GetPlayerStartPositions(entryDirection);
-            if (points[0].X <= 0) return false;
+            if (points.Count == 0 || points[0].X <= 0) return false;
 
             List<Point2D> characterPositions = new List<Point2D>();
             // we walk through each of the character positions and if one is repeated then we know it's not valid
@@ -320,7 +341,7 @@ namespace Ultima5Redux.Maps
 
         public List<Point2D> GetPlayerStartPositions(EntryDirection entryDirection)
         {
-            Debug.Assert((int)entryDirection >= 0 && (int)entryDirection <= NUM_DIRECTIONS);
+            Debug.Assert((int)entryDirection >= 0 && (int)entryDirection <= TotalDirections);
             return _playerPositionsByDirection[(int)entryDirection];
         }
 

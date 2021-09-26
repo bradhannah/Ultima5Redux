@@ -1164,7 +1164,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy">position of stairs</param>
         /// <returns>stair sprite</returns>
-        private int GetStairsSprite(Point2D xy)
+        public int GetStairsSprite(Point2D xy)
         {
             bool bGoingUp = IsStairGoingUp(xy);
             Point2D.Direction direction = GetStairsDirection(xy);

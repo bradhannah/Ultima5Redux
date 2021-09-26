@@ -109,6 +109,8 @@ namespace Ultima5Redux
             return adjustedPos.IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : adjustedPos;
         }
 
+        public Point2D GetAdjustedPosition(int nXDiff, int nYDiff) => new Point2D(X + nXDiff, Y + nYDiff);
+        
         public Point2D GetAdjustedPosition(Direction direction, int nSpaces = 1)
         {
             Point2D adjustedPos = Copy();
