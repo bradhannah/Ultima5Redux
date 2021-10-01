@@ -384,7 +384,7 @@ namespace Ultima5Redux.Maps
             // it's a Shadow Lord, but it breaks convention
             if (nSpriteIndex < 436 || nSpriteIndex >= 504) nSpriteIndex += 4;
 
-            if (nSpriteIndex < 320 || nSpriteIndex > 511)
+            if (nSpriteIndex < 316 || nSpriteIndex > 511)
             {
                 throw new Ultima5ReduxException(
                     $"Tried to get adjusted enemy sprite with index={nIndex} and raw sprite={nEnemyRawSprite}");
