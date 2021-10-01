@@ -1193,7 +1193,7 @@ namespace Ultima5Redux.Maps
             switch (combatMapSpriteType)
             {
                 case SingleCombatMapReference.CombatMapSpriteType.Nothing:
-                    Debug.Assert(enemyPosition.X == 0 && enemyPosition.Y == 0);
+                    //Debug.Assert(enemyPosition.X == 0 && enemyPosition.Y == 0);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.Thing:
                     Debug.WriteLine("It's a chest or maybe a dead body!");

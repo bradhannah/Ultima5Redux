@@ -1093,32 +1093,44 @@ namespace Ultima5ReduxTesting
         
         [Test] public void Test_LoadAllCombatMapsWithMonsters()
         {
-            List<SingleCombatMapReference.EntryDirection> allDirections =
-                new List<SingleCombatMapReference.EntryDirection>()
-                {
-                    SingleCombatMapReference.EntryDirection.Direction0, SingleCombatMapReference.EntryDirection.Direction3,
-                    SingleCombatMapReference.EntryDirection.Direction2, SingleCombatMapReference.EntryDirection.Direction1
-                };
-            
             World world = new World(this.ActualSaveDirectory+@"\b_carpet");
-            foreach (SingleCombatMapReference.EntryDirection entryDirection in allDirections)
+            List<CombatMap> worldMaps = new List<CombatMap>();
+            for (int i = 0; i < 16; i++)
             {
-                List<CombatMap> worldMaps = new List<CombatMap>();
-                for (int i = 0; i < 16; i++)
+                SingleCombatMapReference singleCombatMapReference =
+                    world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i);
+                foreach (SingleCombatMapReference.EntryDirection worldEntryDirection in singleCombatMapReference.GetEntryDirections())
                 {
                     world.State.TheVirtualMap.LoadCombatMap(
-                        world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i),
-                        entryDirection, world.State.CharacterRecords);
+                        world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                            i),
+                        worldEntryDirection, world.State.CharacterRecords);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
                     worldMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
                 }
+            }
 
-                List<CombatMap> dungMaps = new List<CombatMap>();
-                for (int i = 0; i < 16; i++)
+            EnemyReference enemy1 = world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(320));
+            
+            List<CombatMap> dungMaps = new List<CombatMap>();
+            for (int i = 0; i < 112; i++)
+            {
+                SingleCombatMapReference singleCombatMapReference =
+                    world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, i);
+                
+//                Debug.Assert(singleCombatMapReference.GetEntryDirections().Count > 0);
+                if (singleCombatMapReference.GetEntryDirections().Count == 0)
+                {
+                    Debugger.Break();
+                    List<SingleCombatMapReference.EntryDirection> dirs = singleCombatMapReference.GetEntryDirections();
+                }
+                
+                foreach (SingleCombatMapReference.EntryDirection dungeonEntryDirection in singleCombatMapReference.GetEntryDirections())
                 {
                     world.State.TheVirtualMap.LoadCombatMap(
-                        world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, i),
-                        entryDirection, world.State.CharacterRecords);
+                        world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                            i),
+                        dungeonEntryDirection, world.State.CharacterRecords, enemy1, 4);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
                     dungMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
                 }
