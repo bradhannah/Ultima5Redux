@@ -98,6 +98,15 @@ namespace Ultima5Redux
             return IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
         }
 
+        /// <summary>
+        /// Determines if the current point is out of the range provided
+        /// zero based (ie. if X > nMaxX)
+        /// </summary>
+        /// <param name="nMaxX">max X value</param>
+        /// <param name="nMaxY">max Y value</param>
+        /// <param name="nMinX">min X value</param>
+        /// <param name="nMinY">min Y value</param>
+        /// <returns></returns>
         public bool IsOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
         {
             return (X < nMinX || X > nMaxX || Y < nMinY || Y > nMaxY);
@@ -191,7 +200,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="nUnitsOut">how many units from the current point should it go out from</param>
         /// <param name="nXExtent">assuming 0 is left most, what is the x extent?</param>
-        /// <param name="nYExtent">assuming 0 is up most, what is the y extent?</param>
+        /// <param name="nYExtent">assuming 0 is top most, what is the y extent?</param>
         /// <returns></returns>
         public List<Point2D> GetConstrainedSurroundingPoints(int nUnitsOut, int nXExtent, int nYExtent)
         {

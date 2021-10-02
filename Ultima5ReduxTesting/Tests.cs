@@ -1161,5 +1161,13 @@ namespace Ultima5ReduxTesting
             List<Point2D> points= world.State.TheVirtualMap.CurrentCombatMap.GetEscapablePoints(new Point2D(12,12), CombatMap.WalkableType.CombatLand);
             _ = "";
         }
+
+        [Test] public void Test_ExtentCheck()
+        {
+            Point2D point = new Point2D(15, 15);
+            var constrainedPoints = point.GetConstrainedSurroundingPoints(1, 15, 15);
+            Debug.Assert(constrainedPoints.Count == 2);
+            _ = "";
+        }
      }
 }

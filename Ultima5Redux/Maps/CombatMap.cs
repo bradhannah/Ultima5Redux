@@ -771,7 +771,9 @@ namespace Ultima5Redux.Maps
 
             // We will check the raycast and determine if the missed shot in fact actually gets blocked - 
             // doing it in here will ensure that no damage is computed against an enemy if they are targeted
-            if (IsRangedPathBlocked(attackPosition, newAttackPosition, out missedPoint))
+            // OR if the attack position is outside of the current map area, it means that a player has left the map
+            if (IsRangedPathBlocked(attackPosition, newAttackPosition, out missedPoint) 
+                || newAttackPosition.IsOutOfRange(NumOfXTiles-1, NumOfYTiles-1))
             {
                 AdvanceToNextCombatMapUnit();
                 return TurnResult.EnemyMissed;
