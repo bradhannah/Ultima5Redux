@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -43,6 +44,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public Moonstones TheMoonstones { get; set; }
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
+
+        public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList(); 
+        //{ get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
         public Provisions TheProvisions { get; set; }
