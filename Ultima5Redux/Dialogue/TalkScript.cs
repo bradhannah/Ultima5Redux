@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 // ReSharper disable InvalidXmlDocComment
 
 namespace Ultima5Redux.Dialogue
@@ -44,7 +45,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     the end Index for the default script lines (ie. name, job etc.)
         /// </summary>
-        private const int END_BASE_INDEXES = (int) TalkConstants.Bye;
+        private const int END_BASE_INDEXES = (int)TalkConstants.Bye;
 
         /// <summary>
         ///     All of the ScriptLines
@@ -113,12 +114,12 @@ namespace Ultima5Redux.Dialogue
             string question;
 
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
-            List<string> nameQuestion = new List<string>(1) {"name"};
-            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, _scriptLines[(int) TalkConstants.Name]));
-            List<string> jobQuestion = new List<string>(2) {"job", "work"};
-            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, _scriptLines[(int) TalkConstants.Job]));
-            List<string> byeQuestion = new List<string>(1) {"bye"};
-            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, _scriptLines[(int) TalkConstants.Bye]));
+            List<string> nameQuestion = new List<string>(1) { "name" };
+            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, _scriptLines[(int)TalkConstants.Name]));
+            List<string> jobQuestion = new List<string>(2) { "job", "work" };
+            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, _scriptLines[(int)TalkConstants.Job]));
+            List<string> byeQuestion = new List<string>(1) { "bye" };
+            _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, _scriptLines[(int)TalkConstants.Bye]));
 
             // repeat through the question/answer components until we hit a label - then we know to move onto the label section
             do
@@ -155,7 +156,7 @@ namespace Ultima5Redux.Dialogue
             } while (true);
 
             // a little hack - it's easy to end the conversation if it always ends with the end conversation tag
-            _scriptLines[(int) TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndConversation));
+            _scriptLines[(int)TalkConstants.Bye].AddScriptItem(new ScriptItem(TalkCommand.EndConversation));
 
             // time to process labels!! the nIndex that the previous routine left with is the beginning of the label section
             int count = 0;
@@ -320,7 +321,7 @@ namespace Ultima5Redux.Dialogue
         /// <returns>The corresponding single ScriptLine</returns>
         protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
         {
-            return _scriptLines[(int) talkConst];
+            return _scriptLines[(int)talkConst];
         }
 
         /// <summary>
@@ -759,7 +760,7 @@ namespace Ultima5Redux.Dialogue
                     // we trim the double quotes out since they are so hard to deal with
                     // the boys at Origin must have had some very specific rules for dealing with newlines and
                     // double quotes
-                    char[] trimChars = {'"'};
+                    char[] trimChars = { '"' };
                     return _str.Trim(trimChars);
                 }
                 set => _str = value;
@@ -962,7 +963,7 @@ namespace Ultima5Redux.Dialogue
                         lines.Add(new SplitScriptLine());
 
                         // this is a bit dirty - but the next item is the item number that we are being given
-                        item.ItemAdditionalData = (int) GetScriptItem(i + 1).Command;
+                        item.ItemAdditionalData = (int)GetScriptItem(i + 1).Command;
                         // add the item as-is to the new section
                         lines[nSection].AddScriptItem(item);
 
@@ -1028,7 +1029,8 @@ namespace Ultima5Redux.Dialogue
             /// </summary>
             /// <param name="command">the command to search for</param>
             /// <returns>true if it's present, false if it isn't</returns>
-            public bool ContainsCommand(TalkCommand command) =>ScriptItems.Any(scriptItem => scriptItem.Command == command); 
+            public bool ContainsCommand(TalkCommand command) =>
+                ScriptItems.Any(scriptItem => scriptItem.Command == command);
         }
     }
 }

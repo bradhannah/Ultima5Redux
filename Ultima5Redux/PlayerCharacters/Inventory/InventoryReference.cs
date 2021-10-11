@@ -180,7 +180,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             if (!_invRefsByEquipment.ContainsKey(equipment))
                 throw new Ultima5ReduxException(
-                    "You requested an equipment item that doesn't exist in the dictionary: " + (int) equipment);
+                    "You requested an equipment item that doesn't exist in the dictionary: " + (int)equipment);
             return _invRefsByEquipment[equipment];
         }
     }
@@ -188,8 +188,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// <summary>
     ///     Specific inventory item reference
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
-    public class InventoryReference
+    [JsonObject(MemberSerialization.OptIn)] public class InventoryReference
     {
         [JsonProperty] public string ItemName { get; set; }
 
@@ -216,7 +215,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             bool bWasValid = Enum.TryParse(ItemName, out DataOvlReference.Equipment itemEquipment);
             if (bWasValid) return itemEquipment;
-            return (DataOvlReference.Equipment) (-1);
+            return (DataOvlReference.Equipment)(-1);
         }
 
         /// <summary>

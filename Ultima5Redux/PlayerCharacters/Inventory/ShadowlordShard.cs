@@ -19,8 +19,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public ShardType Shard { get; }
         public string EquipMessage { get; }
         public override bool HideQuantity { get; } = true;
-        
-        public override string InventoryReferenceString => Shard.ToString();
 
+        public override string InventoryReferenceString => Shard.ToString();
     }
 }

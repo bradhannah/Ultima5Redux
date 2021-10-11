@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Maps;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -65,7 +66,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public static int GetAdjustedPrice(int nIntelligence, int nPrice)
         {
-            return (int) (nPrice - nPrice * 0.015 * nIntelligence);
+            return (int)(nPrice - nPrice * 0.015 * nIntelligence);
         }
 
         public class BarKeeperStock

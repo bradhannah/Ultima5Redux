@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Ultima5Redux;
-using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.Maps
 {
     public class Sign
     {
+        public enum SignType { SmallSign = 164, BigSign = 160, Tombstone = 138, Cross = 137, Warning = 248 }
+
         private const int CHARS_PER_LINE = 16;
 
         public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y,
@@ -112,7 +112,7 @@ namespace Ultima5Redux.Maps
             foreach (byte curByte in signBytes)
             {
                 if (curByte != '\0')
-                    sb.Append((char) curByte);
+                    sb.Append((char)curByte);
             }
 
             return sb.ToString();
@@ -142,12 +142,12 @@ namespace Ultima5Redux.Maps
 
             Dictionary<char, string> replacementChars = new Dictionary<char, string>
             {
-                {'@', " "},
-                {'[', "TH"},
-                {'^', "EA"},
-                {'_', "ST"},
-                {']', "NG"},
-                {'\\', "EE"}
+                { '@', " " },
+                { '[', "TH" },
+                { '^', "EA" },
+                { '_', "ST" },
+                { ']', "NG" },
+                { '\\', "EE" }
             };
             // the actual character is a solid circle for separation //((char)0xA7).ToString());
 
@@ -163,14 +163,12 @@ namespace Ultima5Redux.Maps
                 else if (signChar == 'g' && prevChar == 'g')
                     // do nothing and leave it out
                     scrubbedStr += '\n';
-                else if (signChar > 127) scrubbedStr += ((char) (signChar - 128)).ToString();
+                else if (signChar > 127) scrubbedStr += ((char)(signChar - 128)).ToString();
                 prevChar = signChar;
             }
 
             return scrubbedStr;
         }
-        
-        public enum SignType { SmallSign = 164, BigSign = 160, Tombstone = 138, Cross = 137, Warning = 248 }
 
         public static SignType GetSignTypeByIndex(int nIndex)
         {
@@ -181,10 +179,11 @@ namespace Ultima5Redux.Maps
                 case SignType.Tombstone:
                 case SignType.Cross:
                 case SignType.Warning:
-                    return (SignType) nIndex;
+                    return (SignType)nIndex;
                 default:
-                    throw new Ultima5ReduxException("Asked for Sign with index="+nIndex+" but that isn't a sign index");
+                    throw new Ultima5ReduxException("Asked for Sign with index=" + nIndex +
+                                                    " but that isn't a sign index");
             }
         }
-   }
+    }
 }

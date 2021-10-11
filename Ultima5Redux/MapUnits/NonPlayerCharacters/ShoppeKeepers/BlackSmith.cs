@@ -39,14 +39,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             foreach (DataOvlReference.Equipment equipment in Enum.GetValues(typeof(DataOvlReference.Equipment)))
             {
                 // we only look at equipment up to SpikedCollars
-                if ((int) equipment > (int) DataOvlReference.Equipment.SpikedCollar) continue;
+                if ((int)equipment > (int)DataOvlReference.Equipment.SpikedCollar) continue;
 
                 const int nEquipmentOffset = 8;
 
                 CombatItem item = inventory.GetItemFromEquipment(equipment);
                 if (item.BasePrice <= 0) continue;
                 // add an equipment offset because equipment strings don't start at zero in the merchant strings
-                _equipmentMapToMerchantStrings.Add((int) equipment, nEquipmentCounter + nEquipmentOffset);
+                _equipmentMapToMerchantStrings.Add((int)equipment, nEquipmentCounter + nEquipmentOffset);
                 nEquipmentCounter++;
             }
         }
@@ -126,7 +126,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold)
         {
             int nDialogueIndex = _equipmentMapToMerchantStrings[nEquipmentIndex];
-            Debug.Assert(nEquipmentIndex >= 0 && nEquipmentIndex <= (int) DataOvlReference.Equipment.SpikedCollar);
+            Debug.Assert(nEquipmentIndex >= 0 && nEquipmentIndex <= (int)DataOvlReference.Equipment.SpikedCollar);
             Debug.Assert(ShoppeKeeperDialogueReference.CountReplacementVariables(nDialogueIndex) == 1);
             return ShoppeKeeperDialogueReference.GetMerchantString(nDialogueIndex, nGold);
         }
@@ -139,7 +139,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <returns></returns>
         public string GetEquipmentBuyingOutput(DataOvlReference.Equipment equipment, int nGold)
         {
-            return GetEquipmentBuyingOutput((int) equipment, nGold);
+            return GetEquipmentBuyingOutput((int)equipment, nGold);
         }
 
         /// <summary>

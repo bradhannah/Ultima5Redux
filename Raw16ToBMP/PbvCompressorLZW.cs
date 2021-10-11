@@ -17,19 +17,13 @@ namespace Raw16ToBMP
         private const int MAX_VALUE = (1 << MAX_BITS) - 1; //max value allowed based on max bits
         private const int MAX_CODE = MAX_VALUE - 1; //max code possible
         private const int TABLE_SIZE = 18041; //must be bigger than the maximum allowed by maxbits and prime
+        private readonly int[] _iaCharTable = new int[TABLE_SIZE]; //character table
 
-        private int[] _iaCodeTable = new int[TABLE_SIZE]; //code table
-        private int[] _iaPrefixTable = new int[TABLE_SIZE]; //prefix table
-        private int[] _iaCharTable = new int[TABLE_SIZE]; //character table
+        private readonly int[] _iaCodeTable = new int[TABLE_SIZE]; //code table
+        private readonly int[] _iaPrefixTable = new int[TABLE_SIZE]; //prefix table
 
         private ulong _iBitBuffer; //bit buffer to temporarily store bytes read from the files
         private int _iBitCounter; //counter for knowing how many bits are in the bit buffer
-
-        private void Initialize() //used to blank  out bit buffer incase this class is called to comprss and decompress from the same instance
-        {
-            _iBitBuffer = 0;
-            _iBitCounter = 0;
-        }
 
         public bool Compress(string pInputFileName, string pOutputFileName)
         {
@@ -72,8 +66,7 @@ namespace Raw16ToBMP
                 WriteCode(writer, iString); //output last code
                 WriteCode(writer, MAX_VALUE); //output end of buffer
                 WriteCode(writer, 0); //flush
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
                 if (writer != null)
@@ -90,43 +83,6 @@ namespace Raw16ToBMP
             }
 
             return true;
-        }
-
-        //hasing function, tries to find index of prefix+char, if not found returns -1 to signify space available
-        private int FindMatch(int pPrefix, int pChar)
-        {
-            int index = 0, offset = 0;
-
-            index = (pChar << HASH_BIT) ^ pPrefix;
-
-            offset = (index == 0) ? 1 : TABLE_SIZE - index;
-
-            while (true)
-            {
-                if (_iaCodeTable[index] == -1)
-                    return index;
-
-                if (_iaPrefixTable[index] == pPrefix && _iaCharTable[index] == pChar)
-                    return index;
-
-                index -= offset;
-                if (index < 0)
-                    index += TABLE_SIZE;
-            }
-        }
-
-        private void WriteCode(Stream pWriter, int pCode)
-        {
-            _iBitBuffer |= (ulong)pCode << (32 - MAX_BITS - _iBitCounter); //make space and insert new code in buffer
-            _iBitCounter += MAX_BITS; //increment bit counter
-
-            while (_iBitCounter >= 8) //write all the bytes we can
-            {
-                int temp = (byte)((_iBitBuffer >> 24) & 255);
-                pWriter.WriteByte((byte)((_iBitBuffer >> 24) & 255)); //write byte from bit buffer
-                _iBitBuffer <<= 8; //remove written byte from buffer
-                _iBitCounter -= 8; //decrement counter
-            }
         }
 
         public bool Decompress(string pInputFileName, string pOutputFileName)
@@ -154,7 +110,8 @@ namespace Raw16ToBMP
                 while (iNewCode != MAX_VALUE) //read file all file
                 {
                     if (iNewCode >= iNextCode)
-                    { //fix for prefix+chr+prefix+char+prefx special case
+                    {
+                        //fix for prefix+chr+prefix+char+prefx special case
                         baDecodeStack[0] = bChar;
                         iCounter = 1;
                         iCurrentCode = iOldCode;
@@ -197,8 +154,7 @@ namespace Raw16ToBMP
                     //if (reader.PeekChar() != 0)
                     iNewCode = ReadCode(reader);
                 }
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
                 if (writer != null)
@@ -215,6 +171,50 @@ namespace Raw16ToBMP
             }
 
             return true;
+        }
+
+        private void
+            Initialize() //used to blank  out bit buffer incase this class is called to comprss and decompress from the same instance
+        {
+            _iBitBuffer = 0;
+            _iBitCounter = 0;
+        }
+
+        //hasing function, tries to find index of prefix+char, if not found returns -1 to signify space available
+        private int FindMatch(int pPrefix, int pChar)
+        {
+            int index = 0, offset = 0;
+
+            index = (pChar << HASH_BIT) ^ pPrefix;
+
+            offset = (index == 0) ? 1 : TABLE_SIZE - index;
+
+            while (true)
+            {
+                if (_iaCodeTable[index] == -1)
+                    return index;
+
+                if (_iaPrefixTable[index] == pPrefix && _iaCharTable[index] == pChar)
+                    return index;
+
+                index -= offset;
+                if (index < 0)
+                    index += TABLE_SIZE;
+            }
+        }
+
+        private void WriteCode(Stream pWriter, int pCode)
+        {
+            _iBitBuffer |= (ulong)pCode << (32 - MAX_BITS - _iBitCounter); //make space and insert new code in buffer
+            _iBitCounter += MAX_BITS; //increment bit counter
+
+            while (_iBitCounter >= 8) //write all the bytes we can
+            {
+                int temp = (byte)((_iBitBuffer >> 24) & 255);
+                pWriter.WriteByte((byte)((_iBitBuffer >> 24) & 255)); //write byte from bit buffer
+                _iBitBuffer <<= 8; //remove written byte from buffer
+                _iBitCounter -= 8; //decrement counter
+            }
         }
 
         private int ReadCode(Stream pReader)

@@ -5,6 +5,7 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
+
 // ReSharper disable UnusedMemberInSuper.Global
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -246,9 +247,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             if (nNum > 6) return "many";
             if (nNum == 1) return "one";
             Debug.Assert(nNum > 0);
-            const int nStartIndex = (int) DataOvlReference.ShoppeKeeperBarKeepStrings2.TWO - 2;
+            const int nStartIndex = (int)DataOvlReference.ShoppeKeeperBarKeepStrings2.TWO - 2;
             return DataOvlReference.StringReferences.GetString(
-                (DataOvlReference.ShoppeKeeperBarKeepStrings2) nStartIndex + nNum);
+                (DataOvlReference.ShoppeKeeperBarKeepStrings2)nStartIndex + nNum);
         }
 
         protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)

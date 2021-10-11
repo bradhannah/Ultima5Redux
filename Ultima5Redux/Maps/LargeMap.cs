@@ -15,26 +15,9 @@ namespace Ultima5Redux.Maps
         private const int TOTAL_CHUNKS_PER_Y = 16; // total number of chunks vertically
         private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
-
-        public override byte[][] TheMap { get; protected set; }
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static int
-            YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static int 
-            XTILES => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
-
-        public override int NumOfXTiles => XTILES;
-        public override int NumOfYTiles => YTILES;
-        
-        private Point2D _topLeftExtent;
         private Point2D _bottomRightExtent;
-        
-        protected override bool IsRepeatingMap => true;
 
-        public override bool ShowOuterSmallMapTiles => false;
+        private Point2D _topLeftExtent;
 
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
@@ -43,7 +26,8 @@ namespace Ultima5Redux.Maps
         /// <param name="mapChoice"></param>
         /// <param name="tileOverrides"></param>
         /// <param name="tileReferences"></param>
-        public LargeMap(string u5Directory, Maps mapChoice, TileOverrides tileOverrides, TileReferences tileReferences) : base(tileOverrides,
+        public LargeMap(string u5Directory, Maps mapChoice, TileOverrides tileOverrides,
+            TileReferences tileReferences) : base(tileOverrides,
             SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice), tileReferences)
         {
             switch (mapChoice)
@@ -60,10 +44,27 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
             }
-            
+
             InitializeAStarMap(WalkableType.StandardWalking);
             InitializeAStarMap(WalkableType.CombatWater);
         }
+
+        public override byte[][] TheMap { get; protected set; }
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static int
+            YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static int
+            XTILES => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+
+        public override int NumOfXTiles => XTILES;
+        public override int NumOfYTiles => YTILES;
+
+        protected override bool IsRepeatingMap => true;
+
+        public override bool ShowOuterSmallMapTiles => false;
 
         protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
@@ -78,7 +79,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        
+
         // ReSharper disable once UnusedMember.Global
         public void PrintMap()
         {
@@ -125,7 +126,7 @@ namespace Ultima5Redux.Maps
 
                 // get the overlay chunk value... to help determine if it is a water only tile
                 // but if we are ignoring the overlay - then just give it zero, so the map will be processed without overlay considerations
-                dataOvlChunks[chunkCount] = ignoreOverlay ? (byte) 0x00 : dataOvl.ReadByte();
+                dataOvlChunks[chunkCount] = ignoreOverlay ? (byte)0x00 : dataOvl.ReadByte();
 
                 // go through each row on the outer loop, because we want to read each horizon first
                 for (int curRow = row * TILES_PER_CHUNK_Y;
@@ -150,7 +151,7 @@ namespace Ultima5Redux.Maps
 
             return theMap;
         }
-        
+
         public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
         {
             if (XRayMode)
@@ -158,7 +159,7 @@ namespace Ultima5Redux.Maps
                 VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
                 return;
             }
-            
+
             NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
 
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
@@ -169,14 +170,16 @@ namespace Ultima5Redux.Maps
             {
                 TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
             }
-            
+
             TouchedOuterBorder = false;
-            
+
             AvatarXyPos = initialFloodFillPosition;
-            
-            _topLeftExtent = new Point2D(AvatarXyPos.X - VisibleInEachDirectionOfAvatar, AvatarXyPos.Y - VisibleInEachDirectionOfAvatar);
-            _bottomRightExtent = new Point2D(AvatarXyPos.X + VisibleInEachDirectionOfAvatar, AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
-            
+
+            _topLeftExtent = new Point2D(AvatarXyPos.X - VisibleInEachDirectionOfAvatar,
+                AvatarXyPos.Y - VisibleInEachDirectionOfAvatar);
+            _bottomRightExtent = new Point2D(AvatarXyPos.X + VisibleInEachDirectionOfAvatar,
+                AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
+
             FloodFillMap(AvatarXyPos, true);
         }
 
@@ -186,8 +189,8 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        /// Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
-        /// current extends
+        ///     Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
+        ///     current extends
         /// </summary>
         /// <param name="direction"></param>
         /// <param name="xy"></param>
@@ -196,7 +199,7 @@ namespace Ultima5Redux.Maps
         {
             int nPositiveX = xy.X + NumOfXTiles;
             int nPositiveY = xy.Y + NumOfYTiles;
-            
+
             if (nPositiveX <= _topLeftExtent.X + NumOfXTiles || xy.X >= _bottomRightExtent.X)
                 return null;
             if (nPositiveY <= _topLeftExtent.Y + NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
@@ -204,6 +207,5 @@ namespace Ultima5Redux.Maps
 
             return xy.GetAdjustedPosition(direction);
         }
-        
-   }
+    }
 }

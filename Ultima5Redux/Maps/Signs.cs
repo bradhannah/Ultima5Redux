@@ -5,7 +5,7 @@ using Ultima5Redux.Data;
 
 namespace Ultima5Redux.Maps
 {
-    public partial class Signs
+    public class Signs
     {
         /// <summary>
         ///     Total number of expected signs in file
@@ -43,7 +43,7 @@ namespace Ultima5Redux.Maps
                     rawSignTxt = Utils.BytesToStringNullTerm(signsByteArray, nIndex + 4 + nNextSignAdjust, 0xFF);
                 }
 
-                _signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location) signsByteArray[nIndex],
+                _signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location)signsByteArray[nIndex],
                     signsByteArray[nIndex + 1],
                     signsByteArray[nIndex + 2],
                     signsByteArray[nIndex + 3],

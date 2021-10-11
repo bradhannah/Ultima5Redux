@@ -6,6 +6,7 @@ using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable UnusedMember.Global
@@ -15,107 +16,25 @@ namespace Ultima5Redux
 {
     public class GameState
     {
-        ///     2D array of flag indicating if an NPC is dead [MasterMap][npcRef#]
-        private readonly bool[][] _npcIsDeadArray;
-        ///     2D array of flag indicating if an NPC is met [MasterMap][npcRef#]
-        private readonly bool[][] _npcIsMetArray;
-        ///     A random number generator - capable of seeding in future
-        private readonly Random _ran = new Random();
         /// Legacy save game state
         private readonly ImportedGameState _importedGameState;
+
+        private readonly Map.Maps _initialMap;
 
         // all initial loaded state information
         private readonly SmallMapReferences.SingleMapReference.Location _location;
         private readonly int _nInitialFloor;
         private readonly int _nInitialX;
         private readonly int _nInitialY;
-        private readonly Map.Maps _initialMap;
-        
-        public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
-        /// <summary>
-        /// Amount of food Avatar has 
-        /// </summary>
-        public ushort Food { get; set; }
-        /// <summary>
-        /// Amount of gold Avatar has
-        /// </summary>
-        public ushort Gold { get; set; }
-        /// <summary>
-        ///  Number of keys the Avatar has
-        /// </summary>
-        public int Keys { get; set; }
-        /// <summary>
-        ///  Number of gems the Avatar has
-        /// </summary>
-        public int Gems { get; set; }
-        /// <summary>
-        /// Number of torches the Avatar has
-        /// </summary>
-        public int Torches { get; set; }
-        /// <summary>
-        /// Number of skull keys the Avatar has
-        /// </summary>
-        public int SkullKeys { get; set; }
-        /// <summary>
-        /// Does the Avatar have the Grappling Hook
-        /// </summary>
-        public bool HasGrapple { get; set; }
-        /// <summary>
-        /// How many turns until the Avatar's torch is extinguished
-        /// </summary>
-        public int TurnsToExtinguish { get; set; }
-        /// <summary>
-        /// What is the index of the currently active player?
-        /// </summary>
-        public int ActivePlayerNumber { get; set; }
-        /// <summary>
-        /// Does the Avatar have a torch lit?
-        /// </summary>
-        public bool IsTorchLit => TurnsToExtinguish > 0;
-        /// <summary>
-        ///     All player character records
-        /// </summary>
-        public PlayerCharacterRecords CharacterRecords { get; }
+        /// 2D array of flag indicating if an NPC is dead [MasterMap][npcRef#]
+        private readonly bool[][] _npcIsDeadArray;
 
-        /// <summary>
-        ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
-        /// </summary>
-        public VirtualMap TheVirtualMap { get; private set; }
+        /// 2D array of flag indicating if an NPC is met [MasterMap][npcRef#]
+        private readonly bool[][] _npcIsMetArray;
 
-        /// <summary>
-        ///     The current time of day
-        /// </summary>
-        public TimeOfDay TheTimeOfDay { get; }
-
-        /// <summary>
-        /// Location and state of all moongates and moonstones
-        /// </summary>
-        public Moongates TheMoongates { get; }
-
-        /// <summary>
-        ///     Players current inventory
-        /// </summary>
-        public Inventory PlayerInventory { get; }
-
-        /// <summary>
-        ///     Users Karma
-        /// </summary>
-        public ushort Karma { get; set; }
-
-        /// <summary>
-        ///     The name of the Avatar
-        /// </summary>
-        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;        
-        
-        // DataChunk accessors, not ideal - but only available within the library
-        internal DataChunk NonPlayerCharacterMovementLists => _importedGameState.NonPlayerCharacterMovementLists;
-        internal DataChunk NonPlayerCharacterMovementOffsets => _importedGameState.NonPlayerCharacterMovementOffsets;
-        internal DataChunk OverworldOverlayDataChunks => _importedGameState.OverworldOverlayDataChunks;
-        internal DataChunk UnderworldOverlayDataChunks => _importedGameState.UnderworldOverlayDataChunks;
-        internal DataChunk CharacterAnimationStatesDataChunk => _importedGameState.CharacterAnimationStatesDataChunk;
-        internal DataChunk CharacterStatesDataChunk => _importedGameState.CharacterStatesDataChunk;
-        internal DataChunk NonPlayerCharacterKeySprites => _importedGameState.NonPlayerCharacterKeySprites;
+        /// A random number generator - capable of seeding in future
+        private readonly Random _ran = new Random();
 
         /// <summary>
         ///     Construct the GameState from a legacy save file
@@ -128,7 +47,7 @@ namespace Ultima5Redux
             // imports the legacy save game file data 
             _importedGameState = new ImportedGameState(u5Directory);
 
-             // one time copy of all imported state information
+            // one time copy of all imported state information
             CharacterRecords = _importedGameState.CharacterRecords;
             _location = _importedGameState.Location;
             _nInitialFloor = _importedGameState.Floor;
@@ -158,9 +77,105 @@ namespace Ultima5Redux
             TheTimeOfDay = _importedGameState.TheTimeOfDay;
 
             // import the players inventory
-            PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef, 
+            PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef,
                 new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences);
         }
+
+        public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
+
+        /// <summary>
+        ///     Amount of food Avatar has
+        /// </summary>
+        public ushort Food { get; set; }
+
+        /// <summary>
+        ///     Amount of gold Avatar has
+        /// </summary>
+        public ushort Gold { get; set; }
+
+        /// <summary>
+        ///     Number of keys the Avatar has
+        /// </summary>
+        public int Keys { get; set; }
+
+        /// <summary>
+        ///     Number of gems the Avatar has
+        /// </summary>
+        public int Gems { get; set; }
+
+        /// <summary>
+        ///     Number of torches the Avatar has
+        /// </summary>
+        public int Torches { get; set; }
+
+        /// <summary>
+        ///     Number of skull keys the Avatar has
+        /// </summary>
+        public int SkullKeys { get; set; }
+
+        /// <summary>
+        ///     Does the Avatar have the Grappling Hook
+        /// </summary>
+        public bool HasGrapple { get; set; }
+
+        /// <summary>
+        ///     How many turns until the Avatar's torch is extinguished
+        /// </summary>
+        public int TurnsToExtinguish { get; set; }
+
+        /// <summary>
+        ///     What is the index of the currently active player?
+        /// </summary>
+        public int ActivePlayerNumber { get; set; }
+
+        /// <summary>
+        ///     Does the Avatar have a torch lit?
+        /// </summary>
+        public bool IsTorchLit => TurnsToExtinguish > 0;
+
+        /// <summary>
+        ///     All player character records
+        /// </summary>
+        public PlayerCharacterRecords CharacterRecords { get; }
+
+        /// <summary>
+        ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
+        /// </summary>
+        public VirtualMap TheVirtualMap { get; private set; }
+
+        /// <summary>
+        ///     The current time of day
+        /// </summary>
+        public TimeOfDay TheTimeOfDay { get; }
+
+        /// <summary>
+        ///     Location and state of all moongates and moonstones
+        /// </summary>
+        public Moongates TheMoongates { get; }
+
+        /// <summary>
+        ///     Players current inventory
+        /// </summary>
+        public Inventory PlayerInventory { get; }
+
+        /// <summary>
+        ///     Users Karma
+        /// </summary>
+        public ushort Karma { get; set; }
+
+        /// <summary>
+        ///     The name of the Avatar
+        /// </summary>
+        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
+
+        // DataChunk accessors, not ideal - but only available within the library
+        internal DataChunk NonPlayerCharacterMovementLists => _importedGameState.NonPlayerCharacterMovementLists;
+        internal DataChunk NonPlayerCharacterMovementOffsets => _importedGameState.NonPlayerCharacterMovementOffsets;
+        internal DataChunk OverworldOverlayDataChunks => _importedGameState.OverworldOverlayDataChunks;
+        internal DataChunk UnderworldOverlayDataChunks => _importedGameState.UnderworldOverlayDataChunks;
+        internal DataChunk CharacterAnimationStatesDataChunk => _importedGameState.CharacterAnimationStatesDataChunk;
+        internal DataChunk CharacterStatesDataChunk => _importedGameState.CharacterStatesDataChunk;
+        internal DataChunk NonPlayerCharacterKeySprites => _importedGameState.NonPlayerCharacterKeySprites;
 
         /// <summary>
         ///     Take fall damage from klimbing mountains
@@ -237,23 +252,23 @@ namespace Ultima5Redux
         /// <param name="combatMapReferences"></param>
         /// <param name="tileOverrides"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences, 
+            LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences,
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
             EnemyReferences enemyReferences, CombatMapReferences combatMapReferences, TileOverrides tileOverrides)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
-                    ? null : smallMapReferences.GetSingleMapByLocation(_location, _nInitialFloor);
+                    ? null
+                    : smallMapReferences.GetSingleMapByLocation(_location, _nInitialFloor);
 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
-                underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates, 
+                underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates,
                 inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites,
                 enemyReferences, PlayerInventory, combatMapReferences, tileOverrides);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);
         }
-
     }
 }

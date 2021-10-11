@@ -11,8 +11,7 @@ namespace Ultima5Redux.DayNightMoon
         /// <summary>
         ///     All available moon phases
         /// </summary>
-        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
-        public enum MoonPhases
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] public enum MoonPhases
         {
             NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter,
             CrescentWaning, NoMoon
@@ -64,8 +63,8 @@ namespace Ultima5Redux.DayNightMoon
         // ReSharper disable once UnusedMember.Global
         public SmallMapReferences.SingleMapReference.Location GetLocationByMoonPhase(MoonPhases moonPhase)
         {
-            Debug.Assert(moonPhase >= 0 && (int) moonPhase < 8);
-            return (SmallMapReferences.SingleMapReference.Location) (int) moonPhase;
+            Debug.Assert(moonPhase >= 0 && (int)moonPhase < 8);
+            return (SmallMapReferences.SingleMapReference.Location)(int)moonPhase;
         }
 
         /// <summary>
@@ -90,9 +89,9 @@ namespace Ultima5Redux.DayNightMoon
             switch (moonsAndSun)
             {
                 case MoonsAndSun.Felucca:
-                    return (MoonPhases) getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2]);
+                    return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2]);
                 case MoonsAndSun.Trammel:
-                    return (MoonPhases) getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2 + 1]);
+                    return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1) * 2 + 1]);
                 case MoonsAndSun.Sun:
                     return MoonPhases.NoMoon;
                 default:
@@ -175,7 +174,7 @@ namespace Ultima5Redux.DayNightMoon
             double radius = (dDiameter - dOffset) / 2d;
             double x = radius * Math.Cos(dAngle * (Math.PI / 180));
             double y = radius * Math.Sin(dAngle * (Math.PI / 180));
-            return new Point2DFloat((float) x, (float) y);
+            return new Point2DFloat((float)x, (float)y);
         }
 
         /// <summary>

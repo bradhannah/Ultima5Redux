@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
-using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -81,7 +80,7 @@ namespace Ultima5Redux.MapUnits
             for (int i = 0; i < MAX_COMMAND_LIST_ENTRIES; i++)
             {
                 byte nIterations = loadedData[nIndex];
-                MovementCommandDirection direction = (MovementCommandDirection) loadedData[nIndex + 1];
+                MovementCommandDirection direction = (MovementCommandDirection)loadedData[nIndex + 1];
 
                 // if we have hit 0xFF then there is nothing else in the list and we can just return
                 if (nIterations == 0xFF || nIterations == 0) return;
@@ -222,8 +221,9 @@ namespace Ultima5Redux.MapUnits
         /// <returns></returns>
         public override string ToString()
         {
-            return _movementQueue.Count == 0 ? "Empty" : 
-                $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
+            return _movementQueue.Count == 0
+                ? "Empty"
+                : $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
         }
     }
 }

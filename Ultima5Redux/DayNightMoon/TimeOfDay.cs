@@ -13,6 +13,9 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         private readonly Dictionary<int, bool> _timeHasChangedDictionary = new Dictionary<int, bool>();
 
+        private byte _nHour;
+        private byte _nMinute;
+
         /// <summary>
         ///     tracks the total number of registered change trackers
         /// </summary>
@@ -37,13 +40,6 @@ namespace Ultima5Redux.DayNightMoon
             Minute = currentMinuteDataChunk.GetChunkAsByte();
         }
 
-        private ushort _nYear;
-        private byte _nMonth;
-        private byte _nDay;
-        private byte _nHour;
-        private byte _nMinute;
-        
-        
 
         /// <summary>
         ///     Gets a string describing the current time of day
@@ -60,6 +56,7 @@ namespace Ultima5Redux.DayNightMoon
         }
 
         public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
+
         // ReSharper disable once UnusedMember.Global
         public string FormattedDate => Month + "-" + Day + "-" + Year;
 
@@ -72,25 +69,11 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public ushort Year
-        {
-            get => _nYear;
-            set => _nYear = value;
-        }
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public ushort Year { get; set; }
 
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public byte Month
-        {
-            get => _nMonth;
-            set => _nMonth = value;
-        }
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public byte Month { get; set; }
 
-        public byte Day
-        {
-            get => _nDay;
-            set => _nDay = value;
-        }
+        public byte Day { get; set; }
 
         public byte Hour
         {
@@ -167,10 +150,10 @@ namespace Ultima5Redux.DayNightMoon
             // if we add the time, and it enters the next hour then we have some work to do
             if (Minute + nMinutes > 59)
             {
-                byte nHours = (byte) Math.DivRem(nMinutes, 60, out int nExtraMinutes);
+                byte nHours = (byte)Math.DivRem(nMinutes, 60, out int nExtraMinutes);
 
-                byte newHour = (byte) (Hour + nHours + 1);
-                Minute = (byte) ((Minute + (byte) nExtraMinutes) % 60);
+                byte newHour = (byte)(Hour + nHours + 1);
+                Minute = (byte)((Minute + (byte)nExtraMinutes) % 60);
 
                 // if it puts us into a new day
                 if (newHour <= 23)
@@ -179,13 +162,13 @@ namespace Ultima5Redux.DayNightMoon
                 }
                 else
                 {
-                    Hour = (byte) (newHour % 24);
+                    Hour = (byte)(newHour % 24);
                     // if the day + 1 is more days then we are allow in the month, then restart the days, and go to next month
-                    int nDay = (byte) (Day + 1);
+                    int nDay = (byte)(Day + 1);
                     if (nDay > nDaysInMonth)
                     {
                         Day = 1;
-                        int nMonth = (byte) (Month + 1);
+                        int nMonth = (byte)(Month + 1);
                         // if the next month goes beyond 13, then we reset and advance the year
                         if (nMonth > 13)
                         {
@@ -199,13 +182,13 @@ namespace Ultima5Redux.DayNightMoon
                     }
                     else
                     {
-                        Day = (byte) (Day + 1);
+                        Day = (byte)(Day + 1);
                     }
                 }
             }
             else
             {
-                Minute += (byte) nMinutes;
+                Minute += (byte)nMinutes;
             }
 
             // time has changed, so we reset all our change tracking flags

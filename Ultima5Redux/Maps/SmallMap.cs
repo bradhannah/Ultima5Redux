@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.Monsters;
@@ -8,24 +7,7 @@ namespace Ultima5Redux.Maps
 {
     public class SmallMap : RegularMap
     {
-        /// <summary>
-        ///     Total tiles per row
-        /// </summary>
-        public static int XTILES => 32;
-        /// <summary>
-        ///     Total tiles per column
-        /// </summary>
-        public static int YTILES => 32;
-        public override byte[][] TheMap { get; protected set; }
-
-        public override int NumOfXTiles => XTILES;
-        public override int NumOfYTiles => YTILES;
-
-        public override bool ShowOuterSmallMapTiles => true;
-
         private readonly SmallMapReferences.SingleMapReference _singleSmallMapReference;
-
-        protected override bool IsRepeatingMap => false;
 
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
@@ -35,16 +17,37 @@ namespace Ultima5Redux.Maps
         /// <param name="spriteTileReferences"></param>
         /// <param name="tileOverrides"></param>
         public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference singleSmallMapReference,
-            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides, singleSmallMapReference,
+            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides,
+            singleSmallMapReference,
             spriteTileReferences)
         {
             _singleSmallMapReference = singleSmallMapReference;
 
             // load the map into memory
-            TheMap = LoadSmallMapFile(Path.Combine(u5Directory, singleSmallMapReference.MapFilename), singleSmallMapReference.FileOffset);
-            
+            TheMap = LoadSmallMapFile(Path.Combine(u5Directory, singleSmallMapReference.MapFilename),
+                singleSmallMapReference.FileOffset);
+
             InitializeAStarMap(WalkableType.StandardWalking);
         }
+
+        /// <summary>
+        ///     Total tiles per row
+        /// </summary>
+        public static int XTILES => 32;
+
+        /// <summary>
+        ///     Total tiles per column
+        /// </summary>
+        public static int YTILES => 32;
+
+        public override byte[][] TheMap { get; protected set; }
+
+        public override int NumOfXTiles => XTILES;
+        public override int NumOfYTiles => YTILES;
+
+        public override bool ShowOuterSmallMapTiles => true;
+
+        protected override bool IsRepeatingMap => false;
 
         public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
         public int MapFloor => _singleSmallMapReference.Floor;
@@ -78,7 +81,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        
+
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
         /// </summary>
@@ -86,11 +89,12 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         protected override float GetAStarWeight(Point2D xy)
         {
-            bool isPreferredIndex(int nSprite) => nSprite == SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
-                                                  SpriteTileReferences.IsPath(nSprite);
+            bool isPreferredIndex(int nSprite) =>
+                nSprite == SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
+                SpriteTileReferences.IsPath(nSprite);
 
             const int fDefaultDeduction = 2;
-            
+
             TileReference unused = SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
 
             float fCost = 10;
@@ -103,6 +107,5 @@ namespace Ultima5Redux.Maps
 
             return fCost;
         }
-
     }
 }

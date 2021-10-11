@@ -147,7 +147,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 for (int i = 1; i < Times.Count; i++)
                 {
                     if (Times[i] >= nEarliest) continue;
-                    
+
                     nEarliestIndex = i;
                     nEarliest = Times[i];
                 }
@@ -166,7 +166,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 for (int i = 1; i < Times.Count; i++)
                 {
                     if (Times[i] <= nLargest) continue;
-                    
+
                     nLargestIndex = i;
                     nLargest = Times[i];
                 }
@@ -178,7 +178,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             {
                 int nIndex = GetScheduleIndex(timeOfDay);
 
-                return (AiType) _aiTypeList[nIndex];
+                return (AiType)_aiTypeList[nIndex];
             }
 
             /// <summary>

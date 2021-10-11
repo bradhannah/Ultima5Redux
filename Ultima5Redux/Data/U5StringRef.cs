@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.Data
 {
@@ -206,7 +205,6 @@ namespace Ultima5Redux.Data
                     typeof(DataOvlReference.Battle2Strings),
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.BATTLE2).GetChunkAsStringList()
                 },
-                
             };
         }
 
@@ -220,7 +218,7 @@ namespace Ultima5Redux.Data
         {
             Debug.Assert(_strMap.ContainsKey(strObj.GetType()));
 
-            return _strMap[strObj.GetType()].StringList[(int) strObj];
+            return _strMap[strObj.GetType()].StringList[(int)strObj];
         }
 
         public string GetDirectionString(Point2D.Direction direction)

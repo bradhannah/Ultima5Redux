@@ -10,27 +10,23 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public abstract class CombatItem : InventoryItem
     {
-        public readonly DataOvlReference.Equipment SpecificEquipment;
+        public enum MissileType { None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock }
 
         public const int BareHandsIndex = -2;
-
-        public enum MissileType
-        {
-            None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock
-        }
+        public readonly DataOvlReference.Equipment SpecificEquipment;
 
         protected CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef,
             int nQuantity, int nOffset, int nSpriteNum)
-            : base(nQuantity, GetEquipmentString(dataOvlRef, (int) specificEquipment),
-                GetEquipmentString(dataOvlRef, (int) specificEquipment), nSpriteNum)
+            : base(nQuantity, GetEquipmentString(dataOvlRef, (int)specificEquipment),
+                GetEquipmentString(dataOvlRef, (int)specificEquipment), nSpriteNum)
         {
-            AttackStat = GetAttack(dataOvlRef, (int) specificEquipment);
-            DefendStat = GetDefense(dataOvlRef, (int) specificEquipment);
-            int nRange = GetRange(dataOvlRef, (int) specificEquipment);
+            AttackStat = GetAttack(dataOvlRef, (int)specificEquipment);
+            DefendStat = GetDefense(dataOvlRef, (int)specificEquipment);
+            int nRange = GetRange(dataOvlRef, (int)specificEquipment);
             Missile = GetMissileType(specificEquipment, nRange);
             Range = nRange == 0 ? 1 : nRange;
-            EquipmentName = GetEquipmentString(dataOvlRef, (int) specificEquipment);
-            RequiredStrength = GetRequiredStrength(dataOvlRef, (int) specificEquipment);
+            EquipmentName = GetEquipmentString(dataOvlRef, (int)specificEquipment);
+            RequiredStrength = GetRequiredStrength(dataOvlRef, (int)specificEquipment);
             SpecificEquipment = specificEquipment;
             InitializePrices(dataOvlRef);
         }
@@ -63,7 +59,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_RANGE_VALUES).GetAsByteList();
             if (nIndex >= rangeValueList.Count) return 1;
             return rangeValueList[nIndex];
-            
         }
 
         private static int GetDefense(DataOvlReference dataOvlRef, int nIndex)
@@ -95,7 +90,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         private static int GetRequiredStrength(DataOvlReference dataOvlRef, int nIndex)
         {
             if (nIndex == BareHandsIndex) return 0;
-            
+
             List<byte> requiredStrengthValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REQ_STRENGTH_EQUIP).GetAsByteList();
             if (nIndex >= requiredStrengthValueList.Count) return 0;
@@ -120,7 +115,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
             BasePrice = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIPMENT_BASE_PRICE)
                 .GetChunkAsUint16List()[
-                    (int) SpecificEquipment];
+                    (int)SpecificEquipment];
         }
 
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records,
@@ -131,7 +126,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             // we add 3% of the value per dex point below 33, and subtract 3% for each point above 33
             const int nBaseDex = 33;
             int nAdjustedPrice =
-                (int) (BasePrice + BasePrice * 0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity));
+                (int)(BasePrice + BasePrice * 0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity));
             return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
         }
 
@@ -143,9 +138,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             // we subtract 3% of the value for every dexterity point below 33, and add 3% for each point above it
             const int nBaseDex = 33;
             int nAdjustedPrice =
-                (int) (BasePrice - BasePrice * 0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity));
+                (int)(BasePrice - BasePrice * 0.03f * (nBaseDex - records.AvatarRecord.Stats.Dexterity));
             return nAdjustedPrice <= 0 ? 1 : nAdjustedPrice;
         }
-
     }
 }

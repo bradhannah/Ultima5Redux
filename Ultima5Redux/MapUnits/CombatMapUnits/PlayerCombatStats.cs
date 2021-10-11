@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Ultima5Redux.PlayerCharacters;
-
-namespace Ultima5Redux.MapUnits.CombatMapUnits
+﻿namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public class PlayerCombatStats
     {

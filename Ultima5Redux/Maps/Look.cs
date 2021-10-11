@@ -34,7 +34,7 @@ namespace Ultima5Redux.Maps
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < TOTAL_LOOKS * 2; i += 2)
             {
-                LookOffsets.Add((int) (LookByteArray[i] | ((uint) LookByteArray[i + 1] << 8)));
+                LookOffsets.Add((int)(LookByteArray[i] | ((uint)LookByteArray[i + 1] << 8)));
             }
         }
 
@@ -53,7 +53,7 @@ namespace Ultima5Redux.Maps
             while ((curCharByte = LookByteArray[lookOffset]) != 0)
             {
                 // cast to (char) to ensure the string understands it not a number
-                description += (char) curCharByte;
+                description += (char)curCharByte;
                 lookOffset++;
             }
 

@@ -20,8 +20,7 @@
         public override bool HideQuantity { get; } = false;
         public override bool IsSellable => false;
         public override int BasePrice => 0;
-        
+
         public override string InventoryReferenceString => ScrollSpell.ToString();
-        
     }
 }

@@ -61,8 +61,7 @@ namespace Ultima5Redux.MapUnits
                    Floor == position.Floor;
         }
 
-        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")] 
-        public override int GetHashCode()
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")] public override int GetHashCode()
         {
             int hashCode = 1832819848;
             hashCode = hashCode * -1521134295 + X.GetHashCode();

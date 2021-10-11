@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 
 namespace Ultima5Redux.External
 {
     public class Node
     {
-        // Change this depending on what the desired size is for each element in the grid
-        //internal const int NODE_SIZE = 1;
-
-        public bool Walkable { get; set; }
         public readonly float Weight;
         public float Cost;
 
@@ -28,6 +22,10 @@ namespace Ultima5Redux.External
             Weight = weight;
             Walkable = walkable;
         }
+        // Change this depending on what the desired size is for each element in the grid
+        //internal const int NODE_SIZE = 1;
+
+        public bool Walkable { get; set; }
 
         public float F
         {
@@ -60,7 +58,7 @@ namespace Ultima5Redux.External
             {
                 for (int j = 0; j < GridRows; j++)
                 {
-                    debugOut +=_grid[i][j].Walkable ? "O" : "X";
+                    debugOut += _grid[i][j].Walkable ? "O" : "X";
                 }
 
                 debugOut += "\n";
@@ -83,14 +81,14 @@ namespace Ultima5Redux.External
                                                 " but didn't exist in the astar grid");
             return _grid[position.X][position.Y];
         }
-        
+
         /// <summary>
-        /// Finds the best path based on surrounding tiles around a single end position
-        /// For example, below the 0 represents the end position, while the Xs represent the tiles that will be checked
-        /// XXXXX
-        /// X 0 X
-        /// XXXXX
-        /// This can be used to help find the best path to get in range of an attack 
+        ///     Finds the best path based on surrounding tiles around a single end position
+        ///     For example, below the 0 represents the end position, while the Xs represent the tiles that will be checked
+        ///     XXXXX
+        ///     X 0 X
+        ///     XXXXX
+        ///     This can be used to help find the best path to get in range of an attack
         /// </summary>
         /// <param name="startPosition"></param>
         /// <param name="endPosition"></param>
@@ -117,9 +115,8 @@ namespace Ultima5Redux.External
 
             return nBestPathNodes == 0xFFFF ? null : bestPath;
         }
-        
-        
-        
+
+
         public Stack<Node> FindPath(Point2D startPosition, Point2D endPosition)
         {
             if (!_grid[endPosition.X][endPosition.Y].Walkable)
@@ -127,10 +124,10 @@ namespace Ultima5Redux.External
                 // if you pass in a non-walkable tile then we don't waste our time calculating
                 return null;
             }
-            
+
             Node start =
-                new Node( startPosition, true);
-            Node end = new Node( endPosition, true);
+                new Node(startPosition, true);
+            Node end = new Node(endPosition, true);
 
             Stack<Node> path = new Stack<Node>();
             List<Node> openList = new List<Node>();

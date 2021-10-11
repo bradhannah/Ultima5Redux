@@ -9,8 +9,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public class SingleMapReference
         {
-            [SuppressMessage("ReSharper", "IdentifierTypo")] 
-            public enum Location
+            [SuppressMessage("ReSharper", "IdentifierTypo")] public enum Location
             {
                 Britannia_Underworld = 0x00, Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6,
                 Skara_Brae = 7, New_Magincia = 8, // Town
@@ -54,7 +53,7 @@ namespace Ultima5Redux.Maps
             ///     Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
             /// </summary>
             // ReSharper disable once UnusedMember.Global
-            public byte Id => (byte) (MapLocation - 1);
+            public byte Id => (byte)(MapLocation - 1);
 
             /// <summary>
             ///     name of the map file
@@ -91,7 +90,7 @@ namespace Ultima5Redux.Maps
                     }
                 }
             }
-            
+
 
             /// <summary>
             ///     The master file
@@ -134,13 +133,13 @@ namespace Ultima5Redux.Maps
 
                 return new SingleMapReference(Location.Combat_resting_shrine, 0, 0);
             }
-            
+
             public static SingleMapReference GetLargeMapSingleInstance(Map.Maps map)
             {
                 if (map == Map.Maps.Small)
                     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
 
-                return new SingleMapReference(Location.Britannia_Underworld, 
+                return new SingleMapReference(Location.Britannia_Underworld,
                     map == Map.Maps.Overworld ? 0 : -1, 0);
             }
 
@@ -250,7 +249,7 @@ namespace Ultima5Redux.Maps
                     case Location.Britannia_Underworld:
                     case Location.Combat_resting_shrine:
                         return SmallMapMasterFiles.None;
-                    default: 
+                    default:
                         throw new Ultima5ReduxException("EH?");
                 }
             }

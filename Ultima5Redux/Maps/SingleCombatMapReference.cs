@@ -22,7 +22,10 @@ namespace Ultima5Redux.Maps
             Deceit = 27, Despise = 28, Destard = 29, Wrong = 30, Covetous = 31, Shame = 32, Hythloth = 33, Doom = 34
         }
 
-        public enum EntryDirection { Direction0 = 0, Direction1 = 1, Direction2 = 2, Direction3 = 3, UpLadder, DownLadder }
+        public enum EntryDirection
+        {
+            Direction0 = 0, Direction1 = 1, Direction2 = 2, Direction3 = 3, UpLadder, DownLadder
+        }
 
         /// <summary>
         ///     The territory that the combat map is in. This matters most for determining data files.
@@ -47,8 +50,9 @@ namespace Ultima5Redux.Maps
         private readonly Dictionary<EntryDirection, bool> _enterDirectionDictionary =
             new Dictionary<EntryDirection, bool>();
 
-        private int TotalDirections => Enum.GetNames(typeof(EntryDirection)).Length;
-        private readonly List<List<Point2D>> _playerPositionsByDirection = Utils.Init2DList<Point2D>(Enum.GetNames(typeof(EntryDirection)).Length, NUM_PLAYERS);
+        private readonly List<List<Point2D>> _playerPositionsByDirection =
+            Utils.Init2DList<Point2D>(Enum.GetNames(typeof(EntryDirection)).Length, NUM_PLAYERS);
+
         private readonly TileReferences _tileReferences;
 
         public readonly byte[][] TheMap;
@@ -77,8 +81,8 @@ namespace Ultima5Redux.Maps
             // copying the array to a simpler format
             TheMap = Utils.Init2DByteArray(XTILES, YTILES);
 
-            Dictionary<EntryDirection, Point2D> ladders = new Dictionary<EntryDirection, Point2D>(); 
-            
+            Dictionary<EntryDirection, Point2D> ladders = new Dictionary<EntryDirection, Point2D>();
+
             // get and build the map sprites 
             for (int nRow = 0; nRow < XTILES; nRow++)
             {
@@ -89,9 +93,11 @@ namespace Ultima5Redux.Maps
                 {
                     byte sprite = list[nCol];
                     TheMap[nCol][nRow] = sprite;
-                    
-                    if (_tileReferences.IsLadderUp(sprite)) ladders.Add(EntryDirection.UpLadder, new Point2D(nCol, nRow));
-                    if (_tileReferences.IsLadderDown(sprite)) ladders.Add(EntryDirection.DownLadder, new Point2D(nCol, nRow));
+
+                    if (_tileReferences.IsLadderUp(sprite))
+                        ladders.Add(EntryDirection.UpLadder, new Point2D(nCol, nRow));
+                    if (_tileReferences.IsLadderDown(sprite))
+                        ladders.Add(EntryDirection.DownLadder, new Point2D(nCol, nRow));
                 }
             }
 
@@ -120,7 +126,7 @@ namespace Ultima5Redux.Maps
                     Debug.Assert(_playerPositionsByDirection[nRow - 1][nPlayer].Y <= YTILES);
                 }
             }
-            
+
             // we also calculate any up or down ladder positions 
             foreach (KeyValuePair<EntryDirection, Point2D> entry in ladders)
             {
@@ -128,14 +134,13 @@ namespace Ultima5Redux.Maps
                 int nKey = (int)entry.Key;
 
                 _enterDirectionDictionary[entry.Key] = true;
-                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(0,1));
-                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(-1,0));
-                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(1,0));
-                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(0,-1));
-                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(-1,-1));
-                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(1,-1));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(0, 1));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(-1, 0));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(1, 0));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(0, -1));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(-1, -1));
+                _playerPositionsByDirection[nKey].Add(ladderPoint.GetAdjustedPosition(1, -1));
             }
-            
 
             // load the enemy positions and sprites
             int nEnemyXOffset = nMapOffset + (nBytesPerRow * 6) + 0xB;
@@ -244,6 +249,8 @@ namespace Ultima5Redux.Maps
                         .Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
             }
         }
+
+        private int TotalDirections => Enum.GetNames(typeof(EntryDirection)).Length;
 
 
         /// <summary>

@@ -5,6 +5,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.PlayerCharacters;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -84,7 +85,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public string GetDoesntKnowGossipResponse()
         {
             string retStr = DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
-                .THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N); 
+                .THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N);
             return retStr;
         }
 

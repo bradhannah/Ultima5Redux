@@ -1,8 +1,7 @@
 ﻿using System;
-using Ultima5Redux;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Ultima5Redux;
 using Ultima5Redux.Data;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
@@ -13,7 +12,7 @@ namespace U5ConversationSimulator
     class Program
     {
         static World _world;
-  
+
         static void Main(string[] args)
         {
             _world = new World("C:\\games\\ultima_5_late\\britain");
@@ -22,9 +21,10 @@ namespace U5ConversationSimulator
             {
                 //_world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britain, 0), _world.State.CharacterRecords, false);
             }
-            
-            _world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
-            
+
+            _world.State.TheVirtualMap.LoadSmallMap(
+                _world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
             //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference._location.Lord_Britishs_Castle);
@@ -34,13 +34,12 @@ namespace U5ConversationSimulator
             List<NonPlayerCharacterReference> minocNpcRef =
                 _world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
             Conversation convo = new Conversation(minocNpcRef[9], _world.State, _world.DataOvlRef); // delwyn
-            
+
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
-            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = new Conversation.EnqueuedScriptItem(EnqueuedScriptItem);
+            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = EnqueuedScriptItem;
             convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
-            
-            
+
             convo.BeginConversation();
             //int i = 1000;
             // while (i > 0)
@@ -60,12 +59,14 @@ namespace U5ConversationSimulator
                     Console.Write(item.Str);
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
-                    Console.Write(conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));
+                    Console.Write(
+                        conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOUR_INTEREST));
                     userResponse = Console.ReadLine();
                     conversation.AddUserResponse(userResponse);
                     break;
                 case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
-                    Console.Write(conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_RESPOND));
+                    Console.Write(
+                        conversation.GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_RESPOND));
                     userResponse = Console.ReadLine();
                     conversation.AddUserResponse(userResponse);
                     break;
@@ -105,6 +106,7 @@ namespace U5ConversationSimulator
                         Console.Write(".");
                         Thread.Sleep(500);
                     }
+
                     Console.WriteLine("");
                     break;
                 case TalkScript.TalkCommand.Rune:
@@ -112,10 +114,12 @@ namespace U5ConversationSimulator
                 case TalkScript.TalkCommand.DefineLabel:
                 case TalkScript.TalkCommand.IfElseKnowsName:
                 case TalkScript.TalkCommand.AvatarsName:
-                    throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
+                    throw new Exception("We recieved a TalkCommand: " + item.Command +
+                                        " that we didn't expect in the World processing");
                 default:
-                    throw new Exception("We recieved a TalkCommand: " + item.Command.ToString() + " that we didn't expect in the World processing");
-                    //Console.Write("<" + item.Command.ToString() + ">");
+                    throw new Exception("We recieved a TalkCommand: " + item.Command +
+                                        " that we didn't expect in the World processing");
+                //Console.Write("<" + item.Command.ToString() + ">");
             }
         }
     }

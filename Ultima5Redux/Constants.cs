@@ -2,8 +2,7 @@
 
 namespace Ultima5Redux
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")] 
-    public static class FileConstants
+    [SuppressMessage("ReSharper", "UnusedMember.Global")] public static class FileConstants
     {
         public const string DATA_OVL = "data.ovl";
 
@@ -34,12 +33,12 @@ namespace Ultima5Redux
         public const string TOWNE_TLK = "towne.tlk";
         public const string DWELLING_TLK = "dwelling.tlk";
         public const string KEEP_TLK = "keep.tlk";
-        
+
         public const string BRIT_CBT = "brit.cbt";
         public const string DUNGEON_CBT = "dungeon.cbt";
 
-        public static readonly string[] TalkFiles = {CASTLE_TLK, TOWNE_TLK, DWELLING_TLK, KEEP_TLK};
-        public static readonly string[] NPCFiles = {CASTLE_NPC, TOWNE_NPC, DWELLING_NPC, KEEP_NPC};
-        public static readonly string[] SmallMapFiles = {CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT};
+        public static readonly string[] TalkFiles = { CASTLE_TLK, TOWNE_TLK, DWELLING_TLK, KEEP_TLK };
+        public static readonly string[] NPCFiles = { CASTLE_NPC, TOWNE_NPC, DWELLING_NPC, KEEP_NPC };
+        public static readonly string[] SmallMapFiles = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };
     }
 }

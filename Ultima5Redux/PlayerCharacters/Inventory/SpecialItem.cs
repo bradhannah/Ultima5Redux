@@ -17,7 +17,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         public SpecialItem(ItemTypeSpriteEnum itemType, int quantity, string longName, string shortName) :
-            base(quantity, longName, shortName, (int) itemType)
+            base(quantity, longName, shortName, (int)itemType)
         {
             ItemType = itemType;
         }
@@ -29,10 +29,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public ItemTypeSpriteEnum ItemType { get; }
 
         public override string InventoryReferenceString => ItemType.ToString();
-        
+
         public static ItemTypeEnum GetItemOffset(ItemTypeSpriteEnum itemTypeSpriteEnum)
         {
-            ItemTypeEnum itemType = (ItemTypeEnum) Enum.Parse(typeof(ItemTypeEnum), itemTypeSpriteEnum.ToString());
+            ItemTypeEnum itemType = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), itemTypeSpriteEnum.ToString());
             return itemType;
         }
     }

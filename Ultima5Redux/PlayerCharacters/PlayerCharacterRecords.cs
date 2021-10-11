@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Permissions;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -34,6 +33,21 @@ namespace Ultima5Redux.PlayerCharacters
         public PlayerCharacterRecord AvatarRecord => Records[0];
 
         public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
+
+        /// <summary>
+        ///     Are there at least one player based on current combat statuses that can be seen by the enemy?
+        /// </summary>
+        public bool AtLeastOnePlayerSeenOnCombatMap
+        {
+            get
+            {
+                List<PlayerCharacterRecord> playerCharacterRecordsInParty = Records.Where(record =>
+                    record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty).ToList();
+                return playerCharacterRecordsInParty.Any(record => !record.IsInvisible) &&
+                       playerCharacterRecordsInParty.Any(record =>
+                           record.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
+            }
+        }
 
         public List<PlayerCharacterRecord> GetPlayersAtInn(SmallMapReferences.SingleMapReference.Location location)
         {
@@ -100,7 +114,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         public int GetIndexOfPlayerCharacterRecord(PlayerCharacterRecord record)
         {
-            for (int i = 0; i < Records.Count; i++ )
+            for (int i = 0; i < Records.Count; i++)
             {
                 if (Records[i] == record) return i;
             }
@@ -209,7 +223,7 @@ namespace Ultima5Redux.PlayerCharacters
         }
 
         /// <summary>
-        /// Injures all party members due to rough sea
+        ///     Injures all party members due to rough sea
         /// </summary>
         public void RoughSeasInjure()
         {
@@ -221,31 +235,19 @@ namespace Ultima5Redux.PlayerCharacters
         }
 
         /// <summary>
-        /// When you exit combat you revert from being a Rat to a real boy!
+        ///     When you exit combat you revert from being a Rat to a real boy!
         /// </summary>
         public void ClearCombatStatuses()
         {
-            foreach (PlayerCharacterRecord record in Records.Where(record => record.IsRat)) 
+            foreach (PlayerCharacterRecord record in Records.Where(record => record.IsRat))
             {
                 record.TurnIntoNotARat();
             }
+
             foreach (PlayerCharacterRecord record in Records.Where(record => record.IsInvisible))
             {
                 record.TurnVisible();
             }
         }
-
-        /// <summary>
-        /// Are there at least one player based on current combat statuses that can be seen by the enemy?
-        /// </summary>
-        public bool AtLeastOnePlayerSeenOnCombatMap
-        {
-            get
-            {
-                List<PlayerCharacterRecord>playerCharacterRecordsInParty = Records.Where(record => record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty).ToList();
-                return playerCharacterRecordsInParty.Any(record => !record.IsInvisible) &&
-                       playerCharacterRecordsInParty.Any(record => record.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
-            }
-        } 
     }
 }

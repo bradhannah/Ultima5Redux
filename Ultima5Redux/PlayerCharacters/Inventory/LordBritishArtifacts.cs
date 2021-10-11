@@ -10,17 +10,17 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             Items[LordBritishArtifact.ArtifactType.Amulet] = new LordBritishArtifact(
                 LordBritishArtifact.ArtifactType.Amulet,
-                gameStateByteArray[(int) Offsets.AMULET],
+                gameStateByteArray[(int)Offsets.AMULET],
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNamesStrings.AMULET),
                 dataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET));
             Items[LordBritishArtifact.ArtifactType.Crown] = new LordBritishArtifact(
                 LordBritishArtifact.ArtifactType.Crown,
-                gameStateByteArray[(int) Offsets.CROWN],
+                gameStateByteArray[(int)Offsets.CROWN],
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNamesStrings.CROWN),
                 dataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN));
             Items[LordBritishArtifact.ArtifactType.Sceptre] = new LordBritishArtifact(
                 LordBritishArtifact.ArtifactType.Sceptre,
-                gameStateByteArray[(int) Offsets.SCEPTRE],
+                gameStateByteArray[(int)Offsets.SCEPTRE],
                 dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNamesStrings.SCEPTRE),
                 dataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE));
         }

@@ -1,32 +1,19 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
-using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.Monsters
 {
     public class Enemy : CombatMapUnit
     {
-        public EnemyReference EnemyReference { get; }
-        
-        public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
-        public override string Name => EnemyReference.MixedCaseSingularName.Trim();
-
-        public override int ClosestAttackRange => EnemyReference.AttackRange;
-
-        public bool IsFleeing { get; set; } = false;
-
-        public Stack<Node> FleeingPath { get; set; } = null;
-
-        public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,  
+        public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference)
-        : base(null, mapUnitState, null, mapUnitMovement, null, 
-            tileReferences, location, dataOvlReference)
+            : base(null, mapUnitState, null, mapUnitMovement, null,
+                tileReferences, location, dataOvlReference)
         {
             EnemyReference = enemyReference;
             mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
@@ -41,7 +28,18 @@ namespace Ultima5Redux.MapUnits.Monsters
             Stats.ExperiencePoints = 0;
             Stats.CurrentMp = 0;
         }
-        
+
+        public EnemyReference EnemyReference { get; }
+
+        public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
+        public override string Name => EnemyReference.MixedCaseSingularName.Trim();
+
+        public override int ClosestAttackRange => EnemyReference.AttackRange;
+
+        public bool IsFleeing { get; set; } = false;
+
+        public Stack<Node> FleeingPath { get; set; } = null;
+
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
@@ -55,25 +53,25 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override string FriendlyName => SingularName;
 
         public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
-        public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
         public override string SingularName => EnemyReference.MixedCaseSingularName;
         public override string PluralName => EnemyReference.AllCapsPluralName;
 
         // temporary until I read them in dynamically (somehow!?)
         public override int Experience => EnemyReference.Experience;
 
+        public sealed override CharacterStats Stats { get; } = new CharacterStats();
+
+        public override bool IsInvisible => false;
+        public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
+
         public override string ToString()
         {
             return KeyTileReference.Name;
         }
 
-        public sealed override CharacterStats Stats { get; } = new CharacterStats();
-
         public bool CanReachForMeleeAttack(CombatMapUnit combatMapUnit)
         {
             return CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
         }
-
-        public override bool IsInvisible => false;
     }
 }

@@ -14,10 +14,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private readonly DataOvlReference _dataOvlRef;
         private readonly List<byte> _gameStateByteArray;
+        private readonly InventoryReferences _inventoryReferences;
         private readonly Moongates _moongates;
         private readonly MoonPhaseReferences _moonPhaseReferences;
         private readonly GameState _state;
-        private readonly InventoryReferences _inventoryReferences;
 
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,
             MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state,
@@ -45,7 +45,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
         public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
 
-        public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList(); 
+        public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList();
+
         //{ get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
@@ -70,28 +71,28 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private static byte BoolToByte(bool bBool)
         {
-            return bBool ? (byte) 1 : (byte) 0;
+            return bBool ? (byte)1 : (byte)0;
         }
 
         private void SetInventoryQuantity(InventoryThings thing, byte nThings)
         {
-            _gameStateByteArray[(int) thing] = nThings;
+            _gameStateByteArray[(int)thing] = nThings;
         }
 
         private byte GetInventoryQuantity(InventoryThings thing)
         {
-            return _gameStateByteArray[(int) thing];
+            return _gameStateByteArray[(int)thing];
         }
 
         private void SetInventoryBool(InventoryThings thing, bool bBool)
         {
-            _gameStateByteArray[(int) thing] = BoolToByte(bBool);
+            _gameStateByteArray[(int)thing] = BoolToByte(bBool);
         }
 
         public bool GetInventoryBool(InventoryThings thing)
         {
             return DataChunk
-                .CreateDataChunk(DataChunk.DataFormatType.Byte, "", _gameStateByteArray, (int) thing, sizeof(byte))
+                .CreateDataChunk(DataChunk.DataFormatType.Byte, "", _gameStateByteArray, (int)thing, sizeof(byte))
                 .GetChunkAsByte() > 0;
         }
 
@@ -171,7 +172,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             AllItems.Clear();
             ReadyItems.Clear();
             UseItems.Clear();
-            
+
             ProtectiveArmour = new Armours(_dataOvlRef, _gameStateByteArray);
             AllItems.AddRange(ProtectiveArmour.GenericItemList);
             ReadyItems.AddRange(ProtectiveArmour.AllCombatItems);
@@ -223,8 +224,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         //     InventoryItem item = AllItems[item];
         //     
         // }
-        
-        
+
+
         private void UpdateAllInventoryReferences()
         {
             foreach (InventoryItem item in AllItems)
@@ -263,6 +264,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 }
             }
         }
-    
     }
 }

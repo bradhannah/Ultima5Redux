@@ -43,9 +43,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             {
                 Dictionary<Healer.RemedyTypes, int> pricesAtLocation = new Dictionary<Healer.RemedyTypes, int>
                 {
-                    {Healer.RemedyTypes.Heal, healPrices[nIndex]},
-                    {Healer.RemedyTypes.Cure, curePrices[nIndex]},
-                    {Healer.RemedyTypes.Resurrect, resurrectPrices[nIndex]}
+                    { Healer.RemedyTypes.Heal, healPrices[nIndex] },
+                    { Healer.RemedyTypes.Cure, curePrices[nIndex] },
+                    { Healer.RemedyTypes.Resurrect, resurrectPrices[nIndex] }
                 };
 
                 _priceDictionary.Add(location, pricesAtLocation);

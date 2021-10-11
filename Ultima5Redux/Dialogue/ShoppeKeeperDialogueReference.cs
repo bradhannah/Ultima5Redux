@@ -151,7 +151,7 @@ namespace Ultima5Redux.Dialogue
             if (equipmentName != "") sb.Replace("&", highlightColor + equipmentName + closeColor);
             if (shoppeKeeperName != "") sb.Replace("$", shoppeKeeperName);
             if (shoppeName != "") sb.Replace("#", shoppeName);
-            if (genderedAddress != "") sb.Replace(char.ToString((char) 20), genderedAddress);
+            if (genderedAddress != "") sb.Replace(char.ToString((char)20), genderedAddress);
             if (tod != null) sb.Replace("@", tod.TimeOfDayName);
 
             if (personOfInterest != "") sb.Replace("&", quantityColor + personOfInterest + closeColor);

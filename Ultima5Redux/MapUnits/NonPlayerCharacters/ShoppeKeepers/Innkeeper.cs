@@ -106,7 +106,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public int GetCostOfInnStay(PlayerCharacterRecord record)
         {
-            return GetBaseCostOfInnStay() * Math.Max(1, (int) record.MonthsSinceStayingAtInn);
+            return GetBaseCostOfInnStay() * Math.Max(1, (int)record.MonthsSinceStayingAtInn);
         }
 
         public int GetBaseCostOfInnStay()

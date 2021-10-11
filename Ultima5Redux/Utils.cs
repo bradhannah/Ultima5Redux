@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 
 namespace Ultima5Redux
 {
@@ -23,7 +22,7 @@ namespace Ultima5Redux
             int nextRan = Ran.Next();
             return nextRan % howMany == 0;
         }
-        
+
         public static int GetNumberBetween(int nMin, int nMax)
         {
             Debug.Assert(nMin < nMax);
@@ -31,11 +30,11 @@ namespace Ultima5Redux
             Random ran = new Random();
             return (ran.Next() % nDiff) + nMin;
         }
-        
+
         public static string AddSpacesBeforeCaps(string str)
         {
             // filthy method from here: https://stackoverflow.com/questions/272633/add-spaces-before-capital-letters
-            return new string(str.SelectMany((c, i) => i > 0 && char.IsUpper(c) ? new[] {' ', c} : new[] {c})
+            return new string(str.SelectMany((c, i) => i > 0 && char.IsUpper(c) ? new[] { ' ', c } : new[] { c })
                 .ToArray());
         }
 
@@ -84,7 +83,7 @@ namespace Ultima5Redux
 
         public static bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols, bool bDefault = false)
         {
-            return Init2DArray<bool>(numberOfRows, numberOfCols, bDefault);
+            return Init2DArray(numberOfRows, numberOfCols, bDefault);
         }
 
         public static T[][] TransposeArray<T>(T[][] ts)
@@ -198,7 +197,7 @@ namespace Ultima5Redux
             while (count < length && (curCharByte = byteArray[curOffset]) != 0x00)
             {
                 // cast to (char) to ensure the string understands it not a number
-                str += (char) curCharByte;
+                str += (char)curCharByte;
                 curOffset++;
                 count++;
             }
@@ -211,7 +210,7 @@ namespace Ultima5Redux
             string str = string.Empty;
             for (int i = 0; i < length; i++)
             {
-                str += (char) byteArray[i];
+                str += (char)byteArray[i];
             }
 
             return str;
@@ -224,7 +223,7 @@ namespace Ultima5Redux
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < length; i += 2)
             {
-                offsetArray.Add((ushort) (byteArray[i] | (byteArray[i + 1] << 8)));
+                offsetArray.Add((ushort)(byteArray[i] | (byteArray[i + 1] << 8)));
             }
 
             return offsetArray;
@@ -247,7 +246,7 @@ namespace Ultima5Redux
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < length; i += 2)
             {
-                offsetArray.Add((int) (byteArray[i] | ((uint) byteArray[i + 1] << 8)));
+                offsetArray.Add((int)(byteArray[i] | ((uint)byteArray[i + 1] << 8)));
             }
 
             return offsetArray;
@@ -302,10 +301,13 @@ namespace Ultima5Redux
         public static Queue<int> CreateRandomizedIntegerQueue(int nElements)
         {
             List<int> intList = new List<int>(nElements);
-            for (int i = 0; i < nElements; i++) { intList.Add(i); }
+            for (int i = 0; i < nElements; i++)
+            {
+                intList.Add(i);
+            }
 
             Random rng = new Random();
-            Queue<int> randomizedQueue = new Queue<int>(intList.OrderBy(o => rng.Next())); 
+            Queue<int> randomizedQueue = new Queue<int>(intList.OrderBy(o => rng.Next()));
             return randomizedQueue;
         }
     }

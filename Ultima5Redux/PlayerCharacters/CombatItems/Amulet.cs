@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Ultima5Redux.Data;
+﻿using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
@@ -12,12 +11,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public Amulet(AmuletEnum amuletType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef,
             int nQuantity)
-            : base(equipment, dataOvlRef, nQuantity, (int) amuletType, AMULET_SPRITE)
+            : base(equipment, dataOvlRef, nQuantity, (int)amuletType, AMULET_SPRITE)
         {
             AmuletType = amuletType;
         }
 
         public override bool HideQuantity => false;
-
     }
 }

@@ -2,25 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using Ultima5Redux.Maps;
 
 namespace Ultima5Redux
 {
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")] 
+    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
     public class Point2DFloat
     {
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
-            }
-        }
-
         public Point2DFloat(float x, float y)
         {
             X = x;
@@ -29,6 +19,14 @@ namespace Ultima5Redux
 
         public float X { get; set; }
         public float Y { get; set; }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
+            }
+        }
 
         public bool WithinN(Point2DFloat xy, float nWithin)
         {
@@ -99,8 +97,8 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Determines if the current point is out of the range provided
-        /// zero based (ie. if X > nMaxX)
+        ///     Determines if the current point is out of the range provided
+        ///     zero based (ie. if X > nMaxX)
         /// </summary>
         /// <param name="nMaxX">max X value</param>
         /// <param name="nMaxY">max Y value</param>
@@ -119,7 +117,7 @@ namespace Ultima5Redux
         }
 
         public Point2D GetAdjustedPosition(int nXDiff, int nYDiff) => new Point2D(X + nXDiff, Y + nYDiff);
-        
+
         public Point2D GetAdjustedPosition(Direction direction, int nSpaces = 1)
         {
             Point2D adjustedPos = Copy();
@@ -177,7 +175,7 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Gets the north, south, east and west points within the zero (only positive) based extents provided
+        ///     Gets the north, south, east and west points within the zero (only positive) based extents provided
         /// </summary>
         /// <param name="nXExtent"></param>
         /// <param name="nYExtent"></param>
@@ -185,7 +183,7 @@ namespace Ultima5Redux
         public List<Point2D> GetConstrainedFourDirectionSurroundingPoints(int nXExtent, int nYExtent)
         {
             List<Point2D> points = new List<Point2D>();
-            
+
             if (X - 1 >= 0) points.Add(new Point2D(X - 1, Y));
             if (Y - 1 >= 0) points.Add(new Point2D(X, Y - 1));
             if (X + 1 <= nXExtent) points.Add(new Point2D(X + 1, Y));
@@ -195,8 +193,8 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Gets a list of points that surround a particular point at "n units out". If you outside points
-        /// exceed the given points then it will add the points of the outermost yet valid points
+        ///     Gets a list of points that surround a particular point at "n units out". If you outside points
+        ///     exceed the given points then it will add the points of the outermost yet valid points
         /// </summary>
         /// <param name="nUnitsOut">how many units from the current point should it go out from</param>
         /// <param name="nXExtent">assuming 0 is left most, what is the x extent?</param>
@@ -205,27 +203,27 @@ namespace Ultima5Redux
         public List<Point2D> GetConstrainedSurroundingPoints(int nUnitsOut, int nXExtent, int nYExtent)
         {
             Debug.Assert(nUnitsOut >= 0);
-            if (nUnitsOut == 0) return new List<Point2D>() {this};
+            if (nUnitsOut == 0) return new List<Point2D> { this };
 
             List<Point2D> points = new List<Point2D>();
 
             void addAcross(int nY)
             {
                 Debug.Assert(nY >= 0);
-                for (int nX = Math.Max(0, this.X - nUnitsOut); nX < Math.Min(nXExtent, X + nUnitsOut + 1); nX++)
+                for (int nX = Math.Max(0, X - nUnitsOut); nX < Math.Min(nXExtent, X + nUnitsOut + 1); nX++)
                 {
-                    points.Add(new Point2D(nX, Math.Min(Math.Max(0,nY), nYExtent)));
+                    points.Add(new Point2D(nX, Math.Min(Math.Max(0, nY), nYExtent)));
                 }
             }
 
             void addDown(int nX)
             {
-                for (int nY = Math.Max(0, this.Y - nUnitsOut + 1); nY < Math.Min(nYExtent, Y + nUnitsOut); nY++)
+                for (int nY = Math.Max(0, Y - nUnitsOut + 1); nY < Math.Min(nYExtent, Y + nUnitsOut); nY++)
                 {
-                    points.Add(new Point2D(Math.Min(Math.Max(0,nX),nXExtent), nY));
+                    points.Add(new Point2D(Math.Min(Math.Max(0, nX), nXExtent), nY));
                 }
             }
-            
+
             addAcross(Y - nUnitsOut);
             addAcross(Y + nUnitsOut);
             addDown(X - nUnitsOut);
@@ -235,14 +233,14 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        /// Provides a list of intersecting points between two points
+        ///     Provides a list of intersecting points between two points
         /// </summary>
         /// <param name="endPoint">the end point you want to point to</param>
         /// <returns>A list of intersecting points</returns>
         public List<Point2D> Raytrace(Point2D endPoint) => Raytrace(this, endPoint);
-        
+
         /// <summary>
-        /// Provides a list of intersecting points between two points
+        ///     Provides a list of intersecting points between two points
         /// </summary>
         /// <param name="startPoint">start point</param>
         /// <param name="endPoint">end point</param>
@@ -261,7 +259,7 @@ namespace Ultima5Redux
             dx *= 2;
             dy *= 2;
 
-            List<Point2D> intersectingPoints = new List<Point2D>(); 
+            List<Point2D> intersectingPoints = new List<Point2D>();
 
             for (; n > 0; --n)
             {
@@ -282,7 +280,7 @@ namespace Ultima5Redux
 
             return intersectingPoints;
         }
-        
+
 
         public Point2D Copy()
         {
@@ -305,8 +303,7 @@ namespace Ultima5Redux
             return Y == other.Y;
         }
 
-        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")] 
-        public override int GetHashCode()
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")] public override int GetHashCode()
         {
             int hashCode = 1861411795;
             hashCode = hashCode * -1521134295 + X.GetHashCode();
@@ -328,6 +325,5 @@ namespace Ultima5Redux
         {
             return !(point1 == point2);
         }
-
     }
 }

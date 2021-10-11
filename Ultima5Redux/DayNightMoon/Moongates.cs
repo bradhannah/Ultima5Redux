@@ -6,8 +6,7 @@ using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.DayNightMoon
 {
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-    public class Moongates
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")] public class Moongates
     {
         /// <summary>
         ///     Total number of moonstones in game
@@ -142,11 +141,11 @@ namespace Ultima5Redux.DayNightMoon
                 throw new Ultima5ReduxException("Can't get a moonphase for a stone that ain't there at " + position);
             int nPos = -1;
             //foreach (Point3D xy in _moongatePositions)
-            Point3D xyzPos = new Point3D(position.X, position.Y, (int) map);
+            Point3D xyzPos = new Point3D(position.X, position.Y, (int)map);
             for (int nMoonstone = 0; nMoonstone < 8; nMoonstone++)
             {
                 Point3D xyz = _moongatePositions[nMoonstone];
-                if (xyz.Z != (int) map) continue;
+                if (xyz.Z != (int)map) continue;
                 if (xyzPos == xyz)
                 {
                     nPos = nMoonstone;
@@ -156,7 +155,7 @@ namespace Ultima5Redux.DayNightMoon
 
             if (nPos == -1) throw new Ultima5ReduxException("Unable to get moon phase by position");
             // the actual position in the array signifies the current moon phase
-            return (MoonPhaseReferences.MoonPhases) nPos;
+            return (MoonPhaseReferences.MoonPhases)nPos;
         }
 
         public bool IsMoonstoneBuried(Point2D position, Map.Maps map)

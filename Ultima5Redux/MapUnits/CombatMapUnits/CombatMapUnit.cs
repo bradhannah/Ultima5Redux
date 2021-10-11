@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Ultima5Redux.Data;
-using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -13,40 +10,17 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public abstract class CombatMapUnit : MapUnit
     {
+        public enum HitState
+        {
+            Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None
+        }
+
         private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
 
-        public abstract CharacterStats Stats { get; }
-        
-        public abstract int Defense { get; }
-        
-        public abstract int ClosestAttackRange { get; }
-
-        public abstract string Name { get; }
-        
-        public abstract int Dexterity { get; }
-
-        public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
-        
-        public CombatMapUnit PreviousAttackTarget { get; private set; }
-        
-        public bool HasEscaped { get; set; } = false;
-
-        public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
-
-        public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
-        public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
-        public abstract bool IsInvisible { get; } 
-        
-        public abstract string SingularName { get; }
-        public abstract string PluralName { get; }
-
-        public abstract int Experience { get; }
-        
         protected CombatMapUnit()
         {
-            
         }
-        
+
         protected CombatMapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
             PlayerCharacterRecords playerCharacterRecords, TileReferences tileReferences,
@@ -55,12 +29,74 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             smallMapTheSmallMapCharacterState, mapUnitMovement, playerCharacterRecords, tileReferences,
             location, dataOvlReference, Point2D.Direction.None)
         {
-            
         }
-        
-        public enum HitState { Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None }
 
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput, out string debugStr, bool bForceHit = false)
+        public abstract CharacterStats Stats { get; }
+
+        public abstract int Defense { get; }
+
+        public abstract int ClosestAttackRange { get; }
+
+        public abstract string Name { get; }
+
+        public abstract int Dexterity { get; }
+
+        public CombatMapUnit PreviousAttackTarget { get; private set; }
+
+        public bool HasEscaped { get; set; } = false;
+
+        public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
+
+        public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
+        public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
+        public abstract bool IsInvisible { get; }
+
+        public abstract string SingularName { get; }
+        public abstract string PluralName { get; }
+
+        public abstract int Experience { get; }
+
+        internal HitState CurrentHitState
+        {
+            get
+            {
+                int nCriticalThreshold = Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
+                int nHeavyThreshold = Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
+                int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
+
+                if (Stats.CurrentHp <= 0)
+                {
+                    return HitState.Dead;
+                }
+
+                if (Stats.CurrentHp < 24)
+                {
+                    return HitState.Fleeing;
+                }
+
+                if (Stats.CurrentHp < nCriticalThreshold)
+                {
+                    return HitState.CriticallyWounded;
+                }
+
+                if (Stats.CurrentHp < nHeavyThreshold)
+                {
+                    return HitState.HeavilyWounded;
+                }
+
+                if (Stats.CurrentHp < nLightThreshold)
+                {
+                    return HitState.LightlyWounded;
+                }
+
+                return HitState.BarelyWounded;
+            }
+        }
+
+        public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
+
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput,
+            out string debugStr, bool bForceHit = false)
         {
             bool bIsHit = IsHit(enemyCombatMapUnit, out debugStr) || bForceHit;
 
@@ -69,15 +105,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             int nAttack = GetAttackDamage(enemyCombatMapUnit, nAttackMax);
             if (!bIsHit)
             {
-                stateOutput = FriendlyName + DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd().Replace("!"," ")
-                              + enemyCombatMapUnit.FriendlyName + "!";
+                stateOutput = FriendlyName + DataOvlRef.StringReferences
+                                               .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd()
+                                               .Replace("!", " ")
+                                           + enemyCombatMapUnit.FriendlyName + "!";
                 return HitState.Missed;
             }
 
             if (nAttack == 0)
             {
-                stateOutput = FriendlyName + DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd().Replace("!"," ")
-                              + enemyCombatMapUnit.FriendlyName + "!";
+                stateOutput = FriendlyName + DataOvlRef.StringReferences
+                                               .GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd()
+                                               .Replace("!", " ")
+                                           + enemyCombatMapUnit.FriendlyName + "!";
                 return HitState.Grazed;
             }
 
@@ -97,7 +137,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return GetState(enemyCombatMapUnit, out stateOutput);
         }
 
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput, out string debugStr)
+        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput,
+            out string debugStr)
         {
             return Attack(enemyCombatMapUnit, weapon.AttackStat, out stateOutput, out debugStr);
         }
@@ -105,13 +146,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         private bool IsHit(CombatMapUnit enemyCombatMapUnit, out string debugStr)
         {
             const int nHitOffset = 128;
-            int randomNum = _random.Next(255);// % 256;
+            int randomNum = _random.Next(255); // % 256;
             bool bWasHit = (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
             debugStr =
                 $"Ran:{randomNum} Dex:{enemyCombatMapUnit.Stats.Dexterity} Dex+128:{enemyCombatMapUnit.Stats.Dexterity + 128} Hit:{bWasHit}";
             return bWasHit;
         }
-        
+
         // bool Creature::isHit(int hit_offset) {
         //     return (hit_offset + 128) >= xu4_random(0x100) ? true : false;
         // }
@@ -128,10 +169,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             int nDamage = nMaxDamage <= 0 ? 0 : _random.Next() % nMaxDamage;
             // 99 is max damage no matter what
             nDamage = Math.Min(nDamage, 99);
-            
+
             return nDamage;
         }
-        
+
         private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
         {
             const int BareHandAttack = 3;
@@ -141,43 +182,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return GetAttackDamage(enemyCombatMapUnit, nMaxDamage);
         }
 
-        
+
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange
              && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
-        internal HitState CurrentHitState
-        {
-            get
-            {
-                int nCriticalThreshold = Stats.MaximumHp >> 2; /* (MaximumHp / 4) */
-                int nHeavyThreshold = Stats.MaximumHp >> 1; /* (MaximumHp / 2) */
-                int nLightThreshold = nCriticalThreshold + nHeavyThreshold;
-
-                if (Stats.CurrentHp <= 0)
-                {
-                    return HitState.Dead;
-                }
-                if (Stats.CurrentHp < 24)
-                {
-                    return HitState.Fleeing;
-                }
-                if (Stats.CurrentHp < nCriticalThreshold)
-                {
-                    return HitState.CriticallyWounded;
-                }
-                if (Stats.CurrentHp < nHeavyThreshold)
-                {
-                    return HitState.HeavilyWounded;
-                }
-                if (Stats.CurrentHp < nLightThreshold)
-                {
-                    return HitState.LightlyWounded;
-                }
-                return HitState.BarelyWounded;
-            }
-        }
-        
         public HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {
             stateOutput = enemyCombatMapUnit.FriendlyName;
@@ -192,16 +201,20 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     stateOutput += " missed!";
                     break;
                 case HitState.BarelyWounded:
-                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._BARELY_WOUNDED_BANG_N);
+                    stateOutput +=
+                        DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._BARELY_WOUNDED_BANG_N);
                     break;
                 case HitState.LightlyWounded:
-                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._LIGHTLY_WOUNDED_BANG_N);
+                    stateOutput +=
+                        DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._LIGHTLY_WOUNDED_BANG_N);
                     break;
                 case HitState.HeavilyWounded:
-                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings.HEAVILY_WOUNDED_BANG_N);
+                    stateOutput +=
+                        DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings.HEAVILY_WOUNDED_BANG_N);
                     break;
                 case HitState.CriticallyWounded:
-                    stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
+                    stateOutput +=
+                        DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
                     break;
                 case HitState.Fleeing:
                     if (enemyCombatMapUnit is Enemy enemy)
@@ -211,8 +224,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     }
                     else
                     {
-                        stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
+                        stateOutput +=
+                            DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._CRITICAL_BANG_N);
                     }
+
                     break;
                 case HitState.Dead:
                     stateOutput += DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings._KILLED_BANG_N);
@@ -225,32 +240,32 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         //        /**
- // * Calculate damage for an attack.
- // */
- //        int PartyMember::getDamage() {
- //            int maxDamage;
- //
- //            maxDamage = Weapon::get(player->weapon)->getDamage();
- //            maxDamage += player->str;
- //            if (maxDamage > 255)
- //                maxDamage = 255;
- //
- //            return xu4_random(maxDamage);
- //        }
-        
-         //        /**
-         // * Determine whether a player's attack hits or not.
-         // */
-         //        bool PartyMember::attackHit(Creature *m) {
-         //            if (!m)
-         //                return false;
-         //            if (Weapon::get(player->weapon)->alwaysHits() || player->dex >= 40)
-         //                return true;
-         //
-         //            return(m->isHit(player->dex));
-         //        }
+        // * Calculate damage for an attack.
+        // */
+        //        int PartyMember::getDamage() {
+        //            int maxDamage;
+        //
+        //            maxDamage = Weapon::get(player->weapon)->getDamage();
+        //            maxDamage += player->str;
+        //            if (maxDamage > 255)
+        //                maxDamage = 255;
+        //
+        //            return xu4_random(maxDamage);
+        //        }
 
-        
+        //        /**
+        // * Determine whether a player's attack hits or not.
+        // */
+        //        bool PartyMember::attackHit(Creature *m) {
+        //            if (!m)
+        //                return false;
+        //            if (Weapon::get(player->weapon)->alwaysHits() || player->dex >= 40)
+        //                return true;
+        //
+        //            return(m->isHit(player->dex));
+        //        }
+
+
         // CreatureStatus Creature::getState() const {
         //     int heavy_threshold, light_threshold, crit_threshold;
         //

@@ -9,8 +9,6 @@ namespace Ultima5Redux.Maps
     public class TileOverrides
     {
         private readonly Dictionary<AllTerritories, List<TileOverride>> _tileOverrides;
-        
-        private enum AllTerritories { Britannia, Underworld, CombatBritannia, CombatDungeon}
 
         /// <summary>
         ///     Constructor loads resource and builds tables
@@ -28,11 +26,12 @@ namespace Ultima5Redux.Maps
             return (_tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
                 .FirstOrDefault(tileOverride => nFloor == tileOverride.Position.Floor) != null);
         }
-        
-        private List<TileOverride> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor) => 
-            !TileOverrideExists(territory, nMapNumber, nFloor) ? 
-                null : 
-                _tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber).Where(tile => nFloor == tile.Position.Floor).ToList();
+
+        private List<TileOverride> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor) =>
+            !TileOverrideExists(territory, nMapNumber, nFloor)
+                ? null
+                : _tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
+                    .Where(tile => nFloor == tile.Position.Floor).ToList();
 
         private static AllTerritories GetOverrideTerritory(SingleCombatMapReference singleCombatMapReference) =>
             singleCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Britannia
@@ -41,7 +40,7 @@ namespace Ultima5Redux.Maps
 
         private static AllTerritories GetOverrideTerritory(SmallMapReferences.SingleMapReference singleMapReference) =>
             singleMapReference.Floor == 0 ? AllTerritories.Britannia : AllTerritories.Underworld;
-        
+
         public List<TileOverride> GetTileOverrides(SingleCombatMapReference singleCombatMapReference)
             => GetTileOverrides(GetOverrideTerritory(singleCombatMapReference),
                 singleCombatMapReference.CombatMapNum, 0);
@@ -55,7 +54,8 @@ namespace Ultima5Redux.Maps
             => GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id,
                 singleMapReference.Floor);
 
-        private Dictionary<Point2D, TileOverride> GetTileXYOverrides(AllTerritories territory, int nMapNumber, int nFloor)
+        private Dictionary<Point2D, TileOverride> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
+            int nFloor)
         {
             Dictionary<Point2D, TileOverride> tileOverrideList = new Dictionary<Point2D, TileOverride>();
 
@@ -78,15 +78,18 @@ namespace Ultima5Redux.Maps
             GetOverrideTerritory(singleMapReference), singleMapReference.Id,
             singleMapReference.Floor);
 
-        public Dictionary<Point2D, TileOverride> GetTileXYOverrides(SingleCombatMapReference singleCombatMapReference) =>
-            GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum, 0);
+        public Dictionary<Point2D, TileOverride>
+            GetTileXYOverrides(SingleCombatMapReference singleCombatMapReference) =>
+            GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum,
+                0);
+
+        private enum AllTerritories { Britannia, Underworld, CombatBritannia, CombatDungeon }
     }
 
     /// <summary>
     ///     A single overriden tile
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
-    public class TileOverride
+    [JsonObject(MemberSerialization.OptIn)] public class TileOverride
     {
         [JsonProperty] public int MapNumber;
 

@@ -108,8 +108,8 @@ namespace Ultima5Redux.Dialogue
 
             // when a new section comes up, we can add it and then proceed to the next line by adding it
             // this is perpetual as long as there is more to see
-            _conversationOrder.Add((int) TalkScript.TalkConstants.Description);
-            _conversationOrder.Add((int) TalkScript.TalkConstants.Greeting);
+            _conversationOrder.Add((int)TalkScript.TalkConstants.Description);
+            _conversationOrder.Add((int)TalkScript.TalkConstants.Greeting);
             _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Description));
             _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Greeting));
 
@@ -185,7 +185,7 @@ namespace Ultima5Redux.Dialogue
                 // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
                 // OR if the Name line contains an IfElseKnowsName (#Eb)
                 if (!npcKnowsAvatar &&
-                    _conversationOrder[nConversationIndex] == (int) TalkScript.TalkConstants.Greeting &&
+                    _conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting &&
                     (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) ||
                      _script.GetScriptLine(TalkScript.TalkConstants.Name)
                          .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
@@ -330,7 +330,7 @@ namespace Ultima5Redux.Dialogue
         /// <returns>Users resonse</returns>
         private string GetResponse()
         {
-            lock (((ICollection) _responseQueue).SyncRoot)
+            lock (((ICollection)_responseQueue).SyncRoot)
             {
                 return _responseQueue.Dequeue();
             }
@@ -343,7 +343,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="output">ScripItem to add to queue</param>
         private void EnqueueToOutputBuffer(TalkScript.ScriptItem output)
         {
-            lock (((ICollection) _outputBufferQueue).SyncRoot)
+            lock (((ICollection)_outputBufferQueue).SyncRoot)
             {
                 _outputBufferQueue.Enqueue(output);
                 EnqueuedScriptItemCallback(this);
@@ -447,7 +447,7 @@ namespace Ultima5Redux.Dialogue
 
                 // if this is the very first position of conversation
                 // we must describe what we "see"
-                if (nTalkLineIndex == (int) TalkScript.TalkConstants.Description && nSplitLine == 0 && nItem == 0)
+                if (nTalkLineIndex == (int)TalkScript.TalkConstants.Description && nSplitLine == 0 && nItem == 0)
                     EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                         GetConversationStr(DataOvlReference.ChunkPhrasesConversation.YOU_SEE) + " "));
 
@@ -481,7 +481,8 @@ namespace Ultima5Redux.Dialogue
                         await AwaitResponse();
                         string avatarNameResponse = GetResponse();
                         // did they actually provide the Avatars name?
-                        if (string.Equals(avatarNameResponse, _gameStateRef.AvatarsName, StringComparison.CurrentCultureIgnoreCase))
+                        if (string.Equals(avatarNameResponse, _gameStateRef.AvatarsName,
+                            StringComparison.CurrentCultureIgnoreCase))
                         {
                             // i met them
                             _gameStateRef.SetNpcHasMetAvatar(Npc, true);
@@ -601,7 +602,7 @@ namespace Ultima5Redux.Dialogue
         /// <param name="response">the string response to add</param>
         public void AddUserResponse(string response)
         {
-            lock (((ICollection) _responseQueue).SyncRoot)
+            lock (((ICollection)_responseQueue).SyncRoot)
             {
                 _responseQueue.Enqueue(response);
             }
@@ -613,7 +614,7 @@ namespace Ultima5Redux.Dialogue
         /// <returns>The next ScripItem</returns>
         public TalkScript.ScriptItem DequeueFromOutputBuffer()
         {
-            lock (((ICollection) _outputBufferQueue).SyncRoot)
+            lock (((ICollection)_outputBufferQueue).SyncRoot)
             {
                 return _outputBufferQueue.Dequeue();
             }
@@ -626,9 +627,9 @@ namespace Ultima5Redux.Dialogue
         /// <returns>associated string</returns>
         public string GetConversationStr(DataOvlReference.ChunkPhrasesConversation index)
         {
-            char[] trimChars = {'"'};
+            char[] trimChars = { '"' };
             string convStr = _dataOvlRef
-                .GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int) index).Trim();
+                .GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index).Trim();
             convStr = convStr.Trim(trimChars);
             return convStr;
         }

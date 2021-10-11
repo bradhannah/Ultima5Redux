@@ -16,7 +16,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             int nIndex = 0;
             foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
             {
-                AddReagent(reagent, (DataOvlReference.ReagentStrings) nIndex++, dataOvlRef, state);
+                AddReagent(reagent, (DataOvlReference.ReagentStrings)nIndex++, dataOvlRef, state);
             }
         }
 
@@ -27,7 +27,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             DataOvlReference dataOvlRef, GameState state)
         {
             Reagent reagent = new Reagent(reagentType,
-                GameStateByteArray[(int) reagentType],
+                GameStateByteArray[(int)reagentType],
                 DataOvlRef.StringReferences.GetString(reagentStrRef),
                 DataOvlRef.StringReferences.GetString(reagentStrRef), dataOvlRef, state);
             Items[reagentType] = reagent;

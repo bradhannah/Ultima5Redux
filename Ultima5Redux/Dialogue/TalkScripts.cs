@@ -88,7 +88,7 @@ namespace Ultima5Redux.Dialogue
 
         public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
         {
-            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum) nNPC)
+            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC)
             ) return null;
             return _talkScriptRefs[smallMapRef][nNPC];
         }
@@ -135,7 +135,7 @@ namespace Ultima5Redux.Dialogue
                 {
                     // add 2 because we know we are starting at an offset
                     NPCTalkOffset talkOffset =
-                        (NPCTalkOffset) Utils.ReadStruct(talkByteList, 2 + i, typeof(NPCTalkOffset));
+                        (NPCTalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPCTalkOffset));
                     npcOffsets[talkOffset.npcIndex] = talkOffset;
 
                     // OMG I'm tired.. figure out why this isn't printing properly....
@@ -162,7 +162,7 @@ namespace Ultima5Redux.Dialogue
                     byte[] chunk = new byte[chunkLength];
 
                     // copy only the bytes from the offset
-                    talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int) chunkLength);
+                    talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int)chunkLength);
                     // Add the raw bytes to the specific Map+NPC#
                     _talkRefs[mapMaster]
                         .Add(key,
@@ -237,11 +237,11 @@ namespace Ultima5Redux.Dialogue
                     // I'm writing single characters, we will keep track so that when we hit the end we can insert a space
                     writingSingleCharacters = true;
                     // this signifies the end of the printing (sample code enters a newline)
-                    if ((char) tempByte == '@')
+                    if ((char)tempByte == '@')
                         //Console.WriteLine("");
                         continue;
                     //Console.Write((char)tempByte);
-                    buildAWord += (char) tempByte;
+                    buildAWord += (char)tempByte;
                     if (nGoldCharsLeft > 0 && --nGoldCharsLeft == 0)
                     {
                         talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, buildAWord);
@@ -302,8 +302,8 @@ namespace Ultima5Redux.Dialogue
                         else
                         {
                             // this is just a standard special command, so let's add it
-                            talkScript.AddTalkCommand((TalkScript.TalkCommand) tempByte, string.Empty);
-                            if ((TalkScript.TalkCommand) tempByte == TalkScript.TalkCommand.Gold)
+                            talkScript.AddTalkCommand((TalkScript.TalkCommand)tempByte, string.Empty);
+                            if ((TalkScript.TalkCommand)tempByte == TalkScript.TalkCommand.Gold)
                                 // here are always three extra characters after the gold, but only for gold
                                 // so we make sure we only capture the next 3 characters
                                 nGoldCharsLeft = 3;
@@ -323,8 +323,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     the mapping of NPC # to file .tlk file offset
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-        private readonly struct NPCTalkOffset
+        [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)] private readonly struct NPCTalkOffset
         {
             public readonly ushort npcIndex;
             public readonly ushort fileOffset;

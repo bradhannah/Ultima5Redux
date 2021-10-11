@@ -1,5 +1,3 @@
-﻿using System.Linq;
-
-static internal class Utils
+﻿static internal class Utils
 {
 }

@@ -20,6 +20,7 @@ namespace Ultima5Redux.MapUnits
     public class MapUnitState
     {
         public const int NBYTES = 0x8;
+
         // ReSharper disable once NotAccessedField.Local
         private readonly byte[] _stateBytes;
 
@@ -62,6 +63,7 @@ namespace Ultima5Redux.MapUnits
         private byte Depends2 { get; set; }
         internal byte Depends3 { get; set; }
         public TileReference Tile1Ref { get; internal set; }
+
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public TileReference Tile2Ref { get; internal set; }
 
@@ -84,7 +86,7 @@ namespace Ultima5Redux.MapUnits
             mapUnitState.SetTileReference(tileReferences.GetTileReference(_tile1));
         }
 
-        public static MapUnitState CreateMonster(TileReferences tileReferences, 
+        public static MapUnitState CreateMonster(TileReferences tileReferences,
             MapUnitPosition combatPlayerPosition, int nSprite)
         {
             MapUnitState combatPlayer = new MapUnitState();
@@ -97,15 +99,15 @@ namespace Ultima5Redux.MapUnits
             combatPlayer.Tile1Ref = tileReferences.GetTileReference(combatPlayer._tile1);
             combatPlayer.Tile2Ref = combatPlayer.Tile1Ref;
 
-            combatPlayer.X = (byte) combatPlayerPosition.X;
-            combatPlayer.Y = (byte) combatPlayerPosition.Y;
-            combatPlayer.Floor = (byte) combatPlayerPosition.Floor;
+            combatPlayer.X = (byte)combatPlayerPosition.X;
+            combatPlayer.Y = (byte)combatPlayerPosition.Y;
+            combatPlayer.Floor = (byte)combatPlayerPosition.Floor;
             return combatPlayer;
         }
 
-        
+
         public static MapUnitState CreateCombatPlayer(TileReferences tileReferences, PlayerCharacterRecord record,
-             MapUnitPosition combatPlayerPosition)
+            MapUnitPosition combatPlayerPosition)
         {
             MapUnitState combatPlayer = new MapUnitState();
 
@@ -117,9 +119,9 @@ namespace Ultima5Redux.MapUnits
             combatPlayer.Tile1Ref = tileReferences.GetTileReference(combatPlayer._tile1);
             combatPlayer.Tile2Ref = combatPlayer.Tile1Ref;
 
-            combatPlayer.X = (byte) combatPlayerPosition.X;
-            combatPlayer.Y = (byte) combatPlayerPosition.Y;
-            combatPlayer.Floor = (byte) combatPlayerPosition.Floor;
+            combatPlayer.X = (byte)combatPlayerPosition.X;
+            combatPlayer.Y = (byte)combatPlayerPosition.Y;
+            combatPlayer.Floor = (byte)combatPlayerPosition.Floor;
             return combatPlayer;
         }
 
@@ -148,9 +150,9 @@ namespace Ultima5Redux.MapUnits
             theAvatar.Tile1Ref = tileReferences.GetTileReference(theAvatar._tile1);
             theAvatar.Tile2Ref = theAvatar.Tile1Ref;
 
-            theAvatar.X = (byte) avatarPosition.X;
-            theAvatar.Y = (byte) avatarPosition.Y;
-            theAvatar.Floor = (byte) avatarPosition.Floor;
+            theAvatar.X = (byte)avatarPosition.X;
+            theAvatar.Y = (byte)avatarPosition.Y;
+            theAvatar.Floor = (byte)avatarPosition.Floor;
             return theAvatar;
         }
     }

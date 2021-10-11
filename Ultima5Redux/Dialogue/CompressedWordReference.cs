@@ -57,7 +57,7 @@ namespace Ultima5Redux.Dialogue
             Debug.Assert(indexStop <= 255);
             for (int i = indexStart; i <= indexStop; i++)
             {
-                _compressWordLookupMap.Add((byte) i, (byte) (i + offset));
+                _compressWordLookupMap.Add((byte)i, (byte)(i + offset));
             }
         }
 
@@ -145,12 +145,12 @@ namespace Ultima5Redux.Dialogue
 
             foreach (char c in rawString)
             {
-                byte byteWord = (byte) c;
+                byte byteWord = (byte)c;
                 byte tempByte = byteWord;
 
                 bool bUsePhraseLookup;
-                if (!(IsAcceptablePunctuation((char) byteWord) || IsAcceptableLettersOrDigits((char) byteWord) ||
-                      IsReplacementCharacter((char) byteWord)))
+                if (!(IsAcceptablePunctuation((char)byteWord) || IsAcceptableLettersOrDigits((char)byteWord) ||
+                      IsReplacementCharacter((char)byteWord)))
                 {
                     bUsePhraseLookup = true;
                     tempByte -= TALK_OFFSET_ADJUST;
@@ -194,7 +194,7 @@ namespace Ultima5Redux.Dialogue
                     //     continue;
                     // }
 
-                    buildAWord += (char) tempByte;
+                    buildAWord += (char)tempByte;
                 }
             }
 

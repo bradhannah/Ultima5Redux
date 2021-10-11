@@ -54,7 +54,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 .GetAsByteList();
             List<byte> quantities = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES)
                 .GetAsByteList();
-            int nOffset = (int) ReagentType - (int) ReagentTypeEnum.SulfurAsh;
+            int nOffset = (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
             int nReagents = Enum.GetNames(typeof(ReagentTypeEnum)).Length;
 
             // Get the locations that reagents are sold at
@@ -85,11 +85,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Standard index/order of reagents in data files
         /// </summary>
-        public int ReagentIndex => (int) ReagentType - (int) ReagentTypeEnum.SulfurAsh;
+        public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
 
         public override string InventoryReferenceString => ReagentType.ToString();
 
-        
+
         /// <summary>
         ///     Get all locations that reagents are sold
         /// </summary>
@@ -126,7 +126,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             // A big thank you to Markus Brenner (@minstrel_dragon) for digging in and figuring out the Karma calculation
             // price = Base Price * (1 + (100 - Karma) / 100)
-            int nAdjustedPrice = _reagentPriceAndQuantities[location].Price * (1 + (100 - (int) _state.Karma) / 100);
+            int nAdjustedPrice = _reagentPriceAndQuantities[location].Price * (1 + (100 - _state.Karma) / 100);
             return nAdjustedPrice;
         }
 

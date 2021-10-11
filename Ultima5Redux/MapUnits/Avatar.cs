@@ -8,25 +8,26 @@ namespace Ultima5Redux.MapUnits
 {
     public class Avatar : MapUnit
     {
-        private readonly bool _bUseExtendedSprites;
-
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
+
+        private readonly bool _bUseExtendedSprites;
 
         /// <summary>
         ///     Describes if there are only left right sprites
         /// </summary>
         private readonly Dictionary<AvatarState, bool> _onlyLeftRight = new Dictionary<AvatarState, bool>
         {
-            {AvatarState.Carpet, true},
-            {AvatarState.Frigate, false},
-            {AvatarState.Hidden, false},
-            {AvatarState.Horse, true},
-            {AvatarState.Skiff, false},
-            {AvatarState.Regular, false}
+            { AvatarState.Carpet, true },
+            { AvatarState.Frigate, false },
+            { AvatarState.Hidden, false },
+            { AvatarState.Horse, true },
+            { AvatarState.Skiff, false },
+            { AvatarState.Regular, false }
         };
 
         private Avatar(TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            MapUnitMovement movement, MapUnitState mapUnitState, DataOvlReference dataOvlReference, bool bUseExtendedSprites)
+            MapUnitMovement movement, MapUnitState mapUnitState, DataOvlReference dataOvlReference,
+            bool bUseExtendedSprites)
         {
             _bUseExtendedSprites = bUseExtendedSprites;
             DataOvlRef = dataOvlReference;
@@ -61,11 +62,11 @@ namespace Ultima5Redux.MapUnits
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
             = new Dictionary<Point2D.Direction, string>
             {
-                {Point2D.Direction.None, "BasicAvatar"},
-                {Point2D.Direction.Left, "BasicAvatar"},
-                {Point2D.Direction.Down, "BasicAvatar"},
-                {Point2D.Direction.Right, "BasicAvatar"},
-                {Point2D.Direction.Up, "BasicAvatar"}
+                { Point2D.Direction.None, "BasicAvatar" },
+                { Point2D.Direction.Left, "BasicAvatar" },
+                { Point2D.Direction.Down, "BasicAvatar" },
+                { Point2D.Direction.Right, "BasicAvatar" },
+                { Point2D.Direction.Up, "BasicAvatar" }
             };
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
@@ -74,9 +75,9 @@ namespace Ultima5Redux.MapUnits
         public override string BoardXitName => "You can't board the Avatar you silly goose!";
 
         public override bool IsActive => true;
-        
+
         public override bool IsAttackable => false;
-        
+
         public override string FriendlyName => "Avatar";
 
         internal AvatarState CurrentAvatarState { get; private set; }
@@ -85,7 +86,7 @@ namespace Ultima5Redux.MapUnits
 
         public bool AreSailsHoisted => IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate &&
                                        frigate.SailsHoisted;
-        
+
         /// <summary>
         ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
         ///     the current MapUnits object
@@ -130,7 +131,7 @@ namespace Ultima5Redux.MapUnits
             // if there are only left and right sprites then we don't switch directions unless they actually
             // go left or right, otherwise we maintain direction - UNLESS we have forced extended sprites on
             // for the vehicle
-            bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections??false;
+            bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections ?? false;
             if (_onlyLeftRight[CurrentAvatarState] && !bUseFourDirections)
                 if (direction != Point2D.Direction.Left && direction != Point2D.Direction.Right)
                     bChangeTile = false;
@@ -172,7 +173,7 @@ namespace Ultima5Redux.MapUnits
             SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
             MapUnitState mapUnitState, DataOvlReference dataOvlReference, bool bUseExtendedSprites)
         {
-            Avatar theAvatar = new Avatar(tileReferences, location, movement, mapUnitState, dataOvlReference, 
+            Avatar theAvatar = new Avatar(tileReferences, location, movement, mapUnitState, dataOvlReference,
                 bUseExtendedSprites);
 
             return theAvatar;
@@ -183,7 +184,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         internal MapUnit UnboardedAvatar()
         {
-            KeyTileReference = NonBoardedTileReference; 
+            KeyTileReference = NonBoardedTileReference;
             CurrentAvatarState = AvatarState.Regular;
             MapUnit previouslyBoardedMapUnit = CurrentBoardedMapUnit;
             CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
@@ -244,7 +245,7 @@ namespace Ultima5Redux.MapUnits
             CurrentBoardedMapUnit.IsOccupiedByAvatar = true;
 
             mapUnit.UseFourDirections = _bUseExtendedSprites;
-            
+
             if (!(mapUnit is Frigate)) return;
 
             // if we are going onto a frigate, then we want to make sure the Avatar can start rowing

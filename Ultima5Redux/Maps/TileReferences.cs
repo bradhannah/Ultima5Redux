@@ -8,14 +8,15 @@ namespace Ultima5Redux.Maps
 {
     public class TileReferences
     {
+        private readonly Dictionary<int, int> _npcOnTopMap;
+
+        private readonly Dictionary<int, int> _npcOnTopMapWithFood;
+
         /// <summary>
         ///     String references for Ultima 5
         /// </summary>
         private readonly U5StringRef _u5StringRef;
 
-        private readonly Dictionary<int, int> _npcOnTopMapWithFood;
-        private readonly Dictionary<int, int> _npcOnTopMap;
-        
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -45,7 +46,6 @@ namespace Ultima5Redux.Maps
                 [GetTileNumberByName("ChairBackBack")] = GetTileNumberByName("SitChairUp"),
                 [GetTileNumberByName("ChairBackRight")] = GetTileNumberByName("SitChairRight")
             };
-
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace Ultima5Redux.Maps
                                                                  "StairsSouth"); // is it a ladder
             return bIsLadder;
         }
-        
-       /// <summary>
+
+        /// <summary>
         ///     Is the sprite a klimbable grate?
         /// </summary>
         /// <param name="nSprite"></param>

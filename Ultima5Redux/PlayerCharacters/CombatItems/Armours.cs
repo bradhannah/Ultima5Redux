@@ -56,7 +56,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private void AddChestArmour(ChestArmour.ChestArmourEnum chestArmour, DataOvlReference.Equipment equipment)
         {
-            ChestArmour armour = new ChestArmour(chestArmour, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
+            ChestArmour armour =
+                new ChestArmour(chestArmour, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
             ChestArmours.Add(armour);
             ItemsFromEquipment.Add(equipment, armour);
         }
@@ -65,7 +66,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             Helm armour = new Helm(helm, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
             Helms.Add(armour);
-            ItemsFromEquipment.Add(equipment, armour); 
+            ItemsFromEquipment.Add(equipment, armour);
         }
 
         private void AddAmulet(Amulet.AmuletEnum amulet, DataOvlReference.Equipment equipment)

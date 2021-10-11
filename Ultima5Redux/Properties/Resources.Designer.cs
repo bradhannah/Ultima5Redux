@@ -68,7 +68,8 @@ namespace Ultima5Redux.Properties {
         ///    &quot;IsWaterEnemy&quot;: false,
         ///    &quot;DoNotMove&quot;: false,
         ///    &quot;CanFlyOverWater&quot;: false,
-        ///    &quot;CanPassThroughWalls&quot;: false
+        ///    &quot;CanPassThroughWalls&quot;: false,
+        ///    &quot;ActivelyAttacks&quot;: true
         ///  },
         ///  {
         ///    &quot;Name&quot;: &quot;Bard1/BARD&quot;,
@@ -76,15 +77,14 @@ namespace Ultima5Redux.Properties {
         ///    &quot;IsWaterEnemy&quot;: false,
         ///    &quot;DoNotMove&quot;: false,
         ///    &quot;CanFlyOverWater&quot;: false,
-        ///    &quot;CanPassThroughWalls&quot;: false
+        ///    &quot;CanPassThroughWalls&quot;: false,
+        ///    &quot;ActivelyAttacks&quot;: true
         ///  },
         ///  {
         ///    &quot;Name&quot;: &quot;Fighter1/FIGHTER&quot;,
         ///    &quot;Experience&quot;: 6,
         ///    &quot;IsWaterEnemy&quot;: false,
-        ///    &quot;DoNotMove&quot;: false,
-        ///    &quot;CanFlyOverWater&quot;: false,
-        ///     [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AdditionalEnemyFlags {
             get {
@@ -135,19 +135,20 @@ namespace Ultima5Redux.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///   &quot;Reagent&quot;: [
-        ///      {
-        ///         &quot;ItemName&quot;: &quot;SulfurAsh&quot;,
-        ///         &quot;ItemNameHighlight&quot;: &quot;sulphurous ash,ash&quot;,
-        ///         &quot;ItemSprite&quot;: &quot;SulfurAsh.2d&quot;,
-        ///         &quot;ItemSpriteExposed&quot;: 0,
-        ///         &quot;ItemDescription&quot;: &quot;Common material left by volcanic action, ash is an excellent source of energy in magical mixtures.&quot;,
-        ///         &quot;ItemDescriptionAttribution&quot;: &quot;The Book of Lore (Ultima V)&quot;
-        ///      },
-        ///      {
-        ///         &quot;ItemName&quot;: &quot;Ginseng&quot;,
-        ///         &quot;ItemNameHighlight&quot;: &quot;ginseng&quot;,
-        ///         &quot;ItemSprite&quot;: &quot;Gi [rest of string was truncated]&quot;;.
+        ///  &quot;Reagent&quot;: [
+        ///    {
+        ///      &quot;ItemName&quot;: &quot;SulfurAsh&quot;,
+        ///      &quot;ItemNameHighlight&quot;: &quot;sulphurous ash,ash&quot;,
+        ///      &quot;ItemSprite&quot;: &quot;SulfurAsh.2d&quot;,
+        ///      &quot;ItemSpriteExposed&quot;: 0,
+        ///      &quot;ItemDescription&quot;: &quot;Common material left by volcanic action, ash is an excellent source of energy in magical mixtures.&quot;,
+        ///      &quot;ItemDescriptionAttribution&quot;: &quot;The Book of Lore (Ultima V)&quot;
+        ///    },
+        ///    {
+        ///      &quot;ItemName&quot;: &quot;Ginseng&quot;,
+        ///      &quot;ItemNameHighlight&quot;: &quot;ginseng&quot;,
+        ///      &quot;ItemSprite&quot;: &quot;Ginseng.2d&quot;,
+        ///      &quot;ItemSpriteExpos [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InventoryDetails {
             get {
@@ -196,6 +197,7 @@ namespace Ultima5Redux.Properties {
         ///    &quot;Name&quot;: &quot;Explosion&quot;,
         ///    &quot;Description&quot;: &quot;&quot;,
         ///    &quot;IsWalking_Passable&quot;: true,
+        ///    &quot;RangeWeapon_Passable&quot;: true,
         ///    &quot;IsBoat_Passable&quot;: true,
         ///    &quot;IsSkiff_Passable&quot;: true,
         ///    &quot;IsCarpet_Passable&quot;: true,
@@ -208,8 +210,7 @@ namespace Ultima5Redux.Properties {
         ///    &quot;IsPartOfAnimation&quot;: false,
         ///    &quot;AnimationIndex&quot;: 0,
         ///    &quot;IsUpright&quot;: true,
-        ///    &quot;FlatTileSubstitutionIndex&quot;: 5,
-        ///    &quot;FlatTileSubstitutionN [rest of string was truncated]&quot;;.
+        ///    &quot;FlatTileSubstitutionInd [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TileData {
             get {
@@ -219,36 +220,33 @@ namespace Ultima5Redux.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;0&quot;: [
+        ///  &quot;Britannia&quot;: [
         ///    {
-        ///      &quot;X&quot;: 45,
-        ///      &quot;Y&quot;: 62,
+        ///      &quot;MapNumber&quot;: 30,
+        ///      &quot;X&quot;: 13,
+        ///      &quot;Y&quot;: 25,
         ///      &quot;Z&quot;: 0,
         ///      &quot;SpriteNum&quot;: 5,
         ///      &quot;SpriteName&quot;: &quot;Grass&quot;,
-        ///      &quot;Comment&quot;: &quot;Iolos hut&quot;
-        ///    }
-        ///  ],
-        ///  &quot;2&quot;: [
-        ///    {
-        ///      &quot;X&quot;: 13,
-        ///      &quot;Y&quot;: 19,
-        ///      &quot;Z&quot;: 0,
-        ///      &quot;SpriteNum&quot;: 48,
-        ///      &quot;SpriteName&quot;: &quot;OutsidePath1&quot;,
-        ///      &quot;Comment&quot;: &quot;Britain lamps&quot;
+        ///      &quot;Comment&quot;: &quot;Lycaeum&quot;
         ///    },
         ///    {
+        ///      &quot;MapNumber&quot;: 30,
         ///      &quot;X&quot;: 17,
-        ///      &quot;Y&quot;: 19,
+        ///      &quot;Y&quot;: 25,
         ///      &quot;Z&quot;: 0,
-        ///      &quot;SpriteNum&quot;: 48,
-        ///      &quot;SpriteName&quot;: &quot;OutsidePath1&quot;,
-        ///      &quot;Comment&quot;: &quot;Britain lamps&quot;
+        ///      &quot;SpriteNum&quot;: 5,
+        ///      &quot;SpriteName&quot;: &quot;Grass&quot;,
+        ///      &quot;Comment&quot;: &quot;Lycaeum&quot;
         ///    },
         ///    {
-        ///      &quot;X&quot;: 17,
-        ///   [rest of string was truncated]&quot;;.
+        ///      &quot;MapNumber&quot;: 30,
+        ///      &quot;X&quot;: 23,
+        ///      &quot;Y&quot;: 13,
+        ///      &quot;Z&quot;: 0,
+        ///      &quot;SpriteNum&quot;: 68,
+        ///      &quot;SpriteName&quot;: &quot;BrickFloor&quot;,
+        ///      &quot;Comment&quot;: &quot;Ly [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TileOverrides {
             get {

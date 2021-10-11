@@ -4,7 +4,7 @@ namespace Ultima5Redux.Maps
 {
     public abstract class RegularMap : Map
     {
-        protected RegularMap(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference, 
+        protected RegularMap(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference,
             TileReferences spriteTileReferences) : base(tileOverrides, spriteTileReferences)
         {
             CurrentSingleMapReference = singleSmallMapReference;
@@ -17,6 +17,5 @@ namespace Ultima5Redux.Maps
         protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
 
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
-
     }
 }

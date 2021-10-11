@@ -103,7 +103,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // Note that buying prices are rounded down, while selling prices are rounded up.
             // http://infinitron.nullneuron.net/u5eco.html
             int nAdjustedPrice = nBasePrice -
-                                 _state.CharacterRecords.AvatarRecord.Stats.Intelligence * (int) (nBasePrice * 0.015f);
+                                 _state.CharacterRecords.AvatarRecord.Stats.Intelligence * (int)(nBasePrice * 0.015f);
             //* (1 + (100 - (int)_state.CharacterRecords.AvatarRecord.Stats.Intelligence) / 100)); 
             return nAdjustedPrice;
         }
@@ -159,14 +159,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             public static readonly Dictionary<ProvisionTypeEnum, int> BundleQuantity =
                 new Dictionary<ProvisionTypeEnum, int>
                 {
-                    {ProvisionTypeEnum.Torches, 5}, {ProvisionTypeEnum.Keys, 3}, {ProvisionTypeEnum.Gems, 4}
+                    { ProvisionTypeEnum.Torches, 5 }, { ProvisionTypeEnum.Keys, 3 }, { ProvisionTypeEnum.Gems, 4 }
                 };
 
             // the order of the provisions in the _prices array
             public static readonly Dictionary<ProvisionTypeEnum, int> ProvisionOrder =
                 new Dictionary<ProvisionTypeEnum, int>
                 {
-                    {ProvisionTypeEnum.Keys, 0}, {ProvisionTypeEnum.Gems, 1}, {ProvisionTypeEnum.Torches, 2}
+                    { ProvisionTypeEnum.Keys, 0 }, { ProvisionTypeEnum.Gems, 1 }, { ProvisionTypeEnum.Torches, 2 }
                 };
         }
     }

@@ -24,7 +24,7 @@ namespace Ultima5Redux.Maps
             {
                 Point2D mapPoint = new Point2D(xPos[nVector], yPos[nVector]);
                 SmallMapReferences.SingleMapReference.Location location =
-                    (SmallMapReferences.SingleMapReference.Location) nVector + 1;
+                    (SmallMapReferences.SingleMapReference.Location)nVector + 1;
                 LocationXY.Add(location, mapPoint);
                 LocationXYLocations.Add(mapPoint, location);
             }

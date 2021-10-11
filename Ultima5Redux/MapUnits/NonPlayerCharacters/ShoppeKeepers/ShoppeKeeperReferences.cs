@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.Properties;
+
 // ReSharper disable CommentTypo
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
@@ -88,7 +89,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
             List<byte> equipmentByteListForTown = equipmentByteList.GetRange(nStartIndex, nMaxItemsPerTown);
             List<DataOvlReference.Equipment> equipmentList = equipmentByteListForTown
-                .Select(b => (DataOvlReference.Equipment) b).ToList();
+                .Select(b => (DataOvlReference.Equipment)b).ToList();
 
             equipmentList.Remove(DataOvlReference.Equipment.Nothing);
             return equipmentList;

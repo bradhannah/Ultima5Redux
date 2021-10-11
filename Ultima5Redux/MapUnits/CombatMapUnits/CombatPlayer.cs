@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Policy;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.Monsters;
-using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -17,12 +14,32 @@ namespace Ultima5Redux.MapUnits
     public class CombatPlayer : CombatMapUnit
     {
         private readonly Inventory _inventory;
+
+        public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy,
+            DataOvlReference dataOvlReference,
+            Inventory inventory)
+        {
+            _inventory = inventory;
+            DataOvlRef = dataOvlReference;
+            Record = record;
+            TileReferences = tileReferences;
+            TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record,
+                new MapUnitPosition(xy.X, xy.Y, 0));
+
+            // set the characters position 
+            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
+        }
+
+        public CombatPlayer()
+        {
+        }
+
         public PlayerCharacterRecord Record { get; }
 
         public override int Defense => _inventory.GetCharacterTotalDefense(Record);
 
         public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.Range);
-        
+
         public override string Name => Record.Name;
 
         public override CharacterStats Stats => Record.Stats;
@@ -30,8 +47,7 @@ namespace Ultima5Redux.MapUnits
         public override bool IsAttackable => true;
         public override string FriendlyName => Record.Name;
 
-        public override int Dexterity => (byte) Record.Stats.Dexterity;
-        public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;
+        public override int Dexterity => (byte)Record.Stats.Dexterity;
         public override string SingularName => FriendlyName;
         public override string PluralName => FriendlyName;
         public override int Experience => 0;
@@ -42,56 +58,43 @@ namespace Ultima5Redux.MapUnits
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
         public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
 
-        public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy, DataOvlReference dataOvlReference,
-            Inventory inventory)
-        {
-            _inventory = inventory;
-            DataOvlRef = dataOvlReference;
-            Record = record;
-            TileReferences = tileReferences;
-            TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record, 
-                new MapUnitPosition(xy.X, xy.Y, 0));
-
-            // set the characters position 
-            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
-        }
-
-        public CombatPlayer()
-        {
-            
-        }
-
-        public override string ToString()
-        {
-            return Record.Name;
-        }
-        
         public override TileReference KeyTileReference
         {
-            get 
+            get
             {
                 if (Record.IsInvisible)
                 {
                     return TileReferences.GetTileReferenceByName("Apparition");
                 }
+
                 if (Record.IsRat)
                 {
                     return TileReferences.GetTileReferenceByName("Rat1");
                 }
 
-                switch(Stats.Status) 
+                switch (Stats.Status)
                 {
-                    case PlayerCharacterRecord.CharacterStatus.Dead: 
-                    case PlayerCharacterRecord.CharacterStatus.Asleep: 
+                    case PlayerCharacterRecord.CharacterStatus.Dead:
+                    case PlayerCharacterRecord.CharacterStatus.Asleep:
                         return TileReferences.GetTileReferenceByName("DeadBody");
                     default: return TileReferences.GetTileReferenceOfKeyIndex(base.KeyTileReference.Index);
-                };
+                }
+
+                ;
+            }
+            set => base.KeyTileReference = value;
         }
-        set => base.KeyTileReference = value;
+
+        public override bool IsInvisible => Record.IsInvisible;
+        public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;
+
+        public override string ToString()
+        {
+            return Record.Name;
         }
 
         /// <summary>
-        /// Gets the string used to describe all available weapons that will be outputted to user
+        ///     Gets the string used to describe all available weapons that will be outputted to user
         /// </summary>
         /// <returns></returns>
         public string GetAttackWeaponsString()
@@ -100,7 +103,7 @@ namespace Ultima5Redux.MapUnits
 
             if (combatItems == null) return "bare hands";
 
-            string combatItemString  = "";
+            string combatItemString = "";
             for (int index = 0; index < combatItems.Count; index++)
             {
                 CombatItem item = combatItems[index];
@@ -113,7 +116,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        /// Gets a list of all weapons that are available for use by given player character. The list is ordered. 
+        ///     Gets a list of all weapons that are available for use by given player character. The list is ordered.
         /// </summary>
         /// <returns>List of attack weapons</returns>
         public List<CombatItem> GetAttackWeapons()
@@ -127,7 +130,7 @@ namespace Ultima5Redux.MapUnits
                 return equipment != DataOvlReference.Equipment.Nothing &&
                        _inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.AttackStat > 0;
             }
-            
+
             if (isAttackingCombatItem(Record.Equipped.Helmet))
                 weapons.Add(_inventory.GetItemFromEquipment(Record.Equipped.Helmet));
 
@@ -146,13 +149,11 @@ namespace Ultima5Redux.MapUnits
                 Debug.Assert(bBareHands);
                 weapons.Add(_inventory.GetItemFromEquipment(DataOvlReference.Equipment.BareHands));
             }
-            
+
             return weapons;
         }
 
         public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
             CanReachForMeleeAttack(opponentCombatMapUnit, item.Range);
-
-        public override bool IsInvisible => Record.IsInvisible;
     }
 }

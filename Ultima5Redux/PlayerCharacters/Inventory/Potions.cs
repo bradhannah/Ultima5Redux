@@ -23,7 +23,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private void AddPotion(Potion.PotionColor color, DataOvlReference.PotionsStrings potStr)
         {
-            Items[color] = new Potion(color, GameStateByteArray[(int) color],
+            Items[color] = new Potion(color, GameStateByteArray[(int)color],
                 DataOvlRef.StringReferences.GetString(potStr),
                 DataOvlRef.StringReferences.GetString(potStr));
         }

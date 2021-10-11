@@ -57,9 +57,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public override string BoardXitName => "Board them? You hardly know them!";
 
         public override bool IsAttackable => true;
-        
+
         public override string FriendlyName => NPCRef.FriendlyName;
-        
+
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>
@@ -144,7 +144,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     Move(npcXy, timeOfDay, false);
                 }
             }
-            
+
             // the NPC is a non-NPC, so we keep looking
             if (npcXy.X == 0 && npcXy.Y == 0) return;
 

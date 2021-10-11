@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Ultima5Redux.Data;
+﻿using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
@@ -12,7 +11,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public Ring(RingEnum ringType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef,
             int nQuantity)
-            : base(equipment, dataOvlRef, nQuantity, (int) ringType, RING_SPRITE)
+            : base(equipment, dataOvlRef, nQuantity, (int)ringType, RING_SPRITE)
         {
             RingType = ringType;
         }

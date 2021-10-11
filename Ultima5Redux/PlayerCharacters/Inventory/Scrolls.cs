@@ -29,9 +29,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private void AddScroll(Spell.SpellWords spellWord, DataOvlReference.SpellStrings spellStr)
         {
             Scroll.ScrollSpells scrollSpell =
-                (Scroll.ScrollSpells) Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
+                (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
 
-            int nIndex = 0x27A + (int) scrollSpell;
+            int nIndex = 0x27A + (int)scrollSpell;
             Items[spellWord] = new Scroll(spellWord, GameStateByteArray[nIndex],
                 DataOvlRef.StringReferences.GetString(spellStr),
                 DataOvlRef.StringReferences.GetString(spellStr));

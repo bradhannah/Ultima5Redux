@@ -88,8 +88,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public List<NonPlayerCharacterReference> GetNonPlayerCharactersByLocation(
             SmallMapReferences.SingleMapReference.Location location)
         {
-            return _locationToNPCsDictionary.ContainsKey(location) ? _locationToNPCsDictionary[location] : 
-                new List<NonPlayerCharacterReference>();
+            return _locationToNPCsDictionary.ContainsKey(location)
+                ? _locationToNPCsDictionary[location]
+                : new List<NonPlayerCharacterReference>();
         }
 
         public NonPlayerCharacterReference GetNonPlayerCharacterByName(string name)
@@ -162,7 +163,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 for (int offset = townOffset; count < NPCS_PER_TOWN; offset += ScheduleOffsetSize, count++)
                 {
                     NonPlayerCharacterReference.NPCSchedule schedule =
-                        (NonPlayerCharacterReference.NPCSchedule) Utils.ReadStruct(npcData, offset,
+                        (NonPlayerCharacterReference.NPCSchedule)Utils.ReadStruct(npcData, offset,
                             typeof(NonPlayerCharacterReference.NPCSchedule));
                     schedules.Add(schedule);
                 }

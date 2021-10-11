@@ -331,7 +331,7 @@ namespace Ultima5Redux.Data
             for (int nByte = nStart; nByte < nStart + nLength; nByte++)
             {
                 byte compareByte = 0x80;
-                byte curByte = (byte) (RawData[nByte] + ValueModifier); 
+                byte curByte = (byte)(RawData[nByte] + ValueModifier);
 
                 for (int nBit = BITS_PER_BYTE - 1; nBit >= 0; nBit--)
                 {
@@ -344,7 +344,7 @@ namespace Ultima5Redux.Data
 
             return boolList;
         }
-        
+
         /// <summary>
         ///     Returns the data in the form of each bit represented as a boolean value
         /// </summary>
@@ -366,7 +366,7 @@ namespace Ultima5Redux.Data
             for (int i = 0; i < DataLength; i++)
             {
                 byte rawData = RawData[i];
-                data.Add((byte) (rawData + ValueModifier));
+                data.Add((byte)(rawData + ValueModifier));
             }
 
             return data;
@@ -377,7 +377,7 @@ namespace Ultima5Redux.Data
             Debug.Assert(nIndex < RawData.Length && nIndex >= 0);
             return RawData[nIndex];
         }
-        
+
 
         public void SetChunkAsByte(byte data)
         {
@@ -386,8 +386,8 @@ namespace Ultima5Redux.Data
 
         public void SetChunkAsUint16(ushort data)
         {
-            RawData[0] = (byte) (data & 0xFF);
-            RawData[1] = (byte) ((data >> 8) & 0xFF);
+            RawData[0] = (byte)(data & 0xFF);
+            RawData[1] = (byte)((data >> 8) & 0xFF);
         }
 
         public byte GetChunkAsByte()
@@ -401,7 +401,7 @@ namespace Ultima5Redux.Data
         /// <returns>UINT16s</returns>
         public ushort GetChunkAsUint16()
         {
-            ushort data = (ushort) (RawData[0] | (RawData[1] << 8));
+            ushort data = (ushort)(RawData[0] | (RawData[1] << 8));
             return data;
         }
 
@@ -415,7 +415,7 @@ namespace Ultima5Redux.Data
             List<ushort> data = Utils.CreateOffsetList(RawData, FileOffset, DataLength);
             for (int i = 0; i < data.Count; i++)
             {
-                data[i] = (ushort) (data[i] + ValueModifier);
+                data[i] = (ushort)(data[i] + ValueModifier);
             }
 
             return data;

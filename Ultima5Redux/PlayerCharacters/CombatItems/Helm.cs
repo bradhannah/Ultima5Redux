@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Ultima5Redux.Data;
+﻿using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
@@ -13,7 +12,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public Helm(HelmEnum helmType, DataOvlReference.Equipment equipment, DataOvlReference dataOvlRef,
             int nQuantity)
-            : base(equipment, dataOvlRef, nQuantity, (int) helmType, HELM_SPRITE)
+            : base(equipment, dataOvlRef, nQuantity, (int)helmType, HELM_SPRITE)
         {
             HelmType = helmType;
         }

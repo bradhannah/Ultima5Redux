@@ -5,22 +5,25 @@ using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class TileReference
+    [DataContract] [SuppressMessage("ReSharper", "InconsistentNaming")] public class TileReference
     {
         [DataMember] public int AnimationIndex;
+        [DataMember] public bool BlocksLight;
+        [DataMember] public SingleCombatMapReference.BritanniaCombatMaps CombatMapIndex;
         [DataMember] public string Description;
         [DataMember] public bool DontDraw;
         [DataMember] public int FlatTileSubstitutionIndex;
         [DataMember] public string FlatTileSubstitutionName;
         [DataMember] public int Index;
-        [DataMember] public bool RangeWeapon_Passable;
         [DataMember] public bool IsBoardable;
         [DataMember] public bool IsBoat_Passable;
         [DataMember] public bool IsBuilding;
         [DataMember] public bool IsCarpet_Passable;
         [DataMember] public bool IsEnemy;
+        [DataMember] public bool IsGuessableFloor;
+        [DataMember] public bool IsHorse_Passable;
         [DataMember] public bool IsKlimable;
+        [DataMember] public bool IsLandEnemyPassable;
         [DataMember] public bool IsNPC;
         [DataMember] public bool IsOpenable;
         [DataMember] public bool IsPartOfAnimation;
@@ -29,16 +32,12 @@ namespace Ultima5Redux.Maps
         [DataMember] public bool IsTalkOverable;
         [DataMember] public bool IsUpright;
         [DataMember] public bool IsWalking_Passable;
-        [DataMember] public string Name;
-        [DataMember] public int SpeedFactor;
-        [DataMember] public bool IsHorse_Passable;
-        [DataMember] public bool IsGuessableFloor;
-        [DataMember] public bool BlocksLight;
-        [DataMember] public bool IsWindow;
-        [DataMember] public SingleCombatMapReference.BritanniaCombatMaps CombatMapIndex;
-        [DataMember] public bool IsLandEnemyPassable;
         [DataMember] public bool IsWaterEnemyPassable;
-        	
+        [DataMember] public bool IsWindow;
+        [DataMember] public string Name;
+        [DataMember] public bool RangeWeapon_Passable;
+        [DataMember] public int SpeedFactor;
+
 
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 

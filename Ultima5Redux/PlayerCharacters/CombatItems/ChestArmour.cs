@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Ultima5Redux.Data;
+﻿using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
@@ -17,7 +16,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public ChestArmour(ChestArmourEnum chestArmourType, DataOvlReference.Equipment equipment,
             DataOvlReference dataOvlRef, int nQuantity)
-            : base(equipment, dataOvlRef, nQuantity, (int) chestArmourType, CHEST_ARMOUR_SPRITE)
+            : base(equipment, dataOvlRef, nQuantity, (int)chestArmourType, CHEST_ARMOUR_SPRITE)
         {
             ChestArmourType = chestArmourType;
         }

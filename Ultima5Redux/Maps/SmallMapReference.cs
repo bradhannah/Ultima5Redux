@@ -143,7 +143,7 @@ namespace Ultima5Redux.Maps
             // get the master map file from the location info
             SingleMapReference.SmallMapMasterFiles masterMap = SingleMapReference.GetMapMasterFromLocation(location);
             if (masterMap == SingleMapReference.SmallMapMasterFiles.None) return;
-            
+
             // we are going to track the order that the maps were added 
             // if the master map hasn't been seen yet, then we need to create a new index array of locations
             if (!_masterFileLocationDictionary.ContainsKey(masterMap))
@@ -198,20 +198,21 @@ namespace Ultima5Redux.Maps
             return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
         }
 
-        [SuppressMessage("ReSharper", "StringLiteralTypo")] public string GetLocationName(SingleMapReference.Location location)
+        [SuppressMessage("ReSharper", "StringLiteralTypo")]
+        public string GetLocationName(SingleMapReference.Location location)
         {
-            string getLocationNameStr(DataOvlReference.LocationStrings index) => 
-                _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.LOCATION_NAMES, (int) index);
+            string getLocationNameStr(DataOvlReference.LocationStrings index) =>
+                _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.LOCATION_NAMES, (int)index);
 
             // filthy way to convert our more commonly used _location enum to the less used LOCATION_STRINGS
             // they didn't even bother having them all match, and then decided to leave some out
             DataOvlReference.LocationStrings newLocStrEnum =
-                (DataOvlReference.LocationStrings) Enum.Parse(typeof(DataOvlReference.LocationStrings),
+                (DataOvlReference.LocationStrings)Enum.Parse(typeof(DataOvlReference.LocationStrings),
                     location.ToString());
 
             // if the DataOVL didn't provide a name, then we are forced to set our own... :(
-            if ((int) newLocStrEnum >= 0) return getLocationNameStr(newLocStrEnum);
-            
+            if ((int)newLocStrEnum >= 0) return getLocationNameStr(newLocStrEnum);
+
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (newLocStrEnum)
             {
@@ -234,7 +235,7 @@ namespace Ultima5Redux.Maps
         {
             // anon function for quick lookup of strings
             string getTypePlaceStr(DataOvlReference.WorldStrings index) =>
-                _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.WORLD, (int) index);
+                _dataRef.GetStringFromDataChunkList(DataOvlReference.DataChunkName.WORLD, (int)index);
 
             switch (location)
             {
@@ -320,7 +321,8 @@ namespace Ultima5Redux.Maps
         /// <returns>a single map reference providing details on the map itself</returns>
         public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor)
         {
-            foreach (SingleMapReference mapRef in MapReferenceList.Where(mapRef => mapRef.MapLocation == location && mapRef.Floor == floor))
+            foreach (SingleMapReference mapRef in MapReferenceList.Where(mapRef =>
+                mapRef.MapLocation == location && mapRef.Floor == floor))
             {
                 return mapRef;
             }
@@ -338,7 +340,7 @@ namespace Ultima5Redux.Maps
             List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUint16List();
 
             // I happen to know that the underworld and overworld is [0], so let's add a placeholder
-            _locationNames = new List<string>(locationOffsets.Count + 1) {"Overworld/Underworld"};
+            _locationNames = new List<string>(locationOffsets.Count + 1) { "Overworld/Underworld" };
 
             // grab each location string
             // it isn't the most efficient way, but it gets the job done

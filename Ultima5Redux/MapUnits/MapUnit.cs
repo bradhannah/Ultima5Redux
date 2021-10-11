@@ -89,22 +89,25 @@ namespace Ultima5Redux.MapUnits
         protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
         protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
 
-        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded  =>
+        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
-        
+
         public abstract bool IsAttackable { get; }
-        
+
         public abstract string FriendlyName { get; }
-        
+
         public abstract Avatar.AvatarState BoardedAvatarState { get; }
+
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsOccupiedByAvatar { get; protected internal set; }
         public Point2D.Direction Direction { get; set; }
 
         public bool UseFourDirections { get; set; } = false;
-        
+
         public TileReference BoardedTileReference =>
-            TileReferences.GetTileReferenceByName(UseFourDirections?FourDirectionToTileNameBoarded[Direction]:DirectionToTileNameBoarded[Direction]);
+            TileReferences.GetTileReferenceByName(UseFourDirections
+                ? FourDirectionToTileNameBoarded[Direction]
+                : DirectionToTileNameBoarded[Direction]);
 
         // ReSharper disable once MemberCanBeProtected.Global
         public virtual TileReference NonBoardedTileReference =>
@@ -148,9 +151,9 @@ namespace Ultima5Redux.MapUnits
                 _mapMapUnitPosition.Y = value.Y;
                 _mapMapUnitPosition.Floor = value.Floor;
 
-                TheMapUnitState.X = (byte) value.X;
-                TheMapUnitState.Y = (byte) value.Y;
-                TheMapUnitState.Floor = (byte) value.Floor;
+                TheMapUnitState.X = (byte)value.X;
+                TheMapUnitState.Y = (byte)value.Y;
+                TheMapUnitState.Floor = (byte)value.Floor;
 
                 if (TheSmallMapCharacterState == null) return;
                 TheSmallMapCharacterState.TheMapUnitPosition.X = value.X;
@@ -242,15 +245,15 @@ namespace Ultima5Redux.MapUnits
             if (mapUnit.MapUnitPosition.XY == targetXy)
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name +
                                                 " is already at " + targetXy.X + "," +
-                                                targetXy.Y); 
+                                                targetXy.Y);
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<Node> nodeStack = 
+            Stack<Node> nodeStack =
                 //currentMap.AStar
                 aStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
-                //new Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
-                //new Vector2(targetXy.X, targetXy.Y));
+            //new Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
+            //new Vector2(targetXy.X, targetXy.Y));
 
             MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
             MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;
@@ -289,7 +292,7 @@ namespace Ultima5Redux.MapUnits
             return true;
         }
 
-        private static Point2D Vector2ToPoint2D(Vector2 vector) => new Point2D((int) vector.X, (int) vector.Y);
+        private static Point2D Vector2ToPoint2D(Vector2 vector) => new Point2D((int)vector.X, (int)vector.Y);
 
         private static MapUnitMovement.MovementCommandDirection GetCommandDirection(Point2D fromXy, Point2D toXy)
         {
@@ -298,7 +301,8 @@ namespace Ultima5Redux.MapUnits
             if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
             if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
             if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
-            throw new Ultima5ReduxException("For some reason we couldn't determine the path of the command direction in getCommandDirection");
+            throw new Ultima5ReduxException(
+                "For some reason we couldn't determine the path of the command direction in getCommandDirection");
         }
     }
 }

@@ -69,8 +69,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         ///     NPCs name
         /// </summary>
         public string Name =>
-            Script == null ? string.Empty : 
-                Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
+            Script == null
+                ? string.Empty
+                : Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
 
         /// <summary>
         ///     friendlier version of name in case they are a profession and not named
@@ -78,7 +79,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public string FriendlyName => Name == "" ? NPCType.ToString() : Name;
 
         public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.None;
-    
+
         /// <summary>
         ///     The daily schedule of the NPC
         /// </summary>
@@ -112,12 +113,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         //        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
 //        public int CurrentFloor { get; private set; }
 
-        /// <summary>
-        ///     Which map is the NPC on?
-        /// </summary>
-        public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
+/// <summary>
+///     Which map is the NPC on?
+/// </summary>
+public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
 
-        public byte MapLocationId => (byte) (MapLocation - 1);
+        public byte MapLocationId => (byte)(MapLocation - 1);
 
         /// <summary>
         ///     What type of NPC are they?
@@ -128,18 +129,18 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             {
                 // it's the Avatar
                 if (NPCKeySprite == 256) return NPCDialogTypeEnum.None;
-                
+
                 // it's a merchant
                 foreach (int npcType in Enum.GetValues(typeof(NPCDialogTypeEnum)))
                 {
                     if (npcType == DialogNumber)
-                        return (NPCDialogTypeEnum) npcType;
+                        return (NPCDialogTypeEnum)npcType;
                 }
 
                 foreach (int npcType in Enum.GetValues(typeof(NPCDialogTypeEnum)))
                 {
-                    if (npcType == CharacterType) 
-                        return (NPCDialogTypeEnum) npcType;
+                    if (npcType == CharacterType)
+                        return (NPCDialogTypeEnum)npcType;
                 }
 
                 return NPCDialogTypeEnum.None;
@@ -173,7 +174,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         /// <summary>
-        /// Is the NPC dead?
+        ///     Is the NPC dead?
         /// </summary>
         public bool IsDead
         {
@@ -190,7 +191,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
             if (dialogType == 0) return true;
             //if (dialogType == NPCDialogTypeEnum.Avatar) return true;
-            foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[]) Enum.GetValues(typeof(NPCDialogTypeEnum)) )
+            foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[])Enum.GetValues(typeof(NPCDialogTypeEnum)))
             {
                 if (dialogType == tempDialogType)
                     return true;
@@ -219,8 +220,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     Original structure
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public unsafe struct NPCSchedule
+        [StructLayout(LayoutKind.Sequential, Pack = 1)] public unsafe struct NPCSchedule
         {
             public fixed byte AI_types[3];
             public fixed byte x_coordinates[3];

@@ -23,7 +23,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                         .Trim()),
                     DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.SOME_TORCHES_BANG_N)
                         .Trim(),
-                    (int) Provision.ProvisionSpritesTypeEnum.Torches, dataOvlRef, state));
+                    (int)Provision.ProvisionSpritesTypeEnum.Torches, dataOvlRef, state));
             Items.Add(Provision.ProvisionTypeEnum.Gems,
                 new Provision(Provision.ProvisionTypeEnum.Gems,
                     uppercaseFirst(
@@ -31,7 +31,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     uppercaseFirst(
                         DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_GEM).Trim()),
                     DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_GEM_BANG_N).Trim(),
-                    (int) Provision.ProvisionSpritesTypeEnum.Gems, dataOvlRef, state));
+                    (int)Provision.ProvisionSpritesTypeEnum.Gems, dataOvlRef, state));
             Items.Add(Provision.ProvisionTypeEnum.Keys,
                 new Provision(Provision.ProvisionTypeEnum.Keys,
                     uppercaseFirst(
@@ -40,7 +40,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                         DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_KEY).Trim()),
                     DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_RING_OF_KEYS_BANG_N)
                         .Trim(),
-                    (int) Provision.ProvisionSpritesTypeEnum.Keys, dataOvlRef, state));
+                    (int)Provision.ProvisionSpritesTypeEnum.Keys, dataOvlRef, state));
             Items.Add(Provision.ProvisionTypeEnum.SkullKeys,
                 new Provision(Provision.ProvisionTypeEnum.SkullKeys,
                     uppercaseFirst(DataOvlRef.StringReferences
@@ -48,7 +48,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     uppercaseFirst(DataOvlRef.StringReferences
                         .GetString(DataOvlReference.SpecialItemNamesStrings.SKULL_KEYS).Trim()),
                     DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY).Trim(),
-                    (int) Provision.ProvisionSpritesTypeEnum.Torches, dataOvlRef, state));
+                    (int)Provision.ProvisionSpritesTypeEnum.Torches, dataOvlRef, state));
         }
 
         public sealed override Dictionary<Provision.ProvisionTypeEnum, Provision> Items { get; } =
