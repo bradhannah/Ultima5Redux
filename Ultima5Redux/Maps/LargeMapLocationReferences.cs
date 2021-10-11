@@ -31,18 +31,18 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
+        ///     Maps the xy based on the location
+        /// </summary>
+        private Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXYLocations { get; } =
+            new Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location>();
+
+        /// <summary>
         ///     Maps the location to an actual 0,0 based map xy coordinates
         /// </summary>
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         // ReSharper disable once CollectionNeverQueried.Global
         public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
-
-        /// <summary>
-        ///     Maps the xy based on the location
-        /// </summary>
-        private Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXYLocations { get; } =
-            new Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location>();
 
         /// <summary>
         ///     Gets the location at a particular xy

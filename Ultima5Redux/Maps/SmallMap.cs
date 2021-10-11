@@ -30,6 +30,14 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.StandardWalking);
         }
 
+        public override bool ShowOuterSmallMapTiles => true;
+
+        public override byte[][] TheMap { get; protected set; }
+        public int MapFloor => _singleSmallMapReference.Floor;
+
+        public override int NumOfXTiles => XTILES;
+        public override int NumOfYTiles => YTILES;
+
         /// <summary>
         ///     Total tiles per row
         /// </summary>
@@ -40,17 +48,9 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public static int YTILES => 32;
 
-        public override byte[][] TheMap { get; protected set; }
-
-        public override int NumOfXTiles => XTILES;
-        public override int NumOfYTiles => YTILES;
-
-        public override bool ShowOuterSmallMapTiles => true;
+        public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
 
         protected override bool IsRepeatingMap => false;
-
-        public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
-        public int MapFloor => _singleSmallMapReference.Floor;
 
         /// <summary>
         ///     Loads a small map into a 2D array

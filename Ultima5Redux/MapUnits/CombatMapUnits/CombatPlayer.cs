@@ -34,29 +34,29 @@ namespace Ultima5Redux.MapUnits
         {
         }
 
-        public PlayerCharacterRecord Record { get; }
+        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
+        public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
 
-        public override int Defense => _inventory.GetCharacterTotalDefense(Record);
+        public override bool IsAttackable => true;
 
-        public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.Range);
-
-        public override string Name => Record.Name;
+        public override bool IsInvisible => Record.IsInvisible;
 
         public override CharacterStats Stats => Record.Stats;
 
-        public override bool IsAttackable => true;
-        public override string FriendlyName => Record.Name;
+        public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.Range);
+
+        public override int Defense => _inventory.GetCharacterTotalDefense(Record);
 
         public override int Dexterity => (byte)Record.Stats.Dexterity;
-        public override string SingularName => FriendlyName;
-        public override string PluralName => FriendlyName;
         public override int Experience => 0;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;
-        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
+        public PlayerCharacterRecord Record { get; }
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
-        public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
+        public override string FriendlyName => Record.Name;
+
+        public override string Name => Record.Name;
+        public override string PluralName => FriendlyName;
+        public override string SingularName => FriendlyName;
 
         public override TileReference KeyTileReference
         {
@@ -85,7 +85,8 @@ namespace Ultima5Redux.MapUnits
             set => base.KeyTileReference = value;
         }
 
-        public override bool IsInvisible => Record.IsInvisible;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;
 
         public override string ToString()

@@ -61,6 +61,11 @@ namespace Ultima5Redux.DayNightMoon
         }
 
         /// <summary>
+        ///     Saved flag indicating if it's buried or in players inventory
+        /// </summary>
+        private DataChunk BuriedFlags { get; }
+
+        /// <summary>
         ///     Saved X position
         /// </summary>
         private DataChunk XPos { get; }
@@ -69,11 +74,6 @@ namespace Ultima5Redux.DayNightMoon
         ///     Saved Y position
         /// </summary>
         private DataChunk YPos { get; }
-
-        /// <summary>
-        ///     Saved flag indicating if it's buried or in players inventory
-        /// </summary>
-        private DataChunk BuriedFlags { get; }
 
         /// <summary>
         ///     Saved Z (floor) position

@@ -14,6 +14,17 @@ namespace Ultima5Redux.MapUnits
         {
         }
 
+        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
+
+        public override bool IsActive => true;
+
+        public override bool IsAttackable => false;
+
+        public override string BoardXitName => DataOvlRef.StringReferences
+            .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
+
+        public override string FriendlyName => BoardXitName;
+
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>
             {
@@ -43,17 +54,6 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Right, "RidingMagicCarpetRight" },
                 { Point2D.Direction.Up, "RidingMagicCarpetUp" }
             };
-
-        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
-
-        public override string BoardXitName => DataOvlRef.StringReferences
-            .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
-
-        public override bool IsActive => true;
-
-        public override bool IsAttackable => false;
-
-        public override string FriendlyName => BoardXitName;
 
         public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby());
     }

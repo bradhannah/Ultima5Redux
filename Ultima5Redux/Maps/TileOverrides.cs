@@ -95,9 +95,11 @@ namespace Ultima5Redux.Maps
 
         public bool IsOverworld => MapNumber == 0 && Z == 0;
 
+        public bool IsSmallMap => MapNumber != 0;
+
         public bool IsUnderworld => MapNumber == 0 && Z == -1;
 
-        public bool IsSmallMap => MapNumber != 0;
+        [JsonProperty] public int SpriteNum { get; set; }
 
         [JsonProperty] public int X { get; set; }
 
@@ -105,12 +107,10 @@ namespace Ultima5Redux.Maps
 
         [JsonProperty] public int Z { get; set; }
 
-        [JsonProperty] public int SpriteNum { get; set; }
-
-        [JsonProperty] public string SpriteName { get; set; }
+        public MapUnitPosition Position => new MapUnitPosition(X, Y, Z);
 
         [JsonProperty] public string Comment { get; set; }
 
-        public MapUnitPosition Position => new MapUnitPosition(X, Y, Z);
+        [JsonProperty] public string SpriteName { get; set; }
     }
 }

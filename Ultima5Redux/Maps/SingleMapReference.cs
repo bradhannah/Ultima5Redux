@@ -56,19 +56,14 @@ namespace Ultima5Redux.Maps
             public byte Id => (byte)(MapLocation - 1);
 
             /// <summary>
-            ///     name of the map file
+            ///     the offset of the map data in the data file
             /// </summary>
-            public string MapFilename => GetFilenameFromLocation(MapLocation);
+            public int FileOffset { get; }
 
             /// <summary>
             ///     the floor that the single map represents
             /// </summary>
             public int Floor { get; }
-
-            /// <summary>
-            ///     the offset of the map data in the data file
-            /// </summary>
-            public int FileOffset { get; }
 
             /// <summary>
             ///     the location (ie. single town like Moonglow)
@@ -115,6 +110,11 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException("Bad MasterFile");
                 }
             }
+
+            /// <summary>
+            ///     name of the map file
+            /// </summary>
+            public string MapFilename => GetFilenameFromLocation(MapLocation);
 
 
             public override string ToString()

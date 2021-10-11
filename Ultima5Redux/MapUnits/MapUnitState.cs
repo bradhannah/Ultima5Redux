@@ -27,6 +27,10 @@ namespace Ultima5Redux.MapUnits
         private int _tile1;
         private int _tile2;
 
+        internal MapUnitState()
+        {
+        }
+
         public MapUnitState(TileReferences tileReferences, byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
@@ -52,16 +56,13 @@ namespace Ultima5Redux.MapUnits
             Tile2Ref = tileReferences.GetTileReference(npcRef.NPCKeySprite);
         }
 
-        internal MapUnitState()
-        {
-        }
+        internal byte Depends1 { get; set; }
+        internal byte Depends3 { get; set; }
+        private byte Depends2 { get; set; }
+        public byte Floor { get; set; }
 
         public byte X { get; set; }
         public byte Y { get; set; }
-        public byte Floor { get; set; }
-        internal byte Depends1 { get; set; }
-        private byte Depends2 { get; set; }
-        internal byte Depends3 { get; set; }
         public TileReference Tile1Ref { get; internal set; }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global

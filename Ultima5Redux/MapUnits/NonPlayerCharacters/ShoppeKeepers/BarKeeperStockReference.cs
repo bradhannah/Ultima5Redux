@@ -82,11 +82,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 RationPrice = nRationPrice;
             }
 
-            public FoodType FoodType { get; }
-            public int FoodPrice { get; }
-            public DrinkType DrinkType { get; }
-            public int DrinkPrice { get; }
             public bool Rations { get; }
+            public DrinkType DrinkType { get; }
+            public FoodType FoodType { get; }
+            public int DrinkPrice { get; }
+            public int FoodPrice { get; }
             public int RationPrice { get; }
         }
     }

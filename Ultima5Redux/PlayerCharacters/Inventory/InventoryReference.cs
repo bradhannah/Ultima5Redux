@@ -190,17 +190,16 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)] public class InventoryReference
     {
-        [JsonProperty] public string ItemName { get; set; }
-
-        [JsonProperty] public string ItemSprite { get; set; }
-
         [JsonProperty] public int ItemSpriteExposed { get; set; }
 
         [JsonProperty] public string ItemDescription { get; set; }
 
         [JsonProperty] public string ItemDescriptionAttribution { get; set; }
+        [JsonProperty] public string ItemName { get; set; }
 
         [JsonProperty] public string ItemNameHighlight { private get; set; }
+
+        [JsonProperty] public string ItemSprite { get; set; }
 
         //[JsonProperty] public int MerchantIndex { get; private set; }
 

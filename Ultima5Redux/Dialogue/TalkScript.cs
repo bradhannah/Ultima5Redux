@@ -76,9 +76,9 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     All associated labels with the Script
+        ///     The number of ScriptLines in the Script
         /// </summary>
-        protected internal ScriptTalkLabels TalkLabels => _scriptTalkLabels;
+        public int NumberOfScriptLines => _scriptLines.Count;
 
         /// <summary>
         ///     All associated questions and answers for the Script
@@ -86,9 +86,9 @@ namespace Ultima5Redux.Dialogue
         protected internal ScriptQuestionAnswers QuestionAnswers => _scriptQuestionAnswers;
 
         /// <summary>
-        ///     The number of ScriptLines in the Script
+        ///     All associated labels with the Script
         /// </summary>
-        public int NumberOfScriptLines => _scriptLines.Count;
+        protected internal ScriptTalkLabels TalkLabels => _scriptTalkLabels;
 
         /// <summary>
         ///     Move to the next line in the script (for adding new content)
@@ -555,14 +555,9 @@ namespace Ultima5Redux.Dialogue
             }
 
             /// <summary>
-            ///     All the NPCs question and answers specific to the label
+            ///     The label reference number
             /// </summary>
-            public ScriptQuestionAnswers QuestionAnswers { get; }
-
-            /// <summary>
-            ///     The initial line that you will always show when jumping to the label
-            /// </summary>
-            public ScriptLine InitialLine { get; set; }
+            public int LabelNum { get; }
 
             /// <summary>
             ///     The default answer if non of the QuestionAnswers are satisfied
@@ -570,9 +565,14 @@ namespace Ultima5Redux.Dialogue
             public List<ScriptLine> DefaultAnswers { get; set; }
 
             /// <summary>
-            ///     The label reference number
+            ///     The initial line that you will always show when jumping to the label
             /// </summary>
-            public int LabelNum { get; }
+            public ScriptLine InitialLine { get; set; }
+
+            /// <summary>
+            ///     All the NPCs question and answers specific to the label
+            /// </summary>
+            public ScriptQuestionAnswers QuestionAnswers { get; }
 
             /// <summary>
             ///     Add an additional question and answer
@@ -703,9 +703,9 @@ namespace Ultima5Redux.Dialogue
                 Answer = answer;
             }
 
-            public ScriptLine Answer { get; }
-
             public List<string> Questions { get; }
+
+            public ScriptLine Answer { get; }
         }
 
         /// <summary>
@@ -745,10 +745,13 @@ namespace Ultima5Redux.Dialogue
                 _str = str;
             }
 
+            public int ItemAdditionalData { get; set; }
+            //=> str;
+
             /// <summary>
-            ///     command issued
+            ///     If there is a label, then this is a zero based index
             /// </summary>
-            public TalkCommand Command { get; }
+            public int LabelNum { get; }
 
             /// <summary>
             ///     Associated string (can be empty)
@@ -765,14 +768,11 @@ namespace Ultima5Redux.Dialogue
                 }
                 set => _str = value;
             }
-            //=> str;
 
             /// <summary>
-            ///     If there is a label, then this is a zero based index
+            ///     command issued
             /// </summary>
-            public int LabelNum { get; }
-
-            public int ItemAdditionalData { get; set; }
+            public TalkCommand Command { get; }
 
             public static bool IsQuestion(string str)
             {
@@ -800,8 +800,7 @@ namespace Ultima5Redux.Dialogue
         ///     Special scriptline that identifies that it has been split in sections
         /// </summary>
         protected internal class SplitScriptLine : ScriptLine
-        {
-        }
+        {}
 
         /// <summary>
         ///     Represents a single line of a script
@@ -813,12 +812,6 @@ namespace Ultima5Redux.Dialogue
             ///     a list of all associated ScriptItems, in a particular order
             /// </summary>
             protected List<ScriptItem> ScriptItems = new List<ScriptItem>();
-
-            /// <summary>
-            ///     Is this script line a user input based question
-            /// </summary>
-            /// <returns>true if it's a question</returns>
-            public bool IsQuestion => GetScriptItem(0).IsQuestion();
 
             /// <summary>
             ///     Does this line represent the end of all Labels in the NPC talk script (end of script)
@@ -833,6 +826,12 @@ namespace Ultima5Redux.Dialogue
                     return false;
                 }
             }
+
+            /// <summary>
+            ///     Is this script line a user input based question
+            /// </summary>
+            /// <returns>true if it's a question</returns>
+            public bool IsQuestion => GetScriptItem(0).IsQuestion();
 
             /// <summary>
             ///     Return the number of current script items

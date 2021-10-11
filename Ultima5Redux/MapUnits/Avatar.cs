@@ -50,6 +50,35 @@ namespace Ultima5Redux.MapUnits
             Movement = movement;
         }
 
+        internal AvatarState CurrentAvatarState { get; private set; }
+        private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
+        public override AvatarState BoardedAvatarState => AvatarState.Regular;
+
+        public bool AreSailsHoisted => IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate &&
+                                       frigate.SailsHoisted;
+
+        public override bool IsActive => true;
+
+        public override bool IsAttackable => false;
+
+        /// <summary>
+        ///     Is the Avatar currently boarded onto a thing
+        /// </summary>
+        public bool IsAvatarOnBoardedThing =>
+            CurrentAvatarState != AvatarState.Regular && CurrentAvatarState != AvatarState.Hidden;
+
+        public Point2D.Direction CurrentDirection { get; private set; }
+
+        /// <summary>
+        ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
+        ///     the current MapUnits object
+        /// </summary>
+        public MapUnit CurrentBoardedMapUnit { get; private set; }
+
+        public override string BoardXitName => "You can't board the Avatar you silly goose!";
+
+        public override string FriendlyName => "Avatar";
+
         public override TileReference KeyTileReference
         {
             get =>
@@ -70,34 +99,6 @@ namespace Ultima5Redux.MapUnits
             };
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
-        public override AvatarState BoardedAvatarState => AvatarState.Regular;
-
-        public override string BoardXitName => "You can't board the Avatar you silly goose!";
-
-        public override bool IsActive => true;
-
-        public override bool IsAttackable => false;
-
-        public override string FriendlyName => "Avatar";
-
-        internal AvatarState CurrentAvatarState { get; private set; }
-        private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
-        public Point2D.Direction CurrentDirection { get; private set; }
-
-        public bool AreSailsHoisted => IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate &&
-                                       frigate.SailsHoisted;
-
-        /// <summary>
-        ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
-        ///     the current MapUnits object
-        /// </summary>
-        public MapUnit CurrentBoardedMapUnit { get; private set; }
-
-        /// <summary>
-        ///     Is the Avatar currently boarded onto a thing
-        /// </summary>
-        public bool IsAvatarOnBoardedThing =>
-            CurrentAvatarState != AvatarState.Regular && CurrentAvatarState != AvatarState.Hidden;
 
         private AvatarState CalculateAvatarState(TileReference tileReference)
         {

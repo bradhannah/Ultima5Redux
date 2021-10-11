@@ -90,22 +90,32 @@ namespace Ultima5Redux.PlayerCharacters
             Unknown2 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown2];
         }
 
-        public bool IsRat { get; private set; }
-        public bool IsInvisible { get; private set; }
+        private byte InnOrParty { get; set; }
 
         //, KilledPermanently = 0x7F
         private byte Unknown2 { get; }
+        public bool IsInvisible { get; private set; }
 
-        private byte InnOrParty { get; set; }
-
-        public string Name { get; }
-        public CharacterGender Gender { get; set; }
-        public CharacterClass Class { get; set; }
+        public bool IsRat { get; private set; }
 
         public byte MonthsSinceStayingAtInn
         {
             get => _monthsSinceStayingAtInn;
             set => _monthsSinceStayingAtInn = (byte)(value % byte.MaxValue);
+        }
+
+        public CharacterClass Class { get; set; }
+        public CharacterGender Gender { get; set; }
+
+        public CharacterPartyStatus PartyStatus
+        {
+            get
+            {
+                if (InnOrParty == 0x00) return CharacterPartyStatus.InTheParty;
+                if (InnOrParty == 0xFF) return CharacterPartyStatus.HasntJoinedYet;
+                return CharacterPartyStatus.AtTheInn;
+            }
+            set => InnOrParty = (byte)value;
         }
 
         public int PrimarySpriteIndex =>
@@ -121,16 +131,7 @@ namespace Ultima5Redux.PlayerCharacters
         public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
             (SmallMapReferences.SingleMapReference.Location)InnOrParty;
 
-        public CharacterPartyStatus PartyStatus
-        {
-            get
-            {
-                if (InnOrParty == 0x00) return CharacterPartyStatus.InTheParty;
-                if (InnOrParty == 0xFF) return CharacterPartyStatus.HasntJoinedYet;
-                return CharacterPartyStatus.AtTheInn;
-            }
-            set => InnOrParty = (byte)value;
-        }
+        public string Name { get; }
 
         public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
         {
@@ -292,12 +293,13 @@ namespace Ultima5Redux.PlayerCharacters
                 Amulet = DataOvlReference.Equipment.Nothing;
             }
 
-            public DataOvlReference.Equipment Helmet { get; set; }
+            public DataOvlReference.Equipment Amulet { get; set; }
             public DataOvlReference.Equipment Armor { get; set; }
+
+            public DataOvlReference.Equipment Helmet { get; set; }
             public DataOvlReference.Equipment LeftHand { get; set; }
             public DataOvlReference.Equipment RightHand { get; set; }
             public DataOvlReference.Equipment Ring { get; set; }
-            public DataOvlReference.Equipment Amulet { get; set; }
 
             public bool IsEquipped(DataOvlReference.Equipment equipment)
             {

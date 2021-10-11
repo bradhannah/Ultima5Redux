@@ -45,16 +45,16 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                        equipment == DataOvlReference.Equipment.JewelShield;
         }
 
-        public WeaponTypeEnum WeaponType { get; }
-
-        public bool IsAmmo { get; }
-
-        public bool IsTwoHanded { get; }
-
-        public bool IsShield { get; }
-
         public override bool CanSell => BasePrice > 0 || IsAmmo;
 
         public override bool HideQuantity => false;
+
+        public bool IsAmmo { get; }
+
+        public bool IsShield { get; }
+
+        public bool IsTwoHanded { get; }
+
+        public WeaponTypeEnum WeaponType { get; }
     }
 }

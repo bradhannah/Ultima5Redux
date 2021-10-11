@@ -81,11 +81,21 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatLandAndWater);
         }
 
-        public SingleCombatMapReference TheCombatMapReference { get; }
+        private List<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers.Cast<CombatMapUnit>().ToList();
+        private List<CombatMapUnit> AllEnemiesGeneric => AllEnemies.Cast<CombatMapUnit>().ToList();
 
-        public override int NumOfXTiles => SingleCombatMapReference.XTILES;
-        public override int NumOfYTiles => SingleCombatMapReference.YTILES;
-        protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
+        /// <summary>
+        ///     Current combat map units for current combat map
+        /// </summary>
+        private MapUnits.MapUnits CombatMapUnits { get; }
+
+        public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
+
+        public bool AreEnemiesLeft => NumberOfEnemies > 0;
+
+        public bool InEscapeMode { get; set; } = false;
+
+        public override bool ShowOuterSmallMapTiles => false;
 
         public override byte[][] TheMap
         {
@@ -93,52 +103,43 @@ namespace Ultima5Redux.Maps
             protected set { }
         }
 
-        public int Turn => _initiativeQueue.Turn;
-        public int Round => _initiativeQueue.Round;
+        public CombatMapUnit CurrentCombatMapUnit => _initiativeQueue.GetCurrentCombatUnit();
+
+        public CombatPlayer CurrentCombatPlayer =>
+            _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
+
+        public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
+        public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
 
         public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().Count(enemy => enemy.IsActive);
 
         public int NumberOfVisiblePlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>()
             .Count(combatPlayer => combatPlayer.IsActive);
 
-        public bool AreEnemiesLeft => NumberOfEnemies > 0;
+        public override int NumOfXTiles => SingleCombatMapReference.XTILES;
+        public override int NumOfYTiles => SingleCombatMapReference.YTILES;
+        public int Round => _initiativeQueue.Round;
 
-        public bool InEscapeMode { get; set; } = false;
+        public int Turn => _initiativeQueue.Turn;
 
-        protected override bool IsRepeatingMap => false;
+        public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
+            CombatMapUnits.CurrentMapUnits.Where(combatMapUnit => combatMapUnit.IsAttackable && combatMapUnit.IsActive)
+                .OfType<CombatMapUnit>().ToList();
 
-        public override bool ShowOuterSmallMapTiles => false;
+        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().ToList();
+        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().ToList();
 
         /// <summary>
         ///     Current player or enemy who is active in current round
         /// </summary>
         public PlayerCharacterRecord CurrentPlayerCharacterRecord => CurrentCombatPlayer?.Record;
 
-        public CombatPlayer CurrentCombatPlayer =>
-            _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
-
-        public CombatMapUnit CurrentCombatMapUnit => _initiativeQueue.GetCurrentCombatUnit();
-
-        public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
-
         public PlayerCharacterRecord SelectedCombatPlayerRecord => _initiativeQueue.ActivePlayerCharacterRecord;
 
-        /// <summary>
-        ///     Current combat map units for current combat map
-        /// </summary>
-        private MapUnits.MapUnits CombatMapUnits { get; }
+        public SingleCombatMapReference TheCombatMapReference { get; }
 
-        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().ToList();
-        private List<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers.Cast<CombatMapUnit>().ToList();
-        private List<CombatMapUnit> AllEnemiesGeneric => AllEnemies.Cast<CombatMapUnit>().ToList();
-        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().ToList();
-
-        public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
-            CombatMapUnits.CurrentMapUnits.Where(combatMapUnit => combatMapUnit.IsAttackable && combatMapUnit.IsActive)
-                .OfType<CombatMapUnit>().ToList();
-
-        public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
-        public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
+        protected override bool IsRepeatingMap => false;
+        protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
 
         public List<CombatMapUnit> GetActiveCombatMapUnitsByType(CombatMapUnitEnum combatMapUnitEnum)
         {

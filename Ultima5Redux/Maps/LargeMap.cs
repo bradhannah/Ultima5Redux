@@ -49,22 +49,22 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatWater);
         }
 
+        public override bool ShowOuterSmallMapTiles => false;
+
         public override byte[][] TheMap { get; protected set; }
 
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static int
-            YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
+        public override int NumOfXTiles => XTILES;
+        public override int NumOfYTiles => YTILES;
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static int
             XTILES => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
-        public override int NumOfXTiles => XTILES;
-        public override int NumOfYTiles => YTILES;
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static int
+            YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
         protected override bool IsRepeatingMap => true;
-
-        public override bool ShowOuterSmallMapTiles => false;
 
         protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {

@@ -89,13 +89,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [JsonObject(MemberSerialization.OptIn)] public class AdditionalEnemyFlags
         {
-            [JsonProperty] public string Name { get; set; }
-            [JsonProperty] public int Experience { get; set; }
-            [JsonProperty] public bool IsWaterEnemy { get; set; }
-            [JsonProperty] public bool DoNotMove { get; set; }
+            [JsonProperty] public bool ActivelyAttacks { get; set; }
             [JsonProperty] public bool CanFlyOverWater { get; set; }
             [JsonProperty] public bool CanPassThroughWalls { get; set; }
-            [JsonProperty] public bool ActivelyAttacks { get; set; }
+            [JsonProperty] public bool DoNotMove { get; set; }
+            [JsonProperty] public bool IsWaterEnemy { get; set; }
+            [JsonProperty] public int Experience { get; set; }
+            [JsonProperty] public string Name { get; set; }
         }
     }
 }

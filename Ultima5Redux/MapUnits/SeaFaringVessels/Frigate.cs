@@ -35,17 +35,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         {
         }
 
-        /// <summary>
-        ///     How many skiffs does the frigate have aboard?
-        /// </summary>
-        public int SkiffsAboard
-        {
-            get => TheMapUnitState.Depends3;
-            set => TheMapUnitState.Depends3 = (byte)value;
-        }
-
-        public bool SailsHoisted { get; set; } = false;
-
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
             {
@@ -55,24 +44,36 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 { SmallMapReferences.SingleMapReference.Location.Jhelom, 1200 }
             };
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
-            SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
-
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
 
         public override bool IsAttackable => false;
-        public override string FriendlyName => BoardXitName;
 
-        public override string BoardXitName =>
-            DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
+        public bool SailsHoisted { get; set; } = false;
 
         public int Hitpoints
         {
             get => TheMapUnitState.Depends1;
             set => TheMapUnitState.Depends1 = (byte)(value < 0 ? 0 : (value > 99 ? 99 : value));
         }
+
+        /// <summary>
+        ///     How many skiffs does the frigate have aboard?
+        /// </summary>
+        public int SkiffsAboard
+        {
+            get => TheMapUnitState.Depends3;
+            set => TheMapUnitState.Depends3 = (byte)value;
+        }
+
+        public override string BoardXitName =>
+            DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
+
+        public override string FriendlyName => BoardXitName;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+            SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
             PlayerCharacterRecords records)

@@ -33,11 +33,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             _state = state;
         }
 
-        public ProvisionTypeEnum ProvisionType { get; }
-
         public override bool HideQuantity => false;
-
-        public override string InventoryReferenceString => ProvisionType.ToString();
 
         /// <summary>
         ///     Gets the parties current quantity of the specific provision
@@ -81,6 +77,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 }
             }
         }
+
+        public ProvisionTypeEnum ProvisionType { get; }
+
+        public override string InventoryReferenceString => ProvisionType.ToString();
 
         /// <summary>
         ///     Gets the cost of the provision based on the avatar's intelligence rating

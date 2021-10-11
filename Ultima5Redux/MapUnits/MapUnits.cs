@@ -50,7 +50,7 @@ namespace Ultima5Redux.MapUnits
 
 //        private MapUnitStates _currentMapUnitStates;
 
-/// <summary>
+        /// <summary>
 ///     Constructs the collection of all Map CurrentMapUnits in overworld, underworld and current towne
 /// </summary>
 /// <param name="tileReferences">Global tile references</param>
@@ -184,15 +184,6 @@ public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcR
             _currentMapType = initialMap;
         }
 
-        public List<MapUnit> CurrentMapUnits => GetMapUnits(_currentMapType);
-
-        /// <summary>
-        ///     static references to all NPCs in the world
-        /// </summary>
-        private NonPlayerCharacterReferences NPCRefs { get; }
-
-        private MapUnitMovements Movements { get; }
-
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
         /// </summary>
@@ -202,7 +193,7 @@ public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcR
             set => AvatarMapUnit.MapUnitPosition = value;
         }
 
-        public Avatar AvatarMapUnit => (Avatar)CurrentMapUnits[0];
+        private MapUnitMovements Movements { get; }
 
         // ReSharper disable once UnusedMember.Local
         private MapUnitStates CurrentMapUnitStates
@@ -225,6 +216,15 @@ public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcR
                 }
             }
         }
+
+        /// <summary>
+        ///     static references to all NPCs in the world
+        /// </summary>
+        private NonPlayerCharacterReferences NPCRefs { get; }
+
+        public Avatar AvatarMapUnit => (Avatar)CurrentMapUnits[0];
+
+        public List<MapUnit> CurrentMapUnits => GetMapUnits(_currentMapType);
 
         public void InitializeCombatMapReferences()
         {

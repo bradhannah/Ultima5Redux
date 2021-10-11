@@ -47,9 +47,9 @@ namespace Ultima5Redux.External
             _grid = grid;
         }
 
-        private int GridRows => _grid[0].Count;
-
         private int GridCols => _grid.Count;
+
+        private int GridRows => _grid[0].Count;
 
         public string GetWalkableDebug()
         {

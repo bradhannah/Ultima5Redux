@@ -32,25 +32,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             RefreshInventory();
         }
 
-        public LordBritishArtifacts Artifacts { get; set; }
-        public ShadowlordShards Shards { get; set; }
-        public Potions MagicPotions { get; set; }
-        public Scrolls MagicScrolls { get; set; }
-        public Spells MagicSpells { get; set; }
-        public SpecialItems SpecializedItems { get; set; }
         public Armours ProtectiveArmour { get; set; }
-        public Weapons TheWeapons { get; set; }
-        public Reagents SpellReagents { get; set; }
-        public Moonstones TheMoonstones { get; set; }
-        public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
-        public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
-
-        public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList();
-
-        //{ get; } = new List<InventoryItem>();
-        public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
-        public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
-        public Provisions TheProvisions { get; set; }
 
         public bool Grapple
         {
@@ -68,6 +50,26 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 SetInventoryQuantity(InventoryThings.MagicCarpets, (byte)nQuantity);
             }
         }
+
+        public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
+        public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
+        public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
+
+        public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList();
+
+        //{ get; } = new List<InventoryItem>();
+        public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
+
+        public LordBritishArtifacts Artifacts { get; set; }
+        public Moonstones TheMoonstones { get; set; }
+        public Potions MagicPotions { get; set; }
+        public Provisions TheProvisions { get; set; }
+        public Reagents SpellReagents { get; set; }
+        public Scrolls MagicScrolls { get; set; }
+        public ShadowlordShards Shards { get; set; }
+        public SpecialItems SpecializedItems { get; set; }
+        public Spells MagicSpells { get; set; }
+        public Weapons TheWeapons { get; set; }
 
         private static byte BoolToByte(bool bBool)
         {

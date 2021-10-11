@@ -64,10 +64,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
-        public bool BoughtSomethingFromBarKeep { get; set; } = false;
-
         public BarKeeperStockReference.BarKeeperStock TheBarKeeperStock =>
             _barKeeperStockReference.GetBarKeeperStock(TheShoppeKeeperReference.ShoppeKeeperLocation);
+
+        public bool BoughtSomethingFromBarKeep { get; set; } = false;
 
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
         {

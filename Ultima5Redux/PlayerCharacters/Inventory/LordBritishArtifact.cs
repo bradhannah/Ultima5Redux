@@ -11,11 +11,11 @@
             EquipMessage = equipMessage;
         }
 
-        public string EquipMessage { get; }
+        public ArtifactType Artifact { get; }
 
         public override bool HideQuantity { get; } = true;
 
-        public ArtifactType Artifact { get; }
+        public string EquipMessage { get; }
 
         public override string InventoryReferenceString => Artifact.ToString();
 

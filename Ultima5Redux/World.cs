@@ -48,12 +48,12 @@ namespace Ultima5Redux
                 { Potion.PotionColor.Purple, Spell.SpellWords.Rel_Xen_Bet }
             };
 
+        private readonly Random _random = new Random();
+
         private readonly TileOverrides _tileOverrides = new TileOverrides();
 
         // ReSharper disable once UnusedMember.Local
         public readonly CombatMapReferences CombatMapRefs;
-
-        private readonly Random _random = new Random();
 
         /// <summary>
         ///     Constructor
@@ -108,14 +108,6 @@ namespace Ultima5Redux
                 NpcRef, InvRef, DataOvlRef, bUseExtendedSprites, EnemyRefs, CombatMapRefs, _tileOverrides);
         }
 
-
-        /// <summary>
-        ///     Ultima 5 data and save files directory
-        /// </summary>
-        public string U5Directory { get; }
-
-        public EnemyReferences EnemyRefs { get; }
-
         /// <summary>
         ///     The overworld map object
         /// </summary>
@@ -126,6 +118,8 @@ namespace Ultima5Redux
         /// </summary>
         private LargeMap UnderworldMap { get; }
 
+        public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
+
         /// <summary>
         ///     Is the Avatar positioned to fall? When falling from multiple floors this will be activated
         /// </summary>
@@ -133,46 +127,16 @@ namespace Ultima5Redux
         public bool IsPendingFall { get; private set; }
 
         /// <summary>
-        ///     A collection of all the available small maps
+        ///     The current conversation object
         /// </summary>
-        public SmallMaps AllSmallMaps { get; }
-
-        /// <summary>
-        ///     A collection of all tile references
-        /// </summary>
-        public TileReferences SpriteTileReferences { get; }
-
-        /// <summary>
-        ///     A collection of all small map references
-        /// </summary>
-        public SmallMapReferences SmallMapRef { get; }
-
-        /// <summary>
-        ///     A collection of all Look references
-        /// </summary>
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public Look LookRef { get; }
-
-        /// <summary>
-        ///     A collection of all Sign references
-        /// </summary>
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public Signs SignRef { get; }
-
-        /// <summary>
-        ///     A collection of all NPC references
-        /// </summary>
-        public NonPlayerCharacterReferences NpcRef { get; }
+        public Conversation CurrentConversation { get; private set; }
 
         /// <summary>
         ///     A collection of data.ovl references
         /// </summary>
         public DataOvlReference DataOvlRef { get; }
 
-        /// <summary>
-        ///     A collection of all talk script references
-        /// </summary>
-        public TalkScripts TalkScriptsRef { get; }
+        public EnemyReferences EnemyRefs { get; }
 
         /// <summary>
         ///     The current game state
@@ -191,15 +155,51 @@ namespace Ultima5Redux
         public LargeMapLocationReferences LargeMapRef { get; }
 
         /// <summary>
-        ///     The current conversation object
+        ///     A collection of all Look references
         /// </summary>
-        public Conversation CurrentConversation { get; private set; }
-
-        public ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public Look LookRef { get; }
 
         public MoonPhaseReferences MoonPhaseRefs { get; }
 
-        public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
+        /// <summary>
+        ///     A collection of all NPC references
+        /// </summary>
+        public NonPlayerCharacterReferences NpcRef { get; }
+
+        public ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; }
+
+        /// <summary>
+        ///     A collection of all Sign references
+        /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public Signs SignRef { get; }
+
+        /// <summary>
+        ///     A collection of all small map references
+        /// </summary>
+        public SmallMapReferences SmallMapRef { get; }
+
+        /// <summary>
+        ///     A collection of all the available small maps
+        /// </summary>
+        public SmallMaps AllSmallMaps { get; }
+
+
+        /// <summary>
+        ///     Ultima 5 data and save files directory
+        /// </summary>
+        public string U5Directory { get; }
+
+        /// <summary>
+        ///     A collection of all talk script references
+        /// </summary>
+        public TalkScripts TalkScriptsRef { get; }
+
+        /// <summary>
+        ///     A collection of all tile references
+        /// </summary>
+        public TileReferences SpriteTileReferences { get; }
 
         /// <summary>
         ///     Begins the conversation with a particular NPC

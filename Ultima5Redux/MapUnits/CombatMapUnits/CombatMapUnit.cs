@@ -31,31 +31,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
         }
 
-        public abstract CharacterStats Stats { get; }
-
-        public abstract int Defense { get; }
-
-        public abstract int ClosestAttackRange { get; }
-
-        public abstract string Name { get; }
-
-        public abstract int Dexterity { get; }
-
-        public CombatMapUnit PreviousAttackTarget { get; private set; }
-
-        public bool HasEscaped { get; set; } = false;
-
-        public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
-
-        public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
-        public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
-        public abstract bool IsInvisible { get; }
-
-        public abstract string SingularName { get; }
-        public abstract string PluralName { get; }
-
-        public abstract int Experience { get; }
-
         internal HitState CurrentHitState
         {
             get
@@ -92,6 +67,31 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 return HitState.BarelyWounded;
             }
         }
+
+        public bool HasEscaped { get; set; } = false;
+
+        public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
+        public abstract bool IsInvisible { get; }
+        public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
+
+        public abstract CharacterStats Stats { get; }
+
+        public CombatMapUnit PreviousAttackTarget { get; private set; }
+
+        public abstract int ClosestAttackRange { get; }
+
+        public abstract int Defense { get; }
+
+        public abstract int Dexterity { get; }
+
+        public abstract int Experience { get; }
+
+        public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
+
+        public abstract string Name { get; }
+        public abstract string PluralName { get; }
+
+        public abstract string SingularName { get; }
 
         public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
 

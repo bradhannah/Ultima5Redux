@@ -77,11 +77,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 DataOvlReference.Equipment.MysticSword);
         }
 
-        public override Dictionary<Weapon.WeaponTypeEnum, Weapon> Items { get; } =
-            new Dictionary<Weapon.WeaponTypeEnum, Weapon>();
-
         private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Weapon>();
+
+        public override Dictionary<Weapon.WeaponTypeEnum, Weapon> Items { get; } =
+            new Dictionary<Weapon.WeaponTypeEnum, Weapon>();
 
         public Weapon GetWeaponFromEquipment(DataOvlReference.Equipment equipment)
         {

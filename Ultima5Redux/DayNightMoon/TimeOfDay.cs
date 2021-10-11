@@ -40,38 +40,7 @@ namespace Ultima5Redux.DayNightMoon
             Minute = currentMinuteDataChunk.GetChunkAsByte();
         }
 
-
-        /// <summary>
-        ///     Gets a string describing the current time of day
-        /// </summary>
-        /// <returns></returns>
-        public string TimeOfDayName
-        {
-            get
-            {
-                if (Hour > 5 && Hour < 12) return "morning";
-                if (Hour >= 12 && Hour < 17) return "afternoon";
-                return "evening";
-            }
-        }
-
         public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
-
-        // ReSharper disable once UnusedMember.Global
-        public string FormattedDate => Month + "-" + Day + "-" + Year;
-
-        public string FormattedTime
-        {
-            get
-            {
-                string suffix = Hour < 12 ? "AM" : "PM";
-                return (Hour % 12 == 0 ? 12 : Hour % 12) + ":" + $"{Minute:D2}" + " " + suffix;
-            }
-        }
-
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public ushort Year { get; set; }
-
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public byte Month { get; set; }
 
         public byte Day { get; set; }
 
@@ -95,6 +64,37 @@ namespace Ultima5Redux.DayNightMoon
                 _nMinute = value;
             }
         }
+
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public byte Month { get; set; }
+
+        // ReSharper disable once UnusedMember.Global
+        public string FormattedDate => Month + "-" + Day + "-" + Year;
+
+        public string FormattedTime
+        {
+            get
+            {
+                string suffix = Hour < 12 ? "AM" : "PM";
+                return (Hour % 12 == 0 ? 12 : Hour % 12) + ":" + $"{Minute:D2}" + " " + suffix;
+            }
+        }
+
+
+        /// <summary>
+        ///     Gets a string describing the current time of day
+        /// </summary>
+        /// <returns></returns>
+        public string TimeOfDayName
+        {
+            get
+            {
+                if (Hour > 5 && Hour < 12) return "morning";
+                if (Hour >= 12 && Hour < 17) return "afternoon";
+                return "evening";
+            }
+        }
+
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public ushort Year { get; set; }
 
         /// <summary>
         ///     Registers a change tracker, returning the int handle to it that will need to be stored

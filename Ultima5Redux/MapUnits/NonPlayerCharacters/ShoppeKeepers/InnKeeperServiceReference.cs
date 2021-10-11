@@ -69,8 +69,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
 
             public int DialogueOfferIndex { get; }
-            public int RestCost { get; }
             public int MonthlyLeaveCost { get; }
+            public int RestCost { get; }
 
             public Point2D SleepingPosition { get; }
         }

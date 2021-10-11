@@ -18,6 +18,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private readonly Dictionary<CombatMapUnit, int> _combatInitiativeTally = new Dictionary<CombatMapUnit, int>();
 
+        private readonly CombatMap _combatMap;
+
         private readonly MapUnits.MapUnits _combatMapUnits;
 
         /// <summary>
@@ -26,8 +28,6 @@ namespace Ultima5Redux.Maps
         private readonly Queue<Queue<CombatMapUnit>> _initiativeQueue = new Queue<Queue<CombatMapUnit>>();
 
         private readonly PlayerCharacterRecords _playerCharacterRecords;
-
-        private readonly CombatMap _combatMap;
 
         /// <summary>
         ///     Highest player/enemy dexterity encountered
@@ -48,16 +48,16 @@ namespace Ultima5Redux.Maps
             InitializeInitiativeQueue();
         }
 
-        public PlayerCharacterRecord ActivePlayerCharacterRecord { get; private set; }
-
         public int Round { get; private set; }
+
+        public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue =>
+            combatMapUnitQueue.Where((CombatMapUnitIsPresentAndActive)).Count());
 
         public int Turn { get; private set; }
 
         public int TurnsLeftsInRound => _initiativeQueue?.Peek()?.Count ?? 0;
 
-        public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue =>
-            combatMapUnitQueue.Where((CombatMapUnitIsPresentAndActive)).Count());
+        public PlayerCharacterRecord ActivePlayerCharacterRecord { get; private set; }
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)
         {

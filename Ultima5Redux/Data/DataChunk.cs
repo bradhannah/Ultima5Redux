@@ -203,14 +203,19 @@ namespace Ultima5Redux.Data
         }
 
         /// <summary>
-        ///     A brief description of the data chunk
+        ///     The adjustment value for bytes and UINT16
         /// </summary>
-        public string Description { get; }
+        private byte ValueModifier { get; }
 
         /// <summary>
         ///     The raw data of the data chunk
         /// </summary>
         private byte[] RawData { get; }
+
+        /// <summary>
+        ///     The expected data format of the chunk
+        /// </summary>
+        private DataFormatType DataFormat { get; }
 
         /// <summary>
         ///     The length of the RawData
@@ -224,14 +229,9 @@ namespace Ultima5Redux.Data
         private int FileOffset { get; }
 
         /// <summary>
-        ///     The adjustment value for bytes and UINT16
+        ///     A brief description of the data chunk
         /// </summary>
-        private byte ValueModifier { get; }
-
-        /// <summary>
-        ///     The expected data format of the chunk
-        /// </summary>
-        private DataFormatType DataFormat { get; }
+        public string Description { get; }
 
         /// <summary>
         ///     Statically create a DataChunk

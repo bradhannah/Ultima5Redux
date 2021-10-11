@@ -31,6 +31,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Armour>();
 
+        public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
+            new Dictionary<ArmourTypeEnum, List<Armour>>();
+
         // override to allow for inserting entire lists
         public override IEnumerable<InventoryItem> GenericItemList
         {
@@ -43,9 +46,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 return itemList;
             }
         }
-
-        public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
-            new Dictionary<ArmourTypeEnum, List<Armour>>();
 
         public Armour GetArmourFromEquipment(DataOvlReference.Equipment equipment)
         {

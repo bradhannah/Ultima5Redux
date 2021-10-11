@@ -33,8 +33,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             DialogueOption = dialogueOption;
         }
 
-        public string ButtonName { get; }
         public DialogueType DialogueOption { get; }
+
+        public string ButtonName { get; }
     }
 
     /// <summary>

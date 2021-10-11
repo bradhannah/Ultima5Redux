@@ -82,14 +82,14 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     The NPC with whom you are having a conversation
-        /// </summary>
-        public NonPlayerCharacterReference Npc { get; }
-
-        /// <summary>
         ///     Has the conversation ended?
         /// </summary>
         public bool ConversationEnded { get; set; }
+
+        /// <summary>
+        ///     The NPC with whom you are having a conversation
+        /// </summary>
+        public NonPlayerCharacterReference Npc { get; }
 
         /// <summary>
         ///     Begins the conversation with the NPC.

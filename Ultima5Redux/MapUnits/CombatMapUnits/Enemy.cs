@@ -29,39 +29,39 @@ namespace Ultima5Redux.MapUnits.Monsters
             Stats.CurrentMp = 0;
         }
 
-        public EnemyReference EnemyReference { get; }
-
-        public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
-        public override string Name => EnemyReference.MixedCaseSingularName.Trim();
-
-        public override int ClosestAttackRange => EnemyReference.AttackRange;
-
-        public bool IsFleeing { get; set; } = false;
-
-        public Stack<Node> FleeingPath { get; set; } = null;
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
-
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
-        public override string BoardXitName => "Hostile creates don't not like to be boarded!";
-        public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;
         public override bool IsActive => Stats.CurrentHp > 0;
 
         public override bool IsAttackable => Stats.CurrentHp > 0;
-        public override string FriendlyName => SingularName;
+
+        public bool IsFleeing { get; set; } = false;
+
+        public override bool IsInvisible => false;
+
+        public sealed override CharacterStats Stats { get; } = new CharacterStats();
+
+        public EnemyReference EnemyReference { get; }
+
+        public override int ClosestAttackRange => EnemyReference.AttackRange;
+
+        public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
 
         public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
-        public override string SingularName => EnemyReference.MixedCaseSingularName;
-        public override string PluralName => EnemyReference.AllCapsPluralName;
 
         // temporary until I read them in dynamically (somehow!?)
         public override int Experience => EnemyReference.Experience;
 
-        public sealed override CharacterStats Stats { get; } = new CharacterStats();
+        public Stack<Node> FleeingPath { get; set; } = null;
+        public override string BoardXitName => "Hostile creates don't not like to be boarded!";
+        public override string FriendlyName => SingularName;
+        public override string Name => EnemyReference.MixedCaseSingularName.Trim();
+        public override string PluralName => EnemyReference.AllCapsPluralName;
+        public override string SingularName => EnemyReference.MixedCaseSingularName;
+        public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;
 
-        public override bool IsInvisible => false;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
 
         public override string ToString()

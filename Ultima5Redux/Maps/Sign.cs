@@ -38,14 +38,8 @@ namespace Ultima5Redux.Maps
             Offset = nOffset;
         }
 
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public int Offset { get; }
 
-        /// <summary>
-        ///     General location of sign
-        /// </summary>
-        public SmallMapReferences.SingleMapReference.Location Location { get; }
+        private string RawSignText { get; }
 
         /// <summary>
         ///     Floor of location
@@ -53,6 +47,10 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int Floor { get; }
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public int Offset { get; }
 
         /// <summary>
         ///     X coordinate of sign
@@ -65,6 +63,11 @@ namespace Ultima5Redux.Maps
         public int Y { get; }
 
         /// <summary>
+        ///     General location of sign
+        /// </summary>
+        public SmallMapReferences.SingleMapReference.Location Location { get; }
+
+        /// <summary>
         ///     Actual text of sign
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
@@ -72,9 +75,6 @@ namespace Ultima5Redux.Maps
 
         // ReSharper disable once UnusedMember.Global
         public string SignTextCleanedSpaces => TrimSpareSpacesFromSign(SignText);
-
-
-        private string RawSignText { get; }
 
         /// <summary>
         ///     A print function that frankly doesn't work very well...

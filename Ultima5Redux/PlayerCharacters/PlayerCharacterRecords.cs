@@ -30,10 +30,6 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public PlayerCharacterRecord AvatarRecord => Records[0];
-
-        public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
-
         /// <summary>
         ///     Are there at least one player based on current combat statuses that can be seen by the enemy?
         /// </summary>
@@ -48,6 +44,10 @@ namespace Ultima5Redux.PlayerCharacters
                            record.Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead);
             }
         }
+
+        public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
+
+        public PlayerCharacterRecord AvatarRecord => Records[0];
 
         public List<PlayerCharacterRecord> GetPlayersAtInn(SmallMapReferences.SingleMapReference.Location location)
         {

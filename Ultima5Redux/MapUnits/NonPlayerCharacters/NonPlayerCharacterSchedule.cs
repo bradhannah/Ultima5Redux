@@ -50,14 +50,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
 
             /// <summary>
-            ///     3D Coordinates including floor number
-            /// </summary>
-            private List<Point3D> Coords { get; }
-
-            /// <summary>
             ///     Times of day to move to the next scheduled item
             /// </summary>
             private List<byte> Times { get; }
+
+            /// <summary>
+            ///     3D Coordinates including floor number
+            /// </summary>
+            private List<Point3D> Coords { get; }
 
             /// <summary>
             ///     Get the index of the scheduled based on the specified time of day

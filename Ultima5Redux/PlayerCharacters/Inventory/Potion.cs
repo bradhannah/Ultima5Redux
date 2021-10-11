@@ -16,9 +16,9 @@
             Color = color;
         }
 
-        public PotionColor Color { get; }
-
         public override bool HideQuantity { get; } = false;
+
+        public PotionColor Color { get; }
 
         public override string InventoryReferenceString => Color.ToString();
     }

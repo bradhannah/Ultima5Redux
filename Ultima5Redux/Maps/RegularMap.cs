@@ -14,8 +14,8 @@ namespace Ultima5Redux.Maps
             XYOverrides = tileOverrides.GetTileXYOverrides(singleSmallMapReference);
         }
 
-        protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
-
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+
+        protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
     }
 }

@@ -74,7 +74,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public override bool HideQuantity => false;
         public override bool IsSellable => false;
         public override int BasePrice => 0;
-        public ReagentTypeEnum ReagentType { get; }
 
         public override int Quantity
         {
@@ -86,6 +85,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         ///     Standard index/order of reagents in data files
         /// </summary>
         public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
+
+        public ReagentTypeEnum ReagentType { get; }
 
         public override string InventoryReferenceString => ReagentType.ToString();
 

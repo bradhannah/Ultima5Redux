@@ -1,3 +1,2 @@
 ﻿static internal class Utils
-{
-}
+{}

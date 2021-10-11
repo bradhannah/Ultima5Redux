@@ -20,14 +20,14 @@ namespace Ultima5Redux.MapUnits
             Floor = floor;
         }
 
-        public int X { get; set; }
-        public int Y { get; set; }
-
         public int Floor
         {
             get => _floor;
             set => _floor = value == 0xFF ? -1 : value;
         }
+
+        public int X { get; set; }
+        public int Y { get; set; }
 
         public Point2D XY
         {

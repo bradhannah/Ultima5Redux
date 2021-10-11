@@ -252,37 +252,9 @@ namespace Ultima5Redux.Maps
 
         private int TotalDirections => Enum.GetNames(typeof(EntryDirection)).Length;
 
-
-        /// <summary>
-        ///     The number of the combat map (order in data file)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public int CombatMapNum { get; }
-
-        /// <summary>
-        ///     Brief description of the combat map
-        /// </summary>
-        public string Description => _combatMapData.Description;
-
-        /// <summary>
-        ///     Territory of the combat map
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public Territory MapTerritory { get; }
-
-        /// <summary>
-        ///     Generated
-        /// </summary>
-        /// <remarks>this needs to rewritten when we understand how the data files refer to Combat Maps</remarks>
-        public byte Id => (byte)MapTerritory;
-
-        public int Index => CombatMapNum;
-        public string Name => MapTerritory == Territory.Britannia ? Description : "Dungeon-" + CombatMapNum;
-        public Dungeon DungeonLocation => Dungeon.Covetous;
-        public bool OtherStart => false;
-        public bool LaddersUp => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderUp"));
-        public bool LaddersDown => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderDown"));
-        public bool HasTriggers => true;
+        public bool HasMagicDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor"))
+                                    || DoesTileReferenceOccurOnMap(
+                                        _tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
 
         public bool HasRegularDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("RegularDoor"))
                                       || DoesTileReferenceOccurOnMap(
@@ -292,13 +264,44 @@ namespace Ultima5Redux.Maps
                                       || DoesTileReferenceOccurOnMap(
                                           _tileReferences.GetTileReferenceByName("LockedDoorView"));
 
-        public bool HasMagicDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor"))
-                                    || DoesTileReferenceOccurOnMap(
-                                        _tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
+        public bool HasTriggers => true;
+        public bool IsBroke => false;
+        public bool LaddersDown => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderDown"));
+        public bool LaddersUp => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LadderUp"));
+        public bool OtherStart => false;
 
         public bool SpecialEnemyComputation => false;
-        public bool IsBroke => false;
+
+        /// <summary>
+        ///     Generated
+        /// </summary>
+        /// <remarks>this needs to rewritten when we understand how the data files refer to Combat Maps</remarks>
+        public byte Id => (byte)MapTerritory;
+
+        public Dungeon DungeonLocation => Dungeon.Covetous;
+
+
+        /// <summary>
+        ///     The number of the combat map (order in data file)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public int CombatMapNum { get; }
+
+        public int Index => CombatMapNum;
+
+        /// <summary>
+        ///     Brief description of the combat map
+        /// </summary>
+        public string Description => _combatMapData.Description;
+
+        public string Name => MapTerritory == Territory.Britannia ? Description : "Dungeon-" + CombatMapNum;
         public string Notes => "No Notes";
+
+        /// <summary>
+        ///     Territory of the combat map
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public Territory MapTerritory { get; }
 
         public string GetAsCSVLine() =>
             $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.Direction0)}, " +

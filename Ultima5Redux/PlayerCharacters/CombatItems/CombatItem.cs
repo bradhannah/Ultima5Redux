@@ -32,13 +32,13 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
 
         public virtual bool CanSell => BasePrice > 0;
-
-        public int RequiredStrength { get; }
         public int AttackStat { get; }
         public int DefendStat { get; }
         public int Range { get; }
-        public string EquipmentName { get; }
+
+        public int RequiredStrength { get; }
         public MissileType Missile { get; }
+        public string EquipmentName { get; }
 
         public override string InventoryReferenceString => SpecificEquipment.ToString();
 

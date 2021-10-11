@@ -42,23 +42,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
-        public bool ArrivedAtLocation { get; private set; }
-
-        public override TileReference NonBoardedTileReference => KeyTileReference;
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>();
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>();
-
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
-        public override string BoardXitName => "Board them? You hardly know them!";
-
-        public override bool IsAttackable => true;
-
-        public override string FriendlyName => NPCRef.FriendlyName;
+        public bool ArrivedAtLocation { get; private set; }
 
         /// <summary>
         ///     Is the map character currently an active character on the current map
@@ -82,6 +68,20 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 return false;
             }
         }
+
+        public override bool IsAttackable => true;
+
+        public override string BoardXitName => "Board them? You hardly know them!";
+
+        public override string FriendlyName => NPCRef.FriendlyName;
+
+        public override TileReference NonBoardedTileReference => KeyTileReference;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>();
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>();
 
         private void Move(Point2D xy, int nFloor, TimeOfDay tod)
         {

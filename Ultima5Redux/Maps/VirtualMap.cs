@@ -158,25 +158,29 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
+
         //public bool ShowOuterSmallMapTiles => _bTouchedOuterBorder;
 
         private RegularMap PreCombatMap { get; set; }
+        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
+        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
 
-        private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
+        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
+        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
 
-        public MapUnitPosition CurrentPosition
-        {
-            get
-            {
-                if (CurrentMap is CombatMap combatMap)
-                {
-                    return combatMap.CurrentCombatMapUnit.MapUnitPosition;
-                }
+        public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
 
-                return TheMapUnits.CurrentAvatarPosition;
-            }
-            set => TheMapUnits.CurrentAvatarPosition = value;
-        }
+        public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
+
+        public bool IsCombatMap => CurrentMap is CombatMap;
+
+        /// <summary>
+        ///     Are we currently on a large map?
+        /// </summary>
+        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
+
+        public CombatMap CurrentCombatMap { get; private set; }
 
         //set => TheMapUnits.CurrentAvatarPosition = value;
         /// <summary>
@@ -190,18 +194,20 @@ namespace Ultima5Redux.Maps
         public int NumberOfRowTiles => CurrentMap.NumOfYTiles; //_overrideMap.Length;
 
         /// <summary>
-        ///     The current small map (null if on large map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public SmallMap CurrentSmallMap { get; private set; }
-
-        /// <summary>
         ///     Current large map (null if on small map)
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         public LargeMap CurrentLargeMap { get; private set; }
 
-        public CombatMap CurrentCombatMap { get; private set; }
+        /// <summary>
+        ///     The persistant overworld map
+        /// </summary>
+        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+
+        /// <summary>
+        ///     The persistant underworld map
+        /// </summary>
+        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
 
         /// <summary>
         ///     The abstracted Map object for the current map
@@ -223,17 +229,26 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public bool IsCombatMap => CurrentMap is CombatMap;
-
         /// <summary>
-        ///     The persistant overworld map
+        ///     If we are on a large map - then are we on overworld or underworld
         /// </summary>
-        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+        public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
 
-        /// <summary>
-        ///     The persistant underworld map
-        /// </summary>
-        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+        public MapUnitPosition CurrentPosition
+        {
+            get
+            {
+                if (CurrentMap is CombatMap combatMap)
+                {
+                    return combatMap.CurrentCombatMapUnit.MapUnitPosition;
+                }
+
+                return TheMapUnits.CurrentAvatarPosition;
+            }
+            set => TheMapUnits.CurrentAvatarPosition = value;
+        }
+
+        public MapUnits.MapUnits TheMapUnits { get; }
 
         /// <summary>
         ///     Detailed reference of current small map
@@ -255,33 +270,18 @@ namespace Ultima5Redux.Maps
             }
             private set => _currentSingleMapReference = value;
         }
+
+        /// <summary>
+        ///     The current small map (null if on large map)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public SmallMap CurrentSmallMap { get; private set; }
         //{ get; private set; }
 
         /// <summary>
         ///     All small map references
         /// </summary>
         public SmallMapReferences SmallMapRefs { get; }
-
-        /// <summary>
-        ///     Are we currently on a large map?
-        /// </summary>
-        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
-
-        public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
-
-        /// <summary>
-        ///     If we are on a large map - then are we on overworld or underworld
-        /// </summary>
-        public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
-
-        public MapUnits.MapUnits TheMapUnits { get; }
-
-        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
-        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
-        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
-        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
-
-        public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
 
         public bool IsLandNearby() =>
             IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);

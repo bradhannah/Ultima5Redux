@@ -81,7 +81,82 @@ namespace Ultima5Redux
                 new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences);
         }
 
+        internal DataChunk CharacterAnimationStatesDataChunk => _importedGameState.CharacterAnimationStatesDataChunk;
+        internal DataChunk CharacterStatesDataChunk => _importedGameState.CharacterStatesDataChunk;
+        internal DataChunk NonPlayerCharacterKeySprites => _importedGameState.NonPlayerCharacterKeySprites;
+
+        // DataChunk accessors, not ideal - but only available within the library
+        internal DataChunk NonPlayerCharacterMovementLists => _importedGameState.NonPlayerCharacterMovementLists;
+        internal DataChunk NonPlayerCharacterMovementOffsets => _importedGameState.NonPlayerCharacterMovementOffsets;
+        internal DataChunk OverworldOverlayDataChunks => _importedGameState.OverworldOverlayDataChunks;
+        internal DataChunk UnderworldOverlayDataChunks => _importedGameState.UnderworldOverlayDataChunks;
+
+        /// <summary>
+        ///     Does the Avatar have the Grappling Hook
+        /// </summary>
+        public bool HasGrapple { get; set; }
+
+        /// <summary>
+        ///     Does the Avatar have a torch lit?
+        /// </summary>
+        public bool IsTorchLit => TurnsToExtinguish > 0;
+
         public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
+
+        /// <summary>
+        ///     What is the index of the currently active player?
+        /// </summary>
+        public int ActivePlayerNumber { get; set; }
+
+        /// <summary>
+        ///     Number of gems the Avatar has
+        /// </summary>
+        public int Gems { get; set; }
+
+        /// <summary>
+        ///     Number of keys the Avatar has
+        /// </summary>
+        public int Keys { get; set; }
+
+        /// <summary>
+        ///     Number of skull keys the Avatar has
+        /// </summary>
+        public int SkullKeys { get; set; }
+
+        /// <summary>
+        ///     Number of torches the Avatar has
+        /// </summary>
+        public int Torches { get; set; }
+
+        /// <summary>
+        ///     How many turns until the Avatar's torch is extinguished
+        /// </summary>
+        public int TurnsToExtinguish { get; set; }
+
+        /// <summary>
+        ///     Players current inventory
+        /// </summary>
+        public Inventory PlayerInventory { get; }
+
+        /// <summary>
+        ///     Location and state of all moongates and moonstones
+        /// </summary>
+        public Moongates TheMoongates { get; }
+
+        /// <summary>
+        ///     All player character records
+        /// </summary>
+        public PlayerCharacterRecords CharacterRecords { get; }
+
+        /// <summary>
+        ///     The name of the Avatar
+        /// </summary>
+        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
+
+        /// <summary>
+        ///     The current time of day
+        /// </summary>
+        public TimeOfDay TheTimeOfDay { get; }
 
         /// <summary>
         ///     Amount of food Avatar has
@@ -94,88 +169,14 @@ namespace Ultima5Redux
         public ushort Gold { get; set; }
 
         /// <summary>
-        ///     Number of keys the Avatar has
-        /// </summary>
-        public int Keys { get; set; }
-
-        /// <summary>
-        ///     Number of gems the Avatar has
-        /// </summary>
-        public int Gems { get; set; }
-
-        /// <summary>
-        ///     Number of torches the Avatar has
-        /// </summary>
-        public int Torches { get; set; }
-
-        /// <summary>
-        ///     Number of skull keys the Avatar has
-        /// </summary>
-        public int SkullKeys { get; set; }
-
-        /// <summary>
-        ///     Does the Avatar have the Grappling Hook
-        /// </summary>
-        public bool HasGrapple { get; set; }
-
-        /// <summary>
-        ///     How many turns until the Avatar's torch is extinguished
-        /// </summary>
-        public int TurnsToExtinguish { get; set; }
-
-        /// <summary>
-        ///     What is the index of the currently active player?
-        /// </summary>
-        public int ActivePlayerNumber { get; set; }
-
-        /// <summary>
-        ///     Does the Avatar have a torch lit?
-        /// </summary>
-        public bool IsTorchLit => TurnsToExtinguish > 0;
-
-        /// <summary>
-        ///     All player character records
-        /// </summary>
-        public PlayerCharacterRecords CharacterRecords { get; }
-
-        /// <summary>
-        ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
-        /// </summary>
-        public VirtualMap TheVirtualMap { get; private set; }
-
-        /// <summary>
-        ///     The current time of day
-        /// </summary>
-        public TimeOfDay TheTimeOfDay { get; }
-
-        /// <summary>
-        ///     Location and state of all moongates and moonstones
-        /// </summary>
-        public Moongates TheMoongates { get; }
-
-        /// <summary>
-        ///     Players current inventory
-        /// </summary>
-        public Inventory PlayerInventory { get; }
-
-        /// <summary>
         ///     Users Karma
         /// </summary>
         public ushort Karma { get; set; }
 
         /// <summary>
-        ///     The name of the Avatar
+        ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
         /// </summary>
-        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
-
-        // DataChunk accessors, not ideal - but only available within the library
-        internal DataChunk NonPlayerCharacterMovementLists => _importedGameState.NonPlayerCharacterMovementLists;
-        internal DataChunk NonPlayerCharacterMovementOffsets => _importedGameState.NonPlayerCharacterMovementOffsets;
-        internal DataChunk OverworldOverlayDataChunks => _importedGameState.OverworldOverlayDataChunks;
-        internal DataChunk UnderworldOverlayDataChunks => _importedGameState.UnderworldOverlayDataChunks;
-        internal DataChunk CharacterAnimationStatesDataChunk => _importedGameState.CharacterAnimationStatesDataChunk;
-        internal DataChunk CharacterStatesDataChunk => _importedGameState.CharacterStatesDataChunk;
-        internal DataChunk NonPlayerCharacterKeySprites => _importedGameState.NonPlayerCharacterKeySprites;
+        public VirtualMap TheVirtualMap { get; private set; }
 
         /// <summary>
         ///     Take fall damage from klimbing mountains

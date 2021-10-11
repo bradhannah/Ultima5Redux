@@ -113,27 +113,28 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             KeyTileReference = tileReferences.GetTileReferenceOfKeyIndex(nKeySpriteIndex);
         }
 
+        public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
+        public bool CanFlyOverWater => _additionalEnemyFlags.CanFlyOverWater;
+        public bool CanPassThroughWalls => _additionalEnemyFlags.CanPassThroughWalls;
+
+        public bool DoesNotMove => _additionalEnemyFlags.DoNotMove;
+
         public bool IsNpc => KeyTileReference.IsNPC;
-
-        public TileReference KeyTileReference { get; }
-
-        public DefaultEnemyStats TheDefaultEnemyStats { get; }
-
-        public string AllCapsPluralName { get; }
-        public string MixedCaseSingularName { get; }
-
-        public int AttackRange { get; }
-        public CombatItem.MissileType TheMissileType { get; }
-        public int FriendIndex { get; }
-        public int Experience => _additionalEnemyFlags.Experience; //_enemyExp[_monsterIndex]; 
 
         public bool IsWaterEnemy =>
             _additionalEnemyFlags.IsWaterEnemy; //KeyTileReference.Index >= 384 && KeyTileReference.Index < 400;
 
-        public bool DoesNotMove => _additionalEnemyFlags.DoNotMove;
-        public bool CanFlyOverWater => _additionalEnemyFlags.CanFlyOverWater;
-        public bool CanPassThroughWalls => _additionalEnemyFlags.CanPassThroughWalls;
-        public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
+        public DefaultEnemyStats TheDefaultEnemyStats { get; }
+
+        public int AttackRange { get; }
+        public int Experience => _additionalEnemyFlags.Experience; //_enemyExp[_monsterIndex]; 
+        public int FriendIndex { get; }
+        public CombatItem.MissileType TheMissileType { get; }
+
+        public string AllCapsPluralName { get; }
+        public string MixedCaseSingularName { get; }
+
+        public TileReference KeyTileReference { get; }
 
         public override string ToString()
         {
@@ -154,13 +155,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public class DefaultEnemyStats
         {
-            public int Strength { get; internal set; }
-            public int Dexterity { get; internal set; }
-            public int Intelligence { get; internal set; }
             public int Armour { get; internal set; }
             public int Damage { get; internal set; }
+            public int Dexterity { get; internal set; }
             public int HitPoints { get; internal set; }
+            public int Intelligence { get; internal set; }
             public int MaxPerMap { get; internal set; }
+            public int Strength { get; internal set; }
             public int TreasureNumber { get; internal set; }
         }
 

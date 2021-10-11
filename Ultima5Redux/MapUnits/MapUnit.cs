@@ -73,8 +73,10 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
         }
 
-        protected DataOvlReference DataOvlRef { get; set; }
-        protected TileReferences TileReferences { get; set; }
+        /// <summary>
+        ///     How many iterations will I force the character to wander?
+        /// </summary>
+        internal int ForcedWandering { get; set; }
 
         /// <summary>
         ///     All the movements for the map character
@@ -82,58 +84,26 @@ namespace Ultima5Redux.MapUnits
         internal MapUnitMovement Movement { get; private protected set; }
 
         /// <summary>
-        ///     the state of the animations
-        /// </summary>
-        public MapUnitState TheMapUnitState { get; protected set; }
-
-        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
-        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
-
-        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
-            DirectionToTileNameBoarded;
-
-        public abstract bool IsAttackable { get; }
-
-        public abstract string FriendlyName { get; }
-
-        public abstract Avatar.AvatarState BoardedAvatarState { get; }
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public bool IsOccupiedByAvatar { get; protected internal set; }
-        public Point2D.Direction Direction { get; set; }
-
-        public bool UseFourDirections { get; set; } = false;
-
-        public TileReference BoardedTileReference =>
-            TileReferences.GetTileReferenceByName(UseFourDirections
-                ? FourDirectionToTileNameBoarded[Direction]
-                : DirectionToTileNameBoarded[Direction]);
-
-        // ReSharper disable once MemberCanBeProtected.Global
-        public virtual TileReference NonBoardedTileReference =>
-            TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
-
-        public abstract string BoardXitName { get; }
-
-        /// <summary>
         ///     The location state of the character
         /// </summary>
         internal SmallMapCharacterState TheSmallMapCharacterState { get; }
 
+        public abstract Avatar.AvatarState BoardedAvatarState { get; }
+
         /// <summary>
-        ///     Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
+        ///     Is the map character currently an active character on the current map
         /// </summary>
-        public virtual TileReference KeyTileReference
-        {
-            get => NPCRef == null
-                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
-                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
-            set
-            {
-                TheMapUnitState.Tile1Ref = value;
-                TheMapUnitState.Tile2Ref = value;
-            }
-        }
+        public abstract bool IsActive { get; }
+
+        public abstract bool IsAttackable { get; }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public bool IsOccupiedByAvatar { get; protected internal set; }
+
+        public bool UseFourDirections { get; set; } = false;
+        public Point2D.Direction Direction { get; set; }
+
+        public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
 
         /// <summary>
         ///     The characters current position on the map
@@ -163,9 +133,9 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        ///     How many iterations will I force the character to wander?
+        ///     the state of the animations
         /// </summary>
-        internal int ForcedWandering { get; set; }
+        public MapUnitState TheMapUnitState { get; protected set; }
 
         /// <summary>
         ///     Reference to current NPC (if it's an NPC at all!)
@@ -173,17 +143,48 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once MemberCanBeProtected.Global
         public NonPlayerCharacterReference NPCRef { get; set; }
 
-        public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
+        public abstract string BoardXitName { get; }
+
+        public abstract string FriendlyName { get; }
+
+        public TileReference BoardedTileReference =>
+            TileReferences.GetTileReferenceByName(UseFourDirections
+                ? FourDirectionToTileNameBoarded[Direction]
+                : DirectionToTileNameBoarded[Direction]);
+
+        /// <summary>
+        ///     Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
+        /// </summary>
+        public virtual TileReference KeyTileReference
+        {
+            get => NPCRef == null
+                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
+                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
+            set
+            {
+                TheMapUnitState.Tile1Ref = value;
+                TheMapUnitState.Tile2Ref = value;
+            }
+        }
+
+        // ReSharper disable once MemberCanBeProtected.Global
+        public virtual TileReference NonBoardedTileReference =>
+            TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
         /// <summary>
         ///     Is the character currently active on the map?
         /// </summary>
         protected bool IsInParty { get; }
 
-        /// <summary>
-        ///     Is the map character currently an active character on the current map
-        /// </summary>
-        public abstract bool IsActive { get; }
+        protected DataOvlReference DataOvlRef { get; set; }
+
+        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
+
+        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+            DirectionToTileNameBoarded;
+
+        protected TileReferences TileReferences { get; set; }
 
         public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
         {

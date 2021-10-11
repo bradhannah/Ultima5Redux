@@ -57,33 +57,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 Debug.WriteLine(location + "     NPC Number: " + DialogNumber + " in " + location);
         }
 
-        // based on Xu4 AI = (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
-
-        //public void Move(Point2D xy, int nFloor)
-        //{
-        //    CurrentMapPosition = xy;
-        //    CurrentFloor = nFloor;
-        //}
-
         /// <summary>
-        ///     NPCs name
+        ///     The byte representing the type of character
         /// </summary>
-        public string Name =>
-            Script == null
-                ? string.Empty
-                : Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
-
-        /// <summary>
-        ///     friendlier version of name in case they are a profession and not named
-        /// </summary>
-        public string FriendlyName => Name == "" ? NPCType.ToString() : Name;
-
-        public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.None;
-
-        /// <summary>
-        ///     The daily schedule of the NPC
-        /// </summary>
-        public NonPlayerCharacterSchedule Schedule { get; }
+        private byte CharacterType { get; }
 
         /// <summary>
         ///     The Dialog identifier
@@ -91,34 +68,66 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         private byte DialogNumber { get; }
 
         /// <summary>
-        ///     0-31 index of it's position in the NPC arrays (used for saved.gam references)
+        ///     Is the NPC dead?
         /// </summary>
-        public int DialogIndex { get; }
+        public bool IsDead
+        {
+            get => !_gameStateRef.NpcIsAlive(this);
+            set => _gameStateRef.SetNpcIsDead(this, value);
+        }
+
+        public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.None;
 
         /// <summary>
-        ///     The byte representing the type of character
+        ///     Returns true if the NPC knows/has met the Avatar
         /// </summary>
-        private byte CharacterType { get; }
+        public bool KnowTheAvatar
+        {
+            get
+            {
+                int nScriptLines = Script.NumberOfScriptLines;
 
-        /// <summary>
-        ///     The talk script the NPC will follow
-        /// </summary>
-        public TalkScript Script { get; }
+                // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
+                // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)
+
+                if (_gameStateRef.NpcHasMetAvatar(this)) return true;
+
+                for (int i = 0; i < nScriptLines; i++)
+                {
+                    if (Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName)) return false;
+                }
+
+                return true;
+            }
+            set => _gameStateRef.SetNpcHasMetAvatar(this, value);
+        }
 
         /// <summary>
         ///     They are either a merchant or they have a speaking role
         /// </summary>
         public bool NormalNPC => NPCType != NPCDialogTypeEnum.None || DialogNumber > 0;
 
+        public byte MapLocationId => (byte)(MapLocation - 1);
+
+        /// <summary>
+        ///     0-31 index of it's position in the NPC arrays (used for saved.gam references)
+        /// </summary>
+        public int DialogIndex { get; }
+
+        public int NPCKeySprite => CharacterType + 0x100;
+
         //        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
 //        public int CurrentFloor { get; private set; }
 
-/// <summary>
+        /// <summary>
 ///     Which map is the NPC on?
 /// </summary>
 public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
 
-        public byte MapLocationId => (byte)(MapLocation - 1);
+        /// <summary>
+        ///     The daily schedule of the NPC
+        /// </summary>
+        public NonPlayerCharacterSchedule Schedule { get; }
 
         /// <summary>
         ///     What type of NPC are they?
@@ -147,40 +156,31 @@ public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
             }
         }
 
-        public int NPCKeySprite => CharacterType + 0x100;
+        /// <summary>
+        ///     friendlier version of name in case they are a profession and not named
+        /// </summary>
+        public string FriendlyName => Name == "" ? NPCType.ToString() : Name;
+
+        // based on Xu4 AI = (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
+
+        //public void Move(Point2D xy, int nFloor)
+        //{
+        //    CurrentMapPosition = xy;
+        //    CurrentFloor = nFloor;
+        //}
 
         /// <summary>
-        ///     Returns true if the NPC knows/has met the Avatar
+        ///     NPCs name
         /// </summary>
-        public bool KnowTheAvatar
-        {
-            get
-            {
-                int nScriptLines = Script.NumberOfScriptLines;
-
-                // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
-                // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)
-
-                if (_gameStateRef.NpcHasMetAvatar(this)) return true;
-
-                for (int i = 0; i < nScriptLines; i++)
-                {
-                    if (Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName)) return false;
-                }
-
-                return true;
-            }
-            set => _gameStateRef.SetNpcHasMetAvatar(this, value);
-        }
+        public string Name =>
+            Script == null
+                ? string.Empty
+                : Script.GetScriptLine(TalkScript.TalkConstants.Name).GetScriptItem(0).Str.Trim();
 
         /// <summary>
-        ///     Is the NPC dead?
+        ///     The talk script the NPC will follow
         /// </summary>
-        public bool IsDead
-        {
-            get => !_gameStateRef.NpcIsAlive(this);
-            set => _gameStateRef.SetNpcIsDead(this, value);
-        }
+        public TalkScript Script { get; }
 
         /// <summary>
         ///     Return true if the dialog is not part of a standard dialog tree like a guard or shopkeeper

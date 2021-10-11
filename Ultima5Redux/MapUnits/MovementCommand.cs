@@ -11,14 +11,14 @@
             }
 
             /// <summary>
-            ///     the direction of the command
-            /// </summary>
-            public MovementCommandDirection Direction { get; }
-
-            /// <summary>
             ///     how many iterations of the command left
             /// </summary>
             public int Iterations { get; private set; }
+
+            /// <summary>
+            ///     the direction of the command
+            /// </summary>
+            public MovementCommandDirection Direction { get; }
 
             /// <summary>
             ///     Use a single iteration -decrement and return the number of remaining movements

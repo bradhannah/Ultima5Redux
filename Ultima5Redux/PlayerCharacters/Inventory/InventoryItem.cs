@@ -24,23 +24,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         public abstract bool HideQuantity { get; }
-        public virtual int Quantity { get; set; }
-
-        public virtual string LongName { get; }
-
-        public virtual string ShortName { get; }
-
-        public virtual string FindDescription { get; }
-
-        public InventoryReference InvRef { get; protected internal set; }
 
         public virtual bool IsSellable => BasePrice > 0;
 
         public virtual int BasePrice { get; protected set; } = 0;
+        public virtual int Quantity { get; set; }
+
+        public int SpriteNum { get; }
+
+        public InventoryReference InvRef { get; protected internal set; }
+
+        public virtual string FindDescription { get; }
 
         public abstract string InventoryReferenceString { get; }
 
-        public int SpriteNum { get; }
+        public virtual string LongName { get; }
 
         public string QuantityString
         {
@@ -50,6 +48,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 return Quantity == 0 ? "--" : Quantity.ToString();
             }
         }
+
+        public virtual string ShortName { get; }
 
         public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location)

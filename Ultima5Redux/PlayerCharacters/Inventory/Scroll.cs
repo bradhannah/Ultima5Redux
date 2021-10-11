@@ -15,11 +15,11 @@
             ScrollSpell = spell;
         }
 
-        public Spell.SpellWords ScrollSpell { get; }
-
         public override bool HideQuantity { get; } = false;
         public override bool IsSellable => false;
         public override int BasePrice => 0;
+
+        public Spell.SpellWords ScrollSpell { get; }
 
         public override string InventoryReferenceString => ScrollSpell.ToString();
     }

@@ -35,6 +35,12 @@ namespace Ultima5Redux.Maps
             SpriteTileReferences = spriteTileReferences;
         }
 
+        public abstract bool ShowOuterSmallMapTiles { get; }
+
+        public bool XRayMode { get; set; } = false;
+
+        public abstract byte[][] TheMap { get; protected set; }
+
         /// <summary>
         ///     All A* nodes for the current map
         ///     Accessed by [x][y]
@@ -46,12 +52,6 @@ namespace Ultima5Redux.Maps
         public abstract int NumOfYTiles { get; }
 
         protected abstract Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
-
-        public bool XRayMode { get; set; } = false;
-
-        public abstract byte[][] TheMap { get; protected set; }
-
-        public abstract bool ShowOuterSmallMapTiles { get; }
 
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles

@@ -48,9 +48,9 @@ namespace Ultima5Redux.PlayerCharacters
         public override bool HideQuantity { get; } = false;
         public override bool IsSellable => false;
 
-        public override string InventoryReferenceString => SpellIncantation.ToString();
-
         public SpellWords SpellIncantation { get; }
+
+        public override string InventoryReferenceString => SpellIncantation.ToString();
 
         public int MinCircle()
         {
