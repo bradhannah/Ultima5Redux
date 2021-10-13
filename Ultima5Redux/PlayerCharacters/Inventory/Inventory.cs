@@ -57,7 +57,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList();
 
-        //{ get; } = new List<InventoryItem>();
         public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
 
         public LordBritishArtifacts Artifacts { get; set; }
@@ -97,7 +96,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 .CreateDataChunk(DataChunk.DataFormatType.Byte, "", _gameStateByteArray, (int)thing, sizeof(byte))
                 .GetChunkAsByte() > 0;
         }
-
+        
         /// <summary>
         ///     Gets the attack of a particular piece of equipment
         /// </summary>
@@ -133,7 +132,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <returns>amount of total damage</returns>
         public int GetCharacterTotalAttack(PlayerCharacterRecord record)
         {
-            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armor) +
+            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
                    GetAttack(record.Equipped.Helmet)
                    + GetAttack(record.Equipped.Ring) + GetAttack(record.Equipped.LeftHand) +
                    GetAttack(record.Equipped.RightHand);
@@ -146,7 +145,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <returns>the players total defense</returns>
         public int GetCharacterTotalDefense(PlayerCharacterRecord record)
         {
-            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armor) +
+            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
                    GetDefense(record.Equipped.Helmet) +
                    GetDefense(record.Equipped.LeftHand) + GetDefense(record.Equipped.RightHand) +
                    GetDefense(record.Equipped.Ring);
