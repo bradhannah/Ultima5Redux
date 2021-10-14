@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.PlayerCharacters.CombatItems;
 
 namespace Ultima5Redux.PlayerCharacters
 {
@@ -146,6 +147,51 @@ namespace Ultima5Redux.PlayerCharacters
 
             inventory.GetItemFromEquipment(equippedEquipment).Quantity++;
             Equipped.UnequipEquippableSlot(equippableSlot);
+        }
+
+        private CharacterEquipped.EquippableSlot GetEquippableSlot(CombatItem combatItem)
+        {
+            switch (combatItem)
+            {
+                case Helm _:
+                    return CharacterEquipped.EquippableSlot.Helm;
+                case Amulet _:
+                    return CharacterEquipped.EquippableSlot.Amulet;
+                case Ring _:
+                    return CharacterEquipped.EquippableSlot.Ring;
+                case Armour _:
+                    return CharacterEquipped.EquippableSlot.Armour;
+                case Weapon weapon:
+                    return weapon.IsShield ? CharacterEquipped.EquippableSlot.RightHand : CharacterEquipped.EquippableSlot.LeftHand;
+                default:
+                    throw new Ultima5ReduxException("Tried to get equippable slot for unsupported item: " +
+                                                    combatItem.LongName);
+            }
+        }
+
+        public void EquipEquipment(Inventory.Inventory inventory, DataOvlReference.Equipment newEquipment)
+        {
+            // detect the equipable slot
+            CharacterEquipped.EquippableSlot equippableSlot = GetEquippableSlot(inventory.GetItemFromEquipment(newEquipment));  
+            if (equippableSlot == CharacterEquipped.EquippableSlot.None) return;
+            
+            // get the thing that is already equipped
+            DataOvlReference.Equipment oldEquippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
+
+            // put the old one back in your inventory
+            CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment); 
+            if (oldEquippedCombatItem!=null) oldEquippedCombatItem.Quantity--;
+            
+            // there should be at least one in your inventory to do this
+            CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment); 
+            Debug.Assert(newEquippedCombatItem.Quantity > 0);
+            Equipped.SetEquippableSlot(equippableSlot, newEquipment);
+            
+            if (newEquippedCombatItem is Weapon weapon)
+            {
+                if (weapon.IsTwoHanded) UnequipEquipment(CharacterEquipped.EquippableSlot.RightHand, inventory);
+                if (weapon.IsShield) UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
+            }
         }
         
         public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
@@ -337,33 +383,38 @@ namespace Ultima5Redux.PlayerCharacters
                 };
             }
 
-            internal void UnequipEquippableSlot(EquippableSlot equippableSlot)
+            internal void SetEquippableSlot(EquippableSlot equippableSlot, DataOvlReference.Equipment equipment)
             {
                 switch (equippableSlot)
                 {
                     case EquippableSlot.None:
                         break;
                     case EquippableSlot.Helm:
-                        Helmet = DataOvlReference.Equipment.Nothing;
+                        Helmet = equipment;
                         break;
                     case EquippableSlot.Amulet:
-                        Amulet = DataOvlReference.Equipment.Nothing;
+                        Amulet = equipment;
                         break;
                     case EquippableSlot.LeftHand:
-                        LeftHand = DataOvlReference.Equipment.Nothing;
+                        LeftHand = equipment;
                         break;
                     case EquippableSlot.RightHand:
-                        RightHand = DataOvlReference.Equipment.Nothing;
+                        RightHand = equipment;
                         break;
                     case EquippableSlot.Ring:
-                        Ring = DataOvlReference.Equipment.Nothing;
+                        Ring = equipment;
                         break;
                     case EquippableSlot.Armour:
-                        Armour = DataOvlReference.Equipment.Nothing;
+                        Armour = equipment;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(equippableSlot), equippableSlot, null);
                 }
+            }
+            
+            internal void UnequipEquippableSlot(EquippableSlot equippableSlot)
+            {
+                SetEquippableSlot(equippableSlot, DataOvlReference.Equipment.Nothing);
             }
             
             public bool IsEquipped(DataOvlReference.Equipment equipment)
