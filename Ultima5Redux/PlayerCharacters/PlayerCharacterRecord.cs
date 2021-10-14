@@ -139,14 +139,15 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         /// <param name="equippableSlot"></param>
         /// <param name="inventory"></param>
-        public void UnequipEquipment(CharacterEquipped.EquippableSlot equippableSlot, Inventory.Inventory inventory)
+        public bool UnequipEquipment(CharacterEquipped.EquippableSlot equippableSlot, Inventory.Inventory inventory)
         {
-            if (!Equipped.IsEquipped(equippableSlot)) return;
+            if (!Equipped.IsEquipped(equippableSlot)) return false;
 
             DataOvlReference.Equipment equippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
 
             inventory.GetItemFromEquipment(equippedEquipment).Quantity++;
             Equipped.UnequipEquippableSlot(equippableSlot);
+            return true;
         }
 
         private CharacterEquipped.EquippableSlot GetEquippableSlot(CombatItem combatItem)
@@ -169,11 +170,13 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public void EquipEquipment(Inventory.Inventory inventory, DataOvlReference.Equipment newEquipment)
+        public enum EquipResult { Success, SuccessUnequipRight, SuccessUnequipLeft, TooHeavy, Error }
+        
+        public EquipResult EquipEquipment(Inventory.Inventory inventory, DataOvlReference.Equipment newEquipment)
         {
             // detect the equipable slot
             CharacterEquipped.EquippableSlot equippableSlot = GetEquippableSlot(inventory.GetItemFromEquipment(newEquipment));  
-            if (equippableSlot == CharacterEquipped.EquippableSlot.None) return;
+            if (equippableSlot == CharacterEquipped.EquippableSlot.None) return EquipResult.Error;
             
             // get the thing that is already equipped
             DataOvlReference.Equipment oldEquippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
@@ -185,13 +188,27 @@ namespace Ultima5Redux.PlayerCharacters
             // there should be at least one in your inventory to do this
             CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment); 
             Debug.Assert(newEquippedCombatItem.Quantity > 0);
-            Equipped.SetEquippableSlot(equippableSlot, newEquipment);
             
-            if (newEquippedCombatItem is Weapon weapon)
+            // let's make sure they have enough strength to wield/wear the Equipment
+            if (Stats.Strength < newEquippedCombatItem.RequiredStrength) return EquipResult.TooHeavy;
+            
+            Equipped.SetEquippableSlot(equippableSlot, newEquipment);
+
+            if (!(newEquippedCombatItem is Weapon weapon)) return EquipResult.Success;
+            
+            if (weapon.IsTwoHanded)
             {
-                if (weapon.IsTwoHanded) UnequipEquipment(CharacterEquipped.EquippableSlot.RightHand, inventory);
-                if (weapon.IsShield) UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
+                bool bUnequipped = UnequipEquipment(CharacterEquipped.EquippableSlot.RightHand, inventory);
+                return bUnequipped ? EquipResult.SuccessUnequipRight : EquipResult.Success;
             }
+
+            if (weapon.IsShield)
+            {
+                bool bUnequipped = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
+                return bUnequipped ? EquipResult.SuccessUnequipLeft : EquipResult.Success;
+            }
+
+            return EquipResult.Success;
         }
         
         public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
