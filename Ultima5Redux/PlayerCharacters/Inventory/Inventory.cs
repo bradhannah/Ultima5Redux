@@ -119,7 +119,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private int GetDefense(DataOvlReference.Equipment equipment)
         {
             Weapon weapon = TheWeapons.GetWeaponFromEquipment(equipment);
-            if (weapon != null) return weapon.AttackStat;
+            if (weapon != null) return weapon.DefendStat;
 
             Armour armour = ProtectiveArmour.GetArmourFromEquipment(equipment);
             return armour?.DefendStat ?? 0;

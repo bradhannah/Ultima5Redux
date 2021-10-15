@@ -15,6 +15,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             RingType = ringType;
         }
+        public override PlayerCharacterRecord.CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+            PlayerCharacterRecord.CharacterEquipped.EquippableSlot.Ring;
 
         public override bool HideQuantity => false;
     }

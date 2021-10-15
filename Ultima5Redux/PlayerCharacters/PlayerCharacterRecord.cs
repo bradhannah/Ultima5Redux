@@ -204,8 +204,19 @@ namespace Ultima5Redux.PlayerCharacters
 
             if (weapon.IsShield)
             {
-                bool bUnequipped = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
-                return bUnequipped ? EquipResult.SuccessUnequipLeft : EquipResult.Success;
+                bool bUnequippedLeft = false;
+
+                DataOvlReference.Equipment leftHandEquippedEquipment = Equipped.GetEquippedEquipment(CharacterEquipped.EquippableSlot.LeftHand);
+
+                if (inventory.GetItemFromEquipment(leftHandEquippedEquipment) is Weapon leftHandWeapon)
+                {
+                    if (leftHandWeapon.IsTwoHanded)
+                    {
+                        // if the left hand weapon is 2 handed then we unequip it
+                        bUnequippedLeft = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
+                    }
+                }
+                return bUnequippedLeft ? EquipResult.SuccessUnequipLeft : EquipResult.Success;
             }
 
             return EquipResult.Success;

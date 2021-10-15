@@ -39,7 +39,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public int RequiredStrength { get; }
         public MissileType Missile { get; }
         public string EquipmentName { get; }
-
+        public abstract PlayerCharacterRecord.CharacterEquipped.EquippableSlot EquippableSlot { get; }
+        
         public override string InventoryReferenceString => SpecificEquipment.ToString();
 
         private static int GetAttack(DataOvlReference dataOvlRef, int nIndex)

@@ -56,5 +56,10 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public bool IsTwoHanded { get; }
 
         public WeaponTypeEnum WeaponType { get; }
+
+        public override PlayerCharacterRecord.CharacterEquipped.EquippableSlot EquippableSlot =>
+            IsShield
+                ? PlayerCharacterRecord.CharacterEquipped.EquippableSlot.RightHand
+                : PlayerCharacterRecord.CharacterEquipped.EquippableSlot.LeftHand;
     }
 }

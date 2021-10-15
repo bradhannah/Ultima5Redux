@@ -16,6 +16,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             HelmType = helmType;
         }
+        public override PlayerCharacterRecord.CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+            PlayerCharacterRecord.CharacterEquipped.EquippableSlot.Helm;
 
         public override bool HideQuantity => false;
     }
