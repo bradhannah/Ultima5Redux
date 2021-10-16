@@ -30,7 +30,7 @@ namespace Ultima5Redux
         public enum TryToMoveResult
         {
             Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell, ShipBreakingUp, ShipDestroyed,
-            MovedWithDamage
+            MovedWithDamage, MovedSelectionCursor
         }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
