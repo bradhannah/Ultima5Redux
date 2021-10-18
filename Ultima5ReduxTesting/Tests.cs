@@ -1139,5 +1139,12 @@ namespace Ultima5ReduxTesting
             Debug.Assert(constrainedPoints.Count == 2);
             _ = "";
         }
+
+        [Test] public void Test_TalkToNoOne()
+        {
+            World world = new World(ActualSaveDirectory + @"\b_carpet");
+
+            NonPlayerCharacter npc = world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
+        }
     }
 }
