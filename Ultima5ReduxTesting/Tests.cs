@@ -924,7 +924,8 @@ namespace Ultima5ReduxTesting
                 world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, enemyReference);
 
-            EnemyReference secondEnemyReference = world.EnemyRefs.GetEnemyReference(enemyReference.FriendIndex);
+            EnemyReference secondEnemyReference = world.EnemyRefs.GetFriendReference(enemyReference);
+            //GetEnemyReference(enemyReference.FriendIndex);
         }
 
         [Test] public void Test_LoadCampFireCombatMap()
@@ -938,23 +939,23 @@ namespace Ultima5ReduxTesting
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+            
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
-            CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
-                out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
-            Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
-            Debug.Assert(combatMapUnit is CombatPlayer);
+            // CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
+            //     out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
+            // Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
+            // Debug.Assert(combatMapUnit is CombatPlayer);
 
-            if (combatMapUnit is CombatPlayer player)
-            {
-                Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
-                world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult, true);
-                world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-                world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult, true);
-                world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-                world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult, true);
-                Debug.Assert(tryToMoveResult == World.TryToMoveResult.Blocked);
-            }
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            
+            Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult, true);
+            world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+            world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult, true);
+            world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
+            world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult, true);
+            Debug.Assert(tryToMoveResult == World.TryToMoveResult.Blocked);
 
             _ = "";
         }
@@ -968,10 +969,10 @@ namespace Ultima5ReduxTesting
                 world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 4),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
 
-            CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
-                out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
-            Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
-            Debug.Assert(combatMapUnit is CombatPlayer);
+            // CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
+            //     out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
+            // Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
+            // Debug.Assert(combatMapUnit is CombatPlayer);
 
             world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult, true);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
@@ -989,10 +990,10 @@ namespace Ultima5ReduxTesting
                 world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 4),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
 
-            CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
-                out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
-            Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
-            Debug.Assert(combatMapUnit is CombatPlayer);
+            // CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
+            //     out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
+            // Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
+            // Debug.Assert(combatMapUnit is CombatPlayer);
 
             world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult, true);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
@@ -1024,11 +1025,7 @@ namespace Ultima5ReduxTesting
                 world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
-            CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
-                out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
-            Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
-            Debug.Assert(combatMapUnit is CombatPlayer);
-            if (combatMapUnit is CombatPlayer player)
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer; 
             {
                 Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
                 world.TryToMoveCombatMap(player, Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult,
@@ -1091,7 +1088,6 @@ namespace Ultima5ReduxTesting
 //                Debug.Assert(singleCombatMapReference.GetEntryDirections().Count > 0);
                 if (singleCombatMapReference.GetEntryDirections().Count == 0)
                 {
-                    Debugger.Break();
                     List<SingleCombatMapReference.EntryDirection> dirs = singleCombatMapReference.GetEntryDirections();
                 }
 

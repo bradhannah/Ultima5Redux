@@ -1383,8 +1383,9 @@ namespace Ultima5Redux
 
         private bool IsAllowedToBuryMoongate()
         {
-            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld) return false;
-            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld) return false;
+            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld &&
+                State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld)
+                return false;
             if (State.TheVirtualMap.IsAnyExposedItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
             TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
 
