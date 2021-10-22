@@ -30,7 +30,7 @@ namespace Ultima5Redux
         public enum TryToMoveResult
         {
             Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell, ShipBreakingUp, ShipDestroyed,
-            MovedWithDamage, MovedSelectionCursor
+            MovedWithDamage, MovedSelectionCursor, IgnoredMovement
         }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
@@ -872,6 +872,16 @@ namespace Ultima5Redux
                 AdvanceTime(N_DEFAULT_ADVANCE_TIME);
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HEAD) + " " +
                        DataOvlRef.StringReferences.GetDirectionString(direction);
+            }
+
+            // we know that if the avatar is on a frigate, then he hasn't just changed direction
+            // so, if sails are hoisted and they are heading in a specific direction, then we will ignore
+            // any additional keystrokes
+            if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.AreSailsHoisted &&
+                State.WindDirection != Point2D.Direction.None && bManualMovement)
+            {
+                tryToMoveResult = TryToMoveResult.IgnoredMovement;
+                return "";
             }
 
             // we start with a different descriptor depending on the vehicle the Avatar is currently on
