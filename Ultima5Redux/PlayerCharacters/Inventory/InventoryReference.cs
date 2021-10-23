@@ -78,8 +78,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             // build reagent highlight table
-            foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Reagent)
-            ) //reagentInvRefs)
+            foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Reagent) ) 
             {
                 _invRefs.Add(invRef);
 

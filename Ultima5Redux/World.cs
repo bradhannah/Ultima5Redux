@@ -882,7 +882,7 @@ namespace Ultima5Redux
             {
                 tryToMoveResult = TryToMoveResult.IgnoredMovement;
                 return "";
-            }
+            }   
 
             // we start with a different descriptor depending on the vehicle the Avatar is currently on
             switch (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
@@ -10,7 +11,7 @@ namespace Ultima5Redux.PlayerCharacters
     {
         private static readonly TextInfo _ti = new CultureInfo("en-US", false).TextInfo;
 
-        private static readonly Dictionary<string, string> _literalTranslationDictionary =
+        private static readonly Dictionary<string, string> LiteralTranslationDictionary =
             new Dictionary<string, string>
             {
                 { "An", "Negate" },
@@ -50,6 +51,12 @@ namespace Ultima5Redux.PlayerCharacters
 
         public override Dictionary<Spell.SpellWords, Spell> Items { get; } = new Dictionary<Spell.SpellWords, Spell>();
 
+        public static string GetSpellWordByChar(string spellCharacter)
+        {
+            var hey = LiteralTranslationDictionary.Where(sp => sp.Key.StartsWith(spellCharacter.ToUpper()));
+            return hey.FirstOrDefault().Key;
+        }
+        
         private void AddSpell(Spell.SpellWords spellWord, DataOvlReference.SpellStrings spellStr)
         {
             if (spellWord == Spell.SpellWords.Nox)
@@ -65,7 +72,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         public static string GetLiteralTranslation(string syllable)
         {
-            return _literalTranslationDictionary[_ti.ToTitleCase(syllable)];
+            return LiteralTranslationDictionary[_ti.ToTitleCase(syllable)];
         }
     }
 }
