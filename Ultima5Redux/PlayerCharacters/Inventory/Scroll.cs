@@ -9,17 +9,19 @@
 
         private const int SCROLL_SPRITE = 260;
 
-        public Scroll(Spell.SpellWords spell, int quantity, string longName, string shortName) : base(quantity,
+        public Scroll(MagicReference.SpellWords spell, int quantity, string longName, string shortName,  MagicReference scrollMagicReference) : base(quantity,
             longName, shortName, SCROLL_SPRITE)
         {
             ScrollSpell = spell;
+            ScrollMagicReference = scrollMagicReference;
         }
 
         public override bool HideQuantity { get; } = false;
         public override bool IsSellable => false;
         public override int BasePrice => 0;
 
-        public Spell.SpellWords ScrollSpell { get; }
+        public MagicReference.SpellWords ScrollSpell { get; }
+        public MagicReference ScrollMagicReference { get; }
 
         public override string InventoryReferenceString => ScrollSpell.ToString();
     }

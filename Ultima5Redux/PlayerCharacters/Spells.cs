@@ -7,8 +7,9 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public class Spells : InventoryItems<Spell.SpellWords, Spell>
+    public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
     {
+        private readonly MagicReferences _magicReferences;
         private static readonly TextInfo _ti = new CultureInfo("en-US", false).TextInfo;
 
         private static readonly Dictionary<string, string> LiteralTranslationDictionary =
@@ -40,16 +41,18 @@ namespace Ultima5Redux.PlayerCharacters
                 { "Zu", "Sleep" },
             };
 
-        public Spells(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef, gameStateByteArray)
+        public Spells(DataOvlReference dataOvlRef, List<byte> gameStateByteArray,
+            MagicReferences magicReferences) : base(dataOvlRef, gameStateByteArray)
         {
+            _magicReferences = magicReferences;
             int nIndex = 0;
-            foreach (Spell.SpellWords spell in Enum.GetValues(typeof(Spell.SpellWords)))
+            foreach (MagicReference.SpellWords spell in Enum.GetValues(typeof(MagicReference.SpellWords)))
             {
-                AddSpell(spell, (DataOvlReference.SpellStrings)nIndex++);
+                AddSpell(spell, (DataOvlReference.SpellStrings)nIndex++, _magicReferences.GetMagicReference(spell));
             }
         }
 
-        public override Dictionary<Spell.SpellWords, Spell> Items { get; } = new Dictionary<Spell.SpellWords, Spell>();
+        public override Dictionary<MagicReference.SpellWords, Spell> Items { get; } = new Dictionary<MagicReference.SpellWords, Spell>();
 
         public static string GetSpellWordByChar(string spellCharacter)
         {
@@ -57,17 +60,18 @@ namespace Ultima5Redux.PlayerCharacters
             return hey.FirstOrDefault().Key;
         }
         
-        private void AddSpell(Spell.SpellWords spellWord, DataOvlReference.SpellStrings spellStr)
+        private void AddSpell(MagicReference.SpellWords spellWord, DataOvlReference.SpellStrings spellStr, MagicReference magicReference)
         {
-            if (spellWord == Spell.SpellWords.Nox)
+            if (spellWord == MagicReference.SpellWords.Nox)
             {
-                Items[spellWord] = new Spell(spellWord, 0, "Nox", "Nox");
+                Items[spellWord] = new Spell(spellWord, 0, "Nox", "Nox", magicReference);
                 return;
             }
 
+            string longSpellStr = _ti.ToTitleCase(spellStr.ToString().Replace("_", " ").ToLower());
+
             Items[spellWord] = new Spell(spellWord, GameStateByteArray[(int)spellWord],
-                DataOvlRef.StringReferences.GetString(spellStr),
-                DataOvlRef.StringReferences.GetString(spellStr));
+                longSpellStr, longSpellStr, _magicReferences.GetMagicReference(spellWord));
         }
 
         public static string GetLiteralTranslation(string syllable)

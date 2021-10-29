@@ -16,6 +16,8 @@ namespace Ultima5Redux
 {
     public class GameState
     {
+        private readonly MagicReferences _magicReferences;
+
         /// Legacy save game state
         private readonly ImportedGameState _importedGameState;
 
@@ -42,8 +44,10 @@ namespace Ultima5Redux
         /// <param name="u5Directory">Directory of the game State files</param>
         /// <param name="dataOvlRef"></param>
         /// <param name="inventoryReferences"></param>
-        public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences)
+        /// <param name="magicReferences"></param>
+        public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences, MagicReferences magicReferences)
         {
+            _magicReferences = magicReferences;
             // imports the legacy save game file data 
             _importedGameState = new ImportedGameState(u5Directory);
 
@@ -78,7 +82,7 @@ namespace Ultima5Redux
 
             // import the players inventory
             PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef,
-                new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences);
+                new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences, _magicReferences);
         }
 
         internal DataChunk CharacterAnimationStatesDataChunk => _importedGameState.CharacterAnimationStatesDataChunk;

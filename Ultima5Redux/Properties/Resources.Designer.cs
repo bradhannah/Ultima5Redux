@@ -158,6 +158,37 @@ namespace Ultima5Redux.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///  &quot;In_Lor&quot;: {
+        ///    &quot;Spell&quot;: &quot;In Lor&quot;,
+        ///    &quot;SulfurAsh&quot;: true,
+        ///    &quot;Ginseng&quot;: false,
+        ///    &quot;Garlic&quot;: false,
+        ///    &quot;SpiderSilk&quot;: false,
+        ///    &quot;BloodMoss&quot;: false,
+        ///    &quot;BlackPearl&quot;: false,
+        ///    &quot;NightShade&quot;: false,
+        ///    &quot;MandrakeRoot&quot;: false,
+        ///    &quot;Circle&quot;: 1,
+        ///    &quot;Type&quot;: &quot;peace&quot;,
+        ///    &quot;SimpleDescription&quot;: &quot;creates light&quot;,
+        ///    &quot;SimilarFunction&quot;: &quot;torch&quot;,
+        ///    &quot;TimePermitted&quot;: &quot;peace&quot;,
+        ///    &quot;Gold&quot;: 1,
+        ///    &quot;RawGoldReagents&quot;: &quot;1: ash&quot;
+        ///  },
+        ///  &quot;Grav_Por&quot;: {
+        ///    &quot;Spell&quot;: &quot;Grav Por&quot;,
+        ///    &quot;SulfurAsh&quot;: true,
+        ///  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string MagicDefinitions {
+            get {
+                return ResourceManager.GetString("MagicDefinitions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///  &quot;0&quot;: {
         ///    &quot;Location&quot;: &quot;Britain&quot;,
         ///    &quot;ShoppeKeeperType&quot;: &quot;Blacksmith&quot;

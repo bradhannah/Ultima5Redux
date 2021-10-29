@@ -35,17 +35,17 @@ namespace Ultima5Redux
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
 
-        private readonly Dictionary<Potion.PotionColor, Spell.SpellWords> _potionColorToSpellMap =
-            new Dictionary<Potion.PotionColor, Spell.SpellWords>
+        private readonly Dictionary<Potion.PotionColor, MagicReference.SpellWords> _potionColorToSpellMap =
+            new Dictionary<Potion.PotionColor, MagicReference.SpellWords>
             {
-                { Potion.PotionColor.Blue, Spell.SpellWords.An_Zu },
-                { Potion.PotionColor.Yellow, Spell.SpellWords.Mani },
-                { Potion.PotionColor.Black, Spell.SpellWords.Sanct_Lor },
-                { Potion.PotionColor.Red, Spell.SpellWords.An_Nox },
-                { Potion.PotionColor.Green, Spell.SpellWords.Nox },
-                { Potion.PotionColor.Orange, Spell.SpellWords.In_Zu },
-                { Potion.PotionColor.White, Spell.SpellWords.Wis_An_Ylem },
-                { Potion.PotionColor.Purple, Spell.SpellWords.Rel_Xen_Bet }
+                { Potion.PotionColor.Blue, MagicReference.SpellWords.An_Zu },
+                { Potion.PotionColor.Yellow, MagicReference.SpellWords.Mani },
+                { Potion.PotionColor.Black, MagicReference.SpellWords.Sanct_Lor },
+                { Potion.PotionColor.Red, MagicReference.SpellWords.An_Nox },
+                { Potion.PotionColor.Green, MagicReference.SpellWords.Nox },
+                { Potion.PotionColor.Orange, MagicReference.SpellWords.In_Zu },
+                { Potion.PotionColor.White, MagicReference.SpellWords.Wis_An_Ylem },
+                { Potion.PotionColor.Purple, MagicReference.SpellWords.Rel_Xen_Bet }
             };
 
         private readonly Random _random = new Random();
@@ -83,7 +83,9 @@ namespace Ultima5Redux
 
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
 
-            State = new GameState(U5Directory, DataOvlRef, InvRef);
+            MagicRefs = new MagicReferences();
+
+            State = new GameState(U5Directory, DataOvlRef, InvRef, MagicRefs);
 
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
 
@@ -201,6 +203,8 @@ namespace Ultima5Redux
         /// </summary>
         public TileReferences SpriteTileReferences { get; }
 
+        public MagicReferences MagicRefs { get; }
+        
         /// <summary>
         ///     Begins the conversation with a particular NPC
         /// </summary>
@@ -1403,7 +1407,7 @@ namespace Ultima5Redux
         }
 
         public string TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded,
-            out Spell.SpellWords spell)
+            out MagicReference.SpellWords spell)
         {
             string retStr = potion.Color + " Potion\n";
 

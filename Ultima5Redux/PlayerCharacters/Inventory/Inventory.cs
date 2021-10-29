@@ -15,13 +15,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private readonly DataOvlReference _dataOvlRef;
         private readonly List<byte> _gameStateByteArray;
         private readonly InventoryReferences _inventoryReferences;
+        private readonly MagicReferences _magicReferences;
         private readonly Moongates _moongates;
         private readonly MoonPhaseReferences _moonPhaseReferences;
         private readonly GameState _state;
 
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,
             MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state,
-            InventoryReferences inventoryReferences)
+            InventoryReferences inventoryReferences, MagicReferences magicReferences)
         {
             _gameStateByteArray = gameStateByteArray;
             _dataOvlRef = dataOvlRef;
@@ -29,6 +30,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             _moongates = moongates;
             _state = state;
             _inventoryReferences = inventoryReferences;
+            _magicReferences = magicReferences;
             RefreshInventory();
         }
 
@@ -184,7 +186,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ReadyItems.AddRange(TheWeapons.AllCombatItems);
             CombatItems.AddRange(TheWeapons.AllCombatItems);
 
-            MagicScrolls = new Scrolls(_dataOvlRef, _gameStateByteArray);
+            MagicScrolls = new Scrolls(_dataOvlRef, _gameStateByteArray, _magicReferences);
             AllItems.AddRange(MagicScrolls.GenericItemList);
             UseItems.AddRange(MagicScrolls.GenericItemList);
 
@@ -207,7 +209,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             SpellReagents = new Reagents(_dataOvlRef, _gameStateByteArray, _state);
             AllItems.AddRange(SpellReagents.GenericItemList);
 
-            MagicSpells = new Spells(_dataOvlRef, _gameStateByteArray);
+            MagicSpells = new Spells(_dataOvlRef, _gameStateByteArray, _magicReferences);
             AllItems.AddRange(MagicSpells.GenericItemList);
 
             TheMoonstones = new Moonstones(_dataOvlRef, _moonPhaseReferences, _moongates);
