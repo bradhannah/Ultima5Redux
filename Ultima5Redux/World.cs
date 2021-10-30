@@ -380,7 +380,7 @@ namespace Ultima5Redux
             if (magicCarpet != null)
             {
                 // add the carpet to the players inventory and remove it from the map
-                State.PlayerInventory.MagicCarpets++;
+                State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity++;
                 State.TheVirtualMap.TheMapUnits.ClearMapUnit(magicCarpet);
                 bGotAThing = true;
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.A_MAGIC_CARPET);
@@ -495,7 +495,7 @@ namespace Ultima5Redux
             // if it's a large map, we either klimb with the grapple or don't klimb at all
             if (State.TheVirtualMap.IsLargeMap)
             {
-                if (State.HasGrapple) // we don't have a grapple, so we can't klimb
+                if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Grapple].HasOneOfMore) // we don't have a grapple, so we can't klimb
                 {
                     klimbResult = KlimbResult.RequiresDirection;
                     return getKlimbOutput();
@@ -1208,7 +1208,7 @@ namespace Ultima5Redux
 
                         if (State.TheVirtualMap.IsAvatarRidingCarpet)
                             // we tuck the carpet away
-                            State.PlayerInventory.MagicCarpets++;
+                            State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity++;
                         if (State.TheVirtualMap.IsAvatarInSkiff)
                             // add a skiff the the frigate
                             boardableFrigate.SkiffsAboard++;
@@ -1274,7 +1274,7 @@ namespace Ultima5Redux
             }
 
             bWasUsed = true;
-            Debug.Assert((State.PlayerInventory.MagicCarpets > 0));
+            Debug.Assert((State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].HasOneOfMore));
 
             if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
             {
@@ -1282,7 +1282,7 @@ namespace Ultima5Redux
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.ONLY_ON_FOOT);
             }
 
-            State.PlayerInventory.MagicCarpets--;
+            State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity--;
             MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
                 State.TheVirtualMap.CurrentPosition.XY,
                 State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection, out int _);

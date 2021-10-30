@@ -49,8 +49,61 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                         .GetString(DataOvlReference.SpecialItemNamesStrings.SKULL_KEYS).Trim()),
                     DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY).Trim(),
                     (int)Provision.ProvisionSpritesTypeEnum.Torches, dataOvlRef, state));
+            Items.Add(Provision.ProvisionTypeEnum.Food,
+                new Provision(Provision.ProvisionTypeEnum.Food,
+                    uppercaseFirst(DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim()),
+                    uppercaseFirst(DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim()),
+                    DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim(),
+                    (int)Provision.ProvisionSpritesTypeEnum.Food, dataOvlRef, state));
+            Items.Add(Provision.ProvisionTypeEnum.Gold,
+                new Provision(Provision.ProvisionTypeEnum.Gold,
+                    uppercaseFirst(DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim()),
+                    uppercaseFirst(DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim()),
+                    DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim(),
+                    (int)Provision.ProvisionSpritesTypeEnum.Gold, dataOvlRef, state));
+
         }
 
+        public ushort Food
+        {
+            get => (ushort)Items[Provision.ProvisionTypeEnum.Food].Quantity;
+            set => Items[Provision.ProvisionTypeEnum.Food].Quantity = value;
+        }
+        
+        public ushort Gold
+        {
+            get => (ushort)Items[Provision.ProvisionTypeEnum.Gold].Quantity;
+            set => Items[Provision.ProvisionTypeEnum.Gold].Quantity = value;
+        }
+
+        public ushort Gems
+        {
+            get => (ushort)Items[Provision.ProvisionTypeEnum.Gems].Quantity;
+            set => Items[Provision.ProvisionTypeEnum.Gems].Quantity = value;
+        }
+
+        public ushort Torches
+        {
+            get => (ushort)Items[Provision.ProvisionTypeEnum.Torches].Quantity;
+            set => Items[Provision.ProvisionTypeEnum.Torches].Quantity = value;
+        }
+
+        public ushort Keys
+        {
+            get => (ushort)Items[Provision.ProvisionTypeEnum.Keys].Quantity;
+            set => Items[Provision.ProvisionTypeEnum.Keys].Quantity = value;
+        }
+
+        public ushort SkullKeys
+        {
+            get => (ushort)Items[Provision.ProvisionTypeEnum.SkullKeys].Quantity;
+            set => Items[Provision.ProvisionTypeEnum.SkullKeys].Quantity = value;
+        }
+        
         public sealed override Dictionary<Provision.ProvisionTypeEnum, Provision> Items { get; } =
             new Dictionary<Provision.ProvisionTypeEnum, Provision>();
     }

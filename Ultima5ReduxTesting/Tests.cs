@@ -794,21 +794,21 @@ namespace Ultima5ReduxTesting
             Debug.Assert(avatar.IsAvatarOnBoardedThing);
             Debug.Assert(avatar.CurrentBoardedMapUnit != null);
 
-            int nCarpets = world.State.PlayerInventory.MagicCarpets;
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity;
             world.Xit(out bool bWasSuccessful);
-            Debug.Assert(nCarpets == world.State.PlayerInventory.MagicCarpets);
+            Debug.Assert(nCarpets == world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
             Debug.Assert(bWasSuccessful);
             world.Board(out bool bWasSuccessfulBoard);
             Debug.Assert(bWasSuccessfulBoard);
             world.Xit(out bWasSuccessful);
 
-            nCarpets = world.State.PlayerInventory.MagicCarpets;
+            nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity;
             Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
             world.TryToMove(Point2D.Direction.Left, false, false, out World.TryToMoveResult result);
             world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet);
             Debug.Assert(bGotACarpet);
             //Debug.Assert(carpet!=null);
-            Debug.Assert(nCarpets + 1 == world.State.PlayerInventory.MagicCarpets);
+            Debug.Assert(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
             world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
             Debug.Assert(!bGotACarpet);
 
@@ -831,12 +831,12 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(ActualSaveDirectory + @"\Bucden3");
 
-            int nCarpets = world.State.PlayerInventory.MagicCarpets;
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity;
             world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
                 out bool bAbleToUseItem);
             Debug.Assert(bAbleToUseItem);
-            Debug.Assert(world.State.PlayerInventory.MagicCarpets == nCarpets - 1);
+            Debug.Assert(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity == nCarpets - 1);
         }
 
         [Test] public void Test_CheckedBoardedTileHorse()

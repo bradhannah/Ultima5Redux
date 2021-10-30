@@ -8,7 +8,7 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux
 {
-    internal class ImportedGameState
+    public class ImportedGameState
     {
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;

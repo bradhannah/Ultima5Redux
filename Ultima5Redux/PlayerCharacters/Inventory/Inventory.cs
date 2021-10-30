@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -8,6 +9,7 @@ using Ultima5Redux.PlayerCharacters.CombatItems;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
+    [DataContract]
     public class Inventory
     {
         public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A }
@@ -22,7 +24,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,
             MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state,
-            InventoryReferences inventoryReferences, MagicReferences magicReferences)
+            InventoryReferences inventoryReferences, MagicReferences magicReferences,
+            ImportedGameState importedGameState)
         {
             _gameStateByteArray = gameStateByteArray;
             _dataOvlRef = dataOvlRef;
@@ -31,27 +34,74 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             _state = state;
             _inventoryReferences = inventoryReferences;
             _magicReferences = magicReferences;
+            
+            
+            
             RefreshInventory();
         }
 
-        public Armours ProtectiveArmour { get; set; }
+        [DataMember] public Armours ProtectiveArmour { get; set; }
 
-        public bool Grapple
+        public int Gold => TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity;
+        public int Food => TheProvisions.Items[Provision.ProvisionTypeEnum.Food].Quantity;
+        public bool SpendGold(int nGold)
         {
-            get => GetInventoryBool(InventoryThings.Grapple);
-            set => SetInventoryBool(InventoryThings.Grapple, value);
+            if (TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity < nGold) return false;
+            TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity -= nGold;
+            return true;
         }
+        
+        // [DataMember] public bool Grapple
+        // {
+        //     get => GetInventoryBool(InventoryThings.Grapple);
+        //     set => SetInventoryBool(InventoryThings.Grapple, value);
+        // }
 
-        public int MagicCarpets
-        {
-            get => GetInventoryQuantity(InventoryThings.MagicCarpets);
-            set
-            {
-                int nQuantity = value == 0 || value == 0xFF ? 0 : value;
-                SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity = nQuantity;
-                SetInventoryQuantity(InventoryThings.MagicCarpets, (byte)nQuantity);
-            }
-        }
+        // public int MagicCarpets
+        // {
+        //     get => GetInventoryQuantity(InventoryThings.MagicCarpets);
+        //     set
+        //     {
+        //         int nQuantity = value == 0 || value == 0xFF ? 0 : value;
+        //         SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity = nQuantity;
+        //         SetInventoryQuantity(InventoryThings.MagicCarpets, (byte)nQuantity);
+        //     }
+        // }
+
+        // /// <summary>
+        // ///     Amount of food Avatar has
+        // /// </summary>
+        // [DataMember] public ushort Food { get; set; }
+        //
+        // /// <summary>
+        // ///     Amount of gold Avatar has
+        // /// </summary>
+        // [DataMember] public ushort Gold { get; set; }
+        //
+        // /// <summary>
+        // ///     Does the Avatar have the Grappling Hook
+        // /// </summary>
+        // [DataMember] public bool HasGrapple { get; set; }
+
+        // /// <summary>
+        // ///     Number of gems the Avatar has
+        // /// </summary>
+        // [DataMember] public int Gems { get; set; }
+        //
+        // /// <summary>
+        // ///     Number of keys the Avatar has
+        // /// </summary>
+        // [DataMember] public int Keys { get; set; }
+        //
+        // /// <summary>
+        // ///     Number of skull keys the Avatar has
+        // /// </summary>
+        // [DataMember] public int SkullKeys { get; set; }
+        //
+        // /// <summary>
+        // ///     Number of torches the Avatar has
+        // /// </summary>
+        // [DataMember] public int Torches { get; set; }
 
         public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
         public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
@@ -159,16 +209,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="equipment">type of combat equipment</param>
         /// <returns>combat item object</returns>
-        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment)
-        {
-            foreach (CombatItem item in ReadyItems)
-            {
-                if (item.SpecificEquipment == equipment) return item;
-            }
-
-            return null;
-            //throw new Ultima5ReduxException("Requested " + equipment + " but is not a combat type");
-        }
+        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment) =>
+            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment);
 
         public void RefreshInventory()
         {
@@ -221,13 +263,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             UpdateAllInventoryReferences();
         }
-
-        // public void ConsumeItem(InventoryItem item)
-        // {
-        //     InventoryItem item = AllItems[item];
-        //     
-        // }
-
 
         private void UpdateAllInventoryReferences()
         {

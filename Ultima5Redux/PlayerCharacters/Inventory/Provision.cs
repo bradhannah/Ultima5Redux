@@ -7,9 +7,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Provision : InventoryItem
     {
-        public enum ProvisionSpritesTypeEnum { Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263 }
+        public enum ProvisionSpritesTypeEnum { Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258 }
 
-        public enum ProvisionTypeEnum { Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B }
+        public enum ProvisionTypeEnum { Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204 }
 
         private readonly DataOvlReference _dataOvlReference;
         private readonly GameState _state;
@@ -35,48 +35,50 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public override bool HideQuantity => false;
 
-        /// <summary>
-        ///     Gets the parties current quantity of the specific provision
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public override int Quantity
-        {
-            get
-            {
-                switch (ProvisionType)
-                {
-                    case ProvisionTypeEnum.Torches:
-                        return _state.Torches;
-                    case ProvisionTypeEnum.Gems:
-                        return _state.Gems;
-                    case ProvisionTypeEnum.Keys:
-                        return _state.Keys;
-                    case ProvisionTypeEnum.SkullKeys:
-                        return _state.SkullKeys;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            set
-            {
-                switch (ProvisionType)
-                {
-                    case ProvisionTypeEnum.Torches:
-                        _state.Torches = value;
-                        break;
-                    case ProvisionTypeEnum.Gems:
-                        _state.Gems = value;
-                        break;
-                    case ProvisionTypeEnum.Keys:
-                        _state.Keys = value;
-                        break;
-                    case ProvisionTypeEnum.SkullKeys:
-                        _state.SkullKeys = value;
-                        break;
-                    //throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        // /// <summary>
+        // ///     Gets the parties current quantity of the specific provision
+        // /// </summary>
+        // /// <exception cref="ArgumentOutOfRangeException"></exception>
+        // public override int Quantity
+        // {
+        //     get;
+        //     set;
+        //     // get
+        //     // {
+        //     //     switch (ProvisionType)
+        //     //     {
+        //     //         case ProvisionTypeEnum.Torches:
+        //     //             return _state.Torches;
+        //     //         case ProvisionTypeEnum.Gems:
+        //     //             return _state.Gems;
+        //     //         case ProvisionTypeEnum.Keys:
+        //     //             return _state.Keys;
+        //     //         case ProvisionTypeEnum.SkullKeys:
+        //     //             return _state.SkullKeys;
+        //     //         default:
+        //     //             throw new ArgumentOutOfRangeException();
+        //     //     }
+        //     // }
+        //     // set
+        //     // {
+        //     //     switch (ProvisionType)
+        //     //     {
+        //     //         case ProvisionTypeEnum.Torches:
+        //     //             _state.Torches = value;
+        //     //             break;
+        //     //         case ProvisionTypeEnum.Gems:
+        //     //             _state.Gems = value;
+        //     //             break;
+        //     //         case ProvisionTypeEnum.Keys:
+        //     //             _state.Keys = value;
+        //     //             break;
+        //     //         case ProvisionTypeEnum.SkullKeys:
+        //     //             _state.SkullKeys = value;
+        //     //             break;
+        //     //         //throw new ArgumentOutOfRangeException();
+        //     //     }
+        //     // }
+        // }
 
         public ProvisionTypeEnum ProvisionType { get; }
 

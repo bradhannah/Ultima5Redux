@@ -26,6 +26,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public override bool IsSellable => false;
 
+        public bool HasOneOfMore => Quantity > 0;
+
         public ItemTypeSpriteEnum ItemType { get; }
 
         public override string InventoryReferenceString => ItemType.ToString();

@@ -1197,6 +1197,22 @@
       "ItemSpriteExposed": 263,
       "ItemDescription": "These open lots of things",
       "ItemDescriptionAttribution": "The Book of Brad"
+    },
+    {
+      "ItemName": "Food",
+      "ItemNameHighlight": "",
+      "ItemSprite": "271",
+      "ItemSpriteExposed": 271,
+      "ItemDescription": "You eat this",
+      "ItemDescriptionAttribution": "The Book of Brad"
+    },
+    {
+      "ItemName": "Gold",
+      "ItemNameHighlight": "",
+      "ItemSprite": "258",
+      "ItemSpriteExposed": 258,
+      "ItemDescription": "You spend this",
+      "ItemDescriptionAttribution": "The Book of Brad"
     }
   ]
 }

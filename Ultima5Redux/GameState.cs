@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -14,6 +16,7 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux
 {
+    [DataContract]
     public class GameState
     {
         private readonly MagicReferences _magicReferences;
@@ -60,13 +63,13 @@ namespace Ultima5Redux
             _nInitialY = _importedGameState.Y;
 
             Karma = _importedGameState.Karma;
-            Food = _importedGameState.Food;
-            Gold = _importedGameState.Gold;
-            Keys = _importedGameState.Keys;
-            Gems = _importedGameState.Gems;
-            Torches = _importedGameState.Torches;
-            SkullKeys = _importedGameState.SkullKeys;
-            HasGrapple = _importedGameState.HasGrapple;
+            // Food = _importedGameState.Food;
+            // Gold = _importedGameState.Gold;
+            // Keys = _importedGameState.Keys;
+            // Gems = _importedGameState.Gems;
+            // Torches = _importedGameState.Torches;
+            // SkullKeys = _importedGameState.SkullKeys;
+            // HasGrapple = _importedGameState.HasGrapple;
             TurnsToExtinguish = _importedGameState.TorchTurnsLeft;
             ActivePlayerNumber = _importedGameState.ActivePlayerNumber;
 
@@ -82,7 +85,15 @@ namespace Ultima5Redux
 
             // import the players inventory
             PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef,
-                new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences, _magicReferences);
+                new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences, _magicReferences,
+                _importedGameState);
+
+            Serialize();
+        }
+
+        public void Serialize()
+        {
+            string derp = JsonConvert.SerializeObject(this);
         }
 
         internal DataChunk CharacterAnimationStatesDataChunk => _importedGameState.CharacterAnimationStatesDataChunk;
@@ -96,51 +107,28 @@ namespace Ultima5Redux
         internal DataChunk UnderworldOverlayDataChunks => _importedGameState.UnderworldOverlayDataChunks;
 
         /// <summary>
-        ///     Does the Avatar have the Grappling Hook
-        /// </summary>
-        public bool HasGrapple { get; set; }
-
-        /// <summary>
         ///     Does the Avatar have a torch lit?
         /// </summary>
         public bool IsTorchLit => TurnsToExtinguish > 0;
 
-        public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
+        [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
         /// <summary>
         ///     What is the index of the currently active player?
         /// </summary>
-        public int ActivePlayerNumber { get; set; }
+        [DataMember] public int ActivePlayerNumber { get; set; }
 
-        /// <summary>
-        ///     Number of gems the Avatar has
-        /// </summary>
-        public int Gems { get; set; }
 
-        /// <summary>
-        ///     Number of keys the Avatar has
-        /// </summary>
-        public int Keys { get; set; }
-
-        /// <summary>
-        ///     Number of skull keys the Avatar has
-        /// </summary>
-        public int SkullKeys { get; set; }
-
-        /// <summary>
-        ///     Number of torches the Avatar has
-        /// </summary>
-        public int Torches { get; set; }
 
         /// <summary>
         ///     How many turns until the Avatar's torch is extinguished
         /// </summary>
-        public int TurnsToExtinguish { get; set; }
+        [DataMember] public int TurnsToExtinguish { get; set; }
 
         /// <summary>
         ///     Players current inventory
         /// </summary>
-        public Inventory PlayerInventory { get; }
+        [DataMember] public Inventory PlayerInventory { get; }
 
         /// <summary>
         ///     Location and state of all moongates and moonstones
@@ -161,16 +149,6 @@ namespace Ultima5Redux
         ///     The current time of day
         /// </summary>
         public TimeOfDay TheTimeOfDay { get; }
-
-        /// <summary>
-        ///     Amount of food Avatar has
-        /// </summary>
-        public ushort Food { get; set; }
-
-        /// <summary>
-        ///     Amount of gold Avatar has
-        /// </summary>
-        public ushort Gold { get; set; }
 
         /// <summary>
         ///     Users Karma

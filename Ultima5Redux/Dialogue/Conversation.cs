@@ -518,7 +518,7 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Gold:
                         EnqueueToOutputBuffer(item);
-                        _gameStateRef.Gold -= (ushort)item.ItemAdditionalData;
+                        _gameStateRef.PlayerInventory.SpendGold((ushort)item.ItemAdditionalData);
                         break;
                     case TalkScript.TalkCommand.JoinParty:
                         if (_gameStateRef.CharacterRecords.IsFullParty())
