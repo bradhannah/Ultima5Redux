@@ -25,9 +25,11 @@ namespace Ultima5Redux.PlayerCharacters
         public enum MagicTypeEnum { Peace, Support, Attack, Debuff, None}  
         public enum TimePermittedEnum { Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never}
 
-        public Dictionary<Reagent.ReagentTypeEnum, bool> RequiredReagents => 
-            _reagentsDictionary.Where(kvp => kvp.Value == true)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        // public Dictionary<Reagent.ReagentTypeEnum, bool> RequiredReagents => 
+        //     _reagentsDictionary.Where(kvp => kvp.Value == true)
+        //         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
         
         [DataMember] public SpellWords SpellEnum;
         [DataMember] public string Spell;
