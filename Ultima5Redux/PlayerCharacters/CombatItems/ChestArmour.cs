@@ -4,22 +4,23 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class ChestArmour : Armour
     {
-        public enum ChestArmourEnum
+
+        //private const int CHEST_ARMOUR_SPRITE = 267;
+
+        //public ChestArmourEnum ChestArmourType;
+
+        public ChestArmour(CombatItemReference combatItemReference, int nQuantity) :
+            base(combatItemReference, nQuantity)
         {
-            ClothArmour = 0x223, LeatherArmour = 0x224, Ringmail = 0x225, ScaleMail = 0x226, ChainMail = 0x227,
-            PlateMail = 0x228, MysticArmour = 0x229
-        }
-
-        private const int CHEST_ARMOUR_SPRITE = 267;
-
-        public ChestArmourEnum ChestArmourType;
-
-        public ChestArmour(ChestArmourEnum chestArmourType, DataOvlReference.Equipment equipment,
-            DataOvlReference dataOvlRef, int nQuantity)
-            : base(equipment, dataOvlRef, nQuantity, (int)chestArmourType, CHEST_ARMOUR_SPRITE)
-        {
-            ChestArmourType = chestArmourType;
-        }
+            
+        }        
+        
+        // public ChestArmour(ChestArmourEnum chestArmourType, DataOvlReference.Equipment equipment,
+        //     DataOvlReference dataOvlRef, int nQuantity)
+        //     : base(equipment, dataOvlRef, nQuantity, (int)chestArmourType, CHEST_ARMOUR_SPRITE)
+        // {
+        //     ChestArmourType = chestArmourType;
+        // }
 
         //public override int AttackStat { get; }
 

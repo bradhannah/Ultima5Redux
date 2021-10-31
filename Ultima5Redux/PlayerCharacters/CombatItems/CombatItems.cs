@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
@@ -7,11 +8,14 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public abstract class CombatItems<TEnumType, T> : InventoryItems<TEnumType, T>
     {
-        protected CombatItems(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef,
-            gameStateByteArray)
+        protected CombatItemReferences CombatItemReferences { get; }
+
+        protected CombatItems(CombatItemReferences combatItemReferences, List<byte> gameStateByteArray) : 
+            base(gameStateByteArray)
         {
+            CombatItemReferences = combatItemReferences;
         }
 
-        public List<CombatItem> AllCombatItems => GenericItemList.Cast<CombatItem>().ToList();
+        [IgnoreDataMember] public List<CombatItem> AllCombatItems => GenericItemList.Cast<CombatItem>().ToList();
     }
 }

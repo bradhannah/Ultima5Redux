@@ -91,6 +91,7 @@ namespace Ultima5Redux
             Serialize();
         }
 
+ 
         public void Serialize()
         {
             string derp = JsonConvert.SerializeObject(this);

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using Ultima5Redux.Maps;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -7,6 +8,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [DataContract]
     public abstract class InventoryItem
     {
         protected InventoryItem(int quantity, string longName, string shortName, int spriteNum) : this(quantity,
@@ -17,30 +19,30 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         protected InventoryItem(int quantity, string longName, string shortName, string findDescription, int spriteNum)
         {
             Quantity = quantity;
-            LongName = longName;
-            ShortName = shortName;
+            // LongName = longName;
+            // ShortName = shortName;
             SpriteNum = spriteNum;
             FindDescription = findDescription;
         }
 
-        public abstract bool HideQuantity { get; }
+        [DataMember] public virtual string FindDescription { get; }
+        [DataMember] public virtual int Quantity { get; set; }
+        [DataMember] public int SpriteNum { get; }
 
-        public virtual bool IsSellable => BasePrice > 0;
+        [IgnoreDataMember] public InventoryReference InvRef { get; protected internal set; }
 
-        public virtual int BasePrice { get; protected set; } = 0;
-        public virtual int Quantity { get; set; }
+        [IgnoreDataMember] public abstract bool HideQuantity { get; }
 
-        public int SpriteNum { get; }
+        [IgnoreDataMember] public virtual bool IsSellable => BasePrice > 0;
 
-        public InventoryReference InvRef { get; protected internal set; }
+        [IgnoreDataMember] public virtual int BasePrice { get; protected set; } = 0;
 
-        public virtual string FindDescription { get; }
+        [IgnoreDataMember] public abstract string InventoryReferenceString { get; }
 
-        public abstract string InventoryReferenceString { get; }
+        [IgnoreDataMember] public virtual string LongName => InvRef.ItemName;
+        [IgnoreDataMember] public virtual string ShortName => InvRef.ItemName;
 
-        public virtual string LongName { get; }
-
-        public string QuantityString
+        [IgnoreDataMember] public string QuantityString
         {
             get
             {
@@ -48,8 +50,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 return Quantity == 0 ? "--" : Quantity.ToString();
             }
         }
-
-        public virtual string ShortName { get; }
 
         public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location)
