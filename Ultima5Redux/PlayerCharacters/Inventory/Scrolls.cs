@@ -12,9 +12,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         // I wouldn't normally like to use offsets like this, but I want spells and scrolls to be linkable by the same enum
         private readonly int _nQuantityIndexAdjust = Enum.GetValues(typeof(MagicReference.SpellWords)).Length;
 
-        public Scrolls(DataOvlReference dataOvlRef, List<byte> gameStateByteArray,
-            MagicReferences magicReferences) : base(dataOvlRef,
-            gameStateByteArray)
+        public Scrolls(List<byte> gameStateByteArray, MagicReferences magicReferences) : base(gameStateByteArray)
         {
             _magicReferences = magicReferences;
             AddScroll(MagicReference.SpellWords.Vas_Lor, DataOvlReference.SpellStrings.VAS_LOR);
@@ -35,10 +33,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Scroll.ScrollSpells scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
 
+            
+            
             int nIndex = 0x27A + (int)scrollSpell;
             Items[spellWord] = new Scroll(spellWord, GameStateByteArray[nIndex],
-                DataOvlRef.StringReferences.GetString(spellStr),
-                DataOvlRef.StringReferences.GetString(spellStr), 
+                _magicReferences.GetMagicReference(spellWord).Spell,
+                _magicReferences.GetMagicReference(spellWord).Spell, 
                 _magicReferences.GetMagicReference(spellWord));
         }
     }

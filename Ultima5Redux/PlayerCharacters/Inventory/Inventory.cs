@@ -222,13 +222,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             ProtectiveArmour = new Armours(_combatItemReferences, _gameStateByteArray);
             TheWeapons = new Weapons(_combatItemReferences, _gameStateByteArray);
-            MagicScrolls = new Scrolls(_dataOvlRef, _gameStateByteArray, _magicReferences);
+            MagicScrolls = new Scrolls(_gameStateByteArray, _magicReferences);
             MagicPotions = new Potions(_dataOvlRef, _gameStateByteArray);
             SpecializedItems = new SpecialItems(_dataOvlRef, _gameStateByteArray);
             Artifacts = new LordBritishArtifacts(_dataOvlRef, _gameStateByteArray);
             Shards = new ShadowlordShards(_dataOvlRef, _gameStateByteArray);
             SpellReagents = new Reagents(_dataOvlRef, _gameStateByteArray, _state);
-            MagicSpells = new Spells(_dataOvlRef, _gameStateByteArray, _magicReferences);
+            MagicSpells = new Spells(_gameStateByteArray, _magicReferences);
             TheMoonstones = new Moonstones(_dataOvlRef, _moonPhaseReferences, _moongates);
             TheProvisions = new Provisions(_dataOvlRef, _state);
 

@@ -140,7 +140,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput,
             out string debugStr)
         {
-            return Attack(enemyCombatMapUnit, weapon.AttackStat, out stateOutput, out debugStr);
+            return Attack(enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat, out stateOutput, out debugStr);
         }
 
         private bool IsHit(CombatMapUnit enemyCombatMapUnit, out string debugStr)
@@ -177,7 +177,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             const int BareHandAttack = 3;
 
-            int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
+            int nMaxDamage = weapon?.TheCombatItemReference.AttackStat ?? BareHandAttack;
 
             return GetAttackDamage(enemyCombatMapUnit, nMaxDamage);
         }

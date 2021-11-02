@@ -64,9 +64,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_ATTACK_RANGE).GetByte(nMonsterIndex);
 
             if (AttackRange == 1)
-                TheMissileType = CombatItem.MissileType.None;
+                TheMissileType = CombatItemReference.MissileType.None;
             else
-                TheMissileType = (CombatItem.MissileType)dataOvlReference
+                TheMissileType = (CombatItemReference.MissileType)dataOvlReference
                     .GetDataChunk(DataOvlReference.DataChunkName.ENEMY_RANGE_THING)
                     .GetByte(nMonsterIndex);
 
@@ -129,7 +129,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public int AttackRange { get; }
         public int Experience => _additionalEnemyFlags.Experience; //_enemyExp[_monsterIndex]; 
         public int FriendIndex { get; }
-        public CombatItem.MissileType TheMissileType { get; }
+        public CombatItemReference.MissileType TheMissileType { get; }
 
         public string AllCapsPluralName { get; }
         public string MixedCaseSingularName { get; }

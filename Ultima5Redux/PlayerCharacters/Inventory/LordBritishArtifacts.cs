@@ -5,8 +5,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public sealed class LordBritishArtifacts : InventoryItems<LordBritishArtifact.ArtifactType, LordBritishArtifact>
     {
-        public LordBritishArtifacts(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef,
-            gameStateByteArray)
+        public LordBritishArtifacts(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             Items[LordBritishArtifact.ArtifactType.Amulet] = new LordBritishArtifact(
                 LordBritishArtifact.ArtifactType.Amulet,

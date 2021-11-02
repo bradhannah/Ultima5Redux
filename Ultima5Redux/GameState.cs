@@ -7,6 +7,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -48,7 +49,9 @@ namespace Ultima5Redux
         /// <param name="dataOvlRef"></param>
         /// <param name="inventoryReferences"></param>
         /// <param name="magicReferences"></param>
-        public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences, MagicReferences magicReferences)
+        /// <param name="combatItemReferences"></param>
+        public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences, 
+            MagicReferences magicReferences, CombatItemReferences combatItemReferences)
         {
             _magicReferences = magicReferences;
             // imports the legacy save game file data 
@@ -86,7 +89,7 @@ namespace Ultima5Redux
             // import the players inventory
             PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef,
                 new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences, _magicReferences,
-                _importedGameState);
+                _importedGameState, combatItemReferences);
 
             Serialize();
         }

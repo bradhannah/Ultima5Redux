@@ -5,8 +5,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class SpecialItems : InventoryItems<SpecialItem.ItemTypeSpriteEnum, SpecialItem>
     {
-        public SpecialItems(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef,
-            gameStateByteArray)
+        public SpecialItems(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             //   Carpet = 170, Grapple = 12, Spyglass = 89, HMSCape = 260, PocketWatch = 232, BlackBadge = 281,
             //WoodenBox = 270, Sextant = 256

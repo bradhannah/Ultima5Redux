@@ -50,16 +50,16 @@ Armament,MagicAxe,,261,261,"Magic axes are axes that have been enchanted to prod
 Armament,GlassSword,,261,261,"A glass sword is a magical blade of nigh unsurpassed power, which is made out of specially prepared glass. While it may kill virtually any being it strikes dead with a single well placed hit, it will always shatter upon impact, making it a weapon to be used cautiously. ",UltimaCodex.com
 Armament,JeweledSword,,261,261,"Who can explain the ways of Evil? Why would anyone for Evil's cause or any other, forge a shining sword that can do no damage and a suit of fine plate armour transparent to a foe's blade?",Paths of Destiny (Ultima V)
 Armament,MysticSword,,261,261,The Mystic Weapons are among the only weapons that work in The Abyss and are the only weapons that are effective in dungeon Doom.,UltimaCodex.com
-Armament,RingInvis,,266,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
+Armament,RingInvisibility,,266,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
 
 This will provide the user with invisibility during battle.",UltimaCodex.com
 Armament,RingProtection,,266,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
 
 This ring provides additional armour protection.",UltimaCodex.com
-Armament,RingRegen,,266,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
+Armament,RingRegeneration,,266,266,"Magical Rings are for the magic-users and the mundane alike and allows magic to help out passively.
 
 This ring will slowly heal the member wearing it.",UltimaCodex.com
-Armament,Amuletofturning,,268,268,You wear it on your neck and it does things?,The Book of Brad
+Armament,AmuletOfTurning,,268,268,You wear it on your neck and it does things?,The Book of Brad
 Armament,SpikedCollar,,268,268,"These collars seem to be the precursor of the gorgets found in later sets of plate armour. It basically is a leather neckband, riddled with metal spikes. While it may resemble something more likely to be found in certain bedrooms, it did grant the wearer some protection.These collarswere later made obsolete by the appearance of gorgets.",UltimaCodex.com
 Armament,Ankh,,268,268,"An ankh amulet is a small, loop-headed cross displayed by those who have attained Avatarhood or those undertaking the path to Avatarhood in striving to embody the Eight Virtues. ",UltimaCodex.com
 Spell,In_Lor,In Lor,260,260,"This simple spell creates a pool of light. Although a short duration, In Lor creates a brighter light than the best of torches. Note, however, that In Lor cannot be used in place of real flame to enhance the mixing of reagents for spells, for its properties are quite different.

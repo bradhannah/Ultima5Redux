@@ -339,7 +339,7 @@ namespace Ultima5Redux.Maps
                     preAttackOutputStr += " with " + weapon.LongName + "!";
 
                     // let's first make sure that any range weapons do not hit a wall first!
-                    if (weapon.Range > 1)
+                    if (weapon.TheCombatItemReference.Range > 1)
                     {
                         bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
                             opponentMapUnit.MapUnitPosition.XY,
@@ -367,11 +367,11 @@ namespace Ultima5Redux.Maps
                     // if the player attacks, but misses with a range weapon the we need see if they
                     // accidentally hit someone else
                     bool bMissedButHit = false;
-                    if (targetedHitState == CombatMapUnit.HitState.Missed && weapon.Range > 1)
+                    if (targetedHitState == CombatMapUnit.HitState.Missed && weapon.TheCombatItemReference.Range > 1)
                     {
                         TurnResult turnResult = HandleRangedMissed(combatPlayer,
                             opponentCombatMapUnit.MapUnitPosition.XY, out targetedCombatMapUnit,
-                            weapon.AttackStat, out missedPoint, out string addStr);
+                            weapon.TheCombatItemReference.AttackStat, out missedPoint, out string addStr);
                         postAttackOutputStr += addStr;
 
                         if (turnResult == TurnResult.EnemyMissedButHit)
@@ -618,7 +618,7 @@ namespace Ultima5Redux.Maps
                 {
                     case CombatMapUnit.HitState.Missed:
                         // oh oh - the enemy missed
-                        if (enemy.EnemyReference.TheMissileType == CombatItem.MissileType.None)
+                        if (enemy.EnemyReference.TheMissileType == CombatItemReference.MissileType.None)
                         {
                             targetedCombatMapUnit = bestCombatPlayer;
                             break;
@@ -1089,7 +1089,7 @@ namespace Ultima5Redux.Maps
 
         public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem)
         {
-            return GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer, combatItem.Range);
+            return GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer, combatItem.TheCombatItemReference.Range);
         }
 
         private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)

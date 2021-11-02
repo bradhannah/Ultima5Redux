@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
@@ -6,7 +7,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class ArmourReference : CombatItemReference
     {
-        public enum AmuletEnum { AmuletTurning = 0x247, SpikeCollar = 0x248, Ankh = 0x249 }
+        public enum AmuletEnum { AmuletOfTurning = 0x247, SpikedCollar = 0x248, Ankh = 0x249 }
         public enum ChestArmourEnum
         {
             ClothArmour = 0x223, LeatherArmour = 0x224, Ringmail = 0x225, ScaleMail = 0x226, ChainMail = 0x227,
@@ -22,6 +23,18 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public ArmourReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) 
             : base(dataOvlReference, inventoryReference)
         {
+            TheArmourType = GetArmourTypeByEquipment(inventoryReference.GetAsEquipment());
         }
+        
+        internal static ArmourType GetArmourTypeByEquipment(DataOvlReference.Equipment equipment)
+        {
+            if (CombatItemReferences.EquipmentMatches(Enum.GetValues(typeof(HelmEnum)), ref equipment)) return ArmourType.Helm;
+            if (CombatItemReferences.EquipmentMatches(Enum.GetValues(typeof(ChestArmourEnum)), ref equipment)) return ArmourType.ChestArmour;
+            if (CombatItemReferences.EquipmentMatches(Enum.GetValues(typeof(RingEnum)), ref equipment)) return ArmourType.Ring;
+            if (CombatItemReferences.EquipmentMatches(Enum.GetValues(typeof(AmuletEnum)), ref equipment)) return ArmourType.Amulet;
+
+            throw new Ultima5ReduxException("Tried to create CombatItemReference from " + equipment);
+        }
+
     }
 }

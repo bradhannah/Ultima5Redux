@@ -23,26 +23,27 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private static CombatItemType GetCombatItemTypeByEquipment(DataOvlReference.Equipment equipment)
         {
-            bool equipmentMatches(Array theArray)
-            {
-                foreach (object theEnum in theArray) 
-                {
-                    if ((int)equipment == (int)theEnum) return true;
-                }
-
-                return false;
-            }
-            
-            if (equipmentMatches(Enum.GetValues(typeof(WeaponReference.WeaponTypeEnum)))) return CombatItemType.Weapon;
-            if (equipmentMatches(Enum.GetValues(typeof(ArmourReference.HelmEnum)))) return CombatItemType.Armour;
-            if (equipmentMatches(Enum.GetValues(typeof(ArmourReference.ChestArmourEnum)))) return CombatItemType.Armour;
-            if (equipmentMatches(Enum.GetValues(typeof(ArmourReference.RingEnum)))) return CombatItemType.Armour;
-            if (equipmentMatches(Enum.GetValues(typeof(ArmourReference.AmuletEnum)))) return CombatItemType.Armour;
+            if (EquipmentMatches(Enum.GetValues(typeof(WeaponReference.WeaponTypeEnum)), ref equipment)) return CombatItemType.Weapon;
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.HelmEnum)), ref equipment)) return CombatItemType.Armour;
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.ChestArmourEnum)), ref equipment)) return CombatItemType.Armour;
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.RingEnum)), ref equipment)) return CombatItemType.Armour;
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.AmuletEnum)), ref equipment)) return CombatItemType.Armour;
 
             throw new Ultima5ReduxException("Tried to create CombatItemReference from " + equipment);
         }
 
-        
+
+        internal static bool EquipmentMatches(Array theArray, ref DataOvlReference.Equipment equipment)
+        {
+            foreach (object theEnum in theArray)
+            {
+                if (string.Equals(equipment.ToString(), theEnum.ToString(), StringComparison.CurrentCultureIgnoreCase)) return true;
+            }
+
+            return false;
+        }
+
+
         public CombatItemReferences(DataOvlReference dataOvlReference, InventoryReferences inventoryReferences)
         {
             _dataOvlReference = dataOvlReference;
@@ -57,7 +58,26 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 switch (GetCombatItemTypeByEquipment(equipment))
                 {
                     case CombatItemType.Armour:
-                        AllArmour.Add(new ArmourReference(_dataOvlReference, inventoryReference));
+                        ArmourReference armourReference = new ArmourReference(_dataOvlReference, inventoryReference);
+                        
+                        AllArmour.Add(armourReference);
+                        switch (armourReference.TheArmourType)
+                        {
+                            case ArmourReference.ArmourType.Amulet:
+                                Amulets.Add(armourReference);
+                                break;
+                            case ArmourReference.ArmourType.ChestArmour:
+                                ChestArmours.Add(armourReference);
+                                break;
+                            case ArmourReference.ArmourType.Helm:
+                                Helms.Add(armourReference);
+                                break;
+                            case ArmourReference.ArmourType.Ring:
+                                Rings.Add(armourReference);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                         break;
                     case CombatItemType.Weapon:
                         WeaponReferences.Add(new WeaponReference(_dataOvlReference, inventoryReference));
@@ -67,7 +87,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                WeaponReference weaponReference = new WeaponReference(dataOvlReference, inventoryReference);
+                //WeaponReference weaponReference = new WeaponReference(dataOvlReference, inventoryReference);
             }
         }
     }

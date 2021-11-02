@@ -411,7 +411,7 @@
       "ItemDescriptionAttribution": "UltimaCodex.com"
     },
     {
-      "ItemName": "RingInvis",
+      "ItemName": "RingInvisibility",
       "ItemNameHighlight": "",
       "ItemSprite": "266",
       "ItemSpriteExposed": 266,
@@ -427,7 +427,7 @@
       "ItemDescriptionAttribution": "UltimaCodex.com"
     },
     {
-      "ItemName": "RingRegen",
+      "ItemName": "RingRegeneration",
       "ItemNameHighlight": "",
       "ItemSprite": "266",
       "ItemSpriteExposed": 266,
@@ -435,7 +435,7 @@
       "ItemDescriptionAttribution": "UltimaCodex.com"
     },
     {
-      "ItemName": "Amuletofturning",
+      "ItemName": "AmuletOfTurning",
       "ItemNameHighlight": "",
       "ItemSprite": "268",
       "ItemSpriteExposed": 268,

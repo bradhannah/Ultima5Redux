@@ -10,26 +10,25 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// </summary>
     public class Reagents : InventoryItems<Reagent.ReagentTypeEnum, Reagent>
     {
-        public Reagents(DataOvlReference dataOvlRef, List<byte> gameStateByteArray, GameState state) : base(dataOvlRef,
-            gameStateByteArray)
+        public Reagents(DataOvlReference dataOvlReference, List<byte> gameStateByteArray, GameState state) : base(gameStateByteArray)
         {
             int nIndex = 0;
             foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
             {
-                AddReagent(reagent, (DataOvlReference.ReagentStrings)nIndex++, dataOvlRef, state);
+                AddReagent(reagent, (DataOvlReference.ReagentStrings)nIndex++, dataOvlReference, state);
             }
         }
 
         public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; } =
             new Dictionary<Reagent.ReagentTypeEnum, Reagent>();
 
-        private void AddReagent(Reagent.ReagentTypeEnum reagentType, DataOvlReference.ReagentStrings reagentStrRef,
-            DataOvlReference dataOvlRef, GameState state)
+        private void AddReagent(Reagent.ReagentTypeEnum reagentType, DataOvlReference.ReagentStrings reagentStrRef, 
+            DataOvlReference dataOvlReference, GameState state)
         {
             Reagent reagent = new Reagent(reagentType,
                 GameStateByteArray[(int)reagentType],
-                DataOvlRef.StringReferences.GetString(reagentStrRef),
-                DataOvlRef.StringReferences.GetString(reagentStrRef), dataOvlRef, state);
+                dataOvlReference.StringReferences.GetString(reagentStrRef),
+                dataOvlReference.StringReferences.GetString(reagentStrRef), dataOvlReference, state);
             Items[reagentType] = reagent;
         }
 

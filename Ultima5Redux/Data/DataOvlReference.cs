@@ -246,8 +246,8 @@ namespace Ultima5Redux.Data
             Club = 18, FlamingOil = 19, MainGauche = 20, Spear = 21, ThrowingAxe = 22, ShortSword = 23, Mace = 24,
             MorningStar = 25, Bow = 26, Arrows = 27, Crossbow = 28, Quarrels = 29, LongSword = 30, TwoHHammer = 31,
             TwoHAxe = 32, TwoHSword = 33, Halberd = 34, SwordofChaos = 35, MagicBow = 36, SilverSword = 37,
-            MagicAxe = 38, GlassSword = 39, JeweledSword = 40, MysticSword = 41, RingInvis = 42, RingProtection = 43,
-            RingRegen = 44, Amuletofturning = 45, SpikedCollar = 46, Ankh = 47, FlamPor = 48, VasFlam = 49, InCorp = 50,
+            MagicAxe = 38, GlassSword = 39, JeweledSword = 40, MysticSword = 41, RingInvisibility = 42, RingProtection = 43,
+            RingRegeneration = 44, AmuletOfTurning = 45, SpikedCollar = 46, Ankh = 47, FlamPor = 48, VasFlam = 49, InCorp = 50,
             UusNox = 51, UusZu = 52, UusFlam = 53, UusSanct = 54, Nothing = 0xFF
         }
 

@@ -163,7 +163,7 @@ namespace Ultima5Redux.PlayerCharacters
                 case Armour _:
                     return CharacterEquipped.EquippableSlot.Armour;
                 case Weapon weapon:
-                    return weapon.IsShield ? CharacterEquipped.EquippableSlot.RightHand : CharacterEquipped.EquippableSlot.LeftHand;
+                    return weapon.TheCombatItemReference.IsShield ? CharacterEquipped.EquippableSlot.RightHand : CharacterEquipped.EquippableSlot.LeftHand;
                 default:
                     throw new Ultima5ReduxException("Tried to get equippable slot for unsupported item: " +
                                                     combatItem.LongName);
@@ -190,19 +190,19 @@ namespace Ultima5Redux.PlayerCharacters
             Debug.Assert(newEquippedCombatItem.Quantity > 0);
             
             // let's make sure they have enough strength to wield/wear the Equipment
-            if (Stats.Strength < newEquippedCombatItem.RequiredStrength) return EquipResult.TooHeavy;
+            if (Stats.Strength < newEquippedCombatItem.TheCombatItemReference.RequiredStrength) return EquipResult.TooHeavy;
             
             Equipped.SetEquippableSlot(equippableSlot, newEquipment);
 
             if (!(newEquippedCombatItem is Weapon weapon)) return EquipResult.Success;
             
-            if (weapon.IsTwoHanded)
+            if (weapon.TheCombatItemReference.IsTwoHanded)
             {
                 bool bUnequipped = UnequipEquipment(CharacterEquipped.EquippableSlot.RightHand, inventory);
                 return bUnequipped ? EquipResult.SuccessUnequipRight : EquipResult.Success;
             }
 
-            if (weapon.IsShield)
+            if (weapon.TheCombatItemReference.IsShield)
             {
                 bool bUnequippedLeft = false;
 
@@ -210,7 +210,7 @@ namespace Ultima5Redux.PlayerCharacters
 
                 if (inventory.GetItemFromEquipment(leftHandEquippedEquipment) is Weapon leftHandWeapon)
                 {
-                    if (leftHandWeapon.IsTwoHanded)
+                    if (leftHandWeapon.TheCombatItemReference.IsTwoHanded)
                     {
                         // if the left hand weapon is 2 handed then we unequip it
                         bUnequippedLeft = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);

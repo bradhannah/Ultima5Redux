@@ -43,7 +43,7 @@ namespace Ultima5Redux.MapUnits
 
         public override CharacterStats Stats => Record.Stats;
 
-        public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.Range);
+        public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.TheCombatItemReference.Range);
 
         public override int Defense => _inventory.GetCharacterTotalDefense(Record);
 
@@ -129,7 +129,7 @@ namespace Ultima5Redux.MapUnits
             bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
             {
                 return equipment != DataOvlReference.Equipment.Nothing &&
-                       _inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.AttackStat > 0;
+                       _inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.TheCombatItemReference.AttackStat > 0;
             }
 
             if (isAttackingCombatItem(Record.Equipped.Helmet))
@@ -155,6 +155,6 @@ namespace Ultima5Redux.MapUnits
         }
 
         public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
-            CanReachForMeleeAttack(opponentCombatMapUnit, item.Range);
+            CanReachForMeleeAttack(opponentCombatMapUnit, item.TheCombatItemReference.Range);
     }
 }

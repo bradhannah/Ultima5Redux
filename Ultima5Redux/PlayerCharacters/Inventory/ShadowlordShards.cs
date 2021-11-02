@@ -5,8 +5,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class ShadowlordShards : InventoryItems<ShadowlordShard.ShardType, ShadowlordShard>
     {
-        public ShadowlordShards(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef,
-            gameStateByteArray)
+        public ShadowlordShards(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             Items[ShadowlordShard.ShardType.Falsehood] = new ShadowlordShard(ShadowlordShard.ShardType.Falsehood,
                 gameStateByteArray[(int)Offsets.FALSEHOOD],

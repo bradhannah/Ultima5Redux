@@ -11,6 +11,7 @@ using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux
@@ -85,7 +86,9 @@ namespace Ultima5Redux
 
             MagicRefs = new MagicReferences();
 
-            State = new GameState(U5Directory, DataOvlRef, InvRef, MagicRefs);
+            CombatItemRefs = new CombatItemReferences(DataOvlRef, InvRef);
+            
+            State = new GameState(U5Directory, DataOvlRef, InvRef, MagicRefs, CombatItemRefs);
 
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
 
@@ -204,6 +207,8 @@ namespace Ultima5Redux
         public TileReferences SpriteTileReferences { get; }
 
         public MagicReferences MagicRefs { get; }
+        
+        public CombatItemReferences CombatItemRefs { get; }
         
         /// <summary>
         ///     Begins the conversation with a particular NPC

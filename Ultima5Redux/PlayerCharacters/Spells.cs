@@ -41,8 +41,7 @@ namespace Ultima5Redux.PlayerCharacters
                 { "Zu", "Sleep" },
             };
 
-        public Spells(DataOvlReference dataOvlRef, List<byte> gameStateByteArray,
-            MagicReferences magicReferences) : base(dataOvlRef, gameStateByteArray)
+        public Spells(List<byte> gameStateByteArray, MagicReferences magicReferences) : base(gameStateByteArray)
         {
             _magicReferences = magicReferences;
             int nIndex = 0;

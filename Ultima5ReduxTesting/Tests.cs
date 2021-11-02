@@ -560,7 +560,7 @@ namespace Ultima5ReduxTesting
 
             Debug.Assert(blacksmith != null, nameof(blacksmith) + " != null");
             string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
-            string purchaseStr = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.Amuletofturning, 100);
+            string purchaseStr = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.AmuletOfTurning, 100);
 
             for (int i = 0; i < 10; i++)
             {
@@ -623,10 +623,10 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
 
-            int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
+            int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[WeaponReference.WeaponTypeEnum.Crossbow]
                 .GetAdjustedBuyPrice(world.State.CharacterRecords,
                     ((RegularMap)world.State.TheVirtualMap.CurrentMap).CurrentSingleMapReference.MapLocation);
-            int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[Weapon.WeaponTypeEnum.Crossbow]
+            int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[WeaponReference.WeaponTypeEnum.Crossbow]
                 .GetAdjustedSellPrice(world.State.CharacterRecords,
                     ((RegularMap)world.State.TheVirtualMap.CurrentMap).CurrentSingleMapReference.MapLocation);
             Debug.Assert(nCrossbowBuy > 0);
