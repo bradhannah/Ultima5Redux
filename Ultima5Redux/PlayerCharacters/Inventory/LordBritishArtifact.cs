@@ -5,7 +5,7 @@
         public enum ArtifactType { Amulet = 439, Crown = 437, Sceptre = 438 }
 
         public LordBritishArtifact(ArtifactType artifact, int quantity, string longName, string equipMessage) : base(
-            quantity, longName, longName, (int)artifact)
+            quantity, (int)artifact)
         {
             Artifact = artifact;
             EquipMessage = equipMessage;

@@ -41,7 +41,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="dataOvlRef"></param>
         /// <param name="state"></param>
         public Reagent(ReagentTypeEnum reagentType, int quantity, string longName, string shortName,
-            DataOvlReference dataOvlRef, GameState state) : base(quantity, longName, shortName, REAGENT_SPRITE)
+            DataOvlReference dataOvlRef, GameState state) : base(quantity, REAGENT_SPRITE)
         {
             // capture the game state so we know the users Karma for cost calculations
             _state = state;

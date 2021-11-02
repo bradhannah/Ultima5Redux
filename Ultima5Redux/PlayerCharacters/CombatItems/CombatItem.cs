@@ -15,19 +15,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public CombatItemReference TheCombatItemReference { get; }
 
         public DataOvlReference.Equipment SpecificEquipment => TheCombatItemReference.SpecificEquipment;
-        
-        // protected CombatItem(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef,
-        //     int nQuantity, int nOffset, int nSpriteNum)
-        //     : base(nQuantity, GetEquipmentString(dataOvlRef, (int)specificEquipment),
-        //         GetEquipmentString(dataOvlRef, (int)specificEquipment), nSpriteNum)
-        // {
-        //     DataOvlRef = dataOvlRef;
-        //     InitializePrices(dataOvlRef);
-        // }
+
+        public override string LongName => TheCombatItemReference.EquipmentName;
 
         public CombatItem(CombatItemReference theCombatItemReference, int nQuantity) 
-        : base(nQuantity, theCombatItemReference.EquipmentName, theCombatItemReference.EquipmentName, 
-            theCombatItemReference.Sprite)
+        : base(nQuantity, theCombatItemReference.Sprite)
         {
             TheCombatItemReference = theCombatItemReference;
         }

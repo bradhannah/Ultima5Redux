@@ -16,8 +16,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         private const int SPRITE_NUM = 260;
 
-        public Spell(MagicReference.SpellWords spellWord, int quantity, string longName, string shortName, MagicReference magicReference) : base(quantity, longName,
-            shortName, SPRITE_NUM)
+        public Spell(MagicReference.SpellWords spellWord, int quantity, MagicReference magicReference) : base(quantity, SPRITE_NUM)
         {
             SpellIncantation = spellWord;
             SpellMagicReference = magicReference;

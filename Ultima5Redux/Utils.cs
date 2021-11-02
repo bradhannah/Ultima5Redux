@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,7 +11,25 @@ namespace Ultima5Redux
     public static class Utils
     {
         private static readonly Random Ran = new Random();
+        public static readonly TextInfo EnTextInfo = new CultureInfo("en-US", false).TextInfo;
 
+        /// <summary>
+        /// Nasty catch all function that cleans up typical mixed case strings 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string GetFriendlyString(string str)
+        {
+            string friendlyStr = str.Replace("_", " ");
+            if (!friendlyStr.Contains(" ")) friendlyStr = AddSpacesBeforeCaps(friendlyStr);
+            
+            friendlyStr = EnTextInfo.ToTitleCase(friendlyStr.ToLower());
+            // friendlyStr = AddSpacesBeforeCaps(friendlyStr);
+            // friendlyStr = friendlyStr.Replace("  ", " ");
+            return friendlyStr;
+        }
+        
+        
         /// <summary>
         ///     Using the random number generator, provides 1 in howMany odds of returning true
         /// </summary>

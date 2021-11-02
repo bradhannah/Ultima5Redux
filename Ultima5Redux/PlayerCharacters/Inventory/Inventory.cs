@@ -77,33 +77,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public SpecialItems SpecializedItems { get; set; }
         [DataMember] public Spells MagicSpells { get; set; }
 
-        // private static byte BoolToByte(bool bBool)
-        // {
-        //     return bBool ? (byte)1 : (byte)0;
-        // }
-
-        // private void SetInventoryQuantity(InventoryThings thing, byte nThings)
-        // {
-        //     _gameStateByteArray[(int)thing] = nThings;
-        // }
-        //
-        // private byte GetInventoryQuantity(InventoryThings thing)
-        // {
-        //     return _gameStateByteArray[(int)thing];
-        // }
-
-        // private void SetInventoryBool(InventoryThings thing, bool bBool)
-        // {
-        //     _gameStateByteArray[(int)thing] = BoolToByte(bBool);
-        // }
-
-        // public bool GetInventoryBool(InventoryThings thing)
-        // {
-        //     return DataChunk
-        //         .CreateDataChunk(DataChunk.DataFormatType.Byte, "", _gameStateByteArray, (int)thing, sizeof(byte))
-        //         .GetChunkAsByte() > 0;
-        // }
-
         public bool SpendGold(int nGold)
         {
             if (TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity < nGold) return false;

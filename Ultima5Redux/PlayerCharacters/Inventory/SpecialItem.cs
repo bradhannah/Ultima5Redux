@@ -16,8 +16,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             WoodenBox = 270, Sextant = 256
         }
 
-        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity, string longName, string shortName) :
-            base(quantity, longName, shortName, (int)itemType)
+        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) :
+            base(quantity, (int)itemType)
         {
             ItemType = itemType;
         }

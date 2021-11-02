@@ -19,33 +19,14 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public readonly List<Helm> Helms = new List<Helm>();
         public readonly List<Ring> Rings = new List<Ring>();
 
-        // private List<string> _equipmentNames;
-
         public Armours(CombatItemReferences combatItemReferences, List<byte> gameStateByteArray)
             : base(combatItemReferences, gameStateByteArray)
         {
-            // InitializeHelms();
-            // InitializeChestArmour();
-            // InitializeAmulets();
-            // InitializeRings();
-
             foreach (ArmourReference armourReference in combatItemReferences.AllArmour)
             {
                 AddArmour(armourReference);
             }
         }
-
-        // public Armours(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(dataOvlRef,
-        //     gameStateByteArray)
-        // {
-        //     // _equipmentNames = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIP_INDEXES)
-        //     //     .GetAsStringListFromIndexes();
-        //
-        //     InitializeHelms();
-        //     InitializeChestArmour();
-        //     InitializeAmulets();
-        //     InitializeRings();
-        // }
 
         [DataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Armour>();
@@ -78,9 +59,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
 
         private void AddArmour(ArmourReference armourReference)
-            //ChestArmour.ChestArmourEnum chestArmour, DataOvlReference.Equipment equipment)
         {
-//                new ChestArmour(chestArmour, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
             Armour armour;
             switch (armourReference.TheArmourType)
             {
@@ -110,60 +89,5 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
             ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
         }
-
-        // private void AddHelm(ArmourReference armourReference)
-        // {
-        //     Helm armour = 
-        //         //new Helm(helm, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
-        //     Helms.Add(armour);
-        //     ItemsFromEquipment.Add(equipment, armour);
-        // }
-        //
-        // private void AddAmulet(Amulet.AmuletEnum amulet, DataOvlReference.Equipment equipment)
-        // {
-        //     Amulet armour = new Amulet(amulet, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
-        //     Amulets.Add(armour);
-        //     ItemsFromEquipment.Add(equipment, armour);
-        // }
-        //
-        // private void AddRing(Ring.RingEnum ring, DataOvlReference.Equipment equipment)
-        // {
-        //     Ring armour = new Ring(ring, equipment, DataOvlRef, GameStateByteArray[(int)equipment]);
-        //     Rings.Add(armour);
-        //     ItemsFromEquipment.Add(equipment, armour);
-        // }
-
-        // private void InitializeRings()
-        // {
-        //     AddArmour(Ring.RingEnum.RingInvisibility, DataOvlReference.Equipment.RingInvis);
-        //     AddArmour(Ring.RingEnum.RingProtection, DataOvlReference.Equipment.RingProtection);
-        //     AddArmour(Ring.RingEnum.RingRegeneration, DataOvlReference.Equipment.RingRegen);
-        // }
-        //
-        // private void InitializeAmulets()
-        // {
-        //     AddArmour(Amulet.AmuletEnum.AmuletTurning, DataOvlReference.Equipment.Amuletofturning);
-        //     AddArmour(Amulet.AmuletEnum.SpikeCollar, DataOvlReference.Equipment.SpikedCollar);
-        //     AddArmour(Amulet.AmuletEnum.Ankh, DataOvlReference.Equipment.Ankh);
-        // }
-        //
-        // private void InitializeHelms()
-        // {
-        //     AddArmour(Helm.HelmEnum.LeatherHelm, DataOvlReference.Equipment.LeatherHelm);
-        //     AddArmour(Helm.HelmEnum.ChainCoif, DataOvlReference.Equipment.ChainCoif);
-        //     AddArmour(Helm.HelmEnum.IronHelm, DataOvlReference.Equipment.IronHelm);
-        //     AddArmour(Helm.HelmEnum.SpikedHelm, DataOvlReference.Equipment.SpikedHelm);
-        // }
-        //
-        // private void InitializeChestArmour()
-        // {
-        //     AddArmour(ChestArmour.ChestArmourEnum.ClothArmour, DataOvlReference.Equipment.ClothArmour);
-        //     AddArmour(ChestArmour.ChestArmourEnum.LeatherArmour, DataOvlReference.Equipment.LeatherArmour);
-        //     AddArmour(ChestArmour.ChestArmourEnum.Ringmail, DataOvlReference.Equipment.Ringmail);
-        //     AddArmour(ChestArmour.ChestArmourEnum.ScaleMail, DataOvlReference.Equipment.ScaleMail);
-        //     AddArmour(ChestArmour.ChestArmourEnum.ChainMail, DataOvlReference.Equipment.ChainMail);
-        //     AddArmour(ChestArmour.ChestArmourEnum.PlateMail, DataOvlReference.Equipment.PlateMail);
-        //     AddArmour(ChestArmour.ChestArmourEnum.MysticArmour, DataOvlReference.Equipment.MysticArmour);
-        // }
     }
 }

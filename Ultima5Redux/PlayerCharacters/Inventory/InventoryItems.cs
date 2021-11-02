@@ -7,12 +7,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public abstract class InventoryItems<TEnumType, T>
     {
-        //[IgnoreDataMember] protected readonly DataOvlReference DataOvlRef;
         [IgnoreDataMember] protected readonly List<byte> GameStateByteArray;
 
         protected InventoryItems(List<byte> gameStateByteArray)
         {
-            //DataOvlRef = dataOvlRef;
             GameStateByteArray = gameStateByteArray;
         }
 

@@ -26,7 +26,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="state"></param>
         public Provision(ProvisionTypeEnum provisionTypeEnum, string longName, string shortName,
             string findDescription, int spriteNum, DataOvlReference dataOvlRef, GameState state)
-            : base(0, longName, shortName, findDescription, spriteNum)
+            : base(0, findDescription, spriteNum)
         {
             ProvisionType = provisionTypeEnum;
             _dataOvlReference = dataOvlRef;

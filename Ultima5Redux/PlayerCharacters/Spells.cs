@@ -10,7 +10,6 @@ namespace Ultima5Redux.PlayerCharacters
     public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
     {
         private readonly MagicReferences _magicReferences;
-        private static readonly TextInfo _ti = new CultureInfo("en-US", false).TextInfo;
 
         private static readonly Dictionary<string, string> LiteralTranslationDictionary =
             new Dictionary<string, string>
@@ -63,19 +62,23 @@ namespace Ultima5Redux.PlayerCharacters
         {
             if (spellWord == MagicReference.SpellWords.Nox)
             {
-                Items[spellWord] = new Spell(spellWord, 0, "Nox", "Nox", magicReference);
+                Items[spellWord] = new Spell(spellWord, 0, 
+                    //"Nox", "Nox",
+                    magicReference);
                 return;
             }
 
-            string longSpellStr = _ti.ToTitleCase(spellStr.ToString().Replace("_", " ").ToLower());
+            //string longSpellStr = _ti.ToTitleCase(spellStr.ToString().Replace("_", " ").ToLower());
 
-            Items[spellWord] = new Spell(spellWord, GameStateByteArray[(int)spellWord],
-                longSpellStr, longSpellStr, _magicReferences.GetMagicReference(spellWord));
+            Items[spellWord] = new Spell(spellWord, 
+                GameStateByteArray[(int)spellWord],
+                //longSpellStr, longSpellStr, 
+                _magicReferences.GetMagicReference(spellWord));
         }
 
         public static string GetLiteralTranslation(string syllable)
         {
-            return LiteralTranslationDictionary[_ti.ToTitleCase(syllable)];
+            return LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
         }
     }
 }

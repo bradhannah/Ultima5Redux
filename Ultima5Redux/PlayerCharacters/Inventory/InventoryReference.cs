@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
@@ -15,7 +16,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [JsonProperty] public string ItemDescriptionAttribution { get; set; }
         [JsonProperty] public string ItemName { get; set; }
-
+        [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
         [JsonProperty] public string ItemNameHighlight { private get; set; }
 
         [JsonProperty] public string ItemSprite { get; set; }

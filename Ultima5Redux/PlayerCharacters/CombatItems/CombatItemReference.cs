@@ -59,7 +59,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             int nRange = GetRange(_dataOvlReference, (int)specificEquipment);
             Missile = GetMissileType(specificEquipment, nRange);
             Range = nRange == 0 ? 1 : nRange;
-            EquipmentName = GetEquipmentString(dataOvlReference, (int)specificEquipment);
+            EquipmentName = //Utils.AddSpacesBeforeCaps(
+                GetEquipmentString(dataOvlReference, (int)specificEquipment);
+                //);   
             RequiredStrength = GetRequiredStrength(dataOvlReference, (int)specificEquipment);
             SpecificEquipment = specificEquipment;
             Sprite = 1;

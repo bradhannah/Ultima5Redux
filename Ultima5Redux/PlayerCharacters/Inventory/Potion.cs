@@ -10,8 +10,7 @@
 
         private const int POTION_SPRITE = 259;
 
-        public Potion(PotionColor color, int quantity, string longName, string shortName) : base(quantity, longName,
-            shortName, POTION_SPRITE)
+        public Potion(PotionColor color, int quantity, string longName, string shortName) : base(quantity, POTION_SPRITE)
         {
             Color = color;
         }

@@ -9,7 +9,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public Moonstone(MoonPhaseReferences.MoonPhases phase, string longName, string shortName,
             string findDescription, Moongates moongates, InventoryReference invRef)
-            : base(0, longName, shortName, findDescription, MOONSTONE_SPRITE)
+            : base(0, findDescription, MOONSTONE_SPRITE)
         {
             Phase = phase;
             _moongates = moongates;
