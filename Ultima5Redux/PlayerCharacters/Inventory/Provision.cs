@@ -35,51 +35,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public override bool HideQuantity => false;
 
-        // /// <summary>
-        // ///     Gets the parties current quantity of the specific provision
-        // /// </summary>
-        // /// <exception cref="ArgumentOutOfRangeException"></exception>
-        // public override int Quantity
-        // {
-        //     get;
-        //     set;
-        //     // get
-        //     // {
-        //     //     switch (ProvisionType)
-        //     //     {
-        //     //         case ProvisionTypeEnum.Torches:
-        //     //             return _state.Torches;
-        //     //         case ProvisionTypeEnum.Gems:
-        //     //             return _state.Gems;
-        //     //         case ProvisionTypeEnum.Keys:
-        //     //             return _state.Keys;
-        //     //         case ProvisionTypeEnum.SkullKeys:
-        //     //             return _state.SkullKeys;
-        //     //         default:
-        //     //             throw new ArgumentOutOfRangeException();
-        //     //     }
-        //     // }
-        //     // set
-        //     // {
-        //     //     switch (ProvisionType)
-        //     //     {
-        //     //         case ProvisionTypeEnum.Torches:
-        //     //             _state.Torches = value;
-        //     //             break;
-        //     //         case ProvisionTypeEnum.Gems:
-        //     //             _state.Gems = value;
-        //     //             break;
-        //     //         case ProvisionTypeEnum.Keys:
-        //     //             _state.Keys = value;
-        //     //             break;
-        //     //         case ProvisionTypeEnum.SkullKeys:
-        //     //             _state.SkullKeys = value;
-        //     //             break;
-        //     //         //throw new ArgumentOutOfRangeException();
-        //     //     }
-        //     // }
-        // }
-
         public ProvisionTypeEnum ProvisionType { get; }
 
         public override string InventoryReferenceString => ProvisionType.ToString();
