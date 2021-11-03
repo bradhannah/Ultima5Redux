@@ -7,12 +7,10 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class Weapon : CombatItem
     {
-        public Weapon(WeaponReference weaponReference, int nQuantity) :
-            base(weaponReference, nQuantity)
+        public Weapon(WeaponReference weaponReference, int nQuantity) : base(weaponReference, nQuantity)
         {
             
         }
-        
 
         public override bool HideQuantity => false;
 

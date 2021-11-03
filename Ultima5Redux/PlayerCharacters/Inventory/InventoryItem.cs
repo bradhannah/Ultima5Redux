@@ -32,7 +32,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public virtual bool IsSellable => BasePrice > 0;
 
-        [IgnoreDataMember] public virtual int BasePrice { get; protected set; } = 0;
+        [IgnoreDataMember] public virtual int BasePrice => 0;
 
         [IgnoreDataMember] public abstract string InventoryReferenceString { get; }
 

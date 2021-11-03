@@ -18,6 +18,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public override string LongName => TheCombatItemReference.EquipmentName;
 
+        public override int BasePrice => TheCombatItemReference.BasePrice;
+
+        
         public CombatItem(CombatItemReference theCombatItemReference, int nQuantity) 
         : base(nQuantity, theCombatItemReference.Sprite)
         {
