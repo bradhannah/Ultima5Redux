@@ -293,6 +293,7 @@
     <PropertyGroup>
         <PostBuildEvent>copy $(TargetPath) "F:\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
             copy $(TargetDir)\*.pdb "F:\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+            set errorlevel=0
         </PostBuildEvent>
     </PropertyGroup>
 </Project>
