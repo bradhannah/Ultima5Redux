@@ -30,3 +30,8 @@ jobs:
         
       - name: Build the Solution
         run: msbuild Ultima5ReduxSolution.sln
+
+      - name: NUnit Reporter
+        # You may pin to the exact commit or the version.
+        # uses: MirageNet/nunit-reporter@8abbab7fdac37ef57d1621a5cfa508cdf000428f
+        uses: MirageNet/nunit-reporter@v1.0.5
