@@ -9,24 +9,24 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: [windows-latest]
     strategy:
       matrix:
         dotnet: [ '3.1.x' ]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup dotnet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      # You can test your matrix by printing the current dotnet version
-      - name: Display dotnet version
-        run: dotnet --version
+      
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+      
+      - name: Setup NuGet
+        # You may pin to the exact commit or the version.
+        # uses: NuGet/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1
+        uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Restore NuGet packages
+        run: nuget restore Ultima5ReduxSolution.sln
         
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
+      - name: Build the Solution
+        run: msbuild Ultima5ReduxSolution.sln
