@@ -2,22 +2,17 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <StartupObject>U5ConversationSimulator.Program</StartupObject>
+        <LangVersion>8</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Security.Permissions" Version="4.5.0"/>
+        <PackageReference Include="System.Security.Permissions" Version="4.5.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Ultima5Redux\Ultima5Redux.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="System.Drawing">
-            <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Drawing.dll</HintPath>
-        </Reference>
+        <ProjectReference Include="..\Ultima5Redux\Ultima5Redux.csproj" />
     </ItemGroup>
 
 </Project>
