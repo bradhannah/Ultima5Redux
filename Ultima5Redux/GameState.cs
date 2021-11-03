@@ -115,6 +115,11 @@ namespace Ultima5Redux
         /// </summary>
         public bool IsTorchLit => TurnsToExtinguish > 0;
 
+        /// <summary>
+        ///     Users Karma
+        /// </summary>
+        [DataMember] public ushort Karma { get; set; }
+
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
         /// <summary>
@@ -137,32 +142,27 @@ namespace Ultima5Redux
         /// <summary>
         ///     Location and state of all moongates and moonstones
         /// </summary>
-        public Moongates TheMoongates { get; }
+        [DataMember] public Moongates TheMoongates { get; }
 
         /// <summary>
         ///     All player character records
         /// </summary>
-        public PlayerCharacterRecords CharacterRecords { get; }
+        [DataMember] public PlayerCharacterRecords CharacterRecords { get; }
 
         /// <summary>
         ///     The name of the Avatar
         /// </summary>
-        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
+        [IgnoreDataMember] public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
         /// <summary>
         ///     The current time of day
         /// </summary>
-        public TimeOfDay TheTimeOfDay { get; }
-
-        /// <summary>
-        ///     Users Karma
-        /// </summary>
-        public ushort Karma { get; set; }
+        [DataMember] public TimeOfDay TheTimeOfDay { get; }
 
         /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
         /// </summary>
-        public VirtualMap TheVirtualMap { get; private set; }
+        [DataMember] public VirtualMap TheVirtualMap { get; private set; }
 
         /// <summary>
         ///     Take fall damage from klimbing mountains

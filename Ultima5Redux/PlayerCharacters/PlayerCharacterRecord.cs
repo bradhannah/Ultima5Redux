@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public class PlayerCharacterRecord
+    public sealed partial class PlayerCharacterRecord
     {
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M' }
 
@@ -19,15 +20,68 @@ namespace Ultima5Redux.PlayerCharacters
         } // otherwise it is at an inn at Settlement # in byte value
 
         public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
+        
+        private enum CharacterRecordOffsets
+        {
+            Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D,
+            Intelligence = 0x0E, CurrentMP = 0x0F, CurrentHP = 0x10, MaximumHP = 0x12, ExperiencePoints = 0x14,
+            Level = 0x16, MonthsSinceStayingAtInn = 0x17, Unknown2 = 0x18, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B,
+            Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F
+        }
 
         private const int NAME_LENGTH = 8;
-        protected internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
+        
+        internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
 
         private static readonly Random _random = new Random();
 
-        public readonly CharacterEquipped Equipped = new CharacterEquipped();
-        public readonly CharacterStats Stats = new CharacterStats();
         private byte _monthsSinceStayingAtInn;
+
+        [DataMember] public string Name { get; }
+        [DataMember] public CharacterClass Class { get; set; }
+        [DataMember] public CharacterGender Gender { get; set; }
+        [DataMember] private byte InnOrParty { get; set; }
+
+        //, KilledPermanently = 0x7F
+        [DataMember] private byte Unknown2 { get; }
+        [DataMember] public bool IsInvisible { get; private set; }
+
+        [DataMember] public bool IsRat { get; private set; }
+
+        [DataMember] public byte MonthsSinceStayingAtInn
+        {
+            get => _monthsSinceStayingAtInn;
+            set => _monthsSinceStayingAtInn = (byte)(value % byte.MaxValue);
+        }
+        [DataMember] public CharacterPartyStatus PartyStatus
+        {
+            get
+            {
+                return InnOrParty switch
+                {
+                    0x00 => CharacterPartyStatus.InTheParty,
+                    0xFF => CharacterPartyStatus.HasntJoinedYet,
+                    _ => CharacterPartyStatus.AtTheInn
+                };
+            }
+            set => InnOrParty = (byte)value;
+        }
+
+        [IgnoreDataMember] public int PrimarySpriteIndex =>
+            Class switch
+            {
+                CharacterClass.Avatar => 284,
+                CharacterClass.Bard => 324,
+                CharacterClass.Fighter => 328,
+                CharacterClass.Mage => 320,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+        [IgnoreDataMember] public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
+            (SmallMapReferences.SingleMapReference.Location)InnOrParty;
+
+        [DataMember] public CharacterEquipped Equipped { get; } = new CharacterEquipped();
+        [DataMember] public CharacterStats Stats { get; }= new CharacterStats();
 
         /// <summary>
         ///     Creates a character record from a raw record that begins at offset 0
@@ -81,9 +135,7 @@ namespace Ultima5Redux.PlayerCharacters
             if ((int)Equipped.LeftHand <= (int)DataOvlReference.Equipment.JewelShield &&
                 (int)Equipped.LeftHand >= (int)DataOvlReference.Equipment.Dagger)
             {
-                DataOvlReference.Equipment shieldEquip = Equipped.RightHand;
-                Equipped.RightHand = Equipped.LeftHand;
-                Equipped.LeftHand = shieldEquip;
+                (Equipped.RightHand, Equipped.LeftHand) = (Equipped.LeftHand, Equipped.RightHand);
             }
 
             InnOrParty = rawRecordByteList[(int)CharacterRecordOffsets.InnParty];
@@ -91,48 +143,6 @@ namespace Ultima5Redux.PlayerCharacters
             Unknown2 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown2];
         }
 
-        private byte InnOrParty { get; set; }
-
-        //, KilledPermanently = 0x7F
-        private byte Unknown2 { get; }
-        public bool IsInvisible { get; private set; }
-
-        public bool IsRat { get; private set; }
-
-        public byte MonthsSinceStayingAtInn
-        {
-            get => _monthsSinceStayingAtInn;
-            set => _monthsSinceStayingAtInn = (byte)(value % byte.MaxValue);
-        }
-
-        public CharacterClass Class { get; set; }
-        public CharacterGender Gender { get; set; }
-
-        public CharacterPartyStatus PartyStatus
-        {
-            get
-            {
-                if (InnOrParty == 0x00) return CharacterPartyStatus.InTheParty;
-                if (InnOrParty == 0xFF) return CharacterPartyStatus.HasntJoinedYet;
-                return CharacterPartyStatus.AtTheInn;
-            }
-            set => InnOrParty = (byte)value;
-        }
-
-        public int PrimarySpriteIndex =>
-            Class switch
-            {
-                CharacterClass.Avatar => 284,
-                CharacterClass.Bard => 324,
-                CharacterClass.Fighter => 328,
-                CharacterClass.Mage => 320,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-        public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
-            (SmallMapReferences.SingleMapReference.Location)InnOrParty;
-
-        public string Name { get; }
 
         /// <summary>
         /// Unequips and item from the user and 
@@ -361,95 +371,5 @@ namespace Ultima5Redux.PlayerCharacters
         //0x1D        1           ring                0-0x2F,0xFF
         //0x1E        1           amulet              0-0x2F,0xFF
         //0x1F        1           inn/party n/a
-
-        private enum CharacterRecordOffsets
-        {
-            Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D,
-            Intelligence = 0x0E, CurrentMP = 0x0F, CurrentHP = 0x10, MaximumHP = 0x12, ExperiencePoints = 0x14,
-            Level = 0x16, MonthsSinceStayingAtInn = 0x17, Unknown2 = 0x18, Helmet = 0x19, Armor = 0x1A, Weapon = 0x1B,
-            Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F
-        }
-
-        public class CharacterEquipped
-        {
-            public enum EquippableSlot { None, Helm, Amulet, LeftHand, RightHand, Ring, Armour}
-            
-            public CharacterEquipped()
-            {
-                Helmet = DataOvlReference.Equipment.Nothing;
-                Armour = DataOvlReference.Equipment.Nothing;
-                LeftHand = DataOvlReference.Equipment.Nothing;
-                RightHand = DataOvlReference.Equipment.Nothing;
-                Ring = DataOvlReference.Equipment.Nothing;
-                Amulet = DataOvlReference.Equipment.Nothing;
-            }
-
-            public DataOvlReference.Equipment Amulet { get; set; }
-            public DataOvlReference.Equipment Armour { get; set; }
-
-            public DataOvlReference.Equipment Helmet { get; set; }
-            public DataOvlReference.Equipment LeftHand { get; set; }
-            public DataOvlReference.Equipment RightHand { get; set; }
-            public DataOvlReference.Equipment Ring { get; set; }
-
-            public bool IsEquipped(EquippableSlot equippableSlot) =>
-                GetEquippedEquipment(equippableSlot) != DataOvlReference.Equipment.Nothing;
-                
-
-            public DataOvlReference.Equipment GetEquippedEquipment(EquippableSlot equippableSlot)
-            {
-                return equippableSlot switch
-                {
-                    EquippableSlot.None => DataOvlReference.Equipment.Nothing,
-                    EquippableSlot.Helm => Helmet,
-                    EquippableSlot.Amulet => Amulet,
-                    EquippableSlot.LeftHand => LeftHand,
-                    EquippableSlot.RightHand => RightHand,
-                    EquippableSlot.Ring => Ring,
-                    EquippableSlot.Armour => Armour,
-                    _ => throw new ArgumentOutOfRangeException(nameof(equippableSlot), equippableSlot, null)
-                };
-            }
-
-            internal void SetEquippableSlot(EquippableSlot equippableSlot, DataOvlReference.Equipment equipment)
-            {
-                switch (equippableSlot)
-                {
-                    case EquippableSlot.None:
-                        break;
-                    case EquippableSlot.Helm:
-                        Helmet = equipment;
-                        break;
-                    case EquippableSlot.Amulet:
-                        Amulet = equipment;
-                        break;
-                    case EquippableSlot.LeftHand:
-                        LeftHand = equipment;
-                        break;
-                    case EquippableSlot.RightHand:
-                        RightHand = equipment;
-                        break;
-                    case EquippableSlot.Ring:
-                        Ring = equipment;
-                        break;
-                    case EquippableSlot.Armour:
-                        Armour = equipment;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(equippableSlot), equippableSlot, null);
-                }
-            }
-            
-            internal void UnequipEquippableSlot(EquippableSlot equippableSlot)
-            {
-                SetEquippableSlot(equippableSlot, DataOvlReference.Equipment.Nothing);
-            }
-            
-            public bool IsEquipped(DataOvlReference.Equipment equipment)
-            {
-                return Helmet == equipment || Armour == equipment || LeftHand == equipment || RightHand == equipment ||
-                       Ring == equipment || Amulet == equipment;
-            }
-        }
     }
 }

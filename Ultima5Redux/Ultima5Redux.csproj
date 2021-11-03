@@ -148,6 +148,7 @@
         <Compile Include="DayNightMoon\MoonPhaseReferences.cs" />
         <Compile Include="Maps\TileReference.cs" />
         <Compile Include="Maps\TileReferences.cs" />
+        <Compile Include="PlayerCharacters\CharacterEquipped.cs" />
         <Compile Include="PlayerCharacters\CombatItems\Amulet.cs" />
         <Compile Include="PlayerCharacters\CombatItems\Armour.cs" />
         <Compile Include="PlayerCharacters\CombatItems\ArmourReference.cs" />

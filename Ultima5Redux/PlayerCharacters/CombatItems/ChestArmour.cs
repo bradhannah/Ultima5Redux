@@ -28,8 +28,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public override bool HideQuantity => false;
 
-        public override PlayerCharacterRecord.CharacterEquipped.EquippableSlot EquippableSlot { get; } =
-            PlayerCharacterRecord.CharacterEquipped.EquippableSlot.Armour;
+        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+            CharacterEquipped.EquippableSlot.Armour;
 
         //public ChestArmour(ChestArmourEnum chestArmourType, int quantity, string longName, string shortName, int attackStat,
         //    int defendStat, DataOvlReference.EQUIPMENT specificEquipment) : 

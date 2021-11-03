@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public class PlayerCharacterRecords
+    [DataContract] public class PlayerCharacterRecords
     {
         public const int AVATAR_RECORD = 0x00;
+        public const int MAX_PARTY_MEMBERS = 6;
+        public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
 
         private const int TOTAL_CHARACTER_RECORDS = 16;
         private const byte CHARACTER_OFFSET = 0x20;
-        public const int MAX_PARTY_MEMBERS = 6;
 
-        public readonly List<PlayerCharacterRecord> Records = new List<PlayerCharacterRecord>(TOTAL_CHARACTER_RECORDS);
+        [DataMember] public readonly List<PlayerCharacterRecord> Records = new List<PlayerCharacterRecord>(TOTAL_CHARACTER_RECORDS);
+        [IgnoreDataMember] public PlayerCharacterRecord AvatarRecord => Records[0];
 
         public PlayerCharacterRecords(List<byte> rawByteList)
         {
@@ -45,10 +48,6 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
-
-        public PlayerCharacterRecord AvatarRecord => Records[0];
-
         public List<PlayerCharacterRecord> GetPlayersAtInn(SmallMapReferences.SingleMapReference.Location location)
         {
             return Records.Where(record => record.CurrentInnLocation == location).ToList();
@@ -72,20 +71,11 @@ namespace Ultima5Redux.PlayerCharacters
                 throw new Ultima5ReduxException("Asked to swap a party member who doesn't exist First:#" + nFirstPos
                     + " Second:#" + nSecondPos);
 
-            PlayerCharacterRecord tempRec = Records[nFirstPos];
-            Records[nFirstPos] = Records[nSecondPos];
-            Records[nSecondPos] = tempRec;
+            (Records[nFirstPos], Records[nSecondPos]) = (Records[nSecondPos], Records[nFirstPos]);
         }
 
-        public PlayerCharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc)
-        {
-            foreach (PlayerCharacterRecord record in Records)
-            {
-                if (record.Name == npc.Name) return record;
-            }
-
-            return null;
-        }
+        public PlayerCharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc) => 
+            Records.FirstOrDefault(record => record.Name == npc.Name);
 
         public void JoinPlayerCharacter(PlayerCharacterRecord record)
         {
@@ -101,12 +91,8 @@ namespace Ultima5Redux.PlayerCharacters
 
         public int TotalPartyMembers()
         {
-            int nPartyMembers = 0;
-            foreach (PlayerCharacterRecord characterRecord in Records)
-            {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty)
-                    nPartyMembers++;
-            }
+            int nPartyMembers = Records.Count(characterRecord => characterRecord.PartyStatus == 
+                                                                 PlayerCharacterRecord.CharacterPartyStatus.InTheParty);
 
             Debug.Assert(nPartyMembers > 0 && nPartyMembers <= 6);
             return nPartyMembers;
@@ -172,11 +158,7 @@ namespace Ultima5Redux.PlayerCharacters
         ///     Gets the number of active characters in the Avatars party
         /// </summary>
         /// <returns></returns>
-        public int GetNumberOfActiveCharacters()
-        {
-            // Note: this is inefficient!
-            return GetActiveCharacterRecords().Count;
-        }
+        public int GetNumberOfActiveCharacters() => GetActiveCharacterRecords().Count;
 
         /// <summary>
         ///     Gets a character from the active party by index

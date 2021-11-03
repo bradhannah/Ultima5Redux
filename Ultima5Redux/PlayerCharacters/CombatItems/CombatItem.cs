@@ -24,7 +24,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             TheCombatItemReference = theCombatItemReference;
         }
 
-        public abstract PlayerCharacterRecord.CharacterEquipped.EquippableSlot EquippableSlot { get; }
+        public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
         
         public override string InventoryReferenceString => TheCombatItemReference.SpecificEquipment.ToString();
 
