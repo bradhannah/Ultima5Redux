@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.DayNightMoon
@@ -40,11 +41,12 @@ namespace Ultima5Redux.DayNightMoon
             Minute = currentMinuteDataChunk.GetChunkAsByte();
         }
 
-        public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
+        [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
 
-        public byte Day { get; set; }
-
-        public byte Hour
+        [DataMember] public ushort Year { get; set; }
+        [DataMember] public byte Month { get; set; }
+        [DataMember] public byte Day { get; set; }
+        [DataMember] public byte Hour
         {
             get => _nHour;
             set
@@ -53,9 +55,7 @@ namespace Ultima5Redux.DayNightMoon
                 _nHour = value;
             }
         }
-
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public byte Minute
+        [DataMember] public byte Minute
         {
             get => _nMinute;
             set
@@ -65,12 +65,10 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public byte Month { get; set; }
-
         // ReSharper disable once UnusedMember.Global
-        public string FormattedDate => Month + "-" + Day + "-" + Year;
+        [IgnoreDataMember] public string FormattedDate => Month + "-" + Day + "-" + Year;
 
-        public string FormattedTime
+        [IgnoreDataMember] public string FormattedTime
         {
             get
             {
@@ -84,7 +82,7 @@ namespace Ultima5Redux.DayNightMoon
         ///     Gets a string describing the current time of day
         /// </summary>
         /// <returns></returns>
-        public string TimeOfDayName
+        [IgnoreDataMember] public string TimeOfDayName
         {
             get
             {
@@ -94,7 +92,6 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")] public ushort Year { get; set; }
 
         /// <summary>
         ///     Registers a change tracker, returning the int handle to it that will need to be stored

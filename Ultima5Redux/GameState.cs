@@ -66,13 +66,6 @@ namespace Ultima5Redux
             _nInitialY = _importedGameState.Y;
 
             Karma = _importedGameState.Karma;
-            // Food = _importedGameState.Food;
-            // Gold = _importedGameState.Gold;
-            // Keys = _importedGameState.Keys;
-            // Gems = _importedGameState.Gems;
-            // Torches = _importedGameState.Torches;
-            // SkullKeys = _importedGameState.SkullKeys;
-            // HasGrapple = _importedGameState.HasGrapple;
             TurnsToExtinguish = _importedGameState.TorchTurnsLeft;
             ActivePlayerNumber = _importedGameState.ActivePlayerNumber;
 

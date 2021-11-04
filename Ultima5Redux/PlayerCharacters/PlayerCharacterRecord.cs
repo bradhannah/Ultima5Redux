@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -10,15 +12,19 @@ namespace Ultima5Redux.PlayerCharacters
 {
     public sealed partial class PlayerCharacterRecord
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M' }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum CharacterGender { Male = 0x0B, Female = 0x0C }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum CharacterPartyStatus
         {
             InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01
         } // otherwise it is at an inn at Settlement # in byte value
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
         
         private enum CharacterRecordOffsets

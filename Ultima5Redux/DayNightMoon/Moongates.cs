@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.DayNightMoon
 {
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")] public class Moongates
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+    [DataContract]
+    public class Moongates
     {
         /// <summary>
         ///     Total number of moonstones in game
@@ -14,21 +18,14 @@ namespace Ultima5Redux.DayNightMoon
         private const int TOTAL_MOONSTONES = 8;
 
         /// <summary>
-        ///     Dictionary of all locations and if they are buried
-        /// </summary>
-        private readonly Dictionary<Point3D, bool> _moongateBuriedAtPositionDictionary =
-            new Dictionary<Point3D, bool>(TOTAL_MOONSTONES);
-
-        /// <summary>
         ///     All buried positions
         /// </summary>
-        private readonly List<Point3D> _moongatePositions = new List<Point3D>(TOTAL_MOONSTONES);
+        [DataMember(Name="MoongatePositions")] private readonly List<Point3D> _moongatePositions = new List<Point3D>(TOTAL_MOONSTONES);
 
         /// <summary>
         ///     Are moonstones buried?
         /// </summary>
-        private readonly List<bool> _moonstonesBuried = new List<bool>(TOTAL_MOONSTONES);
-
+        [DataMember(Name="MoonstoneBuried")] private readonly List<bool> _moonstonesBuried = new List<bool>(TOTAL_MOONSTONES);
 
         /// <summary>
         ///     Constructor. Built with DataChunk references from save file
@@ -56,7 +53,6 @@ namespace Ultima5Redux.DayNightMoon
                 Point3D moongatePos = new Point3D(xPositions[i], yPositions[i], zPositions[i]);
                 _moongatePositions.Add(moongatePos);
                 _moonstonesBuried.Add(buried[i] == 0);
-                _moongateBuriedAtPositionDictionary.Add(_moongatePositions[i], _moonstonesBuried[i]);
             }
         }
 
@@ -98,15 +94,11 @@ namespace Ultima5Redux.DayNightMoon
         public void SetMoonstoneBuried(int nMoonstoneIndex, bool bBuried)
         {
             _moonstonesBuried[nMoonstoneIndex] = bBuried;
-            _moongateBuriedAtPositionDictionary[GetMoongatePosition(nMoonstoneIndex)] = bBuried;
         }
 
         public void SetMoonstoneBuried(int nMoonstoneIndex, bool bBuried, Point3D xyz)
         {
             Debug.Assert(xyz.Z == 0 || xyz.Z == 0xFF);
-            // we need to remove the old position reference, and add in a new one
-            _moongateBuriedAtPositionDictionary.Remove(GetMoongatePosition(nMoonstoneIndex));
-            _moongateBuriedAtPositionDictionary.Add(xyz, bBuried);
             // this one we can just update since it is a zero based index
             _moongatePositions[nMoonstoneIndex] = xyz;
             // set the moonstone to the appropriate buried sate
@@ -131,8 +123,9 @@ namespace Ultima5Redux.DayNightMoon
         /// <returns>true if one is buried</returns>
         public bool IsMoonstoneBuried(Point3D position)
         {
-            if (!_moongateBuriedAtPositionDictionary.ContainsKey(position)) return false;
-            return _moongateBuriedAtPositionDictionary[position];
+            return _moongatePositions.Contains(position);
+            // if (!_moongateBuriedAtPositionDictionary.ContainsKey(position)) return false;
+            // return _moongateBuriedAtPositionDictionary[position];
         }
 
         public MoonPhaseReferences.MoonPhases GetMoonPhaseByPosition(Point2D position, Map.Maps map)

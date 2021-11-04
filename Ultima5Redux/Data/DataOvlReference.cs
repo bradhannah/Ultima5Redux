@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 // ReSharper disable InconsistentNaming
 
@@ -238,6 +240,7 @@ namespace Ultima5Redux.Data
             ROT_WORMS, SHADOW_LORD
         }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum Equipment
         {
             BareHands = -2, LeatherHelm = 0, ChainCoif = 1, IronHelm = 2, SpikedHelm = 3, SmallShield = 4,

@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Ultima5Redux
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+    [DataContract]
     public class Point3D
     {
         public Point3D(int x, int y, int z)
@@ -13,9 +15,9 @@ namespace Ultima5Redux
             Z = z;
         }
 
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
+        [DataMember] public int X { get; set; }
+        [DataMember] public int Y { get; set; }
+        [DataMember] public int Z { get; set; }
 
         public override int GetHashCode()
         {
