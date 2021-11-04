@@ -32,4 +32,4 @@ jobs:
         run: msbuild Ultima5ReduxSolution.sln
 
       - name: NUnit Console Runner
-        run: packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe Ultima5ReduxTesting\bin\Debug\Ultima5ReduxTesting.dll
+        run: .\packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe Ultima5ReduxTesting\bin\Debug\Ultima5ReduxTesting.dll
