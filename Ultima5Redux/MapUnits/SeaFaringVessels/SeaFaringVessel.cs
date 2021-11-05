@@ -10,7 +10,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location,
             DataOvlReference dataOvlReference, Point2D.Direction direction)
-            : base(null, mapUnitState, smallMapTheSmallMapCharacterState, mapUnitMovement, null, tileReferences,
+            : base(mapUnitState, smallMapTheSmallMapCharacterState, mapUnitMovement, tileReferences,
                 location, dataOvlReference, direction)
         {
         }

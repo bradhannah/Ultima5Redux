@@ -53,107 +53,108 @@ namespace Ultima5Redux.MapUnits
         [DataMember] protected internal bool IsInParty { get; set; }
     }
 
-    [DataContract]
-    public sealed class MapUnitSave : MapUnitDetails
-    {
-        public enum MapUnitType
-        {
-            Avatar, CombatPlayer, Enemy, EmptyMapUnit, Horse, MagicCarpet, NonPlayerCharacter, Frigate, Skiff
-        }
-        
-        [DataMember] public int TileReferenceIndex { get; }
-        [DataMember] public int NPCRefIndex { get; }
-        [DataMember] public MapUnitType TheMapUnitType { get; }
-
-        [DataMember] public override bool IsActive { get; }
-        [DataMember] public override bool IsAttackable { get; }
-        [DataMember] public override Avatar.AvatarState BoardedAvatarState { get; }
-        [DataMember] public override string BoardXitName { get; }
-        [DataMember] public override string FriendlyName { get; }
-
-        public MapUnitSave(MapUnit mapUnit)
-        {
-            MovementAttempts = mapUnit.MovementAttempts;
-            ForcedWandering = mapUnit.ForcedWandering;
-            Movement = mapUnit.Movement;
-            TheSmallMapCharacterState = mapUnit.TheSmallMapCharacterState;
-            IsActive = mapUnit.IsActive;
-            IsAttackable = mapUnit.IsAttackable;
-            IsOccupiedByAvatar = mapUnit.IsOccupiedByAvatar;
-            UseFourDirections = mapUnit.UseFourDirections;
-            Direction = mapUnit.Direction;
-            MapLocation = mapUnit.MapLocation;
-            MapUnitPosition = mapUnit.MapUnitPosition;
-            BoardedAvatarState = mapUnit.BoardedAvatarState;
-            BoardXitName = mapUnit.BoardXitName;
-            FriendlyName = mapUnit.FriendlyName;
-            IsInParty = mapUnit.IsInParty;
-
-            TileReferenceIndex = mapUnit.KeyTileReference.Index;
-            NPCRefIndex = mapUnit?.NPCRef.DialogIndex ?? -1;
-            TheMapUnitType = GetMapUnitTypeFromMapUnit(mapUnit);
-        }
-
-        public MapUnit CreateMapUnit(TileReferences tileReferences, DataOvlReference dataOvlReference,
-            EnemyReferences enemyReferences, NonPlayerCharacterReferences npcRefs,
-            TimeOfDay timeOfDay, PlayerCharacterRecords records, 
-            bool bUseExtendedSprites = true)
-        {
-            MapUnitState getQuickMapUnitState() =>
-                MapUnitState.CreateMapUnitState(tileReferences, MapUnitPosition, TileReferenceIndex);
-            
-            switch (TheMapUnitType)
-            {
-                case MapUnitType.Avatar:
-                    return Avatar.CreateAvatar(tileReferences, MapLocation, Movement, null, dataOvlReference, bUseExtendedSprites);
-                case MapUnitType.CombatPlayer:
-                    throw new Ultima5ReduxException("Can't restore a combat player from a save file");
-                case MapUnitType.Enemy:
-                    return new Enemy(getQuickMapUnitState(), Movement, tileReferences, 
-                        enemyReferences.GetEnemyReference(TileReferenceIndex), MapLocation, dataOvlReference);
-                case MapUnitType.EmptyMapUnit:
-                    return new EmptyMapUnit();
-                case MapUnitType.Horse:
-                    return new Horse(getQuickMapUnitState(), Movement, tileReferences, MapLocation, 
-                        dataOvlReference, Direction);
-                case MapUnitType.MagicCarpet:
-                    return new MagicCarpet(
-                        MapUnitState.CreateMapUnitState(tileReferences, MapUnitPosition, TileReferenceIndex),
-                        Movement, tileReferences, MapLocation, dataOvlReference, Direction);
-                case MapUnitType.NonPlayerCharacter:
-                    return new NonPlayerCharacter(npcRefs.NPCs[NPCRefIndex], getQuickMapUnitState(),
-                        TheSmallMapCharacterState,
-                        Movement, timeOfDay, records, false, tileReferences, MapLocation, dataOvlReference);
-                case MapUnitType.Frigate:
-                    return new Frigate(getQuickMapUnitState(), Movement, tileReferences, MapLocation, dataOvlReference,
-                        Direction);
-                case MapUnitType.Skiff:
-                    return new Skiff(getQuickMapUnitState(), Movement, tileReferences, MapLocation, dataOvlReference,
-                        Direction);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private MapUnitType GetMapUnitTypeFromMapUnit(MapUnit mapUnit)
-        {
-            return mapUnit switch
-            {
-                Avatar _ => MapUnitType.Avatar,
-                EmptyMapUnit _ => MapUnitType.EmptyMapUnit,
-                Horse _ => MapUnitType.Horse,
-                MagicCarpet _ => MapUnitType.MagicCarpet,
-                NonPlayerCharacter _ => MapUnitType.NonPlayerCharacter,
-                CombatPlayer _ => MapUnitType.CombatPlayer,
-                Enemy _ => MapUnitType.Enemy,
-                _ => throw new Ultima5ReduxException("Tried to GetMapUnitType from " + mapUnit.GetType().ToString())
-            };
-        }
-        
-    }
+    // [DataContract]
+    // public sealed class MapUnitSave : MapUnitDetails
+    // {
+    //     public enum MapUnitType
+    //     {
+    //         Avatar, CombatPlayer, Enemy, EmptyMapUnit, Horse, MagicCarpet, NonPlayerCharacter, Frigate, Skiff
+    //     }
+    //     
+    //     [DataMember] public int TileReferenceIndex { get; }
+    //     [DataMember] public int NPCRefIndex { get; }
+    //     [DataMember] public MapUnitType TheMapUnitType { get; }
+    //
+    //     [DataMember] public override bool IsActive { get; }
+    //     [DataMember] public override bool IsAttackable { get; }
+    //     [DataMember] public override Avatar.AvatarState BoardedAvatarState { get; }
+    //     [DataMember] public override string BoardXitName { get; }
+    //     [DataMember] public override string FriendlyName { get; }
+    //
+    //     public MapUnitSave(MapUnit mapUnit)
+    //     {
+    //         MovementAttempts = mapUnit.MovementAttempts;
+    //         ForcedWandering = mapUnit.ForcedWandering;
+    //         Movement = mapUnit.Movement;
+    //         TheSmallMapCharacterState = mapUnit.TheSmallMapCharacterState;
+    //         IsActive = mapUnit.IsActive;
+    //         IsAttackable = mapUnit.IsAttackable;
+    //         IsOccupiedByAvatar = mapUnit.IsOccupiedByAvatar;
+    //         UseFourDirections = mapUnit.UseFourDirections;
+    //         Direction = mapUnit.Direction;
+    //         MapLocation = mapUnit.MapLocation;
+    //         MapUnitPosition = mapUnit.MapUnitPosition;
+    //         BoardedAvatarState = mapUnit.BoardedAvatarState;
+    //         BoardXitName = mapUnit.BoardXitName;
+    //         FriendlyName = mapUnit.FriendlyName;
+    //         IsInParty = mapUnit.IsInParty;
+    //
+    //         TileReferenceIndex = mapUnit.KeyTileReference.Index;
+    //         NPCRefIndex = mapUnit?.NPCRef.DialogIndex ?? -1;
+    //         TheMapUnitType = GetMapUnitTypeFromMapUnit(mapUnit);
+    //     }
+    //
+    //     public MapUnit CreateMapUnit(TileReferences tileReferences, DataOvlReference dataOvlReference,
+    //         EnemyReferences enemyReferences, NonPlayerCharacterReferences npcRefs,
+    //         TimeOfDay timeOfDay, PlayerCharacterRecords records, 
+    //         bool bUseExtendedSprites = true)
+    //     {
+    //         MapUnitState getQuickMapUnitState() =>
+    //             MapUnitState.CreateMapUnitState(tileReferences, MapUnitPosition, TileReferenceIndex);
+    //         
+    //         switch (TheMapUnitType)
+    //         {
+    //             case MapUnitType.Avatar:
+    //                 return Avatar.CreateAvatar(tileReferences, MapLocation, Movement, null, dataOvlReference, bUseExtendedSprites);
+    //             case MapUnitType.CombatPlayer:
+    //                 throw new Ultima5ReduxException("Can't restore a combat player from a save file");
+    //             case MapUnitType.Enemy:
+    //                 return new Enemy(getQuickMapUnitState(), Movement, tileReferences, 
+    //                     enemyReferences.GetEnemyReference(TileReferenceIndex), MapLocation, dataOvlReference);
+    //             case MapUnitType.EmptyMapUnit:
+    //                 return new EmptyMapUnit();
+    //             case MapUnitType.Horse:
+    //                 return new Horse(getQuickMapUnitState(), Movement, tileReferences, MapLocation, 
+    //                     dataOvlReference, Direction);
+    //             case MapUnitType.MagicCarpet:
+    //                 return new MagicCarpet(
+    //                     MapUnitState.CreateMapUnitState(tileReferences, MapUnitPosition, TileReferenceIndex),
+    //                     Movement, tileReferences, MapLocation, dataOvlReference, Direction);
+    //             case MapUnitType.NonPlayerCharacter:
+    //                 return new NonPlayerCharacter(npcRefs.NPCs[NPCRefIndex], getQuickMapUnitState(),
+    //                     TheSmallMapCharacterState,
+    //                     Movement, timeOfDay, records, false, tileReferences, MapLocation, dataOvlReference);
+    //             case MapUnitType.Frigate:
+    //                 return new Frigate(getQuickMapUnitState(), Movement, tileReferences, MapLocation, dataOvlReference,
+    //                     Direction);
+    //             case MapUnitType.Skiff:
+    //                 return new Skiff(getQuickMapUnitState(), Movement, tileReferences, MapLocation, dataOvlReference,
+    //                     Direction);
+    //             default:
+    //                 throw new ArgumentOutOfRangeException();
+    //         }
+    //     }
+    //
+    //     private MapUnitType GetMapUnitTypeFromMapUnit(MapUnit mapUnit)
+    //     {
+    //         return mapUnit switch
+    //         {
+    //             Avatar _ => MapUnitType.Avatar,
+    //             EmptyMapUnit _ => MapUnitType.EmptyMapUnit,
+    //             Horse _ => MapUnitType.Horse,
+    //             MagicCarpet _ => MapUnitType.MagicCarpet,
+    //             NonPlayerCharacter _ => MapUnitType.NonPlayerCharacter,
+    //             CombatPlayer _ => MapUnitType.CombatPlayer,
+    //             Enemy _ => MapUnitType.Enemy,
+    //             _ => throw new Ultima5ReduxException("Tried to GetMapUnitType from " + mapUnit.GetType().ToString())
+    //         };
+    //     }
+    //     
+    // }
     
     public abstract class MapUnit : MapUnitDetails
     {
+        private readonly NonPlayerCharacterReferences _npcRefs;
         [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
 
         /// <summary>
@@ -188,31 +189,21 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         [IgnoreDataMember] public MapUnitState TheMapUnitState { get; protected set; }
 
-        /// <summary>
-        ///     Reference to current NPC (if it's an NPC at all!)
-        /// </summary>
-        // ReSharper disable once MemberCanBeProtected.Global
-        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef { get; set; }
 
         [IgnoreDataMember] public TileReference BoardedTileReference =>
             TileReferences.GetTileReferenceByName(UseFourDirections
                 ? FourDirectionToTileNameBoarded[Direction]
                 : DirectionToTileNameBoarded[Direction]);
 
-        /// <summary>
-        ///     Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
-        /// </summary>
-        [IgnoreDataMember] public virtual TileReference KeyTileReference
-        {
-            get => NPCRef == null
-                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
-                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
-            set
-            {
-                TheMapUnitState.Tile1Ref = value;
-                TheMapUnitState.Tile2Ref = value;
-            }
-        }
+        // [IgnoreDataMember] public virtual TileReference KeyTileReference
+        // {
+        //     get => TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index);
+        //     set
+        //     {
+        //         TheMapUnitState.Tile1Ref = value;
+        //         TheMapUnitState.Tile2Ref = value;
+        //     }
+        // }
 
         // ReSharper disable once MemberCanBeProtected.Global
         [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
@@ -226,13 +217,46 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] protected DataOvlReference DataOvlRef { get; set; }
         [IgnoreDataMember] protected TileReferences TileReferences { get; set; }
+        [IgnoreDataMember] protected NonPlayerCharacterReferences NPRefs { get; set; }
+
+        [DataMember] private int _keyTileIndex = -1;
+        [DataMember] private int _npcRefIndex = -1;
+        
+        [IgnoreDataMember]
+        public NonPlayerCharacterReference NPCRef
+        {
+            get
+            {
+                if (_npcRefs == null || _npcRefIndex == -1) return null;
+                return _npcRefs?.GetNonPlayerCharactersByLocation(MapLocation)[_npcRefIndex];
+                //NPCs[_npcRefIndex];   
+            }
+            private set
+            {
+                if (value == null) _npcRefIndex = -1;
+                else
+                    _npcRefIndex = value.DialogIndex;
+            }
+        }
+
+        [IgnoreDataMember]
+        public virtual TileReference KeyTileReference
+        {
+            get => NPCRef == null
+                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
+                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
+            set
+            {
+                TheMapUnitState.Tile1Ref = value;
+                TheMapUnitState.Tile2Ref = value;
+            }
+        }
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
         /// </summary>
         protected MapUnit()
         {
-            NPCRef = null;
             TheMapUnitState = null;
             TheSmallMapCharacterState = null;
             Movement = null;
@@ -246,38 +270,35 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnitState"></param>
         /// <param name="smallMapTheSmallMapCharacterState"></param>
         /// <param name="mapUnitMovement"></param>
-        /// <param name="playerCharacterRecords"></param>
         /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         /// <param name="dataOvlRef"></param>
         /// <param name="direction"></param>
-        protected MapUnit(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
+        /// <param name="npcRefs"></param>
+        protected MapUnit(MapUnitState mapUnitState,
             SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, PlayerCharacterRecords playerCharacterRecords,
+            MapUnitMovement mapUnitMovement, 
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlRef, Point2D.Direction direction)
+            DataOvlReference dataOvlRef, Point2D.Direction direction,
+            NonPlayerCharacterReference npcRef = null, NonPlayerCharacterReferences npcRefs = null)
         {
+            _npcRefs = npcRefs;
             DataOvlRef = dataOvlRef;
             TileReferences = tileReferences;
             MapLocation = location;
-            NPCRef = npcRef;
             TheMapUnitState = mapUnitState;
             TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
             Movement = mapUnitMovement;
             Direction = direction;
 
-            PlayerCharacterRecord record = null;
+            _npcRefIndex = npcRef?.DialogIndex ?? -1;
 
             // Debug.Assert(playerCharacterRecords != null);
             Debug.Assert(TheMapUnitState != null);
             Debug.Assert(Movement != null);
 
-            // gets the player character record for an NPC if one exists
-            // this is commonly used when meeting NPCs who have not yet joined your party 
-            if (npcRef != null) record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
-
-            // is the NPC you are loading currently in the party?
-            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
+            _keyTileIndex = mapUnitState.Tile1Ref.Index;
+            //_npcRefIndex = npcRefs.NPCs
 
             // set the characters position 
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
@@ -294,17 +315,8 @@ namespace Ultima5Redux.MapUnits
         }
 
         // ReSharper disable once UnusedMember.Global
-        public string GetDebugDescription(TimeOfDay timeOfDay)
+        public virtual string GetDebugDescription(TimeOfDay timeOfDay)
         {
-            if (NPCRef != null)
-                return "Name=" + NPCRef.FriendlyName
-                               + " " + MapUnitPosition + " Scheduled to be at: " +
-                               NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
-                               " with AI Mode: " +
-                               NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
-                               " <b>Movement Attempts</b>: " + MovementAttempts + " " +
-                               Movement;
-
             return "MapUnit " + KeyTileReference.Description
                               + " " + MapUnitPosition + " Scheduled to be at: "
                               + " <b>Movement Attempts</b>: " + MovementAttempts + " "
@@ -341,17 +353,13 @@ namespace Ultima5Redux.MapUnits
         protected static bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy, AStar aStar)
         {
             if (mapUnit.MapUnitPosition.XY == targetXy)
-                throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.NPCRef.Name +
+                throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.FriendlyName +
                                                 " is already at " + targetXy.X + "," +
                                                 targetXy.Y);
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
-            Stack<Node> nodeStack =
-                //currentMap.AStar
-                aStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
-            //new Vector2(mapUnit.MapUnitPosition.XY.X, mapUnit.MapUnitPosition.XY.Y),
-            //new Vector2(targetXy.X, targetXy.Y));
+            Stack<Node> nodeStack = aStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
 
             MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
             MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;

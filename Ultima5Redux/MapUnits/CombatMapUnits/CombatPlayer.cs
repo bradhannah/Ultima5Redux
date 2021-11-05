@@ -16,8 +16,7 @@ namespace Ultima5Redux.MapUnits
         private readonly Inventory _inventory;
 
         public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy,
-            DataOvlReference dataOvlReference,
-            Inventory inventory)
+            DataOvlReference dataOvlReference, Inventory inventory)
         {
             _inventory = inventory;
             DataOvlRef = dataOvlReference;

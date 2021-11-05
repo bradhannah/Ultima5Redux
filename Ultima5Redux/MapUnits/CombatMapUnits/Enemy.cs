@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.Monsters
@@ -11,13 +13,15 @@ namespace Ultima5Redux.MapUnits.Monsters
     {
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference)
-            : base(null, mapUnitState, null, mapUnitMovement, null,
-                tileReferences, location, dataOvlReference)
+            DataOvlReference dataOvlReference, NonPlayerCharacterReference npcRef, 
+            NonPlayerCharacterReferences npcRefs)
+            // : base(mapUnitState, mapUnitMovement,  tileReferences, location, dataOvlReference, npcRef, npcRefs)
+            : base(mapUnitState, null, mapUnitMovement, 
+                tileReferences, location, dataOvlReference, npcRef, npcRefs) 
         {
             EnemyReference = enemyReference;
             mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
-
+            
             Stats.Level = 1;
             Stats.Dexterity = EnemyReference.TheDefaultEnemyStats.Dexterity;
             Stats.Intelligence = EnemyReference.TheDefaultEnemyStats.Intelligence;
@@ -63,7 +67,7 @@ namespace Ultima5Redux.MapUnits.Monsters
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
-
+        
         public override string ToString()
         {
             return KeyTileReference.Name;

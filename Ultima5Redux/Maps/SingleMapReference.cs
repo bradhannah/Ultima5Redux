@@ -1,4 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Ultima5Redux.Maps
 {
@@ -9,7 +12,9 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public class SingleMapReference
         {
-            [SuppressMessage("ReSharper", "IdentifierTypo")] public enum Location
+            [SuppressMessage("ReSharper", "IdentifierTypo")]
+            [JsonConverter(typeof(StringEnumConverter))]
+            public enum Location
             {
                 Britannia_Underworld = 0x00, Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6,
                 Skara_Brae = 7, New_Magincia = 8, // Town
@@ -27,6 +32,7 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     Map master files. These represent .DAT, .NPC and .TLK files
             /// </summary>
+            [JsonConverter(typeof(StringEnumConverter))]
             public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon, None }
 
             /// <summary>
@@ -53,24 +59,24 @@ namespace Ultima5Redux.Maps
             ///     Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
             /// </summary>
             // ReSharper disable once UnusedMember.Global
-            public byte Id => (byte)(MapLocation - 1);
+            [IgnoreDataMember] public byte Id => (byte)(MapLocation - 1);
 
             /// <summary>
             ///     the offset of the map data in the data file
             /// </summary>
-            public int FileOffset { get; }
+            [DataMember] public int FileOffset { get; }
 
             /// <summary>
             ///     the floor that the single map represents
             /// </summary>
-            public int Floor { get; }
+            [DataMember] public int Floor { get; }
 
             /// <summary>
             ///     the location (ie. single town like Moonglow)
             /// </summary>
-            public Location MapLocation { get; }
+            [DataMember] public Location MapLocation { get; }
 
-            public Map.Maps MapType
+            [IgnoreDataMember] public Map.Maps MapType
             {
                 get
                 {
@@ -86,12 +92,17 @@ namespace Ultima5Redux.Maps
                 }
             }
 
+            /// <summary>
+            ///     name of the map file
+            /// </summary>
+            [IgnoreDataMember] public string MapFilename => GetFilenameFromLocation(MapLocation);
+
 
             /// <summary>
             ///     The master file
             /// </summary>
             // ReSharper disable once UnusedMember.Global
-            public SmallMapMasterFiles MasterFile
+            [IgnoreDataMember] public SmallMapMasterFiles MasterFile
             {
                 get
                 {
@@ -110,12 +121,6 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException("Bad MasterFile");
                 }
             }
-
-            /// <summary>
-            ///     name of the map file
-            /// </summary>
-            public string MapFilename => GetFilenameFromLocation(MapLocation);
-
 
             public override string ToString()
             {

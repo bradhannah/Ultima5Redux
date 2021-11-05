@@ -46,6 +46,7 @@ namespace Ultima5Redux.Maps
         private readonly SmallMaps _smallMaps;
 
         private readonly GameState _state;
+        private readonly NonPlayerCharacterReferences _npcRefs;
         private readonly TileOverrides _tileOverrides;
 
         /// <summary>
@@ -238,6 +239,7 @@ namespace Ultima5Redux.Maps
             _smallMaps = smallMaps;
             _tileReferences = tileReferences;
             _state = state;
+            _npcRefs = npcRefs;
             _timeOfDay = timeOfDay;
             _moongates = moongates;
             _inventoryReferences = inventoryReferences;

@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     static references to all NPCs in the world
         /// </summary>
-        [IgnoreDataMember] private NonPlayerCharacterReferences NPCRefs { get; }
+        [IgnoreDataMember] private readonly NonPlayerCharacterReferences _npcRefs;
         [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
         [IgnoreDataMember] private readonly EnemyReferences _enemyReferences;
         [IgnoreDataMember] private readonly TileReferences _tileReferences;
@@ -57,23 +57,23 @@ namespace Ultima5Redux.MapUnits
         [DataMember] private Map.Maps _currentMapType;
         [DataMember] private MapUnitStates _smallMapUnitStates;
 
-        [DataMember] private List<MapUnitSave> SmallMapSaveData
-        {
-            get
-            {
-                List<MapUnitSave> mapUnitSaves = new List<MapUnitSave>(_smallWorldMapUnits.Count);
-                foreach (MapUnit mapUnit in _smallWorldMapUnits)
-                {
-                    MapUnitSave mapUnitSave = new MapUnitSave(mapUnit);
-                }
-
-                return mapUnitSaves;
-            }
-            set
-            {
-                _ = value;
-            }
-        }
+        // [DataMember] private List<MapUnitSave> SmallMapSaveData
+        // {
+        //     get
+        //     {
+        //         List<MapUnitSave> mapUnitSaves = new List<MapUnitSave>(_smallWorldMapUnits.Count);
+        //         foreach (MapUnit mapUnit in _smallWorldMapUnits)
+        //         {
+        //             MapUnitSave mapUnitSave = new MapUnitSave(mapUnit);
+        //         }
+        //
+        //         return mapUnitSaves;
+        //     }
+        //     set
+        //     {
+        //         _ = value;
+        //     }
+        // }
         
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
@@ -145,8 +145,10 @@ namespace Ultima5Redux.MapUnits
             // Debug.Assert((initialMap == LargeMap.Maps.Small &&
             //               currentSmallMap != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld));
 
-            _currentMapType = initialMap;
             _dataOvlReference = dataOvlReference;
+            _npcRefs = npcRefs;
+
+            _currentMapType = initialMap;
             _bUseExtendedSprites = bUseExtendedSprites;
             _enemyReferences = enemyReferences;
             _tileReferences = tileReferences;
@@ -207,8 +209,6 @@ namespace Ultima5Redux.MapUnits
 
             // movements pertain to whichever map was loaded from disk
             Movements = new MapUnitMovements(nonPlayerCharacterMovementLists, nonPlayerCharacterMovementOffsets);
-
-            NPCRefs = npcRefs;
 
             // we only load the large maps once and they always exist on disk
             LoadLargeMap(Map.Maps.Overworld, true);
@@ -560,7 +560,7 @@ namespace Ultima5Redux.MapUnits
             }
 
             // get all the NPC references for the current location
-            List<NonPlayerCharacterReference> npcCurrentMapRefs = NPCRefs.GetNonPlayerCharactersByLocation(location);
+            List<NonPlayerCharacterReference> npcCurrentMapRefs = _npcRefs.GetNonPlayerCharactersByLocation(location);
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
@@ -579,12 +579,11 @@ namespace Ultima5Redux.MapUnits
                     continue;
                 }
 
-                if (bInitialLoad)
+                if (i == 0 && bInitialLoad)
                 {
                     MapUnitState theAvatarMapState = _smallMapUnitStates.GetCharacterState(0);
                     MapUnit theAvatar = Avatar.CreateAvatar(_tileReferences, location, mapUnitMovement,
-                        theAvatarMapState,
-                        _dataOvlReference, _bUseExtendedSprites);
+                        theAvatarMapState, _dataOvlReference, _bUseExtendedSprites);
                     theAvatar.MapUnitPosition.X = theAvatarMapState.X;
                     theAvatar.MapUnitPosition.Y = theAvatarMapState.Y;
                     theAvatar.MapLocation = location;
@@ -637,8 +636,9 @@ namespace Ultima5Redux.MapUnits
 
             if (smallMapCharacterState != null && npcRef != null && smallMapCharacterState.Active && npcRef.NormalNPC)
             {
-                newUnit = new NonPlayerCharacter(npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
-                    _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileReferences, location, _dataOvlReference);
+                newUnit = new NonPlayerCharacter(mapUnitState, smallMapCharacterState, mapUnitMovement,
+                    _timeOfDay, _playerCharacterRecords, bInitialLoad, _tileReferences, location, _dataOvlReference, 
+                    npcRef, _npcRefs);
             }
             else if (mapUnitState.Tile1Ref == null)
             {
@@ -669,9 +669,7 @@ namespace Ultima5Redux.MapUnits
             {
                 Debug.Assert(_enemyReferences != null);
                 newUnit = new Enemy(mapUnitState, mapUnitMovement, _tileReferences,
-                    _enemyReferences.GetEnemyReference(tileRef), location, _dataOvlReference);
-                //npcRef, mapUnitState, smallMapCharacterState, mapUnitMovement,
-                //_timeOfDay, _playerCharacterRecords, _tileReferences, location, _dataOvlReference);
+                    _enemyReferences.GetEnemyReference(tileRef), location, _dataOvlReference, npcRef, _npcRefs);
             }
             // this is where we will create monsters too
             else
@@ -706,9 +704,9 @@ namespace Ultima5Redux.MapUnits
             MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
 
             Enemy enemy = new Enemy(mapUnitState, Movements.GetMovement(nIndex), _tileReferences, enemyReference,
-                _currentLocation, _dataOvlReference);
+                _currentLocation, _dataOvlReference, npcRef, _npcRefs);
             enemy.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
-            enemy.NPCRef = npcRef;
+
             nIndex = AddCombatMapUnit(enemy);
 
             return enemy;

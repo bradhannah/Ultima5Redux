@@ -77,6 +77,16 @@ namespace Ultima5Redux.PlayerCharacters
         public PlayerCharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc) => 
             Records.FirstOrDefault(record => record.Name == npc.Name);
 
+        public int GetCharacterIndexByNPC(NonPlayerCharacterReference npc)
+        {
+            for (int i = 0; i < Records.Count; i++)
+            {
+                if (Records[i].Name == npc.Name) return i;
+            }
+
+            return -1;
+        }
+
         public void JoinPlayerCharacter(PlayerCharacterRecord record)
         {
             int nJoinedCharacterIndex = TotalPartyMembers();

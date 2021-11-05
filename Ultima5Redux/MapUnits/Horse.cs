@@ -10,7 +10,7 @@ namespace Ultima5Redux.MapUnits
         public Horse(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
             Point2D.Direction direction)
-            : base(null, mapUnitState, null, mapUnitMovement, null, tileReferences,
+            : base(mapUnitState, null, mapUnitMovement, tileReferences,
                 location, dataOvlReference, direction)
         {
             KeyTileReference = NonBoardedTileReference;

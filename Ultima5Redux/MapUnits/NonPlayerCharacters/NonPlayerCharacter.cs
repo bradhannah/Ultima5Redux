@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
@@ -12,16 +13,32 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     public sealed class NonPlayerCharacter : MapUnit
     {
         private int _scheduleIndex = -1;
+        [DataMember] private int _playerCharacterRecordIndex = -1;
+        [IgnoreDataMember] private PlayerCharacterRecords ThePlayerCharacterRecords { get; set; }
 
-        public NonPlayerCharacter(NonPlayerCharacterReference npcRef, MapUnitState mapUnitState,
+
+        
+        public NonPlayerCharacter(MapUnitState mapUnitState,
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
             TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference) : base(npcRef, mapUnitState, smallMapTheSmallMapCharacterState,
-            mapUnitMovement, playerCharacterRecords, tileReferences, location, dataOvlReference,
-            Point2D.Direction.None)
+            DataOvlReference dataOvlReference, NonPlayerCharacterReference npcRef, NonPlayerCharacterReferences npcRefs) 
+            : base(mapUnitState, smallMapTheSmallMapCharacterState,
+            mapUnitMovement, tileReferences, location, dataOvlReference,
+            Point2D.Direction.None, npcRef, npcRefs)
         {
             bool bLargeMap = TheSmallMapCharacterState == null && npcRef == null;
+
+            PlayerCharacterRecord record = null;
+     
+            // gets the player character record for an NPC if one exists
+            // this is commonly used when meeting NPCs who have not yet joined your party 
+            if (npcRef != null) record = playerCharacterRecords.GetCharacterRecordByNPC(npcRef);
+            
+            _playerCharacterRecordIndex = playerCharacterRecords.GetCharacterIndexByNPC(npcRef);
+            
+            // is the NPC you are loading currently in the party?
+            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
 
             // it's a large map so we follow different logic to determine the placement of the character
             if (bLargeMap)
@@ -434,5 +451,25 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             // add the single instruction to the queue
             Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(direction, 1));
         }
+        
+        // ReSharper disable once UnusedMember.Global
+        public override string GetDebugDescription(TimeOfDay timeOfDay)
+        {
+            if (NPCRef != null)
+                return "Name=" + NPCRef.FriendlyName
+                               + " " + MapUnitPosition + " Scheduled to be at: " +
+                               NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
+                               " with AI Mode: " +
+                               NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
+                               " <b>Movement Attempts</b>: " + MovementAttempts + " " +
+                               Movement;
+
+            return "MapUnit " + KeyTileReference.Description
+                              + " " + MapUnitPosition + " Scheduled to be at: "
+                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
+                              + Movement;
+        }
     }
+    
+    
 }
