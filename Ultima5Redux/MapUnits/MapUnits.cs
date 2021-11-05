@@ -56,6 +56,24 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] private Map.Maps _currentMapType;
         [DataMember] private MapUnitStates _smallMapUnitStates;
+
+        [DataMember] private List<MapUnitSave> SmallMapSaveData
+        {
+            get
+            {
+                List<MapUnitSave> mapUnitSaves = new List<MapUnitSave>(_smallWorldMapUnits.Count);
+                foreach (MapUnit mapUnit in _smallWorldMapUnits)
+                {
+                    MapUnitSave mapUnitSave = new MapUnitSave(mapUnit);
+                }
+
+                return mapUnitSaves;
+            }
+            set
+            {
+                _ = value;
+            }
+        }
         
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map

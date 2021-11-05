@@ -3,58 +3,163 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
     [DataContract]
-    public abstract class MapUnit
+    public abstract class MapUnitDetails
     {
-        [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
-
-        [DataMember] protected int MovementAttempts = 0;
-
+        [DataMember] protected internal int MovementAttempts { get; set; }
         /// <summary>
         ///     How many iterations will I force the character to wander?
         /// </summary>
         [DataMember] internal int ForcedWandering { get; set; }
-
         /// <summary>
         ///     All the movements for the map character
         /// </summary>
         [DataMember] internal MapUnitMovement Movement { get; private protected set; }
-
         /// <summary>
         ///     The location state of the character
         /// </summary>
-        [DataMember] internal SmallMapCharacterState TheSmallMapCharacterState { get; }
-
-        [DataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
+        [DataMember] protected internal SmallMapCharacterState TheSmallMapCharacterState { get; set; }
 
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>
         [DataMember] public abstract bool IsActive { get; }
-
         [DataMember] public abstract bool IsAttackable { get; }
-
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         [DataMember] public bool IsOccupiedByAvatar { get; protected internal set; }
-
         [DataMember] public bool UseFourDirections { get; set; } = false;
         [DataMember] public Point2D.Direction Direction { get; set; }
-
         [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
+        [DataMember] public virtual MapUnitPosition MapUnitPosition { get; internal set; }
+        [DataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
+        [DataMember] public abstract string BoardXitName { get; }
+        [DataMember] public abstract string FriendlyName { get; }
+        /// <summary>
+        ///     Is the character currently active on the map?
+        /// </summary>
+        [DataMember] protected internal bool IsInParty { get; set; }
+    }
+
+    [DataContract]
+    public sealed class MapUnitSave : MapUnitDetails
+    {
+        public enum MapUnitType
+        {
+            Avatar, CombatPlayer, Enemy, EmptyMapUnit, Horse, MagicCarpet, NonPlayerCharacter, Frigate, Skiff
+        }
+        
+        [DataMember] public int TileReferenceIndex { get; }
+        [DataMember] public int NPCRefIndex { get; }
+        [DataMember] public MapUnitType TheMapUnitType { get; }
+
+        [DataMember] public override bool IsActive { get; }
+        [DataMember] public override bool IsAttackable { get; }
+        [DataMember] public override Avatar.AvatarState BoardedAvatarState { get; }
+        [DataMember] public override string BoardXitName { get; }
+        [DataMember] public override string FriendlyName { get; }
+
+        public MapUnitSave(MapUnit mapUnit)
+        {
+            MovementAttempts = mapUnit.MovementAttempts;
+            ForcedWandering = mapUnit.ForcedWandering;
+            Movement = mapUnit.Movement;
+            TheSmallMapCharacterState = mapUnit.TheSmallMapCharacterState;
+            IsActive = mapUnit.IsActive;
+            IsAttackable = mapUnit.IsAttackable;
+            IsOccupiedByAvatar = mapUnit.IsOccupiedByAvatar;
+            UseFourDirections = mapUnit.UseFourDirections;
+            Direction = mapUnit.Direction;
+            MapLocation = mapUnit.MapLocation;
+            MapUnitPosition = mapUnit.MapUnitPosition;
+            BoardedAvatarState = mapUnit.BoardedAvatarState;
+            BoardXitName = mapUnit.BoardXitName;
+            FriendlyName = mapUnit.FriendlyName;
+            IsInParty = mapUnit.IsInParty;
+
+            TileReferenceIndex = mapUnit.KeyTileReference.Index;
+            NPCRefIndex = mapUnit?.NPCRef.DialogIndex ?? -1;
+            TheMapUnitType = GetMapUnitTypeFromMapUnit(mapUnit);
+        }
+
+        public MapUnit CreateMapUnit(TileReferences tileReferences, DataOvlReference dataOvlReference,
+            EnemyReferences enemyReferences, NonPlayerCharacterReferences npcRefs,
+            TimeOfDay timeOfDay, PlayerCharacterRecords records, 
+            bool bUseExtendedSprites = true)
+        {
+            MapUnitState getQuickMapUnitState() =>
+                MapUnitState.CreateMapUnitState(tileReferences, MapUnitPosition, TileReferenceIndex);
+            
+            switch (TheMapUnitType)
+            {
+                case MapUnitType.Avatar:
+                    return Avatar.CreateAvatar(tileReferences, MapLocation, Movement, null, dataOvlReference, bUseExtendedSprites);
+                case MapUnitType.CombatPlayer:
+                    throw new Ultima5ReduxException("Can't restore a combat player from a save file");
+                case MapUnitType.Enemy:
+                    return new Enemy(getQuickMapUnitState(), Movement, tileReferences, 
+                        enemyReferences.GetEnemyReference(TileReferenceIndex), MapLocation, dataOvlReference);
+                case MapUnitType.EmptyMapUnit:
+                    return new EmptyMapUnit();
+                case MapUnitType.Horse:
+                    return new Horse(getQuickMapUnitState(), Movement, tileReferences, MapLocation, 
+                        dataOvlReference, Direction);
+                case MapUnitType.MagicCarpet:
+                    return new MagicCarpet(
+                        MapUnitState.CreateMapUnitState(tileReferences, MapUnitPosition, TileReferenceIndex),
+                        Movement, tileReferences, MapLocation, dataOvlReference, Direction);
+                case MapUnitType.NonPlayerCharacter:
+                    return new NonPlayerCharacter(npcRefs.NPCs[NPCRefIndex], getQuickMapUnitState(),
+                        TheSmallMapCharacterState,
+                        Movement, timeOfDay, records, false, tileReferences, MapLocation, dataOvlReference);
+                case MapUnitType.Frigate:
+                    return new Frigate(getQuickMapUnitState(), Movement, tileReferences, MapLocation, dataOvlReference,
+                        Direction);
+                case MapUnitType.Skiff:
+                    return new Skiff(getQuickMapUnitState(), Movement, tileReferences, MapLocation, dataOvlReference,
+                        Direction);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private MapUnitType GetMapUnitTypeFromMapUnit(MapUnit mapUnit)
+        {
+            return mapUnit switch
+            {
+                Avatar _ => MapUnitType.Avatar,
+                EmptyMapUnit _ => MapUnitType.EmptyMapUnit,
+                Horse _ => MapUnitType.Horse,
+                MagicCarpet _ => MapUnitType.MagicCarpet,
+                NonPlayerCharacter _ => MapUnitType.NonPlayerCharacter,
+                CombatPlayer _ => MapUnitType.CombatPlayer,
+                Enemy _ => MapUnitType.Enemy,
+                _ => throw new Ultima5ReduxException("Tried to GetMapUnitType from " + mapUnit.GetType().ToString())
+            };
+        }
+        
+    }
+    
+    public abstract class MapUnit : MapUnitDetails
+    {
+        [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
 
         /// <summary>
         ///     The characters current position on the map
         /// </summary>
-        [DataMember] public MapUnitPosition MapUnitPosition
+        [DataMember] public override MapUnitPosition MapUnitPosition
         {
             get => _mapMapUnitPosition;
             internal set
@@ -81,17 +186,13 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     the state of the animations
         /// </summary>
-        [DataMember] public MapUnitState TheMapUnitState { get; protected set; }
+        [IgnoreDataMember] public MapUnitState TheMapUnitState { get; protected set; }
 
         /// <summary>
         ///     Reference to current NPC (if it's an NPC at all!)
         /// </summary>
         // ReSharper disable once MemberCanBeProtected.Global
         [IgnoreDataMember] public NonPlayerCharacterReference NPCRef { get; set; }
-
-        [DataMember] public abstract string BoardXitName { get; }
-
-        [DataMember] public abstract string FriendlyName { get; }
 
         [IgnoreDataMember] public TileReference BoardedTileReference =>
             TileReferences.GetTileReferenceByName(UseFourDirections
@@ -117,19 +218,13 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
             TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
-        /// <summary>
-        ///     Is the character currently active on the map?
-        /// </summary>
-        [DataMember] protected bool IsInParty { get; }
 
-        [IgnoreDataMember] protected DataOvlReference DataOvlRef { get; set; }
-
-        [DataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
-        [DataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
-
+        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
         [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
+        [IgnoreDataMember] protected DataOvlReference DataOvlRef { get; set; }
         [IgnoreDataMember] protected TileReferences TileReferences { get; set; }
 
         /// <summary>
