@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
@@ -11,11 +12,125 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
+    [DataContract]
     public abstract class MapUnit
     {
-        private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
+        [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
 
-        protected int MovementAttempts = 0;
+        [DataMember] protected int MovementAttempts = 0;
+
+        /// <summary>
+        ///     How many iterations will I force the character to wander?
+        /// </summary>
+        [DataMember] internal int ForcedWandering { get; set; }
+
+        /// <summary>
+        ///     All the movements for the map character
+        /// </summary>
+        [DataMember] internal MapUnitMovement Movement { get; private protected set; }
+
+        /// <summary>
+        ///     The location state of the character
+        /// </summary>
+        [DataMember] internal SmallMapCharacterState TheSmallMapCharacterState { get; }
+
+        [DataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
+
+        /// <summary>
+        ///     Is the map character currently an active character on the current map
+        /// </summary>
+        [DataMember] public abstract bool IsActive { get; }
+
+        [DataMember] public abstract bool IsAttackable { get; }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        [DataMember] public bool IsOccupiedByAvatar { get; protected internal set; }
+
+        [DataMember] public bool UseFourDirections { get; set; } = false;
+        [DataMember] public Point2D.Direction Direction { get; set; }
+
+        [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
+
+        /// <summary>
+        ///     The characters current position on the map
+        /// </summary>
+        [DataMember] public MapUnitPosition MapUnitPosition
+        {
+            get => _mapMapUnitPosition;
+            internal set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                // this is a bit redundant but we have a backing field and also store the XY positions
+                // in the TheMapUnitState and TheSmallMapCharacterState, but we have to do this because the .XY
+                // of the MapUnitPosition is often edited directly
+                _mapMapUnitPosition.X = value.X;
+                _mapMapUnitPosition.Y = value.Y;
+                _mapMapUnitPosition.Floor = value.Floor;
+
+                TheMapUnitState.X = (byte)value.X;
+                TheMapUnitState.Y = (byte)value.Y;
+                TheMapUnitState.Floor = (byte)value.Floor;
+
+                if (TheSmallMapCharacterState == null) return;
+                TheSmallMapCharacterState.TheMapUnitPosition.X = value.X;
+                TheSmallMapCharacterState.TheMapUnitPosition.Y = value.Y;
+                TheSmallMapCharacterState.TheMapUnitPosition.Floor = value.Floor;
+            }
+        }
+
+        /// <summary>
+        ///     the state of the animations
+        /// </summary>
+        [DataMember] public MapUnitState TheMapUnitState { get; protected set; }
+
+        /// <summary>
+        ///     Reference to current NPC (if it's an NPC at all!)
+        /// </summary>
+        // ReSharper disable once MemberCanBeProtected.Global
+        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef { get; set; }
+
+        [DataMember] public abstract string BoardXitName { get; }
+
+        [DataMember] public abstract string FriendlyName { get; }
+
+        [IgnoreDataMember] public TileReference BoardedTileReference =>
+            TileReferences.GetTileReferenceByName(UseFourDirections
+                ? FourDirectionToTileNameBoarded[Direction]
+                : DirectionToTileNameBoarded[Direction]);
+
+        /// <summary>
+        ///     Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
+        /// </summary>
+        [IgnoreDataMember] public virtual TileReference KeyTileReference
+        {
+            get => NPCRef == null
+                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
+                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
+            set
+            {
+                TheMapUnitState.Tile1Ref = value;
+                TheMapUnitState.Tile2Ref = value;
+            }
+        }
+
+        // ReSharper disable once MemberCanBeProtected.Global
+        [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
+            TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+
+        /// <summary>
+        ///     Is the character currently active on the map?
+        /// </summary>
+        [DataMember] protected bool IsInParty { get; }
+
+        [IgnoreDataMember] protected DataOvlReference DataOvlRef { get; set; }
+
+        [DataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+        [DataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
+
+        [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+            DirectionToTileNameBoarded;
+
+        [IgnoreDataMember] protected TileReferences TileReferences { get; set; }
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
@@ -71,121 +186,8 @@ namespace Ultima5Redux.MapUnits
 
             // set the characters position 
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
-        }
-
-        /// <summary>
-        ///     How many iterations will I force the character to wander?
-        /// </summary>
-        internal int ForcedWandering { get; set; }
-
-        /// <summary>
-        ///     All the movements for the map character
-        /// </summary>
-        internal MapUnitMovement Movement { get; private protected set; }
-
-        /// <summary>
-        ///     The location state of the character
-        /// </summary>
-        internal SmallMapCharacterState TheSmallMapCharacterState { get; }
-
-        public abstract Avatar.AvatarState BoardedAvatarState { get; }
-
-        /// <summary>
-        ///     Is the map character currently an active character on the current map
-        /// </summary>
-        public abstract bool IsActive { get; }
-
-        public abstract bool IsAttackable { get; }
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public bool IsOccupiedByAvatar { get; protected internal set; }
-
-        public bool UseFourDirections { get; set; } = false;
-        public Point2D.Direction Direction { get; set; }
-
-        public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
-
-        /// <summary>
-        ///     The characters current position on the map
-        /// </summary>
-        public MapUnitPosition MapUnitPosition
-        {
-            get => _mapMapUnitPosition;
-            internal set
-            {
-                if (value == null) throw new ArgumentNullException(nameof(value));
-                // this is a bit redundant but we have a backing field and also store the XY positions
-                // in the TheMapUnitState and TheSmallMapCharacterState, but we have to do this because the .XY
-                // of the MapUnitPosition is often edited directly
-                _mapMapUnitPosition.X = value.X;
-                _mapMapUnitPosition.Y = value.Y;
-                _mapMapUnitPosition.Floor = value.Floor;
-
-                TheMapUnitState.X = (byte)value.X;
-                TheMapUnitState.Y = (byte)value.Y;
-                TheMapUnitState.Floor = (byte)value.Floor;
-
-                if (TheSmallMapCharacterState == null) return;
-                TheSmallMapCharacterState.TheMapUnitPosition.X = value.X;
-                TheSmallMapCharacterState.TheMapUnitPosition.Y = value.Y;
-                TheSmallMapCharacterState.TheMapUnitPosition.Floor = value.Floor;
-            }
-        }
-
-        /// <summary>
-        ///     the state of the animations
-        /// </summary>
-        public MapUnitState TheMapUnitState { get; protected set; }
-
-        /// <summary>
-        ///     Reference to current NPC (if it's an NPC at all!)
-        /// </summary>
-        // ReSharper disable once MemberCanBeProtected.Global
-        public NonPlayerCharacterReference NPCRef { get; set; }
-
-        public abstract string BoardXitName { get; }
-
-        public abstract string FriendlyName { get; }
-
-        public TileReference BoardedTileReference =>
-            TileReferences.GetTileReferenceByName(UseFourDirections
-                ? FourDirectionToTileNameBoarded[Direction]
-                : DirectionToTileNameBoarded[Direction]);
-
-        /// <summary>
-        ///     Gets the TileReference of the keyframe of the particular MapUnit (typically the first frame)
-        /// </summary>
-        public virtual TileReference KeyTileReference
-        {
-            get => NPCRef == null
-                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
-                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
-            set
-            {
-                TheMapUnitState.Tile1Ref = value;
-                TheMapUnitState.Tile2Ref = value;
-            }
-        }
-
-        // ReSharper disable once MemberCanBeProtected.Global
-        public virtual TileReference NonBoardedTileReference =>
-            TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
-
-        /// <summary>
-        ///     Is the character currently active on the map?
-        /// </summary>
-        protected bool IsInParty { get; }
-
-        protected DataOvlReference DataOvlRef { get; set; }
-
-        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
-        protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
-
-        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
-            DirectionToTileNameBoarded;
-
-        protected TileReferences TileReferences { get; set; }
-
+        }        
+        
         public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
         {
             // by default the thing doesn't move on it's own

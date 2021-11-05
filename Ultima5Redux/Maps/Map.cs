@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.PlayerCharacters;
@@ -9,8 +12,10 @@ namespace Ultima5Redux.Maps
 {
     public abstract class Map
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum Maps { Small = -1, Overworld, Underworld, Combat }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
 
         /// <summary>
@@ -119,7 +124,6 @@ namespace Ultima5Redux.Maps
         protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
         {
             SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
-            // SetWalkableTile(xy, IsTileWalkable(GetTileReference(xy), walkableType), walkableType);
         }
 
         public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)

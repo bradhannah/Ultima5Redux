@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Ultima5Redux.MapUnits
 {
     /// <summary>
     ///     Tracks the position of any character on the screen
     /// </summary>
+    [DataContract]
     public class MapUnitPosition
     {
         private int _floor;
@@ -20,15 +22,19 @@ namespace Ultima5Redux.MapUnits
             Floor = floor;
         }
 
+        [DataMember]
         public int Floor
         {
             get => _floor;
             set => _floor = value == 0xFF ? -1 : value;
         }
 
+        [DataMember]
         public int X { get; set; }
+        [DataMember]
         public int Y { get; set; }
 
+        [IgnoreDataMember]
         public Point2D XY
         {
             get => new Point2D(X, Y);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -12,66 +13,107 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class MapUnits
+    
+    [DataContract] public class MapUnits
     {
         private const int MAX_MAP_CHARACTERS = 0x20;
         private readonly bool _bUseExtendedSprites;
 
         private readonly List<MapUnit> _combatMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
 
-        private readonly DataOvlReference _dataOvlReference;
-        private readonly EnemyReferences _enemyReferences;
-        private readonly Avatar _masterAvatarMapUnit;
+        /// <summary>
+        ///     static references to all NPCs in the world
+        /// </summary>
+        [IgnoreDataMember] private NonPlayerCharacterReferences NPCRefs { get; }
+        [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
+        [IgnoreDataMember] private readonly EnemyReferences _enemyReferences;
+        [IgnoreDataMember] private readonly TileReferences _tileReferences;
+        [IgnoreDataMember] private readonly TimeOfDay _timeOfDay;
+        
+        [DataMember] private readonly Avatar _masterAvatarMapUnit;
 
-        private readonly DataChunk _overworldDataChunk;
-        private readonly List<MapUnit> _overworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
-        private readonly MapUnitStates _overworldMapUnitStates;
+        [IgnoreDataMember] private readonly DataChunk _overworldDataChunk;
+        [DataMember] private readonly List<MapUnit> _overworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        [DataMember] private readonly MapUnitStates _overworldMapUnitStates;
 
-        private readonly PlayerCharacterRecords _playerCharacterRecords;
+        [IgnoreDataMember] private readonly PlayerCharacterRecords _playerCharacterRecords;
 
         // load the MapAnimationStates once from disk, don't worry about again until you are saving to disk
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
 
         // ReSharper disable once NotAccessedField.Local
-        private readonly SmallMapCharacterStates _smallMapCharacterStates;
-        private readonly List<MapUnit> _smallWorldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        [DataMember] private readonly SmallMapCharacterStates _smallMapCharacterStates;
+        [DataMember] private readonly List<MapUnit> _smallWorldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
 
-        private readonly TileReferences _tileReferences;
-        private readonly TimeOfDay _timeOfDay;
+        [IgnoreDataMember] private readonly DataChunk _underworldDataChunk;
+        [DataMember] private readonly List<MapUnit> _underworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
+        [DataMember] private readonly MapUnitStates _underworldMapUnitStates;
+        
+        [IgnoreDataMember] private MapUnitStates _combatMapUnitStates;
+        [DataMember] private SmallMapReferences.SingleMapReference.Location _currentLocation;
 
-        private readonly DataChunk _underworldDataChunk;
-        private readonly List<MapUnit> _underworldMapUnits = new List<MapUnit>(MAX_MAP_CHARACTERS);
-        private readonly MapUnitStates _underworldMapUnitStates;
-        private MapUnitStates _combatMapUnitStates;
-        private SmallMapReferences.SingleMapReference.Location _currentLocation;
+        [IgnoreDataMember] public List<MapUnit> CurrentMapUnits => GetMapUnits(_currentMapType);
 
-        private Map.Maps _currentMapType;
-        private MapUnitStates _smallMapUnitStates;
+        [DataMember] private Map.Maps _currentMapType;
+        [DataMember] private MapUnitStates _smallMapUnitStates;
+        
+        /// <summary>
+        ///     The single source of truth for the Avatar's current position within the current map
+        /// </summary>
+        [DataMember] internal MapUnitPosition CurrentAvatarPosition
+        {
+            get => AvatarMapUnit.MapUnitPosition;
+            set => AvatarMapUnit.MapUnitPosition = value;
+        }
 
-//        private MapUnitStates _currentMapUnitStates;
+        [DataMember] private MapUnitMovements Movements { get; }
+
+        // ReSharper disable once UnusedMember.Local
+        [IgnoreDataMember] private MapUnitStates CurrentMapUnitStates
+        {
+            get
+            {
+                switch (_currentMapType)
+                {
+                    case Map.Maps.Small:
+                        return _smallMapUnitStates;
+                    case Map.Maps.Overworld:
+                        return _overworldMapUnitStates;
+                    case Map.Maps.Underworld:
+                        return _underworldMapUnitStates;
+                    case Map.Maps.Combat:
+                        return _combatMapUnitStates;
+                    default:
+                        throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" +
+                                                        _currentMapType);
+                }
+            }
+        }
+
+        [IgnoreDataMember] public Avatar AvatarMapUnit => (Avatar)CurrentMapUnits[0];
 
         /// <summary>
-///     Constructs the collection of all Map CurrentMapUnits in overworld, underworld and current towne
-/// </summary>
-/// <param name="tileReferences">Global tile references</param>
-/// <param name="npcRefs">Global NPC references</param>
-/// <param name="activeMapUnitStatesDataChunk"></param>
-/// <param name="overworldMapUnitStatesDataChunk"></param>
-/// <param name="underworldMapUnitStatesDataChunk"></param>
-/// <param name="charStatesDataChunk"></param>
-/// <param name="nonPlayerCharacterMovementLists"></param>
-/// <param name="nonPlayerCharacterMovementOffsets"></param>
-/// <param name="timeOfDay"></param>
-/// <param name="playerCharacterRecords"></param>
-/// <param name="initialMap">
-///     The initial map you are beginning on. It's important to know because there is only
-///     one TheSmallMapCharacterState loaded in the save file at load time
-/// </param>
-/// <param name="bUseExtendedSprites"></param>
-/// <param name="enemyReferences"></param>
-/// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
-/// <param name="dataOvlReference"></param>
-public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcRefs,
+        ///     Constructs the collection of all Map CurrentMapUnits in overworld, underworld and current towne
+        /// </summary>
+        /// <param name="tileReferences">Global tile references</param>
+        /// <param name="npcRefs">Global NPC references</param>
+        /// <param name="activeMapUnitStatesDataChunk"></param>
+        /// <param name="overworldMapUnitStatesDataChunk"></param>
+        /// <param name="underworldMapUnitStatesDataChunk"></param>
+        /// <param name="charStatesDataChunk"></param>
+        /// <param name="nonPlayerCharacterMovementLists"></param>
+        /// <param name="nonPlayerCharacterMovementOffsets"></param>
+        /// <param name="timeOfDay"></param>
+        /// <param name="playerCharacterRecords"></param>
+        /// <param name="initialMap">
+        ///     The initial map you are beginning on. It's important to know because there is only
+        ///     one TheSmallMapCharacterState loaded in the save file at load time
+        /// </param>
+        /// <param name="bUseExtendedSprites"></param>
+        /// <param name="enemyReferences"></param>
+        /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
+        /// <param name="dataOvlReference"></param>
+        public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcRefs,
             DataChunk activeMapUnitStatesDataChunk, DataChunk overworldMapUnitStatesDataChunk,
             DataChunk underworldMapUnitStatesDataChunk, DataChunk charStatesDataChunk,
             DataChunk nonPlayerCharacterMovementLists, DataChunk nonPlayerCharacterMovementOffsets,
@@ -184,48 +226,6 @@ public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcR
             _currentMapType = initialMap;
         }
 
-        /// <summary>
-        ///     The single source of truth for the Avatar's current position within the current map
-        /// </summary>
-        internal MapUnitPosition CurrentAvatarPosition
-        {
-            get => AvatarMapUnit.MapUnitPosition;
-            set => AvatarMapUnit.MapUnitPosition = value;
-        }
-
-        private MapUnitMovements Movements { get; }
-
-        // ReSharper disable once UnusedMember.Local
-        private MapUnitStates CurrentMapUnitStates
-        {
-            get
-            {
-                switch (_currentMapType)
-                {
-                    case Map.Maps.Small:
-                        return _smallMapUnitStates;
-                    case Map.Maps.Overworld:
-                        return _overworldMapUnitStates;
-                    case Map.Maps.Underworld:
-                        return _underworldMapUnitStates;
-                    case Map.Maps.Combat:
-                        return _combatMapUnitStates;
-                    default:
-                        throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" +
-                                                        _currentMapType);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     static references to all NPCs in the world
-        /// </summary>
-        private NonPlayerCharacterReferences NPCRefs { get; }
-
-        public Avatar AvatarMapUnit => (Avatar)CurrentMapUnits[0];
-
-        public List<MapUnit> CurrentMapUnits => GetMapUnits(_currentMapType);
-
         public void InitializeCombatMapReferences()
         {
             _combatMapUnitStates = new MapUnitStates(_tileReferences);
@@ -309,7 +309,6 @@ public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcR
 
             AvatarMapUnit.MapLocation = mapRef.MapLocation;
             AvatarMapUnit.MapUnitPosition.Floor = mapRef.Floor;
-            //if (AvatarMapUnit
         }
 
         /// <summary>
@@ -460,11 +459,9 @@ public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcR
             switch (map)
             {
                 case Map.Maps.Overworld:
-                    //_currentMapUnitStates = _overworldMapUnitStates;
                     mapUnits = _overworldMapUnits;
                     break;
                 case Map.Maps.Underworld:
-                    //_currentMapUnitStates = _underworldMapUnitStates;
                     mapUnits = _underworldMapUnits;
                     break;
                 case Map.Maps.Combat:
@@ -677,8 +674,6 @@ public MapUnits(TileReferences tileReferences, NonPlayerCharacterReferences npcR
             if (nIndex < 0) return -1;
 
             AddNewMapUnit(Map.Maps.Combat, mapUnit);
-
-            //_combatMapUnitStates.[nIndex] = mapUnit.TheMapUnitState;
 
             return nIndex;
         }

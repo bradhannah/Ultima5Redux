@@ -85,6 +85,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
             get
             {
+                if (Script == null) return false;
                 int nScriptLines = Script.NumberOfScriptLines;
 
                 // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar

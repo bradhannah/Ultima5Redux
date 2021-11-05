@@ -83,8 +83,6 @@ namespace Ultima5Redux
             PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef,
                 new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences, _magicReferences,
                 _importedGameState, combatItemReferences);
-
-            Serialize();
         }
 
  

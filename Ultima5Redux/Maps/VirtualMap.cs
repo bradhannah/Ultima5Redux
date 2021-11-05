@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
@@ -19,7 +20,7 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Maps
 {
-    public class VirtualMap
+    [DataContract] public class VirtualMap
     {
         private readonly CombatMapReferences _combatMapRefs;
         private readonly DataOvlReference _dataOvlReference;
@@ -62,20 +63,142 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Exposed searched or loot items
         /// </summary>
-        private Queue<InventoryItem>[][] _exposedSearchItems;
+        [DataMember(Name="ExposedSearchItems")] private Queue<InventoryItem>[][] _exposedSearchItems;
 
         /// <summary>
         ///     override map is responsible for overriding tiles that would otherwise be static
         /// </summary>
-        private int[][] _overrideMap;
+        [DataMember(Name="OverrideMap")] private int[][] _overrideMap;
 
-        private Queue<InventoryItem>[][] _pushedExposedSearchItems;
+        [IgnoreDataMember] private Queue<InventoryItem>[][] _pushedExposedSearchItems;
 
-        private int[][] _pushedOverrideMap;
-
-        //private Map.Maps PreMaps { get; set; }
+        [IgnoreDataMember] private int[][] _pushedOverrideMap;
 
         /// <summary>
+        /// The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
+        /// </summary>
+        [DataMember] private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
+        /// <summary>
+        /// Which map was the avatar on before this one?
+        /// </summary>
+        [DataMember] private RegularMap PreCombatMap { get; set; }
+        [IgnoreDataMember] public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
+        [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
+        [IgnoreDataMember] public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
+        [IgnoreDataMember] public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
+        [IgnoreDataMember] public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
+        [IgnoreDataMember] public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
+        [IgnoreDataMember] public bool IsCombatMap => CurrentMap is CombatMap;
+
+        /// <summary>
+        ///     Are we currently on a large map?
+        /// </summary>
+        [IgnoreDataMember] public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
+
+        [IgnoreDataMember] public CombatMap CurrentCombatMap { get; private set; }
+
+        //set => TheMapUnits.CurrentAvatarPosition = value;
+        /// <summary>
+        ///     Number of total columns for current map
+        /// </summary>
+        [IgnoreDataMember] public int NumberOfColumnTiles => CurrentMap.NumOfXTiles; 
+
+        /// <summary>
+        ///     Number of total rows for current map
+        /// </summary>
+        [IgnoreDataMember] public int NumberOfRowTiles => CurrentMap.NumOfYTiles; 
+
+        /// <summary>
+        ///     Current large map (null if on small map)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        [IgnoreDataMember] public LargeMap CurrentLargeMap { get; private set; }
+
+        /// <summary>
+        ///     The persistant overworld map
+        /// </summary>
+        [IgnoreDataMember] public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+
+        /// <summary>
+        ///     The persistant underworld map
+        /// </summary>
+        [IgnoreDataMember] public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+
+        /// <summary>
+        ///     The abstracted Map object for the current map
+        ///     Returns large or small depending on what is active
+        /// </summary>
+        [IgnoreDataMember] public Map CurrentMap
+        {
+            get
+            {
+                switch (CurrentSingleMapReference.MapLocation)
+                {
+                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
+                        return CurrentCombatMap;
+                    case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
+                        return CurrentSingleMapReference.Floor == 0 ? OverworldMap : UnderworldMap;
+                    default:
+                        return CurrentSmallMap;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     If we are on a large map - then are we on overworld or underworld
+        /// </summary>
+        [IgnoreDataMember] public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
+
+        [DataMember] public MapUnitPosition CurrentPosition
+        {
+            get
+            {
+                if (CurrentMap is CombatMap combatMap)
+                {
+                    return combatMap.CurrentCombatMapUnit.MapUnitPosition;
+                }
+
+                return TheMapUnits.CurrentAvatarPosition;
+            }
+            set => TheMapUnits.CurrentAvatarPosition = value;
+        }
+
+        [DataMember] public MapUnits.MapUnits TheMapUnits { get; }
+
+        /// <summary>
+        ///     Detailed reference of current small map
+        /// </summary>
+        [DataMember] public SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        {
+            get
+            {
+                if (_currentSingleMapReference.MapLocation ==
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+                if (_currentSingleMapReference != null)
+                {
+                    return _currentSingleMapReference;
+                }
+
+                throw new Ultima5ReduxException(
+                    "Tried to get a single map reference that isn't large, small or combat");
+            }
+            private set => _currentSingleMapReference = value;
+        }
+
+        /// <summary>
+        ///     The current small map (null if on large map)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        [DataMember] public SmallMap CurrentSmallMap { get; private set; }
+        //{ get; private set; }
+
+        /// <summary>
+        ///     All small map references
+        /// </summary>
+        [IgnoreDataMember] public SmallMapReferences SmallMapRefs { get; }
+
+       /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
         /// <param name="smallMapReferences"></param>
@@ -156,133 +279,8 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
-        }
-
-        private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
-
-        //public bool ShowOuterSmallMapTiles => _bTouchedOuterBorder;
-
-        private RegularMap PreCombatMap { get; set; }
-        public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
-        public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
-
-        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
-        public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
-
-        public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
-
-        public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
-
-        public bool IsCombatMap => CurrentMap is CombatMap;
-
-        /// <summary>
-        ///     Are we currently on a large map?
-        /// </summary>
-        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
-
-        public CombatMap CurrentCombatMap { get; private set; }
-
-        //set => TheMapUnits.CurrentAvatarPosition = value;
-        /// <summary>
-        ///     Number of total columns for current map
-        /// </summary>
-        public int NumberOfColumnTiles => CurrentMap.NumOfXTiles; //_overrideMap[0].Length;
-
-        /// <summary>
-        ///     Number of total rows for current map
-        /// </summary>
-        public int NumberOfRowTiles => CurrentMap.NumOfYTiles; //_overrideMap.Length;
-
-        /// <summary>
-        ///     Current large map (null if on small map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public LargeMap CurrentLargeMap { get; private set; }
-
-        /// <summary>
-        ///     The persistant overworld map
-        /// </summary>
-        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
-
-        /// <summary>
-        ///     The persistant underworld map
-        /// </summary>
-        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
-
-        /// <summary>
-        ///     The abstracted Map object for the current map
-        ///     Returns large or small depending on what is active
-        /// </summary>
-        public Map CurrentMap
-        {
-            get
-            {
-                switch (CurrentSingleMapReference.MapLocation)
-                {
-                    case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
-                        return CurrentCombatMap;
-                    case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
-                        return CurrentSingleMapReference.Floor == 0 ? OverworldMap : UnderworldMap;
-                    default:
-                        return CurrentSmallMap;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     If we are on a large map - then are we on overworld or underworld
-        /// </summary>
-        public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
-
-        public MapUnitPosition CurrentPosition
-        {
-            get
-            {
-                if (CurrentMap is CombatMap combatMap)
-                {
-                    return combatMap.CurrentCombatMapUnit.MapUnitPosition;
-                }
-
-                return TheMapUnits.CurrentAvatarPosition;
-            }
-            set => TheMapUnits.CurrentAvatarPosition = value;
-        }
-
-        public MapUnits.MapUnits TheMapUnits { get; }
-
-        /// <summary>
-        ///     Detailed reference of current small map
-        /// </summary>
-        public SmallMapReferences.SingleMapReference CurrentSingleMapReference
-        {
-            get
-            {
-                if (_currentSingleMapReference.MapLocation ==
-                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
-                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-                if (_currentSingleMapReference != null)
-                {
-                    return _currentSingleMapReference;
-                }
-
-                throw new Ultima5ReduxException(
-                    "Tried to get a single map reference that isn't large, small or combat");
-            }
-            private set => _currentSingleMapReference = value;
-        }
-
-        /// <summary>
-        ///     The current small map (null if on large map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public SmallMap CurrentSmallMap { get; private set; }
-        //{ get; private set; }
-
-        /// <summary>
-        ///     All small map references
-        /// </summary>
-        public SmallMapReferences SmallMapRefs { get; }
-
+        }        
+        
         public bool IsLandNearby() =>
             IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
