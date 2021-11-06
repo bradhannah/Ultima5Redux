@@ -22,59 +22,50 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public class VirtualMap
     {
-        private readonly CombatMapReferences _combatMapRefs;
-        private readonly DataOvlReference _dataOvlReference;
-        private readonly EnemyReferences _enemyReferences;
-        private readonly Inventory _inventory;
+        internal enum LadderOrStairDirection { Up, Down }
+
+        [IgnoreDataMember] private readonly CombatMapReferences _combatMapRefs;
+        [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
+        [IgnoreDataMember] private readonly EnemyReferences _enemyReferences;
+        [IgnoreDataMember] private readonly Inventory _inventory;
 
         // ReSharper disable once NotAccessedField.Local
-        private readonly InventoryReferences _inventoryReferences;
+        [IgnoreDataMember] private readonly InventoryReferences _inventoryReferences;
 
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
-        private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
+        [IgnoreDataMember] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
 
         /// <summary>
         ///     Details of where the moongates are
         /// </summary>
-        private readonly Moongates _moongates;
+        [IgnoreDataMember] private readonly Moongates _moongates;
 
         /// <summary>
         ///     All the small maps
         /// </summary>
-        private readonly SmallMaps _smallMaps;
+        [IgnoreDataMember] private readonly SmallMaps _smallMaps;
 
-        private readonly GameState _state;
-        private readonly NonPlayerCharacterReferences _npcRefs;
-        private readonly TileOverrides _tileOverrides;
+        [IgnoreDataMember] private readonly GameState _state;
+        [IgnoreDataMember] private readonly NonPlayerCharacterReferences _npcRefs;
+        [IgnoreDataMember] private readonly TileOverrideReferences _tileOverrideReferences;
 
         /// <summary>
         ///     References to all tiles
         /// </summary>
-        private readonly TileReferences _tileReferences;
+        [IgnoreDataMember] private readonly TileReferences _tileReferences;
 
         /// <summary>
         ///     Current time of day
         /// </summary>
-        private readonly TimeOfDay _timeOfDay;
+        [IgnoreDataMember] private readonly TimeOfDay _timeOfDay;
 
-        private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+        [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
-        /// <summary>
-        ///     Exposed searched or loot items
-        /// </summary>
-        [DataMember(Name="ExposedSearchItems")] private Queue<InventoryItem>[][] _exposedSearchItems;
-
-        /// <summary>
-        ///     override map is responsible for overriding tiles that would otherwise be static
-        /// </summary>
-        [DataMember(Name="OverrideMap")] private int[][] _overrideMap;
-
-        [IgnoreDataMember] private Queue<InventoryItem>[][] _pushedExposedSearchItems;
-
-        [IgnoreDataMember] private int[][] _pushedOverrideMap;
-
+        [DataMember] private MapOverrides TheMapOverrides { get; set; }
+        [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
+        
         /// <summary>
         /// The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
         /// </summary>
@@ -150,7 +141,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         [IgnoreDataMember] public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
 
-        [DataMember] public MapUnitPosition CurrentPosition
+        [IgnoreDataMember] public MapUnitPosition CurrentPosition
         {
             get
             {
@@ -220,7 +211,7 @@ namespace Ultima5Redux.Maps
         /// <param name="enemyReferences"></param>
         /// <param name="inventory"></param>
         /// <param name="combatMapRefs"></param>
-        /// <param name="tileOverrides"></param>
+        /// <param name="tileOverrideReferences"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
@@ -228,7 +219,7 @@ namespace Ultima5Redux.Maps
             Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
             EnemyReferences enemyReferences, Inventory inventory, CombatMapReferences combatMapRefs,
-            TileOverrides tileOverrides)
+            TileOverrideReferences tileOverrideReferences)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -247,7 +238,7 @@ namespace Ultima5Redux.Maps
             _enemyReferences = enemyReferences;
             _inventory = inventory;
             _combatMapRefs = combatMapRefs;
-            _tileOverrides = tileOverrides;
+            _tileOverrideReferences = tileOverrideReferences;
 
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
@@ -331,8 +322,10 @@ namespace Ultima5Redux.Maps
                 //     break;
                 case LargeMap largeMap:
                 case SmallMap smallMap:
-                    _exposedSearchItems = _pushedExposedSearchItems;
-                    _overrideMap = _pushedOverrideMap;
+                    //_exposedSearchItems = _pushedExposedSearchItems;
+                    //_overrideMap = _pushedOverrideMap;
+                    TheMapOverrides = PreTheMapOverrides;
+                    
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
                     TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false,
@@ -344,15 +337,6 @@ namespace Ultima5Redux.Maps
                         "Attempting to return to previous map after combat with an unsupported map type: " +
                         PreCombatMap?.GetType() ?? "NULL");
             }
-        }
-
-        private void ClearOverridenTiles(Map map)
-        {
-            _overrideMap = Utils.Init2DArray<int>(map.TheMap[0].Length, map.TheMap.Length);
-            _exposedSearchItems =
-                Utils.Init2DArray<Queue<InventoryItem>>(map.TheMap[0].Length,
-                    map.TheMap.Length);
-            CurrentMap.ClearOpenDoors();
         }
 
 
@@ -434,17 +418,19 @@ namespace Ultima5Redux.Maps
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
 
             CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences,
-                _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference, _tileOverrides);
+                _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference, _tileOverrideReferences);
 
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
-            if (_exposedSearchItems.Length > CurrentCombatMap.NumOfXTiles)
+            if (TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
             {
-                _pushedExposedSearchItems = _exposedSearchItems;
-                _pushedOverrideMap = _overrideMap;
+                // _pushedExposedSearchItems = _exposedSearchItems;
+                // _pushedOverrideMap = _overrideMap;
+                PreTheMapOverrides = TheMapOverrides;
             }
 
-            ClearOverridenTiles(CurrentCombatMap);
+            TheMapOverrides = new MapOverrides(CurrentCombatMap, _tileReferences);
+                //.ClearOverridenTiles(CurrentCombatMap);
 
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
@@ -463,7 +449,8 @@ namespace Ultima5Redux.Maps
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
-            ClearOverridenTiles(CurrentSmallMap);
+            // TheMapOverrides.ClearOverridenTiles(CurrentSmallMap);
+            TheMapOverrides = new MapOverrides(CurrentSmallMap, _tileReferences);
 
             LargeMapOverUnder = (Map.Maps)(-1);
 
@@ -494,7 +481,11 @@ namespace Ultima5Redux.Maps
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
             }
 
-            ClearOverridenTiles(CurrentLargeMap);
+            // this will probably fail, which means creating a new map was a good idea
+            //Debug.Assert(TheMapOverrides.TheMap is LargeMap && TheMapOverrides.TheMap == CurrentLargeMap);
+            // todo: maybe we store each map override indefinitely so we never lose anything 
+            TheMapOverrides = new MapOverrides(CurrentLargeMap, _tileReferences);
+                //.ClearOverridenTiles();
 
             LargeMapOverUnder = map;
 
@@ -502,10 +493,6 @@ namespace Ultima5Redux.Maps
                 map);
         }
 
-        public IEnumerable<InventoryItem> GetExposedInventoryItems(Point2D xy)
-        {
-            return _exposedSearchItems[xy.X][xy.Y];
-        }
 
         /// <summary>
         ///     Gets a tile reference from the given coordinate
@@ -519,10 +506,13 @@ namespace Ultima5Redux.Maps
         {
             // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
             if (!bIgnoreExposed)
-                if (_exposedSearchItems[x][y] != null)
-                    if (_exposedSearchItems[x][y].Count > 0)
+                if (TheMapOverrides.HasExposedSearchItems(x, y))
+                {
+                    Queue<InventoryItem> searchItems = TheMapOverrides.GetExposedSearchItems(x, y);
+                    if (searchItems.Count > 0)
                         // we get the top most exposed item and only show it
-                        return _tileReferences.GetTileReference(_exposedSearchItems[x][y].Peek().SpriteNum);
+                        return _tileReferences.GetTileReference(searchItems.Peek().SpriteNum);
+                }
 
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
@@ -532,8 +522,9 @@ namespace Ultima5Redux.Maps
                 return _tileReferences.GetTileReferenceByName("Moongate");
 
             // we check to see if our override map has something on top of it
-            if (_overrideMap[x][y] != 0)
-                return _tileReferences.GetTileReference(_overrideMap[x][y]);
+            if (TheMapOverrides.HasOverrideTile(x, y))
+                return TheMapOverrides.GetOverrideTileReference(x, y);
+                    //_tileReferences.GetTileReference(_overrideMap[x][y]);
 
             // the GetTileReference accounts for any forced overrides across the entire world
             return CurrentMap.GetTileReference(new Point2D(x, y));
@@ -567,9 +558,10 @@ namespace Ultima5Redux.Maps
                 InventoryItem invItem =
                     _state.PlayerInventory.TheMoonstones.Items[
                         _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder)];
-                if (_exposedSearchItems[xy.X][xy.Y] == null)
-                    _exposedSearchItems[xy.X][xy.Y] = new Queue<InventoryItem>();
-                _exposedSearchItems[xy.X][xy.Y].Enqueue(invItem);
+                // if (_exposedSearchItems[xy.X][xy.Y] == null)
+                //     _exposedSearchItems[xy.X][xy.Y] = new Queue<InventoryItem>();
+                TheMapOverrides.EnqueueSearchItem(xy, invItem);
+                //_exposedSearchItems[xy.X][xy.Y].Enqueue(invItem);
 
                 return 1;
             }
@@ -577,17 +569,17 @@ namespace Ultima5Redux.Maps
             return 0;
         }
 
-        internal bool IsAnyExposedItems(Point2D xy)
-        {
-            if (_exposedSearchItems[xy.X][xy.Y] == null) return false;
-            return _exposedSearchItems[xy.X][xy.Y].Count > 0;
-        }
+        // internal bool IsAnyExposedItems(Point2D xy)
+        // {
+        //     if (_exposedSearchItems[xy.X][xy.Y] == null) return false;
+        //     return _exposedSearchItems[xy.X][xy.Y].Count > 0;
+        // }
 
-        internal InventoryItem DequeuExposedItem(Point2D xy)
-        {
-            if (IsAnyExposedItems(xy)) return _exposedSearchItems[xy.X][xy.Y].Dequeue();
-            throw new Ultima5ReduxException("Tried to deque an item at " + xy + " but there is no item on it");
-        }
+        // internal InventoryItem DequeuExposedItem(Point2D xy)
+        // {
+        //     if (TheMapOverrides.HasExposedSearchItems(xy)) return TheMapOverrides.DequeueSearchItem(xy);
+        //     throw new Ultima5ReduxException("Tried to deque an item at " + xy + " but there is no item on it");
+        // }
 
         /// <summary>
         ///     Gets the Avatar's current position in 3D spaces
@@ -610,7 +602,8 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         public void SetOverridingTileReferece(TileReference tileReference, Point2D xy)
         {
-            SetOverridingTileReferece(tileReference, xy.X, xy.Y);
+            TheMapOverrides.SetOverrideTile(xy, tileReference);
+            // SetOverridingTileReferece(tileReference, xy.X, xy.Y);
         }
 
         /// <summary>
@@ -620,10 +613,10 @@ namespace Ultima5Redux.Maps
         /// <param name="x"></param>
         /// <param name="y"></param>
         // ReSharper disable once MemberCanBePrivate.Global
-        public void SetOverridingTileReferece(TileReference tileReference, int x, int y)
-        {
-            _overrideMap[x][y] = tileReference.Index;
-        }
+        // public void SetOverridingTileReferece(TileReference tileReference, int x, int y)
+        // {
+        //     TheMapOverrides.SetOverrideTile(x, y, tileReference.Index);
+        // }
 
         /// <summary>
         ///     Gets the NPC you want to talk to in the given direction
@@ -1277,8 +1270,8 @@ namespace Ultima5Redux.Maps
             if (IsLargeMap && CurrentMap.IsXYOverride(xy)) return CurrentMap.GetTileOverride(xy).SpriteNum;
 
             // if has exposed search then we evaluate and see if it is actually a normal tile underneath
-            int nExposedCount = _exposedSearchItems[xy.X][xy.Y]?.Count ?? 0;
-            if (nExposedCount > 0)
+            // int nExposedCount = _exposedSearchItems[xy.X][xy.Y]?.Count ?? 0;
+            if (TheMapOverrides.HasExposedSearchItems(xy))
             {
                 // there are exposed items on this tile
                 TileReference tileRef = GetTileReference(xy.X, xy.Y, true, true);
@@ -1423,6 +1416,12 @@ namespace Ultima5Redux.Maps
             return horse;
         }
 
-        internal enum LadderOrStairDirection { Up, Down }
+        public IEnumerable<InventoryItem> GetExposedSearchItems(Point2D xy) =>
+            TheMapOverrides.GetExposedSearchItems(xy);
+
+        public bool HasAnyExposedSearchItems(Point2D xy) => TheMapOverrides.HasExposedSearchItems(xy);
+
+        public InventoryItem DequeuExposedSearchItems(Point2D xy) => TheMapOverrides.DequeueSearchItem(xy);
+
     }
 }

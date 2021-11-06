@@ -13,13 +13,13 @@ namespace Ultima5Redux.Maps
         private readonly TileReferences _spriteTileReferences;
 
         public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences spriteTileReferences,
-            TileOverrides tileOverrides)
+            TileOverrideReferences tileOverrideReferences)
         {
             _spriteTileReferences = spriteTileReferences;
             foreach (SmallMapReferences.SingleMapReference mapRef in smallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(u5Directory, mapRef, spriteTileReferences, tileOverrides);
+                SmallMap smallMap = new SmallMap(u5Directory, mapRef, spriteTileReferences, tileOverrideReferences);
                 _smallMaps.Add(smallMap);
 
                 // we make a map that allows us to map the _location and Floor number to the small map with 

@@ -109,9 +109,11 @@
         <Compile Include="ImportedGameState.cs" />
         <Compile Include="Maps\CombatMap.cs" />
         <Compile Include="Maps\InitiativeQueue.cs" />
+        <Compile Include="Maps\MapOverrides.cs" />
         <Compile Include="Maps\RegularMap.cs" />
         <Compile Include="Maps\Sign.cs" />
         <Compile Include="Maps\SingleCombatMapReference.cs" />
+        <Compile Include="Maps\TileOverrideReference.cs" />
         <Compile Include="MapUnits\Avatar.cs" />
         <Compile Include="MapUnits\CombatMapUnits\CombatMapUnit.cs" />
         <Compile Include="MapUnits\CombatMapUnits\CombatPlayer.cs" />
@@ -150,7 +152,7 @@
         <Compile Include="Maps\GenericTileset.cs" />
         <Compile Include="Maps\Look.cs" />
         <Compile Include="Maps\Signs.cs" />
-        <Compile Include="Maps\TileOverrides.cs" />
+        <Compile Include="Maps\TileOverrideReferences.cs" />
         <Compile Include="DayNightMoon\Moongates.cs" />
         <Compile Include="DayNightMoon\MoonPhaseReferences.cs" />
         <Compile Include="Maps\TileReference.cs" />

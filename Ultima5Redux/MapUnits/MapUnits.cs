@@ -29,7 +29,7 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] private readonly TileReferences _tileReferences;
         [IgnoreDataMember] private readonly TimeOfDay _timeOfDay;
         
-        [DataMember] private readonly Avatar _masterAvatarMapUnit;
+        [IgnoreDataMember] private readonly Avatar _masterAvatarMapUnit;
 
         [IgnoreDataMember] private readonly PlayerCharacterRecords _playerCharacterRecords;
 
@@ -79,13 +79,13 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
         /// </summary>
-        [DataMember] internal MapUnitPosition CurrentAvatarPosition
+        [IgnoreDataMember] internal MapUnitPosition CurrentAvatarPosition
         {
             get => AvatarMapUnit.MapUnitPosition;
             set => AvatarMapUnit.MapUnitPosition = value;
         }
 
-        [DataMember] private MapUnitMovements Movements { get; }
+        [IgnoreDataMember] private readonly MapUnitMovements _importedMovements;
 
         // ReSharper disable once UnusedMember.Local
         [IgnoreDataMember] private MapUnitStates CurrentMapUnitStates
@@ -209,7 +209,7 @@ namespace Ultima5Redux.MapUnits
             _smallMapCharacterStates = new SmallMapCharacterStates(charStatesDataChunk, tileReferences);
 
             // movements pertain to whichever map was loaded from disk
-            Movements = new MapUnitMovements(nonPlayerCharacterMovementLists, nonPlayerCharacterMovementOffsets);
+            _importedMovements = new MapUnitMovements(nonPlayerCharacterMovementLists, nonPlayerCharacterMovementOffsets);
 
             // we only load the large maps once and they always exist on disk
             LoadLargeMap(Map.Maps.Overworld, true);
@@ -509,7 +509,7 @@ namespace Ultima5Redux.MapUnits
             {
                 // if this is not the initial load of the map then we can trust character states and
                 // movements that are already loaded into memory
-                MapUnitMovement mapUnitMovement = Movements.GetMovement(i);
+                MapUnitMovement mapUnitMovement = _importedMovements.GetMovement(i);
                 // always clear movements because they are not stored in the data for a LargeMap because
                 // the monsters will recalculate every turn based on where the Avatar is 
                 mapUnitMovement.ClearMovements();
@@ -580,7 +580,7 @@ namespace Ultima5Redux.MapUnits
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
-                MapUnitMovement mapUnitMovement = Movements.GetMovement(i);
+                MapUnitMovement mapUnitMovement = _importedMovements.GetMovement(i);
 
                 // if it is the first index, then it's the Avatar - but if it's the initial load
                 // then it will just load from disk, otherwise we need to create a stub
@@ -718,7 +718,7 @@ namespace Ultima5Redux.MapUnits
 
             MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
 
-            Enemy enemy = new Enemy(mapUnitState, Movements.GetMovement(nIndex), _tileReferences, enemyReference,
+            Enemy enemy = new Enemy(mapUnitState, _importedMovements.GetMovement(nIndex), _tileReferences, enemyReference,
                 _currentLocation, _dataOvlReference, npcRef, _npcRefs);
             enemy.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
 
@@ -744,7 +744,7 @@ namespace Ultima5Redux.MapUnits
 
             MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
 
-            MagicCarpet magicCarpet = new MagicCarpet(mapUnitState, Movements.GetMovement(nIndex),
+            MagicCarpet magicCarpet = new MagicCarpet(mapUnitState, _importedMovements.GetMovement(nIndex),
                 _tileReferences, _currentLocation, _dataOvlReference, direction)
             {
                 // set position of frigate in the world
@@ -762,7 +762,7 @@ namespace Ultima5Redux.MapUnits
             if (nIndex == -1) return null;
 
             MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
-            Horse horse = new Horse(mapUnitState, Movements.GetMovement(nIndex),
+            Horse horse = new Horse(mapUnitState, _importedMovements.GetMovement(nIndex),
                 _tileReferences, _currentLocation, _dataOvlReference, Point2D.Direction.Right)
             {
                 MapUnitPosition = mapUnitPosition
@@ -788,7 +788,7 @@ namespace Ultima5Redux.MapUnits
 
             MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
 
-            Frigate frigate = new Frigate(mapUnitState, Movements.GetMovement(nIndex),
+            Frigate frigate = new Frigate(mapUnitState, _importedMovements.GetMovement(nIndex),
                 _tileReferences, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference,
                 direction);
 
@@ -815,7 +815,7 @@ namespace Ultima5Redux.MapUnits
             if (nIndex == -1) return null;
 
             MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
-            Skiff skiff = new Skiff(mapUnitState, Movements.GetMovement(nIndex),
+            Skiff skiff = new Skiff(mapUnitState, _importedMovements.GetMovement(nIndex),
                 _tileReferences, SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, _dataOvlReference,
                 direction);
 

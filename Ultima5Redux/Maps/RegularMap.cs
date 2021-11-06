@@ -4,18 +4,18 @@ namespace Ultima5Redux.Maps
 {
     public abstract class RegularMap : Map
     {
-        protected RegularMap(TileOverrides tileOverrides, SmallMapReferences.SingleMapReference singleSmallMapReference,
-            TileReferences spriteTileReferences) : base(tileOverrides, spriteTileReferences)
+        protected RegularMap(TileOverrideReferences tileOverrideReferences, SmallMapReferences.SingleMapReference singleSmallMapReference,
+            TileReferences spriteTileReferences) : base(tileOverrideReferences, spriteTileReferences)
         {
             CurrentSingleMapReference = singleSmallMapReference;
 
             // for now combat maps don't have overrides
             //if (singleSmallMapReference != null) 
-            XYOverrides = tileOverrides.GetTileXYOverrides(singleSmallMapReference);
+            XYOverrides = tileOverrideReferences.GetTileXYOverrides(singleSmallMapReference);
         }
 
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
 
-        protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
+        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
     }
 }

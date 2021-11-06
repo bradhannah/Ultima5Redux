@@ -51,7 +51,7 @@ namespace Ultima5Redux
 
         private readonly Random _random = new Random();
 
-        private readonly TileOverrides _tileOverrides = new TileOverrides();
+        private readonly TileOverrideReferences _tileOverrideReferences = new TileOverrideReferences();
 
         // ReSharper disable once UnusedMember.Local
         public readonly CombatMapReferences CombatMapRefs;
@@ -71,16 +71,16 @@ namespace Ultima5Redux
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
 
             // build the overworld map
-            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld, _tileOverrides, SpriteTileReferences);
+            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld, _tileOverrideReferences, SpriteTileReferences);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld, _tileOverrides, SpriteTileReferences);
+            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld, _tileOverrideReferences, SpriteTileReferences);
 
             InvRef = new InventoryReferences();
 
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
 
-            AllSmallMaps = new SmallMaps(SmallMapRef, U5Directory, SpriteTileReferences, _tileOverrides);
+            AllSmallMaps = new SmallMaps(SmallMapRef, U5Directory, SpriteTileReferences, _tileOverrideReferences);
 
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
 
@@ -110,7 +110,7 @@ namespace Ultima5Redux
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences,
-                NpcRef, InvRef, DataOvlRef, bUseExtendedSprites, EnemyRefs, CombatMapRefs, _tileOverrides);
+                NpcRef, InvRef, DataOvlRef, bUseExtendedSprites, EnemyRefs, CombatMapRefs, _tileOverrideReferences);
 
             State.Serialize();
         }
@@ -394,10 +394,10 @@ namespace Ultima5Redux
             }
 
             // are there any exposed items (generic call)
-            if (State.TheVirtualMap.IsAnyExposedItems(xy))
+            if (State.TheVirtualMap.HasAnyExposedSearchItems(xy))
             {
                 bGotAThing = true;
-                InventoryItem invItem = State.TheVirtualMap.DequeuExposedItem(xy);
+                InventoryItem invItem = State.TheVirtualMap.DequeuExposedSearchItems(xy);
                 inventoryItem = invItem;
                 invItem.Quantity++;
 
@@ -622,7 +622,7 @@ namespace Ultima5Redux
             bWasSuccessful = false;
 
             // if there is something exposed already OR there is nothing found 
-            if (State.TheVirtualMap.IsAnyExposedItems(xy) || !State.TheVirtualMap.ContainsSearchableThings(xy))
+            if (State.TheVirtualMap.HasAnyExposedSearchItems(xy) || !State.TheVirtualMap.ContainsSearchableThings(xy))
                 return ThouDostFind(
                     DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings.NOTHING_OF_NOTE_DOT_N));
 
@@ -636,7 +636,7 @@ namespace Ultima5Redux
 
             string searchResultStr = string.Empty;
             bWasSuccessful = true;
-            foreach (InventoryItem invRef in State.TheVirtualMap.GetExposedInventoryItems(xy))
+            foreach (InventoryItem invRef in State.TheVirtualMap.GetExposedSearchItems(xy))
             {
                 searchResultStr += invRef.FindDescription + "\n";
             }
@@ -1407,7 +1407,7 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld &&
                 State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld)
                 return false;
-            if (State.TheVirtualMap.IsAnyExposedItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
+            if (State.TheVirtualMap.HasAnyExposedSearchItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
             TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
 
             return SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);

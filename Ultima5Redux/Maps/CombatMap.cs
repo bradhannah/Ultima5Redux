@@ -58,12 +58,12 @@ namespace Ultima5Redux.Maps
         /// <param name="inventoryReferences"></param>
         /// <param name="inventory"></param>
         /// <param name="dataOvlReference"></param>
-        /// <param name="tileOverrides"></param>
+        /// <param name="tileOverrideReferences"></param>
         public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatMapReference,
             TileReferences tileReferences, EnemyReferences enemyReferences,
             InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference,
-            TileOverrides tileOverrides) :
-            base(tileOverrides, tileReferences)
+            TileOverrideReferences tileOverrideReferences) :
+            base(tileOverrideReferences, tileReferences)
         {
             _virtualMap = virtualMap;
             CombatMapUnits = _virtualMap.TheMapUnits;
@@ -73,7 +73,7 @@ namespace Ultima5Redux.Maps
             _inventoryReferences = inventoryReferences;
             _inventory = inventory;
             _dataOvlReference = dataOvlReference;
-            XYOverrides = tileOverrides.GetTileXYOverrides(singleCombatMapReference);
+            XYOverrides = tileOverrideReferences.GetTileXYOverrides(singleCombatMapReference);
 
             InitializeAStarMap(WalkableType.CombatLand);
             InitializeAStarMap(WalkableType.CombatWater);
@@ -138,7 +138,7 @@ namespace Ultima5Redux.Maps
         public SingleCombatMapReference TheCombatMapReference { get; }
 
         protected override bool IsRepeatingMap => false;
-        protected sealed override Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
+        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
 
         public List<CombatMapUnit> GetActiveCombatMapUnitsByType(CombatMapUnitEnum combatMapUnitEnum)
         {

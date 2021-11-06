@@ -15,9 +15,9 @@ namespace Ultima5Redux.Maps
         /// <param name="u5Directory"></param>
         /// <param name="singleSmallMapReference"></param>
         /// <param name="spriteTileReferences"></param>
-        /// <param name="tileOverrides"></param>
+        /// <param name="tileOverrideReferences"></param>
         public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference singleSmallMapReference,
-            TileReferences spriteTileReferences, TileOverrides tileOverrides) : base(tileOverrides,
+            TileReferences spriteTileReferences, TileOverrideReferences tileOverrideReferences) : base(tileOverrideReferences,
             singleSmallMapReference,
             spriteTileReferences)
         {

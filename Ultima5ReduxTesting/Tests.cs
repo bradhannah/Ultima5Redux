@@ -195,7 +195,7 @@ namespace Ultima5ReduxTesting
 
         [Test] public void Test_TileOverrides()
         {
-            TileOverrides to = new TileOverrides();
+            TileOverrideReferences to = new TileOverrideReferences();
 
             World world = new World(SaveDirectory);
 

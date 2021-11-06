@@ -32,11 +32,11 @@ namespace Ultima5Redux.Maps
 
         // ReSharper disable once NotAccessedField.Global
         // ReSharper disable once MemberCanBePrivate.Global
-        protected TileOverrides TileOverrides;
+        protected TileOverrideReferences TileOverrideReferences;
 
-        protected Map(TileOverrides tileOverrides, TileReferences spriteTileReferences)
+        protected Map(TileOverrideReferences tileOverrideReferences, TileReferences spriteTileReferences)
         {
-            TileOverrides = tileOverrides;
+            TileOverrideReferences = tileOverrideReferences;
             SpriteTileReferences = spriteTileReferences;
         }
 
@@ -56,7 +56,7 @@ namespace Ultima5Redux.Maps
 
         public abstract int NumOfYTiles { get; }
 
-        protected abstract Dictionary<Point2D, TileOverride> XYOverrides { get; set; }
+        protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
 
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
@@ -171,7 +171,7 @@ namespace Ultima5Redux.Maps
             return XYOverrides != null && XYOverrides.ContainsKey(xy);
         }
 
-        public TileOverride GetTileOverride(Point2D xy)
+        public TileOverrideReference GetTileOverride(Point2D xy)
         {
             return XYOverrides[xy];
         }
