@@ -229,11 +229,11 @@ namespace Ultima5Redux.MapUnits
             {
                 if (_npcRefs == null || _npcRefIndex == -1) return null;
                 return _npcRefs?.GetNonPlayerCharactersByLocation(MapLocation)[_npcRefIndex];
-                //NPCs[_npcRefIndex];   
             }
             private set
             {
-                if (value == null) _npcRefIndex = -1;
+                if (value == null) 
+                    _npcRefIndex = -1;
                 else
                     _npcRefIndex = value.DialogIndex;
             }
@@ -253,7 +253,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        ///     empty constructor if there is nothing in the map character slot
+        /// empty constructor if there is nothing in the map character slot
         /// </summary>
         protected MapUnit()
         {
@@ -298,7 +298,6 @@ namespace Ultima5Redux.MapUnits
             Debug.Assert(Movement != null);
 
             _keyTileIndex = mapUnitState.Tile1Ref.Index;
-            //_npcRefIndex = npcRefs.NPCs
 
             // set the characters position 
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);

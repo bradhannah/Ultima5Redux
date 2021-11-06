@@ -95,21 +95,21 @@ namespace Ultima5Redux.Maps
             Round = 0;
             Turn = 0;
 
-            foreach (MapUnit mapUnit in _combatMapUnits.CurrentMapUnits)
+            foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
             {
-                if (!IsCombatMapUnit(mapUnit)) continue;
+                //if (!IsCombatMapUnit(combatMapUnit)) continue;
 
-                int nDexterity = ((CombatMapUnit)mapUnit).Dexterity;
+                int nDexterity = combatMapUnit.Dexterity;
 
                 // if it's an enemy and they aren't an active attacker such as a POISON FIELD
                 // then we just skip them since they have a DEX of 0
-                if (mapUnit is Enemy enemy && !enemy.EnemyReference.ActivelyAttacks) continue;
+                if (combatMapUnit is Enemy enemy && !enemy.EnemyReference.ActivelyAttacks) continue;
 
                 // get the highest and lowest dexterity values to be used in ongoing tally
                 if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
                 if (_nHighestDexterity < nDexterity) _nHighestDexterity = nDexterity;
 
-                AddCombatMapUnitToQueue((CombatMapUnit)mapUnit);
+                AddCombatMapUnitToQueue((CombatMapUnit)combatMapUnit);
             }
         }
 
@@ -140,11 +140,9 @@ namespace Ultima5Redux.Maps
                     dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
 
                 // go through each combat map unit and place them in priority order based on their dexterity values 
-                foreach (MapUnit mapUnit in _combatMapUnits.CurrentMapUnits)
+                foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
                 {
-                    if (!IsCombatMapUnit(mapUnit)) continue;
-
-                    CombatMapUnit combatMapUnit = (CombatMapUnit)mapUnit;
+                    Debug.Assert(IsCombatMapUnit(combatMapUnit));
 
                     int nDexterity = combatMapUnit.Dexterity;
                     // if the combat unit is not in the list, but is also not an Active Attacker then we skip them 

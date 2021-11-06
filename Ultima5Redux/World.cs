@@ -388,7 +388,7 @@ namespace Ultima5Redux
             {
                 // add the carpet to the players inventory and remove it from the map
                 State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity++;
-                State.TheVirtualMap.TheMapUnits.ClearMapUnit(magicCarpet);
+                State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(magicCarpet);
                 bGotAThing = true;
                 return DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.A_MAGIC_CARPET);
             }
@@ -1013,7 +1013,7 @@ namespace Ultima5Redux
 
                         MapUnit newFrigate =
                             State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit(State.TheVirtualMap, out string _);
-                        State.TheVirtualMap.TheMapUnits.ClearMapUnit(newFrigate);
+                        State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(newFrigate);
                         State.TheVirtualMap.TheMapUnits.MakeAndBoardSkiff();
                     }
                     else
@@ -1248,7 +1248,7 @@ namespace Ultima5Redux
             // board the unit
             State.TheVirtualMap.TheMapUnits.AvatarMapUnit.BoardMapUnit(mapUnit);
             // clean it from the world so it no longer appears
-            State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
+            State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(mapUnit);
         }
 
         /// <summary>

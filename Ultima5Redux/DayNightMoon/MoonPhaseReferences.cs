@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
@@ -11,14 +13,18 @@ namespace Ultima5Redux.DayNightMoon
         /// <summary>
         ///     All available moon phases
         /// </summary>
-        [SuppressMessage("ReSharper", "UnusedMember.Global")] public enum MoonPhases
+        [SuppressMessage("ReSharper", "UnusedMember.Global")] 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum MoonPhases
         {
             NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter,
             CrescentWaning, NoMoon
         }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum TimeOfDayPhases { Daytime, Nighttime, Sunrise, Sunset }
 
         /// <summary>

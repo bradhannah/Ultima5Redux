@@ -2,12 +2,17 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    [DataContract] [SuppressMessage("ReSharper", "InconsistentNaming")] public class MagicReference
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [DataContract]  
+    public class MagicReference
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum SpellWords
         {
             // taking a bit of a risk and just let the subsequent values be assigned since they should be in order
@@ -22,12 +27,10 @@ namespace Ultima5Redux.PlayerCharacters
         private readonly Dictionary<Reagent.ReagentTypeEnum, bool> _reagentsDictionary =
             new Dictionary<Reagent.ReagentTypeEnum, bool>();
         
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum MagicTypeEnum { Peace, Support, Attack, Debuff, None}  
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum TimePermittedEnum { Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never}
-
-        // public Dictionary<Reagent.ReagentTypeEnum, bool> RequiredReagents => 
-        //     _reagentsDictionary.Where(kvp => kvp.Value == true)
-        //         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
         

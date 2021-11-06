@@ -686,7 +686,7 @@ namespace Ultima5ReduxTesting
             // yew
             world.EnterBuilding(new Point2D(58, 43), out bool bWasSuccessful);
 
-            foreach (MapUnit mapUnit in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits)
+            foreach (MapUnit mapUnit in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.AllMapUnits)
             {
                 _ = mapUnit.NonBoardedTileReference;
             }

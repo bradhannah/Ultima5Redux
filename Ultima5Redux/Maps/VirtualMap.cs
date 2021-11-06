@@ -1059,7 +1059,7 @@ namespace Ultima5Redux.Maps
         internal void MoveMapUnitsToNextMove()
         {
             // go through each of the NPCs on the map
-            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.Where(mapChar => mapChar.IsActive))
+            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
                 mapUnit.CompleteNextMove(this, _timeOfDay, CurrentMap.GetAStarByMapUnit(mapUnit));
             }
@@ -1230,11 +1230,11 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsMapUnitOccupiedTile(Point2D xy)
         {
-            List<MapUnit> mapUnits = TheMapUnits.GetMapUnits(LargeMapOverUnder);
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
             for (int index = 0; index < mapUnits.Count; index++)
             {
                 // sometimes characters are null because they don't exist - and that is OK
-                if (!mapUnits[index].IsActive) continue;
+                Debug.Assert(mapUnits[index].IsActive);
 
                 MapUnitPosition mapUnitPosition = mapUnits[index].MapUnitPosition;
                 if (mapUnitPosition.X == xy.X && mapUnitPosition.Y == xy.Y &&

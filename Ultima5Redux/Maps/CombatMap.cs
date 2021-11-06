@@ -111,10 +111,9 @@ namespace Ultima5Redux.Maps
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
         public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
 
-        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().Count(enemy => enemy.IsActive);
+        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.Enemies.Count(enemy => enemy.IsActive);
 
-        public int NumberOfVisiblePlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>()
-            .Count(combatPlayer => combatPlayer.IsActive);
+        public int NumberOfVisiblePlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers.Count(combatPlayer => combatPlayer.IsActive);
 
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
@@ -123,11 +122,11 @@ namespace Ultima5Redux.Maps
         public int Turn => _initiativeQueue.Turn;
 
         public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
-            CombatMapUnits.CurrentMapUnits.Where(combatMapUnit => combatMapUnit.IsAttackable && combatMapUnit.IsActive)
-                .OfType<CombatMapUnit>().ToList();
+            CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
+                combatMapUnit.IsAttackable && combatMapUnit.IsActive).ToList();
 
-        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().ToList();
-        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.OfType<Enemy>().ToList();
+        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
+        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
 
         /// <summary>
         ///     Current player or enemy who is active in current round
@@ -846,7 +845,7 @@ namespace Ultima5Redux.Maps
         }
 
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) =>
-            CombatMapUnits.CurrentMapUnits.OfType<CombatPlayer>().FirstOrDefault(player => player.Record == record);
+            CombatMapUnits.CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
 
         public void AdvanceToNextCombatMapUnit()
         {
@@ -870,9 +869,9 @@ namespace Ultima5Redux.Maps
         private int GetCombatMapUnitIndex(CombatMapUnit combatMapUnit)
         {
             if (combatMapUnit == null) return -1;
-            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.Count(); i++)
+            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
             {
-                if (CombatMapUnits.CurrentMapUnits[i] == combatMapUnit) return i;
+                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] == combatMapUnit) return i;
             }
 
             return -1;
@@ -880,9 +879,9 @@ namespace Ultima5Redux.Maps
 
         private int GetNextAvailableCombatMapUnitIndex()
         {
-            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.Count(); i++)
+            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
             {
-                if (CombatMapUnits.CurrentMapUnits[i] is EmptyMapUnit) return i;
+                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] is EmptyMapUnit) return i;
             }
 
             return -1;
@@ -1065,14 +1064,15 @@ namespace Ultima5Redux.Maps
 
         private T GetClosestCombatMapUnitInRange<T>(CombatMapUnit attackingUnit, int nRange) where T : CombatMapUnit
         {
-            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
+            int nMapUnits = CombatMapUnits.CurrentMapUnits.AllMapUnits.Count;
 
             double dBestDistanceToAttack = 150f;
             T bestOpponent = null;
 
-            for (int nIndex = 0; nIndex < nMapUnits; nIndex++)
+            //or (int nIndex = 0; nIndex < nMapUnits; nIndex++)
+            foreach (CombatMapUnit combatMapUnit in CombatMapUnits.CombatMapMapUnitCollection.AllCombatMapUnits)
             {
-                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is T enemy)) continue;
+                if (!(combatMapUnit is T enemy)) continue;
                 if (!IsCombatMapUnitInRange(attackingUnit, enemy, nRange)) continue;
                 // if the enemy unit is invisible or charmed then they should not be targeted
                 if (enemy.IsInvisible || enemy.IsCharmed) continue;
@@ -1104,13 +1104,13 @@ namespace Ultima5Redux.Maps
             // -1 indicates it wasn't found, so could be dead or null. We set it to the beginning
             if (nOffset == -1) nOffset = 0;
 
-            int nMapUnits = CombatMapUnits.CurrentMapUnits.Count();
+            int nMapUnits = CombatMapUnits.CurrentMapUnits.AllMapUnits.Count;
 
             for (int i = 0; i < nMapUnits; i++)
             {
                 // we start at the next position, and wrap around ensuring we have hit all possible enemies
                 int nIndex = (i + nOffset + 1) % nMapUnits;
-                if (!(CombatMapUnits.CurrentMapUnits[nIndex] is Enemy enemy)) continue;
+                if (!(CombatMapUnits.CurrentMapUnits.AllMapUnits[nIndex] is Enemy enemy)) continue;
                 if (!enemy.IsActive) continue;
                 if (CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
             }
@@ -1169,10 +1169,9 @@ namespace Ultima5Redux.Maps
                     playerStartPositions[nPlayer], _dataOvlReference, _inventory);
 
                 // make sure the tile that the player occupies is not walkable
-                //aStarDictionary[WalkableType.CombatLand].
                 GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
 
-                CombatMapUnits.CurrentMapUnits[nPlayer] = combatPlayer;
+                CombatMapUnits.CurrentMapUnits.AllMapUnits[nPlayer] = combatPlayer;
             }
         }
 
@@ -1295,11 +1294,11 @@ namespace Ultima5Redux.Maps
         /// <returns>true if a player escaped, false if none were found</returns>
         public bool NextCharacterEscape(out CombatPlayer escapedPlayer)
         {
-            foreach (MapUnit mapUnit in CombatMapUnits.CurrentMapUnits)
+            foreach (CombatPlayer combatPlayer in CombatMapUnits.CurrentMapUnits.CombatPlayers)
             {
-                if (!(mapUnit is CombatPlayer)) continue;
+                //if (!(combatPlayer is CombatPlayer)) continue;
 
-                CombatPlayer combatPlayer = (CombatPlayer)mapUnit;
+                //CombatPlayer combatPlayer = (CombatPlayer)combatPlayer;
                 if (combatPlayer.HasEscaped) continue;
 
                 MakePlayerEscape(combatPlayer);

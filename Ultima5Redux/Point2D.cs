@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Ultima5Redux
 {
@@ -79,8 +81,8 @@ namespace Ultima5Redux
         /// <summary>
         ///     4 way direction
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum Direction { Up, Down, Left, Right, None }
-
 
         public Point2D(int x, int y)
         {
