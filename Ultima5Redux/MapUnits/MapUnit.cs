@@ -195,7 +195,7 @@ namespace Ultima5Redux.MapUnits
             Debug.Assert(TheMapUnitState != null);
             Debug.Assert(Movement != null);
 
-            _keyTileIndex = mapUnitState.Tile1Ref.Index;
+            _keyTileIndex = mapUnitState.Tile1Ref?.Index ?? 0;
 
             // set the characters position 
             MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
