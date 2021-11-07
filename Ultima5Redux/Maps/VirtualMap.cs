@@ -552,13 +552,11 @@ namespace Ultima5Redux.Maps
             // moonstone check
             if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder) && _timeOfDay.IsDayLight)
             {
-                InventoryItem invItem =
-                    _state.PlayerInventory.TheMoonstones.Items[
-                        _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder)];
-                // if (_exposedSearchItems[xy.X][xy.Y] == null)
-                //     _exposedSearchItems[xy.X][xy.Y] = new Queue<InventoryItem>();
+                MoonPhaseReferences.MoonPhases moonPhase = _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
+                InventoryItem invItem = _state.PlayerInventory.TheMoonstones.Items[moonPhase];
                 TheMapOverrides.EnqueueSearchItem(xy, invItem);
-                //_exposedSearchItems[xy.X][xy.Y].Enqueue(invItem);
+                
+                _moongates.SetMoonstoneBuried((int)moonPhase, false);
 
                 return 1;
             }

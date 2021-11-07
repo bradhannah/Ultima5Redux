@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
@@ -123,7 +124,18 @@ namespace Ultima5Redux.DayNightMoon
         /// <returns>true if one is buried</returns>
         public bool IsMoonstoneBuried(Point3D position)
         {
-            return _moongatePositions.Contains(position);
+            if (!_moongatePositions.Contains(position)) return false;
+
+            // feels inefficient but it's only 8 loops
+            for (int i = 0; i < _moongatePositions.Count; i++)
+            {
+                if (_moongatePositions[i] == position)
+                {
+                    return _moonstonesBuried[i];
+                }
+            }
+
+            return false;
             // if (!_moongateBuriedAtPositionDictionary.ContainsKey(position)) return false;
             // return _moongateBuriedAtPositionDictionary[position];
         }

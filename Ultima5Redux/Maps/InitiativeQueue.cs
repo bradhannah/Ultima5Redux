@@ -140,7 +140,7 @@ namespace Ultima5Redux.Maps
                     dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
 
                 // go through each combat map unit and place them in priority order based on their dexterity values 
-                foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
+                foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(IsCombatMapUnit))
                 {
                     Debug.Assert(IsCombatMapUnit(combatMapUnit));
 
