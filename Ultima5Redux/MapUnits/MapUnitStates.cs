@@ -44,11 +44,6 @@ namespace Ultima5Redux.MapUnits
             return _mapUnitStates[nIndex];
         }
 
-        public bool HasAnyAnimationStates()
-        {
-            return _mapUnitStates.Count > 0;
-        }
-
         public MapUnitState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {
             foreach (MapUnitState characterState in _mapUnitStates)
@@ -69,6 +64,8 @@ namespace Ultima5Redux.MapUnits
         public void Load(MapUnitStatesFiles mapUnitStatesType, bool bLoadFromDisk, int nOffset = 0x00)
         {
             MapUnitStatesType = mapUnitStatesType;
+            
+            _mapUnitStates.Clear();
 
             if (!bLoadFromDisk) return;
 
@@ -82,14 +79,5 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        /// <summary>
-        ///     Keeps all existing data in tact, but assigns a new DataChunk. This will be used when saving to
-        ///     a different DataChunk then it was read from.
-        /// </summary>
-        /// <param name="newAnimationStatesDataChunk"></param>
-        public void ReassignNewDataChunk(DataChunk newAnimationStatesDataChunk)
-        {
-            _mapUnitStatesDataChunk = newAnimationStatesDataChunk;
-        }
     }
 }

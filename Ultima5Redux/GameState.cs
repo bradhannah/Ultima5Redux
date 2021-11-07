@@ -50,12 +50,13 @@ namespace Ultima5Redux
         /// <param name="inventoryReferences"></param>
         /// <param name="magicReferences"></param>
         /// <param name="combatItemReferences"></param>
+        /// <param name="tileReferences"></param>
         public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences, 
-            MagicReferences magicReferences, CombatItemReferences combatItemReferences)
+            MagicReferences magicReferences, CombatItemReferences combatItemReferences, TileReferences tileReferences)
         {
             _magicReferences = magicReferences;
             // imports the legacy save game file data 
-            _importedGameState = new ImportedGameState(u5Directory);
+            _importedGameState = new ImportedGameState(u5Directory, tileReferences);
 
             // one time copy of all imported state information
             CharacterRecords = _importedGameState.CharacterRecords;
@@ -90,16 +91,6 @@ namespace Ultima5Redux
         {
             string derp = JsonConvert.SerializeObject(this);
         }
-
-        internal DataChunk CharacterAnimationStatesDataChunk => _importedGameState.CharacterAnimationStatesDataChunk;
-        internal DataChunk CharacterStatesDataChunk => _importedGameState.CharacterStatesDataChunk;
-        internal DataChunk NonPlayerCharacterKeySprites => _importedGameState.NonPlayerCharacterKeySprites;
-
-        // DataChunk accessors, not ideal - but only available within the library
-        internal DataChunk NonPlayerCharacterMovementLists => _importedGameState.NonPlayerCharacterMovementLists;
-        internal DataChunk NonPlayerCharacterMovementOffsets => _importedGameState.NonPlayerCharacterMovementOffsets;
-        internal DataChunk OverworldOverlayDataChunks => _importedGameState.OverworldOverlayDataChunks;
-        internal DataChunk UnderworldOverlayDataChunks => _importedGameState.UnderworldOverlayDataChunks;
 
         /// <summary>
         ///     Does the Avatar have a torch lit?
@@ -243,7 +234,7 @@ namespace Ultima5Redux
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
                 underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates,
                 inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites,
-                enemyReferences, PlayerInventory, combatMapReferences, tileOverrideReferences);
+                enemyReferences, PlayerInventory, combatMapReferences, tileOverrideReferences, _importedGameState);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);

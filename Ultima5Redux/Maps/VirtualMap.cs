@@ -190,7 +190,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         [IgnoreDataMember] public SmallMapReferences SmallMapRefs { get; }
 
-       /// <summary>
+        /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
         /// <param name="smallMapReferences"></param>
@@ -212,6 +212,7 @@ namespace Ultima5Redux.Maps
         /// <param name="inventory"></param>
         /// <param name="combatMapRefs"></param>
         /// <param name="tileOverrideReferences"></param>
+        /// <param name="importedGameState"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
@@ -219,7 +220,7 @@ namespace Ultima5Redux.Maps
             Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
             EnemyReferences enemyReferences, Inventory inventory, CombatMapReferences combatMapRefs,
-            TileOverrideReferences tileOverrideReferences)
+            TileOverrideReferences tileOverrideReferences, ImportedGameState importedGameState)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -250,18 +251,14 @@ namespace Ultima5Redux.Maps
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
             TheMapUnits = new MapUnits.MapUnits(tileReferences, npcRefs,
-                state.CharacterAnimationStatesDataChunk, state.OverworldOverlayDataChunks,
-                state.UnderworldOverlayDataChunks, state.CharacterStatesDataChunk,
-                state.NonPlayerCharacterMovementLists, state.NonPlayerCharacterMovementOffsets,
                 timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, bUseExtendedSprites,
-                enemyReferences, mapLocation);
+                enemyReferences, importedGameState, mapLocation);
 
             switch (initialMap)
             {
                 case Map.Maps.Small:
                     if (currentSmallMapReference == null)
                         throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
-                    LoadSmallMap(currentSmallMapReference);
                     break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
@@ -318,18 +315,14 @@ namespace Ultima5Redux.Maps
         {
             switch (PreCombatMap)
             {
-                // case CombatMap combatMap:
-                //     break;
-                case LargeMap largeMap:
-                case SmallMap smallMap:
-                    //_exposedSearchItems = _pushedExposedSearchItems;
-                    //_overrideMap = _pushedOverrideMap;
+                case LargeMap _:
+                case SmallMap _:
                     TheMapOverrides = PreTheMapOverrides;
                     
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
-                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false,
-                        true);
+                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false);
+                        //true);
                     PreCombatMap = null;
                     break;
                 default:
@@ -452,7 +445,7 @@ namespace Ultima5Redux.Maps
             // TheMapOverrides.ClearOverridenTiles(CurrentSmallMap);
             TheMapOverrides = new MapOverrides(CurrentSmallMap, _tileReferences);
 
-            LargeMapOverUnder = (Map.Maps)(-1);
+            LargeMapOverUnder = (Map.Maps)(-1); 
 
             TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small);
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
@@ -485,7 +478,6 @@ namespace Ultima5Redux.Maps
             //Debug.Assert(TheMapOverrides.TheMap is LargeMap && TheMapOverrides.TheMap == CurrentLargeMap);
             // todo: maybe we store each map override indefinitely so we never lose anything 
             TheMapOverrides = new MapOverrides(CurrentLargeMap, _tileReferences);
-                //.ClearOverridenTiles();
 
             LargeMapOverUnder = map;
 

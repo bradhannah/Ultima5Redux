@@ -88,7 +88,7 @@ namespace Ultima5Redux
 
             CombatItemRefs = new CombatItemReferences(DataOvlRef, InvRef);
             
-            State = new GameState(U5Directory, DataOvlRef, InvRef, MagicRefs, CombatItemRefs);
+            State = new GameState(U5Directory, DataOvlRef, InvRef, MagicRefs, CombatItemRefs, SpriteTileReferences);
 
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
 

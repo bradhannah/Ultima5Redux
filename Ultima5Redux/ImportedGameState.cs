@@ -3,6 +3,7 @@ using System.IO;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
@@ -13,7 +14,7 @@ namespace Ultima5Redux
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
-        public ImportedGameState(string u5Directory)
+        public ImportedGameState(string u5Directory, TileReferences tileReferences)
         {
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
@@ -148,6 +149,17 @@ namespace Ultima5Redux
             // we will need to add 0x100 for now, but cannot because it's read in as a bytelist
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Sprite (by smallmap)", 0xFF8, 0x20, 0x00,
                 DataChunkName.NPC_SPRITE_INDEXES);
+            
+            //// MapUnitStates
+            // DataChunk activeDataChunk = OverworldOverlayDataChunks;
+
+            OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks, tileReferences);
+            UnderworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks, tileReferences);
+            ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks, tileReferences);
+            
+            SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk, tileReferences);
+            CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists, 
+                NonPlayerCharacterMovementOffsets);
         }
 
         /// <summary>
@@ -170,8 +182,6 @@ namespace Ultima5Redux
         /// </summary>
         internal byte TorchTurnsLeft => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
 
-        internal DataChunk CharacterAnimationStatesDataChunk =>
-            DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
 
         internal DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
         internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
@@ -182,10 +192,14 @@ namespace Ultima5Redux
         internal DataChunk NonPlayerCharacterMovementOffsets =>
             DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
 
-        internal DataChunk OverworldOverlayDataChunks =>
+        // map overlay data chunks
+        private DataChunk ActiveOverlayDataChunks =>
+            DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
+
+        private DataChunk OverworldOverlayDataChunks =>
             _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
-        internal DataChunk UnderworldOverlayDataChunks =>
+        private DataChunk UnderworldOverlayDataChunks =>
             _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
         /// <summary>
@@ -244,6 +258,11 @@ namespace Ultima5Redux
 
         private DataChunks<DataChunkName> DataChunks { get; }
 
+        internal MapUnitStates OverworldMapUnitStates { get; }
+        internal MapUnitStates UnderworldMapUnitStates { get; }
+        internal MapUnitStates ActiveMapUnitStates { get; }
+        internal SmallMapCharacterStates SmallMapCharacterStates { get; }
+        internal MapUnitMovements CharacterMovements { get; }
         private DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return DataChunks.GetDataChunk(dataChunkName);

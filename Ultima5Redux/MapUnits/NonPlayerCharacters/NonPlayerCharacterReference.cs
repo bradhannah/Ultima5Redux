@@ -24,7 +24,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         private readonly GameState _gameStateRef;
-        private readonly bool _normalNPC;
 
         /// <summary>
         ///     Construct an NPC
@@ -36,10 +35,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <param name="dialogIndex">0-31 index of it's position in the NPC arrays (used for saved.gam references)</param>
         /// <param name="talkScript">their conversation script</param>
         /// <param name="location"></param>
-        /// <param name="bNormalNPC"></param>
         public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location,
             GameState gameStateRef, NPCSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex,
-            TalkScript talkScript, bool bNormalNPC)
+            TalkScript talkScript)
         {
             Schedule = new NonPlayerCharacterSchedule(schedule);
 
@@ -50,7 +48,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             Script = talkScript;
             DialogIndex = dialogIndex;
             _gameStateRef = gameStateRef;
-            _normalNPC = bNormalNPC;
 
             // no schedule? I guess you're not real
             if (!IsEmptySchedule(schedule))
@@ -117,13 +114,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         public int NPCKeySprite => CharacterType + 0x100;
 
-        //        public Point2D CurrentMapPosition { get; private set; } = new Point2D(0, 0);
-//        public int CurrentFloor { get; private set; }
-
         /// <summary>
-///     Which map is the NPC on?
-/// </summary>
-public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
+        ///     Which map is the NPC on?
+        /// </summary>
+        public SmallMapReferences.SingleMapReference.Location MapLocation { get; }
 
         /// <summary>
         ///     The daily schedule of the NPC

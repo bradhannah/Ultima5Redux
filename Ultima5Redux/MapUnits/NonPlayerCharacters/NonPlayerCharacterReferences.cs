@@ -180,15 +180,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     npcDialogNumber.Add(npcData[offset + StartingNPCDialogTownOffset]);
                 }
 
-                List<byte> keySpriteList = gameStateRef.NonPlayerCharacterKeySprites.GetAsByteList();
+                //List<byte> keySpriteList = gameStateRef.NonPlayerCharacterKeySprites.GetAsByteList();
 
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
                     NonPlayerCharacterReference npc = new NonPlayerCharacterReference(location, gameStateRef,
                         schedules[nNpc], npcTypes[nNpc],
-                        npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]),
-                        keySpriteList[nNpc] != 0);
+                        npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]));
                     NPCs.Add(npc);
                     // we also create a quick lookup table by location but first need to check that there is an initialized list inside
                     if (!_locationToNPCsDictionary.ContainsKey(singleMapRef.MapLocation))
