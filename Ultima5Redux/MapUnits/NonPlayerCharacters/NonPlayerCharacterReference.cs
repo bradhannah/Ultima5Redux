@@ -13,6 +13,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     /// </summary>
     public partial class NonPlayerCharacterReference
     {
+        private enum NPCKeySpriteEnum
+        {
+            Custom = -1, Guard = 368, Merchant = 340, Healer = 320, UnknownX86 = 368, Bard = 324, Fighter = 328,
+            Towny = 336, BardPlaying = 348, Jester = 344, Child = 360, Beggar = 364, Apparition = 372, BlackThorn = 376,
+            LordBritish = 380, Unknown = 0xFF
+        }
+        
         /// <summary>
         ///     NPC Type, any other value is a specific character
         /// </summary>
@@ -23,12 +30,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             // unknowns may be crown and sandlewood box
         }
 
-        private readonly GameState _gameStateRef;
-
         /// <summary>
         ///     Construct an NPC
         /// </summary>
-        /// <param name="gameStateRef"></param>
         /// <param name="schedule">daily schedule</param>
         /// <param name="npcType">type of NPC they are</param>
         /// <param name="dialogNumber">dialog number referencing data OVL</param>
@@ -36,7 +40,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <param name="talkScript">their conversation script</param>
         /// <param name="location"></param>
         public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location,
-            GameState gameStateRef, NPCSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex,
+            NPCSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex,
             TalkScript talkScript)
         {
             Schedule = new NonPlayerCharacterSchedule(schedule);
@@ -47,7 +51,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             DialogNumber = dialogNumber;
             Script = talkScript;
             DialogIndex = dialogIndex;
-            _gameStateRef = gameStateRef;
 
             // no schedule? I guess you're not real
             if (!IsEmptySchedule(schedule))
@@ -64,41 +67,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// </summary>
         private byte DialogNumber { get; }
 
-        /// <summary>
-        ///     Is the NPC dead?
-        /// </summary>
-        public bool IsDead
-        {
-            get => !_gameStateRef.NpcIsAlive(this);
-            set => _gameStateRef.SetNpcIsDead(this, value);
-        }
-
+      
         public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.None;
-
-        /// <summary>
-        ///     Returns true if the NPC knows/has met the Avatar
-        /// </summary>
-        public bool KnowTheAvatar
-        {
-            get
-            {
-                if (Script == null) return false;
-                int nScriptLines = Script.NumberOfScriptLines;
-
-                // two steps - first if the NPC Has met flag is flipped in saved.gam then we know they have met the Avatar
-                // secondly, if the AskName command is not present in their entire script, then we can surmise that they must already know the Avatar (from the old days)
-
-                if (_gameStateRef.NpcHasMetAvatar(this)) return true;
-
-                for (int i = 0; i < nScriptLines; i++)
-                {
-                    if (Script.GetScriptLine(i).ContainsCommand(TalkScript.TalkCommand.AskName)) return false;
-                }
-
-                return true;
-            }
-            set => _gameStateRef.SetNpcHasMetAvatar(this, value);
-        }
 
         /// <summary>
         ///     They are either a merchant or they have a speaking role
@@ -157,12 +127,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public string FriendlyName => Name == "" ? NPCType.ToString() : Name;
 
         // based on Xu4 AI = (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
-
-        //public void Move(Point2D xy, int nFloor)
-        //{
-        //    CurrentMapPosition = xy;
-        //    CurrentFloor = nFloor;
-        //}
 
         /// <summary>
         ///     NPCs name
@@ -224,11 +188,5 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             public fixed byte times[4];
         }
 
-        private enum NPCKeySpriteEnum
-        {
-            Custom = -1, Guard = 368, Merchant = 340, Healer = 320, UnknownX86 = 368, Bard = 324, Fighter = 328,
-            Towny = 336, BardPlaying = 348, Jester = 344, Child = 360, Beggar = 364, Apparition = 372, BlackThorn = 376,
-            LordBritish = 380, Unknown = 0xFF
-        }
     }
 }

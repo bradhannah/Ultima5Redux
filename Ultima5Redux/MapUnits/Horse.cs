@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
@@ -9,9 +10,9 @@ namespace Ultima5Redux.MapUnits
     {
         public Horse(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
-            Point2D.Direction direction)
+            Point2D.Direction direction, NonPlayerCharacterState npcState)
             : base(mapUnitState, null, mapUnitMovement, tileReferences,
-                location, dataOvlReference, direction)
+                location, dataOvlReference, direction, npcState)
         {
             KeyTileReference = NonBoardedTileReference;
         }

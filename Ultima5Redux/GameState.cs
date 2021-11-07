@@ -33,12 +33,6 @@ namespace Ultima5Redux
         private readonly int _nInitialX;
         private readonly int _nInitialY;
 
-        /// 2D array of flag indicating if an NPC is dead [MasterMap][npcRef#]
-        private readonly bool[][] _npcIsDeadArray;
-
-        /// 2D array of flag indicating if an NPC is met [MasterMap][npcRef#]
-        private readonly bool[][] _npcIsMetArray;
-
         /// A random number generator - capable of seeding in future
         private readonly Random _ran = new Random();
 
@@ -52,11 +46,12 @@ namespace Ultima5Redux
         /// <param name="combatItemReferences"></param>
         /// <param name="tileReferences"></param>
         public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences, 
-            MagicReferences magicReferences, CombatItemReferences combatItemReferences, TileReferences tileReferences)
+            MagicReferences magicReferences, CombatItemReferences combatItemReferences, TileReferences tileReferences,
+            NonPlayerCharacterReferences npcRefs)
         {
             _magicReferences = magicReferences;
             // imports the legacy save game file data 
-            _importedGameState = new ImportedGameState(u5Directory, tileReferences);
+            _importedGameState = new ImportedGameState(u5Directory, tileReferences, npcRefs);
 
             // one time copy of all imported state information
             CharacterRecords = _importedGameState.CharacterRecords;
@@ -70,15 +65,11 @@ namespace Ultima5Redux
             TurnsToExtinguish = _importedGameState.TorchTurnsLeft;
             ActivePlayerNumber = _importedGameState.ActivePlayerNumber;
 
-            // Initialize the table to determine if an NPC is dead
-            _npcIsDeadArray = _importedGameState.NPCIsDeadArray;
-
-            // these will map directly to the towns and the NPC dialog #
-            _npcIsMetArray = _importedGameState.NPCIsMetArray;
-
             TheMoongates = _importedGameState.TheMoongates;
 
             TheTimeOfDay = _importedGameState.TheTimeOfDay;
+
+            TheNonPlayerCharacterStates = _importedGameState.TheNonPlayerCharacterStates;
 
             // import the players inventory
             PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef,
@@ -147,6 +138,11 @@ namespace Ultima5Redux
         [DataMember] public VirtualMap TheVirtualMap { get; private set; }
 
         /// <summary>
+        /// NPC states such as if they are dead or have met the avatar
+        /// </summary>
+        [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates;
+        
+        /// <summary>
         ///     Take fall damage from klimbing mountains
         /// </summary>
         public void GrapplingFall()
@@ -166,43 +162,6 @@ namespace Ultima5Redux
             return nextRan % howMany == 0;
         }
 
-        /// <summary>
-        ///     Is NPC alive?
-        /// </summary>
-        /// <param name="npcRef">NPC object</param>
-        /// <returns>true if NPC is alive</returns>
-        public bool NpcIsAlive(NonPlayerCharacterReference npcRef)
-        {
-            // the array isDead because LB stores 0=alive, 1=dead
-            // I think it's easier to evaluate if they are alive
-            return _npcIsDeadArray[npcRef.MapLocationId][npcRef.DialogIndex] == false;
-        }
-
-        public void SetNpcIsDead(NonPlayerCharacterReference npcRef, bool bIsDead)
-        {
-            _npcIsDeadArray[npcRef.MapLocationId][npcRef.DialogIndex] = bIsDead;
-        }
-
-
-        /// <summary>
-        ///     Has the NPC met the avatar yet?
-        /// </summary>
-        /// <param name="npcRef"></param>
-        /// <returns></returns>
-        public bool NpcHasMetAvatar(NonPlayerCharacterReference npcRef)
-        {
-            return _npcIsMetArray[npcRef.MapLocationId][npcRef.DialogIndex];
-        }
-
-        /// <summary>
-        ///     Set a flag to determine if Avatar has met an NPC
-        /// </summary>
-        /// <param name="npcRef"></param>
-        /// <param name="bHasMet"></param>
-        public void SetNpcHasMetAvatar(NonPlayerCharacterReference npcRef, bool bHasMet)
-        {
-            _npcIsMetArray[npcRef.MapLocationId][npcRef.DialogIndex] = bHasMet;
-        }
 
         /// <summary>
         ///     Initializes (one time) the virtual map component
@@ -220,6 +179,7 @@ namespace Ultima5Redux
         /// <param name="enemyReferences"></param>
         /// <param name="combatMapReferences"></param>
         /// <param name="tileOverrideReferences"></param>
+        /// <param name="npcStates"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
             LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences,
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
@@ -234,7 +194,8 @@ namespace Ultima5Redux
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
                 underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates,
                 inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites,
-                enemyReferences, PlayerInventory, combatMapReferences, tileOverrideReferences, _importedGameState);
+                enemyReferences, PlayerInventory, combatMapReferences, tileOverrideReferences, _importedGameState,
+                TheNonPlayerCharacterStates);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);

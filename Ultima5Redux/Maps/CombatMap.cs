@@ -461,7 +461,7 @@ namespace Ultima5Redux.Maps
                         // if the enemy was an NPC then we kill them!
                         if (deadEnemy.NPCRef != null)
                         {
-                            deadEnemy.NPCRef.IsDead = true;
+                            deadEnemy.NPCState.IsDead = true;
                         }
 
                         RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);

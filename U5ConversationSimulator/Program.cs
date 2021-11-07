@@ -31,9 +31,13 @@ namespace U5ConversationSimulator
             //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference._location.Britain);
 
             //Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
-            List<NonPlayerCharacterReference> minocNpcRef =
-                _world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
-            Conversation convo = new Conversation(minocNpcRef[9], _world.State, _world.DataOvlRef); // delwyn
+            // List<NonPlayerCharacterReference> minocNpcRef =
+            //     _world.NpcRefs.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
+            
+            SmallMapReferences.SingleMapReference.Location location = SmallMapReferences.SingleMapReference.Location.Minoc;
+            NonPlayerCharacterState npcState =
+                _world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
+            Conversation convo = new Conversation(_world.State, _world.DataOvlRef, npcState); // delwyn
 
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
@@ -87,7 +91,7 @@ namespace U5ConversationSimulator
                     //
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    _world.State.CharacterRecords.AddMemberToParty(conversation.Npc);
+                    _world.State.CharacterRecords.AddMemberToParty(conversation.TheNonPlayerCharacterState.NPCRef);
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //

@@ -14,7 +14,7 @@ namespace Ultima5Redux
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
-        public ImportedGameState(string u5Directory, TileReferences tileReferences)
+        public ImportedGameState(string u5Directory, TileReferences tileReferences, NonPlayerCharacterReferences npcRefs)
         {
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
@@ -160,6 +160,8 @@ namespace Ultima5Redux
             SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk, tileReferences);
             CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists, 
                 NonPlayerCharacterMovementOffsets);
+
+            TheNonPlayerCharacterStates = new NonPlayerCharacterStates(this, npcRefs);
         }
 
         /// <summary>
@@ -263,6 +265,8 @@ namespace Ultima5Redux
         internal MapUnitStates ActiveMapUnitStates { get; }
         internal SmallMapCharacterStates SmallMapCharacterStates { get; }
         internal MapUnitMovements CharacterMovements { get; }
+        internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; } 
+        
         private DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return DataChunks.GetDataChunk(dataChunkName);

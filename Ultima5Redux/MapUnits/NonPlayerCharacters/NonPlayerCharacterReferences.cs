@@ -66,18 +66,17 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <param name="u5Directory">the directory with Ultima 5 data files</param>
         /// <param name="smallMapRef">The small map reference</param>
         /// <param name="talkScriptsRef"></param>
-        /// <param name="gameStateRef"></param>
         public NonPlayerCharacterReferences(string u5Directory, SmallMapReferences smallMapRef,
-            TalkScripts talkScriptsRef, GameState gameStateRef)
+            TalkScripts talkScriptsRef)
         {
             InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Castle, smallMapRef,
-                talkScriptsRef, gameStateRef);
+                talkScriptsRef);
             InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Towne, smallMapRef,
-                talkScriptsRef, gameStateRef);
+                talkScriptsRef);
             InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Keep, smallMapRef,
-                talkScriptsRef, gameStateRef);
+                talkScriptsRef);
             InitializeNPCs(u5Directory, SmallMapReferences.SingleMapReference.SmallMapMasterFiles.Dwelling, smallMapRef,
-                talkScriptsRef, gameStateRef);
+                talkScriptsRef);
         }
 
         /// <summary>
@@ -130,10 +129,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <param name="mapMaster">The master map from which to load</param>
         /// <param name="smallMapRef">Small map reference to help link NPCs to a map</param>
         /// <param name="talkScriptsRef"></param>
-        /// <param name="gameStateRef"></param>
         private void InitializeNPCs(string u5Directory,
             SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster, SmallMapReferences smallMapRef,
-            TalkScripts talkScriptsRef, GameState gameStateRef)
+            TalkScripts talkScriptsRef)
         {
             // open the appropriate NPC data file
             string dataFilenameAndPath = Path.Combine(u5Directory,
@@ -185,7 +183,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
-                    NonPlayerCharacterReference npc = new NonPlayerCharacterReference(location, gameStateRef,
+                    NonPlayerCharacterReference npc = new NonPlayerCharacterReference(location, 
                         schedules[nNpc], npcTypes[nNpc],
                         npcDialogNumber[nNpc], nNpc, talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]));
                     NPCs.Add(npc);

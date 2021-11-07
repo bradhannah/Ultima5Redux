@@ -88,7 +88,13 @@ namespace Ultima5Redux
 
             CombatItemRefs = new CombatItemReferences(DataOvlRef, InvRef);
             
-            State = new GameState(U5Directory, DataOvlRef, InvRef, MagicRefs, CombatItemRefs, SpriteTileReferences);
+            TalkScriptsRef = new TalkScripts(U5Directory, DataOvlRef);
+
+            // build the NPC tables
+            NpcRefs = new NonPlayerCharacterReferences(U5Directory, SmallMapRef, TalkScriptsRef);
+       
+            State = new GameState(U5Directory, DataOvlRef, InvRef, MagicRefs, CombatItemRefs, 
+                SpriteTileReferences, NpcRefs);
 
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
 
@@ -100,17 +106,13 @@ namespace Ultima5Redux
             // build the sign tables
             SignRef = new Signs(U5Directory);
 
-            TalkScriptsRef = new TalkScripts(U5Directory, DataOvlRef);
-
-            // build the NPC tables
-            NpcRef = new NonPlayerCharacterReferences(U5Directory, SmallMapRef, TalkScriptsRef, State);
 
             ShoppeKeeperDialogueReference =
-                new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef, NpcRef, State.PlayerInventory);
+                new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef, NpcRefs, State.PlayerInventory);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, SpriteTileReferences,
-                NpcRef, InvRef, DataOvlRef, bUseExtendedSprites, EnemyRefs, CombatMapRefs, _tileOverrideReferences);
+                NpcRefs, InvRef, DataOvlRef, bUseExtendedSprites, EnemyRefs, CombatMapRefs, _tileOverrideReferences);
 
             State.Serialize();
         }
@@ -172,7 +174,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     A collection of all NPC references
         /// </summary>
-        public NonPlayerCharacterReferences NpcRef { get; }
+        public NonPlayerCharacterReferences NpcRefs { get; }
 
         public ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; }
 
@@ -215,13 +217,13 @@ namespace Ultima5Redux
         /// <summary>
         ///     Begins the conversation with a particular NPC
         /// </summary>
-        /// <param name="npc">the NPC to have a conversation with</param>
+        /// <param name="npcState">the NPC to have a conversation with</param>
         /// <param name="enqueuedScriptItem">a handler to be called when script items are enqueued</param>
         /// <returns>A conversation object to be used to follow along with the conversation</returns>
-        public Conversation CreateConversationAndBegin(NonPlayerCharacterReference npc,
+        public Conversation CreateConversationAndBegin(NonPlayerCharacterState npcState,
             Conversation.EnqueuedScriptItem enqueuedScriptItem)
         {
-            CurrentConversation = new Conversation(npc, State, DataOvlRef);
+            CurrentConversation = new Conversation(State, DataOvlRef, npcState);
 
             CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
 

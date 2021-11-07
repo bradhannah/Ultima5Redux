@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -8,9 +9,8 @@ namespace Ultima5Redux.MapUnits
     {
         public MagicCarpet(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
-            Point2D.Direction direction) : base(mapUnitState, null,
-            mapUnitMovement, tileReferences,
-            location, dataOvlReference, direction)
+            Point2D.Direction direction, NonPlayerCharacterState npcState) : base(mapUnitState, null,
+            mapUnitMovement, tileReferences, location, dataOvlReference, direction, npcState)
         {
         }
 

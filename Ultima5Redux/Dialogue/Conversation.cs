@@ -35,6 +35,8 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         private readonly DataOvlReference _dataOvlRef;
 
+        private readonly NonPlayerCharacterState _npcState;
+
         /// <summary>
         ///     Game State used for determining if Avatar has met the NPC
         /// </summary>
@@ -67,18 +69,23 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         public EnqueuedScriptItem EnqueuedScriptItemCallback;
 
+        public NonPlayerCharacterState TheNonPlayerCharacterState => _npcState; 
+        
         /// <summary>
         ///     Construction a conversation
         /// </summary>
         /// <param name="npc">NPC you will have a conversation with</param>
         /// <param name="state">The games current State</param>
         /// <param name="dataOvlRef">Data.OVL for reference</param>
-        public Conversation(NonPlayerCharacterReference npc, GameState state, DataOvlReference dataOvlRef)
+        /// <param name="npcState"></param>
+        public Conversation(GameState state, DataOvlReference dataOvlRef, 
+            NonPlayerCharacterState npcState)
         {
-            Npc = npc;
-            _script = npc.Script;
+            //Npc = npc;
+            _script = npcState.NPCRef.Script;
             _gameStateRef = state;
             _dataOvlRef = dataOvlRef;
+            _npcState = npcState;
         }
 
         /// <summary>
@@ -89,7 +96,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     The NPC with whom you are having a conversation
         /// </summary>
-        public NonPlayerCharacterReference Npc { get; }
+        //public NonPlayerCharacterReference Npc { get; }
 
         /// <summary>
         ///     Begins the conversation with the NPC.
@@ -114,7 +121,7 @@ namespace Ultima5Redux.Dialogue
             _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Greeting));
 
             // some of these operations can be expensive, so let's call them once and store instead
-            bool npcKnowsAvatar = Npc.KnowTheAvatar;
+            bool npcKnowsAvatar = _npcState.HasMetAvatar;
 
             // the index into conversationOrder
             int nConversationIndex = 0;
@@ -147,11 +154,11 @@ namespace Ultima5Redux.Dialogue
                         await ProcessLine(scriptLine);
                     }
 
-                    if (Npc.Script.QuestionAnswers.AnswerIsAvailable(userResponse))
+                    if (_script.QuestionAnswers.AnswerIsAvailable(userResponse))
                     {
                         // the user asked a question that we recognize, so let's process the answer
                         await ProcessMultipleLines(
-                            Npc.Script.QuestionAnswers.GetQuestionAnswer(userResponse).Answer.SplitIntoSections(), -1);
+                            _script.QuestionAnswers.GetQuestionAnswer(userResponse).Answer.SplitIntoSections(), -1);
                     }
                     else
                     {
@@ -193,7 +200,7 @@ namespace Ultima5Redux.Dialogue
                     if (_gameStateRef.OneInXOdds(2)) // || true)
                         // okay, tell them who you are
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
-                            "\nI am called " + Npc.Name));
+                            "\nI am called " + _npcState.NPCRef.Name));
 
                 // if in label && next line include <AvatarName>, then skip label
                 const int StartingIndexForLabel = 0;
@@ -375,7 +382,7 @@ namespace Ultima5Redux.Dialogue
                 }
 
                 // if the line refers to the Avatar, but the NPC doesn't know the Avatar then just skip the line
-                if (scriptLines[i].ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !Npc.KnowTheAvatar) continue;
+                if (scriptLines[i].ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !_npcState.HasMetAvatar) continue;
 
                 // If there are no script items, then just skip
                 // Note: this shouldn't really happen, but it does, so maybe one day find out why they are being added
@@ -433,7 +440,7 @@ namespace Ultima5Redux.Dialogue
         private async Task ProcessLine(TalkScript.ScriptLine scriptLine, int nTalkLineIndex, int nSplitLine)
         {
             // if they already know the avatar then they aren't going to ask again
-            if (scriptLine.ContainsCommand(TalkScript.TalkCommand.AskName) && Npc.KnowTheAvatar)
+            if (scriptLine.ContainsCommand(TalkScript.TalkCommand.AskName) && _npcState.HasMetAvatar)
             {
                 _currentSkipInstruction = SkipInstruction.DontSkip;
                 return;
@@ -455,7 +462,7 @@ namespace Ultima5Redux.Dialogue
                 {
                     case TalkScript.TalkCommand.IfElseKnowsName:
                         Debug.Assert(nItems == 1);
-                        if (Npc.KnowTheAvatar)
+                        if (_npcState.HasMetAvatar)
                         {
                             // we continue to the next block, but skip the one after
                             _currentSkipInstruction = SkipInstruction.SkipAfterNext;
@@ -469,7 +476,7 @@ namespace Ultima5Redux.Dialogue
                         }
                     case TalkScript.TalkCommand.AvatarsName:
                         // we should already know if they know the avatars name....
-                        Debug.Assert(Npc.KnowTheAvatar);
+                        Debug.Assert(_npcState.HasMetAvatar);
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                             TextProcessItem(item)));
                         break;
@@ -485,7 +492,7 @@ namespace Ultima5Redux.Dialogue
                             StringComparison.CurrentCultureIgnoreCase))
                         {
                             // i met them
-                            _gameStateRef.SetNpcHasMetAvatar(Npc, true);
+                            _npcState.HasMetAvatar = true;
                             EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                                 GetConversationStr(DataOvlReference.ChunkPhrasesConversation.PLEASURE)));
                         }

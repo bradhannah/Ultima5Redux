@@ -213,6 +213,7 @@ namespace Ultima5Redux.Maps
         /// <param name="combatMapRefs"></param>
         /// <param name="tileOverrideReferences"></param>
         /// <param name="importedGameState"></param>
+        /// <param name="npcStates"></param>
         public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
@@ -220,7 +221,8 @@ namespace Ultima5Redux.Maps
             Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
             EnemyReferences enemyReferences, Inventory inventory, CombatMapReferences combatMapRefs,
-            TileOverrideReferences tileOverrideReferences, ImportedGameState importedGameState)
+            TileOverrideReferences tileOverrideReferences, ImportedGameState importedGameState, 
+            NonPlayerCharacterStates npcStates)
         {
             // let's make sure they are using the correct combination
             // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
@@ -252,11 +254,13 @@ namespace Ultima5Redux.Maps
             // subsequent loads may not have all the data stored on disk and will need to recalculate
             TheMapUnits = new MapUnits.MapUnits(tileReferences, npcRefs,
                 timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, bUseExtendedSprites,
-                enemyReferences, importedGameState, mapLocation);
+                enemyReferences, importedGameState, npcStates, mapLocation);
 
             switch (initialMap)
             {
                 case Map.Maps.Small:
+                    // CurrentSingleMapReference = currentSmallMapReference;
+                    LoadSmallMap(currentSmallMapReference, null, true);
                     if (currentSmallMapReference == null)
                         throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
                     break;
@@ -437,7 +441,8 @@ namespace Ultima5Redux.Maps
             CurrentCombatMap.InitializeInitiativeQueue();
         }
 
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null)
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null, 
+            bool bLoadFromDisk = false)
         {
             CurrentSingleMapReference = singleMapReference;
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
@@ -447,7 +452,7 @@ namespace Ultima5Redux.Maps
 
             LargeMapOverUnder = (Map.Maps)(-1); 
 
-            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small);
+            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, bLoadFromDisk);
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
 

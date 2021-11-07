@@ -24,9 +24,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         protected CombatMapUnit(MapUnitState mapUnitState,
             SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
             TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
-            NonPlayerCharacterReference npcRef, NonPlayerCharacterReferences npcRefs) : 
+            NonPlayerCharacterReferences npcRefs, NonPlayerCharacterState npcState) : 
             base(mapUnitState, smallMapTheSmallMapCharacterState, mapUnitMovement, tileReferences,
-            location, dataOvlReference, Point2D.Direction.None, npcRef, npcRefs)
+            location, dataOvlReference, Point2D.Direction.None, npcState, npcRefs)
         {
         }
 

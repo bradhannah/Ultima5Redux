@@ -206,19 +206,19 @@ namespace Ultima5Redux.MapUnits
                 case AvatarState.Carpet:
                     MagicCarpet carpet = new MagicCarpet(vehicleState,
                         new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
                     BoardMapUnit(carpet);
                     break;
                 case AvatarState.Horse:
                     Horse horse = new Horse(vehicleState,
                         new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
                     BoardMapUnit(horse);
                     break;
                 case AvatarState.Frigate:
                     Frigate frigate = new Frigate(vehicleState,
                         new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
                     // must decide how many skiffs are there and assign them
                     frigate.SkiffsAboard = TheMapUnitState.Depends3;
                     BoardMapUnit(frigate);
@@ -226,7 +226,7 @@ namespace Ultima5Redux.MapUnits
                 case AvatarState.Skiff:
                     Skiff skiff = new Skiff(vehicleState,
                         new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection);
+                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
                     BoardMapUnit(skiff);
                     break;
                 case AvatarState.Hidden:

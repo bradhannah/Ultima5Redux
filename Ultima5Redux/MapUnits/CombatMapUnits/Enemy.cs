@@ -13,11 +13,10 @@ namespace Ultima5Redux.MapUnits.Monsters
     {
         public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
             EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, NonPlayerCharacterReference npcRef, 
-            NonPlayerCharacterReferences npcRefs)
+            DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcRefs, NonPlayerCharacterState npcState)
             // : base(mapUnitState, mapUnitMovement,  tileReferences, location, dataOvlReference, npcRef, npcRefs)
             : base(mapUnitState, null, mapUnitMovement, 
-                tileReferences, location, dataOvlReference, npcRef, npcRefs) 
+                tileReferences, location, dataOvlReference, npcRefs, npcState) 
         {
             EnemyReference = enemyReference;
             mapUnitState.Tile1Ref = enemyReference.KeyTileReference;

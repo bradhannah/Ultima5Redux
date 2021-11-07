@@ -430,13 +430,15 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_TalkToSmith()
         {
             World world = new World(SaveDirectory);
-            List<NonPlayerCharacterReference> iolosHutRefs =
-                world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Iolos_Hut);
+            SmallMapReferences.SingleMapReference.Location location =
+                SmallMapReferences.SingleMapReference.Location.Iolos_Hut;
+            //List<NonPlayerCharacterReference> iolosHutRefs =
+            NonPlayerCharacterState npcState = world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 4);
 
-            NonPlayerCharacterReference smithTheHorseRef = iolosHutRefs[4];
+            //NonPlayerCharacterReference smithTheHorseRef = iolosHutRefs[4];
+            // world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex()
 
-            world.CreateConversationAndBegin(smithTheHorseRef,
-                OnUpdateOfEnqueuedScriptItem);
+            world.CreateConversationAndBegin(npcState, OnUpdateOfEnqueuedScriptItem);
         }
 
         private static void OnUpdateOfEnqueuedScriptItem(Conversation conversation)
@@ -466,12 +468,17 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_TalkToDelwyn()
         {
             World world = new World(SaveDirectory);
-            List<NonPlayerCharacterReference> minocNpcRef =
-                world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
 
-            NonPlayerCharacterReference delwynRef = minocNpcRef[9];
+            SmallMapReferences.SingleMapReference.Location location =
+                SmallMapReferences.SingleMapReference.Location.Minoc;
+            
+            // List<NonPlayerCharacterReference> minocNpcRef =
+            //     world.NpcRefs.GetNonPlayerCharactersByLocation(location);
 
-            Conversation convo = world.CreateConversationAndBegin(delwynRef,
+            // NonPlayerCharacterReference delwynRef = minocNpcRef[9];
+            NonPlayerCharacterState npcState = world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
+
+            Conversation convo = world.CreateConversationAndBegin(npcState,
                 OnUpdateOfEnqueuedScriptItemHandleDelwyn);
             convo.BeginConversation();
             convo.AddUserResponse("yes");
@@ -479,7 +486,7 @@ namespace Ultima5ReduxTesting
             convo.AddUserResponse("yes");
             convo.AddUserResponse("bye");
 
-            Conversation convo2 = world.CreateConversationAndBegin(delwynRef,
+            Conversation convo2 = world.CreateConversationAndBegin(npcState,
                 OnUpdateOfEnqueuedScriptItemHandleDelwyn);
             convo2.BeginConversation();
             convo2.AddUserResponse("yes");
