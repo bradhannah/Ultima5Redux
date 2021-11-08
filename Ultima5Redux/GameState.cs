@@ -17,8 +17,7 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux
 {
-    [DataContract]
-    public class GameState
+    [DataContract] public class GameState
     {
         private readonly MagicReferences _magicReferences;
 
@@ -45,7 +44,7 @@ namespace Ultima5Redux
         /// <param name="magicReferences"></param>
         /// <param name="combatItemReferences"></param>
         /// <param name="tileReferences"></param>
-        public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences, 
+        public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences,
             MagicReferences magicReferences, CombatItemReferences combatItemReferences, TileReferences tileReferences,
             NonPlayerCharacterReferences npcRefs)
         {
@@ -77,10 +76,11 @@ namespace Ultima5Redux
                 _importedGameState, combatItemReferences);
         }
 
- 
-        public void Serialize()
+
+        public string Serialize()
         {
             string derp = JsonConvert.SerializeObject(this);
+            return derp;
         }
 
         /// <summary>
@@ -91,57 +91,65 @@ namespace Ultima5Redux
         /// <summary>
         ///     Users Karma
         /// </summary>
-        [DataMember] public ushort Karma { get; set; }
+        [DataMember]
+        public ushort Karma { get; set; }
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
         /// <summary>
         ///     What is the index of the currently active player?
         /// </summary>
-        [DataMember] public int ActivePlayerNumber { get; set; }
-
+        [DataMember]
+        public int ActivePlayerNumber { get; set; }
 
 
         /// <summary>
         ///     How many turns until the Avatar's torch is extinguished
         /// </summary>
-        [DataMember] public int TurnsToExtinguish { get; set; }
+        [DataMember]
+        public int TurnsToExtinguish { get; set; }
 
         /// <summary>
         ///     Players current inventory
         /// </summary>
-        [DataMember] public Inventory PlayerInventory { get; }
+        [DataMember]
+        public Inventory PlayerInventory { get; }
 
         /// <summary>
         ///     Location and state of all moongates and moonstones
         /// </summary>
-        [DataMember] public Moongates TheMoongates { get; }
+        [DataMember]
+        public Moongates TheMoongates { get; }
 
         /// <summary>
         ///     All player character records
         /// </summary>
-        [DataMember] public PlayerCharacterRecords CharacterRecords { get; }
+        [DataMember]
+        public PlayerCharacterRecords CharacterRecords { get; }
 
         /// <summary>
         ///     The name of the Avatar
         /// </summary>
-        [IgnoreDataMember] public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
+        [IgnoreDataMember]
+        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
         /// <summary>
         ///     The current time of day
         /// </summary>
-        [DataMember] public TimeOfDay TheTimeOfDay { get; }
+        [DataMember]
+        public TimeOfDay TheTimeOfDay { get; }
 
         /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
         /// </summary>
-        [DataMember] public VirtualMap TheVirtualMap { get; private set; }
+        [DataMember]
+        public VirtualMap TheVirtualMap { get; private set; }
 
         /// <summary>
         /// NPC states such as if they are dead or have met the avatar
         /// </summary>
         [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates;
-        
+
         /// <summary>
         ///     Take fall damage from klimbing mountains
         /// </summary>
@@ -184,7 +192,8 @@ namespace Ultima5Redux
             LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences,
             NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
             DataOvlReference dataOvlReference, bool bUseExtendedSprites,
-            EnemyReferences enemyReferences, CombatMapReferences combatMapReferences, TileOverrideReferences tileOverrideReferences)
+            EnemyReferences enemyReferences, CombatMapReferences combatMapReferences,
+            TileOverrideReferences tileOverrideReferences)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld

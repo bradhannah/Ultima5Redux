@@ -254,6 +254,7 @@ namespace Ultima5ReduxTesting
             pushAThing = world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed);
             Assert.True(bWasPushed);
             Debug.WriteLine(pushAThing);
+            string derp = world.State.Serialize();
 
             pushAThing = world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed);
             Assert.True(bWasPushed);
@@ -348,6 +349,7 @@ namespace Ultima5ReduxTesting
             // second search should be empty
             world.TryToSearch(moongatePosition, out bWasSuccessful);
             Debug.Assert(!bWasSuccessful);
+            string derp = world.State.Serialize();
 
             TileReference tileRef = world.State.TheVirtualMap.GetTileReference(moongatePosition);
             Debug.Assert(tileRef.Index == 281);

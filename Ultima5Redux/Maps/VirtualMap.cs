@@ -183,7 +183,6 @@ namespace Ultima5Redux.Maps
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         [DataMember] public SmallMap CurrentSmallMap { get; private set; }
-        //{ get; private set; }
 
         /// <summary>
         ///     All small map references
@@ -224,10 +223,6 @@ namespace Ultima5Redux.Maps
             TileOverrideReferences tileOverrideReferences, ImportedGameState importedGameState, 
             NonPlayerCharacterStates npcStates)
         {
-            // let's make sure they are using the correct combination
-            // Debug.Assert((initialMap == LargeMap.Maps.Small && currentSmallMapReference != null && 
-            //               currentSmallMapReference.MapLocation != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld) 
-
             SmallMapRefs = smallMapReferences;
 
             _smallMaps = smallMaps;
@@ -259,7 +254,6 @@ namespace Ultima5Redux.Maps
             switch (initialMap)
             {
                 case Map.Maps.Small:
-                    // CurrentSingleMapReference = currentSmallMapReference;
                     LoadSmallMap(currentSmallMapReference, null, true);
                     if (currentSmallMapReference == null)
                         throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
@@ -421,13 +415,10 @@ namespace Ultima5Redux.Maps
             // not if we are going combat to combat map (think Debug)
             if (TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
             {
-                // _pushedExposedSearchItems = _exposedSearchItems;
-                // _pushedOverrideMap = _overrideMap;
                 PreTheMapOverrides = TheMapOverrides;
             }
 
             TheMapOverrides = new MapOverrides(CurrentCombatMap, _tileReferences);
-                //.ClearOverridenTiles(CurrentCombatMap);
 
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
