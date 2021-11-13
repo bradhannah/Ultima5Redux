@@ -2,16 +2,20 @@
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class MagicCarpet : MapUnit
+    public sealed class MagicCarpet : MapUnit
     {
-        public MagicCarpet(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
-            SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
-            Point2D.Direction direction, NonPlayerCharacterState npcState) : base(mapUnitState, null,
-            mapUnitMovement, tileReferences, location, dataOvlReference, direction, npcState)
+        private const string REGULAR_CARPET_STR = "Carpet2";
+        
+        public MagicCarpet(SmallMapReferences.SingleMapReference.Location location,
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : 
+            base(null, new MapUnitMovement(0), location, direction, npcState, 
+                GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition)
         {
+            KeyTileReference = NonBoardedTileReference;
         }
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
@@ -20,7 +24,7 @@ namespace Ultima5Redux.MapUnits
 
         public override bool IsAttackable => false;
 
-        public override string BoardXitName => DataOvlRef.StringReferences
+        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
 
         public override string FriendlyName => BoardXitName;
@@ -28,11 +32,11 @@ namespace Ultima5Redux.MapUnits
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>
             {
-                { Point2D.Direction.None, "Carpet2" },
-                { Point2D.Direction.Left, "Carpet2" },
-                { Point2D.Direction.Down, "Carpet2" },
-                { Point2D.Direction.Right, "Carpet2" },
-                { Point2D.Direction.Up, "Carpet2" }
+                { Point2D.Direction.None, REGULAR_CARPET_STR },
+                { Point2D.Direction.Left, REGULAR_CARPET_STR },
+                { Point2D.Direction.Down, REGULAR_CARPET_STR },
+                { Point2D.Direction.Right, REGULAR_CARPET_STR },
+                { Point2D.Direction.Up, REGULAR_CARPET_STR }
             };
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =

@@ -3,6 +3,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
@@ -28,11 +29,17 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 { Point2D.Direction.Up, "ShipSailsUp" }
             };
 
-        public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, Point2D.Direction direction, NonPlayerCharacterState npcState) :
-            base(mapUnitState, null, mapUnitMovement, tileReferences, location,
-                dataOvlReference, direction, npcState)
+        public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location, 
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
+            this(mapUnitMovement, location, direction, npcState, mapUnitPosition)
+        {
+            Hitpoints = mapUnitState.Depends1;
+            SkiffsAboard = mapUnitState.Depends3;
+        }
+
+        public Frigate(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location, 
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
+            base(null, mapUnitMovement, location, direction, npcState, mapUnitPosition)
         {
         }
 
@@ -51,23 +58,23 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public bool SailsHoisted { get; set; } = false;
 
-        public int Hitpoints
-        {
-            get => TheMapUnitState.Depends1;
-            set => TheMapUnitState.Depends1 = (byte)(value < 0 ? 0 : (value > 99 ? 99 : value));
-        }
+        public int Hitpoints { get; set; }
+        // {
+        //     get => TheMapUnitState.Depends1;
+        //     set => TheMapUnitState.Depends1 = (byte)(value < 0 ? 0 : (value > 99 ? 99 : value));
+        // }
 
         /// <summary>
         ///     How many skiffs does the frigate have aboard?
         /// </summary>
-        public int SkiffsAboard
-        {
-            get => TheMapUnitState.Depends3;
-            set => TheMapUnitState.Depends3 = (byte)value;
-        }
+        public int SkiffsAboard { get; set; }
+        // {
+        //     get => TheMapUnitState.Depends3;
+        //     set => TheMapUnitState.Depends3 = (byte)value;
+        // }
 
         public override string BoardXitName =>
-            DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
+            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
 
         public override string FriendlyName => BoardXitName;
 

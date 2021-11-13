@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Ultima5Redux.Data;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
@@ -11,15 +10,15 @@ namespace Ultima5Redux.MapUnits.Monsters
 {
     public class Enemy : CombatMapUnit
     {
-        public Enemy(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
-            EnemyReference enemyReference, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcRefs, NonPlayerCharacterState npcState)
-            // : base(mapUnitState, mapUnitMovement,  tileReferences, location, dataOvlReference, npcRef, npcRefs)
-            : base(mapUnitState, null, mapUnitMovement, 
-                tileReferences, location, dataOvlReference, npcRefs, npcState) 
+        public Enemy(
+            //MapUnitState mapUnitState, 
+            MapUnitMovement mapUnitMovement, EnemyReference enemyReference, 
+            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState)
+            : base(null, mapUnitMovement, location, npcState, enemyReference.KeyTileReference) 
         {
             EnemyReference = enemyReference;
-            mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
+            //mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
+            //KeyTileReference = enemyReference.KeyTileReference;
             
             Stats.Level = 1;
             Stats.Dexterity = EnemyReference.TheDefaultEnemyStats.Dexterity;
@@ -60,7 +59,8 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override string Name => EnemyReference.MixedCaseSingularName.Trim();
         public override string PluralName => EnemyReference.AllCapsPluralName;
         public override string SingularName => EnemyReference.MixedCaseSingularName;
-        public override TileReference NonBoardedTileReference => TheMapUnitState.Tile1Ref;
+        public override TileReference NonBoardedTileReference => KeyTileReference;
+        public override TileReference KeyTileReference => EnemyReference.KeyTileReference;
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
 

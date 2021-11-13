@@ -31,13 +31,13 @@ namespace Ultima5Redux.MapUnits
         ///     DataChunk of current map characters movement list
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
-        private DataChunk _movementInstructionDataChunk;
+        //private DataChunk _movementInstructionDataChunk;
 
         /// <summary>
         ///     DataChunk of current map characters offset into movement list
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
-        private DataChunk _movementOffsetDataChunk;
+        //private DataChunk _movementOffsetDataChunk;
 
         /// <summary>
         ///     Dialog index of the map character
@@ -45,20 +45,24 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once NotAccessedField.Local
         private int _nDialogIndex;
 
+        public MapUnitMovement(int nDialogIndex)
+        {
+            _nDialogIndex = nDialogIndex;
+        }
+        
         /// <summary>
-        ///     Construct a MapUnitMovement
+        ///     Construct a MapUnitMovement from old save game
         /// </summary>
         /// <param name="nDialogIndex">the index of an NPC</param>
         /// <param name="movementInstructionDataChunk">The full memory chunk of all movement instructions</param>
         /// <param name="movementOffsetDataChunk">the full memory chunk of the movement offsets</param>
-        public MapUnitMovement(int nDialogIndex, DataChunk movementInstructionDataChunk,
-            DataChunk movementOffsetDataChunk)
+        public MapUnitMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
         {
             // we totally ignore the first entry, since it's bad stuff
             if (nDialogIndex == 0) return;
 
-            _movementInstructionDataChunk = movementInstructionDataChunk;
-            _movementOffsetDataChunk = movementOffsetDataChunk;
+            //_movementInstructionDataChunk = movementInstructionDataChunk;
+            //_movementOffsetDataChunk = movementOffsetDataChunk;
             _nDialogIndex = nDialogIndex;
 
             // Note: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
@@ -99,25 +103,6 @@ namespace Ultima5Redux.MapUnits
                 nIndex = (nIndex + 2) % (MAX_COMMAND_LIST_ENTRIES * 2);
             }
         }
-
-        // private static MovementCommandDirection GetDirection(Point2D.Direction virtualMapDirection)
-        // {
-        //     switch (virtualMapDirection)
-        //     {
-        //         case Point2D.Direction.Right:
-        //             return MovementCommandDirection.East;
-        //         case Point2D.Direction.Up:
-        //             return MovementCommandDirection.North;
-        //         case Point2D.Direction.Left:
-        //             return MovementCommandDirection.West;
-        //         case Point2D.Direction.Down:
-        //             return MovementCommandDirection.South;
-        //         case Point2D.Direction.None:
-        //         default:
-        //             throw new Ultima5ReduxException(
-        //                 $"Cannot convert {virtualMapDirection} to MovementCommandDirection");
-        //     }
-        // }
 
         /// <summary>
         ///     Provides an adjust xy coordinate based on a given direction

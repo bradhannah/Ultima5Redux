@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
@@ -13,12 +14,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>> _npcMap =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>();
         
-        public NonPlayerCharacterStates(ImportedGameState importedGameState, NonPlayerCharacterReferences npcRefs)
+        public NonPlayerCharacterStates(ImportedGameState importedGameState)
         {
             Debug.Assert(importedGameState.NPCIsDeadArray.Length == importedGameState.NPCIsMetArray.Length);
 
             int nLocations = importedGameState.NPCIsMetArray[0].Length;
-                //Enum.GetNames(typeof(SmallMapReferences.SingleMapReference.Location)).Length;
             
             int nNpcsPerLocation = importedGameState.NPCIsMetArray[0].Length;
             
@@ -28,20 +28,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     (SmallMapReferences.SingleMapReference.Location)locationIndex;
                 _npcMap.Add(location, new List<NonPlayerCharacterState>(nNpcsPerLocation));
                 
-                // if (location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                //     continue;
-                
                 for (int npcIndex = 0; npcIndex < nNpcsPerLocation; npcIndex++)
                 {
                     NonPlayerCharacterState npcState = 
-                        new NonPlayerCharacterState(npcRefs.GetNonPlayerCharactersByLocation(location)[npcIndex])
+                        new NonPlayerCharacterState(GameReferences.NpcRefs.GetNonPlayerCharactersByLocation(location)[npcIndex])
                     {
                         IsDead = importedGameState.NPCIsDeadArray[locationIndex - 1][npcIndex],
                         HasMetAvatar = importedGameState.NPCIsMetArray[locationIndex - 1][npcIndex]
                     };
                     
                     _npcMap[location].Add(npcState);
-                        //[npcIndex] = npcState;
                 }
             }
         }

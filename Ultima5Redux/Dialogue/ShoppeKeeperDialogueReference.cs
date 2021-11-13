@@ -11,6 +11,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Dialogue
 {
@@ -18,29 +19,22 @@ namespace Ultima5Redux.Dialogue
     {
         private readonly DataChunks<ShoppeKeeperChunkNames> _dataChunks;
         private readonly DataOvlReference _dataOvlReference;
-        private readonly Inventory _inventory;
         private readonly List<string> _merchantStrings = new List<string>();
 
         private readonly Dictionary<int, int> _previousRandomSelectionByMin =
             new Dictionary<int, int>();
 
         private readonly Random _random = new Random();
-        private readonly ShoppeKeeperReferences _shoppeKeeperReferences;
 
         /// <summary>
         ///     Construct using the on disk references
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="dataOvlReference"></param>
-        /// <param name="npcReferences"></param>
-        /// <param name="inventory"></param>
-        public ShoppeKeeperDialogueReference(string u5Directory, DataOvlReference dataOvlReference,
-            NonPlayerCharacterReferences npcReferences, Inventory inventory)
+        public ShoppeKeeperDialogueReference(string u5Directory, DataOvlReference dataOvlReference)
         {
             _dataOvlReference = dataOvlReference;
             string shoppeKeeperDataFilePath = Path.Combine(u5Directory, FileConstants.SHOPPE_DAT);
-
-            _inventory = inventory;
 
             _dataChunks =
                 new DataChunks<ShoppeKeeperChunkNames>(shoppeKeeperDataFilePath, ShoppeKeeperChunkNames.Unused);
@@ -49,8 +43,6 @@ namespace Ultima5Redux.Dialogue
                 0x2797, 0, ShoppeKeeperChunkNames.AllData);
 
             BuildConversationTable(dataOvlReference);
-
-            _shoppeKeeperReferences = new ShoppeKeeperReferences(dataOvlReference, npcReferences);
         }
 
         /// <summary>
@@ -67,7 +59,6 @@ namespace Ultima5Redux.Dialogue
             {
                 string convertedStr =
                     compressedWordReference.ReplaceRawMerchantStringsWithCompressedWords(rawShoppeString);
-                //Console.WriteLine(i++ + @"," + @"""" + convertedStr.Replace('\n', '_').Replace('"', '+') + @"""");
                 _merchantStrings.Add(convertedStr);
             }
         }
@@ -214,38 +205,40 @@ namespace Ultima5Redux.Dialogue
         /// <param name="location"></param>
         /// <param name="npcType"></param>
         /// <param name="playerCharacterRecords"></param>
+        /// <param name="inventory"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">couldn't find the shoppe keeper at that particular location</exception>
         public ShoppeKeeper GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location location,
-            NonPlayerCharacterReference.NPCDialogTypeEnum npcType, PlayerCharacterRecords playerCharacterRecords)
+            NonPlayerCharacterReference.NPCDialogTypeEnum npcType, PlayerCharacterRecords playerCharacterRecords, 
+            Inventory inventory)
         {
             switch (npcType)
             {
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith:
-                    return new BlackSmith(this, _inventory,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                    return new BlackSmith(this, inventory,
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper:
                     return new BarKeeper(this,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.HorseSeller:
                     return new HorseSeller(this,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference,
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference,
                         playerCharacterRecords);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright:
                     return new Shipwright(this,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Healer:
                     return new Healer(this,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper:
                     return new Innkeeper(this,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller:
-                    return new MagicSeller(this, _inventory,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                    return new MagicSeller(this, inventory,
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster:
                     return new GuildMaster(this,
-                        _shoppeKeeperReferences.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(npcType), npcType, null);
             }

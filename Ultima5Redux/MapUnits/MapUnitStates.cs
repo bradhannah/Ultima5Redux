@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
-using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -15,19 +14,16 @@ namespace Ultima5Redux.MapUnits
         private const int MAX_CHARACTER_STATES = 0x20;
 
         private readonly List<MapUnitState> _mapUnitStates = new List<MapUnitState>(MAX_CHARACTER_STATES);
-        private readonly TileReferences _tileReferences;
 
         private DataChunk _mapUnitStatesDataChunk;
 
-        public MapUnitStates(DataChunk mapUnitStatesDataChunk, TileReferences tileReferences)
+        public MapUnitStates(DataChunk mapUnitStatesDataChunk)
         {
-            _tileReferences = tileReferences;
             _mapUnitStatesDataChunk = mapUnitStatesDataChunk;
         }
 
-        public MapUnitStates(TileReferences tileReferences)
+        public MapUnitStates()
         {
-            _tileReferences = tileReferences;
             _mapUnitStatesDataChunk = null;
             // initialize an empty set of character states (for combat map likely)
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
@@ -73,8 +69,7 @@ namespace Ultima5Redux.MapUnits
 
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
-                _mapUnitStates.Add(new MapUnitState(_tileReferences,
-                    characterStateBytes.GetRange(i * MapUnitState.NBYTES + nOffset,
+                _mapUnitStates.Add(new MapUnitState(characterStateBytes.GetRange(i * MapUnitState.NBYTES + nOffset,
                         MapUnitState.NBYTES).ToArray()));
             }
         }

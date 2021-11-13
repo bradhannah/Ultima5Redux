@@ -3,17 +3,18 @@ using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
-    public class Skiff : SeaFaringVessel
+    public sealed class Skiff : SeaFaringVessel
     {
-        public Skiff(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, Point2D.Direction direction, NonPlayerCharacterState npcState) :
-            base(mapUnitState, null, mapUnitMovement, tileReferences, location,
-                dataOvlReference, direction, npcState)
+        public Skiff(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location, 
+            Point2D.Direction direction, NonPlayerCharacterState npcState,
+            MapUnitPosition mapUnitPosition) :
+            base(null, mapUnitMovement, location, direction, npcState, mapUnitPosition)
         {
+            KeyTileReference = NonBoardedTileReference;
         }
 
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
@@ -29,7 +30,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public override bool IsAttackable => false;
 
-        public override string BoardXitName => DataOvlRef.StringReferences
+        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();
 
         public override string FriendlyName => BoardXitName;

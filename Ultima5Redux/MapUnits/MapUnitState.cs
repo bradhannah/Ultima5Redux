@@ -2,6 +2,7 @@
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -31,15 +32,15 @@ namespace Ultima5Redux.MapUnits
         {
         }
 
-        public MapUnitState(TileReferences tileReferences, byte[] stateBytes)
+        public MapUnitState(byte[] stateBytes)
         {
             Debug.Assert(stateBytes.Length == 0x8);
             _stateBytes = stateBytes;
             //
             _tile1 = stateBytes[0] + 0x100;
             _tile2 = stateBytes[1] + 0x100;
-            Tile1Ref = tileReferences.GetTileReference(_tile1);
-            Tile2Ref = tileReferences.GetTileReference(_tile2);
+            Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(_tile1);
+            Tile2Ref = GameReferences.SpriteTileReferences.GetTileReference(_tile2);
 
             X = stateBytes[2];
             Y = stateBytes[3];
@@ -50,10 +51,10 @@ namespace Ultima5Redux.MapUnits
         }
 
 
-        public MapUnitState(TileReferences tileReferences, NonPlayerCharacterReference npcRef)
+        public MapUnitState(NonPlayerCharacterReference npcRef)
         {
-            Tile1Ref = tileReferences.GetTileReference(npcRef.NPCKeySprite);
-            Tile2Ref = tileReferences.GetTileReference(npcRef.NPCKeySprite);
+            Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
+            Tile2Ref = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
         }
 
         internal byte Depends1 { get; set; }
@@ -126,19 +127,18 @@ namespace Ultima5Redux.MapUnits
             return combatPlayer;
         }
 
-        public static MapUnitState CreateAvatar(TileReferences tileReferences, MapUnitPosition avatarPosition,
-            MapUnitState mapUnitState = null)
+        public static MapUnitState CreateAvatar(MapUnitPosition avatarPosition, MapUnitState mapUnitState = null)
         {
             // if a null map unit state is passed in then we are the default Avatar sprite
             // otherwise we may be on a horse, ship etc.
-            bool bDefaultState = mapUnitState != null;
+            //bool bDefaultState = mapUnitState != null;
             MapUnitState theAvatar;
             TileReference avatarTileRef;
 
             if (mapUnitState == null)
             {
                 theAvatar = new MapUnitState();
-                avatarTileRef = tileReferences.GetTileReferenceByName("BasicAvatar");
+                avatarTileRef = GameReferences.SpriteTileReferences.GetTileReferenceByName("BasicAvatar");
             }
             else
             {
@@ -148,7 +148,7 @@ namespace Ultima5Redux.MapUnits
 
             theAvatar._tile1 = avatarTileRef.Index;
             theAvatar._tile2 = avatarTileRef.Index;
-            theAvatar.Tile1Ref = tileReferences.GetTileReference(theAvatar._tile1);
+            theAvatar.Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(theAvatar._tile1);
             theAvatar.Tile2Ref = theAvatar.Tile1Ref;
 
             theAvatar.X = (byte)avatarPosition.X;

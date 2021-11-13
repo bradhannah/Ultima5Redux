@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
-using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -16,7 +15,7 @@ namespace Ultima5Redux.MapUnits
         private readonly List<SmallMapCharacterState> _characterStates =
             new List<SmallMapCharacterState>(MAX_CHARACTER_STATES);
 
-        public SmallMapCharacterStates(DataChunk charStatesDataChunk, TileReferences tileReferences)
+        public SmallMapCharacterStates(DataChunk charStatesDataChunk)
         {
             DataChunk dataChunk = charStatesDataChunk;
 
@@ -24,7 +23,7 @@ namespace Ultima5Redux.MapUnits
 
             for (int nIndex = 0; nIndex < MAX_CHARACTER_STATES; nIndex++)
             {
-                _characterStates.Add(new SmallMapCharacterState(tileReferences,
+                _characterStates.Add(new SmallMapCharacterState(
                     characterStateBytes.GetRange(nIndex * MapUnitState.NBYTES, MapUnitState.NBYTES).ToArray(), nIndex));
             }
         }

@@ -13,6 +13,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 // ReSharper disable UnusedMember.Global
 
@@ -247,9 +248,7 @@ namespace Ultima5Redux.Maps
 
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
-            TheMapUnits = new MapUnits.MapUnits(tileReferences, npcRefs,
-                timeOfDay, playerCharacterRecords, initialMap, _dataOvlReference, bUseExtendedSprites,
-                enemyReferences, importedGameState, npcStates, mapLocation);
+            TheMapUnits = new MapUnits.MapUnits(timeOfDay, playerCharacterRecords, initialMap, bUseExtendedSprites, importedGameState, npcStates, mapLocation);
 
             switch (initialMap)
             {
@@ -1310,13 +1309,12 @@ namespace Ultima5Redux.Maps
             return GetSeaFaringVesselAtDock(location) != null;
         }
 
-        public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference)
+        public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
         {
             List<byte> xDockCoords =
-                dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS).GetAsByteList();
+                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS).GetAsByteList();
             List<byte> yDockCoords =
-                dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS).GetAsByteList();
+                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS).GetAsByteList();
             Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>
                 {
@@ -1354,7 +1352,7 @@ namespace Ultima5Redux.Maps
 
             SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(
                 Map.Maps.Overworld,
-                GetLocationOfDock(location, _dataOvlReference), 0, true);
+                GetLocationOfDock(location), 0, true);
             return seaFaringVessel;
         }
 

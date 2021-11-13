@@ -8,6 +8,7 @@ using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -15,18 +16,15 @@ namespace Ultima5Redux.MapUnits
     {
         private readonly Inventory _inventory;
 
-        public CombatPlayer(PlayerCharacterRecord record, TileReferences tileReferences, Point2D xy,
-            DataOvlReference dataOvlReference, Inventory inventory)
+        public CombatPlayer(PlayerCharacterRecord record, Point2D xy, Inventory inventory) : base()
         {
             _inventory = inventory;
-            DataOvlRef = dataOvlReference;
             Record = record;
-            TileReferences = tileReferences;
-            TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record,
-                new MapUnitPosition(xy.X, xy.Y, 0));
+            // TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record,
+            //     new MapUnitPosition(xy.X, xy.Y, 0));
 
             // set the characters position 
-            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
+            MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
         }
 
         public CombatPlayer()
@@ -63,20 +61,20 @@ namespace Ultima5Redux.MapUnits
             {
                 if (Record.IsInvisible)
                 {
-                    return TileReferences.GetTileReferenceByName("Apparition");
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("Apparition");
                 }
 
                 if (Record.IsRat)
                 {
-                    return TileReferences.GetTileReferenceByName("Rat1");
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("Rat1");
                 }
 
                 switch (Stats.Status)
                 {
                     case PlayerCharacterRecord.CharacterStatus.Dead:
                     case PlayerCharacterRecord.CharacterStatus.Asleep:
-                        return TileReferences.GetTileReferenceByName("DeadBody");
-                    default: return TileReferences.GetTileReferenceOfKeyIndex(base.KeyTileReference.Index);
+                        return GameReferences.SpriteTileReferences.GetTileReferenceByName("DeadBody");
+                    default: return base.KeyTileReference; 
                 }
 
                 ;

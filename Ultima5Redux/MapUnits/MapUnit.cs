@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
-using Ultima5Redux.MapUnits.SeaFaringVessels;
-using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -55,7 +51,6 @@ namespace Ultima5Redux.MapUnits
    
     public abstract class MapUnit : MapUnitDetails
     {
-        private readonly NonPlayerCharacterReferences _npcRefs;
         [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
 
         /// <summary>
@@ -74,9 +69,9 @@ namespace Ultima5Redux.MapUnits
                 _mapMapUnitPosition.Y = value.Y;
                 _mapMapUnitPosition.Floor = value.Floor;
 
-                TheMapUnitState.X = (byte)value.X;
-                TheMapUnitState.Y = (byte)value.Y;
-                TheMapUnitState.Floor = (byte)value.Floor;
+                // TheMapUnitState.X = (byte)value.X;
+                // TheMapUnitState.Y = (byte)value.Y;
+                // TheMapUnitState.Floor = (byte)value.Floor;
 
                 if (TheSmallMapCharacterState == null) return;
                 TheSmallMapCharacterState.TheMapUnitPosition.X = value.X;
@@ -88,17 +83,16 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     the state of the animations
         /// </summary>
-        [IgnoreDataMember] public MapUnitState TheMapUnitState { get; protected set; }
-
+        // [IgnoreDataMember] public MapUnitState TheMapUnitState { get; protected set; }
 
         [IgnoreDataMember] public TileReference BoardedTileReference =>
-            TileReferences.GetTileReferenceByName(UseFourDirections
+            GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
                 ? FourDirectionToTileNameBoarded[Direction]
                 : DirectionToTileNameBoarded[Direction]);
 
         // ReSharper disable once MemberCanBeProtected.Global
         [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
-            TileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+            GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
 
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
@@ -106,45 +100,19 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
-        [IgnoreDataMember] protected DataOvlReference DataOvlRef { get; set; }
-        [IgnoreDataMember] protected TileReferences TileReferences { get; set; }
-        [IgnoreDataMember] protected NonPlayerCharacterReferences NPRefs { get; set; }
         [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
 
         [DataMember] private int _keyTileIndex = -1;
         [DataMember] private int _npcRefIndex = -1;
 
         public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef ?? null;
-        
-        
-        // [IgnoreDataMember]
-        // public NonPlayerCharacterReference NPCRef
-        // {
-        //     get
-        //     {
-        //         if (_npcRefs == null || _npcRefIndex == -1) return null;
-        //         return _npcRefs?.GetNonPlayerCharactersByLocation(MapLocation)[_npcRefIndex];
-        //     }
-        //     private set
-        //     {
-        //         if (value == null) 
-        //             _npcRefIndex = -1;
-        //         else
-        //             _npcRefIndex = value.DialogIndex;
-        //     }
-        // }
 
-        [IgnoreDataMember]
-        public virtual TileReference KeyTileReference
+        [IgnoreDataMember] public virtual TileReference KeyTileReference
         {
             get => NPCRef == null
-                ? TileReferences.GetTileReferenceOfKeyIndex(TheMapUnitState.Tile1Ref.Index)
-                : TileReferences.GetTileReference(NPCRef.NPCKeySprite);
-            set
-            {
-                TheMapUnitState.Tile1Ref = value;
-                TheMapUnitState.Tile2Ref = value;
-            }
+                ? GameReferences.SpriteTileReferences.GetTileReference(_keyTileIndex)
+                : GameReferences.SpriteTileReferences.GetTileReference(NPCRef.NPCKeySprite);
+            set => _keyTileIndex = value.Index;
         }
 
         
@@ -153,7 +121,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         protected MapUnit()
         {
-            TheMapUnitState = null;
+            //TheMapUnitState = null;
             TheSmallMapCharacterState = null;
             Movement = null;
             Direction = Point2D.Direction.None;
@@ -162,43 +130,33 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Builds a MpaCharacter from pre-instantiated objects - typically loaded from disk in advance
         /// </summary>
-        /// <param name="npcRef"></param>
-        /// <param name="mapUnitState"></param>
         /// <param name="smallMapTheSmallMapCharacterState"></param>
         /// <param name="mapUnitMovement"></param>
-        /// <param name="tileReferences"></param>
         /// <param name="location"></param>
-        /// <param name="dataOvlRef"></param>
         /// <param name="direction"></param>
-        /// <param name="npcRefs"></param>
-        protected MapUnit(MapUnitState mapUnitState,
+        /// <param name="npcState"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <param name="tileReference"></param>
+        protected MapUnit(
             SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, 
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlRef, Point2D.Direction direction,
-            NonPlayerCharacterState npcState, NonPlayerCharacterReferences npcRefs = null
-            )
-            //NonPlayerCharacterReference npcRef = null, NonPlayerCharacterReferences npcRefs = null)
+            MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
+             Point2D.Direction direction,
+            NonPlayerCharacterState npcState, TileReference tileReference,
+            MapUnitPosition mapUnitPosition)
         {
-            _npcRefs = npcRefs;
-            DataOvlRef = dataOvlRef;
-            TileReferences = tileReferences;
             MapLocation = location;
-            TheMapUnitState = mapUnitState;
             TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
             Movement = mapUnitMovement;
             Direction = direction;
 
             if (npcState != null) _npcRefIndex = npcState.NPCRef?.DialogIndex ?? -1;
 
-            // Debug.Assert(playerCharacterRecords != null);
-            Debug.Assert(TheMapUnitState != null);
             Debug.Assert(Movement != null);
 
-            _keyTileIndex = mapUnitState.Tile1Ref?.Index ?? 0;
+            _keyTileIndex = tileReference.Index;
 
             // set the characters position 
-            MapUnitPosition = new MapUnitPosition(TheMapUnitState.X, TheMapUnitState.Y, TheMapUnitState.Floor);
+            MapUnitPosition = mapUnitPosition;
         }        
         
         public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)

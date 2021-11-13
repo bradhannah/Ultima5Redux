@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
@@ -16,16 +16,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         [DataMember] private int _playerCharacterRecordIndex = -1;
         [IgnoreDataMember] private PlayerCharacterRecords ThePlayerCharacterRecords { get; set; }
         
-        public NonPlayerCharacter(MapUnitState mapUnitState,
-            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
-            TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
-            TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            DataOvlReference dataOvlReference, NonPlayerCharacterState npcState) 
-            //NonPlayerCharacterReference npcRef, NonPlayerCharacterReferences npcRefs) 
-            : base(mapUnitState, smallMapTheSmallMapCharacterState,
-            mapUnitMovement, tileReferences, location, dataOvlReference,
-            Point2D.Direction.None, npcState)
-            //, npcRef, npcRefs)
+        public NonPlayerCharacter(
+                SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
+                TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, 
+                SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition,
+                    NonPlayerCharacterState npcState)
+            : base(smallMapTheSmallMapCharacterState,
+                mapUnitMovement, location, Point2D.Direction.None,
+                npcState, GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+                mapUnitPosition)
         {
             NPCState = npcState;
             bool bLargeMap = TheSmallMapCharacterState == null && NPCState.NPCRef == null;
@@ -393,20 +392,20 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D xy)
         {
             // is player on a ladder or staircase going in the direction they intend to go?
-            bool bIsOnStairCaseOrLadder = TileReferences.IsStaircase(currentTileRef.Index) ||
-                                          TileReferences.IsLadder(currentTileRef.Index);
+            bool bIsOnStairCaseOrLadder = GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index) ||
+                                          GameReferences.SpriteTileReferences.IsLadder(currentTileRef.Index);
 
             if (!bIsOnStairCaseOrLadder) return false;
 
             // are they destined to go up or down it?
-            if (TileReferences.IsStaircase(currentTileRef.Index))
+            if (GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index))
             {
                 if (virtualMap.IsStairGoingUp(xy))
                     return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
             }
 
-            if (TileReferences.IsLadderUp(currentTileRef.Index))
+            if (GameReferences.SpriteTileReferences.IsLadderUp(currentTileRef.Index))
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
             return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
         }

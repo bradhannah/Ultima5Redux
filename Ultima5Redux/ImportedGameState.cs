@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
@@ -153,15 +154,25 @@ namespace Ultima5Redux
             //// MapUnitStates
             // DataChunk activeDataChunk = OverworldOverlayDataChunks;
 
-            OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks, tileReferences);
-            UnderworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks, tileReferences);
-            ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks, tileReferences);
+            OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
+            UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
+            ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks);
             
-            SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk, tileReferences);
+            OverworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
+            UnderworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
+
+            ActiveMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
+                
+            
+            // _overworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
+            // _underworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
+
+            
+            SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk);
             CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists, 
                 NonPlayerCharacterMovementOffsets);
 
-            TheNonPlayerCharacterStates = new NonPlayerCharacterStates(this, npcRefs);
+            TheNonPlayerCharacterStates = new NonPlayerCharacterStates(this);
         }
 
         /// <summary>

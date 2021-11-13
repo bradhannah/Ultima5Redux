@@ -6,6 +6,7 @@ using Ultima5Redux.Data;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.References;
 
 namespace U5ConversationSimulator
 {
@@ -23,7 +24,7 @@ namespace U5ConversationSimulator
             }
 
             _world.State.TheVirtualMap.LoadSmallMap(
-                _world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
 
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
@@ -37,7 +38,7 @@ namespace U5ConversationSimulator
             SmallMapReferences.SingleMapReference.Location location = SmallMapReferences.SingleMapReference.Location.Minoc;
             NonPlayerCharacterState npcState =
                 _world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
-            Conversation convo = new Conversation(_world.State, _world.DataOvlRef, npcState); // delwyn
+            Conversation convo = new Conversation(_world.State, GameReferences.DataOvlRef, npcState); // delwyn
 
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno

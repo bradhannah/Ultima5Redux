@@ -16,6 +16,7 @@ using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable RedundantAssignment
@@ -50,10 +51,10 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(ActualSaveDirectory + @"\Britain");
             _ = "";
-            foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
+            foreach (SmallMapReferences.SingleMapReference smr in GameReferences.SmallMapRef.MapReferenceList)
             {
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
             }
 
             Assert.True(true);
@@ -65,7 +66,7 @@ namespace Ultima5ReduxTesting
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
 
             Assert.True(true);
         }
@@ -76,12 +77,11 @@ namespace Ultima5ReduxTesting
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
             world.State.TheVirtualMap.TheMapUnits.CreateFrigateAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
-                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
-                    world.DataOvlRef);
+                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
                 Map.Maps.Overworld,
                 dockLocation, 0);
@@ -95,7 +95,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
 
-            world.State.TheVirtualMap.MoveAvatar(new Point2D(frigate2.TheMapUnitState.X, frigate2.TheMapUnitState.Y));
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(frigate2.MapUnitPosition.X, frigate2.MapUnitPosition.Y));
             string retStr = world.Board(out bool bWasSuccessful);
             Debug.Assert(bWasSuccessful);
 
@@ -111,12 +111,11 @@ namespace Ultima5ReduxTesting
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
             world.State.TheVirtualMap.TheMapUnits.CreateSkiffAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
-                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc,
-                    world.DataOvlRef);
+                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc );
             List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
                 Map.Maps.Overworld,
                 dockLocation, 0);
@@ -129,7 +128,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
 
-            world.State.TheVirtualMap.MoveAvatar(new Point2D(skiff.TheMapUnitState.X, skiff.TheMapUnitState.Y));
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(skiff.MapUnitPosition.X, skiff.MapUnitPosition.Y));
             string retStr = world.Board(out bool bWasSuccessful);
             Debug.Assert(bWasSuccessful);
 
@@ -144,7 +143,7 @@ namespace Ultima5ReduxTesting
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
 
             Assert.True(true);
         }
@@ -155,7 +154,7 @@ namespace Ultima5ReduxTesting
 
             Trace.Write("Starting ");
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
             int i = (24 * (60 / 2));
             while (i > 0)
@@ -174,11 +173,11 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
 
-            foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
+            foreach (SmallMapReferences.SingleMapReference smr in GameReferences.SmallMapRef.MapReferenceList)
             {
                 Debug.WriteLine("***** Loading " + smr.MapLocation + " on floor " + smr.Floor);
                 world.State.TheVirtualMap.LoadSmallMap(
-                    world.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
 
                 int i = (24 * (60 / 2));
                 while (i > 0)
@@ -202,7 +201,7 @@ namespace Ultima5ReduxTesting
             Trace.Write("Starting ");
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1));
 
             world.State.TheVirtualMap.GuessTile(new Point2D(14, 7));
         }
@@ -245,7 +244,7 @@ namespace Ultima5ReduxTesting
             World world = new World(SaveDirectory);
 
             world.State.TheVirtualMap.LoadSmallMap(
-                world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0));
 
             string pushAThing = world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed);
             Assert.False(bWasPushed);
@@ -308,7 +307,7 @@ namespace Ultima5ReduxTesting
                 if (phase == MoonPhaseReferences.MoonPhases.NoMoon) continue;
                 bool bBuried = world.State.TheMoongates.IsMoonstoneBuried((int)phase);
                 int nMoonstonesInInv = world.State.PlayerInventory.TheMoonstones.Items[phase].Quantity;
-                string desc = world.InvRef.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item,
+                string desc = GameReferences.InvRef.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item,
                     phase.ToString()).ItemDescription;
             }
         }
@@ -392,7 +391,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
 
-            MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(world.DataOvlRef);
+            MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(GameReferences.DataOvlRef);
 
             world.State.TheTimeOfDay.Day = 25;
             world.State.TheTimeOfDay.Hour = 4;
@@ -411,7 +410,7 @@ namespace Ultima5ReduxTesting
         {
             World world = new World(SaveDirectory);
 
-            MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(world.DataOvlRef);
+            MoonPhaseReferences moonPhaseReferences = new MoonPhaseReferences(GameReferences.DataOvlRef);
 
             for (byte nDay = 1; nDay <= 28; nDay++)
             {
@@ -563,9 +562,10 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_BasicBlackSmithDialogue()
         {
             World world = new World(SaveDirectory);
-            BlackSmith blacksmith = world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            BlackSmith blacksmith = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Minoc,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith, null) as BlackSmith;
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith, null,
+                world.State.PlayerInventory) as BlackSmith;
 
             Debug.Assert(blacksmith != null, nameof(blacksmith) + " != null");
             string purchaseStr2 = blacksmith.GetEquipmentBuyingOutput(DataOvlReference.Equipment.LeatherHelm, 100);
@@ -588,9 +588,10 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_BasicHealerDialogue()
         {
             World world = new World(SaveDirectory);
-            Healer healer = (Healer)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            Healer healer = (Healer)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Cove,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Healer, null);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Healer, null,
+                world.State.PlayerInventory);
 
             _ = healer.NoNeedForMyArt();
 
@@ -600,9 +601,9 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_BasicTavernDialogue()
         {
             World world = new World(SaveDirectory);
-            BarKeeper barKeeper = (BarKeeper)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            BarKeeper barKeeper = (BarKeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Paws,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null,world.State.PlayerInventory);
 
             string myOppressionTest = barKeeper.GetGossipResponse("oppr", true);
         }
@@ -610,9 +611,9 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_BasicMagicSellerDialogue()
         {
             World world = new World(SaveDirectory);
-            MagicSeller magicSeller = (MagicSeller)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            MagicSeller magicSeller = (MagicSeller)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Cove,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null,world.State.PlayerInventory);
             List<Reagent> reagents = magicSeller.GetReagentsForSale();
 
             int price1 = reagents[0].GetAdjustedBuyPrice(world.State.CharacterRecords,
@@ -644,9 +645,9 @@ namespace Ultima5ReduxTesting
             int nKeysPrice = world.State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys]
                 .GetAdjustedBuyPrice(world.State.CharacterRecords,
                     SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
-            GuildMaster guildMaster = (GuildMaster)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            GuildMaster guildMaster = (GuildMaster)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null,world.State.PlayerInventory);
             string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
         }
 
@@ -654,15 +655,15 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_SimpleStringTest()
         {
             World world = new World(SaveDirectory);
-            string str = world.DataOvlRef.StringReferences.GetString(DataOvlReference.Battle2Strings.N_VICTORY_BANG_N);
+            string str = GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Battle2Strings.N_VICTORY_BANG_N);
         }
 
         [Test] public void Test_ShipwrightDialogue()
         {
             World world = new World(SaveDirectory);
-            Shipwright shipwright = (Shipwright)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            Shipwright shipwright = (Shipwright)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null,world.State.PlayerInventory);
 
             string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay);
         }
@@ -711,9 +712,9 @@ namespace Ultima5ReduxTesting
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
-            Innkeeper innKeeper = (Innkeeper)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null,world.State.PlayerInventory);
 
             Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
 
@@ -746,9 +747,9 @@ namespace Ultima5ReduxTesting
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
-            Innkeeper innKeeper = (Innkeeper)world.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+            Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Britain,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null,world.State.PlayerInventory);
 
             Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
 
@@ -927,13 +928,13 @@ namespace Ultima5ReduxTesting
             World world = new World(ActualSaveDirectory + @"\b_carpet");
 
             EnemyReference enemyReference =
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448));
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448));
 
             world.State.TheVirtualMap.LoadCombatMap(
-                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, enemyReference);
 
-            EnemyReference secondEnemyReference = world.EnemyRefs.GetFriendReference(enemyReference);
+            EnemyReference secondEnemyReference = GameReferences.EnemyRefs.GetFriendReference(enemyReference);
             //GetEnemyReference(enemyReference.FriendIndex);
         }
 
@@ -942,12 +943,12 @@ namespace Ultima5ReduxTesting
             World world = new World(ActualSaveDirectory + @"\b_carpet");
 
             world.State.TheVirtualMap.LoadCombatMap(
-                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
             
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
@@ -975,7 +976,7 @@ namespace Ultima5ReduxTesting
 
             // right sided hammer
             world.State.TheVirtualMap.LoadCombatMap(
-                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 4),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 4),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
 
             // CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
@@ -996,7 +997,7 @@ namespace Ultima5ReduxTesting
             World world = new World(ActualSaveDirectory + @"\b_carpet");
 
             world.State.TheVirtualMap.LoadCombatMap(
-                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 4),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 4),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
 
             // CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
@@ -1026,12 +1027,12 @@ namespace Ultima5ReduxTesting
             World world = new World(ActualSaveDirectory + @"\b_carpet");
 
             world.State.TheVirtualMap.LoadCombatMap(
-                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 11),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 11),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
             CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer; 
@@ -1051,14 +1052,14 @@ namespace Ultima5ReduxTesting
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
             world.State.TheVirtualMap.LoadCombatMap(
-                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
 
-            var thing = world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2)
+            var thing = GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2)
                 .GetEntryDirections();
 
             world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
@@ -1073,12 +1074,12 @@ namespace Ultima5ReduxTesting
             for (int i = 0; i < 16; i++)
             {
                 SingleCombatMapReference singleCombatMapReference =
-                    world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i);
+                    GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i);
                 foreach (SingleCombatMapReference.EntryDirection worldEntryDirection in singleCombatMapReference
                     .GetEntryDirections())
                 {
                     world.State.TheVirtualMap.LoadCombatMap(
-                        world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                        GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                             i),
                         worldEntryDirection, world.State.CharacterRecords);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
@@ -1086,13 +1087,13 @@ namespace Ultima5ReduxTesting
                 }
             }
 
-            EnemyReference enemy1 = world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(320));
+            EnemyReference enemy1 = GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(320));
 
             List<CombatMap> dungMaps = new List<CombatMap>();
             for (int i = 0; i < 112; i++)
             {
                 SingleCombatMapReference singleCombatMapReference =
-                    world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, i);
+                    GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, i);
 
 //                Debug.Assert(singleCombatMapReference.GetEntryDirections().Count > 0);
                 if (singleCombatMapReference.GetEntryDirections().Count == 0)
@@ -1104,7 +1105,7 @@ namespace Ultima5ReduxTesting
                     .GetEntryDirections())
                 {
                     world.State.TheVirtualMap.LoadCombatMap(
-                        world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                        GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
                             i),
                         dungeonEntryDirection, world.State.CharacterRecords, enemy1, 4);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
@@ -1128,12 +1129,12 @@ namespace Ultima5ReduxTesting
             World world = new World(ActualSaveDirectory + @"\b_carpet");
 
             world.State.TheVirtualMap.LoadCombatMap(
-                world.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 15),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 15),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(448)), 5,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 5,
                 // troll
-                world.EnemyRefs.GetEnemyReference(world.SpriteTileReferences.GetTileReference(484)), 1);
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
 
             List<Point2D> points =
                 world.State.TheVirtualMap.CurrentCombatMap.GetEscapablePoints(new Point2D(12, 12),

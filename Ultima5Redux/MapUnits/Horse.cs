@@ -3,16 +3,19 @@ using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
     public sealed class Horse : MapUnit
     {
-        public Horse(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, TileReferences tileReferences,
-            SmallMapReferences.SingleMapReference.Location location, DataOvlReference dataOvlReference,
-            Point2D.Direction direction, NonPlayerCharacterState npcState)
-            : base(mapUnitState, null, mapUnitMovement, tileReferences,
-                location, dataOvlReference, direction, npcState)
+        public Horse(MapUnitMovement mapUnitMovement,
+            SmallMapReferences.SingleMapReference.Location location,
+            Point2D.Direction direction, NonPlayerCharacterState npcState,
+            MapUnitPosition mapUnitPosition)
+            : base( null, mapUnitMovement, location, direction, npcState,
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("HorseLeft"), 
+                mapUnitPosition)
         {
             KeyTileReference = NonBoardedTileReference;
         }
@@ -32,7 +35,7 @@ namespace Ultima5Redux.MapUnits
 
         public override bool IsAttackable => false;
 
-        public override string BoardXitName => DataOvlRef.StringReferences
+        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.HORSE_N).Trim();
 
         public override string FriendlyName => BoardXitName;

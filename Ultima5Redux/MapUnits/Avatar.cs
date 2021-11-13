@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class Avatar : MapUnit
+    public sealed class Avatar : MapUnit
     {
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
 
@@ -25,28 +25,27 @@ namespace Ultima5Redux.MapUnits
             { AvatarState.Regular, false }
         };
 
-        private Avatar(TileReferences tileReferences, SmallMapReferences.SingleMapReference.Location location,
-            MapUnitMovement movement, MapUnitState mapUnitState, DataOvlReference dataOvlReference,
-            bool bUseExtendedSprites)
+        private Avatar(SmallMapReferences.SingleMapReference.Location location,
+            MapUnitMovement movement, MapUnitPosition mapUnitPosition, bool bUseExtendedSprites)
         {
             _bUseExtendedSprites = bUseExtendedSprites;
-            DataOvlRef = dataOvlReference;
-            if (mapUnitState == null)
-                TheMapUnitState = MapUnitState.CreateAvatar(tileReferences,
-                    SmallMapReferences.GetStartingXYZByLocation());
-            else
-                TheMapUnitState = MapUnitState.CreateAvatar(tileReferences,
-                    SmallMapReferences.GetStartingXYZByLocation(),
-                    mapUnitState);
-            TileReferences = tileReferences;
-
-            CurrentDirection = TheMapUnitState.Tile1Ref.GetDirection();
-            CurrentAvatarState = CalculateAvatarState(TheMapUnitState.Tile1Ref);
-
+        
+            // if (mapUnitState == null)
+                 //TheMapUnitState = MapUnitState.CreateAvatar(mapUnitPosition);
+                    //SmallMapReferences.GetStartingXYZByLocation());
+            // else
+            //     TheMapUnitState = MapUnitState.CreateAvatar(SmallMapReferences.GetStartingXYZByLocation(),
+            //         mapUnitState);
+        
+            //CurrentDirection = TheMapUnitState.Tile1Ref.GetDirection();
+            CurrentAvatarState = CalculateAvatarState(KeyTileReference);
+                //TheMapUnitState.Tile1Ref);
+            MapUnitPosition = mapUnitPosition;
+        
             BoardMapUnitFromAvatarState(CurrentAvatarState);
-
+        
             MapLocation = location;
-
+        
             Movement = movement;
         }
 
@@ -83,8 +82,8 @@ namespace Ultima5Redux.MapUnits
         {
             get =>
                 IsAvatarOnBoardedThing
-                    ? TileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[CurrentDirection])
-                    : TileReferences.GetTileReferenceByName(DirectionToTileName[CurrentDirection]);
+                    ? GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[CurrentDirection])
+                    : GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[CurrentDirection]);
             set => base.KeyTileReference = value;
         }
 
@@ -152,7 +151,8 @@ namespace Ultima5Redux.MapUnits
             bool bDirectionChanged = PreviousDirection != CurrentDirection;
 
             // set the new sprite to reflect the new direction
-            if (bChangeTile) TheMapUnitState.SetTileReference(GetCurrentTileReference());
+            if (bChangeTile) KeyTileReference = GetCurrentTileReference();
+                //TheMapUnitState.SetTileReference(GetCurrentTileReference());
 
             // return false if the direction changed AND your on a Frigate
             // because you will just change direction
@@ -163,20 +163,16 @@ namespace Ultima5Redux.MapUnits
         ///     Creates an Avatar MapUnit at the default small map position
         ///     Note: this should never need to be called from a LargeMap since the values persist on disk
         /// </summary>
-        /// <param name="tileReferences"></param>
         /// <param name="location"></param>
         /// <param name="movement"></param>
-        /// <param name="mapUnitState"></param>
-        /// <param name="dataOvlReference"></param>
+        /// <param name="mapUnitPosition"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <returns></returns>
-        public static MapUnit CreateAvatar(TileReferences tileReferences,
-            SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
-            MapUnitState mapUnitState, DataOvlReference dataOvlReference, bool bUseExtendedSprites)
+        public static MapUnit CreateAvatar(SmallMapReferences.SingleMapReference.Location location, 
+            MapUnitMovement movement, MapUnitPosition mapUnitPosition, bool bUseExtendedSprites)
         {
-            Avatar theAvatar = new Avatar(tileReferences, location, movement, mapUnitState, dataOvlReference,
-                bUseExtendedSprites);
-
+            Avatar theAvatar = new Avatar(location, movement, mapUnitPosition, bUseExtendedSprites);
+        
             return theAvatar;
         }
 
@@ -195,38 +191,34 @@ namespace Ultima5Redux.MapUnits
 
         private void BoardMapUnitFromAvatarState(AvatarState avatarState)
         {
-            MapUnitState vehicleState = new MapUnitState();
+            //MapUnitState vehicleState = new MapUnitState();
             // we copy the Avatar map unit state as a starting point
-            TheMapUnitState.CopyTo(TileReferences, vehicleState);
-
+            //TheMapUnitState.CopyTo(vehicleState);
+            MapUnitMovement emptyMapUnitMovement = new MapUnitMovement(0, null, null);
+            
             switch (avatarState)
             {
                 case AvatarState.Regular:
                     break;
                 case AvatarState.Carpet:
-                    MagicCarpet carpet = new MagicCarpet(vehicleState,
-                        new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
+                    MagicCarpet carpet = new MagicCarpet(MapLocation, CurrentDirection, null, MapUnitPosition);
                     BoardMapUnit(carpet);
                     break;
                 case AvatarState.Horse:
-                    Horse horse = new Horse(vehicleState,
-                        new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
+                    Horse horse = new Horse(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
                     BoardMapUnit(horse);
                     break;
                 case AvatarState.Frigate:
-                    Frigate frigate = new Frigate(vehicleState,
-                        new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
+                    // todo: this is incorrect - we need to figure out the correct number of skiffs when we board it and create it
+                    Frigate frigate = new Frigate(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
+                    //frigate
                     // must decide how many skiffs are there and assign them
-                    frigate.SkiffsAboard = TheMapUnitState.Depends3;
+                    frigate.SkiffsAboard = 1; 
+                        //TheMapUnitState.Depends3;
                     BoardMapUnit(frigate);
                     break;
                 case AvatarState.Skiff:
-                    Skiff skiff = new Skiff(vehicleState,
-                        new MapUnitMovement(0, null, null),
-                        TileReferences, MapLocation, DataOvlRef, CurrentDirection, null);
+                    Skiff skiff = new Skiff(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
                     BoardMapUnit(skiff);
                     break;
                 case AvatarState.Hidden:

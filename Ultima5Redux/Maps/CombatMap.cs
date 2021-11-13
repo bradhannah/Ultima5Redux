@@ -1165,8 +1165,8 @@ namespace Ultima5Redux.Maps
             {
                 PlayerCharacterRecord record = activeRecords.Records[nPlayer];
 
-                CombatPlayer combatPlayer = new CombatPlayer(record, _tileReferences,
-                    playerStartPositions[nPlayer], _dataOvlReference, _inventory);
+                CombatPlayer combatPlayer = new CombatPlayer(record,
+                    playerStartPositions[nPlayer], _inventory);
 
                 // make sure the tile that the player occupies is not walkable
                 GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
