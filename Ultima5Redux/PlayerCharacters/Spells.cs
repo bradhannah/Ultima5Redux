@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters
@@ -43,10 +41,9 @@ namespace Ultima5Redux.PlayerCharacters
         public Spells(List<byte> gameStateByteArray, MagicReferences magicReferences) : base(gameStateByteArray)
         {
             _magicReferences = magicReferences;
-            int nIndex = 0;
             foreach (MagicReference.SpellWords spell in Enum.GetValues(typeof(MagicReference.SpellWords)))
             {
-                AddSpell(spell, (DataOvlReference.SpellStrings)nIndex++, _magicReferences.GetMagicReference(spell));
+                AddSpell(spell, _magicReferences.GetMagicReference(spell));
             }
         }
 
@@ -58,7 +55,7 @@ namespace Ultima5Redux.PlayerCharacters
             return hey.FirstOrDefault().Key;
         }
         
-        private void AddSpell(MagicReference.SpellWords spellWord, DataOvlReference.SpellStrings spellStr, MagicReference magicReference)
+        private void AddSpell(MagicReference.SpellWords spellWord, MagicReference magicReference)
         {
             if (spellWord == MagicReference.SpellWords.Nox)
             {

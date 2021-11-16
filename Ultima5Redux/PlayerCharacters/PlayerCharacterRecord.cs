@@ -10,7 +10,7 @@ using Ultima5Redux.PlayerCharacters.CombatItems;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    public sealed partial class PlayerCharacterRecord
+    public sealed class PlayerCharacterRecord
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M' }
@@ -35,11 +35,9 @@ namespace Ultima5Redux.PlayerCharacters
             Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F
         }
 
-        private const int NAME_LENGTH = 8;
+        //private const int NAME_LENGTH = 8;
         
         internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
-
-        private static readonly Random _random = new Random();
 
         private byte _monthsSinceStayingAtInn;
 
@@ -122,14 +120,6 @@ namespace Ultima5Redux.PlayerCharacters
             // I couldn't guarantee that other items wouldn't do the same so instead we allow each of the equipment save
             // slots can be "whatever" in "whatever" order. When I save them back to disk, I will save them in the correct order
             // Also confirmed that Ultima 5 can handle these equipment saves out of order as well
-            List<DataOvlReference.Equipment> allEquipment = new List<DataOvlReference.Equipment>(6);
-            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Helmet]);
-            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Armor]);
-            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Weapon]);
-            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Shield]);
-            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Ring]);
-            allEquipment.Add((DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Amulet]);
-
             Equipped.Helmet = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Helmet];
             Equipped.Armour = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Armor];
             Equipped.LeftHand = (DataOvlReference.Equipment)rawRecordByteList[(int)CharacterRecordOffsets.Weapon];
@@ -252,7 +242,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         public int CastSpellMani()
         {
-            if (_random.Next() % 20 == 0)
+            if (Utils.Ran.Next() % 20 == 0)
             {
                 return -1;
             }
@@ -352,7 +342,6 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        private enum DataChunkName { Unused }
         //        offset length      purpose range
         //0           9           character name      zero-terminated string
         //                                            (length = 8+1)

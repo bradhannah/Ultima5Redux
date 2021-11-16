@@ -10,7 +10,7 @@ namespace Ultima5Redux
 {
     public static class Utils
     {
-        private static readonly Random Ran = new Random();
+        public static Random Ran { get; } = new Random();
         public static readonly TextInfo EnTextInfo = new CultureInfo("en-US", false).TextInfo;
 
         /// <summary>

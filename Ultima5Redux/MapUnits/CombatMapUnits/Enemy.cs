@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;

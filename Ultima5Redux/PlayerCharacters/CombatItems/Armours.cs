@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Runtime.Serialization;
-using System.Threading;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 

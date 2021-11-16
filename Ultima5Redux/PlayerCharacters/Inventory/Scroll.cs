@@ -9,7 +9,7 @@
 
         private const int SCROLL_SPRITE = 260;
 
-        public Scroll(MagicReference.SpellWords spell, int quantity, string longName, string shortName,  MagicReference scrollMagicReference) : base(quantity,
+        public Scroll(MagicReference.SpellWords spell, int quantity,  MagicReference scrollMagicReference) : base(quantity,
             SCROLL_SPRITE)
         {
             ScrollSpell = spell;

@@ -11,12 +11,12 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux
 {
-    public class ImportedGameState
+    internal class ImportedGameState
     {
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
 
-        public ImportedGameState(string u5Directory, TileReferences tileReferences, NonPlayerCharacterReferences npcRefs)
+        public ImportedGameState(string u5Directory)
         {
             string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
 
@@ -175,7 +175,6 @@ namespace Ultima5Redux
                     break;
                 case Map.Maps.Combat:
                     throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 

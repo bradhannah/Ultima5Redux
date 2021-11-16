@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 

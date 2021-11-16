@@ -1,70 +1,39 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Provisions : InventoryItems<Provision.ProvisionTypeEnum, Provision>
     {
-        public Provisions(DataOvlReference dataOvlRef, GameState state) : base(null)
+        public Provisions(GameState state) : base(null)
         {
-            string uppercaseFirst(string s)
-            {
-                // Check for empty string.
-                if (string.IsNullOrEmpty(s)) return string.Empty;
-                // Return char and concat substring.
-                return char.ToUpper(s[0]) + s.Substring(1);
-            }
-
             Items.Add(Provision.ProvisionTypeEnum.Torches,
                 new Provision(Provision.ProvisionTypeEnum.Torches,
-                    uppercaseFirst(dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_TORCH)
-                        .Trim()),
-                    uppercaseFirst(dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_TORCH)
-                        .Trim()),
-                    dataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.SOME_TORCHES_BANG_N)
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.SOME_TORCHES_BANG_N)
                         .Trim(),
-                    (int)Provision.ProvisionSpritesTypeEnum.Torches, dataOvlRef, state));
+                    (int)Provision.ProvisionSpritesTypeEnum.Torches, state));
             Items.Add(Provision.ProvisionTypeEnum.Gems,
                 new Provision(Provision.ProvisionTypeEnum.Gems,
-                    uppercaseFirst(
-                        dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_GEM).Trim()),
-                    uppercaseFirst(
-                        dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_GEM).Trim()),
-                    dataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_GEM_BANG_N).Trim(),
-                    (int)Provision.ProvisionSpritesTypeEnum.Gems, dataOvlRef, state));
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_GEM_BANG_N).Trim(),
+                    (int)Provision.ProvisionSpritesTypeEnum.Gems, state));
             Items.Add(Provision.ProvisionTypeEnum.Keys,
                 new Provision(Provision.ProvisionTypeEnum.Keys,
-                    uppercaseFirst(
-                        dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_KEY).Trim()),
-                    uppercaseFirst(
-                        dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_KEY).Trim()),
-                    dataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_RING_OF_KEYS_BANG_N)
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings.A_RING_OF_KEYS_BANG_N)
                         .Trim(),
-                    (int)Provision.ProvisionSpritesTypeEnum.Keys, dataOvlRef, state));
+                    (int)Provision.ProvisionSpritesTypeEnum.Keys, state));
             Items.Add(Provision.ProvisionTypeEnum.SkullKeys,
                 new Provision(Provision.ProvisionTypeEnum.SkullKeys,
-                    uppercaseFirst(dataOvlRef.StringReferences
-                        .GetString(DataOvlReference.SpecialItemNamesStrings.SKULL_KEYS).Trim()),
-                    uppercaseFirst(dataOvlRef.StringReferences
-                        .GetString(DataOvlReference.SpecialItemNamesStrings.SKULL_KEYS).Trim()),
-                    dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY).Trim(),
-                    (int)Provision.ProvisionSpritesTypeEnum.Torches, dataOvlRef, state));
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY).Trim(),
+                    (int)Provision.ProvisionSpritesTypeEnum.Torches, state));
             Items.Add(Provision.ProvisionTypeEnum.Food,
                 new Provision(Provision.ProvisionTypeEnum.Food,
-                    uppercaseFirst(dataOvlRef.StringReferences
-                        .GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim()),
-                    uppercaseFirst(dataOvlRef.StringReferences
-                        .GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim()),
-                    dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim(),
-                    (int)Provision.ProvisionSpritesTypeEnum.Food, dataOvlRef, state));
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim(),
+                    (int)Provision.ProvisionSpritesTypeEnum.Food, state));
             Items.Add(Provision.ProvisionTypeEnum.Gold,
                 new Provision(Provision.ProvisionTypeEnum.Gold,
-                    uppercaseFirst(dataOvlRef.StringReferences
-                        .GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim()),
-                    uppercaseFirst(dataOvlRef.StringReferences
-                        .GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim()),
-                    dataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim(),
-                    (int)Provision.ProvisionSpritesTypeEnum.Gold, dataOvlRef, state));
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim(),
+                    (int)Provision.ProvisionSpritesTypeEnum.Gold, state));
 
         }
 

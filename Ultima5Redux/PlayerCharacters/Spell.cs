@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters

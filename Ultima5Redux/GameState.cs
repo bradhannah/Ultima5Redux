@@ -50,7 +50,7 @@ namespace Ultima5Redux
         {
             _magicReferences = magicReferences;
             // imports the legacy save game file data 
-            _importedGameState = new ImportedGameState(u5Directory, tileReferences, npcRefs);
+            _importedGameState = new ImportedGameState(u5Directory);
 
             // one time copy of all imported state information
             CharacterRecords = _importedGameState.CharacterRecords;

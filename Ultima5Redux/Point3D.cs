@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace Ultima5Redux
 {

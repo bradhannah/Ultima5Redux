@@ -7,11 +7,9 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
-using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
-using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 
@@ -60,6 +58,7 @@ namespace Ultima5Redux
         ///     Constructor
         /// </summary>
         /// <param name="ultima5Directory">ultima 5 data and save game directory</param>
+        /// <param name="bUseExtendedSprites"></param>
         public World(string ultima5Directory, bool bUseExtendedSprites = false)
         {
             U5Directory = ultima5Directory;
@@ -709,9 +708,6 @@ namespace Ultima5Redux
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 return retStr;
             }
-
-            // we get the newTile so that we can determine if it's passable
-            TileReference newTileReference = State.TheVirtualMap.GetTileReference(newPosition.X, newPosition.Y);
 
             if (!State.TheVirtualMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition, false,
                 Avatar.AvatarState.Regular))

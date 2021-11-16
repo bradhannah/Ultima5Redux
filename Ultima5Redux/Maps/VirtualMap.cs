@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
@@ -214,7 +213,7 @@ namespace Ultima5Redux.Maps
         /// <param name="tileOverrideReferences"></param>
         /// <param name="importedGameState"></param>
         /// <param name="npcStates"></param>
-        public VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
+        internal VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, TileReferences tileReferences, GameState state,
             NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
             InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,

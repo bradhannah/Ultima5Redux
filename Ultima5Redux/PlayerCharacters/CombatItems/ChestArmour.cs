@@ -1,6 +1,4 @@
-﻿using Ultima5Redux.Data;
-
-namespace Ultima5Redux.PlayerCharacters.CombatItems
+﻿namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class ChestArmour : Armour
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -36,29 +37,24 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="reagentType">The type of reagent</param>
         /// <param name="quantity">how many the party has</param>
-        /// <param name="longName">long verbose name</param>
-        /// <param name="shortName">shortened version of the name</param>
-        /// <param name="dataOvlRef"></param>
         /// <param name="state"></param>
-        public Reagent(ReagentTypeEnum reagentType, int quantity, string longName, string shortName,
-            DataOvlReference dataOvlRef, GameState state) : base(quantity, REAGENT_SPRITE)
+        public Reagent(ReagentTypeEnum reagentType, int quantity, GameState state) : base(quantity, REAGENT_SPRITE)
         {
             // capture the game state so we know the users Karma for cost calculations
             _state = state;
-            //List<SmallMapReferences.SingleMapReference.Location> reagentShoppeKeeperLocations1 = reagentShoppeKeeperLocations;
             ReagentType = reagentType;
             _reagentPriceAndQuantities =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>();
 
-            List<byte> prices = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_BASE_PRICES)
+            List<byte> prices = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_BASE_PRICES)
                 .GetAsByteList();
-            List<byte> quantities = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES)
+            List<byte> quantities = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES)
                 .GetAsByteList();
             int nOffset = (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
             int nReagents = Enum.GetNames(typeof(ReagentTypeEnum)).Length;
 
             // Get the locations that reagents are sold at
-            List<SmallMapReferences.SingleMapReference.Location> locations = GetLocations(dataOvlRef);
+            List<SmallMapReferences.SingleMapReference.Location> locations = GetLocations();
             // cycle through each location and add reagents to location<->reagent map
             for (int i = 0; i < locations.Count; i++)
             {
@@ -94,17 +90,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Get all locations that reagents are sold
         /// </summary>
-        /// <param name="dataOvlReference"></param>
         /// <returns></returns>
-        private List<SmallMapReferences.SingleMapReference.Location> GetLocations(DataOvlReference dataOvlReference)
+        private List<SmallMapReferences.SingleMapReference.Location> GetLocations()
         {
             List<SmallMapReferences.SingleMapReference.Location> locations =
                 new List<SmallMapReferences.SingleMapReference.Location>();
 
-            foreach (SmallMapReferences.SingleMapReference.Location location in
-                dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS)
-                    .GetAsByteList())
+            List<byte> reagentSkByteList = GameReferences.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS)
+                .GetAsByteList(); 
+            foreach (byte b in reagentSkByteList)
             {
+                SmallMapReferences.SingleMapReference.Location location = 
+                    (SmallMapReferences.SingleMapReference.Location)b;
                 locations.Add(location);
             }
 

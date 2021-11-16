@@ -255,8 +255,8 @@ namespace Ultima5Redux
             int x = startPoint.X;
             int y = startPoint.Y;
             int n = 1 + dx + dy;
-            int x_inc = (endPoint.X > startPoint.X) ? 1 : -1;
-            int y_inc = (endPoint.Y > startPoint.Y) ? 1 : -1;
+            int nXInc = (endPoint.X > startPoint.X) ? 1 : -1;
+            int nYInc = (endPoint.Y > startPoint.Y) ? 1 : -1;
             int error = dx - dy;
             dx *= 2;
             dy *= 2;
@@ -270,12 +270,12 @@ namespace Ultima5Redux
 
                 if (error > 0)
                 {
-                    x += x_inc;
+                    x += nXInc;
                     error -= dy;
                 }
                 else
                 {
-                    y += y_inc;
+                    y += nYInc;
                     error += dx;
                 }
             }

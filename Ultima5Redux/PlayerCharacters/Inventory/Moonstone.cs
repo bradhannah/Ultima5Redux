@@ -7,13 +7,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private const int MOONSTONE_SPRITE = 281;
         private readonly Moongates _moongates;
 
-        public Moonstone(MoonPhaseReferences.MoonPhases phase, string longName, string shortName,
-            string findDescription, Moongates moongates, InventoryReference invRef)
+        public Moonstone(MoonPhaseReferences.MoonPhases phase, string findDescription, Moongates moongates)
             : base(0, findDescription, MOONSTONE_SPRITE)
         {
             Phase = phase;
             _moongates = moongates;
-            InvRef = invRef;
         }
 
         public override bool HideQuantity => true;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
 using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
@@ -76,7 +75,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="importedGameState"></param>
         /// <param name="npcStates"></param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
-        public MapUnits(TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
+        internal MapUnits(TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
             Map.Maps initialMap, bool bUseExtendedSprites, ImportedGameState importedGameState, 
             NonPlayerCharacterStates npcStates,
             SmallMapReferences.SingleMapReference.Location currentSmallMap =
@@ -89,40 +88,6 @@ namespace Ultima5Redux.MapUnits
             _timeOfDay = timeOfDay;
             _playerCharacterRecords = playerCharacterRecords;
             _currentLocation = currentSmallMap;
-
-            // switch (initialMap)
-            // {
-            //     // if the small map is being loaded, then we pull from disk and load the over and underworld from
-            //     // saved.ool
-            //     case Map.Maps.Combat:
-            //         throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
-            //     case Map.Maps.Small:
-            //     case Map.Maps.Overworld:
-            //     case Map.Maps.Underworld:
-            //     {
-            //         // since it is a large map, the small map is empty because the state is lost as soon as you leave it
-            //         // and the selected large map is pulled directly from the active state (saved.gam @ 0x6b8)
-            //         SmallMapUnitStates = null;
-            //
-            //         if (initialMap == Map.Maps.Overworld)
-            //         {
-            //             _overworldMapUnitStates = importedGameState.ActiveMapUnitStates;
-            //             _underworldMapUnitStates = importedGameState.UnderworldMapUnitStates;
-            //         }
-            //         else
-            //         {
-            //             _underworldMapUnitStates = importedGameState.ActiveMapUnitStates; 
-            //             _overworldMapUnitStates = importedGameState.OverworldMapUnitStates;
-            //         }
-            //
-            //         break;
-            //     }
-            //     default:
-            //         throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
-            // }
-
-            // _overworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
-            // _underworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
 
             // map character states pertain to whichever map was loaded from disk
             _smallMapCharacterStates = importedGameState.SmallMapCharacterStates;
@@ -164,7 +129,6 @@ namespace Ultima5Redux.MapUnits
 
         public void InitializeCombatMapReferences()
         {
-            //_combatMapUnitStates = new MapUnitStates();
             CombatMapMapUnitCollection.Clear();
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
@@ -216,7 +180,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="bLoadFromDisk"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
-            bool bLoadFromDisk)//, bool bSkipLoadSmallMap)
+            bool bLoadFromDisk)
         {
             _currentMapType = mapType;
             _currentLocation = mapRef.MapLocation;
@@ -229,7 +193,6 @@ namespace Ultima5Redux.MapUnits
             switch (mapType)
             {
                 case Map.Maps.Small:
-                    // if (!bSkipLoadSmallMap || !bLoadFromDisk) LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
                     LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
                     break;
                 case Map.Maps.Combat:
@@ -415,9 +378,13 @@ namespace Ultima5Redux.MapUnits
                 // the monsters will recalculate every turn based on where the Avatar is 
                 mapUnitMovement.ClearMovements();
 
+                // if you are initial load, then grab from disk, otherwise create an empty collection
+                MapUnitStates currentMapUnitStates = bInitialLoad ? _importedGameState.MapUnitStatesByInitialMap
+                    : new MapUnitStates();
+                
                 // we have retrieved the _currentMapUnitStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
-                MapUnitState mapUnitState = _importedGameState.MapUnitStatesByInitialMap.GetCharacterState(i);
+                MapUnitState mapUnitState = currentMapUnitStates.GetCharacterState(i);
 
                 MapUnitPosition mapUnitPosition = new MapUnitPosition(mapUnitState.X, mapUnitState.Y, 0);
                 TileReference tileReference = mapUnitState.Tile1Ref;
@@ -427,7 +394,6 @@ namespace Ultima5Redux.MapUnits
                 {
                     MapUnit theAvatar = Avatar.CreateAvatar(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                         mapUnitMovement, mapUnitPosition, tileReference, _bUseExtendedSprites);
-                        //mapUnitState);
                     mapUnits.Add(theAvatar);
                     continue;
                 }
@@ -447,23 +413,6 @@ namespace Ultima5Redux.MapUnits
         {
             // wipe all existing characters since they cannot exist beyond the load
             SmallMapUnitCollection.Clear();
-
-            // are we loading from disk? This should only be done on initial game load since state is immediately 
-            // lost when leaving
-            if (bInitialLoad)
-            {
-                Debug.WriteLine("Loading character positions from disk...");
-                // we are loading the small animation from disk
-                // this is only done if you save the game and reload within a towne
-                //SmallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
-            }
-            else
-            {
-                Debug.WriteLine("Loading default character positions...");
-
-                // set a blank map unit state because it wasn't saved to disk
-                //SmallMapUnitStates = new MapUnitStates();
-            }
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)

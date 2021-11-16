@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -11,25 +11,20 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public enum ProvisionTypeEnum { Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204 }
 
-        private readonly DataOvlReference _dataOvlReference;
         private readonly GameState _state;
 
         /// <summary>
         ///     Creates a provision
         /// </summary>
         /// <param name="provisionTypeEnum">what kind of provision</param>
-        /// <param name="longName"></param>
-        /// <param name="shortName"></param>
         /// <param name="findDescription"></param>
         /// <param name="spriteNum"></param>
-        /// <param name="dataOvlRef"></param>
         /// <param name="state"></param>
-        public Provision(ProvisionTypeEnum provisionTypeEnum, string longName, string shortName,
-            string findDescription, int spriteNum, DataOvlReference dataOvlRef, GameState state)
+        public Provision(ProvisionTypeEnum provisionTypeEnum,
+            string findDescription, int spriteNum, GameState state)
             : base(0, findDescription, spriteNum)
         {
             ProvisionType = provisionTypeEnum;
-            _dataOvlReference = dataOvlRef;
             _state = state;
         }
 
@@ -82,9 +77,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private int GetBasePrice(SmallMapReferences.SingleMapReference.Location location)
         {
             int nIndex = 0;
-            foreach (SmallMapReferences.SingleMapReference.Location potentialLocation in _dataOvlReference
+            foreach (byte b in GameReferences.DataOvlRef
                 .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
             {
+                SmallMapReferences.SingleMapReference.Location potentialLocation = (SmallMapReferences.SingleMapReference.Location)b;
                 if (potentialLocation == location)
                     // they sell it, now we find it
                     return ProvisionCostsAndQuantities.Prices[nIndex,
