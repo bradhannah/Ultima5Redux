@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Ultima5Redux.Data;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Dialogue
 {
@@ -30,17 +31,12 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         private readonly List<TalkScript.ScriptLine> _conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
 
-        /// <summary>
-        ///     Data.OVL reference used for grabbing predefined conversation strings
-        /// </summary>
-        private readonly DataOvlReference _dataOvlRef;
-
         private readonly NonPlayerCharacterState _npcState;
 
         /// <summary>
         ///     Game State used for determining if Avatar has met the NPC
         /// </summary>
-        private readonly GameState _gameStateRef;
+        private readonly GameState _gameState;
 
         /// <summary>
         ///     The output buffer storing all outputs that will be read by outer program
@@ -74,17 +70,13 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     Construction a conversation
         /// </summary>
-        /// <param name="npc">NPC you will have a conversation with</param>
         /// <param name="state">The games current State</param>
-        /// <param name="dataOvlRef">Data.OVL for reference</param>
         /// <param name="npcState"></param>
-        public Conversation(GameState state, DataOvlReference dataOvlRef, 
-            NonPlayerCharacterState npcState)
+        public Conversation(GameState state, NonPlayerCharacterState npcState)
         {
             //Npc = npc;
             _script = npcState.NPCRef.Script;
-            _gameStateRef = state;
-            _dataOvlRef = dataOvlRef;
+            _gameState = state;
             _npcState = npcState;
         }
 
@@ -92,11 +84,6 @@ namespace Ultima5Redux.Dialogue
         ///     Has the conversation ended?
         /// </summary>
         public bool ConversationEnded { get; set; }
-
-        /// <summary>
-        ///     The NPC with whom you are having a conversation
-        /// </summary>
-        //public NonPlayerCharacterReference Npc { get; }
 
         /// <summary>
         ///     Begins the conversation with the NPC.
@@ -197,7 +184,7 @@ namespace Ultima5Redux.Dialogue
                      _script.GetScriptLine(TalkScript.TalkConstants.Name)
                          .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
                     // randomly add an introduction of the Avatar since they haven't met him
-                    if (_gameStateRef.OneInXOdds(2)) // || true)
+                    if (_gameState.OneInXOdds(2)) // || true)
                         // okay, tell them who you are
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                             "\nI am called " + _npcState.NPCRef.Name));
@@ -305,7 +292,7 @@ namespace Ultima5Redux.Dialogue
             switch (item.Command)
             {
                 case TalkScript.TalkCommand.AvatarsName:
-                    return _gameStateRef.AvatarsName;
+                    return _gameState.AvatarsName;
                 case TalkScript.TalkCommand.NewLine:
                     return "\n";
                 case TalkScript.TalkCommand.PlainString:
@@ -488,7 +475,7 @@ namespace Ultima5Redux.Dialogue
                         await AwaitResponse();
                         string avatarNameResponse = GetResponse();
                         // did they actually provide the Avatars name?
-                        if (string.Equals(avatarNameResponse, _gameStateRef.AvatarsName,
+                        if (string.Equals(avatarNameResponse, _gameState.AvatarsName,
                             StringComparison.CurrentCultureIgnoreCase))
                         {
                             // i met them
@@ -525,10 +512,10 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Gold:
                         EnqueueToOutputBuffer(item);
-                        _gameStateRef.PlayerInventory.SpendGold((ushort)item.ItemAdditionalData);
+                        _gameState.PlayerInventory.SpendGold((ushort)item.ItemAdditionalData);
                         break;
                     case TalkScript.TalkCommand.JoinParty:
-                        if (_gameStateRef.CharacterRecords.IsFullParty())
+                        if (_gameState.CharacterRecords.IsFullParty())
                         {
                             string noJoinResponse =
                                 GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_1) +
@@ -635,7 +622,7 @@ namespace Ultima5Redux.Dialogue
         public string GetConversationStr(DataOvlReference.ChunkPhrasesConversation index)
         {
             char[] trimChars = { '"' };
-            string convStr = _dataOvlRef
+            string convStr = GameReferences.DataOvlRef
                 .GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index).Trim();
             convStr = convStr.Trim(trimChars);
             return convStr;

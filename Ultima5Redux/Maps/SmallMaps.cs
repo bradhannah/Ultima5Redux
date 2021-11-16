@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
@@ -10,13 +11,10 @@ namespace Ultima5Redux.Maps
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
 
         private readonly List<SmallMap> _smallMaps = new List<SmallMap>();
-        private readonly TileReferences _spriteTileReferences;
 
-        public SmallMaps(SmallMapReferences smallMapRef, string u5Directory, TileReferences spriteTileReferences,
-            TileOverrideReferences tileOverrideReferences)
+        public SmallMaps(string u5Directory)
         {
-            _spriteTileReferences = spriteTileReferences;
-            foreach (SmallMapReferences.SingleMapReference mapRef in smallMapRef.MapReferenceList)
+            foreach (SmallMapReferences.SingleMapReference mapRef in GameReferences.SmallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
                 SmallMap smallMap = new SmallMap(u5Directory, mapRef);
@@ -47,16 +45,16 @@ namespace Ultima5Redux.Maps
             bool bHasHigherFloor = _mapLocationDictionary[location].ContainsKey(nFloor + 1);
 
             // is it a stair case?
-            Debug.Assert(_spriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
+            Debug.Assert(GameReferences.SpriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
             // is it the bottom or top floor? if so, then we know
             if (!bHasLowerFloor) return true;
             if (!bHasHigherFloor) return false;
 
             // is there a stair case on the lower floor?
-            if (_spriteTileReferences.IsStaircase(
+            if (GameReferences.SpriteTileReferences.IsStaircase(
                 _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y])) return false;
             // is there a stair case on the upper floor?
-            if (_spriteTileReferences.IsStaircase(
+            if (GameReferences.SpriteTileReferences.IsStaircase(
                 _mapLocationDictionary[location][nFloor + 1].TheMap[tilePos.X][tilePos.Y])) return true;
             // if not - then WTF?
             throw new Ultima5ReduxException("There is staircase with apparently no matching stair case");

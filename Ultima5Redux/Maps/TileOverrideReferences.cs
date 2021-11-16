@@ -28,7 +28,7 @@ namespace Ultima5Redux.Maps
 
         private List<TileOverrideReference> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor) =>
             !TileOverrideExists(territory, nMapNumber, nFloor)
-                ? null
+                ? new List<TileOverrideReference>()
                 : _tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
                     .Where(tile => nFloor == tile.Position.Floor).ToList();
 

@@ -86,7 +86,7 @@ namespace Ultima5Redux.Maps
             // get and build the map sprites 
             for (int nRow = 0; nRow < XTILES; nRow++)
             {
-                DataChunk rowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Tiles for row {nRow}",
+                DataChunk rowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, $"Tiles for row {nRow}", //-V3138
                     nMapOffset + (nBytesPerRow * nRow), XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
                 List<byte> list = rowChunk.GetAsByteList();
                 for (int nCol = 0; nCol < list.Count; nCol++)
@@ -376,7 +376,7 @@ namespace Ultima5Redux.Maps
             if (nEnemyRawSprite == 0) return CombatMapSpriteType.Nothing;
 
             // it's a chest or something like it
-            if (nEnemyRawSprite >= 1 && nEnemyRawSprite <= 15) return CombatMapSpriteType.Thing;
+            if (nEnemyRawSprite <= 15) return CombatMapSpriteType.Thing;
 
             switch (nEnemyRawSprite)
             {

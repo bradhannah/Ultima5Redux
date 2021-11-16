@@ -201,6 +201,8 @@ namespace Ultima5Redux.Maps
         public string GetCombatPlayerOutputText()
         {
             CombatPlayer combatPlayer = GetCurrentCombatPlayer();
+            if (combatPlayer == null)
+                throw new Ultima5ReduxException("Invalid Combat Player");
             return combatPlayer.Record.Name + ", armed with " + combatPlayer.GetAttackWeaponsString();
         }
 
@@ -208,8 +210,8 @@ namespace Ultima5Redux.Maps
         {
             CombatMapUnit activeCombatMapUnit = _initiativeQueue.GetCurrentCombatUnit();
 
-            Debug.Assert(activeCombatMapUnit is CombatPlayer);
-            CombatPlayer combatPlayer = activeCombatMapUnit as CombatPlayer;
+            if (!(activeCombatMapUnit is CombatPlayer combatPlayer))
+                throw new Ultima5ReduxException("Tried to get CurrentCombatPlayer, but there isn't one");
 
             return combatPlayer;
         }
@@ -273,13 +275,11 @@ namespace Ultima5Redux.Maps
             switch (selectedAction)
             {
                 case SelectionAction.None:
-                    return TurnResult.NoAction;
                 case SelectionAction.Magic:
                     return TurnResult.NoAction;
                 case SelectionAction.Attack:
                     preAttackOutputStr = "Attack ";
                     MapUnit opponentMapUnit = GetCombatUnit(actionPosition);
-
                     // you have tried to attack yourself!?
                     if (opponentMapUnit == combatPlayer)
                     {
@@ -325,6 +325,11 @@ namespace Ultima5Redux.Maps
                     // let's first make sure that any range weapons do not hit a wall first!
                     if (weapon.TheCombatItemReference.Range > 1)
                     {
+                        if (opponentMapUnit == null)
+                            throw new Ultima5ReduxException("Opponent map unit is null");
+                        if (combatPlayer == null)
+                            throw new Ultima5ReduxException("Combat player is null");
+                        
                         bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
                             opponentMapUnit.MapUnitPosition.XY,
                             out missedPoint);
@@ -343,6 +348,8 @@ namespace Ultima5Redux.Maps
                     }
 
                     // do the attack logic
+                    if (combatPlayer == null)
+                        throw new Ultima5ReduxException("Combat player unexpectedly null");
                     targetedHitState = combatPlayer.Attack(opponentCombatMapUnit, weapon, out string stateOutput,
                         out string debugStr);
                     stateOutput += "\n" + debugStr;
@@ -499,6 +506,8 @@ namespace Ultima5Redux.Maps
             Enemy enemy = activeCombatMapUnit as Enemy;
 
             // if the enemy is charmed then the player get's to control them instead!
+            if (enemy == null)
+                throw new Ultima5ReduxException("Enemy unexpectedly null");
             if (enemy.IsCharmed)
             {
                 // the player get's to control the enemy!
@@ -623,8 +632,6 @@ namespace Ultima5Redux.Maps
                     case CombatMapUnit.HitState.HeavilyWounded:
                     case CombatMapUnit.HitState.CriticallyWounded:
                     case CombatMapUnit.HitState.Dead:
-                        targetedCombatMapUnit = bestCombatPlayer;
-                        break;
                     case CombatMapUnit.HitState.Fleeing:
                         targetedCombatMapUnit = bestCombatPlayer;
                         break;
@@ -692,6 +699,9 @@ namespace Ultima5Redux.Maps
             int nNextCombatMapUnitIndex = GetNextAvailableCombatMapUnitIndex();
             if (nNextCombatMapUnitIndex == -1) return null;
             Enemy newEnemy = CreateEnemy(nNextCombatMapUnitIndex, TheCombatMapReference, enemy.EnemyReference, null);
+            if (newEnemy == null)
+                throw new Ultima5ReduxException("Tried to divide enemy, but they were null: " +
+                                                enemy.EnemyReference.KeyTileReference.Name);
             newEnemy.MapUnitPosition = new MapUnitPosition(newEnemyPosition.X, newEnemyPosition.Y, 0);
             _initiativeQueue.AddCombatMapUnitToQueue(newEnemy);
             return newEnemy;
@@ -816,7 +826,9 @@ namespace Ultima5Redux.Maps
         public void MoveActiveCombatMapUnit(Point2D xy)
         {
             CombatMapUnit currentCombatUnit = _initiativeQueue.GetCurrentCombatUnit();
-
+            if (currentCombatUnit == null)
+                throw new Ultima5ReduxException(
+                    "Tried to move active combat unit, but couldn't find them in initiative queue");
             // reset the a star walking rules
             RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLand);
             RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatWater);
@@ -907,6 +919,9 @@ namespace Ultima5Redux.Maps
             }
             else
             {
+                if (CurrentCombatPlayer == null)
+                    throw new Ultima5ReduxException(
+                        "Current combat player was null when trying to move closer to an enemy");
                 outputStr = $"{CurrentCombatPlayer.FriendlyName} advances on {enemy.FriendlyName}";
             }
 
@@ -924,8 +939,11 @@ namespace Ultima5Redux.Maps
         private CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit,
             CombatMapUnitEnum preferredAttackTarget, out bool bMoved)
         {
+            if (activeCombatUnit == null)
+                throw new Ultima5ReduxException("Passed a null active combat unit when moving to closest unit");
+            
             const int NoPath = 0xFFFF;
-            bool bCharmed = activeCombatUnit.IsCharmed;
+            //bool bCharmed = activeCombatUnit.IsCharmed;
             bMoved = false;
 
             int nMinMoves = 0xFFFF;
@@ -1022,7 +1040,8 @@ namespace Ultima5Redux.Maps
                 preferredRoute.Push(aStar.GetNode(nextBestMovePoint));
             }
 
-            Debug.Assert(preferredRoute != null, nameof(preferredRoute) + " != null");
+            if (preferredRoute == null)
+                throw new Ultima5ReduxException("Preferred route object was oddly empty");
 
             Point2D nextPosition = preferredRoute.Pop().Position;
 
@@ -1097,6 +1116,8 @@ namespace Ultima5Redux.Maps
                 int nIndex = (i + nOffset + 1) % nMapUnits;
                 if (!(CombatMapUnits.CurrentMapUnits.AllMapUnits[nIndex] is Enemy enemy)) continue;
                 if (!enemy.IsActive) continue;
+                if (CurrentCombatPlayer == null)
+                    throw new Ultima5ReduxException("Tried to get next enemy, but couldn't find the active player");
                 if (CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
             }
 

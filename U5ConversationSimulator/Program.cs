@@ -18,11 +18,6 @@ namespace U5ConversationSimulator
         {
             _world = new World("C:\\games\\ultima_5_late\\britain");
 
-            //foreach (SmallMapReferences.SingleMapReference smr in world.SmallMapRef.MapReferenceList)
-            {
-                //_world.State.TheVirtualMap.LoadSmallMap(_world.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference._location.Britain, 0), _world.State.CharacterRecords, false);
-            }
-
             _world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
 
@@ -38,7 +33,7 @@ namespace U5ConversationSimulator
             SmallMapReferences.SingleMapReference.Location location = SmallMapReferences.SingleMapReference.Location.Minoc;
             NonPlayerCharacterState npcState =
                 _world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
-            Conversation convo = new Conversation(_world.State, GameReferences.DataOvlRef, npcState); // delwyn
+            Conversation convo = new Conversation(_world.State, npcState); // delwyn
 
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
@@ -119,12 +114,11 @@ namespace U5ConversationSimulator
                 case TalkScript.TalkCommand.DefineLabel:
                 case TalkScript.TalkCommand.IfElseKnowsName:
                 case TalkScript.TalkCommand.AvatarsName:
-                    throw new Exception("We recieved a TalkCommand: " + item.Command +
+                    throw new Exception("We received a TalkCommand: " + item.Command +
                                         " that we didn't expect in the World processing");
                 default:
-                    throw new Exception("We recieved a TalkCommand: " + item.Command +
+                    throw new Exception("We received a TalkCommand: " + item.Command +
                                         " that we didn't expect in the World processing");
-                //Console.Write("<" + item.Command.ToString() + ">");
             }
         }
     }

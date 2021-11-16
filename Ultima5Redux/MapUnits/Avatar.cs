@@ -226,6 +226,8 @@ namespace Ultima5Redux.MapUnits
 
         public void BoardMapUnit(MapUnit mapUnit)
         {
+            if (mapUnit == null)
+                throw new Ultima5ReduxException("Tried to Board a null mapunit");
             // note: since the Avatar does not control all MapUnits, we only add it our internal tracker
             // but do not release it from the world - that must be done outside this method
             KeyTileReference = mapUnit.KeyTileReference;

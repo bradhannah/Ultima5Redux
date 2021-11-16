@@ -224,6 +224,9 @@ namespace Ultima5Redux.MapUnits
         {
             foreach (T mapUnit in GetMapUnitCollection(map).GetMapUnitByType<T>())
             {
+                if (mapUnit == null)
+                    throw new Ultima5ReduxException(
+                        "Getting a specific map unit by location, but the list has a null entry");
                 // sometimes characters are null because they don't exist - and that is OK
                 if (!mapUnit.IsActive) continue;
 

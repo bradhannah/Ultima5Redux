@@ -335,7 +335,9 @@ namespace Ultima5Redux.Maps
             Debug.Assert(_initiativeQueue.Peek().Count > 0);
 
             CombatMapUnit combatMapUnit = _initiativeQueue.Peek().Peek();
-
+            if (combatMapUnit == null)
+                throw new Ultima5ReduxException(
+                    "Tried to get current combat unit from initiative queue, but they were null");
             return combatMapUnit;
         }
 

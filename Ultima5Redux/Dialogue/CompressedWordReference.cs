@@ -204,7 +204,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     Couldn't find a talking word at the indicated index
         /// </summary>
-        private class NoTalkingWordException : Ultima5ReduxException
+        private class NoTalkingWordException : Ultima5ReduxException //-V3164
         {
             public NoTalkingWordException(string message) : base(message)
             {

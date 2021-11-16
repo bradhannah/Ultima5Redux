@@ -183,7 +183,7 @@ namespace Ultima5Redux
         /// <returns></returns>
         public static List<byte> GetFileAsByteList(string filename, int offset = 0, int length = -1)
         {
-            File.OpenRead(filename);
+            FileStream fs = File.OpenRead(filename);
 
             byte[] fileContents = File.ReadAllBytes(filename);
             if (length == -1) return fileContents.ToList();
@@ -194,7 +194,7 @@ namespace Ultima5Redux
             {
                 specificContents.Add(fileContents[i]);
             }
-
+            fs.Close();
             return specificContents;
         }
 

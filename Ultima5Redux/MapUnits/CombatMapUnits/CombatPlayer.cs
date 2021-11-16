@@ -96,7 +96,7 @@ namespace Ultima5Redux.MapUnits
         {
             List<CombatItem> combatItems = GetAttackWeapons();
 
-            if (combatItems == null) return "bare hands";
+            // if (combatItems == null) return "bare hands";
 
             string combatItemString = "";
             for (int index = 0; index < combatItems.Count; index++)

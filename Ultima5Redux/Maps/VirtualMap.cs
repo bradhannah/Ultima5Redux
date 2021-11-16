@@ -146,7 +146,8 @@ namespace Ultima5Redux.Maps
             {
                 if (CurrentMap is CombatMap combatMap)
                 {
-                    return combatMap.CurrentCombatMapUnit.MapUnitPosition;
+                    return combatMap.CurrentCombatMapUnit?.MapUnitPosition
+                        ?? throw new Ultima5ReduxException("Combat map was unexpectedly null");
                 }
 
                 return TheMapUnits.CurrentAvatarPosition;
@@ -163,16 +164,12 @@ namespace Ultima5Redux.Maps
         {
             get
             {
+                if (_currentSingleMapReference == null)
+                    throw new Ultima5ReduxException("Unexpected _currentSingleMapReference is null");
                 if (_currentSingleMapReference.MapLocation ==
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
                     return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-                if (_currentSingleMapReference != null)
-                {
-                    return _currentSingleMapReference;
-                }
-
-                throw new Ultima5ReduxException(
-                    "Tried to get a single map reference that isn't large, small or combat");
+                return _currentSingleMapReference;
             }
             private set => _currentSingleMapReference = value;
         }
@@ -195,31 +192,21 @@ namespace Ultima5Redux.Maps
         /// <param name="smallMaps"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
-        /// <param name="tileReferences"></param>
         /// <param name="state"></param>
-        /// <param name="npcRefs"></param>
         /// <param name="timeOfDay"></param>
         /// <param name="moongates"></param>
-        /// <param name="inventoryReferences"></param>
         /// <param name="playerCharacterRecords"></param>
         /// <param name="initialMap"></param>
         /// <param name="currentSmallMapReference"></param>
-        /// <param name="dataOvlReference"></param>
         /// <param name="bUseExtendedSprites"></param>
-        /// <param name="enemyReferences"></param>
         /// <param name="inventory"></param>
-        /// <param name="combatMapRefs"></param>
-        /// <param name="tileOverrideReferences"></param>
         /// <param name="importedGameState"></param>
         /// <param name="npcStates"></param>
         internal VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
-            LargeMap underworldMap, TileReferences tileReferences, GameState state,
-            NonPlayerCharacterReferences npcRefs, TimeOfDay timeOfDay, Moongates moongates,
-            InventoryReferences inventoryReferences, PlayerCharacterRecords playerCharacterRecords,
-            Map.Maps initialMap, SmallMapReferences.SingleMapReference currentSmallMapReference,
-            DataOvlReference dataOvlReference, bool bUseExtendedSprites,
-            EnemyReferences enemyReferences, Inventory inventory, CombatMapReferences combatMapRefs,
-            TileOverrideReferences tileOverrideReferences, ImportedGameState importedGameState, 
+            LargeMap underworldMap, GameState state, TimeOfDay timeOfDay, Moongates moongates,
+            PlayerCharacterRecords playerCharacterRecords, Map.Maps initialMap, 
+            SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites, 
+            Inventory inventory, ImportedGameState importedGameState, 
             NonPlayerCharacterStates npcStates)
         {
             SmallMapRefs = smallMapReferences;
@@ -245,8 +232,8 @@ namespace Ultima5Redux.Maps
             {
                 case Map.Maps.Small:
                     LoadSmallMap(currentSmallMapReference, null, true);
-                    if (currentSmallMapReference == null)
-                        throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
+                    // if (currentSmallMapReference == null)
+                    //     throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
                     break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
@@ -316,7 +303,7 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new Ultima5ReduxException(
                         "Attempting to return to previous map after combat with an unsupported map type: " +
-                        PreCombatMap?.GetType() ?? "NULL");
+                            PreCombatMap?.GetType());
             }
         }
 
@@ -424,10 +411,10 @@ namespace Ultima5Redux.Maps
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null, 
             bool bLoadFromDisk = false)
         {
-            CurrentSingleMapReference = singleMapReference;
+            CurrentSingleMapReference = singleMapReference ?? 
+                throw new Ultima5ReduxException("Tried to load a small map, but null map reference was given");
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
-            // TheMapOverrides.ClearOverridenTiles(CurrentSmallMap);
             TheMapOverrides = new MapOverrides(CurrentSmallMap);
 
             LargeMapOverUnder = (Map.Maps)(-1); 
@@ -496,12 +483,17 @@ namespace Ultima5Redux.Maps
             if (!bIgnoreMoongate && IsLargeMap &&
                 _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF))
             )
-                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate");
+            {
+                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
+                       throw new Ultima5ReduxException("Supposed to get a moongate override: " + new Point2D(x,y));
+            }
 
             // we check to see if our override map has something on top of it
             if (TheMapOverrides.HasOverrideTile(x, y))
-                return TheMapOverrides.GetOverrideTileReference(x, y);
-                    //_tileReferences.GetTileReference(_overrideMap[x][y]);
+            {
+                return TheMapOverrides.GetOverrideTileReference(x, y) ?? 
+                       throw new Ultima5ReduxException("Expected tile override at " + new Point2D(x,y));
+            }
 
             // the GetTileReference accounts for any forced overrides across the entire world
             return CurrentMap.GetTileReference(new Point2D(x, y));
@@ -1048,7 +1040,6 @@ namespace Ultima5Redux.Maps
                        || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
             }
 
-            if (CurrentSingleMapReference == null) return false;
             // yuck, but if the food is up one tile or down one tile, then food is nearby
             bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index)
                                  || isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index);
@@ -1178,8 +1169,8 @@ namespace Ultima5Redux.Maps
             if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
             if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
 
-            return GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC
-                   || GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC;
+            return (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC)
+                   || (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC);
         }
 
         /// <summary>
@@ -1245,7 +1236,6 @@ namespace Ultima5Redux.Maps
             if (IsLargeMap && CurrentMap.IsXYOverride(xy)) return CurrentMap.GetTileOverride(xy).SpriteNum;
 
             // if has exposed search then we evaluate and see if it is actually a normal tile underneath
-            // int nExposedCount = _exposedSearchItems[xy.X][xy.Y]?.Count ?? 0;
             if (TheMapOverrides.HasExposedSearchItems(xy))
             {
                 // there are exposed items on this tile

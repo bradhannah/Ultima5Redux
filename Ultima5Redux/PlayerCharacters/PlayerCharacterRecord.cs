@@ -182,17 +182,21 @@ namespace Ultima5Redux.PlayerCharacters
         {
             // detect the equipable slot
             CharacterEquipped.EquippableSlot equippableSlot = GetEquippableSlot(inventory.GetItemFromEquipment(newEquipment));  
-            if (equippableSlot == CharacterEquipped.EquippableSlot.None) return EquipResult.Error;
+            //if (equippableSlot == CharacterEquipped.EquippableSlot.None) return EquipResult.Error;
             
             // get the thing that is already equipped
             DataOvlReference.Equipment oldEquippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
 
             // put the old one back in your inventory
             CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment); 
-            if (oldEquippedCombatItem!=null) oldEquippedCombatItem.Quantity--;
+            oldEquippedCombatItem.Quantity--;
+            //if (oldEquippedCombatItem!=null) 
             
             // there should be at least one in your inventory to do this
-            CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment); 
+            CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment);
+            // if (newEquippedCombatItem == null)
+            //     throw new Ultima5ReduxException(
+            //         "Tried to equip equipment that doesn't appear to be in your inventory: " + newEquipment);
             Debug.Assert(newEquippedCombatItem.Quantity > 0);
             
             // let's make sure they have enough strength to wield/wear the Equipment

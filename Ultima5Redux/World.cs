@@ -50,8 +50,6 @@ namespace Ultima5Redux
 
         private readonly Random _random = new Random();
 
-        private readonly TileOverrideReferences _tileOverrideReferences = new TileOverrideReferences();
-
         // ReSharper disable once UnusedMember.Local
 
         /// <summary>
@@ -69,12 +67,12 @@ namespace Ultima5Redux
             // build the underworld map
             UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld);
 
-            AllSmallMaps = new SmallMaps(GameReferences.SmallMapRef, U5Directory, GameReferences.SpriteTileReferences, _tileOverrideReferences);
+            AllSmallMaps = new SmallMaps(U5Directory);
      
-            State = new GameState(U5Directory, GameReferences.DataOvlRef, GameReferences.InvRef, GameReferences.MagicRefs, GameReferences.CombatItemRefs, GameReferences.SpriteTileReferences, GameReferences.NpcRefs);
+            State = new GameState(U5Directory);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(GameReferences.SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, GameReferences.SpriteTileReferences, GameReferences.NpcRefs, GameReferences.InvRef, GameReferences.DataOvlRef, bUseExtendedSprites, GameReferences.EnemyRefs, GameReferences.CombatMapRefs, _tileOverrideReferences);
+            State.InitializeVirtualMap(GameReferences.SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap, bUseExtendedSprites);
 
             State.Serialize();
         }
@@ -126,7 +124,7 @@ namespace Ultima5Redux
         public Conversation CreateConversationAndBegin(NonPlayerCharacterState npcState,
             Conversation.EnqueuedScriptItem enqueuedScriptItem)
         {
-            CurrentConversation = new Conversation(State, GameReferences.DataOvlRef, npcState);
+            CurrentConversation = new Conversation(State, npcState);
 
             CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
 
@@ -680,14 +678,16 @@ namespace Ultima5Redux
             }
         }
 
-        public string TryToMoveCombatMap(Point2D.Direction direction, out TryToMoveResult tryToMoveResult,
-            bool bManualMovement = true) => TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer,
-            direction, out tryToMoveResult, bManualMovement);
+        public string TryToMoveCombatMap(Point2D.Direction direction, out TryToMoveResult tryToMoveResult) 
+            => TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer,
+            direction, out tryToMoveResult);
 
         public string TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction,
-            out TryToMoveResult tryToMoveResult,
-            bool bManualMovement = true)
+            out TryToMoveResult tryToMoveResult)
         {
+            if (combatPlayer == null)
+                throw new Ultima5ReduxException("Trying to move on combat map without a CombatPlayer");
+            
             string retStr = GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
 
             CombatMap currentCombatMap = State.TheVirtualMap.CurrentCombatMap;
@@ -695,7 +695,6 @@ namespace Ultima5Redux
 
             // if we were to move, which direction would we move
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
-
             Point2D newPosition = new Point2D(combatPlayer.MapUnitPosition.X + xAdjust,
                 combatPlayer.MapUnitPosition.Y + yAdjust);
 
@@ -880,8 +879,8 @@ namespace Ultima5Redux
                     int nDamage = _random.Next(5, 15);
 
                     Debug.Assert(avatar.CurrentBoardedMapUnit is Frigate);
-                    Frigate frigate = avatar.CurrentBoardedMapUnit as Frigate;
-                    Debug.Assert(frigate != null, nameof(frigate) + " != null");
+                    if (!(avatar.CurrentBoardedMapUnit is Frigate frigate))
+                        throw new Ultima5ReduxException("Tried to get Avatar's frigate, but it returned  null");
 
                     // if the wind is blowing the same direction then we double the damage
                     if (avatar.CurrentDirection == State.WindDirection) nDamage *= 2;
@@ -1388,8 +1387,8 @@ namespace Ultima5Redux
         {
             Debug.Assert(State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate);
 
-            Frigate avatarsFrigate = State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit as Frigate;
-            Debug.Assert(avatarsFrigate != null, nameof(avatarsFrigate) + " != null");
+            if (!(State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate avatarsFrigate))
+                throw new Ultima5ReduxException("Tried get Avatar's frigate, but it was null");
 
             avatarsFrigate.SailsHoisted = !avatarsFrigate.SailsHoisted;
             bSailsHoisted = avatarsFrigate.SailsHoisted;

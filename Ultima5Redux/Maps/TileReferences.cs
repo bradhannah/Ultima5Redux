@@ -104,7 +104,10 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public TileReference GetTileReference(int nSprite)
         {
-            return TileReferenceDictionary[nSprite];
+            if (!TileReferenceDictionary.ContainsKey(nSprite))
+                throw new Ultima5ReduxException("Requested tile reference for sprite " + nSprite +
+                                                " but it doesn't exist");
+            return TileReferenceDictionary[nSprite] ?? throw new Ultima5ReduxException("Null tile reference: " + nSprite);
         }
 
         public TileReference GetTileReferenceOfKeyIndex(int nSprite)

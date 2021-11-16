@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
-using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -19,8 +16,6 @@ namespace Ultima5Redux
 {
     [DataContract] public class GameState
     {
-        private readonly MagicReferences _magicReferences;
-
         /// Legacy save game state
         private readonly ImportedGameState _importedGameState;
 
@@ -39,16 +34,8 @@ namespace Ultima5Redux
         ///     Construct the GameState from a legacy save file
         /// </summary>
         /// <param name="u5Directory">Directory of the game State files</param>
-        /// <param name="dataOvlRef"></param>
-        /// <param name="inventoryReferences"></param>
-        /// <param name="magicReferences"></param>
-        /// <param name="combatItemReferences"></param>
-        /// <param name="tileReferences"></param>
-        public GameState(string u5Directory, DataOvlReference dataOvlRef, InventoryReferences inventoryReferences,
-            MagicReferences magicReferences, CombatItemReferences combatItemReferences, TileReferences tileReferences,
-            NonPlayerCharacterReferences npcRefs)
+        public GameState(string u5Directory)
         {
-            _magicReferences = magicReferences;
             // imports the legacy save game file data 
             _importedGameState = new ImportedGameState(u5Directory);
 
@@ -177,21 +164,9 @@ namespace Ultima5Redux
         /// <param name="smallMaps"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
-        /// <param name="tileReferences"></param>
-        /// <param name="npcRefs"></param>
-        /// <param name="inventoryReferences"></param>
-        /// <param name="dataOvlReference"></param>
         /// <param name="bUseExtendedSprites"></param>
-        /// <param name="enemyReferences"></param>
-        /// <param name="combatMapReferences"></param>
-        /// <param name="tileOverrideReferences"></param>
-        /// <param name="npcStates"></param>
         internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
-            LargeMap overworldMap, LargeMap underworldMap, TileReferences tileReferences,
-            NonPlayerCharacterReferences npcRefs, InventoryReferences inventoryReferences,
-            DataOvlReference dataOvlReference, bool bUseExtendedSprites,
-            EnemyReferences enemyReferences, CombatMapReferences combatMapReferences,
-            TileOverrideReferences tileOverrideReferences)
+            LargeMap overworldMap, LargeMap underworldMap, bool bUseExtendedSprites)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
@@ -199,10 +174,8 @@ namespace Ultima5Redux
                     : smallMapReferences.GetSingleMapByLocation(_location, _nInitialFloor);
 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
-                underworldMap, tileReferences, this, npcRefs, TheTimeOfDay, TheMoongates,
-                inventoryReferences, CharacterRecords, _initialMap, mapRef, dataOvlReference, bUseExtendedSprites,
-                enemyReferences, PlayerInventory, combatMapReferences, tileOverrideReferences, _importedGameState,
-                TheNonPlayerCharacterStates);
+                underworldMap, this, TheTimeOfDay, TheMoongates, CharacterRecords, _initialMap, mapRef, 
+                bUseExtendedSprites, PlayerInventory, _importedGameState, TheNonPlayerCharacterStates);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);
