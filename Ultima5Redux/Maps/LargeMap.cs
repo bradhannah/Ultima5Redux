@@ -24,11 +24,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="mapChoice"></param>
-        /// <param name="tileOverrideReferences"></param>
-        /// <param name="tileReferences"></param>
-        public LargeMap(string u5Directory, Maps mapChoice, TileOverrideReferences tileOverrideReferences,
-            TileReferences tileReferences) : base(tileOverrideReferences,
-            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice), tileReferences)
+        public LargeMap(string u5Directory, Maps mapChoice) : base(
+            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
             switch (mapChoice)
             {

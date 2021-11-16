@@ -11,19 +11,28 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [DataContract]
     public abstract class InventoryItem
     {
+        private int _quantity;
+
         protected InventoryItem(int quantity, int spriteNum) : this(quantity, "", spriteNum)
         {
         }
 
         protected InventoryItem(int quantity, string findDescription, int spriteNum)
         {
-            Quantity = quantity;
+            _quantity = quantity;
             SpriteNum = spriteNum;
             FindDescription = findDescription;
         }
 
         [DataMember] public virtual string FindDescription { get; }
-        [DataMember] public virtual int Quantity { get; set; }
+
+        [DataMember]
+        public virtual int Quantity
+        {
+            get => _quantity;
+            set => _quantity = value;
+        }
+
         [DataMember] public int SpriteNum { get; }
 
         [IgnoreDataMember] public InventoryReference InvRef { get; protected internal set; }

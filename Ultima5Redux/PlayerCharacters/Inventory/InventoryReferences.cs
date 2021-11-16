@@ -29,11 +29,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private const string SPELL_HIGHLIGHT_COLOR = "<color=red>";
 
         /// <summary>
-        ///     a full list of all inventory references
-        /// </summary>
-        private readonly List<InventoryReference> _invRefs;
-
-        /// <summary>
         ///     All inventory references with respective equipment enums
         /// </summary>
         private readonly Dictionary<DataOvlReference.Equipment, InventoryReference> _invRefsByEquipment;
@@ -65,22 +60,22 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             _reagentKeywordHighlightList = new List<string>();
             _spellKeywordHighlightList = new List<string>();
 
-            _invRefs = new List<InventoryReference>();
+            List<InventoryReference> invRefs = new List<InventoryReference>();
 
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Armament))
             {
-                _invRefs.Add(invRef);
+                invRefs.Add(invRef);
             }
 
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Item))
             {
-                _invRefs.Add(invRef);
+                invRefs.Add(invRef);
             }
 
             // build reagent highlight table
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Reagent) ) 
             {
-                _invRefs.Add(invRef);
+                invRefs.Add(invRef);
 
                 if (invRef.ItemNameHighLights.Length == 0) continue;
 
@@ -91,10 +86,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             //build spell name highlight table
-            foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Spell)
-            ) //spellInvRefs)
+            foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Spell))
             {
-                _invRefs.Add(invRef);
+                invRefs.Add(invRef);
 
                 if (invRef.ItemNameHighLights.Length == 0) continue;
                 foreach (string highlightWord in invRef.ItemNameHighLights)
@@ -104,7 +98,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             _invRefsByEquipment = new Dictionary<DataOvlReference.Equipment, InventoryReference>();
-            foreach (InventoryReference invRef in _invRefs)
+            foreach (InventoryReference invRef in invRefs)
             {
                 DataOvlReference.Equipment equipment = invRef.GetAsEquipment();
                 if (Enum.IsDefined(typeof(DataOvlReference.Equipment), equipment))

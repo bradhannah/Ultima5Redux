@@ -71,9 +71,7 @@ namespace Ultima5Redux
             TheNonPlayerCharacterStates = _importedGameState.TheNonPlayerCharacterStates;
 
             // import the players inventory
-            PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, dataOvlRef,
-                new MoonPhaseReferences(dataOvlRef), TheMoongates, this, inventoryReferences, _magicReferences,
-                _importedGameState, combatItemReferences);
+            PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, TheMoongates, this);
         }
 
 

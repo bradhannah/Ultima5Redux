@@ -24,13 +24,13 @@ namespace Ultima5Redux.Maps
     {
         internal enum LadderOrStairDirection { Up, Down }
 
-        [IgnoreDataMember] private readonly CombatMapReferences _combatMapRefs;
-        [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
-        [IgnoreDataMember] private readonly EnemyReferences _enemyReferences;
+        // [IgnoreDataMember] private readonly CombatMapReferences _combatMapRefs;
+        // [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
+        // [IgnoreDataMember] private readonly EnemyReferences _enemyReferences;
         [IgnoreDataMember] private readonly Inventory _inventory;
 
         // ReSharper disable once NotAccessedField.Local
-        [IgnoreDataMember] private readonly InventoryReferences _inventoryReferences;
+        // [IgnoreDataMember] private readonly InventoryReferences _inventoryReferences;
 
         /// <summary>
         ///     Both underworld and overworld maps
@@ -48,13 +48,12 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] private readonly SmallMaps _smallMaps;
 
         [IgnoreDataMember] private readonly GameState _state;
-        [IgnoreDataMember] private readonly NonPlayerCharacterReferences _npcRefs;
-        [IgnoreDataMember] private readonly TileOverrideReferences _tileOverrideReferences;
+        // [IgnoreDataMember] private readonly TileOverrideReferences _tileOverrideReferences;
 
         /// <summary>
         ///     References to all tiles
         /// </summary>
-        [IgnoreDataMember] private readonly TileReferences _tileReferences;
+        // [IgnoreDataMember] private readonly TileReferences _tileReferences;
 
         /// <summary>
         ///     Current time of day
@@ -226,17 +225,10 @@ namespace Ultima5Redux.Maps
             SmallMapRefs = smallMapReferences;
 
             _smallMaps = smallMaps;
-            _tileReferences = tileReferences;
             _state = state;
-            _npcRefs = npcRefs;
             _timeOfDay = timeOfDay;
             _moongates = moongates;
-            _inventoryReferences = inventoryReferences;
-            _dataOvlReference = dataOvlReference;
-            _enemyReferences = enemyReferences;
             _inventory = inventory;
-            _combatMapRefs = combatMapRefs;
-            _tileOverrideReferences = tileOverrideReferences;
 
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
@@ -346,7 +338,7 @@ namespace Ultima5Redux.Maps
             if (enemyReference.IsNpc) nSecondaryEnemies = 0;
 
             EnemyReference primaryEnemyReference = enemyReference;
-            EnemyReference secondaryEnemyReference = _enemyReferences.GetFriendReference(primaryEnemyReference);
+            EnemyReference secondaryEnemyReference = GameReferences.EnemyRefs.GetFriendReference(primaryEnemyReference);
 
             LoadCombatMap(singleCombatMapReference, entryDirection, records,
                 primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);
@@ -406,8 +398,7 @@ namespace Ultima5Redux.Maps
 
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
 
-            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _tileReferences,
-                _enemyReferences, _inventoryReferences, _inventory, _dataOvlReference, _tileOverrideReferences);
+            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _inventory);
 
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
@@ -416,7 +407,7 @@ namespace Ultima5Redux.Maps
                 PreTheMapOverrides = TheMapOverrides;
             }
 
-            TheMapOverrides = new MapOverrides(CurrentCombatMap, _tileReferences);
+            TheMapOverrides = new MapOverrides(CurrentCombatMap);
 
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
@@ -437,7 +428,7 @@ namespace Ultima5Redux.Maps
             CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
 
             // TheMapOverrides.ClearOverridenTiles(CurrentSmallMap);
-            TheMapOverrides = new MapOverrides(CurrentSmallMap, _tileReferences);
+            TheMapOverrides = new MapOverrides(CurrentSmallMap);
 
             LargeMapOverUnder = (Map.Maps)(-1); 
 
@@ -471,7 +462,7 @@ namespace Ultima5Redux.Maps
             // this will probably fail, which means creating a new map was a good idea
             //Debug.Assert(TheMapOverrides.TheMap is LargeMap && TheMapOverrides.TheMap == CurrentLargeMap);
             // todo: maybe we store each map override indefinitely so we never lose anything 
-            TheMapOverrides = new MapOverrides(CurrentLargeMap, _tileReferences);
+            TheMapOverrides = new MapOverrides(CurrentLargeMap);
 
             LargeMapOverUnder = map;
 
@@ -497,7 +488,7 @@ namespace Ultima5Redux.Maps
                     Queue<InventoryItem> searchItems = TheMapOverrides.GetExposedSearchItems(x, y);
                     if (searchItems.Count > 0)
                         // we get the top most exposed item and only show it
-                        return _tileReferences.GetTileReference(searchItems.Peek().SpriteNum);
+                        return GameReferences.SpriteTileReferences.GetTileReference(searchItems.Peek().SpriteNum);
                 }
 
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
@@ -505,7 +496,7 @@ namespace Ultima5Redux.Maps
             if (!bIgnoreMoongate && IsLargeMap &&
                 _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF))
             )
-                return _tileReferences.GetTileReferenceByName("Moongate");
+                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate");
 
             // we check to see if our override map has something on top of it
             if (TheMapOverrides.HasOverrideTile(x, y))
@@ -692,12 +683,12 @@ namespace Ultima5Redux.Maps
             SingleCombatMapReference.Territory territory)
         {
             TileReference tileReference = GetTileReference(xy);
-            return _combatMapRefs.GetSingleCombatMapReference(territory, (int)tileReference.CombatMapIndex);
+            return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)tileReference.CombatMapIndex);
         }
 
         public bool IsNPCInBed(NonPlayerCharacter npc)
         {
-            return GetTileReference(npc.MapUnitPosition.XY).Index == _tileReferences.GetTileNumberByName("LeftBed");
+            return GetTileReference(npc.MapUnitPosition.XY).Index == GameReferences.SpriteTileReferences.GetTileNumberByName("LeftBed");
         }
 
         internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) =>
@@ -729,10 +720,10 @@ namespace Ultima5Redux.Maps
 
             // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
             // true indicates that it is walkable
-            bool bStaircaseWalkable = !(bNoStaircases && _tileReferences.IsStaircase(tileReference.Index));
+            bool bStaircaseWalkable = !(bNoStaircases && GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index));
 
             // if it's nighttime then the portcullises go down and you cannot pass
-            bool bPortcullisDown = _tileReferences.GetTileNumberByName("BrickWallArchway") == tileReference.Index &&
+            bool bPortcullisDown = GameReferences.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == tileReference.Index &&
                                    !_timeOfDay.IsDayLight;
 
             // we check both the tile reference below as well as the map unit that occupies the tile
@@ -850,13 +841,13 @@ namespace Ultima5Redux.Maps
                     if (ladderOrStairDirection == LadderOrStairDirection.Down)
                     {
                         // if this is a ladder or staircase and it's in the right direction, then add it to the list
-                        if (_tileReferences.IsLadderDown(tileReference.Index) || IsStairGoingDown(new Point2D(x, y)))
+                        if (GameReferences.SpriteTileReferences.IsLadderDown(tileReference.Index) || IsStairGoingDown(new Point2D(x, y)))
                             laddersAndStairs.Add(new Point2D(x, y));
                     }
                     else // otherwise we know you are going up
                     {
-                        if (_tileReferences.IsLadderUp(tileReference.Index) ||
-                            _tileReferences.IsStaircase(tileReference.Index) && IsStairGoingUp(new Point2D(x, y)))
+                        if (GameReferences.SpriteTileReferences.IsLadderUp(tileReference.Index) ||
+                            GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index) && IsStairGoingUp(new Point2D(x, y)))
                             laddersAndStairs.Add(new Point2D(x, y));
                     }
                 } // end y for
@@ -929,7 +920,7 @@ namespace Ultima5Redux.Maps
             bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
-            bool bIsMirror = _tileReferences.IsUnbrokenMirror(nSprite);
+            bool bIsMirror = GameReferences.SpriteTileReferences.IsUnbrokenMirror(nSprite);
             bDrawCharacterOnTile = false;
 
             if (bIsMirror)
@@ -938,26 +929,26 @@ namespace Ultima5Redux.Maps
                 Point2D expectedAvatarPos = new Point2D(tilePosInMap.X, tilePosInMap.Y + 1);
                 if (expectedAvatarPos == CurrentPosition.XY)
                 {
-                    return _tileReferences.GetTileNumberByName("MirrorAvatar");
+                    return GameReferences.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
                 }
             }
 
-            bool bIsDoorTile = _tileReferences.IsDoor(nSprite); // is it a door?
+            bool bIsDoorTile = GameReferences.SpriteTileReferences.IsDoor(nSprite); // is it a door?
             // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
-            bool bIsChair = _tileReferences.IsChair(nSprite);
+            bool bIsChair = GameReferences.SpriteTileReferences.IsChair(nSprite);
             // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
-            bool bIsLadder = _tileReferences.IsLadder(nSprite);
+            bool bIsLadder = GameReferences.SpriteTileReferences.IsLadder(nSprite);
             // is it the human sleeping side of the bed?
-            bool bIsHeadOfBed = _tileReferences.IsHeadOfBed(nSprite);
+            bool bIsHeadOfBed = GameReferences.SpriteTileReferences.IsHeadOfBed(nSprite);
             // we need to check these before they get "corrected"
             // is it the stocks
-            bool bIsStocks = _tileReferences.IsStocks(nSprite);
-            bool bIsManacles = _tileReferences.IsManacles(nSprite); // is it shackles/manacles
+            bool bIsStocks = GameReferences.SpriteTileReferences.IsStocks(nSprite);
+            bool bIsManacles = GameReferences.SpriteTileReferences.IsManacles(nSprite); // is it shackles/manacles
 
             // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
-            bool bIsFoodNearby = _tileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
+            bool bIsFoodNearby = GameReferences.SpriteTileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
 
-            bool bIsStaircase = _tileReferences.IsStaircase(nSprite); // is it a staircase
+            bool bIsStaircase = GameReferences.SpriteTileReferences.IsStaircase(nSprite); // is it a staircase
 
             int nNewSpriteIndex; //= nSprite;
 
@@ -967,7 +958,7 @@ namespace Ultima5Redux.Maps
             }
             else
             {
-                nNewSpriteIndex = _tileReferences.GetCorrectSprite(nSprite,
+                nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite,
                     bIsMapUnitOccupiedTile, bIsAvatarTile,
                     bIsFoodNearby, _state.TheTimeOfDay.IsDayLight);
             }
@@ -1052,9 +1043,9 @@ namespace Ultima5Redux.Maps
         {
             bool isFoodTable(int nSprite)
             {
-                return nSprite == _tileReferences.GetTileReferenceByName("TableFoodTop").Index
-                       || nSprite == _tileReferences.GetTileReferenceByName("TableFoodBottom").Index
-                       || nSprite == _tileReferences.GetTileReferenceByName("TableFoodBoth").Index;
+                return nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index
+                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index
+                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
             }
 
             if (CurrentSingleMapReference == null) return false;
@@ -1072,7 +1063,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsStairGoingUp(Point2D xy)
         {
-            if (!_tileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
 
             if (IsCombatMap) return false;
 
@@ -1082,7 +1073,7 @@ namespace Ultima5Redux.Maps
 
         public bool IsAvatarSitting()
         {
-            return _tileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+            return GameReferences.SpriteTileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
         }
 
 
@@ -1095,7 +1086,7 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public bool IsStairGoingDown(Point2D xy)
         {
-            if (!_tileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
             bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
             return bStairGoUp;
         }
@@ -1150,23 +1141,23 @@ namespace Ultima5Redux.Maps
             {
                 case Point2D.Direction.Up:
                     nSpriteNum = bGoingUp
-                        ? _tileReferences.GetTileReferenceByName("StairsNorth").Index
-                        : _tileReferences.GetTileReferenceByName("StairsSouth").Index;
+                        ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsNorth").Index
+                        : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsSouth").Index;
                     break;
                 case Point2D.Direction.Down:
                     nSpriteNum = bGoingUp
-                        ? _tileReferences.GetTileReferenceByName("StairsSouth").Index
-                        : _tileReferences.GetTileReferenceByName("StairsNorth").Index;
+                        ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsSouth").Index
+                        : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsNorth").Index;
                     break;
                 case Point2D.Direction.Left:
                     nSpriteNum = bGoingUp
-                        ? _tileReferences.GetTileReferenceByName("StairsWest").Index
-                        : _tileReferences.GetTileReferenceByName("StairsEast").Index;
+                        ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsWest").Index
+                        : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsEast").Index;
                     break;
                 case Point2D.Direction.Right:
                     nSpriteNum = bGoingUp
-                        ? _tileReferences.GetTileReferenceByName("StairsEast").Index
-                        : _tileReferences.GetTileReferenceByName("StairsWest").Index;
+                        ? GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsEast").Index
+                        : GameReferences.SpriteTileReferences.GetTileReferenceByName("StairsWest").Index;
                     break;
                 case Point2D.Direction.None:
                     break;

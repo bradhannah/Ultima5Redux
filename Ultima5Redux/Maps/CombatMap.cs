@@ -11,6 +11,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
@@ -27,11 +28,7 @@ namespace Ultima5Redux.Maps
             CombatPlayerBlocked, NoAction, Sleeping
         }
 
-        private readonly DataOvlReference _dataOvlReference;
-        private readonly EnemyReferences _enemyReferences;
         private readonly Inventory _inventory;
-        private readonly InventoryReferences _inventoryReferences;
-        private readonly TileReferences _tileReferences;
 
         // world references
         private readonly VirtualMap _virtualMap;
@@ -53,27 +50,15 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="virtualMap"></param>
         /// <param name="singleCombatMapReference"></param>
-        /// <param name="tileReferences"></param>
-        /// <param name="enemyReferences"></param>
-        /// <param name="inventoryReferences"></param>
         /// <param name="inventory"></param>
-        /// <param name="dataOvlReference"></param>
-        /// <param name="tileOverrideReferences"></param>
         public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatMapReference,
-            TileReferences tileReferences, EnemyReferences enemyReferences,
-            InventoryReferences inventoryReferences, Inventory inventory, DataOvlReference dataOvlReference,
-            TileOverrideReferences tileOverrideReferences) :
-            base(tileOverrideReferences, tileReferences)
+            Inventory inventory ) 
         {
             _virtualMap = virtualMap;
             CombatMapUnits = _virtualMap.TheMapUnits;
-            _tileReferences = tileReferences;
             TheCombatMapReference = singleCombatMapReference;
-            _enemyReferences = enemyReferences;
-            _inventoryReferences = inventoryReferences;
             _inventory = inventory;
-            _dataOvlReference = dataOvlReference;
-            XYOverrides = tileOverrideReferences.GetTileXYOverrides(singleCombatMapReference);
+            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
 
             InitializeAStarMap(WalkableType.CombatLand);
             InitializeAStarMap(WalkableType.CombatWater);
@@ -206,10 +191,10 @@ namespace Ultima5Redux.Maps
         }
 
         private bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
-                                                                       tileReference.Index == SpriteTileReferences
+                                                                       tileReference.Index == GameReferences.SpriteTileReferences
                                                                            .GetTileReferenceByName("RegularDoor")
                                                                            .Index ||
-                                                                       tileReference.Index == SpriteTileReferences
+                                                                       tileReference.Index == GameReferences.SpriteTileReferences
                                                                            .GetTileReferenceByName("RegularDoorView")
                                                                            .Index;
 
@@ -346,7 +331,7 @@ namespace Ultima5Redux.Maps
                         if (bIsBlocked)
                         {
                             postAttackOutputStr =
-                                combatPlayer.FriendlyName + _dataOvlReference.StringReferences
+                                combatPlayer.FriendlyName + GameReferences.DataOvlRef.StringReferences
                                                               .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
                                                               .TrimEnd().Replace("!", " ")
                                                           + opponentMapUnit.FriendlyName + " because it was blocked!";
@@ -392,7 +377,7 @@ namespace Ultima5Redux.Maps
                     {
                         case AdditionalHitStateAction.EnemyDivided:
                             postAttackOutputStr += "\n" + targetedCombatMapUnit.FriendlyName +
-                                                   _dataOvlReference.StringReferences
+                                                   GameReferences.DataOvlRef.StringReferences
                                                        .GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N)
                                                        .TrimEnd();
                             break;
@@ -1202,7 +1187,7 @@ namespace Ultima5Redux.Maps
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
                     enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        _enemyReferences.GetEnemyReference(nEnemySprite), out int _, npcRef);
+                        GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _, npcRef);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));

@@ -952,11 +952,6 @@ namespace Ultima5ReduxTesting
             
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
-            // CombatMap.TurnResult turnResult = world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
-            //     out CombatMapUnit combatMapUnit, out _, out string outputStr, out string postAttackOutputStr, out _);
-            // Debug.Assert(turnResult == CombatMap.TurnResult.RequireCharacterInput);
-            // Debug.Assert(combatMapUnit is CombatPlayer);
-
             CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
             
             Debug.Assert(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);

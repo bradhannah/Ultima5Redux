@@ -1,10 +1,10 @@
 ﻿namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class LordBritishArtifact : InventoryItem
+    public sealed class LordBritishArtifact : InventoryItem
     {
         public enum ArtifactType { Amulet = 439, Crown = 437, Sceptre = 438 }
 
-        public LordBritishArtifact(ArtifactType artifact, int quantity, string longName, string equipMessage) : base(
+        public LordBritishArtifact(ArtifactType artifact, int quantity, string equipMessage) : base(
             quantity, (int)artifact)
         {
             Artifact = artifact;

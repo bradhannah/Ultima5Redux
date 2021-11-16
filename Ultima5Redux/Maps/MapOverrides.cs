@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
     [DataContract]
     public class MapOverrides
     {
-        private readonly TileReferences _tileReferences;
-
         /// <summary>
         ///     Exposed searched or loot items
         /// </summary>
@@ -25,9 +24,8 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] internal Map TheMap { get; }
         
-        public MapOverrides(Map map, TileReferences tileReferences)
+        public MapOverrides(Map map)
         {
-            _tileReferences = tileReferences;
             TheMap = map;
             ClearOverridenTiles();
         }
@@ -45,7 +43,7 @@ namespace Ultima5Redux.Maps
         {
             int nIndex = GetOverrideTileIndex(xy);
             if (nIndex == -1) return null;
-            return _tileReferences.GetTileReference(nIndex);
+            return GameReferences.SpriteTileReferences.GetTileReference(nIndex);
         }
 
         public void SetOverrideTile(Point2D xy, int nIndex) 

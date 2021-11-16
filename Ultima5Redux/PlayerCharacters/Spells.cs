@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters
 {
     public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
     {
-        private readonly MagicReferences _magicReferences;
-
         private static readonly Dictionary<string, string> LiteralTranslationDictionary =
             new Dictionary<string, string>
             {
@@ -38,12 +37,11 @@ namespace Ultima5Redux.PlayerCharacters
                 { "Zu", "Sleep" },
             };
 
-        public Spells(List<byte> gameStateByteArray, MagicReferences magicReferences) : base(gameStateByteArray)
+        public Spells(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
-            _magicReferences = magicReferences;
             foreach (MagicReference.SpellWords spell in Enum.GetValues(typeof(MagicReference.SpellWords)))
             {
-                AddSpell(spell, _magicReferences.GetMagicReference(spell));
+                AddSpell(spell, GameReferences.MagicRefs.GetMagicReference(spell));
             }
         }
 
@@ -60,17 +58,13 @@ namespace Ultima5Redux.PlayerCharacters
             if (spellWord == MagicReference.SpellWords.Nox)
             {
                 Items[spellWord] = new Spell(spellWord, 0, 
-                    //"Nox", "Nox",
                     magicReference);
                 return;
             }
 
-            //string longSpellStr = _ti.ToTitleCase(spellStr.ToString().Replace("_", " ").ToLower());
-
             Items[spellWord] = new Spell(spellWord, 
                 GameStateByteArray[(int)spellWord],
-                //longSpellStr, longSpellStr, 
-                _magicReferences.GetMagicReference(spellWord));
+                GameReferences.MagicRefs.GetMagicReference(spellWord));
         }
 
         public static string GetLiteralTranslation(string syllable)

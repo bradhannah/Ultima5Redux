@@ -6,6 +6,7 @@ using Newtonsoft.Json.Converters;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
@@ -27,16 +28,12 @@ namespace Ultima5Redux.Maps
             new Dictionary<WalkableType, List<List<Node>>>();
 
         private readonly Dictionary<Point2D, int> _openDoors = new Dictionary<Point2D, int>();
-        protected readonly TileReferences SpriteTileReferences;
 
         // ReSharper disable once NotAccessedField.Global
         // ReSharper disable once MemberCanBePrivate.Global
-        protected TileOverrideReferences TileOverrideReferences;
 
-        protected Map(TileOverrideReferences tileOverrideReferences, TileReferences spriteTileReferences)
+        protected Map()
         {
-            TileOverrideReferences = tileOverrideReferences;
-            SpriteTileReferences = spriteTileReferences;
         }
 
         public abstract bool ShowOuterSmallMapTiles { get; }
@@ -102,7 +99,7 @@ namespace Ultima5Redux.Maps
             {
                 for (int y = 0; y < nYTiles; y++)
                 {
-                    TileReference currentTile = SpriteTileReferences.GetTileReference(TheMap[x][y]);
+                    TileReference currentTile = GameReferences.SpriteTileReferences.GetTileReference(TheMap[x][y]);
 
                     bool bIsWalkable = IsTileWalkable(currentTile, walkableType);
 
@@ -147,12 +144,12 @@ namespace Ultima5Redux.Maps
 
             bool bIsWalkable =
                 tileReference.IsWalking_Passable || tileReference.Index ==
-                                                 SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                                 || tileReference.Index == SpriteTileReferences
+                                                 GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
+                                                 || tileReference.Index == GameReferences.SpriteTileReferences
                                                      .GetTileReferenceByName("RegularDoorView").Index
-                                                 || tileReference.Index == SpriteTileReferences
+                                                 || tileReference.Index == GameReferences.SpriteTileReferences
                                                      .GetTileReferenceByName("LockedDoor").Index
-                                                 || tileReference.Index == SpriteTileReferences
+                                                 || tileReference.Index == GameReferences.SpriteTileReferences
                                                      .GetTileReferenceByName("LockedDoorView").Index;
 
             return bIsWalkable;
@@ -160,9 +157,9 @@ namespace Ultima5Redux.Maps
 
         public TileReference GetTileReference(Point2D xy)
         {
-            if (IsXYOverride(xy)) return SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
+            if (IsXYOverride(xy)) return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
 
-            return SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+            return GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
         }
 
         public bool IsXYOverride(Point2D xy)
@@ -353,7 +350,7 @@ namespace Ultima5Redux.Maps
             TestForVisibility[nCharacterIndex][adjustedXy.X][adjustedXy.Y] = true;
 
             // if it blocks light then we make it visible but do not make subsequent tiles visible
-            TileReference tileReference = SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
+            TileReference tileReference = GameReferences.SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
 
             bool bBlocksLight =
                 tileReference.BlocksLight // if it says it blocks light AND 
@@ -427,7 +424,7 @@ namespace Ultima5Redux.Maps
         public void SetOpenDoor(Point2D xy)
         {
             TileReference tileReference = GetTileReference(xy);
-            Debug.Assert(SpriteTileReferences.IsDoor(tileReference.Index),
+            Debug.Assert(GameReferences.SpriteTileReferences.IsDoor(tileReference.Index),
                 "you tried to set an open door on a tile that is not an open door");
 
             _openDoors.Add(xy, 10);
@@ -441,7 +438,7 @@ namespace Ultima5Redux.Maps
         public void CloseDoor(Point2D xy)
         {
             TileReference tileReference = GetTileReference(xy);
-            Debug.Assert(SpriteTileReferences.IsDoor(tileReference.Index),
+            Debug.Assert(GameReferences.SpriteTileReferences.IsDoor(tileReference.Index),
                 "you tried to set an open door on a tile that is not an open door");
             Debug.Assert(_openDoors.ContainsKey(xy), "tried to close a door that wasn't open");
 

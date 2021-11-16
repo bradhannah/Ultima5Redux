@@ -7,12 +7,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public abstract class CombatItems<TEnumType, T> : InventoryItems<TEnumType, T>
     {
-        protected CombatItemReferences CombatItemReferences { get; }
-
-        protected CombatItems(CombatItemReferences combatItemReferences, List<byte> gameStateByteArray) : 
-            base(gameStateByteArray)
+        protected CombatItems(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
-            CombatItemReferences = combatItemReferences;
         }
 
         [IgnoreDataMember] public List<CombatItem> AllCombatItems => GenericItemList.Cast<CombatItem>().ToList();

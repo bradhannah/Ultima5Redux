@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
@@ -17,10 +18,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public readonly List<Helm> Helms = new List<Helm>();
         public readonly List<Ring> Rings = new List<Ring>();
 
-        public Armours(CombatItemReferences combatItemReferences, List<byte> gameStateByteArray)
-            : base(combatItemReferences, gameStateByteArray)
+        public Armours(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
-            foreach (ArmourReference armourReference in combatItemReferences.AllArmour)
+            foreach (ArmourReference armourReference in GameReferences.CombatItemRefs.AllArmour)
             {
                 AddArmour(armourReference);
             }

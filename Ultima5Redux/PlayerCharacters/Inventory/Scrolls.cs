@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Scrolls : InventoryItems<MagicReference.SpellWords, Scroll>
     {
-        private readonly MagicReferences _magicReferences;
 
-        public Scrolls(List<byte> gameStateByteArray, MagicReferences magicReferences) : base(gameStateByteArray)
+        public Scrolls(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
-            _magicReferences = magicReferences;
             AddScroll(MagicReference.SpellWords.Vas_Lor);
             AddScroll(MagicReference.SpellWords.Rel_Hur);
             AddScroll(MagicReference.SpellWords.In_Sanct);
@@ -32,7 +31,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             
             int nIndex = 0x27A + (int)scrollSpell;
             Items[spellWord] = new Scroll(spellWord, GameStateByteArray[nIndex], 
-                _magicReferences.GetMagicReference(spellWord));
+                GameReferences.MagicRefs.GetMagicReference(spellWord));
         }
     }
 }

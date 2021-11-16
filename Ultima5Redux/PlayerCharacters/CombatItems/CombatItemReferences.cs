@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class CombatItemReferences
     {
-        private readonly DataOvlReference _dataOvlReference;
-        private readonly List<CombatItemReference> _combatItemReferences = new List<CombatItemReference>();
-
         public readonly List<WeaponReference> WeaponReferences = new List<WeaponReference>();
         public readonly List<ArmourReference> ChestArmours = new List<ArmourReference>();
         public readonly List<ArmourReference> Helms = new List<ArmourReference>();
@@ -43,10 +41,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
 
 
-        public CombatItemReferences(DataOvlReference dataOvlReference, InventoryReferences inventoryReferences)
+        public CombatItemReferences(InventoryReferences inventoryReferences)
         {
-            _dataOvlReference = dataOvlReference;
-            
             List<InventoryReference> combatItems = 
                 inventoryReferences.GetInventoryReferenceList(InventoryReferences.InventoryReferenceType.Armament);
             // foreach of the weapon references
@@ -57,7 +53,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 switch (GetCombatItemTypeByEquipment(equipment))
                 {
                     case CombatItemType.Armour:
-                        ArmourReference armourReference = new ArmourReference(_dataOvlReference, inventoryReference);
+                        ArmourReference armourReference = new ArmourReference(GameReferences.DataOvlRef, inventoryReference);
                         
                         AllArmour.Add(armourReference);
                         switch (armourReference.TheArmourType)
@@ -79,7 +75,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                         }
                         break;
                     case CombatItemType.Weapon:
-                        WeaponReferences.Add(new WeaponReference(_dataOvlReference, inventoryReference));
+                        WeaponReferences.Add(new WeaponReference(GameReferences.DataOvlRef, inventoryReference));
                         break;
                     case CombatItemType.Other:
                         throw new Ultima5ReduxException("Tried to create CombatItemReference from " + equipment);

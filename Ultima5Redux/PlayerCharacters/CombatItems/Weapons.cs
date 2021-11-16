@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class Weapons : CombatItems<WeaponReference.WeaponTypeEnum, Weapon>
     {
-        public Weapons(CombatItemReferences combatItemReferences, List<byte> gameStateByteArray)
-        : base(combatItemReferences, gameStateByteArray)
+        public Weapons(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
-            foreach (WeaponReference weaponReference in combatItemReferences.WeaponReferences)
+            foreach (WeaponReference weaponReference in GameReferences.CombatItemRefs.WeaponReferences)
             {
                 AddWeapon(weaponReference);
             }

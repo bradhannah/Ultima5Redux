@@ -2,6 +2,7 @@
 using System.IO;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.Monsters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
@@ -14,12 +15,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="u5Directory"></param>
         /// <param name="singleSmallMapReference"></param>
-        /// <param name="spriteTileReferences"></param>
-        /// <param name="tileOverrideReferences"></param>
-        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference singleSmallMapReference,
-            TileReferences spriteTileReferences, TileOverrideReferences tileOverrideReferences) : base(tileOverrideReferences,
-            singleSmallMapReference,
-            spriteTileReferences)
+        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
+            singleSmallMapReference)
         {
             _singleSmallMapReference = singleSmallMapReference;
 
@@ -32,7 +29,7 @@ namespace Ultima5Redux.Maps
 
         public override bool ShowOuterSmallMapTiles => true;
 
-        public override byte[][] TheMap { get; protected set; }
+        public sealed override byte[][] TheMap { get; protected set; }
         public int MapFloor => _singleSmallMapReference.Floor;
 
         public override int NumOfXTiles => XTILES;
@@ -90,12 +87,12 @@ namespace Ultima5Redux.Maps
         protected override float GetAStarWeight(Point2D xy)
         {
             bool isPreferredIndex(int nSprite) =>
-                nSprite == SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
-                SpriteTileReferences.IsPath(nSprite);
+                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||
+                GameReferences.SpriteTileReferences.IsPath(nSprite);
 
             const int fDefaultDeduction = 2;
 
-            TileReference unused = SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+            TileReference unused = GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
 
             float fCost = 10;
 

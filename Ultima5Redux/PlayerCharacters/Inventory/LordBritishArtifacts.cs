@@ -1,27 +1,25 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public sealed class LordBritishArtifacts : InventoryItems<LordBritishArtifact.ArtifactType, LordBritishArtifact>
     {
-        public LordBritishArtifacts(DataOvlReference dataOvlRef, List<byte> gameStateByteArray) : base(gameStateByteArray)
+        public LordBritishArtifacts(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             Items[LordBritishArtifact.ArtifactType.Amulet] = new LordBritishArtifact(
                 LordBritishArtifact.ArtifactType.Amulet,
                 gameStateByteArray[(int)Offsets.AMULET],
-                dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNamesStrings.AMULET),
-                dataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET));
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET));
             Items[LordBritishArtifact.ArtifactType.Crown] = new LordBritishArtifact(
                 LordBritishArtifact.ArtifactType.Crown,
                 gameStateByteArray[(int)Offsets.CROWN],
-                dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNamesStrings.CROWN),
-                dataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN));
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN));
             Items[LordBritishArtifact.ArtifactType.Sceptre] = new LordBritishArtifact(
                 LordBritishArtifact.ArtifactType.Sceptre,
                 gameStateByteArray[(int)Offsets.SCEPTRE],
-                dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNamesStrings.SCEPTRE),
-                dataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE));
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE));
         }
 
         public override Dictionary<LordBritishArtifact.ArtifactType, LordBritishArtifact> Items { get; } =

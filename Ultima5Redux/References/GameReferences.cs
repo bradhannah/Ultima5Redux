@@ -72,6 +72,8 @@ namespace Ultima5Redux.References
         public static MagicReferences MagicRefs { get; }
         public static CombatItemReferences CombatItemRefs { get; }
         public static ShoppeKeeperReferences ShoppeKeeperRefs { get; }
+        public static TileOverrideReferences TileOverrideRefs { get; }
+        
         private static string U5Directory => @"C:\games\Ultima_5\Gold"; 
 
         static GameReferences()
@@ -87,7 +89,7 @@ namespace Ultima5Redux.References
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);    
-            CombatItemRefs = new CombatItemReferences(DataOvlRef, InvRef);
+            CombatItemRefs = new CombatItemReferences(InvRef);
             TalkScriptsRef = new TalkScripts(U5Directory, DataOvlRef);
             NpcRefs = new NonPlayerCharacterReferences(U5Directory, SmallMapRef, TalkScriptsRef);
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
@@ -95,6 +97,7 @@ namespace Ultima5Redux.References
 
             ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef);
             ShoppeKeeperRefs = new ShoppeKeeperReferences(DataOvlRef, NpcRefs);
+            TileOverrideRefs = new TileOverrideReferences();
         }
 
     }

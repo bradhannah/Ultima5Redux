@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    public class CombatItemReference
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] public class CombatItemReference
     {
         public enum MissileType { None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock }
 
@@ -19,12 +20,12 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public int RequiredStrength { get; }
         public MissileType Missile { get; }
         public string EquipmentName { get; }
-        public int BasePrice { get; set; } = 0;
+        public int BasePrice { get; private set; }
         public int Sprite { get; }
 
         public readonly DataOvlReference.Equipment SpecificEquipment;
 
-        public const int BareHandsIndex = -2;
+        public const int BARE_HANDS_INDEX = -2;
 
         public bool IsAmmo => SpecificEquipment == DataOvlReference.Equipment.Quarrels ||
                               SpecificEquipment == DataOvlReference.Equipment.Arrows;
@@ -45,8 +46,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                                    SpecificEquipment == DataOvlReference.Equipment.Halberd ||
                                    SpecificEquipment == DataOvlReference.Equipment.FlamingOil;
 
-        public InventoryReference InventoryReference { get; }
-
         public CombatItemReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference)
         {
             _dataOvlReference = dataOvlReference;
@@ -66,7 +65,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
         private static string GetEquipmentString(DataOvlReference dataOvlRef, int nString)
         {
-            if (nString == BareHandsIndex) return "Bare Hands";
+            if (nString == BARE_HANDS_INDEX) return "Bare Hands";
             List<string> equipmentNames = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.EQUIP_INDEXES)
                 .GetAsStringListFromIndexes();
             return nString == 0xFF ? " " : equipmentNames[nString];
@@ -86,7 +85,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
         private static int GetAttack(DataOvlReference dataOvlRef, int nIndex)
         {
-            if (nIndex == BareHandsIndex) return 3;
+            if (nIndex == BARE_HANDS_INDEX) return 3;
 
             List<byte> attackValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_VALUES).GetAsByteList();
@@ -95,7 +94,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private static int GetRange(DataOvlReference dataOvlRef, int nIndex)
         {
-            if (nIndex == BareHandsIndex) return 1;
+            if (nIndex == BARE_HANDS_INDEX) return 1;
 
             List<byte> rangeValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_RANGE_VALUES).GetAsByteList();
@@ -105,7 +104,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private static int GetDefense(DataOvlReference dataOvlRef, int nIndex)
         {
-            if (nIndex == BareHandsIndex) return 0;
+            if (nIndex == BARE_HANDS_INDEX) return 0;
 
             List<byte> defenseValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.DEFENSE_VALUES).GetAsByteList();
@@ -131,7 +130,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private static int GetRequiredStrength(DataOvlReference dataOvlRef, int nIndex)
         {
-            if (nIndex == BareHandsIndex) return 0;
+            if (nIndex == BARE_HANDS_INDEX) return 0;
 
             List<byte> requiredStrengthValueList =
                 dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REQ_STRENGTH_EQUIP).GetAsByteList();

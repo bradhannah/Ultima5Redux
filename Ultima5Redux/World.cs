@@ -64,10 +64,10 @@ namespace Ultima5Redux
             U5Directory = ultima5Directory;
 
             // build the overworld map
-            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld, _tileOverrideReferences, GameReferences.SpriteTileReferences);
+            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld, _tileOverrideReferences, GameReferences.SpriteTileReferences);
+            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld);
 
             AllSmallMaps = new SmallMaps(GameReferences.SmallMapRef, U5Directory, GameReferences.SpriteTileReferences, _tileOverrideReferences);
      

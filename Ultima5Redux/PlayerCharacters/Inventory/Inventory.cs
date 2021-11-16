@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.CombatItems;
+using Ultima5Redux.References;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -12,30 +13,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [DataContract]
     public class Inventory
     {
-        public enum InventoryThings { Grapple = 0x209, MagicCarpets = 0x20A }
-
-        private readonly DataOvlReference _dataOvlRef;
         private readonly List<byte> _gameStateByteArray;
-        private readonly InventoryReferences _inventoryReferences;
-        private readonly MagicReferences _magicReferences;
-        private readonly CombatItemReferences _combatItemReferences;
         private readonly Moongates _moongates;
-        private readonly MoonPhaseReferences _moonPhaseReferences;
         private readonly GameState _state;
 
-        internal Inventory(List<byte> gameStateByteArray, DataOvlReference dataOvlRef,
-            MoonPhaseReferences moonPhaseReferences, Moongates moongates, GameState state,
-            InventoryReferences inventoryReferences, MagicReferences magicReferences,
-            ImportedGameState importedGameState, CombatItemReferences combatItemReferences)
+        internal Inventory(List<byte> gameStateByteArray, Moongates moongates, GameState state)
         {
             _gameStateByteArray = gameStateByteArray;
-            _dataOvlRef = dataOvlRef;
-            _moonPhaseReferences = moonPhaseReferences;
             _moongates = moongates;
             _state = state;
-            _inventoryReferences = inventoryReferences;
-            _magicReferences = magicReferences;
-            _combatItemReferences = combatItemReferences;
 
             RefreshInventoryFromLegacySave();
         }
@@ -193,15 +179,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ReadyItems.Clear();
             UseItems.Clear();
 
-            ProtectiveArmour = new Armours(_combatItemReferences, _gameStateByteArray);
-            TheWeapons = new Weapons(_combatItemReferences, _gameStateByteArray);
-            MagicScrolls = new Scrolls(_gameStateByteArray, _magicReferences);
+            ProtectiveArmour = new Armours(_gameStateByteArray);
+            TheWeapons = new Weapons(_gameStateByteArray);
+            MagicScrolls = new Scrolls(_gameStateByteArray);
             MagicPotions = new Potions(_gameStateByteArray);
             SpecializedItems = new SpecialItems(_gameStateByteArray);
-            Artifacts = new LordBritishArtifacts(_dataOvlRef, _gameStateByteArray);
-            Shards = new ShadowlordShards(_dataOvlRef, _gameStateByteArray);
+            Artifacts = new LordBritishArtifacts(_gameStateByteArray);
+            Shards = new ShadowlordShards(_gameStateByteArray);
             SpellReagents = new Reagents( _gameStateByteArray, _state);
-            MagicSpells = new Spells(_gameStateByteArray, _magicReferences);
+            MagicSpells = new Spells(_gameStateByteArray);
             TheMoonstones = new Moonstones(_moongates);
             TheProvisions = new Provisions(_state);
 
@@ -216,30 +202,28 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             {
                 switch (item)
                 {
-                    case LordBritishArtifact artifact:
-                    case ShadowlordShard shard:
-                    case Potion magicPotion:
-                    case Scroll magicScroll:
-                    case SpecialItem specializedItem:
-                    case Moonstone moonstone:
-                    case Provision provision:
-                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                    case LordBritishArtifact _:
+                    case ShadowlordShard _:
+                    case Potion _:
+                    case Scroll _:
+                    case SpecialItem _:
+                    case Moonstone _:
+                    case Provision _:
+                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
                             InventoryReferences.InventoryReferenceType.Item, item.InventoryReferenceString);
                         break;
-                    case Spell magicSpell:
-                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                    case Spell _:
+                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
                             InventoryReferences.InventoryReferenceType.Spell, item.InventoryReferenceString);
                         break;
-                    case Reagent spellReagent:
-                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                    case Reagent _:
+                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
                             InventoryReferences.InventoryReferenceType.Reagent, item.InventoryReferenceString);
                         break;
-                    case CombatItem combatItem: 
-                        //protectiveArmour:
-                        //case Weapon weapon:
+                    case CombatItem _: 
                         // we have to assign this manually because when we serialize from JSON it is unable to link it 
                         // itself
-                        item.InvRef = _inventoryReferences.GetInventoryReference(
+                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
                             InventoryReferences.InventoryReferenceType.Armament, item.InventoryReferenceString);
                         break;
                     default:
