@@ -63,15 +63,11 @@ namespace Ultima5Redux.MapUnits
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 // this is a bit redundant but we have a backing field and also store the XY positions
-                // in the TheMapUnitState and TheSmallMapCharacterState, but we have to do this because the .XY
+                // in the TheSmallMapCharacterState, but we have to do this because the .XY
                 // of the MapUnitPosition is often edited directly
                 _mapMapUnitPosition.X = value.X;
                 _mapMapUnitPosition.Y = value.Y;
                 _mapMapUnitPosition.Floor = value.Floor;
-
-                // TheMapUnitState.X = (byte)value.X;
-                // TheMapUnitState.Y = (byte)value.Y;
-                // TheMapUnitState.Floor = (byte)value.Floor;
 
                 if (TheSmallMapCharacterState == null) return;
                 TheSmallMapCharacterState.TheMapUnitPosition.X = value.X;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -152,21 +153,33 @@ namespace Ultima5Redux
                 DataChunkName.NPC_SPRITE_INDEXES);
             
             //// MapUnitStates
-            // DataChunk activeDataChunk = OverworldOverlayDataChunks;
-
             OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
             UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
             ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks);
             
             OverworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
             UnderworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
-
             ActiveMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
-                
-            
-            // _overworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
-            // _underworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
 
+            switch (InitialMap)
+            {
+                case Map.Maps.Small:
+                    // small, overworld and underworld always have saved Animation states so we load them in at the beginning
+                    SmallMapUnitStates = ActiveMapUnitStates;
+                    break;
+                case Map.Maps.Overworld:
+                    OverworldMapUnitStates = ActiveMapUnitStates;
+                    break;
+                case Map.Maps.Underworld:
+                    UnderworldMapUnitStates = ActiveMapUnitStates;
+                    break;
+                case Map.Maps.Combat:
+                    throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             
             SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk);
             CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists, 
@@ -194,7 +207,6 @@ namespace Ultima5Redux
         ///     How many turns left until your torch is burnt out?
         /// </summary>
         internal byte TorchTurnsLeft => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
-
 
         internal DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
         internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
@@ -248,6 +260,22 @@ namespace Ultima5Redux
                 ? Floor == 0xFF ? Map.Maps.Underworld : Map.Maps.Overworld
                 : Map.Maps.Small;
 
+        public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)
+        {
+            return map switch
+            {
+                Map.Maps.Small => SmallMapUnitStates,
+                Map.Maps.Overworld => OverworldMapUnitStates,
+                Map.Maps.Underworld => UnderworldMapUnitStates,
+                Map.Maps.Combat => throw new Ultima5ReduxException(
+                 "Can't return a map state for a combat map from the imported game state"),
+                _ => throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" + map)
+            };
+        }
+         
+        // ReSharper disable once UnusedMember.Local
+        [IgnoreDataMember] public MapUnitStates MapUnitStatesByInitialMap => GetMapUnitStatesByMap(InitialMap);
+
         internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
             GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS),
             GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
@@ -274,6 +302,7 @@ namespace Ultima5Redux
         internal MapUnitStates OverworldMapUnitStates { get; }
         internal MapUnitStates UnderworldMapUnitStates { get; }
         internal MapUnitStates ActiveMapUnitStates { get; }
+        private MapUnitStates SmallMapUnitStates { get; }
         internal SmallMapCharacterStates SmallMapCharacterStates { get; }
         internal MapUnitMovements CharacterMovements { get; }
         internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; } 

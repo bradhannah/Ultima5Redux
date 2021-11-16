@@ -20,6 +20,7 @@ namespace Ultima5Redux.MapUnits
     {
         internal const int MAX_MAP_CHARACTERS = 0x20;
         private readonly bool _bUseExtendedSprites;
+        private readonly ImportedGameState _importedGameState;
 
 
         /// <summary>
@@ -39,21 +40,14 @@ namespace Ultima5Redux.MapUnits
         [DataMember] public MapUnitCollection UnderworldMapUnitCollection { get; } = new MapUnitCollection();
         [DataMember] public MapUnitCollection OverworldMapMapUnitCollection { get; } = new MapUnitCollection();
         [DataMember] public MapUnitCollection CombatMapMapUnitCollection { get; } = new MapUnitCollection();
-        
-        //[IgnoreDataMember] private readonly DataChunk _overworldDataChunk;
-        [DataMember] private readonly MapUnitStates _overworldMapUnitStates;
 
         [DataMember] private readonly SmallMapCharacterStates _smallMapCharacterStates;
 
-        [DataMember] private readonly MapUnitStates _underworldMapUnitStates;
-        
-        [IgnoreDataMember] private MapUnitStates _combatMapUnitStates;
         [DataMember] private SmallMapReferences.SingleMapReference.Location _currentLocation;
 
         [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(_currentMapType);
 
         [DataMember] private Map.Maps _currentMapType;
-        [DataMember] private MapUnitStates SmallMapUnitStates { get; set; }
         
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
@@ -66,32 +60,11 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] private readonly MapUnitMovements _importedMovements;
 
-        // ReSharper disable once UnusedMember.Local
-        [IgnoreDataMember] private MapUnitStates CurrentMapUnitStates
-        {
-            get
-            {
-                switch (_currentMapType)
-                {
-                    case Map.Maps.Small:
-                        return SmallMapUnitStates;
-                    case Map.Maps.Overworld:
-                        return _overworldMapUnitStates;
-                    case Map.Maps.Underworld:
-                        return _underworldMapUnitStates;
-                    case Map.Maps.Combat:
-                        return _combatMapUnitStates;
-                    default:
-                        throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" +
-                                                        _currentMapType);
-                }
-            }
-        }
-
         [IgnoreDataMember] public Avatar AvatarMapUnit => CurrentMapUnits.TheAvatar;
 
         /// <summary>
         ///     Constructs the collection of all Map CurrentMapUnits in overworld, underworld and current towne
+        ///     from a legacy save import
         /// </summary>
         /// <param name="timeOfDay"></param>
         /// <param name="playerCharacterRecords"></param>
@@ -109,57 +82,44 @@ namespace Ultima5Redux.MapUnits
             SmallMapReferences.SingleMapReference.Location currentSmallMap =
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
-            // let's make sure they are using the correct combination
-            // Debug.Assert((initialMap == LargeMap.Maps.Small &&
-            //               currentSmallMap != SmallMapReferences.SingleMapReference.Location.Britannia_Underworld));
-
-
             _currentMapType = initialMap;
             _bUseExtendedSprites = bUseExtendedSprites;
+            _importedGameState = importedGameState;
             _npcStates = npcStates;
             _timeOfDay = timeOfDay;
             _playerCharacterRecords = playerCharacterRecords;
             _currentLocation = currentSmallMap;
 
-            switch (initialMap)
-            {
-                // if the small map is being loaded, then we pull from disk and load the over and underworld from
-                // saved.ool
-                case Map.Maps.Combat:
-                    throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
-                case Map.Maps.Small:
-                    // small, overworld and underworld always have saved Animation states so we load them in at the beginning
-                    SmallMapUnitStates = importedGameState.ActiveMapUnitStates;
-                    //SmallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
-
-                    // we always load the over and underworld from disk immediately, no need to reload as we will track it in memory 
-                    // going forward
-                    _overworldMapUnitStates = importedGameState.OverworldMapUnitStates; 
-                    _underworldMapUnitStates = importedGameState.UnderworldMapUnitStates; 
-                    break;
-                case Map.Maps.Overworld:
-                case Map.Maps.Underworld:
-                {
-                    // since it is a large map, the small map is empty because the state is lost as soon as you leave it
-                    // and the selected large map is pulled directly from the active state (saved.gam @ 0x6b8)
-                    SmallMapUnitStates = null;
-
-                    if (initialMap == Map.Maps.Overworld)
-                    {
-                        _overworldMapUnitStates = importedGameState.ActiveMapUnitStates;
-                        _underworldMapUnitStates = importedGameState.UnderworldMapUnitStates;
-                    }
-                    else
-                    {
-                        _underworldMapUnitStates = importedGameState.ActiveMapUnitStates; 
-                        _overworldMapUnitStates = importedGameState.OverworldMapUnitStates;
-                    }
-
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
-            }
+            // switch (initialMap)
+            // {
+            //     // if the small map is being loaded, then we pull from disk and load the over and underworld from
+            //     // saved.ool
+            //     case Map.Maps.Combat:
+            //         throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
+            //     case Map.Maps.Small:
+            //     case Map.Maps.Overworld:
+            //     case Map.Maps.Underworld:
+            //     {
+            //         // since it is a large map, the small map is empty because the state is lost as soon as you leave it
+            //         // and the selected large map is pulled directly from the active state (saved.gam @ 0x6b8)
+            //         SmallMapUnitStates = null;
+            //
+            //         if (initialMap == Map.Maps.Overworld)
+            //         {
+            //             _overworldMapUnitStates = importedGameState.ActiveMapUnitStates;
+            //             _underworldMapUnitStates = importedGameState.UnderworldMapUnitStates;
+            //         }
+            //         else
+            //         {
+            //             _underworldMapUnitStates = importedGameState.ActiveMapUnitStates; 
+            //             _overworldMapUnitStates = importedGameState.OverworldMapUnitStates;
+            //         }
+            //
+            //         break;
+            //     }
+            //     default:
+            //         throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
+            // }
 
             // _overworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
             // _underworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
@@ -204,7 +164,7 @@ namespace Ultima5Redux.MapUnits
 
         public void InitializeCombatMapReferences()
         {
-            _combatMapUnitStates = new MapUnitStates();
+            //_combatMapUnitStates = new MapUnitStates();
             CombatMapMapUnitCollection.Clear();
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
@@ -227,7 +187,7 @@ namespace Ultima5Redux.MapUnits
                 mapUnit.UseFourDirections = _bUseExtendedSprites;
             }
 
-            if (SmallMapUnitStates == null) return;
+            if (SmallMapUnitCollection == null) return;
 
             foreach (MapUnit mapUnit in SmallMapUnitCollection.AllMapUnits)
             {
@@ -457,7 +417,7 @@ namespace Ultima5Redux.MapUnits
 
                 // we have retrieved the _currentMapUnitStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
-                MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(i);
+                MapUnitState mapUnitState = _importedGameState.MapUnitStatesByInitialMap.GetCharacterState(i);
 
                 MapUnitPosition mapUnitPosition = new MapUnitPosition(mapUnitState.X, mapUnitState.Y, 0);
                 TileReference tileReference = mapUnitState.Tile1Ref;
@@ -495,14 +455,14 @@ namespace Ultima5Redux.MapUnits
                 Debug.WriteLine("Loading character positions from disk...");
                 // we are loading the small animation from disk
                 // this is only done if you save the game and reload within a towne
-                SmallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
+                //SmallMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
             }
             else
             {
                 Debug.WriteLine("Loading default character positions...");
 
                 // set a blank map unit state because it wasn't saved to disk
-                SmallMapUnitStates = new MapUnitStates();
+                //SmallMapUnitStates = new MapUnitStates();
             }
 
             // populate each of the map characters individually
@@ -523,22 +483,16 @@ namespace Ultima5Redux.MapUnits
                 } 
                 if (i == 0 && bInitialLoad)
                 {
-                    MapUnitState theAvatarMapState = SmallMapUnitStates.GetCharacterState(0);
+                    MapUnitState theAvatarMapState = _importedGameState.GetMapUnitStatesByMap(Map.Maps.Small).GetCharacterState(0);
                     MapUnit theAvatar = Avatar.CreateAvatar(location, mapUnitMovement,
                         new MapUnitPosition(theAvatarMapState.X, theAvatarMapState.Y, theAvatarMapState.Floor),
                         theAvatarMapState.Tile1Ref, _bUseExtendedSprites);
-                        //theAvatarMapState);
-                        //SmallMapReferences.GetStartingXYZByLocation()
-                    // theAvatar.MapUnitPosition.X = theAvatarMapState.X;
-                    // theAvatar.MapUnitPosition.Y = theAvatarMapState.Y;
-                    //theAvatar.MapLocation = location;
                     SmallMapUnitCollection.Add(theAvatar);
                     continue;
                 }
 
                 // get the specific NPC reference 
                 NonPlayerCharacterState npcState = _npcStates.GetStateByLocationAndIndex(location, i);
-                    //npcCurrentMapRefs[i];
 
                 // we keep the object because we may be required to save this to disk - but since we are
                 // leaving the map there is no need to save their movements
@@ -548,13 +502,6 @@ namespace Ultima5Redux.MapUnits
                 SmallMapCharacterState smallMapCharacterState =
                     new SmallMapCharacterState(npcState.NPCRef, i, _timeOfDay);
 
-                // initialize a default MapUnitState 
-                // MapUnitState mapUnitState = new MapUnitState(npcState.NPCRef)
-                // {
-                //     X = (byte)smallMapCharacterState.TheMapUnitPosition.X,
-                //     Y = (byte)smallMapCharacterState.TheMapUnitPosition.Y,
-                //     Floor = (byte)smallMapCharacterState.TheMapUnitPosition.Floor
-                // };
                 MapUnitPosition mapUnitPosition = new MapUnitPosition((byte)smallMapCharacterState.TheMapUnitPosition.X,
                     (byte)smallMapCharacterState.TheMapUnitPosition.Y,
                     (byte)smallMapCharacterState.TheMapUnitPosition.Floor);
@@ -570,12 +517,13 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Generates a new map unit
         /// </summary>
-        /// <param name="mapUnitState"></param>
         /// <param name="mapUnitMovement"></param>
         /// <param name="bInitialLoad"></param>
         /// <param name="location"></param>
         /// <param name="npcState"></param>
+        /// <param name="tileReference"></param>
         /// <param name="smallMapCharacterState"></param>
+        /// <param name="mapUnitPosition"></param>
         /// <returns></returns>
         private MapUnit CreateNewMapUnit(MapUnitMovement mapUnitMovement, bool bInitialLoad,
             SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState,
@@ -583,8 +531,6 @@ namespace Ultima5Redux.MapUnits
             SmallMapCharacterState smallMapCharacterState = null)
         {
             MapUnit newUnit;
-            //MapUnitPosition mapUnitPosition = new MapUnitPosition(mapUnitState.X, mapUnitState.Y, 0);
-            //TileReference tileReference = tileReference//mapUnitState.Tile1Ref;
 
             if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active && npcState.NPCRef.NormalNPC)
             {
@@ -647,8 +593,6 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
             if (nIndex == -1) return null;
 
-            //MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
-
             Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference,
                 _currentLocation, null);
             enemy.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
@@ -673,8 +617,6 @@ namespace Ultima5Redux.MapUnits
 
             if (nIndex == -1) return null;
 
-            //MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
-
             MagicCarpet magicCarpet =
                 new MagicCarpet(_currentLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
             
@@ -687,7 +629,6 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
             if (nIndex == -1) return null;
 
-            //MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
             Horse horse = new Horse(_importedMovements.GetMovement(nIndex), _currentLocation, Point2D.Direction.Right, 
                 null, mapUnitPosition)
             {
@@ -712,14 +653,10 @@ namespace Ultima5Redux.MapUnits
 
             if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
-
             Frigate frigate = new Frigate(_importedMovements.GetMovement(nIndex), SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
 
             // set position of frigate in the world
-            // Point2D frigateLocation = xy;
-            // frigate.MapUnitPosition = new MapUnitPosition(frigateLocation.X, frigateLocation.Y, 0);
             frigate.SkiffsAboard = nSkiffsAboard;
             frigate.KeyTileReference = GameReferences.SpriteTileReferences.GetTileReferenceByName("ShipNoSailsLeft");
 
@@ -739,7 +676,6 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(_currentMapType);
             if (nIndex == -1) return null;
 
-            MapUnitState mapUnitState = CurrentMapUnitStates.GetCharacterState(nIndex);
             Skiff skiff = new Skiff(_importedMovements.GetMovement(nIndex), SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
 

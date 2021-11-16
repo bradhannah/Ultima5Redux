@@ -30,17 +30,7 @@ namespace Ultima5Redux.MapUnits
         {
             _bUseExtendedSprites = bUseExtendedSprites;
         
-            // if (mapUnitState == null)
-                 //TheMapUnitState = MapUnitState.CreateAvatar(mapUnitPosition);
-                    //SmallMapReferences.GetStartingXYZByLocation());
-            // else
-            //     TheMapUnitState = MapUnitState.CreateAvatar(SmallMapReferences.GetStartingXYZByLocation(),
-            //         mapUnitState);
-        
-            //CurrentDirection = TheMapUnitState.Tile1Ref.GetDirection();
             KeyTileReference = tileReference;
-            
-                //TheMapUnitState.Tile1Ref);
             MapUnitPosition = mapUnitPosition;
         
             BoardMapUnitFromAvatarState(CurrentAvatarState);
