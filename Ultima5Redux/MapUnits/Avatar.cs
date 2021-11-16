@@ -26,7 +26,7 @@ namespace Ultima5Redux.MapUnits
         };
 
         private Avatar(SmallMapReferences.SingleMapReference.Location location,
-            MapUnitMovement movement, MapUnitPosition mapUnitPosition, bool bUseExtendedSprites)
+            MapUnitMovement movement, MapUnitPosition mapUnitPosition, TileReference tileReference, bool bUseExtendedSprites)
         {
             _bUseExtendedSprites = bUseExtendedSprites;
         
@@ -38,7 +38,8 @@ namespace Ultima5Redux.MapUnits
             //         mapUnitState);
         
             //CurrentDirection = TheMapUnitState.Tile1Ref.GetDirection();
-            CurrentAvatarState = CalculateAvatarState(KeyTileReference);
+            KeyTileReference = tileReference;
+            
                 //TheMapUnitState.Tile1Ref);
             MapUnitPosition = mapUnitPosition;
         
@@ -84,7 +85,11 @@ namespace Ultima5Redux.MapUnits
                 IsAvatarOnBoardedThing
                     ? GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileNameBoarded[CurrentDirection])
                     : GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[CurrentDirection]);
-            set => base.KeyTileReference = value;
+            set
+            {
+                CurrentAvatarState = CalculateAvatarState(value);
+                base.KeyTileReference = value;
+            }
         }
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
@@ -104,7 +109,7 @@ namespace Ultima5Redux.MapUnits
             if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
             if (tileReference.Name.StartsWith("Ship")) return AvatarState.Frigate;
             if (tileReference.Name.StartsWith("Skiff")) return AvatarState.Skiff;
-            if (tileReference.Name.StartsWith("RidingMagicCarpet")) return AvatarState.Carpet;
+            if (tileReference.Name.StartsWith("RidingMagicCarpet") || tileReference.Name.StartsWith("Carpet")) return AvatarState.Carpet;
             if (tileReference.Name.StartsWith("RidingHorse")) return AvatarState.Horse;
             if (tileReference.Name.StartsWith("Horse")) return AvatarState.Horse;
             throw new Ultima5ReduxException("Asked to calculate AvatarState of " + tileReference.Name +
@@ -169,9 +174,10 @@ namespace Ultima5Redux.MapUnits
         /// <param name="bUseExtendedSprites"></param>
         /// <returns></returns>
         public static MapUnit CreateAvatar(SmallMapReferences.SingleMapReference.Location location, 
-            MapUnitMovement movement, MapUnitPosition mapUnitPosition, bool bUseExtendedSprites)
+            MapUnitMovement movement, MapUnitPosition mapUnitPosition, TileReference tileReference, 
+            bool bUseExtendedSprites)
         {
-            Avatar theAvatar = new Avatar(location, movement, mapUnitPosition, bUseExtendedSprites);
+            Avatar theAvatar = new Avatar(location, movement, mapUnitPosition, tileReference, bUseExtendedSprites);
         
             return theAvatar;
         }

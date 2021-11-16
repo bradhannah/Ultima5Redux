@@ -12,18 +12,15 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class CombatPlayer : CombatMapUnit
+    public sealed class CombatPlayer : CombatMapUnit
     {
         private readonly Inventory _inventory;
 
-        public CombatPlayer(PlayerCharacterRecord record, Point2D xy, Inventory inventory) : base()
+        public CombatPlayer(PlayerCharacterRecord record, Point2D xy, Inventory inventory)  
         {
             _inventory = inventory;
             Record = record;
-            // TheMapUnitState = MapUnitState.CreateCombatPlayer(TileReferences, Record,
-            //     new MapUnitPosition(xy.X, xy.Y, 0));
-
-            // set the characters position 
+            KeyTileReference = GameReferences.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
             MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
         }
 
