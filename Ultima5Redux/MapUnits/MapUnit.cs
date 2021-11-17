@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Numerics;
 using System.Runtime.Serialization;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
@@ -35,7 +34,7 @@ namespace Ultima5Redux.MapUnits
         [DataMember] public abstract bool IsAttackable { get; }
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         [DataMember] public bool IsOccupiedByAvatar { get; protected internal set; }
-        [DataMember] public bool UseFourDirections { get; set; } = false;
+        [DataMember] public bool UseFourDirections { get; set; }
         [DataMember] public Point2D.Direction Direction { get; set; }
         [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
         [DataMember] public virtual MapUnitPosition MapUnitPosition { get; internal set; }
@@ -55,7 +54,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     The characters current position on the map
         /// </summary>
-        [DataMember] public override MapUnitPosition MapUnitPosition
+        [DataMember] public sealed override MapUnitPosition MapUnitPosition
         {
             get => _mapMapUnitPosition;
             internal set
@@ -100,7 +99,7 @@ namespace Ultima5Redux.MapUnits
         [DataMember] private int _keyTileIndex = -1;
         [DataMember] private int _npcRefIndex = -1;
 
-        public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef ?? null;
+        public NonPlayerCharacterReference NPCRef => NPCState.NPCRef;
 
         [IgnoreDataMember] public virtual TileReference KeyTileReference
         {
@@ -196,11 +195,11 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Builds the actual path for the character to travel based on their current position and their target position
         /// </summary>
-        /// <param name="currentMap"></param>
         /// <param name="mapUnit">where the character is presently</param>
         /// <param name="targetXy">where you want them to go</param>
+        /// <param name="aStar"></param>
         /// <returns>returns true if a path was found, false if it wasn't</returns>
-        protected static bool BuildPath(Map currentMap, MapUnit mapUnit, Point2D targetXy, AStar aStar)
+        protected static bool BuildPath(MapUnit mapUnit, Point2D targetXy, AStar aStar)
         {
             if (mapUnit.MapUnitPosition.XY == targetXy)
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.FriendlyName +
@@ -247,8 +246,6 @@ namespace Ultima5Redux.MapUnits
                 mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow));
             return true;
         }
-
-        private static Point2D Vector2ToPoint2D(Vector2 vector) => new Point2D((int)vector.X, (int)vector.Y);
 
         private static MapUnitMovement.MovementCommandDirection GetCommandDirection(Point2D fromXy, Point2D toXy)
         {

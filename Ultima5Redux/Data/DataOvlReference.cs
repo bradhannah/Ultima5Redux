@@ -1020,7 +1020,7 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (upper case)",
                 0x32b, 0x165, 0x00, DataChunkName.MONSTER_NAMES_UPPER);
-            SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
+            // SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
                 "Character type, monster names in capital letters (44 of them)", 0x32b, 0x165);
@@ -1089,7 +1089,7 @@ namespace Ultima5Redux.Data
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional Weapon/Armour strings", 0x175c,
                 0xa9, 0x10);
-            DataChunk strEquipIndexes = _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List,
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List,
                 "String indexes for all equipment (except scrolls) (add 0x10 to index)",
                 0x1806, 0x2F * 2 + 2, 0x10, DataChunkName.EQUIP_INDEXES);
 
@@ -1298,7 +1298,7 @@ namespace Ultima5Redux.Data
                 0x179);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle messages", 0x6efe, 0x112, 0x00,
                 DataChunkName.BATTLE2);
-            SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE2).GetChunkAsStringList();
+            // SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE2).GetChunkAsStringList();
             //_dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things that happened to you", 0x6f1c, 0xf4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "MISC file names", 0x7010, 0x1a);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Unknown String", 0x702A, 0Xa);

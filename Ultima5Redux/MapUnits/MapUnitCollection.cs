@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 

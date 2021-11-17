@@ -234,9 +234,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             List<SmallMapReferences.SingleMapReference.Location> locations =
                 new List<SmallMapReferences.SingleMapReference.Location>();
 
-            foreach (SmallMapReferences.SingleMapReference.Location location in
-                dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
+            foreach (byte b in dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
             {
+                SmallMapReferences.SingleMapReference.Location location = (SmallMapReferences.SingleMapReference.Location)b;
                 locations.Add(location);
             }
 

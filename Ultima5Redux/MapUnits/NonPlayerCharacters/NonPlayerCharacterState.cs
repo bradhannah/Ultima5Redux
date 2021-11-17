@@ -6,7 +6,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     [DataContract]
     public class NonPlayerCharacterState
     {
-        [IgnoreDataMember] private bool _bHasMetAvatar = false;
+        [IgnoreDataMember] private bool _bHasMetAvatar;
 
         [IgnoreDataMember] public NonPlayerCharacterReference NPCRef { get; }
         [DataMember] public int NPCRefIndex => NPCRef.DialogIndex;

@@ -36,16 +36,18 @@ namespace Raw16ToBMP
                 reader = new FileStream(pInputFileName, FileMode.Open);
                 writer = new FileStream(pOutputFileName, FileMode.Create);
                 int iNextCode = 256;
-                int iChar = 0, iString = 0, iIndex = 0;
+                int iChar;
 
                 for (int i = 0; i < TABLE_SIZE; i++) //blank out table
+                {
                     _iaCodeTable[i] = -1;
+                }
 
-                iString = reader.ReadByte(); //get first code, will be 0-255 ascii char
+                int iString = reader.ReadByte();
 
                 while ((iChar = reader.ReadByte()) != -1) //read until we reach end of file
                 {
-                    iIndex = FindMatch(iString, iChar); //get correct index for prefix+char
+                    int iIndex = FindMatch(iString, iChar);
 
                     if (_iaCodeTable[iIndex] != -1) //set string if we have something at that index
                         iString = _iaCodeTable[iIndex];
@@ -183,11 +185,9 @@ namespace Raw16ToBMP
         //hasing function, tries to find index of prefix+char, if not found returns -1 to signify space available
         private int FindMatch(int pPrefix, int pChar)
         {
-            int index = 0, offset = 0;
+            int index = (pChar << HASH_BIT) ^ pPrefix;
 
-            index = (pChar << HASH_BIT) ^ pPrefix;
-
-            offset = (index == 0) ? 1 : TABLE_SIZE - index;
+            int offset = (index == 0) ? 1 : TABLE_SIZE - index;
 
             while (true)
             {
@@ -210,7 +210,7 @@ namespace Raw16ToBMP
 
             while (_iBitCounter >= 8) //write all the bytes we can
             {
-                int temp = (byte)((_iBitBuffer >> 24) & 255);
+                // int temp = (byte)((_iBitBuffer >> 24) & 255);
                 pWriter.WriteByte((byte)((_iBitBuffer >> 24) & 255)); //write byte from bit buffer
                 _iBitBuffer <<= 8; //remove written byte from buffer
                 _iBitCounter -= 8; //decrement counter

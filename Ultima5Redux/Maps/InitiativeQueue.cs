@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.Maps

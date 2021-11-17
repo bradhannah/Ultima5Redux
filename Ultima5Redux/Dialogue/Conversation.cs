@@ -29,6 +29,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     All of the ScriptLines that we are capable of processing for the NPC
         /// </summary>
+        // ReSharper disable once CollectionNeverQueried.Local
         private readonly List<TalkScript.ScriptLine> _conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
 
         private readonly NonPlayerCharacterState _npcState;
@@ -258,7 +259,7 @@ namespace Ultima5Redux.Dialogue
                         // let's get the answer details including the ScriptLine that will follow
                         TalkScript.ScriptQuestionAnswer
                             qa = scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
-                        TalkScript.ScriptLine npcResponseLine = qa.Answer;
+                         // TalkScript.ScriptLine npcResponseLine = qa.Answer;
 
                         await ProcessMultipleLines(qa.Answer.SplitIntoSections(), nTalkLineIndex);
                     }

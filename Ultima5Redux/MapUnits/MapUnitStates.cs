@@ -33,6 +33,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private MapUnitStatesFiles MapUnitStatesType { get; set; }
 
         public MapUnitState GetCharacterState(int nIndex)

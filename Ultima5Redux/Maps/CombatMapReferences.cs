@@ -40,6 +40,11 @@ namespace Ultima5Redux.Maps
             string dungeonCbtPath = Path.Combine(u5Directory, FileConstants.DUNGEON_CBT);
             DataChunks<DataChunkName> dungeonDataChunks = new DataChunks<DataChunkName>(dungeonCbtPath, DataChunkName.Unused);
 
+            if (combatMapDataJson == null || !combatMapDataJson.ContainsKey(
+                                              SingleCombatMapReference.Territory.Britannia)
+                                          || !combatMapDataJson.ContainsKey(SingleCombatMapReference.Territory.Dungeon))
+                throw new Ultima5ReduxException("combat map json is missing maps");
+            
             for (int nMap = 0; nMap < TOTAL_OVERWORLD_MAPS; nMap++)
             {
                 // build the map of east, west, north and south player locations
@@ -78,7 +83,7 @@ namespace Ultima5Redux.Maps
             return _singleCombatMapReferences[territory][nIndex];
         }
 
-        public string GetAsCSV(SingleCombatMapReference.Territory territory)
+        public string GetAsCsv(SingleCombatMapReference.Territory territory)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(SingleCombatMapReference.GetCsvHeader());

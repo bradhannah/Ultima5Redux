@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using Ultima5Redux;
 using Ultima5Redux.Data;
@@ -12,13 +11,13 @@ namespace U5ConversationSimulator
 {
     class Program
     {
-        static World _world;
+        private static World World;
 
-        static void Main(string[] args)
+        static void Main()
         {
-            _world = new World("C:\\games\\ultima_5_late\\britain");
+            World = new World("C:\\games\\ultima_5_late\\britain");
 
-            _world.State.TheVirtualMap.LoadSmallMap(
+            World.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
 
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
@@ -32,8 +31,8 @@ namespace U5ConversationSimulator
             
             SmallMapReferences.SingleMapReference.Location location = SmallMapReferences.SingleMapReference.Location.Minoc;
             NonPlayerCharacterState npcState =
-                _world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
-            Conversation convo = new Conversation(_world.State, npcState); // delwyn
+                World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
+            Conversation convo = new Conversation(World.State, npcState); // delwyn
 
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
@@ -87,23 +86,23 @@ namespace U5ConversationSimulator
                     //
                     break;
                 case TalkScript.TalkCommand.JoinParty:
-                    _world.State.CharacterRecords.AddMemberToParty(conversation.TheNonPlayerCharacterState.NPCRef);
+                    World.State.CharacterRecords.AddMemberToParty(conversation.TheNonPlayerCharacterState.NPCRef);
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //
-                    _world.State.Karma -= 1;
+                    World.State.Karma -= 1;
                     break;
                 case TalkScript.TalkCommand.KarmaPlusOne:
-                    _world.State.Karma += 1;
+                    World.State.Karma += 1;
                     break;
                 case TalkScript.TalkCommand.KeyWait:
-                    Console.Write("...");
+                    Console.Write(@"...");
                     Console.ReadKey();
                     break;
                 case TalkScript.TalkCommand.Pause:
                     for (int i = 0; i < 3; i++)
                     {
-                        Console.Write(".");
+                        Console.Write(@".");
                         Thread.Sleep(500);
                     }
 

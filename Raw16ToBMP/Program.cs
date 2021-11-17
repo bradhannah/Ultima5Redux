@@ -33,7 +33,7 @@ namespace Raw16ToBMP
 
         public static int Write16BitmapFile(string filename, int width, int height, byte[] imageData)
         {
-            using (var stream = new MemoryStream(imageData))
+            using (new MemoryStream(imageData))
             using (var bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb))
                 // .Format8bppIndexed))// Format32bppArgb))
             {
@@ -119,13 +119,13 @@ namespace Raw16ToBMP
 
     class Program
     {
-        private ICompressorAlgorithm _compressorAlgorithm;
+        // private ICompressorAlgorithm _compressorAlgorithm;
 
-        public ICompressorAlgorithm CompressorAlgorithm
-        {
-            // allows us to set the algorithm at runtime, also lets us set the algorithm dynamically if we creata  factory class
-            set { _compressorAlgorithm = value; }
-        }
+        // public ICompressorAlgorithm CompressorAlgorithm
+        // {
+        //     // allows us to set the algorithm at runtime, also lets us set the algorithm dynamically if we creata  factory class
+        //     set { _compressorAlgorithm = value; }
+        // }
 
         static void CreateMon0()
         {
@@ -166,13 +166,14 @@ namespace Raw16ToBMP
             //positionArray[2], positionArray[3], fileArray);
         }
 
+        // ReSharper disable once UnusedMember.Local
         static void CreateScreen()
         {
-            const int indexSize = 0x32;
+            const int IndexSize = 0x32;
             byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
             //byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
 
-            byte[] positionArray = new byte[indexSize];
+            byte[] positionArray = new byte[IndexSize];
             for (int i = 0; i < positionArray.Length; i++)
             {
                 positionArray[i] = fileArray[i];
@@ -185,7 +186,8 @@ namespace Raw16ToBMP
             int byteIndex = 0;
             for (int bmpIndex = 0; byteIndex < nForcedWidth * nForcedHeigh; bmpIndex += 2, byteIndex += 1)
             {
-                flameGraphic[byteIndex] = fileArray[byteIndex + indexSize];
+                _ = bmpIndex;
+                flameGraphic[byteIndex] = fileArray[byteIndex + IndexSize];
             }
 
             BitmapWriter.Write16BitmapFile("C:\\games\\ultima_5\\temp\\dec_res\\create.16.bmp", nForcedWidth,
@@ -266,7 +268,7 @@ namespace Raw16ToBMP
         //    CompressorAlgorithm = new PbvCompressorLZW();
         //}
 
-        static void Main(string[] args)
+        static void Main()
         {
             CreateMon0();
             StartScreen();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -37,17 +38,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         private readonly EnemyReferences.AdditionalEnemyFlags _additionalEnemyFlags;
 
         private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new Dictionary<EnemyAbility, bool>();
-        private readonly int _monsterIndex;
-
-        private readonly TileReferences _tileReferences;
-
-        private byte _nThing;
 
         public EnemyReference(DataOvlReference dataOvlReference, TileReferences tileReferences, int nMonsterIndex,
             EnemyReferences.AdditionalEnemyFlags additionalEnemyFlags)
         {
-            _tileReferences = tileReferences;
-            _monsterIndex = nMonsterIndex;
             _additionalEnemyFlags = additionalEnemyFlags;
 
             List<bool> enemyFlags = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_FLAGS)
@@ -75,7 +69,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             FriendIndex =
                 dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_FRIENDS).GetByte(nMonsterIndex);
 
-            _nThing = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_THING).GetByte(nMonsterIndex);
+            dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_THING).GetByte(nMonsterIndex);
 
             TheDefaultEnemyStats = new DefaultEnemyStats
             {
@@ -153,6 +147,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 .GetByte(nMonsterIndex * TotalBytesPerRecord + (int)stat);
         }
 
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] 
         public class DefaultEnemyStats
         {
             public int Armour { get; internal set; }
@@ -167,6 +162,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private enum DefaultStats
         {
+            // ReSharper disable once UnusedMember.Local
             Strength = 0, Dexterity, Intelligence, Armour, Damage, Hitpoints, MaxPerMap, Treasure
         }
     }

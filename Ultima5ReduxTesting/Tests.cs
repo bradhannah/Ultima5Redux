@@ -1065,7 +1065,7 @@ namespace Ultima5ReduxTesting
         [Test] public void Test_LoadAllCombatMapsWithMonsters()
         {
             World world = new World(ActualSaveDirectory + @"\b_carpet");
-            List<CombatMap> worldMaps = new List<CombatMap>();
+            //List<CombatMap> worldMaps = new List<CombatMap>();
             for (int i = 0; i < 16; i++)
             {
                 SingleCombatMapReference singleCombatMapReference =
@@ -1078,13 +1078,13 @@ namespace Ultima5ReduxTesting
                             i),
                         worldEntryDirection, world.State.CharacterRecords);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
-                    worldMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
+                    //worldMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
                 }
             }
 
             EnemyReference enemy1 = GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(320));
 
-            List<CombatMap> dungMaps = new List<CombatMap>();
+            //List<CombatMap> dungMaps = new List<CombatMap>();
             for (int i = 0; i < 112; i++)
             {
                 SingleCombatMapReference singleCombatMapReference =
@@ -1104,7 +1104,7 @@ namespace Ultima5ReduxTesting
                             i),
                         dungeonEntryDirection, world.State.CharacterRecords, enemy1, 4);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
-                    dungMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
+                    //dungMaps.Add(world.State.TheVirtualMap.CurrentCombatMap);
                 }
             }
 

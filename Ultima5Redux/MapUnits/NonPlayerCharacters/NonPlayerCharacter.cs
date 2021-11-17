@@ -13,9 +13,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     public sealed class NonPlayerCharacter : MapUnit
     {
         private int _scheduleIndex = -1;
-        [DataMember] private int _playerCharacterRecordIndex = -1;
-        [IgnoreDataMember] private PlayerCharacterRecords ThePlayerCharacterRecords { get; set; }
         
+        [DataMember] private int _playerCharacterRecordIndex;
+
         public NonPlayerCharacter(
                 SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
                 TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, 
@@ -61,6 +61,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool ArrivedAtLocation { get; private set; }
 
         /// <summary>
@@ -240,7 +241,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                             npcXy.XY, MapUnitPosition.XY);
                     foreach (Point2D xy in stairsAndLadderLocations)
                     {
-                        bool bPathBuilt = BuildPath(virtualMap.CurrentMap, this, xy, aStar);
+                        bool bPathBuilt = BuildPath(this, xy, aStar);
                         // if a path was successfully built, then we have no need to build another path since this is the "best" path
                         if (bPathBuilt) return;
                     }
@@ -289,7 +290,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.MerchantThing:
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
-                        BuildPath(virtualMap.CurrentMap, this, npcXy.XY, aStar);
+                        BuildPath(this, npcXy.XY, aStar);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.Wander:
@@ -307,7 +308,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                             WanderWithinN(virtualMap, timeOfDay, nWanderTiles);
                         else
                             // move to the correct position
-                            BuildPath(virtualMap.CurrentMap, this, npcXy.XY, aStar);
+                            BuildPath(this, npcXy.XY, aStar);
                         break;
                     case NonPlayerCharacterReference.NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         // if the avatar is close by then move away from him, otherwise return to original path, one move at a time

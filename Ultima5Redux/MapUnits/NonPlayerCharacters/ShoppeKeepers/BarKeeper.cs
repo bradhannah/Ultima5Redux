@@ -43,8 +43,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             List<byte> gossipListMap =
                 dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_MAP).GetAsByteList();
 
-            List<byte> locations = dataOvlReference
-                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_TAVERN).GetAsByteList();
+            // List<byte> locations = dataOvlReference
+            //     .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_TAVERN).GetAsByteList();
 
             // initialize the quick look up map for gossip look ups
 

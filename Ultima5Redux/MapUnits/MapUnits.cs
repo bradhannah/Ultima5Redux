@@ -6,7 +6,6 @@ using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
@@ -598,6 +597,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="xy"></param>
         /// <param name="direction"></param>
         /// <param name="nIndex"></param>
+        /// <param name="nSkiffsAboard"></param>
         /// <returns></returns>
         private Frigate CreateFrigate(Point2D xy, Point2D.Direction direction, out int nIndex, int nSkiffsAboard)
         {
@@ -708,7 +708,7 @@ namespace Ultima5Redux.MapUnits
 
         public Skiff MakeAndBoardSkiff()
         {
-            Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int nIndex);
+            Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int _);
             AvatarMapUnit.BoardMapUnit(skiff);
             ClearAndSetEmptyMapUnits(skiff);
             return skiff;

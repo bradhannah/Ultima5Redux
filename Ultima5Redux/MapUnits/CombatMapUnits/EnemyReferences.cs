@@ -27,17 +27,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public List<EnemyReference> AllEnemyReferences { get; } = new List<EnemyReference>(N_TOTAL_MONSTERS);
 
-        private void PrintDebugCSV()
+        // ReSharper disable once UnusedMember.Local
+        private void PrintDebugCsv()
         {
             Console.Write(@"Name,Plural,Singular,ClosestAttackRange,MissileType,Friend,Thing");
             //var dExampleBitfield = 0x8000;
             foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
-                // for (int index = 0; index < AllEnemyReferences[0]._enemyFlags.Count; index++)
             {
-                //Console.Write(@"," + $@"0x{dExampleBitfield:X4}");
                 Console.Write(@"," + ability);
-                //dExampleBitfield >>= 1;
-                //Console.Write(@"," + index.ToString());
             }
 
             Console.WriteLine();
@@ -49,7 +46,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 Console.Write(@"," + $@"{enemy.TheMissileType}");
                 EnemyReference friend = AllEnemyReferences[enemy.FriendIndex];
                 Console.Write(@"," + $@"{friend.AllCapsPluralName}");
-                //Console.Write(@"," + $@"0x{enemy._nThing:X2}");
                 foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
                 {
                     Console.Write(@"," + enemy.IsEnemyAbility(ability));

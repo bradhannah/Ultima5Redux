@@ -200,7 +200,7 @@ namespace Ultima5Redux.Dialogue
                     // let's make sure there are actually labels to look at
                     if (line.IsEndOfLabelSection)
                     {
-                        nextCommandDefaultMessage = true;
+                        // nextCommandDefaultMessage = true;
                         break;
                     }
 

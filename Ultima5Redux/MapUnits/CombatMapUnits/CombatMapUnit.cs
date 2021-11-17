@@ -1,7 +1,6 @@
 ﻿using System;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -175,6 +174,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return nDamage;
         }
 
+        // ReSharper disable once UnusedMember.Local
         private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
         {
             const int BareHandAttack = 3;

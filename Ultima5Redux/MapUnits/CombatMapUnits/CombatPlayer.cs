@@ -3,14 +3,12 @@ using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 
-namespace Ultima5Redux.MapUnits
+namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public sealed class CombatPlayer : CombatMapUnit
     {
@@ -73,8 +71,6 @@ namespace Ultima5Redux.MapUnits
                         return GameReferences.SpriteTileReferences.GetTileReferenceByName("DeadBody");
                     default: return base.KeyTileReference; 
                 }
-
-                ;
             }
             set => base.KeyTileReference = value;
         }
@@ -122,8 +118,9 @@ namespace Ultima5Redux.MapUnits
 
             bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
             {
+                CombatItem combatItem = _inventory.GetItemFromEquipment(equipment);    
                 return equipment != DataOvlReference.Equipment.Nothing &&
-                       _inventory.GetItemFromEquipment(equipment) is CombatItem combatItem && combatItem.TheCombatItemReference.AttackStat > 0;
+                       combatItem.TheCombatItemReference.AttackStat > 0;
             }
 
             if (isAttackingCombatItem(Record.Equipped.Helmet))

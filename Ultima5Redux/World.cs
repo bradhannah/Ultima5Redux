@@ -7,6 +7,7 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;

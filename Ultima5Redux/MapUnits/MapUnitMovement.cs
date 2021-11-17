@@ -28,18 +28,6 @@ namespace Ultima5Redux.MapUnits
         private readonly Queue<MovementCommand> _movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
 
         /// <summary>
-        ///     DataChunk of current map characters movement list
-        /// </summary>
-        // ReSharper disable once NotAccessedField.Local
-        //private DataChunk _movementInstructionDataChunk;
-
-        /// <summary>
-        ///     DataChunk of current map characters offset into movement list
-        /// </summary>
-        // ReSharper disable once NotAccessedField.Local
-        //private DataChunk _movementOffsetDataChunk;
-
-        /// <summary>
         ///     Dialog index of the map character
         /// </summary>
         // ReSharper disable once NotAccessedField.Local

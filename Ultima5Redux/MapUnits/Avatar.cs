@@ -161,6 +161,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="location"></param>
         /// <param name="movement"></param>
         /// <param name="mapUnitPosition"></param>
+        /// <param name="tileReference"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <returns></returns>
         public static MapUnit CreateAvatar(SmallMapReferences.SingleMapReference.Location location, 

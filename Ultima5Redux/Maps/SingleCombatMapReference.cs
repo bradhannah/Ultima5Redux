@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
@@ -416,6 +417,7 @@ namespace Ultima5Redux.Maps
 
         public bool IsValidDirection(EntryDirection entryDirection) => IsEntryDirectionValid(entryDirection);
 
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")] 
         private readonly struct PointAndTileReference
         {
             public PointAndTileReference(Point2D point, TileReference tileReference)

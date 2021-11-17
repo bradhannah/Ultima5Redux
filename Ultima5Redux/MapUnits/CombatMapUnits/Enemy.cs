@@ -1,23 +1,18 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
-using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 
-namespace Ultima5Redux.MapUnits.Monsters
+namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public class Enemy : CombatMapUnit
     {
-        public Enemy(
-            //MapUnitState mapUnitState, 
-            MapUnitMovement mapUnitMovement, EnemyReference enemyReference, 
+        public Enemy( MapUnitMovement mapUnitMovement, EnemyReference enemyReference, 
             SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState)
             : base(null, mapUnitMovement, location, npcState, enemyReference.KeyTileReference) 
         {
             EnemyReference = enemyReference;
-            //mapUnitState.Tile1Ref = enemyReference.KeyTileReference;
-            //KeyTileReference = enemyReference.KeyTileReference;
             
             Stats.Level = 1;
             Stats.Dexterity = EnemyReference.TheDefaultEnemyStats.Dexterity;
@@ -61,9 +56,12 @@ namespace Ultima5Redux.MapUnits.Monsters
         public override TileReference NonBoardedTileReference => KeyTileReference;
         public override TileReference KeyTileReference => EnemyReference.KeyTileReference;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>();
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>();
+        
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
         
         public override string ToString()

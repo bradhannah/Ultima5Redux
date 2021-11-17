@@ -6,7 +6,6 @@ using Ultima5Redux.Data;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.MapUnits.Monsters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -135,7 +134,6 @@ namespace Ultima5Redux.Maps
                     return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive).ToList();
                 case CombatMapUnitEnum.Enemy:
                     return AllEnemiesGeneric.Where(enemy => enemy.IsActive).ToList();
-                    ;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(combatMapUnitEnum), combatMapUnitEnum, null);
             }
@@ -442,10 +440,6 @@ namespace Ultima5Redux.Maps
                 case CombatMapUnit.HitState.CriticallyWounded:
                     break;
                 case CombatMapUnit.HitState.Fleeing:
-                    if (affectedCombatMapUnit is Enemy fleeingEnemy)
-                    {
-                    }
-
                     break;
                 case CombatMapUnit.HitState.Dead:
                     if (affectedCombatMapUnit is Enemy deadEnemy)
@@ -783,7 +777,7 @@ namespace Ultima5Redux.Maps
 
             outputStr += "\nBut they accidentally hit another!";
             // we attack the thing we accidentally hit
-            CombatMapUnit.HitState hitState = attackingCombatMapUnit.Attack(targetedCombatMapUnit,
+            CombatMapUnit.HitState _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit,
                 nAttackMax, out string missedAttackOutputStr, out string debugStr, true);
             // temporary for debugging
             missedAttackOutputStr += "\n" + debugStr;
@@ -844,13 +838,14 @@ namespace Ultima5Redux.Maps
         public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) =>
             CombatMapUnits.CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
 
-        public void AdvanceToNextCombatMapUnit()
+        public CombatMapUnit AdvanceToNextCombatMapUnit()
         {
             CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
 
             _bPlayerHasChanged = true;
 
             RefreshCurrentCombatPlayer();
+            return combatMapUnit;
         }
 
         public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
@@ -1068,8 +1063,6 @@ namespace Ultima5Redux.Maps
 
         private T GetClosestCombatMapUnitInRange<T>(CombatMapUnit attackingUnit, int nRange) where T : CombatMapUnit
         {
-            int nMapUnits = CombatMapUnits.CurrentMapUnits.AllMapUnits.Count;
-
             double dBestDistanceToAttack = 150f;
             T bestOpponent = null;
 
