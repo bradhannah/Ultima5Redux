@@ -32,18 +32,18 @@ namespace Ultima5Redux.Maps
         public sealed override byte[][] TheMap { get; protected set; }
         public int MapFloor => _singleSmallMapReference.Floor;
 
-        public override int NumOfXTiles => XTILES;
-        public override int NumOfYTiles => YTILES;
+        public override int NumOfXTiles => XTiles;
+        public override int NumOfYTiles => YTiles;
 
         /// <summary>
         ///     Total tiles per row
         /// </summary>
-        public static int XTILES => 32;
+        public static int XTiles => 32;
 
         /// <summary>
         ///     Total tiles per column
         /// </summary>
-        public static int YTILES => 32;
+        public static int YTiles => 32;
 
         public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
 
@@ -59,7 +59,7 @@ namespace Ultima5Redux.Maps
         {
             List<byte> mapBytes = Utils.GetFileAsByteList(mapFilename);
 
-            byte[][] smallMap = Utils.ListTo2DArray(mapBytes, (short)XTILES, fileOffset, XTILES * YTILES);
+            byte[][] smallMap = Utils.ListTo2DArray(mapBytes, (short)XTiles, fileOffset, XTiles * YTiles);
 
             // have to transpose the array because the ListTo2DArray function puts the map together backwards...
             return Utils.TransposeArray(smallMap);
@@ -98,9 +98,9 @@ namespace Ultima5Redux.Maps
 
             // we reduce the weight for the A* for each adjacent brick floor or path tile
             if (xy.X - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X - 1][xy.Y]) ? fDefaultDeduction : 0;
-            if (xy.X + 1 < XTILES) fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.X + 1 < XTiles) fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
             if (xy.Y - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y - 1]) ? fDefaultDeduction : 0;
-            if (xy.Y + 1 < YTILES) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
+            if (xy.Y + 1 < YTiles) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
 
             return fCost;
         }

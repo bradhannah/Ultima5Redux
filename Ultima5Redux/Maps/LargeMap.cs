@@ -7,7 +7,7 @@ using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.Maps
 {
-    public class LargeMap : RegularMap
+    public sealed class LargeMap : RegularMap
     {
         private const int TILES_PER_CHUNK_X = 16; // number of tiles horizontal in each chunk
         private const int TILES_PER_CHUNK_Y = 16; // number of tiles vertically in each chunk
@@ -50,16 +50,16 @@ namespace Ultima5Redux.Maps
 
         public override byte[][] TheMap { get; protected set; }
 
-        public override int NumOfXTiles => XTILES;
-        public override int NumOfYTiles => YTILES;
+        public override int NumOfXTiles => XTiles;
+        public override int NumOfYTiles => YTiles;
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static int
-            XTILES => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+            XTiles => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static int
-            YTILES => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
+            YTiles => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
         protected override bool IsRepeatingMap => true;
 
@@ -106,7 +106,7 @@ namespace Ultima5Redux.Maps
             }
 
             // declare the actual full map 4096*4096 tiles, with 255 (16*16) total chunks
-            byte[][] theMap = Utils.Init2DByteArray(YTILES, XTILES);
+            byte[][] theMap = Utils.Init2DByteArray(YTiles, XTiles);
 
             // counter for the serial chunks from brit.dat
             int britDatChunkCount = 0;

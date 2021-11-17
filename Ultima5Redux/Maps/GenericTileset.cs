@@ -12,14 +12,17 @@ namespace Ultima5Redux.Maps
         {
             _tilesetByteArray = File.ReadAllBytes(fileNameAndPath);
 
-            Initialize(fileNameAndPath);
+            Initialize();
         }
 
         private void WriteBitmapRgb(int r, int g, int b)
         {
+            _ = r;
+            _ = g;
+            _ = b;
         }
 
-        private void Initialize(string fileNameAndPath)
+        private void Initialize()
         {
             foreach (byte singleByte in _tilesetByteArray)
             {

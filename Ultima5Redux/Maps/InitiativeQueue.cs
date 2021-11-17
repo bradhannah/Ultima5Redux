@@ -109,7 +109,7 @@ namespace Ultima5Redux.Maps
                 if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
                 if (_nHighestDexterity < nDexterity) _nHighestDexterity = nDexterity;
 
-                AddCombatMapUnitToQueue((CombatMapUnit)combatMapUnit);
+                AddCombatMapUnitToQueue(combatMapUnit);
             }
         }
 

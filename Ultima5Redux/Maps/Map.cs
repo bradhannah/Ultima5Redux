@@ -32,10 +32,6 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once NotAccessedField.Global
         // ReSharper disable once MemberCanBePrivate.Global
 
-        protected Map()
-        {
-        }
-
         public abstract bool ShowOuterSmallMapTiles { get; }
 
         public bool XRayMode { get; set; } = false;

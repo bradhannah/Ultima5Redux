@@ -17,13 +17,6 @@ namespace Ultima5Redux.Maps
         private const int TOTAL_OVERWORLD_MAPS = 16;
         private const int TOTAL_DUNGEON_MAPS = 112;
 
-        /// <summary>
-        ///     All the data chunks
-        /// </summary>
-        private readonly DataChunks<DataChunkName> _britDataChunks;
-
-        private readonly DataChunks<DataChunkName> _dungeonDataChunks;
-
         private readonly Dictionary<SingleCombatMapReference.Territory, List<SingleCombatMapReference>>
             _singleCombatMapReferences =
                 new Dictionary<SingleCombatMapReference.Territory, List<SingleCombatMapReference>>
@@ -42,10 +35,10 @@ namespace Ultima5Redux.Maps
                     Resources.CombatMaps);
 
             string britCbtPath = Path.Combine(u5Directory, FileConstants.BRIT_CBT);
-            _britDataChunks = new DataChunks<DataChunkName>(britCbtPath, DataChunkName.Unused);
+            DataChunks<DataChunkName> britDataChunks = new DataChunks<DataChunkName>(britCbtPath, DataChunkName.Unused);
 
             string dungeonCbtPath = Path.Combine(u5Directory, FileConstants.DUNGEON_CBT);
-            _dungeonDataChunks = new DataChunks<DataChunkName>(dungeonCbtPath, DataChunkName.Unused);
+            DataChunks<DataChunkName> dungeonDataChunks = new DataChunks<DataChunkName>(dungeonCbtPath, DataChunkName.Unused);
 
             for (int nMap = 0; nMap < TOTAL_OVERWORLD_MAPS; nMap++)
             {
@@ -54,7 +47,7 @@ namespace Ultima5Redux.Maps
                 // create the map reference based on the static data
                 SingleCombatMapReference britanniaCombatMapReference = new SingleCombatMapReference(
                     SingleCombatMapReference.Territory.Britannia,
-                    nMap, _britDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Britannia][nMap],
+                    nMap, britDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Britannia][nMap],
                     tileReferences);
 
                 _singleCombatMapReferences[SingleCombatMapReference.Territory.Britannia]
@@ -65,7 +58,7 @@ namespace Ultima5Redux.Maps
             {
                 SingleCombatMapReference dungeonCombatMapReference = new SingleCombatMapReference(
                     SingleCombatMapReference.Territory.Dungeon,
-                    nMap, _dungeonDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Dungeon][nMap],
+                    nMap, dungeonDataChunks, combatMapDataJson[SingleCombatMapReference.Territory.Dungeon][nMap],
                     tileReferences);
                 _singleCombatMapReferences[SingleCombatMapReference.Territory.Dungeon].Add(dungeonCombatMapReference);
             }
@@ -88,10 +81,10 @@ namespace Ultima5Redux.Maps
         public string GetAsCSV(SingleCombatMapReference.Territory territory)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(SingleCombatMapReference.GetCSVHeader());
+            sb.Append(SingleCombatMapReference.GetCsvHeader());
             foreach (SingleCombatMapReference singleCombatMapReference in _singleCombatMapReferences[territory])
             {
-                sb.Append("\n" + singleCombatMapReference.GetAsCSVLine());
+                sb.Append("\n" + singleCombatMapReference.GetAsCsvLine());
             }
 
             return sb.ToString();

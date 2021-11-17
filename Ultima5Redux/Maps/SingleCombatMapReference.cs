@@ -178,9 +178,9 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-            List<Point2D> _triggerPositions = new List<Point2D>(XTILES);
-            List<TileReference> _triggerTileReferences = new List<TileReference>(XTILES);
-            Dictionary<Point2D, List<PointAndTileReference>> _triggerPointToTileReferences =
+            List<Point2D> triggerPositions = new List<Point2D>(XTILES);
+            List<TileReference> triggerTileReferences = new List<TileReference>(XTILES);
+            Dictionary<Point2D, List<PointAndTileReference>> triggerPointToTileReferences =
                 new Dictionary<Point2D, List<PointAndTileReference>>();
 
             // load the trigger positions
@@ -194,7 +194,7 @@ namespace Ultima5Redux.Maps
                 nMapOffset + nBytesPerRow * 9 + YTILES, nTriggerPositions).GetAsByteList();
             for (int i = 0; i < nTriggerPositions; i++)
             {
-                _triggerPositions.Add(new Point2D(triggerXPositions[i], triggerYPositions[i]));
+                triggerPositions.Add(new Point2D(triggerXPositions[i], triggerYPositions[i]));
             }
 
             // Gather all replacement tile references when trigger occurs
@@ -203,7 +203,7 @@ namespace Ultima5Redux.Maps
                 nMapOffset + XTILES, nTriggerPositions).GetAsByteList();
             foreach (byte nIndex in triggerTileIndexes)
             {
-                _triggerTileReferences.Add(tileReferences.GetTileReference(nIndex
+                triggerTileReferences.Add(tileReferences.GetTileReference(nIndex
                 ));
                 //+ 0xFF));
             }
@@ -226,7 +226,7 @@ namespace Ultima5Redux.Maps
                 nMapOffset + nBytesPerRow * 10 + (XTILES * 2), nTriggerPositions).GetAsByteList());
             for (int i = 0; i < nTriggerPositions; i++)
             {
-                TileReference newTriggeredTileReference = _triggerTileReferences[i];
+                TileReference newTriggeredTileReference = triggerTileReferences[i];
                 // if the index is 255 (was 0) then we know it is indicating it shouldn't used
                 if (newTriggeredTileReference.Index == 0x0) continue;
 
@@ -234,19 +234,19 @@ namespace Ultima5Redux.Maps
                 Point2D pos1 = new Point2D(triggerResultXPositions[i], triggerResultYPositions[i]);
                 Point2D pos2 = new Point2D(triggerResultXPositions[i + nTriggerPositions],
                     triggerResultYPositions[i + nTriggerPositions]);
-                Point2D triggeredPosition = _triggerPositions[i];
+                Point2D triggeredPosition = triggerPositions[i];
 
                 // if the trigger position has not been recorded yet, then we initialize the list
                 // we use a List because every tile has a minimum of 2 changes, but can result in a lot more
                 ///// NOTE!!!!! Check this again - it may be putting duplicates in
-                if (!_triggerPointToTileReferences.ContainsKey(triggeredPosition))
-                    _triggerPointToTileReferences.Add(triggeredPosition, new List<PointAndTileReference>());
+                if (!triggerPointToTileReferences.ContainsKey(triggeredPosition))
+                    triggerPointToTileReferences.Add(triggeredPosition, new List<PointAndTileReference>());
 
-                _triggerPointToTileReferences[triggeredPosition]
-                    .Add(new PointAndTileReference(pos1, _triggerTileReferences[i]));
+                triggerPointToTileReferences[triggeredPosition]
+                    .Add(new PointAndTileReference(pos1, triggerTileReferences[i]));
                 if (pos1 != pos2)
-                    _triggerPointToTileReferences[triggeredPosition]
-                        .Add(new PointAndTileReference(pos2, _triggerTileReferences[i]));
+                    triggerPointToTileReferences[triggeredPosition]
+                        .Add(new PointAndTileReference(pos2, triggerTileReferences[i]));
             }
         }
 
@@ -303,12 +303,12 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public Territory MapTerritory { get; }
 
-        public string GetAsCSVLine() =>
+        public string GetAsCsvLine() =>
             $"{Index}, {Name}, {DungeonLocation}, {IsValidDirection(EntryDirection.Direction0)}, " +
             $"{IsValidDirection(EntryDirection.Direction1)}, {IsValidDirection(EntryDirection.Direction3)}, " +
             $"{IsValidDirection(EntryDirection.Direction2)}, {LaddersUp}, {LaddersDown}, {HasTriggers}, {Notes}";
 
-        public static string GetCSVHeader() =>
+        public static string GetCsvHeader() =>
             "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirNorthUp, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
 
         public bool IsEnterable(EntryDirection entryDirection)

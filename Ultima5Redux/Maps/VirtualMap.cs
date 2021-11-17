@@ -48,12 +48,6 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] private readonly SmallMaps _smallMaps;
 
         [IgnoreDataMember] private readonly GameState _state;
-        // [IgnoreDataMember] private readonly TileOverrideReferences _tileOverrideReferences;
-
-        /// <summary>
-        ///     References to all tiles
-        /// </summary>
-        // [IgnoreDataMember] private readonly TileReferences _tileReferences;
 
         /// <summary>
         ///     Current time of day
@@ -264,8 +258,8 @@ namespace Ultima5Redux.Maps
         private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Avatar.AvatarState avatarState) =>
             IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
 
-        private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Point2D xy, Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravel(xy.GetAdjustedPosition(direction), true, avatarState);
+        // private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Point2D xy, Avatar.AvatarState avatarState) =>
+        //     IsTileFreeToTravel(xy.GetAdjustedPosition(direction), true, avatarState);
 
         /// <summary>
         ///     Use the stairs and change floors, loading a new map
@@ -570,20 +564,7 @@ namespace Ultima5Redux.Maps
         public void SetOverridingTileReferece(TileReference tileReference, Point2D xy)
         {
             TheMapOverrides.SetOverrideTile(xy, tileReference);
-            // SetOverridingTileReferece(tileReference, xy.X, xy.Y);
         }
-
-        /// <summary>
-        ///     Sets an override for the current tile which will be favoured over the static map tile
-        /// </summary>
-        /// <param name="tileReference"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        // ReSharper disable once MemberCanBePrivate.Global
-        // public void SetOverridingTileReferece(TileReference tileReference, int x, int y)
-        // {
-        //     TheMapOverrides.SetOverrideTile(x, y, tileReference.Index);
-        // }
 
         /// <summary>
         ///     Gets the NPC you want to talk to in the given direction
@@ -825,9 +806,9 @@ namespace Ultima5Redux.Maps
             List<Point2D> laddersAndStairs = new List<Point2D>();
 
             // go through every single tile on the map looking for ladders and stairs
-            for (int x = 0; x < SmallMap.XTILES; x++)
+            for (int x = 0; x < SmallMap.XTiles; x++)
             {
-                for (int y = 0; y < SmallMap.YTILES; y++)
+                for (int y = 0; y < SmallMap.YTiles; y++)
                 {
                     TileReference tileReference = GetTileReference(x, y);
                     if (ladderOrStairDirection == LadderOrStairDirection.Down)
@@ -925,7 +906,7 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-            bool bIsDoorTile = GameReferences.SpriteTileReferences.IsDoor(nSprite); // is it a door?
+            //bool bIsDoorTile = GameReferences.SpriteTileReferences.IsDoor(nSprite); // is it a door?
             // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
             bool bIsChair = GameReferences.SpriteTileReferences.IsChair(nSprite);
             // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite

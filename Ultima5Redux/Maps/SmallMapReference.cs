@@ -120,13 +120,13 @@ namespace Ultima5Redux.Maps
             List<SingleMapReference> mapRefs = new List<SingleMapReference>();
 
             int fileOffset =
-                roomOffset * SmallMap.XTILES *
-                SmallMap.YTILES; // the number of rooms offset, converted to number of bytes to skip
+                roomOffset * SmallMap.XTiles *
+                SmallMap.YTiles; // the number of rooms offset, converted to number of bytes to skip
 
             for (int i = 0; i < nFloors; i++)
             {
                 mapRefs.Add(new SingleMapReference(location, startFloor + i,
-                    fileOffset + i * SmallMap.XTILES * SmallMap.YTILES));
+                    fileOffset + i * SmallMap.XTiles * SmallMap.YTiles));
             }
 
             return mapRefs;
