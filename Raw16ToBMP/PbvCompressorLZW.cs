@@ -182,7 +182,7 @@ namespace Raw16ToBMP
             _iBitCounter = 0;
         }
 
-        //hasing function, tries to find index of prefix+char, if not found returns -1 to signify space available
+        //hashing function, tries to find index of prefix+char, if not found returns -1 to signify space available
         private int FindMatch(int pPrefix, int pChar)
         {
             int index = (pChar << HASH_BIT) ^ pPrefix;

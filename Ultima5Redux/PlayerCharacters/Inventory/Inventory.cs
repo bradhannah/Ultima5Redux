@@ -131,7 +131,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="equipment">type of combat equipment</param>
         /// <returns>combat item object</returns>
         public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment) =>
-            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ?? 
+            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) 
+            ?? 
             throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
 
         private void RefreshRollupInventory()

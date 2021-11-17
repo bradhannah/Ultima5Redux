@@ -118,9 +118,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
             {
+                if (equipment == DataOvlReference.Equipment.Nothing) return false;
                 CombatItem combatItem = _inventory.GetItemFromEquipment(equipment);    
-                return equipment != DataOvlReference.Equipment.Nothing &&
-                       combatItem.TheCombatItemReference.AttackStat > 0;
+                return combatItem.TheCombatItemReference.AttackStat > 0;
             }
 
             if (isAttackingCombatItem(Record.Equipped.Helmet))
