@@ -15,22 +15,23 @@ namespace Ultima5Redux.PlayerCharacters
 
         private const int SPRITE_NUM = 260;
 
-        public Spell(MagicReference.SpellWords spellWord, int quantity, MagicReference magicReference) : base(quantity, SPRITE_NUM)
+        public override bool HideQuantity { get; } = false;
+
+        public override string InventoryReferenceString => SpellIncantation.ToString();
+        public override bool IsSellable => false;
+
+        public int MinCircle => SpellMagicReference.Circle;
+
+        public MagicReference.SpellWords SpellIncantation { get; }
+
+        public MagicReference SpellMagicReference { get; }
+
+        public Spell(MagicReference.SpellWords spellWord, int quantity, MagicReference magicReference) : base(quantity,
+            SPRITE_NUM)
         {
             SpellIncantation = spellWord;
             SpellMagicReference = magicReference;
         }
-
-        public override bool HideQuantity { get; } = false;
-        public override bool IsSellable => false;
-
-        public MagicReference.SpellWords SpellIncantation { get; }
-        
-        public MagicReference SpellMagicReference { get; }
-
-        public override string InventoryReferenceString => SpellIncantation.ToString();
-
-        public int MinCircle => SpellMagicReference.Circle;
 
         public string GetLiteralTranslation()
         {

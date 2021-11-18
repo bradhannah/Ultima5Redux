@@ -6,6 +6,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Scrolls : InventoryItems<MagicReference.SpellWords, Scroll>
     {
+        public override Dictionary<MagicReference.SpellWords, Scroll> Items { get; } =
+            new Dictionary<MagicReference.SpellWords, Scroll>(8);
 
         public Scrolls(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
@@ -19,18 +21,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             AddScroll(MagicReference.SpellWords.An_Tym);
         }
 
-        public override Dictionary<MagicReference.SpellWords, Scroll> Items { get; } =
-            new Dictionary<MagicReference.SpellWords, Scroll>(8);
-
         private void AddScroll(MagicReference.SpellWords spellWord)
         {
             Scroll.ScrollSpells scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
 
-            
-            
             int nIndex = 0x27A + (int)scrollSpell;
-            Items[spellWord] = new Scroll(spellWord, GameStateByteArray[nIndex], 
+            Items[spellWord] = new Scroll(spellWord, GameStateByteArray[nIndex],
                 GameReferences.MagicRefs.GetMagicReference(spellWord));
         }
     }

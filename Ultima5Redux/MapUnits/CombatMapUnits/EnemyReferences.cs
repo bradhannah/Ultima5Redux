@@ -11,6 +11,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     {
         private const int N_TOTAL_MONSTERS = 0x30;
 
+        public List<EnemyReference> AllEnemyReferences { get; } = new List<EnemyReference>(N_TOTAL_MONSTERS);
+
         public EnemyReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)
         {
             AdditionalEnemyFlagList additionalEnemyFlagList = new AdditionalEnemyFlagList();
@@ -25,7 +27,22 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             //PrintDebugCSV();
         }
 
-        public List<EnemyReference> AllEnemyReferences { get; } = new List<EnemyReference>(N_TOTAL_MONSTERS);
+        public EnemyReference GetEnemyReference(TileReference tileReference)
+        {
+            int nIndex = (tileReference.Index - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+            return AllEnemyReferences[nIndex];
+        }
+
+        public EnemyReference GetEnemyReference(int nSprite)
+        {
+            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+            return AllEnemyReferences[nIndex];
+        }
+
+        public EnemyReference GetFriendReference(EnemyReference enemyReference)
+        {
+            return AllEnemyReferences[enemyReference.FriendIndex];
+        }
 
         // ReSharper disable once UnusedMember.Local
         private void PrintDebugCsv()
@@ -55,23 +72,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
-        public EnemyReference GetEnemyReference(TileReference tileReference)
-        {
-            int nIndex = (tileReference.Index - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
-            return AllEnemyReferences[nIndex];
-        }
-
-        public EnemyReference GetEnemyReference(int nSprite)
-        {
-            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
-            return AllEnemyReferences[nIndex];
-        }
-
-        public EnemyReference GetFriendReference(EnemyReference enemyReference)
-        {
-            return AllEnemyReferences[enemyReference.FriendIndex];
-        }
-
         private class AdditionalEnemyFlagList
         {
             public readonly List<AdditionalEnemyFlags> AllAdditionalEnemyFlags;
@@ -89,8 +89,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             [JsonProperty] public bool CanFlyOverWater { get; set; }
             [JsonProperty] public bool CanPassThroughWalls { get; set; }
             [JsonProperty] public bool DoNotMove { get; set; }
-            [JsonProperty] public bool IsWaterEnemy { get; set; }
             [JsonProperty] public int Experience { get; set; }
+            [JsonProperty] public bool IsWaterEnemy { get; set; }
             [JsonProperty] public string Name { get; set; }
         }
     }

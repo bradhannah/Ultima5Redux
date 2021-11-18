@@ -16,13 +16,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             WoodenBox = 270, Sextant = 256
         }
 
-        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) :
-            base(quantity, (int)itemType)
-        {
-            ItemType = itemType;
-        }
-
         public override bool HideQuantity => ItemType != ItemTypeSpriteEnum.Carpet;
+
+        public override string InventoryReferenceString => ItemType.ToString();
 
         public override bool IsSellable => false;
 
@@ -30,7 +26,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public ItemTypeSpriteEnum ItemType { get; }
 
-        public override string InventoryReferenceString => ItemType.ToString();
+        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) :
+            base(quantity, (int)itemType)
+        {
+            ItemType = itemType;
+        }
 
         public static ItemTypeEnum GetItemOffset(ItemTypeSpriteEnum itemTypeSpriteEnum)
         {

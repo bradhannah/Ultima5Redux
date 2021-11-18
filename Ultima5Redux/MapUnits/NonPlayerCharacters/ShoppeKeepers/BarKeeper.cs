@@ -25,6 +25,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private readonly Dictionary<string, string> _gossipWordToPlaceMap = new Dictionary<string, string>();
         private readonly Dictionary<string, int> _gossipWordToPosition = new Dictionary<string, int>();
 
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        {
+            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBarkeeper)
+        };
+
+        public bool BoughtSomethingFromBarKeep { get; set; } = false;
+
+        public BarKeeperStockReference.BarKeeperStock TheBarKeeperStock =>
+            _barKeeperStockReference.GetBarKeeperStock(TheShoppeKeeperReference.ShoppeKeeperLocation);
+
         public BarKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
             ShoppeKeeperReference theShoppeKeeperReference,
             DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference,
@@ -64,61 +74,21 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
-        public BarKeeperStockReference.BarKeeperStock TheBarKeeperStock =>
-            _barKeeperStockReference.GetBarKeeperStock(TheShoppeKeeperReference.ShoppeKeeperLocation);
-
-        public bool BoughtSomethingFromBarKeep { get; set; } = false;
-
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
-        {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBarkeeper)
-        };
-
-        public string GetMoneyForGossipResponse(string word)
-        {
-            string cleanedWord = CleanGossipWordForLookup(word);
-            return ShoppeKeeperDialogueReference.GetMerchantString(84, GetCostOfGossip(cleanedWord)) +
-                   DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
-                       .N_N_FAIR_NUFF_Q_DQ);
-        }
-
-        public string GetDoesntKnowGossipResponse()
-        {
-            string retStr = DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
-                .THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N);
-            return retStr;
-        }
-
         private static string CleanGossipWordForLookup(string word)
         {
             int nLength = Math.Min(4, word.Length);
             return word.Substring(0, nLength);
         }
 
-        public string GetGossipResponse(string word, bool bHighlightDetails)
+        public static int GetPriceBasedOnParty(int nPricePerPartyMember, int nPartyMembers)
         {
-            string cleanedWord = CleanGossipWordForLookup(word);
-            Debug.Assert(DoesBarKeeperKnowGossip(cleanedWord));
-            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(85, 88);
-            return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                personOfInterest: _gossipWordToPersonMap[cleanedWord],
-                locationToFindPersonOfInterest: _gossipWordToPlaceMap[cleanedWord],
-                bUseRichText: bHighlightDetails);
+            return nPricePerPartyMember * nPartyMembers;
         }
 
-        public bool DoesBarKeeperKnowGossip(string word)
+        public override string GetForSaleList()
         {
-            return _gossipWordToPlaceMap.ContainsKey(CleanGossipWordForLookup(word));
-        }
-
-        public int GetCostOfGossip(string word)
-        {
-            string cleanedWord = CleanGossipWordForLookup(word);
-            Debug.Assert(DoesBarKeeperKnowGossip(cleanedWord));
-            if (!_gossipWordToPosition.ContainsKey(cleanedWord))
-                throw new Ultima5ReduxException("Asked for cost of gossip word \"" + cleanedWord +
-                                                "\" but wasn't in list");
-            return _gossipCostByPosition[_gossipWordToPosition[cleanedWord]];
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(69, 72);
+            return ShoppeKeeperDialogueReference.GetMerchantString(nIndex);
         }
 
         public override string GetHelloResponse(TimeOfDay tod = null)
@@ -135,13 +105,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             string origStr = DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
                 .DQ_N_N_CANT_PAY_Q_B_BEAT_IT_BANG_DQ_N_YELLS_SP);
             return origStr.Replace("\"\n\n", "").Replace("\n", " ") + TheShoppeKeeperReference.ShoppeKeeperName;
-        }
-
-        public string GetPissedOffNotEnoughMoneyRations()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
-                       .THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N).Replace("\n", " ") +
-                   TheShoppeKeeperReference.ShoppeKeeperName + ".";
         }
 
         public override string GetWhichWouldYouSee()
@@ -164,9 +127,32 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             // 72,"Wouldst thou sample our finely brewed Stout, or desirest thou some fresh Fruits? We also sell the finest Provisions!"
         }
 
-        public static int GetPriceBasedOnParty(int nPricePerPartyMember, int nPartyMembers)
+        public bool DoesBarKeeperKnowGossip(string word)
         {
-            return nPricePerPartyMember * nPartyMembers;
+            return _gossipWordToPlaceMap.ContainsKey(CleanGossipWordForLookup(word));
+        }
+
+        public string GetAnythingElseResponse()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                .DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ);
+        }
+
+        public int GetCostOfGossip(string word)
+        {
+            string cleanedWord = CleanGossipWordForLookup(word);
+            Debug.Assert(DoesBarKeeperKnowGossip(cleanedWord));
+            if (!_gossipWordToPosition.ContainsKey(cleanedWord))
+                throw new Ultima5ReduxException("Asked for cost of gossip word \"" + cleanedWord +
+                                                "\" but wasn't in list");
+            return _gossipCostByPosition[_gossipWordToPosition[cleanedWord]];
+        }
+
+        public string GetDoesntKnowGossipResponse()
+        {
+            string retStr = DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                .THAT_I_CANNOT_HELP_THEE_WITH_DOT_N_N);
+            return retStr;
         }
 
         public string GetFoodOrDrinkOfferAndConfirmation(int nPricePerPartyMember, int nPartMembers,
@@ -191,30 +177,29 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                                                                        .TrimStart().Replace("\"", ""));
         }
 
-        public string GetRationOffer(PlayerCharacterRecords records)
-        {
-            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(77, 83);
-            return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                BarKeeperStockReference.GetAdjustedPrice(records.AvatarRecord.Stats.Intelligence,
-                    TheBarKeeperStock.RationPrice));
-        }
-
-        public override string GetForSaleList()
-        {
-            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(69, 72);
-            return ShoppeKeeperDialogueReference.GetMerchantString(nIndex);
-        }
-
         public string GetGossipQuestion(PlayerCharacterRecord.CharacterGender avatarGender)
         {
             return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
                 .OF_WHAT_WOULDST_N_THOU_HEAD_MY_N_LORE_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) + "?";
         }
 
-        public string GetAnythingElseResponse()
+        public string GetGossipResponse(string word, bool bHighlightDetails)
         {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
-                .DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ);
+            string cleanedWord = CleanGossipWordForLookup(word);
+            Debug.Assert(DoesBarKeeperKnowGossip(cleanedWord));
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(85, 88);
+            return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                personOfInterest: _gossipWordToPersonMap[cleanedWord],
+                locationToFindPersonOfInterest: _gossipWordToPlaceMap[cleanedWord],
+                bUseRichText: bHighlightDetails);
+        }
+
+        public string GetMoneyForGossipResponse(string word)
+        {
+            string cleanedWord = CleanGossipWordForLookup(word);
+            return ShoppeKeeperDialogueReference.GetMerchantString(84, GetCostOfGossip(cleanedWord)) +
+                   DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                       .N_N_FAIR_NUFF_Q_DQ);
         }
 
         public string GetMustAttendToPayingCustomers(PlayerCharacterRecord.CharacterGender avatarGender)
@@ -223,6 +208,21 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        .SORRY_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) +
                    ", I must attend to my PAYING customers!\" says "
                    + TheShoppeKeeperReference.ShoppeKeeperName;
+        }
+
+        public string GetPissedOffNotEnoughMoneyRations()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
+                       .THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N).Replace("\n", " ") +
+                   TheShoppeKeeperReference.ShoppeKeeperName + ".";
+        }
+
+        public string GetRationOffer(PlayerCharacterRecords records)
+        {
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(77, 83);
+            return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                BarKeeperStockReference.GetAdjustedPrice(records.AvatarRecord.Stats.Intelligence,
+                    TheBarKeeperStock.RationPrice));
         }
     }
 }

@@ -12,8 +12,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public class SingleMapReference
         {
-            [SuppressMessage("ReSharper", "IdentifierTypo")]
-            [JsonConverter(typeof(StringEnumConverter))]
+            [SuppressMessage("ReSharper", "IdentifierTypo")] [JsonConverter(typeof(StringEnumConverter))]
             public enum Location
             {
                 Britannia_Underworld = 0x00, Moonglow = 1, Britain = 2, Jhelom = 3, Yew = 4, Minoc = 5, Trinsic = 6,
@@ -32,8 +31,10 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     Map master files. These represent .DAT, .NPC and .TLK files
             /// </summary>
-            [JsonConverter(typeof(StringEnumConverter))]
-            public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon, None }
+            [JsonConverter(typeof(StringEnumConverter))] public enum SmallMapMasterFiles
+            {
+                Castle, Towne, Dwelling, Keep, Dungeon, None
+            }
 
             /// <summary>
             ///     Total number of small map locations
@@ -41,17 +42,22 @@ namespace Ultima5Redux.Maps
             public const int TOTAL_SMALL_MAP_LOCATIONS = 32;
 
             /// <summary>
-            ///     Construct a single map reference
+            ///     the offset of the map data in the data file
             /// </summary>
-            /// <param name="mapLocation">overall location (ie. Moonglow)</param>
-            /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
-            /// <param name="fileOffset">location of data offset in map file</param>
-            public SingleMapReference(Location mapLocation, int floor, int fileOffset)
-            {
-                MapLocation = mapLocation;
-                Floor = floor;
-                FileOffset = fileOffset;
-            }
+            [DataMember]
+            public int FileOffset { get; }
+
+            /// <summary>
+            ///     the floor that the single map represents
+            /// </summary>
+            [DataMember]
+            public int Floor { get; }
+
+            /// <summary>
+            ///     the location (ie. single town like Moonglow)
+            /// </summary>
+            [DataMember]
+            public Location MapLocation { get; }
 
 
             /// <summary>
@@ -59,24 +65,17 @@ namespace Ultima5Redux.Maps
             ///     Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
             /// </summary>
             // ReSharper disable once UnusedMember.Global
-            [IgnoreDataMember] public byte Id => (byte)(MapLocation - 1);
+            [IgnoreDataMember]
+            public byte Id => (byte)(MapLocation - 1);
 
             /// <summary>
-            ///     the offset of the map data in the data file
+            ///     name of the map file
             /// </summary>
-            [DataMember] public int FileOffset { get; }
+            [IgnoreDataMember]
+            public string MapFilename => GetFilenameFromLocation(MapLocation);
 
-            /// <summary>
-            ///     the floor that the single map represents
-            /// </summary>
-            [DataMember] public int Floor { get; }
-
-            /// <summary>
-            ///     the location (ie. single town like Moonglow)
-            /// </summary>
-            [DataMember] public Location MapLocation { get; }
-
-            [IgnoreDataMember] public Map.Maps MapType
+            [IgnoreDataMember]
+            public Map.Maps MapType
             {
                 get
                 {
@@ -92,17 +91,13 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-            /// <summary>
-            ///     name of the map file
-            /// </summary>
-            [IgnoreDataMember] public string MapFilename => GetFilenameFromLocation(MapLocation);
-
 
             /// <summary>
             ///     The master file
             /// </summary>
             // ReSharper disable once UnusedMember.Global
-            [IgnoreDataMember] public SmallMapMasterFiles MasterFile
+            [IgnoreDataMember]
+            public SmallMapMasterFiles MasterFile
             {
                 get
                 {
@@ -122,13 +117,17 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-            public override string ToString()
+            /// <summary>
+            ///     Construct a single map reference
+            /// </summary>
+            /// <param name="mapLocation">overall location (ie. Moonglow)</param>
+            /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
+            /// <param name="fileOffset">location of data offset in map file</param>
+            public SingleMapReference(Location mapLocation, int floor, int fileOffset)
             {
-                string mapStr = MapLocation.ToString().Replace("_", " ") + " - ";
-                if (Floor == -1) mapStr += "Basement";
-                else if (Floor == 0) mapStr += "Main Level";
-                else mapStr += "Floor " + Floor;
-                return mapStr;
+                MapLocation = mapLocation;
+                Floor = floor;
+                FileOffset = fileOffset;
             }
 
             public static SingleMapReference GetCombatMapSingleInstance()
@@ -139,6 +138,30 @@ namespace Ultima5Redux.Maps
                 return new SingleMapReference(Location.Combat_resting_shrine, 0, 0);
             }
 
+            /// <summary>
+            ///     Get the filename of the map data based on the location
+            /// </summary>
+            /// <param name="location">the location you are looking for</param>
+            /// <returns>the filename string</returns>
+            public static string GetFilenameFromLocation(Location location)
+            {
+                switch (GetMapMasterFromLocation(location))
+                {
+                    case SmallMapMasterFiles.Castle:
+                        return FileConstants.CASTLE_DAT;
+                    case SmallMapMasterFiles.Towne:
+                        return FileConstants.TOWNE_DAT;
+                    case SmallMapMasterFiles.Dwelling:
+                        return FileConstants.DWELLING_DAT;
+                    case SmallMapMasterFiles.Keep:
+                        return FileConstants.KEEP_DAT;
+                    case SmallMapMasterFiles.Dungeon:
+                        return "NOFILE";
+                    default:
+                        throw new Ultima5ReduxException("Bad _location");
+                }
+            }
+
             public static SingleMapReference GetLargeMapSingleInstance(Map.Maps map)
             {
                 if (map == Map.Maps.Small)
@@ -146,54 +169,6 @@ namespace Ultima5Redux.Maps
 
                 return new SingleMapReference(Location.Britannia_Underworld,
                     map == Map.Maps.Overworld ? 0 : -1, 0);
-            }
-
-            /// <summary>
-            ///     Get the name of the .TLK file based on the master map file
-            /// </summary>
-            /// <param name="mapMaster"></param>
-            /// <returns>name of the .TLK file</returns>
-            public static string GetTlkFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
-            {
-                switch (mapMaster)
-                {
-                    case SmallMapMasterFiles.Castle:
-                        return FileConstants.CASTLE_TLK;
-                    case SmallMapMasterFiles.Dwelling:
-                        return FileConstants.DWELLING_TLK;
-                    case SmallMapMasterFiles.Keep:
-                        return FileConstants.KEEP_TLK;
-                    case SmallMapMasterFiles.Towne:
-                        return FileConstants.TOWNE_TLK;
-                    case SmallMapMasterFiles.Dungeon:
-                        break;
-                }
-
-                throw new Ultima5ReduxException("Couldn't map NPC filename");
-            }
-
-            /// <summary>
-            ///     Gets the NPC file based on the master map file
-            /// </summary>
-            /// <param name="mapMaster"></param>
-            /// <returns>name of the .NPC file</returns>
-            public static string GetNPCFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
-            {
-                switch (mapMaster)
-                {
-                    case SmallMapMasterFiles.Castle:
-                        return FileConstants.CASTLE_NPC;
-                    case SmallMapMasterFiles.Dwelling:
-                        return FileConstants.DWELLING_NPC;
-                    case SmallMapMasterFiles.Keep:
-                        return FileConstants.KEEP_NPC;
-                    case SmallMapMasterFiles.Towne:
-                        return FileConstants.TOWNE_NPC;
-                    case SmallMapMasterFiles.Dungeon:
-                        break;
-                }
-
-                throw new Ultima5ReduxException("Couldn't map NPC filename");
             }
 
             /// <summary>
@@ -260,27 +235,60 @@ namespace Ultima5Redux.Maps
             }
 
             /// <summary>
-            ///     Get the filename of the map data based on the location
+            ///     Gets the NPC file based on the master map file
             /// </summary>
-            /// <param name="location">the location you are looking for</param>
-            /// <returns>the filename string</returns>
-            public static string GetFilenameFromLocation(Location location)
+            /// <param name="mapMaster"></param>
+            /// <returns>name of the .NPC file</returns>
+            public static string GetNPCFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
             {
-                switch (GetMapMasterFromLocation(location))
+                switch (mapMaster)
                 {
                     case SmallMapMasterFiles.Castle:
-                        return FileConstants.CASTLE_DAT;
-                    case SmallMapMasterFiles.Towne:
-                        return FileConstants.TOWNE_DAT;
+                        return FileConstants.CASTLE_NPC;
                     case SmallMapMasterFiles.Dwelling:
-                        return FileConstants.DWELLING_DAT;
+                        return FileConstants.DWELLING_NPC;
                     case SmallMapMasterFiles.Keep:
-                        return FileConstants.KEEP_DAT;
+                        return FileConstants.KEEP_NPC;
+                    case SmallMapMasterFiles.Towne:
+                        return FileConstants.TOWNE_NPC;
                     case SmallMapMasterFiles.Dungeon:
-                        return "NOFILE";
-                    default:
-                        throw new Ultima5ReduxException("Bad _location");
+                        break;
                 }
+
+                throw new Ultima5ReduxException("Couldn't map NPC filename");
+            }
+
+            /// <summary>
+            ///     Get the name of the .TLK file based on the master map file
+            /// </summary>
+            /// <param name="mapMaster"></param>
+            /// <returns>name of the .TLK file</returns>
+            public static string GetTlkFilenameFromMasterFile(SmallMapMasterFiles mapMaster)
+            {
+                switch (mapMaster)
+                {
+                    case SmallMapMasterFiles.Castle:
+                        return FileConstants.CASTLE_TLK;
+                    case SmallMapMasterFiles.Dwelling:
+                        return FileConstants.DWELLING_TLK;
+                    case SmallMapMasterFiles.Keep:
+                        return FileConstants.KEEP_TLK;
+                    case SmallMapMasterFiles.Towne:
+                        return FileConstants.TOWNE_TLK;
+                    case SmallMapMasterFiles.Dungeon:
+                        break;
+                }
+
+                throw new Ultima5ReduxException("Couldn't map NPC filename");
+            }
+
+            public override string ToString()
+            {
+                string mapStr = MapLocation.ToString().Replace("_", " ") + " - ";
+                if (Floor == -1) mapStr += "Basement";
+                else if (Floor == 0) mapStr += "Main Level";
+                else mapStr += "Floor " + Floor;
+                return mapStr;
             }
         }
     }

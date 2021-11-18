@@ -9,25 +9,11 @@ namespace Ultima5Redux.MapUnits
     public sealed class MagicCarpet : MapUnit
     {
         private const string REGULAR_CARPET_STR = "Carpet2";
-        
-        public MagicCarpet(SmallMapReferences.SingleMapReference.Location location,
-            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : 
-            base(null, new MapUnitMovement(0), location, direction, npcState, 
-                GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition)
-        {
-            KeyTileReference = NonBoardedTileReference;
-        }
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
 
-        public override bool IsActive => true;
-
-        public override bool IsAttackable => false;
-
         public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
-
-        public override string FriendlyName => BoardXitName;
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>
@@ -58,6 +44,20 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Right, "RidingMagicCarpetRight" },
                 { Point2D.Direction.Up, "RidingMagicCarpetUp" }
             };
+
+        public override string FriendlyName => BoardXitName;
+
+        public override bool IsActive => true;
+
+        public override bool IsAttackable => false;
+
+        public MagicCarpet(SmallMapReferences.SingleMapReference.Location location,
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
+            base(null, new MapUnitMovement(0), location, direction, npcState,
+                GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition)
+        {
+            KeyTileReference = NonBoardedTileReference;
+        }
 
         public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby());
     }

@@ -13,9 +13,10 @@ namespace Ultima5Redux.Maps
     {
         public enum DataChunkName { Unused = -1 }
 
+        private const int TOTAL_DUNGEON_MAPS = 112;
+
         // the master copy of the map references
         private const int TOTAL_OVERWORLD_MAPS = 16;
-        private const int TOTAL_DUNGEON_MAPS = 112;
 
         private readonly Dictionary<SingleCombatMapReference.Territory, List<SingleCombatMapReference>>
             _singleCombatMapReferences =
@@ -38,13 +39,14 @@ namespace Ultima5Redux.Maps
             DataChunks<DataChunkName> britDataChunks = new DataChunks<DataChunkName>(britCbtPath, DataChunkName.Unused);
 
             string dungeonCbtPath = Path.Combine(u5Directory, FileConstants.DUNGEON_CBT);
-            DataChunks<DataChunkName> dungeonDataChunks = new DataChunks<DataChunkName>(dungeonCbtPath, DataChunkName.Unused);
+            DataChunks<DataChunkName> dungeonDataChunks =
+                new DataChunks<DataChunkName>(dungeonCbtPath, DataChunkName.Unused);
 
             if (combatMapDataJson == null || !combatMapDataJson.ContainsKey(
                                               SingleCombatMapReference.Territory.Britannia)
                                           || !combatMapDataJson.ContainsKey(SingleCombatMapReference.Territory.Dungeon))
                 throw new Ultima5ReduxException("combat map json is missing maps");
-            
+
             for (int nMap = 0; nMap < TOTAL_OVERWORLD_MAPS; nMap++)
             {
                 // build the map of east, west, north and south player locations
@@ -69,6 +71,18 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        public string GetAsCsv(SingleCombatMapReference.Territory territory)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(SingleCombatMapReference.GetCsvHeader());
+            foreach (SingleCombatMapReference singleCombatMapReference in _singleCombatMapReferences[territory])
+            {
+                sb.Append("\n" + singleCombatMapReference.GetAsCsvLine());
+            }
+
+            return sb.ToString();
+        }
+
         public List<SingleCombatMapReference> GetListOfSingleCombatMapReferences(
             SingleCombatMapReference.Territory territory)
         {
@@ -81,18 +95,6 @@ namespace Ultima5Redux.Maps
             Debug.Assert(nIndex >= 0);
             Debug.Assert(nIndex < _singleCombatMapReferences[territory].Count);
             return _singleCombatMapReferences[territory][nIndex];
-        }
-
-        public string GetAsCsv(SingleCombatMapReference.Territory territory)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(SingleCombatMapReference.GetCsvHeader());
-            foreach (SingleCombatMapReference singleCombatMapReference in _singleCombatMapReferences[territory])
-            {
-                sb.Append("\n" + singleCombatMapReference.GetAsCsvLine());
-            }
-
-            return sb.ToString();
         }
 
         public class CombatMapData

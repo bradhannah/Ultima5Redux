@@ -2,6 +2,10 @@
 {
     public class Helm : Armour
     {
+        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+            CharacterEquipped.EquippableSlot.Helm;
+
+        public override bool HideQuantity => false;
 
         //private const int HELM_SPRITE = 265;
 
@@ -13,16 +17,10 @@
         // {
         //     HelmType = helmType;
         // }
-        
+
         public Helm(CombatItemReference combatItemReference, int nQuantity) :
             base(combatItemReference, nQuantity)
         {
-            
-        }        
-        
-        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
-            CharacterEquipped.EquippableSlot.Helm;
-
-        public override bool HideQuantity => false;
+        }
     }
 }

@@ -13,8 +13,139 @@ namespace Ultima5Redux
 {
     internal class ImportedGameState
     {
+        /// <summary>
+        ///     Data chunks for each of the save game sections
+        /// </summary>
+        private enum DataChunkName
+        {
+            Unused, CHARACTER_RECORDS, NPC_ISDEAD_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY, FOOD_QUANTITY, GOLD_QUANTITY,
+            KEYS_QUANTITY, GEMS_QUANTITY, TORCHES_QUANTITY, TORCHES_TURNS, CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY,
+            CURRENT_HOUR, CURRENT_MINUTE, NPC_TYPES, NPC_MOVEMENT_LISTS, NPC_MOVEMENT_OFFSETS, NPC_SPRITE_INDEXES,
+            PARTY_LOC, Z_COORD, X_COORD, Y_COORD, CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
+            MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, GRAPPLE, SKULL_KEYS_QUANTITY,
+
+            KARMA
+            //, MONSTERS_AND_STUFF_TABLE
+        }
+
+        private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }
+
+        // ReSharper disable once UnusedMember.Local
+        [IgnoreDataMember] public MapUnitStates MapUnitStatesByInitialMap => GetMapUnitStatesByMap(InitialMap);
+
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
+        internal MapUnitStates ActiveMapUnitStates { get; }
+
+        // map overlay data chunks
+        private DataChunk ActiveOverlayDataChunks =>
+            DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
+
+        internal byte ActivePlayerNumber => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
+
+        internal MapUnitMovements CharacterMovements { get; }
+
+        internal PlayerCharacterRecords CharacterRecords { get; }
+
+        internal DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
+
+        private DataChunks<DataChunkName> DataChunks { get; }
+
+        /// <summary>
+        ///     Current floor
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        internal int Floor => DataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
+
+        /// <summary>
+        ///     Players total food
+        /// </summary>
+        internal ushort Food => DataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUint16();
+
+        internal List<byte> GameStateByteArray { get; }
+        internal byte Gems => DataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
+
+        /// <summary>
+        ///     Players total gold
+        /// </summary>
+        internal ushort Gold => DataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUint16();
+
+        /// <summary>
+        ///     Does the Avatar have a grapple?
+        /// </summary>
+        internal bool HasGrapple => DataChunks.GetDataChunk(DataChunkName.GRAPPLE).GetChunkAsByte() != 0x00;
+
+        /// <summary>
+        ///     Which map am I currently on?
+        /// </summary>
+        internal Map.Maps InitialMap =>
+            Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
+                ? Floor == 0xFF ? Map.Maps.Underworld : Map.Maps.Overworld
+                : Map.Maps.Small;
+
+        internal byte Karma => DataChunks.GetDataChunk(DataChunkName.KARMA).GetChunkAsByte();
+
+        internal byte Keys => DataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
+
+        /// <summary>
+        ///     Current location
+        /// </summary>
+        internal SmallMapReferences.SingleMapReference.Location Location =>
+            (SmallMapReferences.SingleMapReference.Location)DataChunks.GetDataChunk(DataChunkName.PARTY_LOC)
+                .GetChunkAsByte();
+
+        internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
+
+        // DataChunk based properties (not ideal) 
+        internal DataChunk NonPlayerCharacterMovementLists => DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS);
+
+        internal DataChunk NonPlayerCharacterMovementOffsets =>
+            DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
+
+        internal bool[][] NPCIsDeadArray { get; }
+        internal bool[][] NPCIsMetArray { get; }
+
+        internal MapUnitStates OverworldMapUnitStates { get; }
+
+        private DataChunk OverworldOverlayDataChunks =>
+            _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
+
+        internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
+        internal SmallMapCharacterStates SmallMapCharacterStates { get; }
+        private MapUnitStates SmallMapUnitStates { get; }
+
+        internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
+            GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS),
+            GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
+
+        internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; }
+
+        internal TimeOfDay TheTimeOfDay => new TimeOfDay(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
+            DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
+            DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), DataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
+            DataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
+
+        internal byte Torches => DataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
+
+        /// <summary>
+        ///     How many turns left until your torch is burnt out?
+        /// </summary>
+        internal byte TorchTurnsLeft => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
+
+        internal MapUnitStates UnderworldMapUnitStates { get; }
+
+        private DataChunk UnderworldOverlayDataChunks =>
+            _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
+
+        /// <summary>
+        ///     Saved X location of Avatar
+        /// </summary>
+        internal int X => DataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
+
+        /// <summary>
+        ///     Saved Y location of Avatar
+        /// </summary>
+        internal int Y => DataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
 
         public ImportedGameState(string u5Directory)
         {
@@ -151,12 +282,12 @@ namespace Ultima5Redux
             // we will need to add 0x100 for now, but cannot because it's read in as a bytelist
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "NPC Sprite (by smallmap)", 0xFF8, 0x20, 0x00,
                 DataChunkName.NPC_SPRITE_INDEXES);
-            
+
             //// MapUnitStates
             OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
             UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
             ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks);
-            
+
             OverworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
             UnderworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
             ActiveMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
@@ -178,86 +309,18 @@ namespace Ultima5Redux
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            
+
             SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk);
-            CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists, 
+            CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists,
                 NonPlayerCharacterMovementOffsets);
 
             TheNonPlayerCharacterStates = new NonPlayerCharacterStates(this);
         }
 
-        /// <summary>
-        ///     Does the Avatar have a grapple?
-        /// </summary>
-        internal bool HasGrapple => DataChunks.GetDataChunk(DataChunkName.GRAPPLE).GetChunkAsByte() != 0x00;
-
-        internal bool[][] NPCIsDeadArray { get; }
-        internal bool[][] NPCIsMetArray { get; }
-        internal byte ActivePlayerNumber => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
-        internal byte Gems => DataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
-        internal byte Karma => DataChunks.GetDataChunk(DataChunkName.KARMA).GetChunkAsByte();
-
-        internal byte Keys => DataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
-        internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
-        internal byte Torches => DataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
-
-        /// <summary>
-        ///     How many turns left until your torch is burnt out?
-        /// </summary>
-        internal byte TorchTurnsLeft => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
-
-        internal DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
-        internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
-
-        // DataChunk based properties (not ideal) 
-        internal DataChunk NonPlayerCharacterMovementLists => DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS);
-
-        internal DataChunk NonPlayerCharacterMovementOffsets =>
-            DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
-
-        // map overlay data chunks
-        private DataChunk ActiveOverlayDataChunks =>
-            DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
-
-        private DataChunk OverworldOverlayDataChunks =>
-            _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
-
-        private DataChunk UnderworldOverlayDataChunks =>
-            _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
-
-        /// <summary>
-        ///     Current floor
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        internal int Floor => DataChunks.GetDataChunk(DataChunkName.Z_COORD).GetChunkAsByte();
-
-        /// <summary>
-        ///     Saved X location of Avatar
-        /// </summary>
-        internal int X => DataChunks.GetDataChunk(DataChunkName.X_COORD).GetChunkAsByte();
-
-        /// <summary>
-        ///     Saved Y location of Avatar
-        /// </summary>
-        internal int Y => DataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
-
-        internal List<byte> GameStateByteArray { get; }
-
-        /// <summary>
-        ///     Current location
-        /// </summary>
-        internal SmallMapReferences.SingleMapReference.Location Location =>
-            (SmallMapReferences.SingleMapReference.Location)DataChunks.GetDataChunk(DataChunkName.PARTY_LOC)
-                .GetChunkAsByte();
-
-        /// <summary>
-        ///     Which map am I currently on?
-        /// </summary>
-        internal Map.Maps InitialMap =>
-            Location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
-                ? Floor == 0xFF ? Map.Maps.Underworld : Map.Maps.Overworld
-                : Map.Maps.Small;
+        private DataChunk GetDataChunk(DataChunkName dataChunkName)
+        {
+            return DataChunks.GetDataChunk(dataChunkName);
+        }
 
         public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)
         {
@@ -267,65 +330,9 @@ namespace Ultima5Redux
                 Map.Maps.Overworld => OverworldMapUnitStates,
                 Map.Maps.Underworld => UnderworldMapUnitStates,
                 Map.Maps.Combat => throw new Ultima5ReduxException(
-                 "Can't return a map state for a combat map from the imported game state"),
+                    "Can't return a map state for a combat map from the imported game state"),
                 _ => throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" + map)
             };
         }
-         
-        // ReSharper disable once UnusedMember.Local
-        [IgnoreDataMember] public MapUnitStates MapUnitStatesByInitialMap => GetMapUnitStatesByMap(InitialMap);
-
-        internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
-            GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS),
-            GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
-
-        internal PlayerCharacterRecords CharacterRecords { get; }
-
-        internal TimeOfDay TheTimeOfDay => new TimeOfDay(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
-            DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
-            DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), DataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
-            DataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
-
-        /// <summary>
-        ///     Players total food
-        /// </summary>
-        internal ushort Food => DataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUint16();
-
-        /// <summary>
-        ///     Players total gold
-        /// </summary>
-        internal ushort Gold => DataChunks.GetDataChunk(DataChunkName.GOLD_QUANTITY).GetChunkAsUint16();
-
-        private DataChunks<DataChunkName> DataChunks { get; }
-
-        internal MapUnitStates OverworldMapUnitStates { get; }
-        internal MapUnitStates UnderworldMapUnitStates { get; }
-        internal MapUnitStates ActiveMapUnitStates { get; }
-        private MapUnitStates SmallMapUnitStates { get; }
-        internal SmallMapCharacterStates SmallMapCharacterStates { get; }
-        internal MapUnitMovements CharacterMovements { get; }
-        internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; } 
-        
-        private DataChunk GetDataChunk(DataChunkName dataChunkName)
-        {
-            return DataChunks.GetDataChunk(dataChunkName);
-        }
-
-        /// <summary>
-        ///     Data chunks for each of the save game sections
-        /// </summary>
-        private enum DataChunkName
-        {
-            Unused, CHARACTER_RECORDS, NPC_ISDEAD_TABLE, NPC_ISMET_TABLE, N_PEOPLE_PARTY, FOOD_QUANTITY, GOLD_QUANTITY,
-            KEYS_QUANTITY, GEMS_QUANTITY, TORCHES_QUANTITY, TORCHES_TURNS, CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY,
-            CURRENT_HOUR, CURRENT_MINUTE, NPC_TYPES, NPC_MOVEMENT_LISTS, NPC_MOVEMENT_OFFSETS, NPC_SPRITE_INDEXES,
-            PARTY_LOC, Z_COORD, X_COORD, Y_COORD, CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
-            MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, GRAPPLE, SKULL_KEYS_QUANTITY,
-
-            KARMA
-            //, MONSTERS_AND_STUFF_TABLE
-        }
-
-        private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }
     }
 }

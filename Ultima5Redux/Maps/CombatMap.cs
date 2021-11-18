@@ -16,6 +16,9 @@ namespace Ultima5Redux.Maps
 {
     public class CombatMap : Map
     {
+        // when computing what should happen when a player hits - these states can be triggered 
+        private enum AdditionalHitStateAction { None, EnemyDivided }
+
         public enum CombatMapUnitEnum { All, CombatPlayer, Enemy }
 
         public enum SelectionAction { None, Magic, Attack }
@@ -43,6 +46,68 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private PlayerCharacterRecords _playerCharacterRecords;
 
+        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
+
+        protected override bool IsRepeatingMap => false;
+
+        public override int NumOfXTiles => SingleCombatMapReference.XTILES;
+        public override int NumOfYTiles => SingleCombatMapReference.YTILES;
+
+        public override bool ShowOuterSmallMapTiles => false;
+
+        public override byte[][] TheMap
+        {
+            get => TheCombatMapReference.TheMap;
+            protected set { }
+        }
+
+        public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
+
+        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
+
+        private List<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers.Cast<CombatMapUnit>().ToList();
+        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
+        private List<CombatMapUnit> AllEnemiesGeneric => AllEnemies.Cast<CombatMapUnit>().ToList();
+
+        public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
+            CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
+                combatMapUnit.IsAttackable && combatMapUnit.IsActive).ToList();
+
+        public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
+
+        public bool AreEnemiesLeft => NumberOfEnemies > 0;
+
+        /// <summary>
+        ///     Current combat map units for current combat map
+        /// </summary>
+        private MapUnits.MapUnits CombatMapUnits { get; }
+
+        public CombatMapUnit CurrentCombatMapUnit => _initiativeQueue.GetCurrentCombatUnit();
+
+        public CombatPlayer CurrentCombatPlayer =>
+            _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
+
+        /// <summary>
+        ///     Current player or enemy who is active in current round
+        /// </summary>
+        public PlayerCharacterRecord CurrentPlayerCharacterRecord => CurrentCombatPlayer?.Record;
+
+        public bool InEscapeMode { get; set; } = false;
+        public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
+
+        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.Enemies.Count(enemy => enemy.IsActive);
+
+        public int NumberOfVisiblePlayers =>
+            CombatMapUnits.CurrentMapUnits.CombatPlayers.Count(combatPlayer => combatPlayer.IsActive);
+
+        public int Round => _initiativeQueue.Round;
+
+        public PlayerCharacterRecord SelectedCombatPlayerRecord => _initiativeQueue.ActivePlayerCharacterRecord;
+
+        public SingleCombatMapReference TheCombatMapReference { get; }
+
+        public int Turn => _initiativeQueue.Turn;
+
         /// <summary>
         ///     Creates CombatMap.
         ///     Note: Does not initialize the combat map units.
@@ -51,7 +116,7 @@ namespace Ultima5Redux.Maps
         /// <param name="singleCombatMapReference"></param>
         /// <param name="inventory"></param>
         public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatMapReference,
-            Inventory inventory ) 
+            Inventory inventory)
         {
             _virtualMap = virtualMap;
             CombatMapUnits = _virtualMap.TheMapUnits;
@@ -65,77 +130,42 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatLandAndWater);
         }
 
-        private List<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers.Cast<CombatMapUnit>().ToList();
-        private List<CombatMapUnit> AllEnemiesGeneric => AllEnemies.Cast<CombatMapUnit>().ToList();
+        // if hit, but not killed
+        private static bool IsHitButNotKilled(CombatMapUnit.HitState hitState) =>
+            hitState == CombatMapUnit.HitState.BarelyWounded ||
+            hitState == CombatMapUnit.HitState.LightlyWounded ||
+            hitState == CombatMapUnit.HitState.HeavilyWounded ||
+            hitState == CombatMapUnit.HitState.CriticallyWounded ||
+            hitState == CombatMapUnit.HitState.Fleeing;
 
-        /// <summary>
-        ///     Current combat map units for current combat map
-        /// </summary>
-        private MapUnits.MapUnits CombatMapUnits { get; }
+        protected override float GetAStarWeight(Point2D xy) => 1.0f;
 
-        public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
-
-        public bool AreEnemiesLeft => NumberOfEnemies > 0;
-
-        public bool InEscapeMode { get; set; } = false;
-
-        public override bool ShowOuterSmallMapTiles => false;
-
-        public override byte[][] TheMap
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
-            get => TheCombatMapReference.TheMap;
-            protected set { }
+            return mapUnit switch
+            {
+                Enemy enemy => GetWalkableTypeByEnemy(enemy),
+                CombatPlayer _ => WalkableType.CombatLand,
+                _ => WalkableType.StandardWalking
+            };
         }
 
-        public CombatMapUnit CurrentCombatMapUnit => _initiativeQueue.GetCurrentCombatUnit();
-
-        public CombatPlayer CurrentCombatPlayer =>
-            _initiativeQueue.GetCurrentCombatUnit() is CombatPlayer player ? player : null;
-
-        public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
-        public int NumberOfCombatItemInQueue => _currentCombatItemQueue.Count;
-
-        public int NumberOfEnemies => CombatMapUnits.CurrentMapUnits.Enemies.Count(enemy => enemy.IsActive);
-
-        public int NumberOfVisiblePlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers.Count(combatPlayer => combatPlayer.IsActive);
-
-        public override int NumOfXTiles => SingleCombatMapReference.XTILES;
-        public override int NumOfYTiles => SingleCombatMapReference.YTILES;
-        public int Round => _initiativeQueue.Round;
-
-        public int Turn => _initiativeQueue.Turn;
-
-        public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
-            CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
-                combatMapUnit.IsAttackable && combatMapUnit.IsActive).ToList();
-
-        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
-        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
-
-        /// <summary>
-        ///     Current player or enemy who is active in current round
-        /// </summary>
-        public PlayerCharacterRecord CurrentPlayerCharacterRecord => CurrentCombatPlayer?.Record;
-
-        public PlayerCharacterRecord SelectedCombatPlayerRecord => _initiativeQueue.ActivePlayerCharacterRecord;
-
-        public SingleCombatMapReference TheCombatMapReference { get; }
-
-        protected override bool IsRepeatingMap => false;
-        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
-
-        public List<CombatMapUnit> GetActiveCombatMapUnitsByType(CombatMapUnitEnum combatMapUnitEnum)
+        protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
-            switch (combatMapUnitEnum)
+            switch (walkableType)
             {
-                case CombatMapUnitEnum.All:
-                    return AllVisibleAttackableCombatMapUnits;
-                case CombatMapUnitEnum.CombatPlayer:
-                    return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive).ToList();
-                case CombatMapUnitEnum.Enemy:
-                    return AllEnemiesGeneric.Where(enemy => enemy.IsActive).ToList();
+                case WalkableType.CombatWater:
+                    return tileReference.IsWaterEnemyPassable;
+                case WalkableType.CombatFlyThroughWalls:
+                    // if you can fly through walls, then you can fly through anything except people and enemies
+                    return true;
+                case WalkableType.CombatLandAndWater:
+                    return IsWalkingPassable(tileReference) || tileReference.IsWaterEnemyPassable;
+                case WalkableType.CombatLand:
+                    return IsWalkingPassable(tileReference);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(combatMapUnitEnum), combatMapUnitEnum, null);
+                    throw new Ultima5ReduxException(
+                        "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
             }
         }
 
@@ -160,7 +190,6 @@ namespace Ultima5Redux.Maps
             for (int i = 0; i < combatPlayers.Count; i++)
             {
                 // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
-                //AvatarXyPos = combatPlayers[i].MapUnitPosition.XY;
                 TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
                 FloodFillMap(combatPlayers[i].MapUnitPosition.XY, true, i, combatPlayers[i].MapUnitPosition.XY,
                     true);
@@ -169,32 +198,250 @@ namespace Ultima5Redux.Maps
             TouchedOuterBorder = false;
         }
 
-        protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
+        public CombatMapUnit AdvanceToNextCombatMapUnit()
         {
-            switch (walkableType)
+            CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
+
+            _bPlayerHasChanged = true;
+
+            RefreshCurrentCombatPlayer();
+            return combatMapUnit;
+        }
+
+        public void BuildCombatItemQueue(List<CombatItem> combatItems) =>
+            _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
+
+        private void ClearCurrentCombatItemQueue()
+        {
+            if (_currentCombatItemQueue == null)
+                _currentCombatItemQueue = new Queue<CombatItem>();
+            else
+                _currentCombatItemQueue.Clear();
+        }
+
+
+        /// <summary>
+        ///     Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
+        ///     specified enemies
+        /// </summary>
+        /// <param name="singleCombatMapReference"></param>
+        /// <param name="primaryEnemyReference"></param>
+        /// <param name="nPrimaryEnemies"></param>
+        /// <param name="secondaryEnemyReference"></param>
+        /// <param name="nSecondaryEnemies"></param>
+        /// <param name="npcRef"></param>
+        internal void CreateEnemies(SingleCombatMapReference singleCombatMapReference,
+            EnemyReference primaryEnemyReference, int nPrimaryEnemies,
+            EnemyReference secondaryEnemyReference, int nSecondaryEnemies, NonPlayerCharacterReference npcRef)
+        {
+            int nEnemyIndex = 0;
+
+            // dungeons do not have encountered based enemies (but where are the dragons???)
+            if (singleCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Dungeon)
             {
-                case WalkableType.CombatWater:
-                    return tileReference.IsWaterEnemyPassable;
-                case WalkableType.CombatFlyThroughWalls:
-                    // if you can fly through walls, then you can fly through anything except people and enemies
-                    return true;
-                case WalkableType.CombatLandAndWater:
-                    return IsWalkingPassable(tileReference) || tileReference.IsWaterEnemyPassable;
-                case WalkableType.CombatLand:
-                    return IsWalkingPassable(tileReference);
-                default:
-                    throw new Ultima5ReduxException(
-                        "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
+                for (nEnemyIndex = 0; nEnemyIndex < SingleCombatMapReference.NUM_ENEMIES; nEnemyIndex++)
+                {
+                    CreateEnemy(nEnemyIndex, singleCombatMapReference, primaryEnemyReference, npcRef);
+                }
+
+                return;
+            }
+
+            if (npcRef != null) Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0);
+
+            // if there is only a single enemy then we always give them first position (such as NPC fights)
+            if (nPrimaryEnemies == 1 && nSecondaryEnemies == 0)
+            {
+                CreateEnemy(0, singleCombatMapReference, primaryEnemyReference, npcRef);
+                return;
+            }
+
+            // for regular combat maps, we introduce some randomness 
+            Queue<int> monsterIndex = Utils.CreateRandomizedIntegerQueue(SingleCombatMapReference.NUM_ENEMIES);
+
+            for (int nIndex = 0; nIndex < nPrimaryEnemies; nIndex++, nEnemyIndex++)
+            {
+                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, primaryEnemyReference, null);
+            }
+
+            for (int nIndex = 0; nIndex < nSecondaryEnemies; nIndex++, nEnemyIndex++)
+            {
+                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference, null);
             }
         }
 
-        private bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
-                                                                       tileReference.Index == GameReferences.SpriteTileReferences
-                                                                           .GetTileReferenceByName("RegularDoor")
-                                                                           .Index ||
-                                                                       tileReference.Index == GameReferences.SpriteTileReferences
-                                                                           .GetTileReferenceByName("RegularDoorView")
-                                                                           .Index;
+        private Enemy CreateEnemy(Point2D position, EnemyReference enemyReference)
+        {
+            Enemy enemy = CombatMapUnits.CreateEnemy(position, enemyReference, out int _);
+            return enemy;
+        }
+
+
+        /// <summary>
+        ///     Creates a single enemy in the context of the combat map.
+        /// </summary>
+        /// <param name="nEnemyIndex">0 based index that reflects the combat maps enemy index list</param>
+        /// <param name="singleCombatMapReference">reference of the combat map</param>
+        /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
+        /// <param name="npcRef"></param>
+        /// <returns>the enemy that was just created</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private Enemy CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
+            EnemyReference enemyReference, NonPlayerCharacterReference npcRef)
+        {
+            SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType =
+                singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
+            Point2D enemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
+
+            Enemy enemy = null;
+            switch (combatMapSpriteType)
+            {
+                case SingleCombatMapReference.CombatMapSpriteType.Nothing:
+                    //Debug.Assert(enemyPosition.X == 0 && enemyPosition.Y == 0);
+                    break;
+                case SingleCombatMapReference.CombatMapSpriteType.Thing:
+                    Debug.WriteLine("It's a chest or maybe a dead body!");
+                    break;
+                case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
+                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                        GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
+                    break;
+                case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
+                    Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
+                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                        enemyReference, out int _);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            // make sure the tile that the enemy occupies is not walkable
+            // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
+            SetNotWalkableDueToCombatMapUnit(enemyPosition);
+            return enemy;
+        }
+
+        /// <summary>
+        ///     Creates a party in the context of the combat map
+        /// </summary>
+        /// <param name="entryDirection">which direction did they enter from?</param>
+        /// <param name="activeRecords">all character records</param>
+        internal void CreateParty(SingleCombatMapReference.EntryDirection entryDirection,
+            PlayerCharacterRecords activeRecords)
+        {
+            _playerCharacterRecords = activeRecords;
+
+            // clear any previous combat map units
+            CombatMapUnits.InitializeCombatMapReferences();
+
+            List<Point2D> playerStartPositions =
+                TheCombatMapReference.GetPlayerStartPositions(entryDirection);
+
+            // cycle through each player and make a map unit
+            for (int nPlayer = 0; nPlayer < activeRecords.GetNumberOfActiveCharacters(); nPlayer++)
+            {
+                PlayerCharacterRecord record = activeRecords.Records[nPlayer];
+
+                CombatPlayer combatPlayer = new CombatPlayer(record,
+                    playerStartPositions[nPlayer], _inventory);
+
+                // make sure the tile that the player occupies is not walkable
+                GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
+
+                CombatMapUnits.CurrentMapUnits.AllMapUnits[nPlayer] = combatPlayer;
+            }
+        }
+
+        public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
+
+        /// <summary>
+        ///     Takes an enemy and divides them on the combat map, making a fresh copy of them
+        /// </summary>
+        /// <returns>the new enemy if they did divide, otherwise null</returns>
+        /// <param name="enemy"></param>
+        public Enemy DivideEnemy(Enemy enemy)
+        {
+            // is there a free spot surrounding the enemy?
+            Point2D newEnemyPosition = GetRandomEmptySpaceAroundEnemy(enemy);
+            if (newEnemyPosition == null)
+                return null;
+
+            // creates a new enemy of the same type and returns it
+            int nNextCombatMapUnitIndex = GetNextAvailableCombatMapUnitIndex();
+            if (nNextCombatMapUnitIndex == -1) return null;
+
+            Enemy newEnemy = CreateEnemy(newEnemyPosition, enemy.EnemyReference);
+
+            if (newEnemy == null)
+                throw new Ultima5ReduxException("Tried to divide enemy, but they were null: " +
+                                                enemy.EnemyReference.KeyTileReference.Name);
+            newEnemy.MapUnitPosition = new MapUnitPosition(newEnemyPosition.X, newEnemyPosition.Y, 0);
+            _initiativeQueue.AddCombatMapUnitToQueue(newEnemy);
+            return newEnemy;
+        }
+
+        public List<CombatMapUnit> GetActiveCombatMapUnitsByType(CombatMapUnitEnum combatMapUnitEnum)
+        {
+            switch (combatMapUnitEnum)
+            {
+                case CombatMapUnitEnum.All:
+                    return AllVisibleAttackableCombatMapUnits;
+                case CombatMapUnitEnum.CombatPlayer:
+                    return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive).ToList();
+                case CombatMapUnitEnum.Enemy:
+                    return AllEnemiesGeneric.Where(enemy => enemy.IsActive).ToList();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(combatMapUnitEnum), combatMapUnitEnum, null);
+            }
+        }
+
+        private T GetClosestCombatMapUnitInRange<T>(CombatMapUnit attackingUnit, int nRange) where T : CombatMapUnit
+        {
+            double dBestDistanceToAttack = 150f;
+            T bestOpponent = null;
+
+            //or (int nIndex = 0; nIndex < nMapUnits; nIndex++)
+            foreach (CombatMapUnit combatMapUnit in CombatMapUnits.CombatMapMapUnitCollection.AllCombatMapUnits)
+            {
+                if (!(combatMapUnit is T enemy)) continue;
+                if (!IsCombatMapUnitInRange(attackingUnit, enemy, nRange)) continue;
+                // if the enemy unit is invisible or charmed then they should not be targeted
+                if (enemy.IsInvisible || enemy.IsCharmed) continue;
+
+                double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(attackingUnit.MapUnitPosition.XY);
+                if (!(dDistance < dBestDistanceToAttack)) continue;
+
+                dBestDistanceToAttack = dDistance;
+                bestOpponent = enemy;
+            }
+
+            return bestOpponent;
+        }
+
+        private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)
+        {
+            return GetClosestCombatMapUnitInRange<CombatPlayer>(enemy, enemy.EnemyReference.AttackRange);
+        }
+
+        public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem)
+        {
+            return GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer,
+                combatItem.TheCombatItemReference.Range);
+        }
+
+        private int GetCombatMapUnitIndex(CombatMapUnit combatMapUnit)
+        {
+            if (combatMapUnit == null) return -1;
+            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
+            {
+                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] == combatMapUnit) return i;
+            }
+
+            return -1;
+        }
+
+        public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) =>
+            CombatMapUnits.CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
 
         public string GetCombatPlayerOutputText()
         {
@@ -202,6 +449,15 @@ namespace Ultima5Redux.Maps
             if (combatPlayer == null)
                 throw new Ultima5ReduxException("Invalid Combat Player");
             return combatPlayer.Record.Name + ", armed with " + combatPlayer.GetAttackWeaponsString();
+        }
+
+        public CombatMapUnit GetCombatUnit(Point2D unitPosition)
+        {
+            MapUnit mapUnit = _virtualMap.GetTopVisibleMapUnit(unitPosition, true);
+
+            if (mapUnit is CombatMapUnit unit) return unit;
+
+            return null;
         }
 
         private CombatPlayer GetCurrentCombatPlayer()
@@ -214,24 +470,303 @@ namespace Ultima5Redux.Maps
             return combatPlayer;
         }
 
-        public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
-        public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
-
-        private void ClearCurrentCombatItemQueue()
+        /// <summary>
+        ///     Gets all tiles that are at the edge of the screen and are escapable based on the given position
+        /// </summary>
+        /// <param name="fromPosition"></param>
+        /// <param name="walkableType"></param>
+        /// <returns>a list of all potential positions</returns>
+        public List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
         {
-            if (_currentCombatItemQueue == null)
-                _currentCombatItemQueue = new Queue<CombatItem>();
-            else
-                _currentCombatItemQueue.Clear();
+            _ = fromPosition;
+            List<Point2D> points = new List<Point2D>();
+
+            for (int nIndex = 0; nIndex < NumOfXTiles; nIndex++)
+            {
+                Point2D top = new Point2D(nIndex, 0);
+                Point2D bottom = new Point2D(nIndex, NumOfYTiles - 1);
+                Point2D left = new Point2D(0, nIndex);
+                Point2D right = new Point2D(NumOfXTiles - 1, nIndex);
+
+                if (IsTileWalkable(top, walkableType)) points.Add(top);
+                if (IsTileWalkable(bottom, walkableType)) points.Add(bottom);
+
+                if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
+
+                if (IsTileWalkable(left, walkableType)) points.Add(left);
+                if (IsTileWalkable(right, walkableType)) points.Add(right);
+            }
+
+            return points;
         }
 
-        public void BuildCombatItemQueue(List<CombatItem> combatItems) =>
-            _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
-
-        private bool IsTileRangePathBlocked(Point2D xy)
+        /// <summary>
+        ///     Gets the best escape route based on current position
+        /// </summary>
+        /// <param name="fromPosition"></param>
+        /// <param name="walkableType"></param>
+        /// <returns>path to exit, or null if none exist</returns>
+        public Stack<Node> GetEscapeRoute(Point2D fromPosition, WalkableType walkableType)
         {
-            TileReference tileReference = GetTileReference(xy);
-            return !tileReference.RangeWeapon_Passable;
+            List<Point2D> points = GetEscapablePoints(fromPosition, walkableType);
+
+            int nShortestPath = 0xFFFF;
+            Stack<Node> shortestPath = null;
+
+            foreach (Point2D destinationPoint in points)
+            {
+                Stack<Node> currentPath = GetAStarByWalkableType(walkableType).FindPath(fromPosition, destinationPoint);
+                if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
+
+                nShortestPath = currentPath.Count;
+                shortestPath = currentPath;
+            }
+
+            return shortestPath;
+        }
+
+        public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
+
+        public bool GetHasPlayerChangedSinceLastCheckAndReset()
+        {
+            if (!_bPlayerHasChanged) return false;
+            _bPlayerHasChanged = false;
+            return true;
+        }
+
+        private int GetNextAvailableCombatMapUnitIndex()
+        {
+            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
+            {
+                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] is EmptyMapUnit) return i;
+            }
+
+            return -1;
+        }
+
+
+        public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
+        {
+            int nOffset = GetCombatMapUnitIndex(currentEnemy);
+            // -1 indicates it wasn't found, so could be dead or null. We set it to the beginning
+            if (nOffset == -1) nOffset = 0;
+
+            int nMapUnits = CombatMapUnits.CurrentMapUnits.AllMapUnits.Count;
+
+            for (int i = 0; i < nMapUnits; i++)
+            {
+                // we start at the next position, and wrap around ensuring we have hit all possible enemies
+                int nIndex = (i + nOffset + 1) % nMapUnits;
+                if (!(CombatMapUnits.CurrentMapUnits.AllMapUnits[nIndex] is Enemy enemy)) continue;
+                if (!enemy.IsActive) continue;
+                if (CurrentCombatPlayer == null)
+                    throw new Ultima5ReduxException("Tried to get next enemy, but couldn't find the active player");
+                if (CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Gets a random empty space surrounding a particular enemy. Typically for things like enemy division
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <returns>an available point, or null if no points are available</returns>
+        private Point2D GetRandomEmptySpaceAroundEnemy(Enemy enemy)
+        {
+            List<Point2D> surroundingPoints =
+                enemy.MapUnitPosition.XY.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
+            List<Point2D> emptySpacePoints = new List<Point2D>();
+            foreach (Point2D point in surroundingPoints)
+            {
+                // the check for IsTileWalkable may be redundant, but just in case
+                // we create a list of potential free spaces around the enemy
+                bool bIsAStarWalkable = GetAStarByMapUnit(enemy).GetWalkable(point);
+                if (IsTileWalkable(point, GetWalkableTypeByEnemy(enemy))
+                    //WalkableType.CombatLand) 
+                    && bIsAStarWalkable)
+                {
+                    emptySpacePoints.Add(point);
+                }
+            }
+
+            if (emptySpacePoints.Count == 0) return null;
+            Point2D randomPoint = emptySpacePoints[Utils.GetNumberBetween(0, emptySpacePoints.Count - 1)];
+            return (randomPoint);
+        }
+
+        /// <summary>
+        ///     Returns a random point surrounding a particular point - that ISN'T "notThisPoint"
+        ///     Think about it in terms of missing - you missed the enemy (notThisPoint) so you hit
+        ///     some other tile surrounding it
+        /// </summary>
+        /// <param name="surroundThisPoint"></param>
+        /// <param name="notThisPoint"></param>
+        /// <returns></returns>
+        private Point2D GetRandomSurroundingPointThatIsnt(Point2D surroundThisPoint, Point2D notThisPoint)
+        {
+            List<Point2D> surroundingCombatPlayerPoints =
+                surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1,
+                    NumOfYTiles - 1);
+            Point2D randomSurroundingPoint;
+            Random random = new Random();
+            for (;;)
+            {
+                int nIndex = random.Next() % surroundingCombatPlayerPoints.Count;
+                randomSurroundingPoint = surroundingCombatPlayerPoints[nIndex];
+                if (randomSurroundingPoint != notThisPoint)
+                    break;
+                surroundingCombatPlayerPoints.RemoveAt(nIndex);
+            }
+
+            return randomSurroundingPoint;
+        }
+
+        public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
+        {
+            // if there aren't the minimum number of turns, then we force it to add additional turns to at least
+            // the stated number of units
+            if (_initiativeQueue.TotalTurnsInQueue < nUnits)
+                _initiativeQueue.CalculateNextInitiativeQueue();
+
+            return _initiativeQueue.GetTopNCombatMapUnits(nUnits);
+        }
+
+        private WalkableType GetWalkableTypeByEnemy(Enemy enemy)
+        {
+            WalkableType walkableType;
+            if (enemy.EnemyReference.IsWaterEnemy)
+                walkableType = WalkableType.CombatWater;
+            else if (enemy.EnemyReference.CanPassThroughWalls)
+                walkableType = WalkableType.CombatFlyThroughWalls;
+            else if (enemy.EnemyReference.CanFlyOverWater)
+                walkableType = WalkableType.CombatLandAndWater;
+            else
+                walkableType = WalkableType.CombatLand;
+            return walkableType;
+        }
+
+        private AdditionalHitStateAction HandleHitState(CombatMapUnit.HitState hitState,
+            CombatMapUnit affectedCombatMapUnit)
+        {
+            AdditionalHitStateAction additionalHitStateAction = AdditionalHitStateAction.None;
+            // some things only occur if they are hit - but not if they are killed or missed
+            if (IsHitButNotKilled(hitState))
+            {
+                // do they multiply?
+                if (affectedCombatMapUnit is Enemy enemy &&
+                    enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) &&
+                    Utils.OneInXOdds(2))
+                {
+                    Enemy newEnemy = DivideEnemy(enemy);
+                    if (newEnemy != null) additionalHitStateAction = AdditionalHitStateAction.EnemyDivided;
+                }
+            }
+
+            switch (hitState)
+            {
+                case CombatMapUnit.HitState.Grazed:
+                    break;
+                case CombatMapUnit.HitState.Missed:
+                    break;
+                case CombatMapUnit.HitState.BarelyWounded:
+                    break;
+                case CombatMapUnit.HitState.LightlyWounded:
+                    break;
+                case CombatMapUnit.HitState.HeavilyWounded:
+                    break;
+                case CombatMapUnit.HitState.CriticallyWounded:
+                    break;
+                case CombatMapUnit.HitState.Fleeing:
+                    break;
+                case CombatMapUnit.HitState.Dead:
+                    if (affectedCombatMapUnit is Enemy deadEnemy)
+                    {
+                        // if the enemy was an NPC then we kill them!
+                        if (deadEnemy.NPCRef != null)
+                        {
+                            deadEnemy.NPCState.IsDead = true;
+                        }
+
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
+                            WalkableType.CombatFlyThroughWalls);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
+                            WalkableType.CombatLandAndWater);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(hitState), hitState, null);
+            }
+
+            return additionalHitStateAction;
+        }
+
+
+        private TurnResult HandleRangedMissed(CombatMapUnit attackingCombatMapUnit, Point2D attackPosition,
+            out CombatMapUnit targetedCombatMapUnit, int nAttackMax, out Point2D missedPoint, out string outputStr)
+        {
+            // they are ranged, and missed which means we need to pick a new tile to attack
+            // get a list of all surround tiles surrounding the player that they are attacking
+            outputStr = "";
+            missedPoint = null;
+
+            Point2D newAttackPosition = GetRandomSurroundingPointThatIsnt(attackPosition,
+                attackPosition);
+            Debug.Assert(newAttackPosition != null);
+
+            targetedCombatMapUnit = GetCombatUnit(newAttackPosition);
+
+            // We will check the raycast and determine if the missed shot in fact actually gets blocked - 
+            // doing it in here will ensure that no damage is computed against an enemy if they are targeted
+            // OR if the attack position is outside of the current map area, it means that a player has left the map
+            if (IsRangedPathBlocked(attackPosition, newAttackPosition, out missedPoint)
+                || newAttackPosition.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
+            {
+                AdvanceToNextCombatMapUnit();
+                return TurnResult.EnemyMissed;
+            }
+
+            if (targetedCombatMapUnit == null)
+            {
+                missedPoint = newAttackPosition;
+                AdvanceToNextCombatMapUnit();
+                return TurnResult.EnemyMissed;
+            }
+
+            outputStr += "\nBut they accidentally hit another!";
+            // we attack the thing we accidentally hit
+            CombatMapUnit.HitState _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit,
+                nAttackMax, out string missedAttackOutputStr, out string debugStr, true);
+            // temporary for debugging
+            missedAttackOutputStr += "\n" + debugStr;
+            outputStr += "\n" + missedAttackOutputStr;
+            AdvanceToNextCombatMapUnit();
+            return TurnResult.EnemyMissedButHit;
+        }
+
+        internal void InitializeInitiativeQueue()
+        {
+            _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords, this);
+            _initiativeQueue.InitializeInitiativeQueue();
+            RefreshCurrentCombatPlayer();
+        }
+
+        private bool IsCombatMapUnitInRange(CombatMapUnit attackingUnit, CombatMapUnit opponentCombatMapUnit,
+            int nRange)
+        {
+            if (!opponentCombatMapUnit.IsActive) return false;
+            if (!opponentCombatMapUnit.IsAttackable) return false;
+            if (nRange == 1 && !attackingUnit.CanReachForMeleeAttack(opponentCombatMapUnit, nRange)) return false;
+            if (nRange > 1)
+            {
+                if (IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY,
+                    out _)) return false;
+            }
+
+            return true;
         }
 
         private bool IsRangedPathBlocked(Point2D attackingPoint, Point2D opponentMapUnit, out Point2D firstBlockPoint)
@@ -252,6 +787,225 @@ namespace Ultima5Redux.Maps
             firstBlockPoint = null;
             return false;
         }
+
+        private bool IsTileRangePathBlocked(Point2D xy)
+        {
+            TileReference tileReference = GetTileReference(xy);
+            return !tileReference.RangeWeapon_Passable;
+        }
+
+        private bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
+                                                                       tileReference.Index == GameReferences
+                                                                           .SpriteTileReferences
+                                                                           .GetTileReferenceByName("RegularDoor")
+                                                                           .Index ||
+                                                                       tileReference.Index == GameReferences
+                                                                           .SpriteTileReferences
+                                                                           .GetTileReferenceByName("RegularDoorView")
+                                                                           .Index;
+
+        public void MakePlayerEscape(CombatPlayer combatPlayer)
+        {
+            Debug.Assert(!combatPlayer.HasEscaped);
+
+            combatPlayer.HasEscaped = true;
+            AdvanceToNextCombatMapUnit();
+        }
+
+        /// <summary>
+        ///     Moves the active combat unit to a new map location
+        /// </summary>
+        /// <param name="xy"></param>
+        public void MoveActiveCombatMapUnit(Point2D xy)
+        {
+            CombatMapUnit currentCombatUnit = _initiativeQueue.GetCurrentCombatUnit();
+            if (currentCombatUnit == null)
+                throw new Ultima5ReduxException(
+                    "Tried to move active combat unit, but couldn't find them in initiative queue");
+            // reset the a star walking rules
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLand);
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatWater);
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatFlyThroughWalls);
+            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLandAndWater);
+
+            currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+
+            WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
+            SetWalkableTile(xy, false, walkableType);
+        }
+
+        /// <summary>
+        ///     Moves the combat map unit to the CombatPlayer for whom they can reach in the fewest number of steps
+        /// </summary>
+        /// <param name="activeCombatUnit">the combat map unit that wants to attack a combat player</param>
+        /// <param name="preferredAttackTarget">the type of target you will target</param>
+        /// <param name="bMoved">did the CombatMapUnit move</param>
+        /// <returns>The combat player that they are heading towards</returns>
+        private CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit,
+            CombatMapUnitEnum preferredAttackTarget, out bool bMoved)
+        {
+            if (activeCombatUnit == null)
+                throw new Ultima5ReduxException("Passed a null active combat unit when moving to closest unit");
+
+            const int NoPath = 0xFFFF;
+            //bool bCharmed = activeCombatUnit.IsCharmed;
+            bMoved = false;
+
+            int nMinMoves = 0xFFFF;
+            Stack<Node> preferredRoute = null;
+            CombatMapUnit preferredAttackVictim = null;
+
+            AStar aStar = GetAStarByMapUnit(activeCombatUnit);
+
+            List<Point2D> potentialTargetsPoints = new List<Point2D>();
+
+            foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
+            {
+                Point2D combatMapUnitXY = combatMapUnit.MapUnitPosition.XY;
+
+                potentialTargetsPoints.Add(combatMapUnitXY);
+
+                // get the shortest path to the unit - we ignore the range value because by calling this method we are insisting
+                // that they move
+                Stack<Node> theWay = aStar.FindPath(activeCombatUnit.MapUnitPosition.XY, combatMapUnitXY);
+                int nMoves = theWay?.Count ?? NoPath;
+                if (nMoves < nMinMoves)
+                {
+                    nMinMoves = nMoves;
+                    preferredRoute = theWay;
+                    preferredAttackVictim = combatMapUnit;
+                }
+            }
+
+            Point2D activeCombatUnitXY = activeCombatUnit.MapUnitPosition.XY;
+
+            if (nMinMoves == NoPath)
+            {
+                // if there is no path, then lets do some dirty checks to see if we can at least move closer
+
+                // get the surrounding points around current active unit
+                List<Point2D> surroundingPoints =
+                    activeCombatUnitXY.GetConstrainedFourDirectionSurroundingPoints(NumOfXTiles - 1, NumOfYTiles - 1);
+
+                double fShortestPath = 999f;
+                Point2D bestOpponentPoint = null;
+                // cycle through all potential targets and determine and pick the closest available target
+                foreach (Point2D point in potentialTargetsPoints)
+                {
+                    double fDistance = point.DistanceBetween(activeCombatUnitXY);
+                    if (fDistance < fShortestPath)
+                    {
+                        fShortestPath = fDistance;
+                        bestOpponentPoint = point.Copy();
+                    }
+                }
+
+                // there is not best point, so give up - also, this shouldn't really happen, but not 
+                // worth crashing over if it does
+                if (bestOpponentPoint == null)
+                    return null;
+
+                // we start with the shortest path being the current tiles distance to the best enemies tile
+                fShortestPath = activeCombatUnitXY.DistanceBetween(bestOpponentPoint);
+
+                Point2D nextBestMovePoint = null;
+                List<Point2D> wanderablePoints = new List<Point2D>();
+                // go through of each surrounding points and find the shortest path based to an opponent
+                // on the free tiles
+                foreach (Point2D point in surroundingPoints)
+                {
+                    // if it isn't walkable then we skip it
+                    if (!GetAStarByMapUnit(activeCombatUnit).GetWalkable(point)) continue;
+                    // keep track of the points we could wander to if we don't find a good path
+                    wanderablePoints.Add(point);
+                    double fDistance = point.DistanceBetween(bestOpponentPoint);
+                    if (fDistance < fShortestPath)
+                    {
+                        fShortestPath = fDistance;
+                        nextBestMovePoint = point;
+                    }
+                }
+
+                if (nextBestMovePoint == null)
+                {
+                    if (wanderablePoints.Count == 0) return null;
+                    Random ran = new Random();
+
+                    // only a 50% chance they will wander
+                    if (ran.Next() % 2 == 0) return null;
+
+                    // wander logic - we are already the closest to the selected enemy
+                    int nChoices = wanderablePoints.Count;
+                    int nRandomChoice = ran.Next() % nChoices;
+                    nextBestMovePoint = wanderablePoints[nRandomChoice];
+                }
+
+                // we think we found the next best path
+                preferredRoute = new Stack<Node>();
+                preferredRoute.Push(aStar.GetNode(nextBestMovePoint));
+            }
+
+            if (preferredRoute == null)
+                throw new Ultima5ReduxException("Preferred route object was oddly empty");
+
+            Point2D nextPosition = preferredRoute.Pop().Position;
+
+            MoveActiveCombatMapUnit(nextPosition);
+            bMoved = true;
+
+            return preferredAttackVictim;
+        }
+
+        private CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit, out bool bMoved) =>
+            MoveToClosestAttackableCombatMapUnit(activeCombatUnit, CombatMapUnitEnum.CombatPlayer, out bMoved) as
+                CombatPlayer;
+
+        private Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit, out string outputStr, out bool bMoved)
+        {
+            Enemy enemy =
+                MoveToClosestAttackableCombatMapUnit(activeMapUnit, CombatMapUnitEnum.Enemy, out bMoved) as Enemy;
+            outputStr = "";
+            if (enemy == null)
+            {
+                if (bMoved) outputStr = $"{activeMapUnit.FriendlyName} moved.\nUnable to target enemy.";
+                else outputStr = "Unable to target or advance on enemy.";
+            }
+            else
+            {
+                if (CurrentCombatPlayer == null)
+                    throw new Ultima5ReduxException(
+                        "Current combat player was null when trying to move closer to an enemy");
+                outputStr = $"{CurrentCombatPlayer.FriendlyName} advances on {enemy.FriendlyName}";
+            }
+
+            AdvanceToNextCombatMapUnit();
+            return enemy;
+        }
+
+        public Enemy MoveToClosestAttackableEnemy(out string outputStr, out bool bMoved) =>
+            MoveToClosestAttackableEnemy(CurrentCombatPlayer, out outputStr, out bMoved);
+
+        /// <summary>
+        ///     Makes the next available character escape
+        /// </summary>
+        /// <param name="escapedPlayer">the player who escaped, or null if none left</param>
+        /// <returns>true if a player escaped, false if none were found</returns>
+        public bool NextCharacterEscape(out CombatPlayer escapedPlayer)
+        {
+            foreach (CombatPlayer combatPlayer in CombatMapUnits.CurrentMapUnits.CombatPlayers)
+            {
+                if (combatPlayer.HasEscaped) continue;
+
+                MakePlayerEscape(combatPlayer);
+                escapedPlayer = combatPlayer;
+                return true;
+            }
+
+            escapedPlayer = null;
+            return false;
+        }
+
+        public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
 
 
         public TurnResult ProcessCombatPlayerTurn(SelectionAction selectedAction, Point2D actionPosition,
@@ -327,7 +1081,7 @@ namespace Ultima5Redux.Maps
                             throw new Ultima5ReduxException("Opponent map unit is null");
                         if (combatPlayer == null)
                             throw new Ultima5ReduxException("Combat player is null");
-                        
+
                         bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
                             opponentMapUnit.MapUnitPosition.XY,
                             out missedPoint);
@@ -407,72 +1161,6 @@ namespace Ultima5Redux.Maps
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        private AdditionalHitStateAction HandleHitState(CombatMapUnit.HitState hitState,
-            CombatMapUnit affectedCombatMapUnit)
-        {
-            AdditionalHitStateAction additionalHitStateAction = AdditionalHitStateAction.None;
-            // some things only occur if they are hit - but not if they are killed or missed
-            if (IsHitButNotKilled(hitState))
-            {
-                // do they multiply?
-                if (affectedCombatMapUnit is Enemy enemy &&
-                    enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) &&
-                    Utils.OneInXOdds(2))
-                {
-                    Enemy newEnemy = DivideEnemy(enemy);
-                    if (newEnemy != null) additionalHitStateAction = AdditionalHitStateAction.EnemyDivided;
-                }
-            }
-
-            switch (hitState)
-            {
-                case CombatMapUnit.HitState.Grazed:
-                    break;
-                case CombatMapUnit.HitState.Missed:
-                    break;
-                case CombatMapUnit.HitState.BarelyWounded:
-                    break;
-                case CombatMapUnit.HitState.LightlyWounded:
-                    break;
-                case CombatMapUnit.HitState.HeavilyWounded:
-                    break;
-                case CombatMapUnit.HitState.CriticallyWounded:
-                    break;
-                case CombatMapUnit.HitState.Fleeing:
-                    break;
-                case CombatMapUnit.HitState.Dead:
-                    if (affectedCombatMapUnit is Enemy deadEnemy)
-                    {
-                        // if the enemy was an NPC then we kill them!
-                        if (deadEnemy.NPCRef != null)
-                        {
-                            deadEnemy.NPCState.IsDead = true;
-                        }
-
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater);
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                            WalkableType.CombatFlyThroughWalls);
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                            WalkableType.CombatLandAndWater);
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(hitState), hitState, null);
-            }
-
-            return additionalHitStateAction;
-        }
-
-        // if hit, but not killed
-        private bool IsHitButNotKilled(CombatMapUnit.HitState hitState) =>
-            hitState == CombatMapUnit.HitState.BarelyWounded ||
-            hitState == CombatMapUnit.HitState.LightlyWounded ||
-            hitState == CombatMapUnit.HitState.HeavilyWounded ||
-            hitState == CombatMapUnit.HitState.CriticallyWounded ||
-            hitState == CombatMapUnit.HitState.Fleeing;
 
         /// <summary>
         ///     Attempts to processes the turn of the current combat unit - either CombatPlayer or Enemy.
@@ -663,74 +1351,6 @@ namespace Ultima5Redux.Maps
             return TurnResult.EnemyMoved;
         }
 
-        private WalkableType GetWalkableTypeByEnemy(Enemy enemy)
-        {
-            WalkableType walkableType;
-            if (enemy.EnemyReference.IsWaterEnemy)
-                walkableType = WalkableType.CombatWater;
-            else if (enemy.EnemyReference.CanPassThroughWalls)
-                walkableType = WalkableType.CombatFlyThroughWalls;
-            else if (enemy.EnemyReference.CanFlyOverWater)
-                walkableType = WalkableType.CombatLandAndWater;
-            else
-                walkableType = WalkableType.CombatLand;
-            return walkableType;
-        }
-
-        /// <summary>
-        ///     Takes an enemy and divides them on the combat map, making a fresh copy of them
-        /// </summary>
-        /// <returns>the new enemy if they did divide, otherwise null</returns>
-        /// <param name="enemy"></param>
-        public Enemy DivideEnemy(Enemy enemy)
-        {
-            // is there a free spot surrounding the enemy?
-            Point2D newEnemyPosition = GetRandomEmptySpaceAroundEnemy(enemy);
-            if (newEnemyPosition == null)
-                return null;
-
-            // creates a new enemy of the same type and returns it
-            int nNextCombatMapUnitIndex = GetNextAvailableCombatMapUnitIndex();
-            if (nNextCombatMapUnitIndex == -1) return null;
-            
-            Enemy newEnemy = CreateEnemy(newEnemyPosition, enemy.EnemyReference);
-
-            if (newEnemy == null)
-                throw new Ultima5ReduxException("Tried to divide enemy, but they were null: " +
-                                                enemy.EnemyReference.KeyTileReference.Name);
-            newEnemy.MapUnitPosition = new MapUnitPosition(newEnemyPosition.X, newEnemyPosition.Y, 0);
-            _initiativeQueue.AddCombatMapUnitToQueue(newEnemy);
-            return newEnemy;
-        }
-
-        /// <summary>
-        ///     Gets a random empty space surrounding a particular enemy. Typically for things like enemy division
-        /// </summary>
-        /// <param name="enemy"></param>
-        /// <returns>an available point, or null if no points are available</returns>
-        private Point2D GetRandomEmptySpaceAroundEnemy(Enemy enemy)
-        {
-            List<Point2D> surroundingPoints =
-                enemy.MapUnitPosition.XY.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
-            List<Point2D> emptySpacePoints = new List<Point2D>();
-            foreach (Point2D point in surroundingPoints)
-            {
-                // the check for IsTileWalkable may be redundant, but just in case
-                // we create a list of potential free spaces around the enemy
-                bool bIsAStarWalkable = GetAStarByMapUnit(enemy).GetWalkable(point);
-                if (IsTileWalkable(point, GetWalkableTypeByEnemy(enemy))
-                    //WalkableType.CombatLand) 
-                    && bIsAStarWalkable)
-                {
-                    emptySpacePoints.Add(point);
-                }
-            }
-
-            if (emptySpacePoints.Count == 0) return null;
-            Point2D randomPoint = emptySpacePoints[Utils.GetNumberBetween(0, emptySpacePoints.Count - 1)];
-            return (randomPoint);
-        }
-
 
         private void RefreshCurrentCombatPlayer()
         {
@@ -745,486 +1365,11 @@ namespace Ultima5Redux.Maps
             BuildCombatItemQueue(combatItems);
         }
 
-
-        private TurnResult HandleRangedMissed(CombatMapUnit attackingCombatMapUnit, Point2D attackPosition,
-            out CombatMapUnit targetedCombatMapUnit, int nAttackMax, out Point2D missedPoint, out string outputStr)
-        {
-            // they are ranged, and missed which means we need to pick a new tile to attack
-            // get a list of all surround tiles surrounding the player that they are attacking
-            outputStr = "";
-            missedPoint = null;
-
-            Point2D newAttackPosition = GetRandomSurroundingPointThatIsnt(attackPosition,
-                attackPosition);
-            Debug.Assert(newAttackPosition != null);
-
-            targetedCombatMapUnit = GetCombatUnit(newAttackPosition);
-
-            // We will check the raycast and determine if the missed shot in fact actually gets blocked - 
-            // doing it in here will ensure that no damage is computed against an enemy if they are targeted
-            // OR if the attack position is outside of the current map area, it means that a player has left the map
-            if (IsRangedPathBlocked(attackPosition, newAttackPosition, out missedPoint)
-                || newAttackPosition.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
-            {
-                AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyMissed;
-            }
-
-            if (targetedCombatMapUnit == null)
-            {
-                missedPoint = newAttackPosition;
-                AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyMissed;
-            }
-
-            outputStr += "\nBut they accidentally hit another!";
-            // we attack the thing we accidentally hit
-            CombatMapUnit.HitState _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit,
-                nAttackMax, out string missedAttackOutputStr, out string debugStr, true);
-            // temporary for debugging
-            missedAttackOutputStr += "\n" + debugStr;
-            outputStr += "\n" + missedAttackOutputStr;
-            AdvanceToNextCombatMapUnit();
-            return TurnResult.EnemyMissedButHit;
-        }
-
-        /// <summary>
-        ///     Returns a random point surrounding a particular point - that ISN'T "notThisPoint"
-        ///     Think about it in terms of missing - you missed the enemy (notThisPoint) so you hit
-        ///     some other tile surrounding it
-        /// </summary>
-        /// <param name="surroundThisPoint"></param>
-        /// <param name="notThisPoint"></param>
-        /// <returns></returns>
-        private Point2D GetRandomSurroundingPointThatIsnt(Point2D surroundThisPoint, Point2D notThisPoint)
-        {
-            List<Point2D> surroundingCombatPlayerPoints =
-                surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1,
-                    NumOfYTiles - 1);
-            Point2D randomSurroundingPoint;
-            Random random = new Random();
-            for (;;)
-            {
-                int nIndex = random.Next() % surroundingCombatPlayerPoints.Count;
-                randomSurroundingPoint = surroundingCombatPlayerPoints[nIndex];
-                if (randomSurroundingPoint != notThisPoint)
-                    break;
-                surroundingCombatPlayerPoints.RemoveAt(nIndex);
-            }
-
-            return randomSurroundingPoint;
-        }
-
-        /// <summary>
-        ///     Moves the active combat unit to a new map location
-        /// </summary>
-        /// <param name="xy"></param>
-        public void MoveActiveCombatMapUnit(Point2D xy)
-        {
-            CombatMapUnit currentCombatUnit = _initiativeQueue.GetCurrentCombatUnit();
-            if (currentCombatUnit == null)
-                throw new Ultima5ReduxException(
-                    "Tried to move active combat unit, but couldn't find them in initiative queue");
-            // reset the a star walking rules
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLand);
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatWater);
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatFlyThroughWalls);
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLandAndWater);
-
-            currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
-
-            WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
-            SetWalkableTile(xy, false, walkableType);
-        }
-
-        public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) =>
-            CombatMapUnits.CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
-
-        public CombatMapUnit AdvanceToNextCombatMapUnit()
-        {
-            CombatMapUnit combatMapUnit = _initiativeQueue.AdvanceToNextCombatMapUnit();
-
-            _bPlayerHasChanged = true;
-
-            RefreshCurrentCombatPlayer();
-            return combatMapUnit;
-        }
-
-        public List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
-        {
-            // if there aren't the minimum number of turns, then we force it to add additional turns to at least
-            // the stated number of units
-            if (_initiativeQueue.TotalTurnsInQueue < nUnits)
-                _initiativeQueue.CalculateNextInitiativeQueue();
-
-            return _initiativeQueue.GetTopNCombatMapUnits(nUnits);
-        }
-
-        private int GetCombatMapUnitIndex(CombatMapUnit combatMapUnit)
-        {
-            if (combatMapUnit == null) return -1;
-            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
-            {
-                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] == combatMapUnit) return i;
-            }
-
-            return -1;
-        }
-
-        private int GetNextAvailableCombatMapUnitIndex()
-        {
-            for (int i = 0; i < CombatMapUnits.CurrentMapUnits.AllMapUnits.Count; i++)
-            {
-                if (CombatMapUnits.CurrentMapUnits.AllMapUnits[i] is EmptyMapUnit) return i;
-            }
-
-            return -1;
-        }
-
-        public bool GetHasPlayerChangedSinceLastCheckAndReset()
-        {
-            if (!_bPlayerHasChanged) return false;
-            _bPlayerHasChanged = false;
-            return true;
-        }
-
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)
         {
             _initiativeQueue.SetActivePlayerCharacter(record);
             _bPlayerHasChanged = true;
             RefreshCurrentCombatPlayer();
-        }
-
-        public Enemy GetFirstEnemy(CombatItem combatItem) => GetNextEnemy(null, combatItem);
-
-        private CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit, out bool bMoved) =>
-            MoveToClosestAttackableCombatMapUnit(activeCombatUnit, CombatMapUnitEnum.CombatPlayer, out bMoved) as
-                CombatPlayer;
-
-        public Enemy MoveToClosestAttackableEnemy(out string outputStr, out bool bMoved) =>
-            MoveToClosestAttackableEnemy(CurrentCombatPlayer, out outputStr, out bMoved);
-
-        private Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit, out string outputStr, out bool bMoved)
-        {
-            Enemy enemy =
-                MoveToClosestAttackableCombatMapUnit(activeMapUnit, CombatMapUnitEnum.Enemy, out bMoved) as Enemy;
-            outputStr = "";
-            if (enemy == null)
-            {
-                if (bMoved) outputStr = $"{activeMapUnit.FriendlyName} moved.\nUnable to target enemy.";
-                else outputStr = "Unable to target or advance on enemy.";
-            }
-            else
-            {
-                if (CurrentCombatPlayer == null)
-                    throw new Ultima5ReduxException(
-                        "Current combat player was null when trying to move closer to an enemy");
-                outputStr = $"{CurrentCombatPlayer.FriendlyName} advances on {enemy.FriendlyName}";
-            }
-
-            AdvanceToNextCombatMapUnit();
-            return enemy;
-        }
-
-        /// <summary>
-        ///     Moves the combat map unit to the CombatPlayer for whom they can reach in the fewest number of steps
-        /// </summary>
-        /// <param name="activeCombatUnit">the combat map unit that wants to attack a combat player</param>
-        /// <param name="preferredAttackTarget">the type of target you will target</param>
-        /// <param name="bMoved">did the CombatMapUnit move</param>
-        /// <returns>The combat player that they are heading towards</returns>
-        private CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit,
-            CombatMapUnitEnum preferredAttackTarget, out bool bMoved)
-        {
-            if (activeCombatUnit == null)
-                throw new Ultima5ReduxException("Passed a null active combat unit when moving to closest unit");
-            
-            const int NoPath = 0xFFFF;
-            //bool bCharmed = activeCombatUnit.IsCharmed;
-            bMoved = false;
-
-            int nMinMoves = 0xFFFF;
-            Stack<Node> preferredRoute = null;
-            CombatMapUnit preferredAttackVictim = null;
-
-            AStar aStar = GetAStarByMapUnit(activeCombatUnit);
-
-            List<Point2D> potentialTargetsPoints = new List<Point2D>();
-
-            foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
-            {
-                Point2D combatMapUnitXY = combatMapUnit.MapUnitPosition.XY;
-
-                potentialTargetsPoints.Add(combatMapUnitXY);
-
-                // get the shortest path to the unit - we ignore the range value because by calling this method we are insisting
-                // that they move
-                Stack<Node> theWay = aStar.FindPath(activeCombatUnit.MapUnitPosition.XY, combatMapUnitXY);
-                int nMoves = theWay?.Count ?? NoPath;
-                if (nMoves < nMinMoves)
-                {
-                    nMinMoves = nMoves;
-                    preferredRoute = theWay;
-                    preferredAttackVictim = combatMapUnit;
-                }
-            }
-
-            Point2D activeCombatUnitXY = activeCombatUnit.MapUnitPosition.XY;
-
-            if (nMinMoves == NoPath)
-            {
-                // if there is no path, then lets do some dirty checks to see if we can at least move closer
-
-                // get the surrounding points around current active unit
-                List<Point2D> surroundingPoints =
-                    activeCombatUnitXY.GetConstrainedFourDirectionSurroundingPoints(NumOfXTiles - 1, NumOfYTiles - 1);
-
-                double fShortestPath = 999f;
-                Point2D bestOpponentPoint = null;
-                // cycle through all potential targets and determine and pick the closest available target
-                foreach (Point2D point in potentialTargetsPoints)
-                {
-                    double fDistance = point.DistanceBetween(activeCombatUnitXY);
-                    if (fDistance < fShortestPath)
-                    {
-                        fShortestPath = fDistance;
-                        bestOpponentPoint = point.Copy();
-                    }
-                }
-
-                // there is not best point, so give up - also, this shouldn't really happen, but not 
-                // worth crashing over if it does
-                if (bestOpponentPoint == null)
-                    return null;
-
-                // we start with the shortest path being the current tiles distance to the best enemies tile
-                fShortestPath = activeCombatUnitXY.DistanceBetween(bestOpponentPoint);
-
-                Point2D nextBestMovePoint = null;
-                List<Point2D> wanderablePoints = new List<Point2D>();
-                // go through of each surrounding points and find the shortest path based to an opponent
-                // on the free tiles
-                foreach (Point2D point in surroundingPoints)
-                {
-                    // if it isn't walkable then we skip it
-                    if (!GetAStarByMapUnit(activeCombatUnit).GetWalkable(point)) continue;
-                    // keep track of the points we could wander to if we don't find a good path
-                    wanderablePoints.Add(point);
-                    double fDistance = point.DistanceBetween(bestOpponentPoint);
-                    if (fDistance < fShortestPath)
-                    {
-                        fShortestPath = fDistance;
-                        nextBestMovePoint = point;
-                    }
-                }
-
-                if (nextBestMovePoint == null)
-                {
-                    if (wanderablePoints.Count == 0) return null;
-                    Random ran = new Random();
-
-                    // only a 50% chance they will wander
-                    if (ran.Next() % 2 == 0) return null;
-
-                    // wander logic - we are already the closest to the selected enemy
-                    int nChoices = wanderablePoints.Count;
-                    int nRandomChoice = ran.Next() % nChoices;
-                    nextBestMovePoint = wanderablePoints[nRandomChoice];
-                }
-
-                // we think we found the next best path
-                preferredRoute = new Stack<Node>();
-                preferredRoute.Push(aStar.GetNode(nextBestMovePoint));
-            }
-
-            if (preferredRoute == null)
-                throw new Ultima5ReduxException("Preferred route object was oddly empty");
-
-            Point2D nextPosition = preferredRoute.Pop().Position;
-
-            MoveActiveCombatMapUnit(nextPosition);
-            bMoved = true;
-
-            return preferredAttackVictim;
-        }
-
-        private bool IsCombatMapUnitInRange(CombatMapUnit attackingUnit, CombatMapUnit opponentCombatMapUnit,
-            int nRange)
-        {
-            if (!opponentCombatMapUnit.IsActive) return false;
-            if (!opponentCombatMapUnit.IsAttackable) return false;
-            if (nRange == 1 && !attackingUnit.CanReachForMeleeAttack(opponentCombatMapUnit, nRange)) return false;
-            if (nRange > 1)
-            {
-                if (IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY,
-                    out _)) return false;
-            }
-
-            return true;
-        }
-
-        private T GetClosestCombatMapUnitInRange<T>(CombatMapUnit attackingUnit, int nRange) where T : CombatMapUnit
-        {
-            double dBestDistanceToAttack = 150f;
-            T bestOpponent = null;
-
-            //or (int nIndex = 0; nIndex < nMapUnits; nIndex++)
-            foreach (CombatMapUnit combatMapUnit in CombatMapUnits.CombatMapMapUnitCollection.AllCombatMapUnits)
-            {
-                if (!(combatMapUnit is T enemy)) continue;
-                if (!IsCombatMapUnitInRange(attackingUnit, enemy, nRange)) continue;
-                // if the enemy unit is invisible or charmed then they should not be targeted
-                if (enemy.IsInvisible || enemy.IsCharmed) continue;
-
-                double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(attackingUnit.MapUnitPosition.XY);
-                if (!(dDistance < dBestDistanceToAttack)) continue;
-
-                dBestDistanceToAttack = dDistance;
-                bestOpponent = enemy;
-            }
-
-            return bestOpponent;
-        }
-
-        public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem)
-        {
-            return GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer, combatItem.TheCombatItemReference.Range);
-        }
-
-        private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)
-        {
-            return GetClosestCombatMapUnitInRange<CombatPlayer>(enemy, enemy.EnemyReference.AttackRange);
-        }
-
-
-        public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
-        {
-            int nOffset = GetCombatMapUnitIndex(currentEnemy);
-            // -1 indicates it wasn't found, so could be dead or null. We set it to the beginning
-            if (nOffset == -1) nOffset = 0;
-
-            int nMapUnits = CombatMapUnits.CurrentMapUnits.AllMapUnits.Count;
-
-            for (int i = 0; i < nMapUnits; i++)
-            {
-                // we start at the next position, and wrap around ensuring we have hit all possible enemies
-                int nIndex = (i + nOffset + 1) % nMapUnits;
-                if (!(CombatMapUnits.CurrentMapUnits.AllMapUnits[nIndex] is Enemy enemy)) continue;
-                if (!enemy.IsActive) continue;
-                if (CurrentCombatPlayer == null)
-                    throw new Ultima5ReduxException("Tried to get next enemy, but couldn't find the active player");
-                if (CurrentCombatPlayer.CanReachForAttack(enemy, combatItem)) return enemy;
-            }
-
-            return null;
-        }
-
-        internal void InitializeInitiativeQueue()
-        {
-            _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords, this);
-            _initiativeQueue.InitializeInitiativeQueue();
-            RefreshCurrentCombatPlayer();
-        }
-
-        protected override float GetAStarWeight(Point2D xy)
-        {
-            return 1.0f;
-        }
-
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            switch (mapUnit)
-            {
-                case Enemy enemy:
-                    return GetWalkableTypeByEnemy(enemy);
-                // return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.CombatLand;
-                case CombatPlayer _:
-                    return WalkableType.CombatLand;
-                default:
-                    return WalkableType.StandardWalking;
-            }
-        }
-
-        /// <summary>
-        ///     Creates a party in the context of the combat map
-        /// </summary>
-        /// <param name="entryDirection">which direction did they enter from?</param>
-        /// <param name="activeRecords">all character records</param>
-        internal void CreateParty(SingleCombatMapReference.EntryDirection entryDirection,
-            PlayerCharacterRecords activeRecords)
-        {
-            _playerCharacterRecords = activeRecords;
-
-            // clear any previous combat map units
-            CombatMapUnits.InitializeCombatMapReferences();
-
-            List<Point2D> playerStartPositions =
-                TheCombatMapReference.GetPlayerStartPositions(entryDirection);
-
-            // cycle through each player and make a map unit
-            for (int nPlayer = 0; nPlayer < activeRecords.GetNumberOfActiveCharacters(); nPlayer++)
-            {
-                PlayerCharacterRecord record = activeRecords.Records[nPlayer];
-
-                CombatPlayer combatPlayer = new CombatPlayer(record,
-                    playerStartPositions[nPlayer], _inventory);
-
-                // make sure the tile that the player occupies is not walkable
-                GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
-
-                CombatMapUnits.CurrentMapUnits.AllMapUnits[nPlayer] = combatPlayer;
-            }
-        }
-
-        private Enemy CreateEnemy(Point2D position, EnemyReference enemyReference)
-        {
-            Enemy enemy = CombatMapUnits.CreateEnemy(position, enemyReference, out int _);
-            return enemy;
-        }
-        
-
-        /// <summary>
-        ///     Creates a single enemy in the context of the combat map.
-        /// </summary>
-        /// <param name="nEnemyIndex">0 based index that reflects the combat maps enemy index list</param>
-        /// <param name="singleCombatMapReference">reference of the combat map</param>
-        /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
-        /// <param name="npcRef"></param>
-        /// <returns>the enemy that was just created</returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private Enemy CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
-            EnemyReference enemyReference, NonPlayerCharacterReference npcRef)
-        {
-            SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType =
-                singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
-            Point2D enemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
-
-            Enemy enemy = null;
-            switch (combatMapSpriteType)
-            {
-                case SingleCombatMapReference.CombatMapSpriteType.Nothing:
-                    //Debug.Assert(enemyPosition.X == 0 && enemyPosition.Y == 0);
-                    break;
-                case SingleCombatMapReference.CombatMapSpriteType.Thing:
-                    Debug.WriteLine("It's a chest or maybe a dead body!");
-                    break;
-                case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
-                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
-                    break;
-                case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
-                    Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
-                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        enemyReference, out int _);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            // make sure the tile that the enemy occupies is not walkable
-            // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
-            SetNotWalkableDueToCombatMapUnit(enemyPosition);
-            return enemy;
         }
 
         private void SetNotWalkableDueToCombatMapUnit(Point2D position)
@@ -1234,151 +1379,5 @@ namespace Ultima5Redux.Maps
             GetAStarByWalkableType(WalkableType.CombatFlyThroughWalls).SetWalkable(position, false);
             GetAStarByWalkableType(WalkableType.CombatLandAndWater).SetWalkable(position, false);
         }
-
-
-        /// <summary>
-        ///     Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
-        ///     specified enemies
-        /// </summary>
-        /// <param name="singleCombatMapReference"></param>
-        /// <param name="primaryEnemyReference"></param>
-        /// <param name="nPrimaryEnemies"></param>
-        /// <param name="secondaryEnemyReference"></param>
-        /// <param name="nSecondaryEnemies"></param>
-        /// <param name="npcRef"></param>
-        internal void CreateEnemies(SingleCombatMapReference singleCombatMapReference,
-            EnemyReference primaryEnemyReference, int nPrimaryEnemies,
-            EnemyReference secondaryEnemyReference, int nSecondaryEnemies, NonPlayerCharacterReference npcRef)
-        {
-            int nEnemyIndex = 0;
-
-            // dungeons do not have encountered based enemies (but where are the dragons???)
-            if (singleCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Dungeon)
-            {
-                for (nEnemyIndex = 0; nEnemyIndex < SingleCombatMapReference.NUM_ENEMIES; nEnemyIndex++)
-                {
-                    CreateEnemy(nEnemyIndex, singleCombatMapReference, primaryEnemyReference, npcRef);
-                }
-
-                return;
-            }
-
-            if (npcRef != null) Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0);
-
-            // if there is only a single enemy then we always give them first position (such as NPC fights)
-            if (nPrimaryEnemies == 1 && nSecondaryEnemies == 0)
-            {
-                CreateEnemy(0, singleCombatMapReference, primaryEnemyReference, npcRef);
-                return;
-            }
-
-            // for regular combat maps, we introduce some randomness 
-            Queue<int> monsterIndex = Utils.CreateRandomizedIntegerQueue(SingleCombatMapReference.NUM_ENEMIES);
-
-            for (int nIndex = 0; nIndex < nPrimaryEnemies; nIndex++, nEnemyIndex++)
-            {
-                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, primaryEnemyReference, null);
-            }
-
-            for (int nIndex = 0; nIndex < nSecondaryEnemies; nIndex++, nEnemyIndex++)
-            {
-                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference, null);
-            }
-        }
-
-        public CombatMapUnit GetCombatUnit(Point2D unitPosition)
-        {
-            MapUnit mapUnit = _virtualMap.GetTopVisibleMapUnit(unitPosition, true);
-
-            if (mapUnit is CombatMapUnit unit) return unit;
-
-            return null;
-        }
-
-        /// <summary>
-        ///     Makes the next available character escape
-        /// </summary>
-        /// <param name="escapedPlayer">the player who escaped, or null if none left</param>
-        /// <returns>true if a player escaped, false if none were found</returns>
-        public bool NextCharacterEscape(out CombatPlayer escapedPlayer)
-        {
-            foreach (CombatPlayer combatPlayer in CombatMapUnits.CurrentMapUnits.CombatPlayers)
-            {
-                if (combatPlayer.HasEscaped) continue;
-
-                MakePlayerEscape(combatPlayer);
-                escapedPlayer = combatPlayer;
-                return true;
-            }
-
-            escapedPlayer = null;
-            return false;
-        }
-
-        public void MakePlayerEscape(CombatPlayer combatPlayer)
-        {
-            Debug.Assert(!combatPlayer.HasEscaped);
-
-            combatPlayer.HasEscaped = true;
-            AdvanceToNextCombatMapUnit();
-        }
-
-        /// <summary>
-        ///     Gets the best escape route based on current position
-        /// </summary>
-        /// <param name="fromPosition"></param>
-        /// <param name="walkableType"></param>
-        /// <returns>path to exit, or null if none exist</returns>
-        public Stack<Node> GetEscapeRoute(Point2D fromPosition, WalkableType walkableType)
-        {
-            List<Point2D> points = GetEscapablePoints(fromPosition, walkableType);
-
-            int nShortestPath = 0xFFFF;
-            Stack<Node> shortestPath = null;
-
-            foreach (Point2D destinationPoint in points)
-            {
-                Stack<Node> currentPath = GetAStarByWalkableType(walkableType).FindPath(fromPosition, destinationPoint);
-                if (currentPath?.Count >= nShortestPath || currentPath == null) continue;
-
-                nShortestPath = currentPath.Count;
-                shortestPath = currentPath;
-            }
-
-            return shortestPath;
-        }
-
-        /// <summary>
-        ///     Gets all tiles that are at the edge of the screen and are escapable based on the given position
-        /// </summary>
-        /// <param name="fromPosition"></param>
-        /// <param name="walkableType"></param>
-        /// <returns>a list of all potential positions</returns>
-        public List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
-        {
-            _ = fromPosition;
-            List<Point2D> points = new List<Point2D>();
-
-            for (int nIndex = 0; nIndex < NumOfXTiles; nIndex++)
-            {
-                Point2D top = new Point2D(nIndex, 0);
-                Point2D bottom = new Point2D(nIndex, NumOfYTiles - 1);
-                Point2D left = new Point2D(0, nIndex);
-                Point2D right = new Point2D(NumOfXTiles - 1, nIndex);
-
-                if (IsTileWalkable(top, walkableType)) points.Add(top);
-                if (IsTileWalkable(bottom, walkableType)) points.Add(bottom);
-
-                if (nIndex == 0 || nIndex == NumOfYTiles - 1) continue; // we don't double count the top or bottom 
-
-                if (IsTileWalkable(left, walkableType)) points.Add(left);
-                if (IsTileWalkable(right, walkableType)) points.Add(right);
-            }
-
-            return points;
-        }
-
-        // when computing what should happen when a player hits - these states can be triggered 
-        private enum AdditionalHitStateAction { None, EnemyDivided }
     }
 }

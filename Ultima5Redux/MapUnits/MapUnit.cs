@@ -10,51 +10,13 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract]
-    public abstract class MapUnitDetails
-    {
-        [DataMember] protected internal int MovementAttempts { get; set; }
-        /// <summary>
-        ///     How many iterations will I force the character to wander?
-        /// </summary>
-        [DataMember] internal int ForcedWandering { get; set; }
-        /// <summary>
-        ///     All the movements for the map character
-        /// </summary>
-        [DataMember] internal MapUnitMovement Movement { get; private protected set; }
-        /// <summary>
-        ///     The location state of the character
-        /// </summary>
-        [DataMember] protected internal SmallMapCharacterState TheSmallMapCharacterState { get; set; }
-
-        /// <summary>
-        ///     Is the map character currently an active character on the current map
-        /// </summary>
-        [DataMember] public abstract bool IsActive { get; }
-        [DataMember] public abstract bool IsAttackable { get; }
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        [DataMember] public bool IsOccupiedByAvatar { get; protected internal set; }
-        [DataMember] public bool UseFourDirections { get; set; }
-        [DataMember] public Point2D.Direction Direction { get; set; }
-        [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; set; }
-        [DataMember] public virtual MapUnitPosition MapUnitPosition { get; internal set; }
-        [DataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
-        [DataMember] public abstract string BoardXitName { get; }
-        [DataMember] public abstract string FriendlyName { get; }
-        /// <summary>
-        ///     Is the character currently active on the map?
-        /// </summary>
-        [DataMember] protected internal bool IsInParty { get; set; }
-    }
-   
     public abstract class MapUnit : MapUnitDetails
     {
-        [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
-
         /// <summary>
         ///     The characters current position on the map
         /// </summary>
-        [DataMember] public sealed override MapUnitPosition MapUnitPosition
+        [DataMember]
+        public sealed override MapUnitPosition MapUnitPosition
         {
             get => _mapMapUnitPosition;
             internal set
@@ -74,34 +36,34 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        /// <summary>
-        ///     the state of the animations
-        /// </summary>
-        // [IgnoreDataMember] public MapUnitState TheMapUnitState { get; protected set; }
+        [DataMember] private int _keyTileIndex = -1;
+        [DataMember] private int _npcRefIndex = -1;
 
-        [IgnoreDataMember] public TileReference BoardedTileReference =>
-            GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
-                ? FourDirectionToTileNameBoarded[Direction]
-                : DirectionToTileNameBoarded[Direction]);
-
-        // ReSharper disable once MemberCanBeProtected.Global
-        [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
-            GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+        [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
 
 
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
-        [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+
+        [IgnoreDataMember]
+        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
-        [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
+        // ReSharper disable once MemberCanBeProtected.Global
+        [IgnoreDataMember]
+        public virtual TileReference NonBoardedTileReference =>
+            GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
-        [DataMember] private int _keyTileIndex = -1;
-        [DataMember] private int _npcRefIndex = -1;
+        [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
 
-        public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
+        [IgnoreDataMember]
+        public TileReference BoardedTileReference =>
+            GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
+                ? FourDirectionToTileNameBoarded[Direction]
+                : DirectionToTileNameBoarded[Direction]);
 
-        [IgnoreDataMember] public virtual TileReference KeyTileReference
+        [IgnoreDataMember]
+        public virtual TileReference KeyTileReference
         {
             get => NPCRef == null
                 ? GameReferences.SpriteTileReferences.GetTileReference(_keyTileIndex)
@@ -109,9 +71,11 @@ namespace Ultima5Redux.MapUnits
             set => _keyTileIndex = value.Index;
         }
 
-        
+        public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
+
+
         /// <summary>
-        /// empty constructor if there is nothing in the map character slot
+        ///     empty constructor if there is nothing in the map character slot
         /// </summary>
         protected MapUnit()
         {
@@ -134,7 +98,7 @@ namespace Ultima5Redux.MapUnits
         protected MapUnit(
             SmallMapCharacterState smallMapTheSmallMapCharacterState,
             MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
-             Point2D.Direction direction,
+            Point2D.Direction direction,
             NonPlayerCharacterState npcState, TileReference tileReference,
             MapUnitPosition mapUnitPosition)
         {
@@ -150,45 +114,6 @@ namespace Ultima5Redux.MapUnits
             _keyTileIndex = tileReference.Index;
 
             // set the characters position 
-            MapUnitPosition = mapUnitPosition;
-        }        
-        
-        public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
-        {
-            // by default the thing doesn't move on it's own
-        }
-
-        public virtual bool CanBeExited(VirtualMap virtualMap)
-        {
-            return true;
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public virtual string GetDebugDescription(TimeOfDay timeOfDay)
-        {
-            return "MapUnit " + KeyTileReference.Description
-                              + " " + MapUnitPosition + " Scheduled to be at: "
-                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
-                              + Movement;
-        }
-
-        /// <summary>
-        ///     move the character to a new position
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="nFloor"></param>
-        protected void Move(Point2D xy, int nFloor)
-        {
-            MapUnitPosition.XY = xy;
-            MapUnitPosition.Floor = nFloor;
-        }
-
-        /// <summary>
-        ///     Move the character to a new position
-        /// </summary>
-        /// <param name="mapUnitPosition"></param>
-        protected void Move(MapUnitPosition mapUnitPosition)
-        {
             MapUnitPosition = mapUnitPosition;
         }
 
@@ -256,6 +181,45 @@ namespace Ultima5Redux.MapUnits
             if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
             throw new Ultima5ReduxException(
                 "For some reason we couldn't determine the path of the command direction in getCommandDirection");
+        }
+
+        public virtual bool CanBeExited(VirtualMap virtualMap)
+        {
+            return true;
+        }
+
+        public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        {
+            // by default the thing doesn't move on it's own
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public virtual string GetDebugDescription(TimeOfDay timeOfDay)
+        {
+            return "MapUnit " + KeyTileReference.Description
+                              + " " + MapUnitPosition + " Scheduled to be at: "
+                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
+                              + Movement;
+        }
+
+        /// <summary>
+        ///     move the character to a new position
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="nFloor"></param>
+        protected void Move(Point2D xy, int nFloor)
+        {
+            MapUnitPosition.XY = xy;
+            MapUnitPosition.Floor = nFloor;
+        }
+
+        /// <summary>
+        ///     Move the character to a new position
+        /// </summary>
+        /// <param name="mapUnitPosition"></param>
+        protected void Move(MapUnitPosition mapUnitPosition)
+        {
+            MapUnitPosition = mapUnitPosition;
         }
     }
 }

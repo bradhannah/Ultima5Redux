@@ -4,20 +4,20 @@
     {
         public enum ArtifactType { Amulet = 439, Crown = 437, Sceptre = 438 }
 
+        public override bool HideQuantity { get; } = true;
+
+        public override string InventoryReferenceString => Artifact.ToString();
+
+        public ArtifactType Artifact { get; }
+
+        public string EquipMessage { get; }
+
         public LordBritishArtifact(ArtifactType artifact, int quantity, string equipMessage) : base(
             quantity, (int)artifact)
         {
             Artifact = artifact;
             EquipMessage = equipMessage;
         }
-
-        public ArtifactType Artifact { get; }
-
-        public override bool HideQuantity { get; } = true;
-
-        public string EquipMessage { get; }
-
-        public override string InventoryReferenceString => Artifact.ToString();
 
         public bool HasItem()
         {

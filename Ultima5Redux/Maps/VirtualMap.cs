@@ -23,6 +23,49 @@ namespace Ultima5Redux.Maps
     {
         internal enum LadderOrStairDirection { Up, Down }
 
+        /// <summary>
+        ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
+        /// </summary>
+        [DataMember]
+        private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
+
+        [DataMember] public MapUnits.MapUnits TheMapUnits { get; }
+
+        /// <summary>
+        ///     Detailed reference of current small map
+        /// </summary>
+        [DataMember]
+        public SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        {
+            get
+            {
+                if (_currentSingleMapReference == null)
+                    throw new Ultima5ReduxException("Unexpected _currentSingleMapReference is null");
+                if (_currentSingleMapReference.MapLocation ==
+                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
+                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+                return _currentSingleMapReference;
+            }
+            private set => _currentSingleMapReference = value;
+        }
+
+        /// <summary>
+        ///     The current small map (null if on large map)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        [DataMember]
+        public SmallMap CurrentSmallMap { get; private set; }
+
+        /// <summary>
+        ///     Which map was the avatar on before this one?
+        /// </summary>
+        [DataMember]
+        private RegularMap PreCombatMap { get; set; }
+
+        [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
+
+        [DataMember] private MapOverrides TheMapOverrides { get; set; }
+
         // [IgnoreDataMember] private readonly CombatMapReferences _combatMapRefs;
         // [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
         // [IgnoreDataMember] private readonly EnemyReferences _enemyReferences;
@@ -34,7 +77,8 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
-        [IgnoreDataMember] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
+        [IgnoreDataMember]
+        private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
 
         /// <summary>
         ///     Details of where the moongates are
@@ -53,66 +97,12 @@ namespace Ultima5Redux.Maps
         /// </summary>
         [IgnoreDataMember] private readonly TimeOfDay _timeOfDay;
 
-        [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
-
-        [DataMember] private MapOverrides TheMapOverrides { get; set; }
-        [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
-        
-        /// <summary>
-        /// The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
-        /// </summary>
-        [DataMember] private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
-        /// <summary>
-        /// Which map was the avatar on before this one?
-        /// </summary>
-        [DataMember] private RegularMap PreCombatMap { get; set; }
-        [IgnoreDataMember] public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
-        [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
-        [IgnoreDataMember] public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
-        [IgnoreDataMember] public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
-        [IgnoreDataMember] public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
-        [IgnoreDataMember] public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
-        [IgnoreDataMember] public bool IsCombatMap => CurrentMap is CombatMap;
-
-        /// <summary>
-        ///     Are we currently on a large map?
-        /// </summary>
-        [IgnoreDataMember] public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
-
-        [IgnoreDataMember] public CombatMap CurrentCombatMap { get; private set; }
-
-        //set => TheMapUnits.CurrentAvatarPosition = value;
-        /// <summary>
-        ///     Number of total columns for current map
-        /// </summary>
-        [IgnoreDataMember] public int NumberOfColumnTiles => CurrentMap.NumOfXTiles; 
-
-        /// <summary>
-        ///     Number of total rows for current map
-        /// </summary>
-        [IgnoreDataMember] public int NumberOfRowTiles => CurrentMap.NumOfYTiles; 
-
-        /// <summary>
-        ///     Current large map (null if on small map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        [IgnoreDataMember] public LargeMap CurrentLargeMap { get; private set; }
-
-        /// <summary>
-        ///     The persistant overworld map
-        /// </summary>
-        [IgnoreDataMember] public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
-
-        /// <summary>
-        ///     The persistant underworld map
-        /// </summary>
-        [IgnoreDataMember] public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
-
         /// <summary>
         ///     The abstracted Map object for the current map
         ///     Returns large or small depending on what is active
         /// </summary>
-        [IgnoreDataMember] public Map CurrentMap
+        [IgnoreDataMember]
+        public Map CurrentMap
         {
             get
             {
@@ -128,19 +118,74 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        /// <summary>
-        ///     If we are on a large map - then are we on overworld or underworld
-        /// </summary>
-        [IgnoreDataMember] public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
+        [IgnoreDataMember] public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
+        [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
 
-        [IgnoreDataMember] public MapUnitPosition CurrentPosition
+        [IgnoreDataMember]
+        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
+
+        [IgnoreDataMember] public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
+        [IgnoreDataMember] public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
+        [IgnoreDataMember] public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
+        [IgnoreDataMember] public bool IsCombatMap => CurrentMap is CombatMap;
+
+        /// <summary>
+        ///     Are we currently on a large map?
+        /// </summary>
+        [IgnoreDataMember]
+        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
+
+        //set => TheMapUnits.CurrentAvatarPosition = value;
+        /// <summary>
+        ///     Number of total columns for current map
+        /// </summary>
+        [IgnoreDataMember]
+        public int NumberOfColumnTiles => CurrentMap.NumOfXTiles;
+
+        /// <summary>
+        ///     Number of total rows for current map
+        /// </summary>
+        [IgnoreDataMember]
+        public int NumberOfRowTiles => CurrentMap.NumOfYTiles;
+
+        /// <summary>
+        ///     The persistant overworld map
+        /// </summary>
+        [IgnoreDataMember]
+        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+
+        /// <summary>
+        ///     All small map references
+        /// </summary>
+        [IgnoreDataMember]
+        public SmallMapReferences SmallMapRefs { get; }
+
+        /// <summary>
+        ///     The persistant underworld map
+        /// </summary>
+        [IgnoreDataMember]
+        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+
+        [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+
+        [IgnoreDataMember] public CombatMap CurrentCombatMap { get; private set; }
+
+        /// <summary>
+        ///     Current large map (null if on small map)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        [IgnoreDataMember]
+        public LargeMap CurrentLargeMap { get; private set; }
+
+        [IgnoreDataMember]
+        public MapUnitPosition CurrentPosition
         {
             get
             {
                 if (CurrentMap is CombatMap combatMap)
                 {
                     return combatMap.CurrentCombatMapUnit?.MapUnitPosition
-                        ?? throw new Ultima5ReduxException("Combat map was unexpectedly null");
+                           ?? throw new Ultima5ReduxException("Combat map was unexpectedly null");
                 }
 
                 return TheMapUnits.CurrentAvatarPosition;
@@ -148,35 +193,11 @@ namespace Ultima5Redux.Maps
             set => TheMapUnits.CurrentAvatarPosition = value;
         }
 
-        [DataMember] public MapUnits.MapUnits TheMapUnits { get; }
-
         /// <summary>
-        ///     Detailed reference of current small map
+        ///     If we are on a large map - then are we on overworld or underworld
         /// </summary>
-        [DataMember] public SmallMapReferences.SingleMapReference CurrentSingleMapReference
-        {
-            get
-            {
-                if (_currentSingleMapReference == null)
-                    throw new Ultima5ReduxException("Unexpected _currentSingleMapReference is null");
-                if (_currentSingleMapReference.MapLocation ==
-                    SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
-                    return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-                return _currentSingleMapReference;
-            }
-            private set => _currentSingleMapReference = value;
-        }
-
-        /// <summary>
-        ///     The current small map (null if on large map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        [DataMember] public SmallMap CurrentSmallMap { get; private set; }
-
-        /// <summary>
-        ///     All small map references
-        /// </summary>
-        [IgnoreDataMember] public SmallMapReferences SmallMapRefs { get; }
+        [IgnoreDataMember]
+        public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
 
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
@@ -197,9 +218,9 @@ namespace Ultima5Redux.Maps
         /// <param name="npcStates"></param>
         internal VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, GameState state, TimeOfDay timeOfDay, Moongates moongates,
-            PlayerCharacterRecords playerCharacterRecords, Map.Maps initialMap, 
-            SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites, 
-            Inventory inventory, ImportedGameState importedGameState, 
+            PlayerCharacterRecords playerCharacterRecords, Map.Maps initialMap,
+            SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
+            Inventory inventory, ImportedGameState importedGameState,
             NonPlayerCharacterStates npcStates)
         {
             SmallMapRefs = smallMapReferences;
@@ -219,7 +240,8 @@ namespace Ultima5Redux.Maps
 
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
-            TheMapUnits = new MapUnits.MapUnits(timeOfDay, playerCharacterRecords, initialMap, bUseExtendedSprites, importedGameState, npcStates, mapLocation);
+            TheMapUnits = new MapUnits.MapUnits(timeOfDay, playerCharacterRecords, initialMap, bUseExtendedSprites,
+                importedGameState, npcStates, mapLocation);
 
             switch (initialMap)
             {
@@ -237,624 +259,68 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
-        }        
-        
-        public bool IsLandNearby() =>
-            IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
-
-        public bool IsLandNearby(Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
-
-        public bool IsLandNearby(Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState)
-            || IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState)
-            || IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState)
-            || IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
-
-        private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
-
-        // private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Point2D xy, Avatar.AvatarState avatarState) =>
-        //     IsTileFreeToTravel(xy.GetAdjustedPosition(direction), true, avatarState);
-
-        /// <summary>
-        ///     Use the stairs and change floors, loading a new map
-        /// </summary>
-        /// <param name="xy">the position of the stairs, ladder or trapdoor</param>
-        /// <param name="bForceDown">force a downward stairs</param>
-        public void UseStairs(Point2D xy, bool bForceDown = false)
-        {
-            bool bStairGoUp = IsStairGoingUp() && !bForceDown;
-            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
-                    CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)),
-                xy.Copy());
         }
 
-        public void MoveAvatar(Point2D newPosition)
+        public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            TheMapUnits.CurrentAvatarPosition =
-                new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
-        }
-
-        public void ReturnToPreviousMapAfterCombat()
-        {
-            switch (PreCombatMap)
-            {
-                case LargeMap _:
-                case SmallMap _:
-                    TheMapOverrides = PreTheMapOverrides;
-                    
-                    LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
-                    CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
-                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false);
-                        //true);
-                    PreCombatMap = null;
-                    break;
-                default:
-                    throw new Ultima5ReduxException(
-                        "Attempting to return to previous map after combat with an unsupported map type: " +
-                            PreCombatMap?.GetType());
-            }
-        }
-
-
-        /// <summary>
-        ///     Loads a combat map, but aut
-        /// </summary>
-        /// <param name="singleCombatMapReference"></param>
-        /// <param name="entryDirection"></param>
-        /// <param name="records"></param>
-        /// <param name="enemyReference"></param>
-        public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
-            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference enemyReference)
-        {
-            int nPrimaryEnemies = 1;
-            int nSecondaryEnemies = 1;
-
-            if (enemyReference.IsNpc) nSecondaryEnemies = 0;
-
-            EnemyReference primaryEnemyReference = enemyReference;
-            EnemyReference secondaryEnemyReference = GameReferences.EnemyRefs.GetFriendReference(primaryEnemyReference);
-
-            LoadCombatMap(singleCombatMapReference, entryDirection, records,
-                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);
-        }
-
-        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
-            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0,
-            EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
-        {
-            LoadCombatMap(singleCombatMapReference, entryDirection, records,
-                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies, null);
-        }
-
-        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
-            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
-        {
-            LoadCombatMap(singleCombatMapReference, entryDirection, records,
-                primaryEnemyReference, 1, null, 0,
-                npcRef);
-        }
-
-        /// <summary>
-        ///     Loads a combat map as the current map
-        ///     Saves the previous map state, for post combat
-        /// </summary>
-        /// <param name="singleCombatMapReference"></param>
-        /// <param name="entryDirection"></param>
-        /// <param name="records"></param>
-        /// <param name="primaryEnemyReference"></param>
-        /// <param name="nPrimaryEnemies"></param>
-        /// <param name="secondaryEnemyReference"></param>
-        /// <param name="nSecondaryEnemies"></param>
-        /// <param name="npcRef"></param>
-        private void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
-            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference primaryEnemyReference, int nPrimaryEnemies,
-            EnemyReference secondaryEnemyReference, int nSecondaryEnemies,
-            NonPlayerCharacterReference npcRef)
-        {
-            if (npcRef != null)
-                Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0,
-                    "when assigning an NPC, you must have single enemy");
-
-            // if the PreCombatMap is not set OR the existing map is not already a combat map then
-            // we set the PreCombatMap so we know which map to return to
-            if (PreCombatMap == null || !IsCombatMap)
-            {
-                Debug.Assert(CurrentMap is RegularMap,
-                    "You can't load a combat map when you are already in a combat map");
-                PreCombatMap = (RegularMap)CurrentMap;
-                PreMapUnitPosition.Floor = CurrentPosition.Floor;
-                PreMapUnitPosition.X = CurrentPosition.X;
-                PreMapUnitPosition.Y = CurrentPosition.Y;
-            }
-
-            CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
-
-            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _inventory);
-
-            // we only want to push the exposed items and override map if we are on a small or large map 
-            // not if we are going combat to combat map (think Debug)
-            if (TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
-            {
-                PreTheMapOverrides = TheMapOverrides;
-            }
-
-            TheMapOverrides = new MapOverrides(CurrentCombatMap);
-
-            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
-            LargeMapOverUnder = Map.Maps.Combat;
-
-            CurrentCombatMap.CreateParty(entryDirection, records);
-
-            CurrentCombatMap.CreateEnemies(singleCombatMapReference,
-                primaryEnemyReference, nPrimaryEnemies,
-                secondaryEnemyReference, nSecondaryEnemies, npcRef);
-
-            CurrentCombatMap.InitializeInitiativeQueue();
-        }
-
-        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null, 
-            bool bLoadFromDisk = false)
-        {
-            CurrentSingleMapReference = singleMapReference ?? 
-                throw new Ultima5ReduxException("Tried to load a small map, but null map reference was given");
-            CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
-
-            TheMapOverrides = new MapOverrides(CurrentSmallMap);
-
-            LargeMapOverUnder = (Map.Maps)(-1); 
-
-            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, bLoadFromDisk);
-            // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
-            TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
-
-            if (xy != null) CurrentPosition.XY = xy;
-        }
-
-        /// <summary>
-        ///     Loads a large map -either overworld or underworld
-        /// </summary>
-        /// <param name="map"></param>
-        public void LoadLargeMap(Map.Maps map)
-        {
-            CurrentLargeMap = _largeMaps[map];
-            switch (map)
-            {
-                case Map.Maps.Underworld:
-                case Map.Maps.Overworld:
-                    CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
-                    break;
-                case Map.Maps.Combat:
-                case Map.Maps.Small:
-                    throw new Ultima5ReduxException("You can't load a small large map!");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(map), map, null);
-            }
-
-            // this will probably fail, which means creating a new map was a good idea
-            //Debug.Assert(TheMapOverrides.TheMap is LargeMap && TheMapOverrides.TheMap == CurrentLargeMap);
-            // todo: maybe we store each map override indefinitely so we never lose anything 
-            TheMapOverrides = new MapOverrides(CurrentLargeMap);
-
-            LargeMapOverUnder = map;
-
-            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map),
-                map);
-        }
-
-
-        /// <summary>
-        ///     Gets a tile reference from the given coordinate
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="bIgnoreExposed"></param>
-        /// <param name="bIgnoreMoongate"></param>
-        /// <returns></returns>
-        public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
-        {
-            // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
-            if (!bIgnoreExposed)
-                if (TheMapOverrides.HasExposedSearchItems(x, y))
+            List<byte> xDockCoords =
+                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS).GetAsByteList();
+            List<byte> yDockCoords =
+                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS).GetAsByteList();
+            Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
+                new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>
                 {
-                    Queue<InventoryItem> searchItems = TheMapOverrides.GetExposedSearchItems(x, y);
-                    if (searchItems.Count > 0)
-                        // we get the top most exposed item and only show it
-                        return GameReferences.SpriteTileReferences.GetTileReference(searchItems.Peek().SpriteNum);
-                }
+                    {
+                        SmallMapReferences.SingleMapReference.Location.Jhelom,
+                        new Point2D(xDockCoords[0], yDockCoords[0])
+                    },
+                    {
+                        SmallMapReferences.SingleMapReference.Location.Minoc,
+                        new Point2D(xDockCoords[1], yDockCoords[1])
+                    },
+                    {
+                        SmallMapReferences.SingleMapReference.Location.East_Britanny,
+                        new Point2D(xDockCoords[2], yDockCoords[2])
+                    },
+                    {
+                        SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
+                        new Point2D(xDockCoords[3], yDockCoords[3])
+                    }
+                };
 
-            // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
-            // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
-            if (!bIgnoreMoongate && IsLargeMap &&
-                _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF))
-            )
-            {
-                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
-                       throw new Ultima5ReduxException("Supposed to get a moongate override: " + new Point2D(x,y));
-            }
+            if (!docks.ContainsKey(location))
+                throw new Ultima5ReduxException("Asked for a dock  in " + location + " but there isn't one there");
 
-            // we check to see if our override map has something on top of it
-            if (TheMapOverrides.HasOverrideTile(x, y))
-            {
-                return TheMapOverrides.GetOverrideTileReference(x, y) ?? 
-                       throw new Ultima5ReduxException("Expected tile override at " + new Point2D(x,y));
-            }
-
-            // the GetTileReference accounts for any forced overrides across the entire world
-            return CurrentMap.GetTileReference(new Point2D(x, y));
+            return docks[location];
         }
 
-        /// <summary>
-        ///     Gets a tile reference from the tile the avatar currently resides on
-        /// </summary>
-        /// <returns></returns>
-        public TileReference GetTileReferenceOnCurrentTile()
+        public bool ContainsSearchableThings(Point2D xy)
         {
-            return GetTileReference(CurrentPosition.XY);
-        }
-
-        /// <summary>
-        ///     Gets a tile reference from the given coordinate
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        public TileReference GetTileReference(Point2D xy)
-        {
-            return GetTileReference(xy.X, xy.Y);
-        }
-
-        internal int SearchAndExposeItems(Point2D xy)
-        {
-            // check for moonstones
             // moonstone check
-            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder) && _timeOfDay.IsDayLight)
-            {
-                MoonPhaseReferences.MoonPhases moonPhase = _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
-                InventoryItem invItem = _state.PlayerInventory.TheMoonstones.Items[moonPhase];
-                TheMapOverrides.EnqueueSearchItem(xy, invItem);
-                
-                _moongates.SetMoonstoneBuried((int)moonPhase, false);
-
-                return 1;
-            }
-
-            return 0;
-        }
-
-        // internal bool IsAnyExposedItems(Point2D xy)
-        // {
-        //     if (_exposedSearchItems[xy.X][xy.Y] == null) return false;
-        //     return _exposedSearchItems[xy.X][xy.Y].Count > 0;
-        // }
-
-        // internal InventoryItem DequeuExposedItem(Point2D xy)
-        // {
-        //     if (TheMapOverrides.HasExposedSearchItems(xy)) return TheMapOverrides.DequeueSearchItem(xy);
-        //     throw new Ultima5ReduxException("Tried to deque an item at " + xy + " but there is no item on it");
-        // }
-
-        /// <summary>
-        ///     Gets the Avatar's current position in 3D spaces
-        /// </summary>
-        /// <returns></returns>
-        public Point3D GetCurrent3DPosition()
-        {
-            if (LargeMapOverUnder == Map.Maps.Small)
-                return new Point3D(CurrentPosition.X,
-                    CurrentPosition.Y, CurrentSmallMap.MapFloor);
-
-            return new Point3D(CurrentPosition.X,
-                CurrentPosition.Y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF);
+            return IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
         }
 
         /// <summary>
-        ///     Sets an override for the current tile which will be favoured over the static map tile
+        ///     Creates a horse MapUnit in the surrounding tiles of the Avatar - if one exists
         /// </summary>
-        /// <param name="tileReference">the reference (sprite)</param>
-        /// <param name="xy"></param>
-        public void SetOverridingTileReferece(TileReference tileReference, Point2D xy)
+        /// <returns>the new horse or null if there was no where to put it</returns>
+        public Horse CreateHorseAroundAvatar()
         {
-            TheMapOverrides.SetOverrideTile(xy, tileReference);
-        }
+            List<Point2D> freeSpacesAroundAvatar = GetFreeSpacesSurroundingAvatar();
+            if (freeSpacesAroundAvatar.Count <= 0) return null;
 
-        /// <summary>
-        ///     Gets the NPC you want to talk to in the given direction
-        ///     If you are in front of a table then you can talk over top of it too
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns>the NPC or null if non are found</returns>
-        public NonPlayerCharacter GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection direction)
-        {
-            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction);
-
-            NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
-            (LargeMapOverUnder,
-                adjustedPosition, CurrentSingleMapReference.Floor);
-
-            if (npc != null) return npc;
-
-            if (!GetTileReference(adjustedPosition).IsTalkOverable)
-                return null;
-
-            Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
-            return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
-            (LargeMapOverUnder,
-                adjustedPosition2Away, CurrentSingleMapReference.Floor);
-        }
-
-
-        /// <summary>
-        ///     Gets a map unit on the current tile (that ISN'T the Avatar)
-        /// </summary>
-        /// <returns>MapUnit or null if none exist</returns>
-        public MapUnit GetMapUnitOnCurrentTile()
-        {
-            return GetTopVisibleMapUnit(CurrentPosition.XY, true);
-        }
-
-        /// <summary>
-        ///     If an NPC is on a tile, then it will get them
-        ///     assumes it's on the same floor
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns>the NPC or null if one does not exist</returns>
-        public List<MapUnit> GetMapUnitOnTile(Point2D xy)
-        {
-            List<MapUnit> mapUnits =
-                TheMapUnits.GetMapUnitByLocation(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
-
-            return mapUnits;
-        }
-
-        /// <summary>
-        ///     Gets the top visible map unit - excluding the Avatar
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="bExcludeAvatar"></param>
-        /// <returns>MapUnit or null</returns>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
-        {
-            List<Type> visibilePriorityOrder = new List<Type>
-            {
-                typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar)
-            };
-            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
-
-            // this is inefficient, but the lists are so small it is unlikely to matter
-            foreach (Type type in visibilePriorityOrder)
-            {
-                if (bExcludeAvatar && type == typeof(Avatar)) continue;
-                foreach (MapUnit mapUnit in mapUnits)
-                {
-                    if (!mapUnit.IsActive) continue;
-                    // if it's a combat unit but they dead or gone then we skip
-                    if (mapUnit is CombatMapUnit combatMapUnit)
-                    {
-                        if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0) continue;
-                    }
-
-                    // if we find the first highest priority item, then we simply return it
-                    if (mapUnit.GetType() == type) return mapUnit;
-                }
-            }
-
-            return null;
-        }
-
-        public SingleCombatMapReference GetCombatMapReferenceByPosition(Point2D xy,
-            SingleCombatMapReference.Territory territory)
-        {
-            TileReference tileReference = GetTileReference(xy);
-            return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)tileReference.CombatMapIndex);
-        }
-
-        public bool IsNPCInBed(NonPlayerCharacter npc)
-        {
-            return GetTileReference(npc.MapUnitPosition.XY).Index == GameReferences.SpriteTileReferences.GetTileNumberByName("LeftBed");
-        }
-
-        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) =>
-            IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
-
-        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState) =>
-            IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
-
-
-        /// <summary>
-        ///     Is the particular tile eligible to be moved onto
-        /// </summary>
-        /// <param name="currentPosition"></param>
-        /// <param name="newPosition"></param>
-        /// <param name="bNoStaircases"></param>
-        /// <param name="forcedAvatarState"></param>
-        /// <returns>true if you can move onto the tile</returns>
-        internal bool IsTileFreeToTravel(Point2D currentPosition, Point2D newPosition, bool bNoStaircases,
-            Avatar.AvatarState forcedAvatarState)
-        {
-            if (newPosition.X < 0 || newPosition.Y < 0) return false;
-
-            bool bIsAvatarTile = currentPosition == newPosition;
-
-            // get the regular tile reference AND get the map unit (NPC, frigate etc)
-            // we need to evaluate both
-            TileReference tileReference = GetTileReference(newPosition);
-            MapUnit mapUnit = GetTopVisibleMapUnit(newPosition, true);
-
-            // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
-            // true indicates that it is walkable
-            bool bStaircaseWalkable = !(bNoStaircases && GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index));
-
-            // if it's nighttime then the portcullises go down and you cannot pass
-            bool bPortcullisDown = GameReferences.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") == tileReference.Index &&
-                                   !_timeOfDay.IsDayLight;
-
-            // we check both the tile reference below as well as the map unit that occupies the tile
-            bool bIsWalkable;
-            // if the MapUnit is null then we do a basic evaluation 
-            if (mapUnit is null)
-            {
-                bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable) && !bPortcullisDown;
-            }
-            else // otherwise we need to evaluate if the vehicle can moved to the tile
-            {
-                bIsWalkable = mapUnit.KeyTileReference.IsPassable(forcedAvatarState);
-            }
-
-            // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
-            // return !bIsNpcTile && bIsWalkable && !bIsAvatarTile;
-            return bIsWalkable && !bIsAvatarTile;
-        }
-
-        /// <summary>
-        ///     Gets possible directions that are accessible from a particular point
-        /// </summary>
-        /// <param name="characterPosition">the current position of the character</param>
-        /// <param name="scheduledPosition">the place they are supposed to be</param>
-        /// <param name="nMaxDistance">max distance they can travel from that position</param>
-        /// <param name="bNoStaircases"></param>
-        /// <returns></returns>
-        private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition,
-            Point2D scheduledPosition,
-            int nMaxDistance, bool bNoStaircases)
-        {
-            List<MapUnitMovement.MovementCommandDirection> directionList =
-                new List<MapUnitMovement.MovementCommandDirection>();
-
-            // gets an adjusted position OR returns null if the position is not valid
-
-            foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(
-                typeof(MapUnitMovement.MovementCommandDirection)))
-            {
-                // we may be asked to avoid including .None in the list
-                if (direction == MapUnitMovement.MovementCommandDirection.None) continue;
-
-                Point2D adjustedPos = GetPositionIfUserCanMove(direction, characterPosition, bNoStaircases,
-                    scheduledPosition, nMaxDistance);
-                // if adjustedPos == null then the particular direction was not allowed for one reason or another
-                if (adjustedPos != null) directionList.Add(direction);
-            }
-
-            return directionList;
-        }
-
-        private Point2D GetPositionIfUserCanMove(MapUnitMovement.MovementCommandDirection direction,
-            Point2D characterPosition, bool bNoStaircases, Point2D scheduledPosition, int nMaxDistance)
-        {
-            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
-
-            // always include none
-            if (direction == MapUnitMovement.MovementCommandDirection.None) return adjustedPosition;
-
-            if (adjustedPosition.X < 0 || adjustedPosition.X >= CurrentMap.TheMap.Length || adjustedPosition.Y < 0 ||
-                adjustedPosition.Y >= CurrentMap.TheMap[0].Length) return null;
-
-            // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
-            if (IsTileFreeToTravel(adjustedPosition, bNoStaircases) &&
-                scheduledPosition.IsWithinN(adjustedPosition, nMaxDistance)) return adjustedPosition;
-
-            return null;
-        }
-
-        /// <summary>
-        ///     Gets a suitable random position when wandering
-        /// </summary>
-        /// <param name="characterPosition">position of character</param>
-        /// <param name="scheduledPosition">scheduled position of the character</param>
-        /// <param name="nMaxDistance">max number of tiles the wander can be from the scheduled position</param>
-        /// <param name="direction">OUT - the direction that the character should travel</param>
-        /// <returns></returns>
-        internal Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition,
-            int nMaxDistance, out MapUnitMovement.MovementCommandDirection direction)
-        {
             Random ran = new Random();
-            List<MapUnitMovement.MovementCommandDirection> possibleDirections =
-                GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance, true);
+            Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
+            Horse horse = TheMapUnits.CreateHorse(
+                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor),
+                LargeMapOverUnder, out int nIndex);
 
-            // if no directions are returned then we tell them not to move
-            if (possibleDirections.Count == 0)
-            {
-                direction = MapUnitMovement.MovementCommandDirection.None;
+            if (nIndex == -1 || horse == null) return null;
 
-                return characterPosition.Copy();
-            }
-
-            direction = possibleDirections[ran.Next() % possibleDirections.Count];
-
-            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
-
-            return adjustedPosition;
+            return horse;
         }
 
-        /// <summary>
-        ///     Gets a list of points for all stairs and ladders
-        /// </summary>
-        /// <param name="ladderOrStairDirection">direction of all stairs and ladders</param>
-        /// <returns></returns>
-        private List<Point2D> GetListOfAllLaddersAndStairs(LadderOrStairDirection ladderOrStairDirection)
-        {
-            List<Point2D> laddersAndStairs = new List<Point2D>();
-
-            // go through every single tile on the map looking for ladders and stairs
-            for (int x = 0; x < SmallMap.XTiles; x++)
-            {
-                for (int y = 0; y < SmallMap.YTiles; y++)
-                {
-                    TileReference tileReference = GetTileReference(x, y);
-                    if (ladderOrStairDirection == LadderOrStairDirection.Down)
-                    {
-                        // if this is a ladder or staircase and it's in the right direction, then add it to the list
-                        if (GameReferences.SpriteTileReferences.IsLadderDown(tileReference.Index) || IsStairGoingDown(new Point2D(x, y)))
-                            laddersAndStairs.Add(new Point2D(x, y));
-                    }
-                    else // otherwise we know you are going up
-                    {
-                        if (GameReferences.SpriteTileReferences.IsLadderUp(tileReference.Index) ||
-                            GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index) && IsStairGoingUp(new Point2D(x, y)))
-                            laddersAndStairs.Add(new Point2D(x, y));
-                    }
-                } // end y for
-            } // end x for
-
-            return laddersAndStairs;
-        }
-
-        /// <summary>
-        ///     Gets the shortest path between a list of
-        /// </summary>
-        /// <param name="positionList">list of positions</param>
-        /// <param name="destinedPosition">the destination position</param>
-        /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
-        private SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList, Point2D destinedPosition)
-        {
-            SortedDictionary<double, Point2D> sortedPoints = new SortedDictionary<double, Point2D>();
-
-            // get the distances and add to the sorted dictionary
-            foreach (Point2D xy in positionList)
-            {
-                double dDistance = destinedPosition.DistanceBetween(xy);
-                // make them negative so they sort backwards
-
-                // if the distance is the same then we just add a bit to make sure there is no conflict
-                while (sortedPoints.ContainsKey(dDistance))
-                {
-                    dDistance += 0.0000001;
-                }
-
-                sortedPoints.Add(dDistance, xy);
-            }
-
-            return sortedPoints;
-        }
+        public InventoryItem DequeuExposedSearchItems(Point2D xy) => TheMapOverrides.DequeueSearchItem(xy);
 
         /// <summary>
         ///     Gets the best possible stair or ladder location
@@ -880,6 +346,38 @@ namespace Ultima5Redux.Maps
             foreach (Point2D xy in sortedPoints.Values)
             {
                 bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy,
+                    Map.WalkableType.StandardWalking) > 0;
+                // we first make sure that the path even exists before we add it to the list
+                if (bPathBuilt) bestChoiceList.Add(xy);
+            }
+
+            return bestChoiceList;
+        }
+
+        /// <summary>
+        ///     Gets the best possible stair or ladder locations from the current position to the given ladder/stair direction
+        ///     currentPosition -> best ladder/stair
+        /// </summary>
+        /// <param name="ladderOrStairDirection">which direction will we try to get to</param>
+        /// <param name="destinedPosition">the position you are trying to get to</param>
+        /// <param name="currentPosition">the current position of the character</param>
+        /// <returns></returns>
+        internal List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(
+            LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
+        {
+            // get all ladder and stairs locations based (only up or down ladders/stairs)
+            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
+
+            // get an ordered dictionary of the shortest straight line paths
+            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
+
+            // ordered list of the best choice paths (only valid paths) 
+            List<Point2D> bestChoiceList = new List<Point2D>(sortedPoints.Count);
+
+            // to make it more familiar, we will transfer to an ordered list
+            foreach (Point2D xy in sortedPoints.Values)
+            {
+                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy,
                     Map.WalkableType.StandardWalking) > 0;
                 // we first make sure that the path even exists before we add it to the list
                 if (bPathBuilt) bestChoiceList.Add(xy);
@@ -946,139 +444,241 @@ namespace Ultima5Redux.Maps
             return nNewSpriteIndex;
         }
 
+        public SingleCombatMapReference GetCombatMapReferenceByPosition(Point2D xy,
+            SingleCombatMapReference.Territory territory)
+        {
+            TileReference tileReference = GetTileReference(xy);
+            return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
+                (int)tileReference.CombatMapIndex);
+        }
+
+        // internal bool IsAnyExposedItems(Point2D xy)
+        // {
+        //     if (_exposedSearchItems[xy.X][xy.Y] == null) return false;
+        //     return _exposedSearchItems[xy.X][xy.Y].Count > 0;
+        // }
+
+        // internal InventoryItem DequeuExposedItem(Point2D xy)
+        // {
+        //     if (TheMapOverrides.HasExposedSearchItems(xy)) return TheMapOverrides.DequeueSearchItem(xy);
+        //     throw new Ultima5ReduxException("Tried to deque an item at " + xy + " but there is no item on it");
+        // }
+
         /// <summary>
-        ///     Gets the best possible stair or ladder locations from the current position to the given ladder/stair direction
-        ///     currentPosition -> best ladder/stair
+        ///     Gets the Avatar's current position in 3D spaces
         /// </summary>
-        /// <param name="ladderOrStairDirection">which direction will we try to get to</param>
-        /// <param name="destinedPosition">the position you are trying to get to</param>
-        /// <param name="currentPosition">the current position of the character</param>
         /// <returns></returns>
-        internal List<Point2D> getBestStairsAndLadderLocationBasedOnCurrentPosition(
-            LadderOrStairDirection ladderOrStairDirection, Point2D destinedPosition, Point2D currentPosition)
+        public Point3D GetCurrent3DPosition()
         {
-            // get all ladder and stairs locations based (only up or down ladders/stairs)
-            List<Point2D> allLaddersAndStairList = GetListOfAllLaddersAndStairs(ladderOrStairDirection);
+            if (LargeMapOverUnder == Map.Maps.Small)
+                return new Point3D(CurrentPosition.X,
+                    CurrentPosition.Y, CurrentSmallMap.MapFloor);
 
-            // get an ordered dictionary of the shortest straight line paths
-            SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
+            return new Point3D(CurrentPosition.X,
+                CurrentPosition.Y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF);
+        }
 
-            // ordered list of the best choice paths (only valid paths) 
-            List<Point2D> bestChoiceList = new List<Point2D>(sortedPoints.Count);
+        public IEnumerable<InventoryItem> GetExposedSearchItems(Point2D xy) =>
+            TheMapOverrides.GetExposedSearchItems(xy);
 
-            // to make it more familiar, we will transfer to an ordered list
-            foreach (Point2D xy in sortedPoints.Values)
+
+        /// <summary>
+        ///     Create a list of the free spaces surrounding around the Avatar suitable for something to be generated onto
+        ///     Uses all 8 directions
+        /// </summary>
+        /// <returns></returns>
+        private List<Point2D> GetFreeSpacesSurroundingAvatar()
+        {
+            List<Point2D> freeSpacesAroundAvatar = new List<Point2D>();
+
+            for (int x = -1; x <= 1; x++)
             {
-                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy,
-                    Map.WalkableType.StandardWalking) > 0;
-                // we first make sure that the path even exists before we add it to the list
-                if (bPathBuilt) bestChoiceList.Add(xy);
+                for (int y = -1; y <= 1; y++)
+                {
+                    Point2D pointToCheck = new Point2D(Math.Max(CurrentPosition.X + x, 0),
+                        Math.Max(CurrentPosition.Y + y, 0));
+                    if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
+                        freeSpacesAroundAvatar.Add(pointToCheck);
+                }
             }
 
-            return bestChoiceList;
+            return freeSpacesAroundAvatar;
         }
 
         /// <summary>
-        ///     Returns the total number of moves to the number of moves for the character to reach a point
+        ///     Gets a list of points for all stairs and ladders
         /// </summary>
-        /// <param name="currentXy"></param>
-        /// <param name="targetXy">where the character would move</param>
-        /// <param name="walkableType"></param>
-        /// <returns>the number of moves to the targetXy</returns>
-        /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
-        internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, Map.WalkableType walkableType)
+        /// <param name="ladderOrStairDirection">direction of all stairs and ladders</param>
+        /// <returns></returns>
+        private List<Point2D> GetListOfAllLaddersAndStairs(LadderOrStairDirection ladderOrStairDirection)
         {
-            Stack<Node> nodeStack = CurrentMap.GetAStarByWalkableType(walkableType).FindPath(currentXy, targetXy);
+            List<Point2D> laddersAndStairs = new List<Point2D>();
 
-            return nodeStack?.Count ?? 0;
-        }
-
-        /// <summary>
-        ///     Advances each of the NPCs by one movement each
-        /// </summary>
-        internal void MoveMapUnitsToNextMove()
-        {
-            // go through each of the NPCs on the map
-            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
+            // go through every single tile on the map looking for ladders and stairs
+            for (int x = 0; x < SmallMap.XTiles; x++)
             {
-                mapUnit.CompleteNextMove(this, _timeOfDay, CurrentMap.GetAStarByMapUnit(mapUnit));
-            }
+                for (int y = 0; y < SmallMap.YTiles; y++)
+                {
+                    TileReference tileReference = GetTileReference(x, y);
+                    if (ladderOrStairDirection == LadderOrStairDirection.Down)
+                    {
+                        // if this is a ladder or staircase and it's in the right direction, then add it to the list
+                        if (GameReferences.SpriteTileReferences.IsLadderDown(tileReference.Index) ||
+                            IsStairGoingDown(new Point2D(x, y)))
+                            laddersAndStairs.Add(new Point2D(x, y));
+                    }
+                    else // otherwise we know you are going up
+                    {
+                        if (GameReferences.SpriteTileReferences.IsLadderUp(tileReference.Index) ||
+                            GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index) &&
+                            IsStairGoingUp(new Point2D(x, y)))
+                            laddersAndStairs.Add(new Point2D(x, y));
+                    }
+                } // end y for
+            } // end x for
+
+            return laddersAndStairs;
         }
 
+
         /// <summary>
-        ///     Is there food on a table within 1 (4 way) tile
-        ///     Used for determining if eating animation should be used
+        ///     Gets a map unit on the current tile (that ISN'T the Avatar)
         /// </summary>
-        /// <param name="characterPos"></param>
-        /// <returns>true if food is within a tile</returns>
-        public bool IsFoodNearby(Point2D characterPos)
+        /// <returns>MapUnit or null if none exist</returns>
+        public MapUnit GetMapUnitOnCurrentTile()
         {
-            bool isFoodTable(int nSprite)
-            {
-                return nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index
-                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index
-                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
-            }
-
-            // yuck, but if the food is up one tile or down one tile, then food is nearby
-            bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index)
-                                 || isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index);
-            return bIsFoodNearby;
+            return GetTopVisibleMapUnit(CurrentPosition.XY, true);
         }
 
         /// <summary>
-        ///     Are the stairs at the given position going up?
-        ///     Be sure to check if they are stairs first
+        ///     If an NPC is on a tile, then it will get them
+        ///     assumes it's on the same floor
         /// </summary>
         /// <param name="xy"></param>
-        /// <returns></returns>
-        public bool IsStairGoingUp(Point2D xy)
+        /// <returns>the NPC or null if one does not exist</returns>
+        public List<MapUnit> GetMapUnitOnTile(Point2D xy)
         {
-            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+            List<MapUnit> mapUnits =
+                TheMapUnits.GetMapUnitByLocation(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
 
-            if (IsCombatMap) return false;
-
-            bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
-            return bStairGoUp;
+            return mapUnits;
         }
-
-        public bool IsAvatarSitting()
-        {
-            return GameReferences.SpriteTileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
-        }
-
 
         /// <summary>
-        ///     Are the stairs at the given position going down?
-        ///     Be sure to check if they are stairs first
+        ///     Gets the NPC you want to talk to in the given direction
+        ///     If you are in front of a table then you can talk over top of it too
         /// </summary>
-        /// <param name="xy"></param>
+        /// <param name="direction"></param>
+        /// <returns>the NPC or null if non are found</returns>
+        public NonPlayerCharacter GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection direction)
+        {
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction);
+
+            NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
+            (LargeMapOverUnder,
+                adjustedPosition, CurrentSingleMapReference.Floor);
+
+            if (npc != null) return npc;
+
+            if (!GetTileReference(adjustedPosition).IsTalkOverable)
+                return null;
+
+            Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
+            return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
+            (LargeMapOverUnder,
+                adjustedPosition2Away, CurrentSingleMapReference.Floor);
+        }
+
+        private Point2D GetPositionIfUserCanMove(MapUnitMovement.MovementCommandDirection direction,
+            Point2D characterPosition, bool bNoStaircases, Point2D scheduledPosition, int nMaxDistance)
+        {
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
+
+            // always include none
+            if (direction == MapUnitMovement.MovementCommandDirection.None) return adjustedPosition;
+
+            if (adjustedPosition.X < 0 || adjustedPosition.X >= CurrentMap.TheMap.Length || adjustedPosition.Y < 0 ||
+                adjustedPosition.Y >= CurrentMap.TheMap[0].Length) return null;
+
+            // is the tile free to travel to? even if it is, is it within N tiles of the scheduled tile?
+            if (IsTileFreeToTravel(adjustedPosition, bNoStaircases) &&
+                scheduledPosition.IsWithinN(adjustedPosition, nMaxDistance)) return adjustedPosition;
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Gets possible directions that are accessible from a particular point
+        /// </summary>
+        /// <param name="characterPosition">the current position of the character</param>
+        /// <param name="scheduledPosition">the place they are supposed to be</param>
+        /// <param name="nMaxDistance">max distance they can travel from that position</param>
+        /// <param name="bNoStaircases"></param>
         /// <returns></returns>
+        private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition,
+            Point2D scheduledPosition,
+            int nMaxDistance, bool bNoStaircases)
+        {
+            List<MapUnitMovement.MovementCommandDirection> directionList =
+                new List<MapUnitMovement.MovementCommandDirection>();
+
+            // gets an adjusted position OR returns null if the position is not valid
+
+            foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(
+                typeof(MapUnitMovement.MovementCommandDirection)))
+            {
+                // we may be asked to avoid including .None in the list
+                if (direction == MapUnitMovement.MovementCommandDirection.None) continue;
+
+                Point2D adjustedPos = GetPositionIfUserCanMove(direction, characterPosition, bNoStaircases,
+                    scheduledPosition, nMaxDistance);
+                // if adjustedPos == null then the particular direction was not allowed for one reason or another
+                if (adjustedPos != null) directionList.Add(direction);
+            }
+
+            return directionList;
+        }
+
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStairGoingDown(Point2D xy)
+        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
-            bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
-            return bStairGoUp;
+            // 0 = Jhelom
+            // 1 = Minoc
+            // 2 = East Brittany
+            // 3 = Buccaneer's Den
+
+            SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(
+                Map.Maps.Overworld,
+                GetLocationOfDock(location), 0, true);
+            return seaFaringVessel;
         }
 
         /// <summary>
-        ///     Are the stairs at the player characters current position going down?
+        ///     Gets the shortest path between a list of
         /// </summary>
-        /// <returns></returns>
-        public bool IsStairsGoingDown()
+        /// <param name="positionList">list of positions</param>
+        /// <param name="destinedPosition">the destination position</param>
+        /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
+        private SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList, Point2D destinedPosition)
         {
-            return IsStairGoingDown(CurrentPosition.XY);
-        }
+            SortedDictionary<double, Point2D> sortedPoints = new SortedDictionary<double, Point2D>();
 
-        /// <summary>
-        ///     Are the stairs at the player characters current position going up?
-        /// </summary>
-        /// <returns></returns>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStairGoingUp()
-        {
-            return IsStairGoingUp(CurrentPosition.XY);
+            // get the distances and add to the sorted dictionary
+            foreach (Point2D xy in positionList)
+            {
+                double dDistance = destinedPosition.DistanceBetween(xy);
+                // make them negative so they sort backwards
+
+                // if the distance is the same then we just add a bit to make sure there is no conflict
+                while (sortedPoints.ContainsKey(dDistance))
+                {
+                    dDistance += 0.0000001;
+                }
+
+                sortedPoints.Add(dDistance, xy);
+            }
+
+            return sortedPoints;
         }
 
         /// <summary>
@@ -1139,64 +739,147 @@ namespace Ultima5Redux.Maps
             return nSpriteNum;
         }
 
+
         /// <summary>
-        ///     Is the door at the specified coordinate horizontal?
+        ///     Gets a tile reference from the given coordinate
         /// </summary>
-        /// <param name="xy"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="bIgnoreExposed"></param>
+        /// <param name="bIgnoreMoongate"></param>
         /// <returns></returns>
-        public bool IsHorizDoor(Point2D xy)
+        public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
         {
-            if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
-            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
+            // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
+            if (!bIgnoreExposed)
+                if (TheMapOverrides.HasExposedSearchItems(x, y))
+                {
+                    Queue<InventoryItem> searchItems = TheMapOverrides.GetExposedSearchItems(x, y);
+                    if (searchItems.Count > 0)
+                        // we get the top most exposed item and only show it
+                        return GameReferences.SpriteTileReferences.GetTileReference(searchItems.Peek().SpriteNum);
+                }
 
-            return (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC)
-                   || (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC);
-        }
-
-        /// <summary>
-        ///     Gets a map unit if it's on the current tile
-        /// </summary>
-        /// <returns>true if there is a map unit of on the tile</returns>
-        public bool IsMapUnitOccupiedTile()
-        {
-            return IsMapUnitOccupiedTile(CurrentPosition.XY);
-        }
-
-        /// <summary>
-        ///     Is there an NPC on the tile specified?
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        public bool IsMapUnitOccupiedTile(Point2D xy)
-        {
-            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            for (int index = 0; index < mapUnits.Count; index++)
+            // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
+            // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
+            if (!bIgnoreMoongate && IsLargeMap &&
+                _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF))
+            )
             {
-                // sometimes characters are null because they don't exist - and that is OK
-                Debug.Assert(mapUnits[index].IsActive);
-
-                MapUnitPosition mapUnitPosition = mapUnits[index].MapUnitPosition;
-                if (mapUnitPosition.X == xy.X && mapUnitPosition.Y == xy.Y &&
-                    mapUnitPosition.Floor == CurrentPosition.Floor)
-                    return true;
+                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
+                       throw new Ultima5ReduxException("Supposed to get a moongate override: " + new Point2D(x, y));
             }
 
-            return false;
+            // we check to see if our override map has something on top of it
+            if (TheMapOverrides.HasOverrideTile(x, y))
+            {
+                return TheMapOverrides.GetOverrideTileReference(x, y) ??
+                       throw new Ultima5ReduxException("Expected tile override at " + new Point2D(x, y));
+            }
+
+            // the GetTileReference accounts for any forced overrides across the entire world
+            return CurrentMap.GetTileReference(new Point2D(x, y));
         }
 
-        public bool ContainsSearchableThings(Point2D xy)
+        /// <summary>
+        ///     Gets a tile reference from the given coordinate
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public TileReference GetTileReference(Point2D xy)
         {
-            // moonstone check
-            return IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
+            return GetTileReference(xy.X, xy.Y);
         }
 
-        public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
+        /// <summary>
+        ///     Gets a tile reference from the tile the avatar currently resides on
+        /// </summary>
+        /// <returns></returns>
+        public TileReference GetTileReferenceOnCurrentTile()
         {
-            TileReference tileRef1 = GetTileReference(tile1Pos);
-            TileReference tileRef2 = GetTileReference(tile2Pos);
+            return GetTileReference(CurrentPosition.XY);
+        }
 
-            SetOverridingTileReferece(tileRef1, tile2Pos);
-            SetOverridingTileReferece(tileRef2, tile1Pos);
+        /// <summary>
+        ///     Gets the top visible map unit - excluding the Avatar
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bExcludeAvatar"></param>
+        /// <returns>MapUnit or null</returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
+        {
+            List<Type> visibilePriorityOrder = new List<Type>
+            {
+                typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar)
+            };
+            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
+
+            // this is inefficient, but the lists are so small it is unlikely to matter
+            foreach (Type type in visibilePriorityOrder)
+            {
+                if (bExcludeAvatar && type == typeof(Avatar)) continue;
+                foreach (MapUnit mapUnit in mapUnits)
+                {
+                    if (!mapUnit.IsActive) continue;
+                    // if it's a combat unit but they dead or gone then we skip
+                    if (mapUnit is CombatMapUnit combatMapUnit)
+                    {
+                        if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0) continue;
+                    }
+
+                    // if we find the first highest priority item, then we simply return it
+                    if (mapUnit.GetType() == type) return mapUnit;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns the total number of moves to the number of moves for the character to reach a point
+        /// </summary>
+        /// <param name="currentXy"></param>
+        /// <param name="targetXy">where the character would move</param>
+        /// <param name="walkableType"></param>
+        /// <returns>the number of moves to the targetXy</returns>
+        /// <remarks>This is expensive, and would be wonderful if we had a better way to get this info</remarks>
+        internal int GetTotalMovesToLocation(Point2D currentXy, Point2D targetXy, Map.WalkableType walkableType)
+        {
+            Stack<Node> nodeStack = CurrentMap.GetAStarByWalkableType(walkableType).FindPath(currentXy, targetXy);
+
+            return nodeStack?.Count ?? 0;
+        }
+
+        /// <summary>
+        ///     Gets a suitable random position when wandering
+        /// </summary>
+        /// <param name="characterPosition">position of character</param>
+        /// <param name="scheduledPosition">scheduled position of the character</param>
+        /// <param name="nMaxDistance">max number of tiles the wander can be from the scheduled position</param>
+        /// <param name="direction">OUT - the direction that the character should travel</param>
+        /// <returns></returns>
+        internal Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition,
+            int nMaxDistance, out MapUnitMovement.MovementCommandDirection direction)
+        {
+            Random ran = new Random();
+            List<MapUnitMovement.MovementCommandDirection> possibleDirections =
+                GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance, true);
+
+            // if no directions are returned then we tell them not to move
+            if (possibleDirections.Count == 0)
+            {
+                direction = MapUnitMovement.MovementCommandDirection.None;
+
+                return characterPosition.Copy();
+            }
+
+            direction = possibleDirections[ran.Next() % possibleDirections.Count];
+
+            Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(characterPosition, direction);
+
+            return adjustedPosition;
         }
 
         /// <summary>
@@ -1260,6 +943,100 @@ namespace Ultima5Redux.Maps
             return nMostTile == -1 ? 5 : nMostTile;
         }
 
+        public bool HasAnyExposedSearchItems(Point2D xy) => TheMapOverrides.HasExposedSearchItems(xy);
+
+        public bool IsAvatarSitting()
+        {
+            return GameReferences.SpriteTileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+        }
+
+        /// <summary>
+        ///     Is there food on a table within 1 (4 way) tile
+        ///     Used for determining if eating animation should be used
+        /// </summary>
+        /// <param name="characterPos"></param>
+        /// <returns>true if food is within a tile</returns>
+        public bool IsFoodNearby(Point2D characterPos)
+        {
+            bool isFoodTable(int nSprite)
+            {
+                return nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index
+                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index
+                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
+            }
+
+            // yuck, but if the food is up one tile or down one tile, then food is nearby
+            bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index)
+                                 || isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index);
+            return bIsFoodNearby;
+        }
+
+        /// <summary>
+        ///     Is the door at the specified coordinate horizontal?
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsHorizDoor(Point2D xy)
+        {
+            if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
+            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
+
+            return (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC)
+                   || (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC);
+        }
+
+        public bool IsLandNearby() =>
+            IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
+
+        public bool IsLandNearby(Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState)
+            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
+
+        public bool IsLandNearby(Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState)
+            || IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState)
+            || IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState)
+            || IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
+
+        /// <summary>
+        ///     Gets a map unit if it's on the current tile
+        /// </summary>
+        /// <returns>true if there is a map unit of on the tile</returns>
+        public bool IsMapUnitOccupiedTile()
+        {
+            return IsMapUnitOccupiedTile(CurrentPosition.XY);
+        }
+
+        /// <summary>
+        ///     Is there an NPC on the tile specified?
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsMapUnitOccupiedTile(Point2D xy)
+        {
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            for (int index = 0; index < mapUnits.Count; index++)
+            {
+                // sometimes characters are null because they don't exist - and that is OK
+                Debug.Assert(mapUnits[index].IsActive);
+
+                MapUnitPosition mapUnitPosition = mapUnits[index].MapUnitPosition;
+                if (mapUnitPosition.X == xy.X && mapUnitPosition.Y == xy.Y &&
+                    mapUnitPosition.Floor == CurrentPosition.Floor)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsNPCInBed(NonPlayerCharacter npc)
+        {
+            return GetTileReference(npc.MapUnitPosition.XY).Index ==
+                   GameReferences.SpriteTileReferences.GetTileNumberByName("LeftBed");
+        }
+
         /// <summary>
         ///     Determines if a specific Dock is occupied by a Sea Faring Vessel
         /// </summary>
@@ -1269,103 +1046,354 @@ namespace Ultima5Redux.Maps
             return GetSeaFaringVesselAtDock(location) != null;
         }
 
-        public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            List<byte> xDockCoords =
-                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS).GetAsByteList();
-            List<byte> yDockCoords =
-                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS).GetAsByteList();
-            Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>
-                {
-                    {
-                        SmallMapReferences.SingleMapReference.Location.Jhelom,
-                        new Point2D(xDockCoords[0], yDockCoords[0])
-                    },
-                    {
-                        SmallMapReferences.SingleMapReference.Location.Minoc,
-                        new Point2D(xDockCoords[1], yDockCoords[1])
-                    },
-                    {
-                        SmallMapReferences.SingleMapReference.Location.East_Britanny,
-                        new Point2D(xDockCoords[2], yDockCoords[2])
-                    },
-                    {
-                        SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                        new Point2D(xDockCoords[3], yDockCoords[3])
-                    }
-                };
-
-            if (!docks.ContainsKey(location))
-                throw new Ultima5ReduxException("Asked for a dock  in " + location + " but there isn't one there");
-
-            return docks[location];
-        }
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public SeaFaringVessel GetSeaFaringVesselAtDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            // 0 = Jhelom
-            // 1 = Minoc
-            // 2 = East Brittany
-            // 3 = Buccaneer's Den
-
-            SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(
-                Map.Maps.Overworld,
-                GetLocationOfDock(location), 0, true);
-            return seaFaringVessel;
-        }
-
 
         /// <summary>
-        ///     Create a list of the free spaces surrounding around the Avatar suitable for something to be generated onto
-        ///     Uses all 8 directions
+        ///     Are the stairs at the given position going down?
+        ///     Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public bool IsStairGoingDown(Point2D xy)
+        {
+            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
+            return bStairGoUp;
+        }
+
+        /// <summary>
+        ///     Are the stairs at the given position going up?
+        ///     Be sure to check if they are stairs first
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsStairGoingUp(Point2D xy)
+        {
+            if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
+
+            if (IsCombatMap) return false;
+
+            bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
+            return bStairGoUp;
+        }
+
+        /// <summary>
+        ///     Are the stairs at the player characters current position going up?
         /// </summary>
         /// <returns></returns>
-        private List<Point2D> GetFreeSpacesSurroundingAvatar()
+        // ReSharper disable once MemberCanBePrivate.Global
+        public bool IsStairGoingUp()
         {
-            List<Point2D> freeSpacesAroundAvatar = new List<Point2D>();
-
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int y = -1; y <= 1; y++)
-                {
-                    Point2D pointToCheck = new Point2D(Math.Max(CurrentPosition.X + x, 0),
-                        Math.Max(CurrentPosition.Y + y, 0));
-                    if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
-                        freeSpacesAroundAvatar.Add(pointToCheck);
-                }
-            }
-
-            return freeSpacesAroundAvatar;
+            return IsStairGoingUp(CurrentPosition.XY);
         }
 
         /// <summary>
-        ///     Creates a horse MapUnit in the surrounding tiles of the Avatar - if one exists
+        ///     Are the stairs at the player characters current position going down?
         /// </summary>
-        /// <returns>the new horse or null if there was no where to put it</returns>
-        public Horse CreateHorseAroundAvatar()
+        /// <returns></returns>
+        public bool IsStairsGoingDown()
         {
-            List<Point2D> freeSpacesAroundAvatar = GetFreeSpacesSurroundingAvatar();
-            if (freeSpacesAroundAvatar.Count <= 0) return null;
-
-            Random ran = new Random();
-            Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
-            Horse horse = TheMapUnits.CreateHorse(
-                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor),
-                LargeMapOverUnder, out int nIndex);
-
-            if (nIndex == -1 || horse == null) return null;
-
-            return horse;
+            return IsStairGoingDown(CurrentPosition.XY);
         }
 
-        public IEnumerable<InventoryItem> GetExposedSearchItems(Point2D xy) =>
-            TheMapOverrides.GetExposedSearchItems(xy);
+        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) =>
+            IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
-        public bool HasAnyExposedSearchItems(Point2D xy) => TheMapOverrides.HasExposedSearchItems(xy);
+        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState) =>
+            IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
 
-        public InventoryItem DequeuExposedSearchItems(Point2D xy) => TheMapOverrides.DequeueSearchItem(xy);
 
+        /// <summary>
+        ///     Is the particular tile eligible to be moved onto
+        /// </summary>
+        /// <param name="currentPosition"></param>
+        /// <param name="newPosition"></param>
+        /// <param name="bNoStaircases"></param>
+        /// <param name="forcedAvatarState"></param>
+        /// <returns>true if you can move onto the tile</returns>
+        internal bool IsTileFreeToTravel(Point2D currentPosition, Point2D newPosition, bool bNoStaircases,
+            Avatar.AvatarState forcedAvatarState)
+        {
+            if (newPosition.X < 0 || newPosition.Y < 0) return false;
+
+            bool bIsAvatarTile = currentPosition == newPosition;
+
+            // get the regular tile reference AND get the map unit (NPC, frigate etc)
+            // we need to evaluate both
+            TileReference tileReference = GetTileReference(newPosition);
+            MapUnit mapUnit = GetTopVisibleMapUnit(newPosition, true);
+
+            // if we want to eliminate staircases as an option then we need to make sure it isn't a staircase
+            // true indicates that it is walkable
+            bool bStaircaseWalkable =
+                !(bNoStaircases && GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index));
+
+            // if it's nighttime then the portcullises go down and you cannot pass
+            bool bPortcullisDown = GameReferences.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") ==
+                                   tileReference.Index &&
+                                   !_timeOfDay.IsDayLight;
+
+            // we check both the tile reference below as well as the map unit that occupies the tile
+            bool bIsWalkable;
+            // if the MapUnit is null then we do a basic evaluation 
+            if (mapUnit is null)
+            {
+                bIsWalkable = (tileReference.IsPassable(forcedAvatarState) && bStaircaseWalkable) && !bPortcullisDown;
+            }
+            else // otherwise we need to evaluate if the vehicle can moved to the tile
+            {
+                bIsWalkable = mapUnit.KeyTileReference.IsPassable(forcedAvatarState);
+            }
+
+            // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
+            // return !bIsNpcTile && bIsWalkable && !bIsAvatarTile;
+            return bIsWalkable && !bIsAvatarTile;
+        }
+
+        private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
+
+        /// <summary>
+        ///     Loads a combat map as the current map
+        ///     Saves the previous map state, for post combat
+        /// </summary>
+        /// <param name="singleCombatMapReference"></param>
+        /// <param name="entryDirection"></param>
+        /// <param name="records"></param>
+        /// <param name="primaryEnemyReference"></param>
+        /// <param name="nPrimaryEnemies"></param>
+        /// <param name="secondaryEnemyReference"></param>
+        /// <param name="nSecondaryEnemies"></param>
+        /// <param name="npcRef"></param>
+        private void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference primaryEnemyReference, int nPrimaryEnemies,
+            EnemyReference secondaryEnemyReference, int nSecondaryEnemies,
+            NonPlayerCharacterReference npcRef)
+        {
+            if (npcRef != null)
+                Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0,
+                    "when assigning an NPC, you must have single enemy");
+
+            // if the PreCombatMap is not set OR the existing map is not already a combat map then
+            // we set the PreCombatMap so we know which map to return to
+            if (PreCombatMap == null || !IsCombatMap)
+            {
+                Debug.Assert(CurrentMap is RegularMap,
+                    "You can't load a combat map when you are already in a combat map");
+                PreCombatMap = (RegularMap)CurrentMap;
+                PreMapUnitPosition.Floor = CurrentPosition.Floor;
+                PreMapUnitPosition.X = CurrentPosition.X;
+                PreMapUnitPosition.Y = CurrentPosition.Y;
+            }
+
+            CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
+
+            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _inventory);
+
+            // we only want to push the exposed items and override map if we are on a small or large map 
+            // not if we are going combat to combat map (think Debug)
+            if (TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
+            {
+                PreTheMapOverrides = TheMapOverrides;
+            }
+
+            TheMapOverrides = new MapOverrides(CurrentCombatMap);
+
+            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
+            LargeMapOverUnder = Map.Maps.Combat;
+
+            CurrentCombatMap.CreateParty(entryDirection, records);
+
+            CurrentCombatMap.CreateEnemies(singleCombatMapReference,
+                primaryEnemyReference, nPrimaryEnemies,
+                secondaryEnemyReference, nSecondaryEnemies, npcRef);
+
+            CurrentCombatMap.InitializeInitiativeQueue();
+        }
+
+        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0,
+            EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
+        {
+            LoadCombatMap(singleCombatMapReference, entryDirection, records,
+                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies, null);
+        }
+
+        public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
+        {
+            LoadCombatMap(singleCombatMapReference, entryDirection, records,
+                primaryEnemyReference, 1, null, 0,
+                npcRef);
+        }
+
+
+        /// <summary>
+        ///     Loads a combat map, but aut
+        /// </summary>
+        /// <param name="singleCombatMapReference"></param>
+        /// <param name="entryDirection"></param>
+        /// <param name="records"></param>
+        /// <param name="enemyReference"></param>
+        public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
+            SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
+            EnemyReference enemyReference)
+        {
+            int nPrimaryEnemies = 1;
+            int nSecondaryEnemies = 1;
+
+            if (enemyReference.IsNpc) nSecondaryEnemies = 0;
+
+            EnemyReference primaryEnemyReference = enemyReference;
+            EnemyReference secondaryEnemyReference = GameReferences.EnemyRefs.GetFriendReference(primaryEnemyReference);
+
+            LoadCombatMap(singleCombatMapReference, entryDirection, records,
+                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);
+        }
+
+        /// <summary>
+        ///     Loads a large map -either overworld or underworld
+        /// </summary>
+        /// <param name="map"></param>
+        public void LoadLargeMap(Map.Maps map)
+        {
+            CurrentLargeMap = _largeMaps[map];
+            switch (map)
+            {
+                case Map.Maps.Underworld:
+                case Map.Maps.Overworld:
+                    CurrentSingleMapReference = CurrentLargeMap.CurrentSingleMapReference;
+                    break;
+                case Map.Maps.Combat:
+                case Map.Maps.Small:
+                    throw new Ultima5ReduxException("You can't load a small large map!");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(map), map, null);
+            }
+
+            // this will probably fail, which means creating a new map was a good idea
+            //Debug.Assert(TheMapOverrides.TheMap is LargeMap && TheMapOverrides.TheMap == CurrentLargeMap);
+            // todo: maybe we store each map override indefinitely so we never lose anything 
+            TheMapOverrides = new MapOverrides(CurrentLargeMap);
+
+            LargeMapOverUnder = map;
+
+            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map),
+                map);
+        }
+
+        public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
+            bool bLoadFromDisk = false)
+        {
+            CurrentSingleMapReference = singleMapReference ??
+                                        throw new Ultima5ReduxException(
+                                            "Tried to load a small map, but null map reference was given");
+            CurrentSmallMap = _smallMaps.GetSmallMap(singleMapReference.MapLocation, singleMapReference.Floor);
+
+            TheMapOverrides = new MapOverrides(CurrentSmallMap);
+
+            LargeMapOverUnder = (Map.Maps)(-1);
+
+            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, bLoadFromDisk);
+            // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
+            TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
+
+            if (xy != null) CurrentPosition.XY = xy;
+        }
+
+        public void MoveAvatar(Point2D newPosition)
+        {
+            TheMapUnits.CurrentAvatarPosition =
+                new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
+        }
+
+        /// <summary>
+        ///     Advances each of the NPCs by one movement each
+        /// </summary>
+        internal void MoveMapUnitsToNextMove()
+        {
+            // go through each of the NPCs on the map
+            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
+            {
+                mapUnit.CompleteNextMove(this, _timeOfDay, CurrentMap.GetAStarByMapUnit(mapUnit));
+            }
+        }
+
+        public void ReturnToPreviousMapAfterCombat()
+        {
+            switch (PreCombatMap)
+            {
+                case LargeMap _:
+                case SmallMap _:
+                    TheMapOverrides = PreTheMapOverrides;
+
+                    LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
+                    CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
+                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false);
+                    //true);
+                    PreCombatMap = null;
+                    break;
+                default:
+                    throw new Ultima5ReduxException(
+                        "Attempting to return to previous map after combat with an unsupported map type: " +
+                        PreCombatMap?.GetType());
+            }
+        }
+
+        internal int SearchAndExposeItems(Point2D xy)
+        {
+            // check for moonstones
+            // moonstone check
+            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder) && _timeOfDay.IsDayLight)
+            {
+                MoonPhaseReferences.MoonPhases moonPhase = _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
+                InventoryItem invItem = _state.PlayerInventory.TheMoonstones.Items[moonPhase];
+                TheMapOverrides.EnqueueSearchItem(xy, invItem);
+
+                _moongates.SetMoonstoneBuried((int)moonPhase, false);
+
+                return 1;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        ///     Sets an override for the current tile which will be favoured over the static map tile
+        /// </summary>
+        /// <param name="tileReference">the reference (sprite)</param>
+        /// <param name="xy"></param>
+        public void SetOverridingTileReferece(TileReference tileReference, Point2D xy)
+        {
+            TheMapOverrides.SetOverrideTile(xy, tileReference);
+        }
+
+        public void SwapTiles(Point2D tile1Pos, Point2D tile2Pos)
+        {
+            TileReference tileRef1 = GetTileReference(tile1Pos);
+            TileReference tileRef2 = GetTileReference(tile2Pos);
+
+            SetOverridingTileReferece(tileRef1, tile2Pos);
+            SetOverridingTileReferece(tileRef2, tile1Pos);
+        }
+
+        // private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Point2D xy, Avatar.AvatarState avatarState) =>
+        //     IsTileFreeToTravel(xy.GetAdjustedPosition(direction), true, avatarState);
+
+        /// <summary>
+        ///     Use the stairs and change floors, loading a new map
+        /// </summary>
+        /// <param name="xy">the position of the stairs, ladder or trapdoor</param>
+        /// <param name="bForceDown">force a downward stairs</param>
+        public void UseStairs(Point2D xy, bool bForceDown = false)
+        {
+            bool bStairGoUp = IsStairGoingUp() && !bForceDown;
+            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
+                    CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)),
+                xy.Copy());
+        }
     }
 }

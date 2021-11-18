@@ -8,6 +8,65 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
+        [DataMember] public byte Day { get; set; }
+
+        [DataMember]
+        public byte Hour
+        {
+            get => _nHour;
+            set
+            {
+                Debug.Assert(value <= 23);
+                _nHour = value;
+            }
+        }
+
+        [DataMember]
+        public byte Minute
+        {
+            get => _nMinute;
+            set
+            {
+                Debug.Assert(value <= 59);
+                _nMinute = value;
+            }
+        }
+
+        [DataMember] public byte Month { get; set; }
+
+        [DataMember] public ushort Year { get; set; }
+
+        // ReSharper disable once UnusedMember.Global
+        [IgnoreDataMember] public string FormattedDate => Month + "-" + Day + "-" + Year;
+
+        [IgnoreDataMember]
+        public string FormattedTime
+        {
+            get
+            {
+                string suffix = Hour < 12 ? "AM" : "PM";
+                return (Hour % 12 == 0 ? 12 : Hour % 12) + ":" + $"{Minute:D2}" + " " + suffix;
+            }
+        }
+
+        [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
+
+
+        /// <summary>
+        ///     Gets a string describing the current time of day
+        /// </summary>
+        /// <returns></returns>
+        [IgnoreDataMember]
+        public string TimeOfDayName
+        {
+            get
+            {
+                if (Hour > 5 && Hour < 12) return "morning";
+                if (Hour >= 12 && Hour < 17) return "afternoon";
+                return "evening";
+            }
+        }
+
         /// <summary>
         ///     Dictionary of all change trackers and if time has changed since last check
         /// </summary>
@@ -38,97 +97,6 @@ namespace Ultima5Redux.DayNightMoon
             Day = currentDayDataChunk.GetChunkAsByte();
             Hour = currentHourDataChunk.GetChunkAsByte();
             Minute = currentMinuteDataChunk.GetChunkAsByte();
-        }
-
-        [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
-
-        [DataMember] public ushort Year { get; set; }
-        [DataMember] public byte Month { get; set; }
-        [DataMember] public byte Day { get; set; }
-        [DataMember] public byte Hour
-        {
-            get => _nHour;
-            set
-            {
-                Debug.Assert(value <= 23);
-                _nHour = value;
-            }
-        }
-        [DataMember] public byte Minute
-        {
-            get => _nMinute;
-            set
-            {
-                Debug.Assert(value <= 59);
-                _nMinute = value;
-            }
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        [IgnoreDataMember] public string FormattedDate => Month + "-" + Day + "-" + Year;
-
-        [IgnoreDataMember] public string FormattedTime
-        {
-            get
-            {
-                string suffix = Hour < 12 ? "AM" : "PM";
-                return (Hour % 12 == 0 ? 12 : Hour % 12) + ":" + $"{Minute:D2}" + " " + suffix;
-            }
-        }
-
-
-        /// <summary>
-        ///     Gets a string describing the current time of day
-        /// </summary>
-        /// <returns></returns>
-        [IgnoreDataMember] public string TimeOfDayName
-        {
-            get
-            {
-                if (Hour > 5 && Hour < 12) return "morning";
-                if (Hour >= 12 && Hour < 17) return "afternoon";
-                return "evening";
-            }
-        }
-
-
-        /// <summary>
-        ///     Registers a change tracker, returning the int handle to it that will need to be stored
-        /// </summary>
-        /// <returns>the int handler of the change tracker</returns>
-        // ReSharper disable once UnusedMember.Global
-        public int RegisterChangeTracker()
-        {
-            int nChangeTracker = _nTotalChangeTrackers++;
-            _timeHasChangedDictionary[nChangeTracker] = true;
-            return nChangeTracker;
-        }
-
-        /// <summary>
-        ///     Sets all the flags to indicate if time has or hasn't changed for all "RegisterChangeTracker" registered
-        ///     change tracker id
-        /// </summary>
-        /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
-        public void SetAllChangeTrackers(bool bTimeChangeHappened = true)
-        {
-            for (int i = 0; i < _nTotalChangeTrackers; i++)
-            {
-                _timeHasChangedDictionary[i] = bTimeChangeHappened;
-            }
-        }
-
-        /// <summary>
-        ///     Has the time changed since the last time we checked with the given change tracker id
-        /// </summary>
-        /// <param name="nChangeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
-        /// <returns>true if change has occured, otherwise false</returns>
-        // ReSharper disable once UnusedMember.Global
-        public bool HasTimeChanged(int nChangeTrackerId)
-        {
-            bool bTimeChangeOccured = _timeHasChangedDictionary[nChangeTrackerId];
-            // we reset it to false to say we saw it until the next change
-            _timeHasChangedDictionary[nChangeTrackerId] = false;
-            return bTimeChangeOccured;
         }
 
         /// <summary>
@@ -189,6 +157,46 @@ namespace Ultima5Redux.DayNightMoon
 
             // time has changed, so we reset all our change tracking flags
             SetAllChangeTrackers();
+        }
+
+        /// <summary>
+        ///     Has the time changed since the last time we checked with the given change tracker id
+        /// </summary>
+        /// <param name="nChangeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
+        /// <returns>true if change has occured, otherwise false</returns>
+        // ReSharper disable once UnusedMember.Global
+        public bool HasTimeChanged(int nChangeTrackerId)
+        {
+            bool bTimeChangeOccured = _timeHasChangedDictionary[nChangeTrackerId];
+            // we reset it to false to say we saw it until the next change
+            _timeHasChangedDictionary[nChangeTrackerId] = false;
+            return bTimeChangeOccured;
+        }
+
+
+        /// <summary>
+        ///     Registers a change tracker, returning the int handle to it that will need to be stored
+        /// </summary>
+        /// <returns>the int handler of the change tracker</returns>
+        // ReSharper disable once UnusedMember.Global
+        public int RegisterChangeTracker()
+        {
+            int nChangeTracker = _nTotalChangeTrackers++;
+            _timeHasChangedDictionary[nChangeTracker] = true;
+            return nChangeTracker;
+        }
+
+        /// <summary>
+        ///     Sets all the flags to indicate if time has or hasn't changed for all "RegisterChangeTracker" registered
+        ///     change tracker id
+        /// </summary>
+        /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
+        public void SetAllChangeTrackers(bool bTimeChangeHappened = true)
+        {
+            for (int i = 0; i < _nTotalChangeTrackers; i++)
+            {
+                _timeHasChangedDictionary[i] = bTimeChangeHappened;
+            }
         }
     }
 }

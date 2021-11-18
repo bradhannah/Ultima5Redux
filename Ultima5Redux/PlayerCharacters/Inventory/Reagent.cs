@@ -31,6 +31,26 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             _reagentPriceAndQuantities;
 
         private readonly GameState _state;
+        public override int BasePrice => 0;
+
+
+        public override bool HideQuantity => false;
+
+        public override string InventoryReferenceString => ReagentType.ToString();
+        public override bool IsSellable => false;
+
+        public override int Quantity
+        {
+            get => base.Quantity;
+            set => base.Quantity = value > 99 ? 99 : value;
+        }
+
+        /// <summary>
+        ///     Standard index/order of reagents in data files
+        /// </summary>
+        public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
+
+        public ReagentTypeEnum ReagentType { get; }
 
         /// <summary>
         ///     Create a reagent
@@ -46,9 +66,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             _reagentPriceAndQuantities =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>();
 
-            List<byte> prices = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_BASE_PRICES)
+            List<byte> prices = GameReferences.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.REAGENT_BASE_PRICES)
                 .GetAsByteList();
-            List<byte> quantities = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES)
+            List<byte> quantities = GameReferences.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES)
                 .GetAsByteList();
             int nOffset = (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
             int nReagents = Enum.GetNames(typeof(ReagentTypeEnum)).Length;
@@ -64,49 +86,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     _reagentPriceAndQuantities.Add(location,
                         new ReagentPriceAndQuantity(prices[nIndex], quantities[nIndex]));
             }
-        }
-
-
-        public override bool HideQuantity => false;
-        public override bool IsSellable => false;
-        public override int BasePrice => 0;
-
-        public override int Quantity
-        {
-            get => base.Quantity;
-            set => base.Quantity = value > 99 ? 99 : value;
-        }
-
-        /// <summary>
-        ///     Standard index/order of reagents in data files
-        /// </summary>
-        public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
-
-        public ReagentTypeEnum ReagentType { get; }
-
-        public override string InventoryReferenceString => ReagentType.ToString();
-
-
-        /// <summary>
-        ///     Get all locations that reagents are sold
-        /// </summary>
-        /// <returns></returns>
-        private List<SmallMapReferences.SingleMapReference.Location> GetLocations()
-        {
-            List<SmallMapReferences.SingleMapReference.Location> locations =
-                new List<SmallMapReferences.SingleMapReference.Location>();
-
-            List<byte> reagentSkByteList = GameReferences.DataOvlRef
-                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS)
-                .GetAsByteList(); 
-            foreach (byte b in reagentSkByteList)
-            {
-                SmallMapReferences.SingleMapReference.Location location = 
-                    (SmallMapReferences.SingleMapReference.Location)b;
-                locations.Add(location);
-            }
-
-            return locations;
         }
 
         /// <summary>
@@ -145,6 +124,29 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return _reagentPriceAndQuantities[location].Quantity;
         }
 
+
+        /// <summary>
+        ///     Get all locations that reagents are sold
+        /// </summary>
+        /// <returns></returns>
+        private List<SmallMapReferences.SingleMapReference.Location> GetLocations()
+        {
+            List<SmallMapReferences.SingleMapReference.Location> locations =
+                new List<SmallMapReferences.SingleMapReference.Location>();
+
+            List<byte> reagentSkByteList = GameReferences.DataOvlRef
+                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS)
+                .GetAsByteList();
+            foreach (byte b in reagentSkByteList)
+            {
+                SmallMapReferences.SingleMapReference.Location location =
+                    (SmallMapReferences.SingleMapReference.Location)b;
+                locations.Add(location);
+            }
+
+            return locations;
+        }
+
         /// <summary>
         ///     Does a particular location sell a particular reagent?
         /// </summary>
@@ -157,14 +159,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private class ReagentPriceAndQuantity
         {
+            public int Price { get; }
+            public int Quantity { get; }
+
             public ReagentPriceAndQuantity(int price, int quantity)
             {
                 Price = price;
                 Quantity = quantity;
             }
-
-            public int Price { get; }
-            public int Quantity { get; }
         }
     }
 }

@@ -13,6 +13,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         public List<DataOvlReference.Equipment> EquipmentForSaleList { get; set; }
 
+        public NonPlayerCharacterReference NpcRef { get; set; }
+
         public SmallMapReferences.SingleMapReference.Location ShoppeKeeperLocation
         {
             get
@@ -27,7 +29,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
-        public NonPlayerCharacterReference NpcRef { get; set; }
+        public string ShoppeKeeperName { get; set; }
+        public string ShoppeName { get; set; }
 
         public NonPlayerCharacterReference.NPCDialogTypeEnum TheShoppeKeeperType
         {
@@ -42,9 +45,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 return npcDialogTypeEnum;
             }
         }
-
-        public string ShoppeKeeperName { get; set; }
-        public string ShoppeName { get; set; }
 #pragma warning disable CS0649
         [DataMember(Name = "Location")] private string _locationStr;
         [DataMember(Name = "ShoppeKeeperType")] private string _shoppeKeeperType;

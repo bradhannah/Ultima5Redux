@@ -37,14 +37,15 @@ namespace Ultima5Redux.MapUnits
         {
             _nDialogIndex = nDialogIndex;
         }
-        
+
         /// <summary>
         ///     Construct a MapUnitMovement from old save game
         /// </summary>
         /// <param name="nDialogIndex">the index of an NPC</param>
         /// <param name="movementInstructionDataChunk">The full memory chunk of all movement instructions</param>
         /// <param name="movementOffsetDataChunk">the full memory chunk of the movement offsets</param>
-        public MapUnitMovement(int nDialogIndex, DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
+        public MapUnitMovement(int nDialogIndex, DataChunk movementInstructionDataChunk,
+            DataChunk movementOffsetDataChunk)
         {
             // we totally ignore the first entry, since it's bad stuff
             if (nDialogIndex == 0) return;
@@ -129,6 +130,17 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
+        ///     ToString override to simplify debug reading
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return _movementQueue.Count == 0
+                ? "Empty"
+                : $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
+        }
+
+        /// <summary>
         ///     Adds a new movement instruction to the end of the queue
         /// </summary>
         /// <param name="movementCommand"></param>
@@ -143,19 +155,6 @@ namespace Ultima5Redux.MapUnits
         public void ClearMovements()
         {
             _movementQueue.Clear();
-        }
-
-
-        /// <summary>
-        ///     Checks to see if any movement commands are available
-        /// </summary>
-        /// <returns>true if there are commands available</returns>
-        public bool IsNextCommandAvailable()
-        {
-            if (_movementQueue.Count > 0)
-                Debug.Assert(_movementQueue.Peek().Iterations > 0,
-                    "You have no iterations left on your movement command but it's still in the queue");
-            return _movementQueue.Count > 0;
         }
 
 
@@ -188,15 +187,17 @@ namespace Ultima5Redux.MapUnits
             return direction;
         }
 
+
         /// <summary>
-        ///     ToString override to simplify debug reading
+        ///     Checks to see if any movement commands are available
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        /// <returns>true if there are commands available</returns>
+        public bool IsNextCommandAvailable()
         {
-            return _movementQueue.Count == 0
-                ? "Empty"
-                : $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
+            if (_movementQueue.Count > 0)
+                Debug.Assert(_movementQueue.Peek().Iterations > 0,
+                    "You have no iterations left on your movement command but it's still in the queue");
+            return _movementQueue.Count > 0;
         }
     }
 }

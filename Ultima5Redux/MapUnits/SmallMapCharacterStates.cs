@@ -28,6 +28,11 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        public void EmptyState(int nIndex)
+        {
+            _characterStates[nIndex] = new SmallMapCharacterState();
+        }
+
         public SmallMapCharacterState GetCharacterState(int nIndex)
         {
             return _characterStates[nIndex];
@@ -43,11 +48,6 @@ namespace Ultima5Redux.MapUnits
             }
 
             return null;
-        }
-
-        public void EmptyState(int nIndex)
-        {
-            _characterStates[nIndex] = new SmallMapCharacterState();
         }
     }
 }

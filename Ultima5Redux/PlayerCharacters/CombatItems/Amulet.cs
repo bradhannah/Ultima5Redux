@@ -2,16 +2,14 @@
 {
     public class Amulet : Armour
     {
+        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+            CharacterEquipped.EquippableSlot.Amulet;
+
+        public override bool HideQuantity => false;
 
         public Amulet(CombatItemReference combatItemReference, int nQuantity) :
             base(combatItemReference, nQuantity)
         {
-            
-        }        
-
-        public override bool HideQuantity => false;
-
-        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
-            CharacterEquipped.EquippableSlot.Amulet;
+        }
     }
 }

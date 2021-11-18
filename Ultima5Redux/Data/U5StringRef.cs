@@ -208,19 +208,6 @@ namespace Ultima5Redux.Data
             };
         }
 
-        /// <summary>
-        ///     Returns a string based on an enumeration
-        /// </summary>
-        /// <remarks>I wrote this not because I should - but because I could. I feel both pride and shame.</remarks>
-        /// <param name="strObj"></param>
-        /// <returns></returns>
-        public string GetString(object strObj)
-        {
-            Debug.Assert(_strMap.ContainsKey(strObj.GetType()));
-
-            return _strMap[strObj.GetType()].StringList[(int)strObj];
-        }
-
         public string GetDirectionString(Point2D.Direction direction)
         {
             switch (direction)
@@ -238,6 +225,19 @@ namespace Ultima5Redux.Data
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
+        }
+
+        /// <summary>
+        ///     Returns a string based on an enumeration
+        /// </summary>
+        /// <remarks>I wrote this not because I should - but because I could. I feel both pride and shame.</remarks>
+        /// <param name="strObj"></param>
+        /// <returns></returns>
+        public string GetString(object strObj)
+        {
+            Debug.Assert(_strMap.ContainsKey(strObj.GetType()));
+
+            return _strMap[strObj.GetType()].StringList[(int)strObj];
         }
     }
 }

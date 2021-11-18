@@ -3,16 +3,12 @@ using Ultima5Redux.Dialogue;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    [DataContract]
-    public class NonPlayerCharacterState
+    [DataContract] public class NonPlayerCharacterState
     {
-        [IgnoreDataMember] private bool _bHasMetAvatar;
-
-        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef { get; }
         [DataMember] public int NPCRefIndex => NPCRef.DialogIndex;
-        [DataMember] public bool IsDead { get; set; }
-        
-        [DataMember] public bool HasMetAvatar
+
+        [DataMember]
+        public bool HasMetAvatar
         {
             get
             {
@@ -34,10 +30,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             set => _bHasMetAvatar = value;
         }
 
+        [DataMember] public bool IsDead { get; set; }
+
+        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef { get; }
+        [IgnoreDataMember] private bool _bHasMetAvatar;
+
         public NonPlayerCharacterState(NonPlayerCharacterReference npcRef)
         {
             NPCRef = npcRef;
         }
-        
     }
 }

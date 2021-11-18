@@ -12,21 +12,6 @@ namespace Ultima5Redux.PlayerCharacters
 {
     public sealed class PlayerCharacterRecord
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M' }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum CharacterGender { Male = 0x0B, Female = 0x0C }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum CharacterPartyStatus
-        {
-            InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01
-        } // otherwise it is at an inn at Settlement # in byte value
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
-        
         private enum CharacterRecordOffsets
         {
             Name = 0x00, Gender = 0x09, Class = 0x0A, Status = 0x0B, Strength = 0x0C, Dexterity = 0x0D,
@@ -35,29 +20,54 @@ namespace Ultima5Redux.PlayerCharacters
             Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F
         }
 
+        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterClass
+        {
+            Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'
+        }
+
+        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterGender { Male = 0x0B, Female = 0x0C }
+
+        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterPartyStatus
+        {
+            InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01
+        } // otherwise it is at an inn at Settlement # in byte value
+
+        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterStatus
+        {
+            Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D'
+        }
+
+        public enum EquipResult { Success, SuccessUnequipRight, SuccessUnequipLeft, TooHeavy, Error }
+
         //private const int NAME_LENGTH = 8;
-        
+
         internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
 
-        private byte _monthsSinceStayingAtInn;
+        [DataMember] public CharacterEquipped Equipped { get; } = new CharacterEquipped();
 
         [DataMember] public string Name { get; }
-        [DataMember] public CharacterClass Class { get; set; }
-        [DataMember] public CharacterGender Gender { get; set; }
-        [DataMember] private byte InnOrParty { get; set; }
+
+        [DataMember] public CharacterStats Stats { get; } = new CharacterStats();
 
         //, KilledPermanently = 0x7F
         [DataMember] private byte Unknown2 { get; }
+
+        [DataMember] public CharacterClass Class { get; set; }
+        [DataMember] public CharacterGender Gender { get; set; }
+        [DataMember] private byte InnOrParty { get; set; }
         [DataMember] public bool IsInvisible { get; private set; }
 
         [DataMember] public bool IsRat { get; private set; }
 
-        [DataMember] public byte MonthsSinceStayingAtInn
+        [DataMember]
+        public byte MonthsSinceStayingAtInn
         {
             get => _monthsSinceStayingAtInn;
             set => _monthsSinceStayingAtInn = (byte)(value % byte.MaxValue);
         }
-        [DataMember] public CharacterPartyStatus PartyStatus
+
+        [DataMember]
+        public CharacterPartyStatus PartyStatus
         {
             get
             {
@@ -71,7 +81,12 @@ namespace Ultima5Redux.PlayerCharacters
             set => InnOrParty = (byte)value;
         }
 
-        [IgnoreDataMember] public int PrimarySpriteIndex =>
+        [IgnoreDataMember]
+        public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
+            (SmallMapReferences.SingleMapReference.Location)InnOrParty;
+
+        [IgnoreDataMember]
+        public int PrimarySpriteIndex =>
             Class switch
             {
                 CharacterClass.Avatar => 284,
@@ -81,11 +96,7 @@ namespace Ultima5Redux.PlayerCharacters
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-        [IgnoreDataMember] public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
-            (SmallMapReferences.SingleMapReference.Location)InnOrParty;
-
-        [DataMember] public CharacterEquipped Equipped { get; } = new CharacterEquipped();
-        [DataMember] public CharacterStats Stats { get; }= new CharacterStats();
+        private byte _monthsSinceStayingAtInn;
 
         /// <summary>
         ///     Creates a character record from a raw record that begins at offset 0
@@ -139,21 +150,81 @@ namespace Ultima5Redux.PlayerCharacters
             Unknown2 = rawRecordByteList[(int)CharacterRecordOffsets.Unknown2];
         }
 
-
-        /// <summary>
-        /// Unequips and item from the user and 
-        /// </summary>
-        /// <param name="equippableSlot"></param>
-        /// <param name="inventory"></param>
-        public bool UnequipEquipment(CharacterEquipped.EquippableSlot equippableSlot, Inventory.Inventory inventory)
+        public int CastSpellMani()
         {
-            if (!Equipped.IsEquipped(equippableSlot)) return false;
+            if (Utils.Ran.Next() % 20 == 0)
+            {
+                return -1;
+            }
 
-            DataOvlReference.Equipment equippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
+            int nHealPoints = Utils.GetNumberBetween(5, 25);
+            Stats.CurrentHp = Math.Min(Stats.MaximumHp, Stats.CurrentHp + nHealPoints);
+            return nHealPoints;
+        }
 
-            inventory.GetItemFromEquipment(equippedEquipment).Quantity++;
-            Equipped.UnequipEquippableSlot(equippableSlot);
+        public bool Cure()
+        {
+            if (Stats.Status != CharacterStatus.Poisoned) return false;
+            Stats.Status = CharacterStatus.Good;
             return true;
+        }
+
+        public EquipResult EquipEquipment(Inventory.Inventory inventory, DataOvlReference.Equipment newEquipment)
+        {
+            // detect the equipable slot
+            CharacterEquipped.EquippableSlot equippableSlot =
+                GetEquippableSlot(inventory.GetItemFromEquipment(newEquipment));
+            //if (equippableSlot == CharacterEquipped.EquippableSlot.None) return EquipResult.Error;
+
+            // get the thing that is already equipped
+            DataOvlReference.Equipment oldEquippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
+
+            // put the old one back in your inventory
+            CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment);
+            oldEquippedCombatItem.Quantity--;
+            //if (oldEquippedCombatItem!=null) 
+
+            // there should be at least one in your inventory to do this
+            CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment);
+            // if (newEquippedCombatItem == null)
+            //     throw new Ultima5ReduxException(
+            //         "Tried to equip equipment that doesn't appear to be in your inventory: " + newEquipment);
+            Debug.Assert(newEquippedCombatItem.Quantity > 0);
+
+            // let's make sure they have enough strength to wield/wear the Equipment
+            if (Stats.Strength < newEquippedCombatItem.TheCombatItemReference.RequiredStrength)
+                return EquipResult.TooHeavy;
+
+            Equipped.SetEquippableSlot(equippableSlot, newEquipment);
+
+            if (!(newEquippedCombatItem is Weapon weapon)) return EquipResult.Success;
+
+            if (weapon.TheCombatItemReference.IsTwoHanded)
+            {
+                bool bUnequipped = UnequipEquipment(CharacterEquipped.EquippableSlot.RightHand, inventory);
+                return bUnequipped ? EquipResult.SuccessUnequipRight : EquipResult.Success;
+            }
+
+            if (weapon.TheCombatItemReference.IsShield)
+            {
+                bool bUnequippedLeft = false;
+
+                DataOvlReference.Equipment leftHandEquippedEquipment =
+                    Equipped.GetEquippedEquipment(CharacterEquipped.EquippableSlot.LeftHand);
+
+                if (inventory.GetItemFromEquipment(leftHandEquippedEquipment) is Weapon leftHandWeapon)
+                {
+                    if (leftHandWeapon.TheCombatItemReference.IsTwoHanded)
+                    {
+                        // if the left hand weapon is 2 handed then we unequip it
+                        bUnequippedLeft = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
+                    }
+                }
+
+                return bUnequippedLeft ? EquipResult.SuccessUnequipLeft : EquipResult.Success;
+            }
+
+            return EquipResult.Success;
         }
 
         private CharacterEquipped.EquippableSlot GetEquippableSlot(CombatItem combatItem)
@@ -169,158 +240,13 @@ namespace Ultima5Redux.PlayerCharacters
                 case Armour _:
                     return CharacterEquipped.EquippableSlot.Armour;
                 case Weapon weapon:
-                    return weapon.TheCombatItemReference.IsShield ? CharacterEquipped.EquippableSlot.RightHand : CharacterEquipped.EquippableSlot.LeftHand;
+                    return weapon.TheCombatItemReference.IsShield
+                        ? CharacterEquipped.EquippableSlot.RightHand
+                        : CharacterEquipped.EquippableSlot.LeftHand;
                 default:
                     throw new Ultima5ReduxException("Tried to get equippable slot for unsupported item: " +
                                                     combatItem.LongName);
             }
-        }
-
-        public enum EquipResult { Success, SuccessUnequipRight, SuccessUnequipLeft, TooHeavy, Error }
-        
-        public EquipResult EquipEquipment(Inventory.Inventory inventory, DataOvlReference.Equipment newEquipment)
-        {
-            // detect the equipable slot
-            CharacterEquipped.EquippableSlot equippableSlot = GetEquippableSlot(inventory.GetItemFromEquipment(newEquipment));  
-            //if (equippableSlot == CharacterEquipped.EquippableSlot.None) return EquipResult.Error;
-            
-            // get the thing that is already equipped
-            DataOvlReference.Equipment oldEquippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
-
-            // put the old one back in your inventory
-            CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment); 
-            oldEquippedCombatItem.Quantity--;
-            //if (oldEquippedCombatItem!=null) 
-            
-            // there should be at least one in your inventory to do this
-            CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment);
-            // if (newEquippedCombatItem == null)
-            //     throw new Ultima5ReduxException(
-            //         "Tried to equip equipment that doesn't appear to be in your inventory: " + newEquipment);
-            Debug.Assert(newEquippedCombatItem.Quantity > 0);
-            
-            // let's make sure they have enough strength to wield/wear the Equipment
-            if (Stats.Strength < newEquippedCombatItem.TheCombatItemReference.RequiredStrength) return EquipResult.TooHeavy;
-            
-            Equipped.SetEquippableSlot(equippableSlot, newEquipment);
-
-            if (!(newEquippedCombatItem is Weapon weapon)) return EquipResult.Success;
-            
-            if (weapon.TheCombatItemReference.IsTwoHanded)
-            {
-                bool bUnequipped = UnequipEquipment(CharacterEquipped.EquippableSlot.RightHand, inventory);
-                return bUnequipped ? EquipResult.SuccessUnequipRight : EquipResult.Success;
-            }
-
-            if (weapon.TheCombatItemReference.IsShield)
-            {
-                bool bUnequippedLeft = false;
-
-                DataOvlReference.Equipment leftHandEquippedEquipment = Equipped.GetEquippedEquipment(CharacterEquipped.EquippableSlot.LeftHand);
-
-                if (inventory.GetItemFromEquipment(leftHandEquippedEquipment) is Weapon leftHandWeapon)
-                {
-                    if (leftHandWeapon.TheCombatItemReference.IsTwoHanded)
-                    {
-                        // if the left hand weapon is 2 handed then we unequip it
-                        bUnequippedLeft = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
-                    }
-                }
-                return bUnequippedLeft ? EquipResult.SuccessUnequipLeft : EquipResult.Success;
-            }
-
-            return EquipResult.Success;
-        }
-        
-        public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
-        {
-            InnOrParty = (byte)location;
-            MonthsSinceStayingAtInn = 0;
-            // if the character goes to the Inn while poisoned then they die there immediately
-            if (Stats.Status == CharacterStatus.Poisoned)
-            {
-                Stats.CurrentHp = 0;
-                Stats.Status = CharacterStatus.Dead;
-            }
-        }
-
-        public int CastSpellMani()
-        {
-            if (Utils.Ran.Next() % 20 == 0)
-            {
-                return -1;
-            }
-
-            int nHealPoints = Utils.GetNumberBetween(5, 25);
-            Stats.CurrentHp = Math.Min(Stats.MaximumHp, Stats.CurrentHp + nHealPoints);
-            return nHealPoints;
-        }
-
-        public bool TurnInvisible()
-        {
-            //285 Apparition
-            IsInvisible = true;
-            return true;
-        }
-
-        public void TurnVisible()
-        {
-            IsInvisible = false;
-        }
-
-        public int Heal()
-        {
-            int nCurrentHp = Stats.CurrentHp;
-            Stats.CurrentHp = Stats.MaximumHp;
-            return Stats.MaximumHp - nCurrentHp;
-        }
-
-        public void TurnIntoNotARat()
-        {
-            Debug.Assert(IsRat);
-            IsRat = false;
-        }
-
-        public void TurnIntoRat()
-        {
-            IsRat = true;
-        }
-
-        public bool Cure()
-        {
-            if (Stats.Status != CharacterStatus.Poisoned) return false;
-            Stats.Status = CharacterStatus.Good;
-            return true;
-        }
-
-        public bool Resurrect()
-        {
-            if (Stats.Status != CharacterStatus.Dead) return false;
-            Stats.Status = CharacterStatus.Good;
-            Stats.CurrentHp = Stats.MaximumHp;
-            return true;
-        }
-
-        public bool Poison()
-        {
-            if (Stats.Status == CharacterStatus.Dead) return false;
-            Debug.Assert(Stats.Status == CharacterStatus.Good || Stats.Status == CharacterStatus.Poisoned);
-            Stats.Status = CharacterStatus.Poisoned;
-            return true;
-        }
-
-        public bool Sleep()
-        {
-            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Poisoned) return false;
-            Stats.Status = CharacterStatus.Asleep;
-            return true;
-        }
-
-        public bool WakeUp()
-        {
-            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Poisoned) return false;
-            Stats.Status = CharacterStatus.Good;
-            return true;
         }
 
         public string GetPlayerSelectedMessage(DataOvlReference dataOvlReference, bool bPlayerEscaped,
@@ -344,6 +270,95 @@ namespace Ultima5Redux.PlayerCharacters
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public int Heal()
+        {
+            int nCurrentHp = Stats.CurrentHp;
+            Stats.CurrentHp = Stats.MaximumHp;
+            return Stats.MaximumHp - nCurrentHp;
+        }
+
+        public bool Poison()
+        {
+            if (Stats.Status == CharacterStatus.Dead) return false;
+            Debug.Assert(Stats.Status == CharacterStatus.Good || Stats.Status == CharacterStatus.Poisoned);
+            Stats.Status = CharacterStatus.Poisoned;
+            return true;
+        }
+
+        public bool Resurrect()
+        {
+            if (Stats.Status != CharacterStatus.Dead) return false;
+            Stats.Status = CharacterStatus.Good;
+            Stats.CurrentHp = Stats.MaximumHp;
+            return true;
+        }
+
+        public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
+        {
+            InnOrParty = (byte)location;
+            MonthsSinceStayingAtInn = 0;
+            // if the character goes to the Inn while poisoned then they die there immediately
+            if (Stats.Status == CharacterStatus.Poisoned)
+            {
+                Stats.CurrentHp = 0;
+                Stats.Status = CharacterStatus.Dead;
+            }
+        }
+
+        public bool Sleep()
+        {
+            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Poisoned) return false;
+            Stats.Status = CharacterStatus.Asleep;
+            return true;
+        }
+
+        public void TurnIntoNotARat()
+        {
+            Debug.Assert(IsRat);
+            IsRat = false;
+        }
+
+        public void TurnIntoRat()
+        {
+            IsRat = true;
+        }
+
+        public bool TurnInvisible()
+        {
+            //285 Apparition
+            IsInvisible = true;
+            return true;
+        }
+
+        public void TurnVisible()
+        {
+            IsInvisible = false;
+        }
+
+
+        /// <summary>
+        ///     Unequips and item from the user and
+        /// </summary>
+        /// <param name="equippableSlot"></param>
+        /// <param name="inventory"></param>
+        public bool UnequipEquipment(CharacterEquipped.EquippableSlot equippableSlot, Inventory.Inventory inventory)
+        {
+            if (!Equipped.IsEquipped(equippableSlot)) return false;
+
+            DataOvlReference.Equipment equippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
+
+            inventory.GetItemFromEquipment(equippedEquipment).Quantity++;
+            Equipped.UnequipEquippableSlot(equippableSlot);
+            return true;
+        }
+
+        public bool WakeUp()
+        {
+            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Poisoned) return false;
+            Stats.Status = CharacterStatus.Good;
+            return true;
         }
 
         //        offset length      purpose range

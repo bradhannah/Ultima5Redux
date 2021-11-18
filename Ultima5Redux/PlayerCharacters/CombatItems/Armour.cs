@@ -2,8 +2,7 @@
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract]
-    public abstract class Armour : CombatItem
+    [DataContract] public abstract class Armour : CombatItem
     {
         // protected Armour(DataOvlReference.Equipment specificEquipment, DataOvlReference dataOvlRef,
         //     int nQuantity, int nOffset, int nSpriteNum)
@@ -11,10 +10,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         // {
         // }
 
-        protected Armour(CombatItemReference theCombatItemReference, int nQuantity) : base(theCombatItemReference, nQuantity)
+        protected Armour(CombatItemReference theCombatItemReference, int nQuantity) : base(theCombatItemReference,
+            nQuantity)
         {
-            
         }
-        
     }
 }

@@ -10,15 +10,15 @@
 
         private const int POTION_SPRITE = 259;
 
+        public override bool HideQuantity { get; } = false;
+
+        public override string InventoryReferenceString => Color.ToString();
+
+        public PotionColor Color { get; }
+
         public Potion(PotionColor color, int quantity) : base(quantity, POTION_SPRITE)
         {
             Color = color;
         }
-
-        public override bool HideQuantity { get; } = false;
-
-        public PotionColor Color { get; }
-
-        public override string InventoryReferenceString => Color.ToString();
     }
 }

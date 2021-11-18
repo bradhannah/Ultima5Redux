@@ -12,11 +12,12 @@ namespace Ultima5Redux.Maps
 {
     public abstract class Map
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum Maps { Small = -1, Overworld, Underworld, Combat }
+        [JsonConverter(typeof(StringEnumConverter))] public enum Maps { Small = -1, Overworld, Underworld, Combat }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
+        [JsonConverter(typeof(StringEnumConverter))] public enum WalkableType
+        {
+            StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater
+        }
 
         /// <summary>
         ///     A* algorithm helper class
@@ -29,15 +30,6 @@ namespace Ultima5Redux.Maps
 
         private readonly Dictionary<Point2D, int> _openDoors = new Dictionary<Point2D, int>();
 
-        // ReSharper disable once NotAccessedField.Global
-        // ReSharper disable once MemberCanBePrivate.Global
-
-        public abstract bool ShowOuterSmallMapTiles { get; }
-
-        public bool XRayMode { get; set; } = false;
-
-        public abstract byte[][] TheMap { get; protected set; }
-
         /// <summary>
         ///     All A* nodes for the current map
         ///     Accessed by [x][y]
@@ -48,125 +40,16 @@ namespace Ultima5Redux.Maps
 
         public abstract int NumOfYTiles { get; }
 
+        // ReSharper disable once NotAccessedField.Global
+        // ReSharper disable once MemberCanBePrivate.Global
+
+        public abstract bool ShowOuterSmallMapTiles { get; }
+
+        public abstract byte[][] TheMap { get; protected set; }
+
         protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
 
-        /// <summary>
-        ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        protected abstract float GetAStarWeight(Point2D xy);
-
-        protected abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
-
-        public AStar GetAStarByMapUnit(MapUnit mapUnit)
-        {
-            WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
-
-            return GetAStarByWalkableType(walkableType);
-        }
-
-        public AStar GetAStarByWalkableType(WalkableType walkableType)
-        {
-            if (!_aStarDictionary.ContainsKey(walkableType))
-            {
-                throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
-                                                GetType());
-            }
-
-            return _aStarDictionary[walkableType];
-        }
-
-        /// <summary>
-        ///     Builds the A* map to be used for NPC pathfinding
-        /// </summary>
-        protected void InitializeAStarMap(WalkableType walkableType)
-        {
-            Debug.Assert(TheMap != null);
-            Debug.Assert(TheMap.Length > 0);
-            int nXTiles = TheMap[0].Length;
-            int nYTiles = TheMap.Length;
-
-            // load the A-Star compatible map into memory
-            List<List<Node>> aStarNodesLists = Utils.Init2DList<Node>(nXTiles, nYTiles);
-            _aStarNodes.Add(walkableType, aStarNodesLists);
-
-            for (int x = 0; x < nXTiles; x++)
-            {
-                for (int y = 0; y < nYTiles; y++)
-                {
-                    TileReference currentTile = GameReferences.SpriteTileReferences.GetTileReference(TheMap[x][y]);
-
-                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType);
-
-                    float fWeight = GetAStarWeight(new Point2D(x, y));
-
-                    Node node = new Node(new Point2D(x, y),
-                        //new Vector2(x, y),
-                        bIsWalkable, fWeight);
-                    aStarNodesLists[x].Add(node);
-                }
-            }
-
-            _aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
-        }
-
-        public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
-
-        protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
-        {
-            SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
-        }
-
-        public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
-        {
-            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
-            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
-        }
-
-        protected bool IsTileWalkable(Point2D xy, WalkableType walkableType)
-        {
-            if (IsOpenDoor(xy)) return true;
-            TileReference tileReference = GetTileReference(xy);
-            return (IsTileWalkable(tileReference, walkableType));
-        }
-
-        protected virtual bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
-        {
-            if (walkableType == WalkableType.CombatWater)
-            {
-                return tileReference.IsWaterEnemyPassable;
-            }
-
-            bool bIsWalkable =
-                tileReference.IsWalking_Passable || tileReference.Index ==
-                                                 GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index
-                                                 || tileReference.Index == GameReferences.SpriteTileReferences
-                                                     .GetTileReferenceByName("RegularDoorView").Index
-                                                 || tileReference.Index == GameReferences.SpriteTileReferences
-                                                     .GetTileReferenceByName("LockedDoor").Index
-                                                 || tileReference.Index == GameReferences.SpriteTileReferences
-                                                     .GetTileReferenceByName("LockedDoorView").Index;
-
-            return bIsWalkable;
-        }
-
-        public TileReference GetTileReference(Point2D xy)
-        {
-            if (IsXYOverride(xy)) return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
-
-            return GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
-        }
-
-        public bool IsXYOverride(Point2D xy)
-        {
-            return XYOverrides != null && XYOverrides.ContainsKey(xy);
-        }
-
-        public TileOverrideReference GetTileOverride(Point2D xy)
-        {
-            return XYOverrides[xy];
-        }
+        public bool XRayMode { get; set; } = false;
 
         // public void SetTileOverride(Point2D xy, TileReference tileReference)
         // {
@@ -269,6 +152,126 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        /// <summary>
+        ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        protected abstract float GetAStarWeight(Point2D xy);
+
+        protected abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
+
+        protected virtual bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
+        {
+            if (walkableType == WalkableType.CombatWater)
+            {
+                return tileReference.IsWaterEnemyPassable;
+            }
+
+            bool bIsWalkable =
+                tileReference.IsWalking_Passable || tileReference.Index ==
+                                                 GameReferences.SpriteTileReferences
+                                                     .GetTileReferenceByName("RegularDoor").Index
+                                                 || tileReference.Index == GameReferences.SpriteTileReferences
+                                                     .GetTileReferenceByName("RegularDoorView").Index
+                                                 || tileReference.Index == GameReferences.SpriteTileReferences
+                                                     .GetTileReferenceByName("LockedDoor").Index
+                                                 || tileReference.Index == GameReferences.SpriteTileReferences
+                                                     .GetTileReferenceByName("LockedDoorView").Index;
+
+            return bIsWalkable;
+        }
+
+        public AStar GetAStarByMapUnit(MapUnit mapUnit)
+        {
+            WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
+
+            return GetAStarByWalkableType(walkableType);
+        }
+
+        public AStar GetAStarByWalkableType(WalkableType walkableType)
+        {
+            if (!_aStarDictionary.ContainsKey(walkableType))
+            {
+                throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
+                                                GetType());
+            }
+
+            return _aStarDictionary[walkableType];
+        }
+
+        public TileOverrideReference GetTileOverride(Point2D xy)
+        {
+            return XYOverrides[xy];
+        }
+
+        public TileReference GetTileReference(Point2D xy)
+        {
+            if (IsXYOverride(xy))
+                return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
+
+            return GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+        }
+
+        /// <summary>
+        ///     Builds the A* map to be used for NPC pathfinding
+        /// </summary>
+        protected void InitializeAStarMap(WalkableType walkableType)
+        {
+            Debug.Assert(TheMap != null);
+            Debug.Assert(TheMap.Length > 0);
+            int nXTiles = TheMap[0].Length;
+            int nYTiles = TheMap.Length;
+
+            // load the A-Star compatible map into memory
+            List<List<Node>> aStarNodesLists = Utils.Init2DList<Node>(nXTiles, nYTiles);
+            _aStarNodes.Add(walkableType, aStarNodesLists);
+
+            for (int x = 0; x < nXTiles; x++)
+            {
+                for (int y = 0; y < nYTiles; y++)
+                {
+                    TileReference currentTile = GameReferences.SpriteTileReferences.GetTileReference(TheMap[x][y]);
+
+                    bool bIsWalkable = IsTileWalkable(currentTile, walkableType);
+
+                    float fWeight = GetAStarWeight(new Point2D(x, y));
+
+                    Node node = new Node(new Point2D(x, y),
+                        //new Vector2(x, y),
+                        bIsWalkable, fWeight);
+                    aStarNodesLists[x].Add(node);
+                }
+            }
+
+            _aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
+        }
+
+        public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
+
+        protected bool IsTileWalkable(Point2D xy, WalkableType walkableType)
+        {
+            if (IsOpenDoor(xy)) return true;
+            TileReference tileReference = GetTileReference(xy);
+            return (IsTileWalkable(tileReference, walkableType));
+        }
+
+        public bool IsXYOverride(Point2D xy)
+        {
+            return XYOverrides != null && XYOverrides.ContainsKey(xy);
+        }
+
+        protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
+        {
+            SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
+        }
+
+        public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
+        {
+            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
+            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
+        }
+
         #region FLOOD FILL
 
         // FLOOD FILL STUFF
@@ -346,7 +349,8 @@ namespace Ultima5Redux.Maps
             TestForVisibility[nCharacterIndex][adjustedXy.X][adjustedXy.Y] = true;
 
             // if it blocks light then we make it visible but do not make subsequent tiles visible
-            TileReference tileReference = GameReferences.SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
+            TileReference tileReference =
+                GameReferences.SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
 
             bool bBlocksLight =
                 tileReference.BlocksLight // if it says it blocks light AND 

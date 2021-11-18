@@ -12,57 +12,20 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     public sealed class NonPlayerCharacter : MapUnit
     {
-        private int _scheduleIndex = -1;
-        
         [DataMember] private int _playerCharacterRecordIndex;
-
-        public NonPlayerCharacter(
-                SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
-                TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk, 
-                SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition,
-                    NonPlayerCharacterState npcState)
-            : base(smallMapTheSmallMapCharacterState,
-                mapUnitMovement, location, Point2D.Direction.None,
-                npcState, GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
-                mapUnitPosition)
-        {
-            NPCState = npcState;
-            bool bLargeMap = TheSmallMapCharacterState == null && NPCState.NPCRef == null;
-
-            PlayerCharacterRecord record = null;
-     
-            // gets the player character record for an NPC if one exists
-            // this is commonly used when meeting NPCs who have not yet joined your party 
-            if (NPCState.NPCRef != null) record = playerCharacterRecords.GetCharacterRecordByNPC(NPCState.NPCRef);
-            
-            _playerCharacterRecordIndex = playerCharacterRecords.GetCharacterIndexByNPC(NPCState.NPCRef);
-            
-            // is the NPC you are loading currently in the party?
-            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
-
-            // it's a large map so we follow different logic to determine the placement of the character
-            if (bLargeMap)
-            {
-                Move(MapUnitPosition);
-            }
-            else
-            {
-                // there is no TheSmallMapCharacterState which indicates that it is a large map
-                if (!bLoadedFromDisk)
-                {
-                    if (NPCState.NPCRef != null) MoveNpcToDefaultScheduledPosition(timeOfDay);
-                }
-                else
-                {
-                    Move(MapUnitPosition);
-                }
-            }
-        }
+        private int _scheduleIndex = -1;
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public bool ArrivedAtLocation { get; private set; }
+        public override string BoardXitName => "Board them? You hardly know them!";
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>();
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>();
+
+        public override string FriendlyName => NPCRef.FriendlyName;
 
         /// <summary>
         ///     Is the map character currently an active character on the current map
@@ -89,58 +52,128 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         public override bool IsAttackable => true;
 
-        public override string BoardXitName => "Board them? You hardly know them!";
-
-        public override string FriendlyName => NPCRef.FriendlyName;
-
         public override TileReference NonBoardedTileReference => KeyTileReference;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>();
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public bool ArrivedAtLocation { get; private set; }
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>();
-
-        private void Move(Point2D xy, int nFloor, TimeOfDay tod)
+        public NonPlayerCharacter(
+            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
+            TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
+            SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition,
+            NonPlayerCharacterState npcState)
+            : base(smallMapTheSmallMapCharacterState,
+                mapUnitMovement, location, Point2D.Direction.None,
+                npcState, GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+                mapUnitPosition)
         {
-            base.Move(xy, nFloor);
-            UpdateScheduleTracking(tod);
-        }
+            NPCState = npcState;
+            bool bLargeMap = TheSmallMapCharacterState == null && NPCState.NPCRef == null;
 
-        private void Move(MapUnitPosition mapUnitPosition, TimeOfDay tod, bool bIsLargeMap)
-        {
-            base.Move(mapUnitPosition);
-            if (!bIsLargeMap) UpdateScheduleTracking(tod);
-        }
+            PlayerCharacterRecord record = null;
 
-        private void UpdateScheduleTracking(TimeOfDay tod)
-        {
-            if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod)) ArrivedAtLocation = true;
+            // gets the player character record for an NPC if one exists
+            // this is commonly used when meeting NPCs who have not yet joined your party 
+            if (NPCState.NPCRef != null) record = playerCharacterRecords.GetCharacterRecordByNPC(NPCState.NPCRef);
 
-            int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
-            // it's the first time, so we don't reset the ArrivedAtLocation flag 
-            if (_scheduleIndex == -1)
+            _playerCharacterRecordIndex = playerCharacterRecords.GetCharacterIndexByNPC(NPCState.NPCRef);
+
+            // is the NPC you are loading currently in the party?
+            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
+
+            // it's a large map so we follow different logic to determine the placement of the character
+            if (bLargeMap)
             {
-                _scheduleIndex = nCurrentScheduleIndex;
+                Move(MapUnitPosition);
             }
-            else if (_scheduleIndex != nCurrentScheduleIndex)
+            else
             {
-                _scheduleIndex = nCurrentScheduleIndex;
-                ArrivedAtLocation = false;
+                // there is no TheSmallMapCharacterState which indicates that it is a large map
+                if (!bLoadedFromDisk)
+                {
+                    if (NPCState.NPCRef != null) MoveNpcToDefaultScheduledPosition(timeOfDay);
+                }
+                else
+                {
+                    Move(MapUnitPosition);
+                }
             }
         }
 
-        /// <summary>
-        ///     Moves the NPC to the appropriate floor and location based on the their expected location and position
-        /// </summary>
-        private void MoveNpcToDefaultScheduledPosition(TimeOfDay timeOfDay)
+        public override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
         {
-            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+            // if there is no next available movement then we gotta recalculate and see if they should move
+            if (!Movement.IsNextCommandAvailable())
+                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor, aStar);
 
-            // the NPC is a non-NPC, so we keep looking
-            if (npcXy.X == 0 && npcXy.Y == 0) return;
+            // if this NPC has a command in the buffer, so let's execute!
+            if (!Movement.IsNextCommandAvailable()) return;
 
-            Move(npcXy, timeOfDay, false);
+            // it's possible that CalculateNextPath came up empty for a variety of reasons, and that's okay
+            // peek and see what we have before we pop it off
+            MapUnitMovement.MovementCommandDirection direction = Movement.GetNextMovementCommandDirection(true);
+            Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(MapUnitPosition.XY, direction);
+
+            // need to evaluate if I can even move to the next tile before actually popping out of the queue
+            bool bIsNpcOnSpace = virtualMap.IsMapUnitOccupiedTile(adjustedPos);
+            //TileReference adjustedTile = GetTileReference(adjustedPos);
+            if (virtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
+            {
+                // pop the direction from the queue
+                _ = Movement.GetNextMovementCommandDirection();
+                Move(adjustedPos, MapUnitPosition.Floor, timeOfDay);
+                MovementAttempts = 0;
+            }
+            else
+            {
+                MovementAttempts++;
+            }
+
+            if (ForcedWandering > 0)
+            {
+                WanderWithinN(virtualMap, timeOfDay, 32, true);
+                ForcedWandering--;
+                return;
+            }
+
+            // if we have tried a few times and failed then we will recalculate
+            // could have been a fixed NPC, stubborn Avatar or whatever
+            if (MovementAttempts <= 2) return;
+
+            // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
+            // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
+            // NPCs
+            Debug.WriteLine(NPCRef?.FriendlyName ??
+                            $"NOT_NPC got stuck after {MovementAttempts.ToString()} so we are going to find a new direction for them");
+
+            Movement.ClearMovements();
+
+            // we are sick of waiting and will force a wander for a random number of turns to try to let the little
+            // dummies figure it out on their own
+            Random ran = new Random();
+            int nTimes = ran.Next(0, 2) + 1;
+            WanderWithinN(virtualMap, timeOfDay, 32, true);
+
+            ForcedWandering = nTimes;
+            MovementAttempts = 0;
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public override string GetDebugDescription(TimeOfDay timeOfDay)
+        {
+            if (NPCRef != null)
+                return "Name=" + NPCRef.FriendlyName
+                               + " " + MapUnitPosition + " Scheduled to be at: " +
+                               NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
+                               " with AI Mode: " +
+                               NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
+                               " <b>Movement Attempts</b>: " + MovementAttempts + " " +
+                               Movement;
+
+            return "MapUnit " + KeyTileReference.Description
+                              + " " + MapUnitPosition + " Scheduled to be at: "
+                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
+                              + Movement;
         }
 
         /// <summary>
@@ -322,64 +355,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 }
         }
 
-        public override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
-        {
-            // if there is no next available movement then we gotta recalculate and see if they should move
-            if (!Movement.IsNextCommandAvailable())
-                CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor, aStar);
-
-            // if this NPC has a command in the buffer, so let's execute!
-            if (!Movement.IsNextCommandAvailable()) return;
-
-            // it's possible that CalculateNextPath came up empty for a variety of reasons, and that's okay
-            // peek and see what we have before we pop it off
-            MapUnitMovement.MovementCommandDirection direction = Movement.GetNextMovementCommandDirection(true);
-            Point2D adjustedPos = MapUnitMovement.GetAdjustedPos(MapUnitPosition.XY, direction);
-
-            // need to evaluate if I can even move to the next tile before actually popping out of the queue
-            bool bIsNpcOnSpace = virtualMap.IsMapUnitOccupiedTile(adjustedPos);
-            //TileReference adjustedTile = GetTileReference(adjustedPos);
-            if (virtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
-            {
-                // pop the direction from the queue
-                _ = Movement.GetNextMovementCommandDirection();
-                Move(adjustedPos, MapUnitPosition.Floor, timeOfDay);
-                MovementAttempts = 0;
-            }
-            else
-            {
-                MovementAttempts++;
-            }
-
-            if (ForcedWandering > 0)
-            {
-                WanderWithinN(virtualMap, timeOfDay, 32, true);
-                ForcedWandering--;
-                return;
-            }
-
-            // if we have tried a few times and failed then we will recalculate
-            // could have been a fixed NPC, stubborn Avatar or whatever
-            if (MovementAttempts <= 2) return;
-
-            // a little clunky - but basically if a the NPC can't move then it picks a random direction to move (as long as it's legal)
-            // and moves that single tile, which will then ultimately follow up with a recalculated route, hopefully breaking and deadlocks with other
-            // NPCs
-            Debug.WriteLine(NPCRef?.FriendlyName ??
-                            $"NOT_NPC got stuck after {MovementAttempts.ToString()} so we are going to find a new direction for them");
-
-            Movement.ClearMovements();
-
-            // we are sick of waiting and will force a wander for a random number of turns to try to let the little
-            // dummies figure it out on their own
-            Random ran = new Random();
-            int nTimes = ran.Next(0, 2) + 1;
-            WanderWithinN(virtualMap, timeOfDay, 32, true);
-
-            ForcedWandering = nTimes;
-            MovementAttempts = 0;
-        }
-
         /// <summary>
         ///     Checks if an NPC is on a stair or ladder, and if it goes in the correct direction then it returns true indicating
         ///     they can teleport
@@ -409,6 +384,48 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             if (GameReferences.SpriteTileReferences.IsLadderUp(currentTileRef.Index))
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
             return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
+        }
+
+        private void Move(Point2D xy, int nFloor, TimeOfDay tod)
+        {
+            base.Move(xy, nFloor);
+            UpdateScheduleTracking(tod);
+        }
+
+        private void Move(MapUnitPosition mapUnitPosition, TimeOfDay tod, bool bIsLargeMap)
+        {
+            base.Move(mapUnitPosition);
+            if (!bIsLargeMap) UpdateScheduleTracking(tod);
+        }
+
+        /// <summary>
+        ///     Moves the NPC to the appropriate floor and location based on the their expected location and position
+        /// </summary>
+        private void MoveNpcToDefaultScheduledPosition(TimeOfDay timeOfDay)
+        {
+            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+
+            // the NPC is a non-NPC, so we keep looking
+            if (npcXy.X == 0 && npcXy.Y == 0) return;
+
+            Move(npcXy, timeOfDay, false);
+        }
+
+        private void UpdateScheduleTracking(TimeOfDay tod)
+        {
+            if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod)) ArrivedAtLocation = true;
+
+            int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
+            // it's the first time, so we don't reset the ArrivedAtLocation flag 
+            if (_scheduleIndex == -1)
+            {
+                _scheduleIndex = nCurrentScheduleIndex;
+            }
+            else if (_scheduleIndex != nCurrentScheduleIndex)
+            {
+                _scheduleIndex = nCurrentScheduleIndex;
+                ArrivedAtLocation = false;
+            }
         }
 
         /// <summary>
@@ -452,25 +469,5 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             // add the single instruction to the queue
             Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(direction, 1));
         }
-        
-        // ReSharper disable once UnusedMember.Global
-        public override string GetDebugDescription(TimeOfDay timeOfDay)
-        {
-            if (NPCRef != null)
-                return "Name=" + NPCRef.FriendlyName
-                               + " " + MapUnitPosition + " Scheduled to be at: " +
-                               NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
-                               " with AI Mode: " +
-                               NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
-                               " <b>Movement Attempts</b>: " + MovementAttempts + " " +
-                               Movement;
-
-            return "MapUnit " + KeyTileReference.Description
-                              + " " + MapUnitPosition + " Scheduled to be at: "
-                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
-                              + Movement;
-        }
     }
-    
-    
 }

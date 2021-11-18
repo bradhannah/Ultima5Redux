@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+
 // ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace Ultima5Redux
@@ -9,6 +10,10 @@ namespace Ultima5Redux
     [DataContract]
     public class Point3D
     {
+        [DataMember] public int X { get; set; }
+        [DataMember] public int Y { get; set; }
+        [DataMember] public int Z { get; set; }
+
         public Point3D(int x, int y, int z)
         {
             X = x;
@@ -16,9 +21,21 @@ namespace Ultima5Redux
             Z = z;
         }
 
-        [DataMember] public int X { get; set; }
-        [DataMember] public int Y { get; set; }
-        [DataMember] public int Z { get; set; }
+
+        public static bool operator ==(Point3D left, Point3D right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Point3D left, Point3D right)
+        {
+            return !Equals(left, right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Point3D);
+        }
 
         public override int GetHashCode()
         {
@@ -35,22 +52,6 @@ namespace Ultima5Redux
             if (ReferenceEquals(this, p3d)) return true;
             if (p3d.GetType() != GetType()) return false;
             return p3d.X == X && p3d.Y == Y && p3d.Z == Z;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Point3D);
-        }
-
-
-        public static bool operator ==(Point3D left, Point3D right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Point3D left, Point3D right)
-        {
-            return !Equals(left, right);
         }
     }
 }

@@ -15,7 +15,10 @@ namespace Ultima5Redux.MapUnits
 
         private readonly List<MapUnitState> _mapUnitStates = new List<MapUnitState>(MAX_CHARACTER_STATES);
 
-        private DataChunk _mapUnitStatesDataChunk;
+        private readonly DataChunk _mapUnitStatesDataChunk;
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        private MapUnitStatesFiles MapUnitStatesType { get; set; }
 
         public MapUnitStates(DataChunk mapUnitStatesDataChunk)
         {
@@ -32,9 +35,6 @@ namespace Ultima5Redux.MapUnits
                 _mapUnitStates.Add(mapUnitState);
             }
         }
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        private MapUnitStatesFiles MapUnitStatesType { get; set; }
 
         public MapUnitState GetCharacterState(int nIndex)
         {
@@ -61,7 +61,7 @@ namespace Ultima5Redux.MapUnits
         public void Load(MapUnitStatesFiles mapUnitStatesType, bool bLoadFromDisk, int nOffset = 0x00)
         {
             MapUnitStatesType = mapUnitStatesType;
-            
+
             _mapUnitStates.Clear();
 
             if (!bLoadFromDisk) return;
@@ -71,9 +71,8 @@ namespace Ultima5Redux.MapUnits
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
                 _mapUnitStates.Add(new MapUnitState(characterStateBytes.GetRange(i * MapUnitState.NBYTES + nOffset,
-                        MapUnitState.NBYTES).ToArray()));
+                    MapUnitState.NBYTES).ToArray()));
             }
         }
-
     }
 }

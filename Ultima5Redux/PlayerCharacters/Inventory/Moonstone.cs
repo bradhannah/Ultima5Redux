@@ -7,16 +7,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private const int MOONSTONE_SPRITE = 281;
         private readonly Moongates _moongates;
 
-        public Moonstone(MoonPhaseReferences.MoonPhases phase, string findDescription, Moongates moongates)
-            : base(0, findDescription, MOONSTONE_SPRITE)
-        {
-            Phase = phase;
-            _moongates = moongates;
-        }
-
         public override bool HideQuantity => true;
 
-        public int MoongateIndex => (int)Phase;
+        public override string InventoryReferenceString => Phase.ToString();
+
+        public override string LongName => Utils.AddSpacesBeforeCaps(Phase.ToString());
 
         /// <summary>
         ///     If the moonstone is buried, then it's not in your inventory
@@ -29,12 +24,18 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             set => _moongates?.SetMoonstoneBuried((int)Phase, value <= 0);
         }
 
+        public override string ShortName => Utils.AddSpacesBeforeCaps(Phase.ToString());
+
+        public int MoongateIndex => (int)Phase;
+
         public MoonPhaseReferences.MoonPhases Phase { get; }
 
-        public override string InventoryReferenceString => Phase.ToString();
-
-        public override string LongName => Utils.AddSpacesBeforeCaps(Phase.ToString());
-        public override string ShortName => Utils.AddSpacesBeforeCaps(Phase.ToString());
+        public Moonstone(MoonPhaseReferences.MoonPhases phase, string findDescription, Moongates moongates)
+            : base(0, findDescription, MOONSTONE_SPRITE)
+        {
+            Phase = phase;
+            _moongates = moongates;
+        }
 
         // we will hold onto this enum for later when we assign custom sprites
         //public enum ItemTypeEnum { NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter, CrescentWaning, NoMoon }

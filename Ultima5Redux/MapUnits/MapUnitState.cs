@@ -28,6 +28,18 @@ namespace Ultima5Redux.MapUnits
         private int _tile1;
         private int _tile2;
 
+        internal byte Depends1 { get; set; }
+        private byte Depends2 { get; set; }
+        internal byte Depends3 { get; set; }
+        public byte Floor { get; set; }
+        public TileReference Tile1Ref { get; internal set; }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public TileReference Tile2Ref { get; internal set; }
+
+        public byte X { get; set; }
+        public byte Y { get; set; }
+
         internal MapUnitState()
         {
         }
@@ -55,76 +67,6 @@ namespace Ultima5Redux.MapUnits
         {
             Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
             Tile2Ref = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
-        }
-
-        internal byte Depends1 { get; set; }
-        internal byte Depends3 { get; set; }
-        private byte Depends2 { get; set; }
-        public byte Floor { get; set; }
-
-        public byte X { get; set; }
-        public byte Y { get; set; }
-        public TileReference Tile1Ref { get; internal set; }
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public TileReference Tile2Ref { get; internal set; }
-
-        public void SetTileReference(TileReference tileReference)
-        {
-            Tile1Ref = tileReference;
-            Tile2Ref = tileReference;
-        }
-
-        public void CopyTo(TileReferences tileReferences, MapUnitState mapUnitState)
-        {
-            mapUnitState._tile1 = _tile1;
-            mapUnitState._tile2 = _tile2;
-            mapUnitState.Depends1 = Depends1;
-            mapUnitState.Depends2 = Depends2;
-            mapUnitState.Depends3 = Depends3;
-            mapUnitState.Floor = Floor;
-            mapUnitState.X = X;
-            mapUnitState.Y = Y;
-            mapUnitState.SetTileReference(tileReferences.GetTileReference(_tile1));
-        }
-
-        public static MapUnitState CreateMapUnitState(TileReferences tileReferences, MapUnitPosition mapUnitStatePosition, 
-            int nSprite)
-        {
-            MapUnitState mapUnitState = new MapUnitState();
-
-            TileReference mapUnitStateTileReference = tileReferences.GetTileReference(nSprite);
-            Debug.Assert(mapUnitStateTileReference != null);
-
-            mapUnitState._tile1 = mapUnitStateTileReference.Index;
-            mapUnitState._tile2 = mapUnitStateTileReference.Index;
-            mapUnitState.Tile1Ref = tileReferences.GetTileReference(mapUnitState._tile1);
-            mapUnitState.Tile2Ref = mapUnitState.Tile1Ref;
-
-            mapUnitState.X = (byte)mapUnitStatePosition.X;
-            mapUnitState.Y = (byte)mapUnitStatePosition.Y;
-            mapUnitState.Floor = (byte)mapUnitStatePosition.Floor;
-            return mapUnitState;
-        }
-
-
-        public static MapUnitState CreateCombatPlayer(TileReferences tileReferences, PlayerCharacterRecord record,
-            MapUnitPosition combatPlayerPosition)
-        {
-            MapUnitState combatPlayer = new MapUnitState();
-
-            TileReference combatPlayerTileReference = tileReferences.GetTileReference(record.PrimarySpriteIndex);
-            Debug.Assert(combatPlayerTileReference != null);
-
-            combatPlayer._tile1 = combatPlayerTileReference.Index;
-            combatPlayer._tile2 = combatPlayerTileReference.Index;
-            combatPlayer.Tile1Ref = tileReferences.GetTileReference(combatPlayer._tile1);
-            combatPlayer.Tile2Ref = combatPlayer.Tile1Ref;
-
-            combatPlayer.X = (byte)combatPlayerPosition.X;
-            combatPlayer.Y = (byte)combatPlayerPosition.Y;
-            combatPlayer.Floor = (byte)combatPlayerPosition.Floor;
-            return combatPlayer;
         }
 
         public static MapUnitState CreateAvatar(MapUnitPosition avatarPosition, MapUnitState mapUnitState = null)
@@ -155,6 +97,65 @@ namespace Ultima5Redux.MapUnits
             theAvatar.Y = (byte)avatarPosition.Y;
             theAvatar.Floor = (byte)avatarPosition.Floor;
             return theAvatar;
+        }
+
+
+        public static MapUnitState CreateCombatPlayer(TileReferences tileReferences, PlayerCharacterRecord record,
+            MapUnitPosition combatPlayerPosition)
+        {
+            MapUnitState combatPlayer = new MapUnitState();
+
+            TileReference combatPlayerTileReference = tileReferences.GetTileReference(record.PrimarySpriteIndex);
+            Debug.Assert(combatPlayerTileReference != null);
+
+            combatPlayer._tile1 = combatPlayerTileReference.Index;
+            combatPlayer._tile2 = combatPlayerTileReference.Index;
+            combatPlayer.Tile1Ref = tileReferences.GetTileReference(combatPlayer._tile1);
+            combatPlayer.Tile2Ref = combatPlayer.Tile1Ref;
+
+            combatPlayer.X = (byte)combatPlayerPosition.X;
+            combatPlayer.Y = (byte)combatPlayerPosition.Y;
+            combatPlayer.Floor = (byte)combatPlayerPosition.Floor;
+            return combatPlayer;
+        }
+
+        public static MapUnitState CreateMapUnitState(TileReferences tileReferences,
+            MapUnitPosition mapUnitStatePosition,
+            int nSprite)
+        {
+            MapUnitState mapUnitState = new MapUnitState();
+
+            TileReference mapUnitStateTileReference = tileReferences.GetTileReference(nSprite);
+            Debug.Assert(mapUnitStateTileReference != null);
+
+            mapUnitState._tile1 = mapUnitStateTileReference.Index;
+            mapUnitState._tile2 = mapUnitStateTileReference.Index;
+            mapUnitState.Tile1Ref = tileReferences.GetTileReference(mapUnitState._tile1);
+            mapUnitState.Tile2Ref = mapUnitState.Tile1Ref;
+
+            mapUnitState.X = (byte)mapUnitStatePosition.X;
+            mapUnitState.Y = (byte)mapUnitStatePosition.Y;
+            mapUnitState.Floor = (byte)mapUnitStatePosition.Floor;
+            return mapUnitState;
+        }
+
+        public void CopyTo(TileReferences tileReferences, MapUnitState mapUnitState)
+        {
+            mapUnitState._tile1 = _tile1;
+            mapUnitState._tile2 = _tile2;
+            mapUnitState.Depends1 = Depends1;
+            mapUnitState.Depends2 = Depends2;
+            mapUnitState.Depends3 = Depends3;
+            mapUnitState.Floor = Floor;
+            mapUnitState.X = X;
+            mapUnitState.Y = Y;
+            mapUnitState.SetTileReference(tileReferences.GetTileReference(_tile1));
+        }
+
+        public void SetTileReference(TileReference tileReference)
+        {
+            Tile1Ref = tileReference;
+            Tile2Ref = tileReference;
         }
     }
 }

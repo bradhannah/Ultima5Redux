@@ -9,11 +9,6 @@ namespace Ultima5Redux.Maps
     public class Look
     {
         /// <summary>
-        ///     Total number of titles that can be looked at
-        /// </summary>
-        private const short TOTAL_LOOKS = 0x200;
-
-        /// <summary>
         ///     Raw file
         /// </summary>
         private static List<byte> LookByteArray = new List<byte>();
@@ -22,6 +17,11 @@ namespace Ultima5Redux.Maps
         ///     List of all offsets into the lookByteArray
         /// </summary>
         private static readonly List<int> LookOffsets = new List<int>(TOTAL_LOOKS);
+
+        /// <summary>
+        ///     Total number of titles that can be looked at
+        /// </summary>
+        private const short TOTAL_LOOKS = 0x200;
 
         /// <summary>
         ///     Loads the "Look" descriptions

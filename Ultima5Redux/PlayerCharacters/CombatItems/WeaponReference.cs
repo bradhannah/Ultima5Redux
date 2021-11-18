@@ -14,6 +14,10 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             SwordofChaos, MagicBow, SilverSword, MagicAxe, GlassSword, JeweledSword, MysticSword
         }
 
+        public override bool CanSell => BasePrice > 0 || IsAmmo;
+
+        public WeaponTypeEnum WeaponType { get; }
+
         // public enum WeaponTypeSpriteEnum
         // {
         //     BareHands = 261, SmallShield = 262, LargeShield = 262, SpikedShield = 262, MagicShield = 262,
@@ -23,15 +27,12 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         //     SwordofChaos = 261, MagicBow = 261, SilverSword = 261, MagicAxe = 261, GlassSword = 261, JeweledSword = 261,
         //     MysticSword = 261
         // }
-        
-        public WeaponReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) : 
-            base(dataOvlReference,  inventoryReference)
-        {
-             WeaponType = (WeaponTypeEnum)Enum.Parse(typeof(WeaponTypeEnum), inventoryReference.GetAsEquipment().ToString());
-        }
 
-        public WeaponTypeEnum WeaponType { get; }
-        
-        public override bool CanSell => BasePrice > 0 || IsAmmo;
+        public WeaponReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) :
+            base(dataOvlReference, inventoryReference)
+        {
+            WeaponType =
+                (WeaponTypeEnum)Enum.Parse(typeof(WeaponTypeEnum), inventoryReference.GetAsEquipment().ToString());
+        }
     }
 }

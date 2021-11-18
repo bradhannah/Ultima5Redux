@@ -8,10 +8,36 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract]
-    public class Armours : CombatItems<Armours.ArmourTypeEnum, List<Armour>>
+    [DataContract] public class Armours : CombatItems<Armours.ArmourTypeEnum, List<Armour>>
     {
         public enum ArmourTypeEnum { Shield, Chest, Helm, Ring, Amulet }
+
+        [DataMember]
+        private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
+            new Dictionary<DataOvlReference.Equipment, Armour>();
+
+        // [OnDeserialized] public void OnDeserialized(StreamingContext context)
+        // {
+        //     
+        // }
+
+        // override to allow for inserting entire lists
+        [IgnoreDataMember]
+        public override IEnumerable<InventoryItem> GenericItemList
+        {
+            get
+            {
+                List<InventoryItem> itemList = Helms.Cast<InventoryItem>().ToList();
+                itemList.AddRange(ChestArmours);
+                itemList.AddRange(Amulets);
+                itemList.AddRange(Rings);
+                return itemList;
+            }
+        }
+
+        [IgnoreDataMember]
+        public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
+            new Dictionary<ArmourTypeEnum, List<Armour>>();
 
         public readonly List<Amulet> Amulets = new List<Amulet>();
         public readonly List<ChestArmour> ChestArmours = new List<ChestArmour>();
@@ -26,48 +52,20 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
         }
 
-        [DataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
-            new Dictionary<DataOvlReference.Equipment, Armour>();
-
-        [IgnoreDataMember] public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
-            new Dictionary<ArmourTypeEnum, List<Armour>>();
-
-        // [OnDeserialized] public void OnDeserialized(StreamingContext context)
-        // {
-        //     
-        // }
-        
-        // override to allow for inserting entire lists
-        [IgnoreDataMember] public override IEnumerable<InventoryItem> GenericItemList
-        {
-            get
-            {
-                List<InventoryItem> itemList = Helms.Cast<InventoryItem>().ToList();
-                itemList.AddRange(ChestArmours);
-                itemList.AddRange(Amulets);
-                itemList.AddRange(Rings);
-                return itemList;
-            }
-        }
-
-        public Armour GetArmourFromEquipment(DataOvlReference.Equipment equipment)
-        {
-            if (equipment == DataOvlReference.Equipment.Nothing) return null;
-            return ItemsFromEquipment.ContainsKey(equipment) ? ItemsFromEquipment[equipment] : null;
-        }
-
         private void AddArmour(ArmourReference armourReference)
         {
             Armour armour;
             switch (armourReference.TheArmourType)
             {
                 case ArmourReference.ArmourType.Amulet:
-                    Amulet amulet = new Amulet(armourReference, GameStateByteArray[(int)armourReference.SpecificEquipment]);
+                    Amulet amulet = new Amulet(armourReference,
+                        GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = amulet;
                     Amulets.Add(amulet);
                     break;
                 case ArmourReference.ArmourType.ChestArmour:
-                    ChestArmour chestArmour = new ChestArmour(armourReference, GameStateByteArray[(int)armourReference.SpecificEquipment]);
+                    ChestArmour chestArmour = new ChestArmour(armourReference,
+                        GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = chestArmour;
                     ChestArmours.Add(chestArmour);
                     break;
@@ -86,6 +84,12 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
 
             ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
+        }
+
+        public Armour GetArmourFromEquipment(DataOvlReference.Equipment equipment)
+        {
+            if (equipment == DataOvlReference.Equipment.Nothing) return null;
+            return ItemsFromEquipment.ContainsKey(equipment) ? ItemsFromEquipment[equipment] : null;
         }
     }
 }

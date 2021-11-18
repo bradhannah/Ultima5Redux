@@ -53,6 +53,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             // ReSharper disable once NotAccessedField.Local
             private readonly int _offset;
 
+            public int DialogueOfferIndex { get; }
+            public int MonthlyLeaveCost { get; }
+            public int RestCost { get; }
+
+            public Point2D SleepingPosition { get; }
+
             internal InnKeeperServices(int nOffset, int nDialogueOfferIndex, int nRestCost, int nMonthlyLeaveCost,
                 DataOvlReference dataOvlReference)
             {
@@ -67,12 +73,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 MonthlyLeaveCost = nMonthlyLeaveCost;
                 SleepingPosition = new Point2D(xBedList[nOffset], yBedList[nOffset]);
             }
-
-            public int DialogueOfferIndex { get; }
-            public int MonthlyLeaveCost { get; }
-            public int RestCost { get; }
-
-            public Point2D SleepingPosition { get; }
         }
     }
 }

@@ -10,9 +10,33 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract]
-    public class Inventory
+    [DataContract] public class Inventory
     {
+        [DataMember] public LordBritishArtifacts Artifacts { get; set; }
+        [DataMember] public Potions MagicPotions { get; set; }
+        [DataMember] public Scrolls MagicScrolls { get; set; }
+        [DataMember] public Spells MagicSpells { get; set; }
+        [DataMember] public Armours ProtectiveArmour { get; set; }
+        [DataMember] public ShadowlordShards Shards { get; set; }
+        [DataMember] public SpecialItems SpecializedItems { get; set; }
+        [DataMember] public Reagents SpellReagents { get; set; }
+        [DataMember] public Moonstones TheMoonstones { get; set; }
+        [DataMember] public Provisions TheProvisions { get; set; }
+
+        [DataMember] public Weapons TheWeapons { get; set; }
+        [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
+
+
+        [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
+        [IgnoreDataMember] public int Food => TheProvisions.Items[Provision.ProvisionTypeEnum.Food].Quantity;
+
+        [IgnoreDataMember] public int Gold => TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity;
+        [IgnoreDataMember] public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
+
+        [IgnoreDataMember]
+        public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList();
+
+        [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         private readonly List<byte> _gameStateByteArray;
         private readonly Moongates _moongates;
         private readonly GameState _state;
@@ -26,50 +50,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             RefreshInventoryFromLegacySave();
         }
 
-        [IgnoreDataMember] public int Gold => TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity;
-        [IgnoreDataMember] public int Food => TheProvisions.Items[Provision.ProvisionTypeEnum.Food].Quantity;
-        
-  
-        [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
-        [IgnoreDataMember] public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
-        [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
-
-        [IgnoreDataMember] public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList();
-
-        [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
-        
-        [OnDeserialized] internal void OnDeserializedMethod(StreamingContext context)
-        {
-            // update the statically cached lists 
-            RefreshRollupInventory();
-            // when deserializing, we have not saved the inventory references because they are static, 
-            // so we will add them after the fact
-            UpdateAllInventoryReferences();
-        }
-
-        [OnSerialized] internal void OnSerializedMethod(StreamingContext context)
-        {
-        }
-        
-        [DataMember] public Weapons TheWeapons { get; set; }
-        [DataMember] public Armours ProtectiveArmour { get; set; }
-        [DataMember] public LordBritishArtifacts Artifacts { get; set; }
-        [DataMember] public Moonstones TheMoonstones { get; set; }
-        [DataMember] public Potions MagicPotions { get; set; }
-        [DataMember] public Provisions TheProvisions { get; set; }
-        [DataMember] public Reagents SpellReagents { get; set; }
-        [DataMember] public Scrolls MagicScrolls { get; set; }
-        [DataMember] public ShadowlordShards Shards { get; set; }
-        [DataMember] public SpecialItems SpecializedItems { get; set; }
-        [DataMember] public Spells MagicSpells { get; set; }
-
-        public bool SpendGold(int nGold)
-        {
-            if (TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity < nGold) return false;
-            TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity -= nGold;
-            return true;
-        }
-        
         /// <summary>
         ///     Gets the attack of a particular piece of equipment
         /// </summary>
@@ -82,20 +62,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             Armour armour = ProtectiveArmour.GetArmourFromEquipment(equipment);
             return armour?.TheCombatItemReference.AttackStat ?? 0;
-        }
-
-        /// <summary>
-        ///     Gets the defense of a particular piece of equipment
-        /// </summary>
-        /// <param name="equipment"></param>
-        /// <returns></returns>
-        private int GetDefense(DataOvlReference.Equipment equipment)
-        {
-            Weapon weapon = TheWeapons.GetWeaponFromEquipment(equipment);
-            if (weapon != null) return weapon.TheCombatItemReference.DefendStat;
-
-            Armour armour = ProtectiveArmour.GetArmourFromEquipment(equipment);
-            return armour?.TheCombatItemReference.DefendStat ?? 0;
         }
 
         /// <summary>
@@ -124,6 +90,20 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                    GetDefense(record.Equipped.Ring);
         }
 
+        /// <summary>
+        ///     Gets the defense of a particular piece of equipment
+        /// </summary>
+        /// <param name="equipment"></param>
+        /// <returns></returns>
+        private int GetDefense(DataOvlReference.Equipment equipment)
+        {
+            Weapon weapon = TheWeapons.GetWeaponFromEquipment(equipment);
+            if (weapon != null) return weapon.TheCombatItemReference.DefendStat;
+
+            Armour armour = ProtectiveArmour.GetArmourFromEquipment(equipment);
+            return armour?.TheCombatItemReference.DefendStat ?? 0;
+        }
+
 
         /// <summary>
         ///     Gets the Combat Item (inventory item) based on the equipped item
@@ -131,50 +111,23 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="equipment">type of combat equipment</param>
         /// <returns>combat item object</returns>
         public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment) =>
-            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) 
-            ?? 
+            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment)
+            ??
             throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
 
-        private void RefreshRollupInventory()
+        [OnDeserialized] internal void OnDeserializedMethod(StreamingContext context)
         {
-            AllItems.Clear();
-            ReadyItems.Clear();
-            UseItems.Clear();
-            CombatItems.Clear();
-            
-            AllItems.AddRange(ProtectiveArmour.GenericItemList);
-            ReadyItems.AddRange(ProtectiveArmour.AllCombatItems);
-            CombatItems.AddRange(ProtectiveArmour.AllCombatItems);
-            
-            AllItems.AddRange(TheWeapons.GenericItemList);
-            ReadyItems.AddRange(TheWeapons.AllCombatItems);
-            CombatItems.AddRange(TheWeapons.AllCombatItems);
-            
-            AllItems.AddRange(MagicScrolls.GenericItemList);
-            UseItems.AddRange(MagicScrolls.GenericItemList);
-
-            AllItems.AddRange(MagicPotions.GenericItemList);
-            UseItems.AddRange(MagicPotions.GenericItemList);
-
-            AllItems.AddRange(SpecializedItems.GenericItemList);
-            UseItems.AddRange(SpecializedItems.GenericItemList);
-
-            AllItems.AddRange(Artifacts.GenericItemList);
-            UseItems.AddRange(Artifacts.GenericItemList);
-            
-            AllItems.AddRange(Shards.GenericItemList);
-            UseItems.AddRange(Shards.GenericItemList);
-
-            AllItems.AddRange(SpellReagents.GenericItemList);
-
-            AllItems.AddRange(MagicSpells.GenericItemList);
-            
-            AllItems.AddRange(TheMoonstones.GenericItemList);
-            UseItems.AddRange(TheMoonstones.GenericItemList);
-            
-            AllItems.AddRange(TheProvisions.GenericItemList);
+            // update the statically cached lists 
+            RefreshRollupInventory();
+            // when deserializing, we have not saved the inventory references because they are static, 
+            // so we will add them after the fact
+            UpdateAllInventoryReferences();
         }
-        
+
+        [OnSerialized] internal void OnSerializedMethod(StreamingContext context)
+        {
+        }
+
         private void RefreshInventoryFromLegacySave()
         {
             AllItems.Clear();
@@ -188,14 +141,61 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             SpecializedItems = new SpecialItems(_gameStateByteArray);
             Artifacts = new LordBritishArtifacts(_gameStateByteArray);
             Shards = new ShadowlordShards(_gameStateByteArray);
-            SpellReagents = new Reagents( _gameStateByteArray, _state);
+            SpellReagents = new Reagents(_gameStateByteArray, _state);
             MagicSpells = new Spells(_gameStateByteArray);
             TheMoonstones = new Moonstones(_moongates);
             TheProvisions = new Provisions(_state);
 
             RefreshRollupInventory();
-            
+
             UpdateAllInventoryReferences();
+        }
+
+        private void RefreshRollupInventory()
+        {
+            AllItems.Clear();
+            ReadyItems.Clear();
+            UseItems.Clear();
+            CombatItems.Clear();
+
+            AllItems.AddRange(ProtectiveArmour.GenericItemList);
+            ReadyItems.AddRange(ProtectiveArmour.AllCombatItems);
+            CombatItems.AddRange(ProtectiveArmour.AllCombatItems);
+
+            AllItems.AddRange(TheWeapons.GenericItemList);
+            ReadyItems.AddRange(TheWeapons.AllCombatItems);
+            CombatItems.AddRange(TheWeapons.AllCombatItems);
+
+            AllItems.AddRange(MagicScrolls.GenericItemList);
+            UseItems.AddRange(MagicScrolls.GenericItemList);
+
+            AllItems.AddRange(MagicPotions.GenericItemList);
+            UseItems.AddRange(MagicPotions.GenericItemList);
+
+            AllItems.AddRange(SpecializedItems.GenericItemList);
+            UseItems.AddRange(SpecializedItems.GenericItemList);
+
+            AllItems.AddRange(Artifacts.GenericItemList);
+            UseItems.AddRange(Artifacts.GenericItemList);
+
+            AllItems.AddRange(Shards.GenericItemList);
+            UseItems.AddRange(Shards.GenericItemList);
+
+            AllItems.AddRange(SpellReagents.GenericItemList);
+
+            AllItems.AddRange(MagicSpells.GenericItemList);
+
+            AllItems.AddRange(TheMoonstones.GenericItemList);
+            UseItems.AddRange(TheMoonstones.GenericItemList);
+
+            AllItems.AddRange(TheProvisions.GenericItemList);
+        }
+
+        public bool SpendGold(int nGold)
+        {
+            if (TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity < nGold) return false;
+            TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity -= nGold;
+            return true;
         }
 
         private void UpdateAllInventoryReferences()
@@ -222,7 +222,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                         item.InvRef = GameReferences.InvRef.GetInventoryReference(
                             InventoryReferences.InventoryReferenceType.Reagent, item.InventoryReferenceString);
                         break;
-                    case CombatItem _: 
+                    case CombatItem _:
                         // we have to assign this manually because when we serialize from JSON it is unable to link it 
                         // itself
                         item.InvRef = GameReferences.InvRef.GetInventoryReference(

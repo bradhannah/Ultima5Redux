@@ -27,6 +27,11 @@ namespace Ultima5Redux.Data
         private readonly T _unusedValue;
 
         /// <summary>
+        ///     Byte list of file contents
+        /// </summary>
+        public List<byte> FileByteList { get; }
+
+        /// <summary>
         ///     Construct a collection of DataChunks
         /// </summary>
         /// <param name="chunkFile">The file that all chunks will be read from</param>
@@ -37,11 +42,6 @@ namespace Ultima5Redux.Data
             _unusedValue = unusedValue;
             FileByteList = Utils.GetFileAsByteList(chunkFile);
         }
-
-        /// <summary>
-        ///     Byte list of file contents
-        /// </summary>
-        public List<byte> FileByteList { get; }
 
         /// <summary>
         ///     Add a chunk to the list
@@ -177,6 +177,37 @@ namespace Ultima5Redux.Data
         private readonly List<byte> _fullRawData;
 
         /// <summary>
+        ///     The expected data format of the chunk
+        /// </summary>
+        private DataFormatType DataFormat { get; }
+
+        /// <summary>
+        ///     The length of the RawData
+        ///     This begins at zero in the array
+        /// </summary>
+        private int DataLength { get; }
+
+        /// <summary>
+        ///     A brief description of the data chunk
+        /// </summary>
+        public string Description { get; }
+
+        /// <summary>
+        ///     The offset used when getting the RawData
+        /// </summary>
+        private int FileOffset { get; }
+
+        /// <summary>
+        ///     The raw data of the data chunk
+        /// </summary>
+        private byte[] RawData { get; }
+
+        /// <summary>
+        ///     The adjustment value for bytes and UINT16
+        /// </summary>
+        private byte ValueModifier { get; }
+
+        /// <summary>
         ///     Construct a data chunk
         /// </summary>
         /// <param name="dataFormat">what kind of encoding represents the data?</param>
@@ -203,37 +234,6 @@ namespace Ultima5Redux.Data
         }
 
         /// <summary>
-        ///     The adjustment value for bytes and UINT16
-        /// </summary>
-        private byte ValueModifier { get; }
-
-        /// <summary>
-        ///     The raw data of the data chunk
-        /// </summary>
-        private byte[] RawData { get; }
-
-        /// <summary>
-        ///     The expected data format of the chunk
-        /// </summary>
-        private DataFormatType DataFormat { get; }
-
-        /// <summary>
-        ///     The length of the RawData
-        ///     This begins at zero in the array
-        /// </summary>
-        private int DataLength { get; }
-
-        /// <summary>
-        ///     The offset used when getting the RawData
-        /// </summary>
-        private int FileOffset { get; }
-
-        /// <summary>
-        ///     A brief description of the data chunk
-        /// </summary>
-        public string Description { get; }
-
-        /// <summary>
         ///     Statically create a DataChunk
         ///     Handy for quick and dirty variable extraction
         /// </summary>
@@ -248,63 +248,6 @@ namespace Ultima5Redux.Data
         {
             DataChunk dataChunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
             return dataChunk;
-        }
-
-        /// <summary>
-        ///     Debugging function that prints out the chunk
-        /// </summary>
-        public void PrintChunk()
-        {
-            switch (DataFormat)
-            {
-                case DataFormatType.StringListFromIndexes:
-
-                case DataFormatType.Bitmap:
-                    Console.WriteLine(@"BITMAP");
-                    break;
-                case DataFormatType.FixedString:
-                case DataFormatType.SimpleString:
-                    Console.WriteLine(GetChunkAsString());
-                    break;
-                case DataFormatType.StringList:
-                    GetChunkAsStringList().PrintSomeStrings();
-                    break;
-                case DataFormatType.Byte:
-                {
-                    Console.WriteLine(RawData[0].ToString("X"));
-                }
-                    break;
-                case DataFormatType.ByteList:
-                    foreach (byte b in RawData)
-                    {
-                        Console.WriteLine(b.ToString("X"));
-                    }
-
-                    break;
-                case DataFormatType.UINT16:
-                {
-                    ushort word = GetChunkAsUint16List()[0];
-                    Console.WriteLine(@"Word: " + word.ToString("X"));
-                    break;
-                }
-                case DataFormatType.UINT16List:
-                    foreach (ushort word in GetChunkAsUint16List())
-                    {
-                        Console.WriteLine(@"Word: " + word.ToString("X"));
-                    }
-
-                    break;
-                case DataFormatType.Unknown:
-                    Console.WriteLine(@"Unknown");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public List<string> GetAsStringListFromIndexes()
-        {
-            return GetAsStringListFromIndexes(GetChunkAsUint16List(), _fullRawData);
         }
 
         private static List<string> GetAsStringListFromIndexes(IReadOnlyCollection<ushort> indexList,
@@ -372,27 +315,47 @@ namespace Ultima5Redux.Data
             return data;
         }
 
+        public List<string> GetAsStringListFromIndexes()
+        {
+            return GetAsStringListFromIndexes(GetChunkAsUint16List(), _fullRawData);
+        }
+
         public byte GetByte(int nIndex)
         {
             Debug.Assert(nIndex < RawData.Length && nIndex >= 0);
             return RawData[nIndex];
         }
 
-
-        public void SetChunkAsByte(byte data)
-        {
-            RawData[0] = data;
-        }
-
-        public void SetChunkAsUint16(ushort data)
-        {
-            RawData[0] = (byte)(data & 0xFF);
-            RawData[1] = (byte)((data >> 8) & 0xFF);
-        }
-
         public byte GetChunkAsByte()
         {
             return RawData[0];
+        }
+
+        /// <summary>
+        ///     Returns a string representation of the datachunk
+        /// </summary>
+        /// <returns>a single string</returns>
+        public string GetChunkAsString()
+        {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            switch (DataFormat)
+            {
+                case DataFormatType.FixedString:
+                    return Utils.BytesToStringFixedWidth(RawData.ToList(), 0, DataLength);
+                case DataFormatType.SimpleString:
+                    return Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength);
+                default:
+                    throw new Ultima5ReduxException("String datatype doesn't match predefined list.");
+            }
+        }
+
+        /// <summary>
+        ///     Returns a collection of strings
+        /// </summary>
+        /// <returns></returns>
+        public SomeStrings GetChunkAsStringList()
+        {
+            return new SomeStrings(RawData.ToList(), 0, DataLength);
         }
 
         /// <summary>
@@ -422,30 +385,67 @@ namespace Ultima5Redux.Data
         }
 
         /// <summary>
-        ///     Returns a string representation of the datachunk
+        ///     Debugging function that prints out the chunk
         /// </summary>
-        /// <returns>a single string</returns>
-        public string GetChunkAsString()
+        public void PrintChunk()
         {
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (DataFormat)
             {
+                case DataFormatType.StringListFromIndexes:
+
+                case DataFormatType.Bitmap:
+                    Console.WriteLine(@"BITMAP");
+                    break;
                 case DataFormatType.FixedString:
-                    return Utils.BytesToStringFixedWidth(RawData.ToList(), 0, DataLength);
                 case DataFormatType.SimpleString:
-                    return Utils.BytesToStringNullTerm(RawData.ToList(), 0, DataLength);
+                    Console.WriteLine(GetChunkAsString());
+                    break;
+                case DataFormatType.StringList:
+                    GetChunkAsStringList().PrintSomeStrings();
+                    break;
+                case DataFormatType.Byte:
+                {
+                    Console.WriteLine(RawData[0].ToString("X"));
+                }
+                    break;
+                case DataFormatType.ByteList:
+                    foreach (byte b in RawData)
+                    {
+                        Console.WriteLine(b.ToString("X"));
+                    }
+
+                    break;
+                case DataFormatType.UINT16:
+                {
+                    ushort word = GetChunkAsUint16List()[0];
+                    Console.WriteLine(@"Word: " + word.ToString("X"));
+                    break;
+                }
+                case DataFormatType.UINT16List:
+                    foreach (ushort word in GetChunkAsUint16List())
+                    {
+                        Console.WriteLine(@"Word: " + word.ToString("X"));
+                    }
+
+                    break;
+                case DataFormatType.Unknown:
+                    Console.WriteLine(@"Unknown");
+                    break;
                 default:
-                    throw new Ultima5ReduxException("String datatype doesn't match predefined list.");
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        /// <summary>
-        ///     Returns a collection of strings
-        /// </summary>
-        /// <returns></returns>
-        public SomeStrings GetChunkAsStringList()
+
+        public void SetChunkAsByte(byte data)
         {
-            return new SomeStrings(RawData.ToList(), 0, DataLength);
+            RawData[0] = data;
+        }
+
+        public void SetChunkAsUint16(ushort data)
+        {
+            RawData[0] = (byte)(data & 0xFF);
+            RawData[1] = (byte)((data >> 8) & 0xFF);
         }
     }
 }

@@ -21,6 +21,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         private readonly Inventory _inventory;
 
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        {
+            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
+            new ShoppeKeeperOption("Sell", ShoppeKeeperOption.DialogueType.SellBlacksmith)
+        };
+
         /// <summary>
         ///     Blacksmith constructor
         /// </summary>
@@ -51,25 +57,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
-        {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
-            new ShoppeKeeperOption("Sell", ShoppeKeeperOption.DialogueType.SellBlacksmith)
-        };
-
-        /// <summary>
-        ///     Get blacksmiths typical hello response
-        /// </summary>
-        /// <param name="tod"></param>
-        /// <returns></returns>
-        public override string GetHelloResponse(TimeOfDay tod = null)
-        {
-            string helloStr = base.GetHelloResponse(tod) + "\n\n" + TheShoppeKeeperReference.ShoppeKeeperName +
-                              " says \"" +
-                              GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
-            return helloStr;
-        }
-
         /// <summary>
         ///     Gets the listing of all equipment the blacksmith sells
         /// </summary>
@@ -87,25 +74,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         }
 
         /// <summary>
-        ///     Gets the response of blacksmith offering to show you what they have
+        ///     Get blacksmiths typical hello response
         /// </summary>
+        /// <param name="tod"></param>
         /// <returns></returns>
-        public string GetYouCanBuy()
+        public override string GetHelloResponse(TimeOfDay tod = null)
         {
-            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM)
-                    .Trim() + " "
-                            + GetRandomStringFromChoices(
-                                DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
-        }
-
-
-        /// <summary>
-        ///     Gets request of which item you would like to sell to the blacksmith
-        /// </summary>
-        /// <returns></returns>
-        public string GetWhichItemToSell()
-        {
-            return "Which item wouldst thou like to sell?";
+            string helloStr = base.GetHelloResponse(tod) + "\n\n" + TheShoppeKeeperReference.ShoppeKeeperName +
+                              " says \"" +
+                              GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO);
+            return helloStr;
         }
 
         /// <summary>
@@ -115,6 +93,30 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public override string GetWhichWouldYouSee()
         {
             return "Which would ye see?";
+        }
+
+        /// <summary>
+        ///     The blacksmiths nasty response to attempting to sell ammo
+        /// </summary>
+        /// <returns></returns>
+        public string DontDealInAmmoOutput()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
+                DataOvlReference.ShoppeKeeperSellingStrings
+                    .DONT_DEAL_AMMO_GROWL_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+        }
+
+        /// <summary>
+        ///     Blacksmiths response after buying an item
+        /// </summary>
+        /// <returns></returns>
+        public string GetDoneResponse()
+        {
+            string doneResponse = ShoppeKeeperDialogueReference.GetMerchantString(
+                DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperSellingStrings
+                    .YES_DONE_SAYS_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+            doneResponse = doneResponse.Replace("Yes", "").TrimStart();
+            return doneResponse.Replace("!\"\n", "\"! ");
         }
 
         /// <summary>
@@ -164,28 +166,26 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
         }
 
+
         /// <summary>
-        ///     The blacksmiths nasty response to attempting to sell ammo
+        ///     Gets request of which item you would like to sell to the blacksmith
         /// </summary>
         /// <returns></returns>
-        public string DontDealInAmmoOutput()
+        public string GetWhichItemToSell()
         {
-            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
-                DataOvlReference.ShoppeKeeperSellingStrings
-                    .DONT_DEAL_AMMO_GROWL_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+            return "Which item wouldst thou like to sell?";
         }
 
         /// <summary>
-        ///     Blacksmiths response after buying an item
+        ///     Gets the response of blacksmith offering to show you what they have
         /// </summary>
         /// <returns></returns>
-        public string GetDoneResponse()
+        public string GetYouCanBuy()
         {
-            string doneResponse = ShoppeKeeperDialogueReference.GetMerchantString(
-                DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperSellingStrings
-                    .YES_DONE_SAYS_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
-            doneResponse = doneResponse.Replace("Yes", "").TrimStart();
-            return doneResponse.Replace("!\"\n", "\"! ");
+            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM)
+                    .Trim() + " "
+                            + GetRandomStringFromChoices(
+                                DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
         }
     }
 }

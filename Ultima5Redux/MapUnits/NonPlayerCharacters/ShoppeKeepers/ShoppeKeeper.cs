@@ -27,15 +27,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             BuyGuildMaster, RestInnkeeper, GossipInnkeeper, BuyHorses, DropOffPartyMemberInnkeeper
         }
 
+        public string ButtonName { get; }
+
+        public DialogueType DialogueOption { get; }
+
         public ShoppeKeeperOption(string buttonName, DialogueType dialogueOption)
         {
             ButtonName = buttonName;
             DialogueOption = dialogueOption;
         }
-
-        public DialogueType DialogueOption { get; }
-
-        public string ButtonName { get; }
     }
 
     /// <summary>
@@ -43,10 +43,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     /// </summary>
     public abstract class ShoppeKeeper
     {
-        private const int PISSED_OFF_START = 0;
-        private const int PISSED_OFF_STOP = 3;
         private const int HAPPY_START = 4;
         private const int HAPPY_STOP = 7;
+        private const int PISSED_OFF_START = 0;
+        private const int PISSED_OFF_STOP = 3;
 
         /// <summary>
         ///     Dictionary that tracks previous random choice and helps to make sure they don't repeat
@@ -57,6 +57,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         protected readonly DataOvlReference DataOvlReference;
 
         protected readonly ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference;
+
+        /// <summary>
+        ///     A list of the shoppe keeper options (abilities)
+        /// </summary>
+        public abstract List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
+
+        public ShoppeKeeperReference TheShoppeKeeperReference { get; }
 
         /// <summary>
         ///     Construct a shoppe keeper
@@ -73,37 +80,40 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         }
 
         /// <summary>
-        ///     A list of the shoppe keeper options (abilities)
+        ///     Get all locations that reagents are sold
         /// </summary>
-        public abstract List<ShoppeKeeperOption> ShoppeKeeperOptions { get; }
-
-        public ShoppeKeeperReference TheShoppeKeeperReference { get; }
-
-        protected string FlattenStr(string str)
+        /// <param name="dataOvlReference"></param>
+        /// <param name="chunkName"></param>
+        /// <returns></returns>
+        public static IEnumerable<SmallMapReferences.SingleMapReference.Location> GetLocations(
+            DataOvlReference dataOvlReference, DataOvlReference.DataChunkName chunkName)
         {
-            return str.Trim().Replace("\n", " ");
+            List<SmallMapReferences.SingleMapReference.Location> locations =
+                new List<SmallMapReferences.SingleMapReference.Location>();
+
+            foreach (byte b in dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
+            {
+                SmallMapReferences.SingleMapReference.Location location =
+                    (SmallMapReferences.SingleMapReference.Location)b;
+                locations.Add(location);
+            }
+
+            return locations;
         }
+
+        public abstract string GetForSaleList();
+
+
+        public abstract string GetWhichWouldYouSee();
 
         /// <summary>
-        ///     Quotes the string and adds "says shoppekeeper"
+        ///     Get a random response when the shoppekeeper is happy as you leave
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="saysStr"></param>
         /// <returns></returns>
-        protected string AddSaysShoppeKeeper(string str, string saysStr = "says")
+        public virtual string GetHappyShoppeKeeperGoodbyeResponse()
         {
-            str = FlattenStr(str);
-            if (!str.StartsWith("\"")) str = "\"" + str;
-            if (!str.EndsWith("\"")) str += "\"";
-            str += " " + saysStr + " " + TheShoppeKeeperReference.ShoppeKeeperName;
-            return str;
-        }
-
-        public bool IsOnDuty(TimeOfDay tod)
-        {
-            // shoppe keepers are open during their 1 and 3 index into their schedule (0 based)
-            int nScheduleIndex = TheShoppeKeeperReference.NpcRef.Schedule.GetScheduleIndex(tod);
-            return nScheduleIndex == 1 || nScheduleIndex == 3;
+            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP)
+                        + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
         }
 
         /// <summary>
@@ -118,49 +128,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             string response = @"Good " + tod.TimeOfDayName + ", and welcome to " +
                               TheShoppeKeeperReference.ShoppeName + "!";
             return response;
-        }
-
-        public string GetComeLaterResponse()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
-                .MERCH_SEE_ME_AT_SHOP1) + DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
-                .MERCH_SEE_ME_AT_SHOP2);
-        }
-
-        /// <summary>
-        ///     Get a random response when the shoppekeeper gets pissed off at you
-        /// </summary>
-        /// <returns></returns>
-        public virtual string GetPissedOffShoppeKeeperGoodbyeResponse()
-        {
-            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START,
-                            PISSED_OFF_STOP)
-                        + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
-        }
-
-        /// <summary>
-        ///     Get a random response when the shoppekeeper is happy as you leave
-        /// </summary>
-        /// <returns></returns>
-        public virtual string GetHappyShoppeKeeperGoodbyeResponse()
-        {
-            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP)
-                        + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
-        }
-
-        public virtual string GetThyInterest()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
-                .N_THY_INTEREST_Q_QUOTE);
-        }
-
-        /// <summary>
-        ///     Gets a common response after a purchase
-        /// </summary>
-        /// <returns></returns>
-        public virtual string GetThanksAfterPurchaseResponse()
-        {
-            return "Thank thee kindly!";
         }
 
         /// <summary>
@@ -182,12 +149,82 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         }
 
         /// <summary>
+        ///     Get a random response when the shoppekeeper gets pissed off at you
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetPissedOffShoppeKeeperGoodbyeResponse()
+        {
+            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START,
+                            PISSED_OFF_STOP)
+                        + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
+        }
+
+        /// <summary>
+        ///     Gets a common response after a purchase
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetThanksAfterPurchaseResponse()
+        {
+            return "Thank thee kindly!";
+        }
+
+        public virtual string GetThyInterest()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
+                .N_THY_INTEREST_Q_QUOTE);
+        }
+
+        /// <summary>
+        ///     Quotes the string and adds "says shoppekeeper"
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="saysStr"></param>
+        /// <returns></returns>
+        protected string AddSaysShoppeKeeper(string str, string saysStr = "says")
+        {
+            str = FlattenStr(str);
+            if (!str.StartsWith("\"")) str = "\"" + str;
+            if (!str.EndsWith("\"")) str += "\"";
+            str += " " + saysStr + " " + TheShoppeKeeperReference.ShoppeKeeperName;
+            return str;
+        }
+
+        protected string FlattenStr(string str)
+        {
+            return str.Trim().Replace("\n", " ");
+        }
+
+        public string GetComeLaterResponse()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                .MERCH_SEE_ME_AT_SHOP1) + DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                .MERCH_SEE_ME_AT_SHOP2);
+        }
+
+        /// <summary>
         ///     Gets a common response asking if you want to buy the thing
         /// </summary>
         /// <returns></returns>
         public string GetDoYouWantToBuy()
         {
             return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
+        }
+
+        protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)
+        {
+            if (gender == PlayerCharacterRecord.CharacterGender.Male)
+                return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.SIR);
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.MILADY);
+        }
+
+        protected string GetNumberInPartyAsStringWord(int nNum)
+        {
+            if (nNum > 6) return "many";
+            if (nNum == 1) return "one";
+            Debug.Assert(nNum > 0);
+            const int nStartIndex = (int)DataOvlReference.ShoppeKeeperBarKeepStrings2.TWO - 2;
+            return DataOvlReference.StringReferences.GetString(
+                (DataOvlReference.ShoppeKeeperBarKeepStrings2)nStartIndex + nNum);
         }
 
         /// <summary>
@@ -218,46 +255,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return responses[nResponseIndex];
         }
 
-
-        public abstract string GetWhichWouldYouSee();
-        public abstract string GetForSaleList();
-
-        /// <summary>
-        ///     Get all locations that reagents are sold
-        /// </summary>
-        /// <param name="dataOvlReference"></param>
-        /// <param name="chunkName"></param>
-        /// <returns></returns>
-        public static IEnumerable<SmallMapReferences.SingleMapReference.Location> GetLocations(
-            DataOvlReference dataOvlReference, DataOvlReference.DataChunkName chunkName)
+        public bool IsOnDuty(TimeOfDay tod)
         {
-            List<SmallMapReferences.SingleMapReference.Location> locations =
-                new List<SmallMapReferences.SingleMapReference.Location>();
-
-            foreach (byte b in dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
-            {
-                SmallMapReferences.SingleMapReference.Location location = (SmallMapReferences.SingleMapReference.Location)b;
-                locations.Add(location);
-            }
-
-            return locations;
-        }
-
-        protected string GetNumberInPartyAsStringWord(int nNum)
-        {
-            if (nNum > 6) return "many";
-            if (nNum == 1) return "one";
-            Debug.Assert(nNum > 0);
-            const int nStartIndex = (int)DataOvlReference.ShoppeKeeperBarKeepStrings2.TWO - 2;
-            return DataOvlReference.StringReferences.GetString(
-                (DataOvlReference.ShoppeKeeperBarKeepStrings2)nStartIndex + nNum);
-        }
-
-        protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)
-        {
-            if (gender == PlayerCharacterRecord.CharacterGender.Male)
-                return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.SIR);
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.MILADY);
+            // shoppe keepers are open during their 1 and 3 index into their schedule (0 based)
+            int nScheduleIndex = TheShoppeKeeperReference.NpcRef.Schedule.GetScheduleIndex(tod);
+            return nScheduleIndex == 1 || nScheduleIndex == 3;
         }
     }
 }

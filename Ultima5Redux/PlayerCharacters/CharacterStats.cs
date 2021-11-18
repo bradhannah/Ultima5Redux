@@ -7,12 +7,6 @@ namespace Ultima5Redux.PlayerCharacters
         private int _currentHp;
         private PlayerCharacterRecord.CharacterStatus _status;
 
-        public PlayerCharacterRecord.CharacterStatus Status
-        {
-            get => _currentHp <= 0 ? PlayerCharacterRecord.CharacterStatus.Dead : _status;
-            set => _status = value;
-        }
-
         public int CurrentHp
         {
             get => Status == PlayerCharacterRecord.CharacterStatus.Dead ? 0 : _currentHp;
@@ -26,6 +20,13 @@ namespace Ultima5Redux.PlayerCharacters
         public int Level { get; set; }
 
         public int MaximumHp { get; set; }
+
+        public PlayerCharacterRecord.CharacterStatus Status
+        {
+            get => _currentHp <= 0 ? PlayerCharacterRecord.CharacterStatus.Dead : _status;
+            set => _status = value;
+        }
+
         public int Strength { get; set; }
     }
 }

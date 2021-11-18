@@ -8,27 +8,25 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract]
-    public abstract class CombatItem : InventoryItem
+    [DataContract] public abstract class CombatItem : InventoryItem
     {
-        public CombatItemReference TheCombatItemReference { get; }
+        public override int BasePrice => TheCombatItemReference.BasePrice;
 
-        public DataOvlReference.Equipment SpecificEquipment => TheCombatItemReference.SpecificEquipment;
+        public override string InventoryReferenceString => TheCombatItemReference.SpecificEquipment.ToString();
 
         public override string LongName => TheCombatItemReference.EquipmentName;
 
-        public override int BasePrice => TheCombatItemReference.BasePrice;
+        public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
 
-        
-        public CombatItem(CombatItemReference theCombatItemReference, int nQuantity) 
-        : base(nQuantity, theCombatItemReference.Sprite)
+        public DataOvlReference.Equipment SpecificEquipment => TheCombatItemReference.SpecificEquipment;
+        public CombatItemReference TheCombatItemReference { get; }
+
+
+        public CombatItem(CombatItemReference theCombatItemReference, int nQuantity)
+            : base(nQuantity, theCombatItemReference.Sprite)
         {
             TheCombatItemReference = theCombatItemReference;
         }
-
-        public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
-        
-        public override string InventoryReferenceString => TheCombatItemReference.SpecificEquipment.ToString();
 
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location)

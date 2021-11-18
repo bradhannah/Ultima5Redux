@@ -38,6 +38,11 @@ namespace Ultima5Redux.Maps
         private List<string> _locationNames;
 
         /// <summary>
+        ///     A list of all map references
+        /// </summary>
+        public List<SingleMapReference> MapReferenceList { get; } = new List<SingleMapReference>();
+
+        /// <summary>
         ///     Construct all small map references
         /// </summary>
         public SmallMapReferences(DataOvlReference dataRef)
@@ -102,34 +107,22 @@ namespace Ultima5Redux.Maps
         }
 
         /// <summary>
-        ///     A list of all map references
+        ///     Gets the starting location of a small map
         /// </summary>
-        public List<SingleMapReference> MapReferenceList { get; } = new List<SingleMapReference>();
+        /// <returns></returns>
+        public static Point2D GetStartingXYByLocation()
+        {
+            return new Point2D(32 / 2 - 1, 30);
+        }
 
         /// <summary>
-        ///     Cheater function to automatically create floors in a building
+        ///     Gets the starting position of a small map
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="startFloor"></param>
-        /// <param name="nFloors"></param>
-        /// <param name="roomOffset"></param>
         /// <returns></returns>
-        private IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
-            int startFloor, short nFloors, short roomOffset)
+        public static MapUnitPosition GetStartingXYZByLocation()
         {
-            List<SingleMapReference> mapRefs = new List<SingleMapReference>();
-
-            int fileOffset =
-                roomOffset * SmallMap.XTiles *
-                SmallMap.YTiles; // the number of rooms offset, converted to number of bytes to skip
-
-            for (int i = 0; i < nFloors; i++)
-            {
-                mapRefs.Add(new SingleMapReference(location, startFloor + i,
-                    fileOffset + i * SmallMap.XTiles * SmallMap.YTiles));
-            }
-
-            return mapRefs;
+            Point2D startingXY = GetStartingXYByLocation();
+            return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
         }
 
         /// <summary>
@@ -169,33 +162,43 @@ namespace Ultima5Redux.Maps
             _nFloorsDictionary.Add(location, nFloors);
         }
 
-        public int GetNumberOfFloors(SingleMapReference.Location location)
+        /// <summary>
+        ///     Cheater function to automatically create floors in a building
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="startFloor"></param>
+        /// <param name="nFloors"></param>
+        /// <param name="roomOffset"></param>
+        /// <returns></returns>
+        private IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
+            int startFloor, short nFloors, short roomOffset)
         {
-            return _nFloorsDictionary[location];
-        }
+            List<SingleMapReference> mapRefs = new List<SingleMapReference>();
 
-        public bool HasBasement(SingleMapReference.Location location)
-        {
-            return _smallMapBasementDictionary[location];
+            int fileOffset =
+                roomOffset * SmallMap.XTiles *
+                SmallMap.YTiles; // the number of rooms offset, converted to number of bytes to skip
+
+            for (int i = 0; i < nFloors; i++)
+            {
+                mapRefs.Add(new SingleMapReference(location, startFloor + i,
+                    fileOffset + i * SmallMap.XTiles * SmallMap.YTiles));
+            }
+
+            return mapRefs;
         }
 
         /// <summary>
-        ///     Gets the starting location of a small map
+        ///     Get the location based on the index within the small map file
         /// </summary>
-        /// <returns></returns>
-        public static Point2D GetStartingXYByLocation()
+        /// <param name="smallMap">the small map file reference</param>
+        /// <param name="index">the 0-7 index within the small map file</param>
+        /// <returns>the location reference</returns>
+        public SingleMapReference.Location GetLocationByIndex(SingleMapReference.SmallMapMasterFiles smallMap,
+            int index)
         {
-            return new Point2D(32 / 2 - 1, 30);
-        }
-
-        /// <summary>
-        ///     Gets the starting position of a small map
-        /// </summary>
-        /// <returns></returns>
-        public static MapUnitPosition GetStartingXYZByLocation()
-        {
-            Point2D startingXY = GetStartingXYByLocation();
-            return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
+            SingleMapReference.Location location = _masterFileLocationDictionary[smallMap][index];
+            return location;
         }
 
         [SuppressMessage("ReSharper", "StringLiteralTypo")]
@@ -300,17 +303,9 @@ namespace Ultima5Redux.Maps
             return "";
         }
 
-        /// <summary>
-        ///     Get the location based on the index within the small map file
-        /// </summary>
-        /// <param name="smallMap">the small map file reference</param>
-        /// <param name="index">the 0-7 index within the small map file</param>
-        /// <returns>the location reference</returns>
-        public SingleMapReference.Location GetLocationByIndex(SingleMapReference.SmallMapMasterFiles smallMap,
-            int index)
+        public int GetNumberOfFloors(SingleMapReference.Location location)
         {
-            SingleMapReference.Location location = _masterFileLocationDictionary[smallMap][index];
-            return location;
+            return _nFloorsDictionary[location];
         }
 
         /// <summary>
@@ -328,6 +323,11 @@ namespace Ultima5Redux.Maps
             }
 
             throw new Ultima5ReduxException("_location was not found!");
+        }
+
+        public bool HasBasement(SingleMapReference.Location location)
+        {
+            return _smallMapBasementDictionary[location];
         }
 
         private void InitializeLocationNames()

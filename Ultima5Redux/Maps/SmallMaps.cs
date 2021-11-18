@@ -25,11 +25,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference.Location location, int nFloor)
-        {
-            return _mapLocationDictionary[location][nFloor];
-        }
-
         public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
         {
             return !DoStairsGoUp(location, nFloor, tilePos);
@@ -42,7 +37,8 @@ namespace Ultima5Redux.Maps
             bool bHasHigherFloor = _mapLocationDictionary[location].ContainsKey(nFloor + 1);
 
             // is it a stair case?
-            Debug.Assert(GameReferences.SpriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
+            Debug.Assert(
+                GameReferences.SpriteTileReferences.IsStaircase(currentFloorSmallMap.TheMap[tilePos.X][tilePos.Y]));
             // is it the bottom or top floor? if so, then we know
             if (!bHasLowerFloor) return true;
             if (!bHasHigherFloor) return false;
@@ -55,6 +51,11 @@ namespace Ultima5Redux.Maps
                 _mapLocationDictionary[location][nFloor + 1].TheMap[tilePos.X][tilePos.Y])) return true;
             // if not - then WTF?
             throw new Ultima5ReduxException("There is staircase with apparently no matching stair case");
+        }
+
+        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference.Location location, int nFloor)
+        {
+            return _mapLocationDictionary[location][nFloor];
         }
     }
 }

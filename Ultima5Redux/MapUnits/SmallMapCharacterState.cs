@@ -12,6 +12,17 @@ namespace Ultima5Redux.MapUnits
     /// </summary>
     public class SmallMapCharacterState
     {
+        public bool Active { get; }
+        public int MapUnitAnimationStateIndex { get; }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        private int NPCIndex { get; }
+
+        public MapUnitPosition TheMapUnitPosition { get; } = new MapUnitPosition();
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        private TileReference TileRef { get; }
+
         /// <summary>
         ///     Build the character state based on existing conditions
         ///     This is called when entering a new map within the game - as opposed to loading from disk
@@ -54,15 +65,5 @@ namespace Ultima5Redux.MapUnits
             MapUnitAnimationStateIndex = stateUInts[6];
             Active = stateUInts[7] > 0;
         }
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        private int NPCIndex { get; }
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        private TileReference TileRef { get; }
-        public bool Active { get; }
-        public int MapUnitAnimationStateIndex { get; }
-
-        public MapUnitPosition TheMapUnitPosition { get; } = new MapUnitPosition();
     }
 }

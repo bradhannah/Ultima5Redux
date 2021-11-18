@@ -14,41 +14,24 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     {
         private readonly Inventory _inventory;
 
-        public CombatPlayer(PlayerCharacterRecord record, Point2D xy, Inventory inventory)  
-        {
-            _inventory = inventory;
-            Record = record;
-            KeyTileReference = GameReferences.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
-            MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
-        }
-
-        public CombatPlayer()
-        {
-        }
-
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
-        public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
-
-        public override bool IsAttackable => true;
-
-        public override bool IsInvisible => Record.IsInvisible;
-
-        public override CharacterStats Stats => Record.Stats;
+        public override string BoardXitName => "GET OFF ME YOU BRUTE!";
 
         public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.TheCombatItemReference.Range);
 
         public override int Defense => _inventory.GetCharacterTotalDefense(Record);
 
         public override int Dexterity => (byte)Record.Stats.Dexterity;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;
         public override int Experience => 0;
-
-        public PlayerCharacterRecord Record { get; }
-        public override string BoardXitName => "GET OFF ME YOU BRUTE!";
         public override string FriendlyName => Record.Name;
+        public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
 
-        public override string Name => Record.Name;
-        public override string PluralName => FriendlyName;
-        public override string SingularName => FriendlyName;
+        public override bool IsAttackable => true;
+
+        public override bool IsInvisible => Record.IsInvisible;
 
         public override TileReference KeyTileReference
         {
@@ -69,14 +52,28 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     case PlayerCharacterRecord.CharacterStatus.Dead:
                     case PlayerCharacterRecord.CharacterStatus.Asleep:
                         return GameReferences.SpriteTileReferences.GetTileReferenceByName("DeadBody");
-                    default: return base.KeyTileReference; 
+                    default: return base.KeyTileReference;
                 }
             }
             set => base.KeyTileReference = value;
         }
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;
+        public override string Name => Record.Name;
+        public override string PluralName => FriendlyName;
+        public override string SingularName => FriendlyName;
+
+        public override CharacterStats Stats => Record.Stats;
+
+        public PlayerCharacterRecord Record { get; }
+
+        public CombatPlayer(PlayerCharacterRecord record, Point2D xy, Inventory inventory)
+        {
+            _inventory = inventory;
+            Record = record;
+            KeyTileReference = GameReferences.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
+            MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+        }
+
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;
 
         public override string ToString()
@@ -84,27 +81,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return Record.Name;
         }
 
-        /// <summary>
-        ///     Gets the string used to describe all available weapons that will be outputted to user
-        /// </summary>
-        /// <returns></returns>
-        public string GetAttackWeaponsString()
-        {
-            List<CombatItem> combatItems = GetAttackWeapons();
-
-            // if (combatItems == null) return "bare hands";
-
-            string combatItemString = "";
-            for (int index = 0; index < combatItems.Count; index++)
-            {
-                CombatItem item = combatItems[index];
-                if (index > 0)
-                    combatItemString += ", ";
-                combatItemString += item.LongName;
-            }
-
-            return combatItemString;
-        }
+        public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
+            CanReachForMeleeAttack(opponentCombatMapUnit, item.TheCombatItemReference.Range);
 
         /// <summary>
         ///     Gets a list of all weapons that are available for use by given player character. The list is ordered.
@@ -119,7 +97,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
             {
                 if (equipment == DataOvlReference.Equipment.Nothing) return false;
-                CombatItem combatItem = _inventory.GetItemFromEquipment(equipment);    
+                CombatItem combatItem = _inventory.GetItemFromEquipment(equipment);
                 return combatItem.TheCombatItemReference.AttackStat > 0;
             }
 
@@ -145,7 +123,26 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return weapons;
         }
 
-        public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
-            CanReachForMeleeAttack(opponentCombatMapUnit, item.TheCombatItemReference.Range);
+        /// <summary>
+        ///     Gets the string used to describe all available weapons that will be outputted to user
+        /// </summary>
+        /// <returns></returns>
+        public string GetAttackWeaponsString()
+        {
+            List<CombatItem> combatItems = GetAttackWeapons();
+
+            // if (combatItems == null) return "bare hands";
+
+            string combatItemString = "";
+            for (int index = 0; index < combatItems.Count; index++)
+            {
+                CombatItem item = combatItems[index];
+                if (index > 0)
+                    combatItemString += ", ";
+                combatItemString += item.LongName;
+            }
+
+            return combatItemString;
+        }
     }
 }

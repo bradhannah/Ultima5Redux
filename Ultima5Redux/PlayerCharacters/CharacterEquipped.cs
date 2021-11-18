@@ -6,15 +6,15 @@ namespace Ultima5Redux.PlayerCharacters
 {
     [DataContract] public class CharacterEquipped
     {
-        public enum EquippableSlot { None, Helm, Amulet, LeftHand, RightHand, Ring, Armour}
-            
+        public enum EquippableSlot { None, Helm, Amulet, LeftHand, RightHand, Ring, Armour }
+
         [DataMember] public DataOvlReference.Equipment Amulet { get; set; }
         [DataMember] public DataOvlReference.Equipment Armour { get; set; }
         [DataMember] public DataOvlReference.Equipment Helmet { get; set; }
         [DataMember] public DataOvlReference.Equipment LeftHand { get; set; }
         [DataMember] public DataOvlReference.Equipment RightHand { get; set; }
         [DataMember] public DataOvlReference.Equipment Ring { get; set; }
-        
+
         public CharacterEquipped()
         {
             Helmet = DataOvlReference.Equipment.Nothing;
@@ -25,9 +25,6 @@ namespace Ultima5Redux.PlayerCharacters
             Amulet = DataOvlReference.Equipment.Nothing;
         }
 
-        public bool IsEquipped(EquippableSlot equippableSlot) =>
-            GetEquippedEquipment(equippableSlot) != DataOvlReference.Equipment.Nothing;
-                
 
         public DataOvlReference.Equipment GetEquippedEquipment(EquippableSlot equippableSlot)
         {
@@ -42,6 +39,15 @@ namespace Ultima5Redux.PlayerCharacters
                 EquippableSlot.Armour => Armour,
                 _ => throw new ArgumentOutOfRangeException(nameof(equippableSlot), equippableSlot, null)
             };
+        }
+
+        public bool IsEquipped(EquippableSlot equippableSlot) =>
+            GetEquippedEquipment(equippableSlot) != DataOvlReference.Equipment.Nothing;
+
+        public bool IsEquipped(DataOvlReference.Equipment equipment)
+        {
+            return Helmet == equipment || Armour == equipment || LeftHand == equipment || RightHand == equipment ||
+                   Ring == equipment || Amulet == equipment;
         }
 
         internal void SetEquippableSlot(EquippableSlot equippableSlot, DataOvlReference.Equipment equipment)
@@ -72,16 +78,10 @@ namespace Ultima5Redux.PlayerCharacters
                     throw new ArgumentOutOfRangeException(nameof(equippableSlot), equippableSlot, null);
             }
         }
-            
+
         internal void UnequipEquippableSlot(EquippableSlot equippableSlot)
         {
             SetEquippableSlot(equippableSlot, DataOvlReference.Equipment.Nothing);
-        }
-            
-        public bool IsEquipped(DataOvlReference.Equipment equipment)
-        {
-            return Helmet == equipment || Armour == equipment || LeftHand == equipment || RightHand == equipment ||
-                   Ring == equipment || Amulet == equipment;
         }
     }
 }

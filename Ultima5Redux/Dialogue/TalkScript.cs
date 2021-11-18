@@ -26,6 +26,16 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         public enum TalkConstants { Name = 0, Description, Greeting, Job, Bye }
 
+        /// <summary>
+        ///     the end Index for the default script lines (ie. name, job etc.)
+        /// </summary>
+        private const int END_BASE_INDEXES = (int)TalkConstants.Bye;
+
+        /// <summary>
+        ///     the maximum talk code for labels (in .tlk files)
+        /// </summary>
+        public const byte MAX_LABEL = 0x91 + 0x0A;
+
 
         /// <summary>
         ///     the minimum talk code for labels (in .tlk files)
@@ -33,19 +43,9 @@ namespace Ultima5Redux.Dialogue
         public const byte MIN_LABEL = 0x91;
 
         /// <summary>
-        ///     the maximum talk code for labels (in .tlk files)
-        /// </summary>
-        public const byte MAX_LABEL = 0x91 + 0x0A;
-
-        /// <summary>
         ///     total number of labels that are allowed to be defined
         /// </summary>
         public const int TOTAL_LABELS = 0x0A;
-
-        /// <summary>
-        ///     the end Index for the default script lines (ie. name, job etc.)
-        /// </summary>
-        private const int END_BASE_INDEXES = (int)TalkConstants.Bye;
 
         /// <summary>
         ///     All of the ScriptLines
@@ -66,16 +66,6 @@ namespace Ultima5Redux.Dialogue
         private ScriptLine _currentScriptLine = new ScriptLine();
 
         /// <summary>
-        ///     Build the initial TalkScript
-        /// </summary>
-        public TalkScript()
-        {
-            // let's add it immediately instead of waiting for someone to commit it
-            // note; this will fail if the currentScriptLine is not a reference - but I'm pretty sure it is
-            _scriptLines.Add(_currentScriptLine);
-        }
-
-        /// <summary>
         ///     The number of ScriptLines in the Script
         /// </summary>
         public int NumberOfScriptLines => _scriptLines.Count;
@@ -91,12 +81,116 @@ namespace Ultima5Redux.Dialogue
         protected internal ScriptTalkLabels TalkLabels => _scriptTalkLabels;
 
         /// <summary>
-        ///     Move to the next line in the script (for adding new content)
+        ///     Build the initial TalkScript
         /// </summary>
-        protected internal void NextLine()
+        public TalkScript()
         {
-            _currentScriptLine = new ScriptLine();
+            // let's add it immediately instead of waiting for someone to commit it
+            // note; this will fail if the currentScriptLine is not a reference - but I'm pretty sure it is
             _scriptLines.Add(_currentScriptLine);
+        }
+
+        /// <summary>
+        ///     Add to the current script line, but no string associated
+        ///     For example: STRING
+        ///     <NEWLINE>
+        ///         <AVATARNAME>
+        /// </summary>
+        /// <param name="talkCommand"></param>
+        public void AddTalkCommand(TalkCommand talkCommand)
+        {
+            //System.Console.Write("<" + (talkCommand.ToString() + ">"));
+
+            _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
+        }
+
+        /// <summary>
+        ///     Add to the current script line
+        ///     For example: STRING
+        ///     <NEWLINE>
+        ///         <AVATARNAME>
+        /// </summary>
+        /// <param name="talkCommand"></param>
+        /// <param name="talkStr"></param>
+        public void AddTalkCommand(TalkCommand talkCommand, string talkStr)
+        {
+            _currentScriptLine.AddScriptItem(talkCommand == TalkCommand.PlainString
+                ? new ScriptItem(talkCommand, talkStr)
+                : new ScriptItem(talkCommand));
+        }
+
+        /// <summary>
+        ///     Add a talk label.
+        /// </summary>
+        /// <param name="talkCommand">Either GotoLabel or DefineLabel</param>
+        /// <param name="nLabel">label # (0-9)</param>
+        public void AddTalkLabel(TalkCommand talkCommand, int nLabel)
+        {
+            if (nLabel < 0 || nLabel > TOTAL_LABELS)
+                throw new Ultima5ReduxException("Label Number: " + nLabel + " is out of range");
+
+            if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
+                _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
+            //System.Console.Write("<" + (talkCommand.ToString() + " " + nLabel + ">"));
+            else
+                throw new Ultima5ReduxException("You passed a talk command that isn't a label! ");
+        }
+
+        /// <summary>
+        ///     Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
+        ///     This is not compatible with Labels
+        /// </summary>
+        /// <param name="talkConst">name, job etc.</param>
+        /// <returns>The corresponding single ScriptLine</returns>
+        protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
+        {
+            return _scriptLines[(int)talkConst];
+        }
+
+        /// <summary>
+        ///     Gets a script line based on its index in the overall Script
+        /// </summary>
+        /// <param name="index">index into Script</param>
+        /// <returns>The requested ScriptLine</returns>
+        protected internal ScriptLine GetScriptLine(int index)
+        {
+            return _scriptLines[index];
+        }
+
+
+        /// <summary>
+        ///     Gets a scriptline based on the label index
+        /// </summary>
+        /// <param name="nLabel">0 based index of label</param>
+        /// <returns>The corresponding script line</returns>
+        protected internal ScriptLine GetScriptLineLabel(int nLabel)
+        {
+            return _scriptLines[GetScriptLineLabelIndex(nLabel)];
+        }
+
+        /// <summary>
+        ///     Gets the index of the line that contains the given label definition
+        /// </summary>
+        /// <param name="nLabel">0 based label nunber</param>
+        /// <returns>index into Script</returns>
+        public int GetScriptLineLabelIndex(int nLabel)
+        {
+            int nCount = 0;
+            foreach (ScriptLine line in _scriptLines)
+            {
+                if (line.NumberOfScriptItems <= 1)
+                {
+                    nCount++;
+                    continue;
+                }
+
+                ScriptItem item = line.GetScriptItem(1);
+                if (line.IsLabelDefinition() && item.LabelNum == nLabel)
+                    return nCount;
+                nCount++;
+            }
+
+            throw new Ultima5ReduxException("You requested a script label that doesn't exist");
         }
 
         /// <summary>
@@ -314,106 +408,12 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
-        ///     This is not compatible with Labels
+        ///     Move to the next line in the script (for adding new content)
         /// </summary>
-        /// <param name="talkConst">name, job etc.</param>
-        /// <returns>The corresponding single ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
+        protected internal void NextLine()
         {
-            return _scriptLines[(int)talkConst];
-        }
-
-        /// <summary>
-        ///     Gets a script line based on its index in the overall Script
-        /// </summary>
-        /// <param name="index">index into Script</param>
-        /// <returns>The requested ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(int index)
-        {
-            return _scriptLines[index];
-        }
-
-
-        /// <summary>
-        ///     Gets a scriptline based on the label index
-        /// </summary>
-        /// <param name="nLabel">0 based index of label</param>
-        /// <returns>The corresponding script line</returns>
-        protected internal ScriptLine GetScriptLineLabel(int nLabel)
-        {
-            return _scriptLines[GetScriptLineLabelIndex(nLabel)];
-        }
-
-        /// <summary>
-        ///     Gets the index of the line that contains the given label definition
-        /// </summary>
-        /// <param name="nLabel">0 based label nunber</param>
-        /// <returns>index into Script</returns>
-        public int GetScriptLineLabelIndex(int nLabel)
-        {
-            int nCount = 0;
-            foreach (ScriptLine line in _scriptLines)
-            {
-                if (line.NumberOfScriptItems <= 1)
-                {
-                    nCount++;
-                    continue;
-                }
-
-                ScriptItem item = line.GetScriptItem(1);
-                if (line.IsLabelDefinition() && item.LabelNum == nLabel)
-                    return nCount;
-                nCount++;
-            }
-
-            throw new Ultima5ReduxException("You requested a script label that doesn't exist");
-        }
-
-        /// <summary>
-        ///     Add a talk label.
-        /// </summary>
-        /// <param name="talkCommand">Either GotoLabel or DefineLabel</param>
-        /// <param name="nLabel">label # (0-9)</param>
-        public void AddTalkLabel(TalkCommand talkCommand, int nLabel)
-        {
-            if (nLabel < 0 || nLabel > TOTAL_LABELS)
-                throw new Ultima5ReduxException("Label Number: " + nLabel + " is out of range");
-
-            if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
-                _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
-            //System.Console.Write("<" + (talkCommand.ToString() + " " + nLabel + ">"));
-            else
-                throw new Ultima5ReduxException("You passed a talk command that isn't a label! ");
-        }
-
-        /// <summary>
-        ///     Add to the current script line, but no string associated
-        ///     For example: STRING
-        ///     <NEWLINE>
-        ///         <AVATARNAME>
-        /// </summary>
-        /// <param name="talkCommand"></param>
-        public void AddTalkCommand(TalkCommand talkCommand)
-        {
-            //System.Console.Write("<" + (talkCommand.ToString() + ">"));
-
-            _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
-        }
-
-        /// <summary>
-        ///     Add to the current script line
-        ///     For example: STRING
-        ///     <NEWLINE>
-        ///         <AVATARNAME>
-        /// </summary>
-        /// <param name="talkCommand"></param>
-        /// <param name="talkStr"></param>
-        public void AddTalkCommand(TalkCommand talkCommand, string talkStr)
-        {
-            _currentScriptLine.AddScriptItem(talkCommand == TalkCommand.PlainString
-                ? new ScriptItem(talkCommand, talkStr)
-                : new ScriptItem(talkCommand));
+            _currentScriptLine = new ScriptLine();
+            _scriptLines.Add(_currentScriptLine);
         }
 
         /// <summary>
@@ -485,26 +485,16 @@ namespace Ultima5Redux.Dialogue
         protected internal class ScriptTalkLabels
         {
             /// <summary>
+            ///     A simple list of all the labels
+            /// </summary>
+            public List<ScriptTalkLabel> Labels { get; }
+
+            /// <summary>
             ///     Default constructor
             /// </summary>
             public ScriptTalkLabels()
             {
                 Labels = new List<ScriptTalkLabel>();
-            }
-
-            /// <summary>
-            ///     A simple list of all the labels
-            /// </summary>
-            public List<ScriptTalkLabel> Labels { get; }
-
-            public ScriptTalkLabel GetScriptLabel(int nLabel)
-            {
-                foreach (ScriptTalkLabel scriptLabel in Labels)
-                {
-                    if (scriptLabel.LabelNum == nLabel) return scriptLabel;
-                }
-
-                throw new Ultima5ReduxException("Asked for a label " + nLabel + " that doesn't exist...");
             }
 
             /// <summary>
@@ -515,6 +505,16 @@ namespace Ultima5Redux.Dialogue
             {
                 Labels.Add(talkLabel);
             }
+
+            public ScriptTalkLabel GetScriptLabel(int nLabel)
+            {
+                foreach (ScriptTalkLabel scriptLabel in Labels)
+                {
+                    if (scriptLabel.LabelNum == nLabel) return scriptLabel;
+                }
+
+                throw new Ultima5ReduxException("Asked for a label " + nLabel + " that doesn't exist...");
+            }
         }
 
         /// <summary>
@@ -523,6 +523,26 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         protected internal class ScriptTalkLabel
         {
+            /// <summary>
+            ///     The default answer if non of the QuestionAnswers are satisfied
+            /// </summary>
+            public List<ScriptLine> DefaultAnswers { get; set; }
+
+            /// <summary>
+            ///     The initial line that you will always show when jumping to the label
+            /// </summary>
+            public ScriptLine InitialLine { get; set; }
+
+            /// <summary>
+            ///     The label reference number
+            /// </summary>
+            public int LabelNum { get; }
+
+            /// <summary>
+            ///     All the NPCs question and answers specific to the label
+            /// </summary>
+            public ScriptQuestionAnswers QuestionAnswers { get; }
+
             /// <summary>
             ///     Construct the ScriptTalkLabel
             /// </summary>
@@ -555,26 +575,6 @@ namespace Ultima5Redux.Dialogue
             }
 
             /// <summary>
-            ///     The label reference number
-            /// </summary>
-            public int LabelNum { get; }
-
-            /// <summary>
-            ///     The default answer if non of the QuestionAnswers are satisfied
-            /// </summary>
-            public List<ScriptLine> DefaultAnswers { get; set; }
-
-            /// <summary>
-            ///     The initial line that you will always show when jumping to the label
-            /// </summary>
-            public ScriptLine InitialLine { get; set; }
-
-            /// <summary>
-            ///     All the NPCs question and answers specific to the label
-            /// </summary>
-            public ScriptQuestionAnswers QuestionAnswers { get; }
-
-            /// <summary>
             ///     Add an additional question and answer
             /// </summary>
             /// <param name="sqa"></param>
@@ -595,6 +595,11 @@ namespace Ultima5Redux.Dialogue
         protected internal class ScriptQuestionAnswers
         {
             /// <summary>
+            ///     All the NPCs question strings and associated answers
+            /// </summary>
+            public Dictionary<string, ScriptQuestionAnswer> QuestionAnswers { get; }
+
+            /// <summary>
             ///     Default constructor
             /// </summary>
             public ScriptQuestionAnswers()
@@ -603,18 +608,18 @@ namespace Ultima5Redux.Dialogue
             }
 
             /// <summary>
-            ///     All the NPCs question strings and associated answers
+            ///     Add a ScriptQuestionAnswer to the collection
             /// </summary>
-            public Dictionary<string, ScriptQuestionAnswer> QuestionAnswers { get; }
-
-            private string GetQuestionKey(string userSuppliedQuestion)
+            /// <param name="sqa">ScriptQuestionAnswer object to add</param>
+            public void Add(ScriptQuestionAnswer sqa)
             {
-                foreach (string question in QuestionAnswers.Keys)
-                {
-                    if (userSuppliedQuestion.ToLower().StartsWith(question.ToLower())) return question;
-                }
+                if (sqa.Questions == null)
+                    return;
 
-                return string.Empty;
+                foreach (string question in sqa.Questions)
+                {
+                    if (!QuestionAnswers.Keys.Contains(question.Trim())) QuestionAnswers.Add(question.Trim(), sqa);
+                }
             }
 
             public bool AnswerIsAvailable(string question)
@@ -636,6 +641,16 @@ namespace Ultima5Redux.Dialogue
                 return QuestionAnswers[GetQuestionKey(question)];
             }
 
+            private string GetQuestionKey(string userSuppliedQuestion)
+            {
+                foreach (string question in QuestionAnswers.Keys)
+                {
+                    if (userSuppliedQuestion.ToLower().StartsWith(question.ToLower())) return question;
+                }
+
+                return string.Empty;
+            }
+
             /// <summary>
             ///     Get an array of all associated questions
             /// </summary>
@@ -643,21 +658,6 @@ namespace Ultima5Redux.Dialogue
             public string[] GetScriptQuestions()
             {
                 return QuestionAnswers.Keys.ToArray();
-            }
-
-            /// <summary>
-            ///     Add a ScriptQuestionAnswer to the collection
-            /// </summary>
-            /// <param name="sqa">ScriptQuestionAnswer object to add</param>
-            public void Add(ScriptQuestionAnswer sqa)
-            {
-                if (sqa.Questions == null)
-                    return;
-
-                foreach (string question in sqa.Questions)
-                {
-                    if (!QuestionAnswers.Keys.Contains(question.Trim())) QuestionAnswers.Add(question.Trim(), sqa);
-                }
             }
 
             /// <summary>
@@ -697,15 +697,14 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         protected internal class ScriptQuestionAnswer
         {
+            public ScriptLine Answer { get; }
+            public List<string> Questions { get; }
+
             public ScriptQuestionAnswer(List<string> questions, ScriptLine answer)
             {
                 Questions = questions;
                 Answer = answer;
             }
-
-            public List<string> Questions { get; }
-
-            public ScriptLine Answer { get; }
         }
 
         /// <summary>
@@ -714,6 +713,35 @@ namespace Ultima5Redux.Dialogue
         public class ScriptItem
         {
             private string _str = string.Empty;
+
+            /// <summary>
+            ///     command issued
+            /// </summary>
+            public TalkCommand Command { get; }
+
+            public int ItemAdditionalData { get; set; }
+            //=> str;
+
+            /// <summary>
+            ///     If there is a label, then this is a zero based index
+            /// </summary>
+            public int LabelNum { get; }
+
+            /// <summary>
+            ///     Associated string (can be empty)
+            /// </summary>
+            public string Str
+            {
+                get
+                {
+                    // we trim the double quotes out since they are so hard to deal with
+                    // the boys at Origin must have had some very specific rules for dealing with newlines and
+                    // double quotes
+                    char[] trimChars = { '"' };
+                    return _str.Trim(trimChars);
+                }
+                set => _str = value;
+            }
 
             /// <summary>
             ///     Simple constructor for basic commands
@@ -745,35 +773,6 @@ namespace Ultima5Redux.Dialogue
                 _str = str;
             }
 
-            public int ItemAdditionalData { get; set; }
-            //=> str;
-
-            /// <summary>
-            ///     If there is a label, then this is a zero based index
-            /// </summary>
-            public int LabelNum { get; }
-
-            /// <summary>
-            ///     Associated string (can be empty)
-            /// </summary>
-            public string Str
-            {
-                get
-                {
-                    // we trim the double quotes out since they are so hard to deal with
-                    // the boys at Origin must have had some very specific rules for dealing with newlines and
-                    // double quotes
-                    char[] trimChars = { '"' };
-                    return _str.Trim(trimChars);
-                }
-                set => _str = value;
-            }
-
-            /// <summary>
-            ///     command issued
-            /// </summary>
-            public TalkCommand Command { get; }
-
             public static bool IsQuestion(string str)
             {
                 // if the string is:
@@ -800,7 +799,8 @@ namespace Ultima5Redux.Dialogue
         ///     Special scriptline that identifies that it has been split in sections
         /// </summary>
         protected internal class SplitScriptLine : ScriptLine
-        {}
+        {
+        }
 
         /// <summary>
         ///     Represents a single line of a script
@@ -865,18 +865,6 @@ namespace Ultima5Redux.Dialogue
                 return scriptLine;
             }
 
-
-            /// <summary>
-            ///     Does this line represent a new label definition
-            /// </summary>
-            /// <returns></returns>
-            public bool IsLabelDefinition()
-            {
-                if (GetScriptItem(0).Command == TalkCommand.StartLabelDefinition &&
-                    GetScriptItem(1).Command == TalkCommand.DefineLabel) return true;
-                return false;
-            }
-
             /// <summary>
             ///     Add an additional script item
             /// </summary>
@@ -886,10 +874,14 @@ namespace Ultima5Redux.Dialogue
                 ScriptItems.Add(scriptItem);
             }
 
-            public void InsertScriptItemAtFront(ScriptItem scriptItem)
-            {
-                ScriptItems.Insert(0, scriptItem);
-            }
+            /// <summary>
+            ///     Determines if a particular talk command is present in a script line
+            ///     <remarks>This particularly helpful when looking for looking for <AvatarName></remarks>
+            /// </summary>
+            /// <param name="command">the command to search for</param>
+            /// <returns>true if it's present, false if it isn't</returns>
+            public bool ContainsCommand(TalkCommand command) =>
+                ScriptItems.Any(scriptItem => scriptItem.Command == command);
 
             public void EncloseInQuotes()
             {
@@ -914,6 +906,23 @@ namespace Ultima5Redux.Dialogue
             {
                 Debug.Assert(ScriptItems[index] != null);
                 return ScriptItems[index];
+            }
+
+            public void InsertScriptItemAtFront(ScriptItem scriptItem)
+            {
+                ScriptItems.Insert(0, scriptItem);
+            }
+
+
+            /// <summary>
+            ///     Does this line represent a new label definition
+            /// </summary>
+            /// <returns></returns>
+            public bool IsLabelDefinition()
+            {
+                if (GetScriptItem(0).Command == TalkCommand.StartLabelDefinition &&
+                    GetScriptItem(1).Command == TalkCommand.DefineLabel) return true;
+                return false;
             }
 
             /// <summary>
@@ -1021,15 +1030,6 @@ namespace Ultima5Redux.Dialogue
 
                 return lines;
             }
-
-            /// <summary>
-            ///     Determines if a particular talk command is present in a script line
-            ///     <remarks>This particularly helpful when looking for looking for <AvatarName></remarks>
-            /// </summary>
-            /// <param name="command">the command to search for</param>
-            /// <returns>true if it's present, false if it isn't</returns>
-            public bool ContainsCommand(TalkCommand command) =>
-                ScriptItems.Any(scriptItem => scriptItem.Command == command);
         }
     }
 }

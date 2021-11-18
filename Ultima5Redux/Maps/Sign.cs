@@ -11,6 +11,44 @@ namespace Ultima5Redux.Maps
 
         private const int CHARS_PER_LINE = 16;
 
+        /// <summary>
+        ///     Floor of location
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public int Floor { get; }
+
+        /// <summary>
+        ///     General location of sign
+        /// </summary>
+        public SmallMapReferences.SingleMapReference.Location Location { get; }
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public int Offset { get; }
+
+
+        private string RawSignText { get; }
+
+        /// <summary>
+        ///     Actual text of sign
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public string SignText => ScrubSignText(RawSignText);
+
+        // ReSharper disable once UnusedMember.Global
+        public string SignTextCleanedSpaces => TrimSpareSpacesFromSign(SignText);
+
+        /// <summary>
+        ///     X coordinate of sign
+        /// </summary>
+        public int X { get; }
+
+        /// <summary>
+        ///     Y coordinate of sign
+        /// </summary>
+        public int Y { get; }
+
         public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y,
             byte[] signText, int nOffset)
             : this(location, floor, x, y, ScrubSignText(signText), nOffset)
@@ -38,72 +76,20 @@ namespace Ultima5Redux.Maps
             Offset = nOffset;
         }
 
-
-        private string RawSignText { get; }
-
-        /// <summary>
-        ///     Floor of location
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public int Floor { get; }
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public int Offset { get; }
-
-        /// <summary>
-        ///     X coordinate of sign
-        /// </summary>
-        public int X { get; }
-
-        /// <summary>
-        ///     Y coordinate of sign
-        /// </summary>
-        public int Y { get; }
-
-        /// <summary>
-        ///     General location of sign
-        /// </summary>
-        public SmallMapReferences.SingleMapReference.Location Location { get; }
-
-        /// <summary>
-        ///     Actual text of sign
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public string SignText => ScrubSignText(RawSignText);
-
-        // ReSharper disable once UnusedMember.Global
-        public string SignTextCleanedSpaces => TrimSpareSpacesFromSign(SignText);
-
-        /// <summary>
-        ///     A print function that frankly doesn't work very well...
-        /// </summary>
-        // ReSharper disable once UnusedMember.Global
-        public void PrintSign()
+        public static SignType GetSignTypeByIndex(int nIndex)
         {
-            _ = Math.DivRem(SignText.Length, CHARS_PER_LINE, out int remainder);
-            int lines = remainder == 0 ? SignText.Length / CHARS_PER_LINE : SignText.Length / CHARS_PER_LINE + 1;
-            for (int i = 0; i < lines; i++)
+            switch ((SignType)nIndex)
             {
-                int remainingChars = SignText.Length - CHARS_PER_LINE * i;
-                Console.WriteLine(SignText.Substring(i * CHARS_PER_LINE,
-                    remainingChars < 16 ? remainingChars : CHARS_PER_LINE));
+                case SignType.SmallSign:
+                case SignType.BigSign:
+                case SignType.Tombstone:
+                case SignType.Cross:
+                case SignType.Warning:
+                    return (SignType)nIndex;
+                default:
+                    throw new Ultima5ReduxException("Asked for Sign with index=" + nIndex +
+                                                    " but that isn't a sign index");
             }
-        }
-
-        private static string TrimSpareSpacesFromSign(string signText)
-        {
-            string trimmedStr = string.Empty;
-
-            string[] lines = signText.Split('\n');
-
-            foreach (string line in lines)
-            {
-                trimmedStr += line.Trim() + "\n";
-            }
-
-            return trimmedStr.Trim();
         }
 
         private static string ScrubSignText(byte[] signBytes)
@@ -170,19 +156,33 @@ namespace Ultima5Redux.Maps
             return scrubbedStr;
         }
 
-        public static SignType GetSignTypeByIndex(int nIndex)
+        private static string TrimSpareSpacesFromSign(string signText)
         {
-            switch ((SignType)nIndex)
+            string trimmedStr = string.Empty;
+
+            string[] lines = signText.Split('\n');
+
+            foreach (string line in lines)
             {
-                case SignType.SmallSign:
-                case SignType.BigSign:
-                case SignType.Tombstone:
-                case SignType.Cross:
-                case SignType.Warning:
-                    return (SignType)nIndex;
-                default:
-                    throw new Ultima5ReduxException("Asked for Sign with index=" + nIndex +
-                                                    " but that isn't a sign index");
+                trimmedStr += line.Trim() + "\n";
+            }
+
+            return trimmedStr.Trim();
+        }
+
+        /// <summary>
+        ///     A print function that frankly doesn't work very well...
+        /// </summary>
+        // ReSharper disable once UnusedMember.Global
+        public void PrintSign()
+        {
+            _ = Math.DivRem(SignText.Length, CHARS_PER_LINE, out int remainder);
+            int lines = remainder == 0 ? SignText.Length / CHARS_PER_LINE : SignText.Length / CHARS_PER_LINE + 1;
+            for (int i = 0; i < lines; i++)
+            {
+                int remainingChars = SignText.Length - CHARS_PER_LINE * i;
+                Console.WriteLine(SignText.Substring(i * CHARS_PER_LINE,
+                    remainingChars < 16 ? remainingChars : CHARS_PER_LINE));
             }
         }
     }

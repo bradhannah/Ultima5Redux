@@ -7,12 +7,11 @@ using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    [DataContract]  
-    public class MagicReference
+    [SuppressMessage("ReSharper", "InconsistentNaming")] [DataContract] public class MagicReference
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpellWords
+        [JsonConverter(typeof(StringEnumConverter))] public enum MagicTypeEnum { Peace, Support, Attack, Debuff, None }
+
+        [JsonConverter(typeof(StringEnumConverter))] public enum SpellWords
         {
             // taking a bit of a risk and just let the subsequent values be assigned since they should be in order
             In_Lor = 0x24A, Grav_Por, An_Zu, An_Nox, Mani, An_Ylem, An_Sanct, An_Xen_Corp, Rel_Hur, In_Wis, Kal_Xen,
@@ -23,82 +22,93 @@ namespace Ultima5Redux.PlayerCharacters
             Vas_Rel_Por, An_Tym, Nox
         }
 
-        private readonly Dictionary<Reagent.ReagentTypeEnum, bool> _reagentsDictionary =
-            new Dictionary<Reagent.ReagentTypeEnum, bool>();
-        
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum MagicTypeEnum { Peace, Support, Attack, Debuff, None}  
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum TimePermittedEnum { Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never}
-
-        public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
-        
-        [DataMember] public SpellWords SpellEnum;
-        [DataMember] public string Spell;
-
-        private void SetReagentState(Reagent.ReagentTypeEnum reagentType, bool bSpellRequirement)
+        [JsonConverter(typeof(StringEnumConverter))] public enum TimePermittedEnum
         {
-            if (_reagentsDictionary.ContainsKey(reagentType)) _reagentsDictionary[reagentType] = bSpellRequirement;
-            else _reagentsDictionary.Add(reagentType, bSpellRequirement);
+            Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never
         }
 
-        private bool GetReagentState(Reagent.ReagentTypeEnum reagentType) => 
-            _reagentsDictionary.ContainsKey(reagentType) && _reagentsDictionary[reagentType];
-        
+        [DataMember]
+        private bool BlackPearl
+        {
+            get => GetReagentState(Reagent.ReagentTypeEnum.BlackPearl);
+            set => SetReagentState(Reagent.ReagentTypeEnum.BlackPearl, value);
+        }
+
+        [DataMember]
+        private bool BloodMoss
+        {
+            get => GetReagentState(Reagent.ReagentTypeEnum.BloodMoss);
+            set => SetReagentState(Reagent.ReagentTypeEnum.BloodMoss, value);
+        }
+
+        [DataMember] public int Circle;
+
+        [DataMember]
+        private bool Garlic
+        {
+            get => GetReagentState(Reagent.ReagentTypeEnum.Garlic);
+            set => SetReagentState(Reagent.ReagentTypeEnum.Garlic, value);
+        }
+
+        [DataMember]
+        private bool Ginseng
+        {
+            get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.Ginseng);
+            set => SetReagentState(Reagent.ReagentTypeEnum.Ginseng, value);
+        }
+
+        [DataMember] public int Gold;
+
+        [DataMember]
+        private bool MandrakeRoot
+        {
+            get => GetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot);
+            set => SetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot, value);
+        }
+
+        [DataMember]
+        private bool NightShade
+        {
+            get => GetReagentState(Reagent.ReagentTypeEnum.NightShade);
+            set => SetReagentState(Reagent.ReagentTypeEnum.NightShade, value);
+        }
+
+        [DataMember] public string RawGoldReagents;
+        [DataMember] public string SimilarFunction;
+        [DataMember] public string SimpleDescription;
+        [DataMember] public string Spell;
+
+        [DataMember] public SpellWords SpellEnum;
+
+        [DataMember]
+        private bool SpiderSilk
+        {
+            get => GetReagentState(Reagent.ReagentTypeEnum.SpiderSilk);
+            set => SetReagentState(Reagent.ReagentTypeEnum.SpiderSilk, value);
+        }
+
         [DataMember]
         private bool SulfurAsh
         {
             get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.SulfurAsh);
             set => SetReagentState(Reagent.ReagentTypeEnum.SulfurAsh, value);
         }
-        [DataMember] private bool Ginseng
-        {
-            get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.Ginseng);
-            set => SetReagentState(Reagent.ReagentTypeEnum.Ginseng, value);
-        }
 
-        [DataMember] private bool Garlic
-        {
-            get => GetReagentState(Reagent.ReagentTypeEnum.Garlic);
-            set => SetReagentState(Reagent.ReagentTypeEnum.Garlic, value);
-        }
-
-        [DataMember] private bool SpiderSilk
-        {
-            get => GetReagentState(Reagent.ReagentTypeEnum.SpiderSilk);
-            set => SetReagentState(Reagent.ReagentTypeEnum.SpiderSilk, value);
-        }
-
-        [DataMember] private bool BloodMoss
-        {
-            get => GetReagentState(Reagent.ReagentTypeEnum.BloodMoss);
-            set => SetReagentState(Reagent.ReagentTypeEnum.BloodMoss, value);
-        }
-
-        [DataMember] private bool BlackPearl
-        {
-            get => GetReagentState(Reagent.ReagentTypeEnum.BlackPearl);
-            set => SetReagentState(Reagent.ReagentTypeEnum.BlackPearl, value);
-        }
-
-        [DataMember] private bool NightShade
-        {
-            get => GetReagentState(Reagent.ReagentTypeEnum.NightShade);
-            set => SetReagentState(Reagent.ReagentTypeEnum.NightShade, value);
-        }
-
-        [DataMember] private bool MandrakeRoot
-        {
-            get => GetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot);
-            set => SetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot, value);
-        }
-
-        [DataMember] public int Circle;
-        [DataMember] public MagicTypeEnum Type;
-        [DataMember] public string SimpleDescription;
-        [DataMember] public string SimilarFunction;
         [DataMember] public TimePermittedEnum TimePermitted;
-        [DataMember] public int Gold;
-        [DataMember] public string RawGoldReagents;
+        [DataMember] public MagicTypeEnum Type;
+
+        private readonly Dictionary<Reagent.ReagentTypeEnum, bool> _reagentsDictionary =
+            new Dictionary<Reagent.ReagentTypeEnum, bool>();
+
+        private bool GetReagentState(Reagent.ReagentTypeEnum reagentType) =>
+            _reagentsDictionary.ContainsKey(reagentType) && _reagentsDictionary[reagentType];
+
+        public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
+
+        private void SetReagentState(Reagent.ReagentTypeEnum reagentType, bool bSpellRequirement)
+        {
+            if (_reagentsDictionary.ContainsKey(reagentType)) _reagentsDictionary[reagentType] = bSpellRequirement;
+            else _reagentsDictionary.Add(reagentType, bSpellRequirement);
+        }
     }
 }

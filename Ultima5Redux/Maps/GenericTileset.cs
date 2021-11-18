@@ -15,13 +15,6 @@ namespace Ultima5Redux.Maps
             Initialize();
         }
 
-        private void WriteBitmapRgb(int r, int g, int b)
-        {
-            _ = r;
-            _ = g;
-            _ = b;
-        }
-
         private void Initialize()
         {
             foreach (byte singleByte in _tilesetByteArray)
@@ -83,6 +76,13 @@ namespace Ultima5Redux.Maps
                         break;
                 }
             }
+        }
+
+        private void WriteBitmapRgb(int r, int g, int b)
+        {
+            _ = r;
+            _ = g;
+            _ = b;
         }
     }
 }

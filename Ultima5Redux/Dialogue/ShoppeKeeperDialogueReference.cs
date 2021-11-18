@@ -17,6 +17,8 @@ namespace Ultima5Redux.Dialogue
 {
     public class ShoppeKeeperDialogueReference
     {
+        private enum ShoppeKeeperChunkNames { Unused, AllData }
+
         private readonly DataChunks<ShoppeKeeperChunkNames> _dataChunks;
         private readonly DataOvlReference _dataOvlReference;
         private readonly List<string> _merchantStrings = new List<string>();
@@ -43,66 +45,6 @@ namespace Ultima5Redux.Dialogue
                 0x2797, 0, ShoppeKeeperChunkNames.AllData);
 
             BuildConversationTable(dataOvlReference);
-        }
-
-        /// <summary>
-        ///     Decompresses the strings and fills in each compressed word
-        /// </summary>
-        /// <param name="dataOvlReference"></param>
-        private void BuildConversationTable(DataOvlReference dataOvlReference)
-        {
-            IEnumerable<string> rawShoppeStrings =
-                _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData).GetChunkAsStringList().StringList;
-            CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
-            //int i = 0;
-            foreach (string rawShoppeString in rawShoppeStrings)
-            {
-                string convertedStr =
-                    compressedWordReference.ReplaceRawMerchantStringsWithCompressedWords(rawShoppeString);
-                _merchantStrings.Add(convertedStr);
-            }
-        }
-
-        /// <summary>
-        ///     Gets the merchant string before substitutions
-        /// </summary>
-        /// <param name="nDialogueIndex"></param>
-        /// <returns></returns>
-        private string GetMerchantStringWithNoSubstitution(int nDialogueIndex)
-        {
-            return _merchantStrings[nDialogueIndex];
-        }
-
-        internal int CountReplacementVariables(int nDialogueIndex)
-        {
-            int freq = Regex.Matches(GetMerchantString(nDialogueIndex), @"[\%\&\$\#\@\*\^\*]").Count;
-            return freq;
-        }
-
-        /// <summary>
-        ///     Gets the merchant string with full variable replacement
-        /// </summary>
-        /// <param name="nDialogueIndex">index into un-replaced strings</param>
-        /// <param name="nGold">how many gold to fill in</param>
-        /// <param name="equipmentName"></param>
-        /// <param name="bUseRichText"></param>
-        /// <param name="shoppeKeeperName"></param>
-        /// <param name="shoppeName"></param>
-        /// <param name="tod"></param>
-        /// <param name="nQuantity"></param>
-        /// <param name="genderedAddress"></param>
-        /// <param name="personOfInterest"></param>
-        /// <param name="locationToFindPersonOfInterest"></param>
-        /// <param name="bHighlightDetails"></param>
-        /// <returns>a complete string with full replacements</returns>
-        internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "",
-            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null,
-            int nQuantity = 0, string genderedAddress = "", string personOfInterest = "",
-            string locationToFindPersonOfInterest = "", bool bHighlightDetails = false)
-        {
-            string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
-            return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
-                shoppeName, tod, nQuantity, genderedAddress, personOfInterest, locationToFindPersonOfInterest);
         }
 
         /// <summary>
@@ -153,6 +95,91 @@ namespace Ultima5Redux.Dialogue
             return sb.ToString();
         }
 
+        /// <summary>
+        ///     Decompresses the strings and fills in each compressed word
+        /// </summary>
+        /// <param name="dataOvlReference"></param>
+        private void BuildConversationTable(DataOvlReference dataOvlReference)
+        {
+            IEnumerable<string> rawShoppeStrings =
+                _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData).GetChunkAsStringList().StringList;
+            CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
+            //int i = 0;
+            foreach (string rawShoppeString in rawShoppeStrings)
+            {
+                string convertedStr =
+                    compressedWordReference.ReplaceRawMerchantStringsWithCompressedWords(rawShoppeString);
+                _merchantStrings.Add(convertedStr);
+            }
+        }
+
+        internal int CountReplacementVariables(int nDialogueIndex)
+        {
+            int freq = Regex.Matches(GetMerchantString(nDialogueIndex), @"[\%\&\$\#\@\*\^\*]").Count;
+            return freq;
+        }
+
+        /// <summary>
+        ///     Gets the merchant string with full variable replacement
+        /// </summary>
+        /// <param name="nDialogueIndex">index into un-replaced strings</param>
+        /// <param name="nGold">how many gold to fill in</param>
+        /// <param name="equipmentName"></param>
+        /// <param name="bUseRichText"></param>
+        /// <param name="shoppeKeeperName"></param>
+        /// <param name="shoppeName"></param>
+        /// <param name="tod"></param>
+        /// <param name="nQuantity"></param>
+        /// <param name="genderedAddress"></param>
+        /// <param name="personOfInterest"></param>
+        /// <param name="locationToFindPersonOfInterest"></param>
+        /// <param name="bHighlightDetails"></param>
+        /// <returns>a complete string with full replacements</returns>
+        internal string GetMerchantString(int nDialogueIndex, int nGold = -1, string equipmentName = "",
+            bool bUseRichText = true, string shoppeKeeperName = "", string shoppeName = "", TimeOfDay tod = null,
+            int nQuantity = 0, string genderedAddress = "", string personOfInterest = "",
+            string locationToFindPersonOfInterest = "", bool bHighlightDetails = false)
+        {
+            string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
+            return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
+                shoppeName, tod, nQuantity, genderedAddress, personOfInterest, locationToFindPersonOfInterest);
+        }
+
+        /// <summary>
+        ///     Gets the merchant string before substitutions
+        /// </summary>
+        /// <param name="nDialogueIndex"></param>
+        /// <returns></returns>
+        private string GetMerchantStringWithNoSubstitution(int nDialogueIndex)
+        {
+            return _merchantStrings[nDialogueIndex];
+        }
+
+        /// <summary>
+        ///     Returns a random integer between two integers
+        /// </summary>
+        /// <param name="nMin"></param>
+        /// <param name="nMax"></param>
+        /// <returns></returns>
+        internal int GetRandomIndexFromRange(int nMin, int nMax)
+        {
+            Debug.Assert(nMax > nMin);
+            int nDiff = nMax - nMin;
+
+            return _random.Next(nDiff) + nMin;
+        }
+
+        /// <summary>
+        ///     Returns an unsubstituted merchant string from within a particular range
+        /// </summary>
+        /// <param name="nMin"></param>
+        /// <param name="nMax"></param>
+        /// <returns></returns>
+        internal string GetRandomMerchantStringFromRange(int nMin, int nMax)
+        {
+            return _merchantStrings[GetRandomMerchantStringIndexFromRange(nMin, nMax)];
+        }
+
         internal int GetRandomMerchantStringIndexFromRange(int nMin, int nMax)
         {
             // if this hasn't been access before, then lets add a chunk to make sure we don't repeat the same thing 
@@ -175,31 +202,6 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     Returns an unsubstituted merchant string from within a particular range
-        /// </summary>
-        /// <param name="nMin"></param>
-        /// <param name="nMax"></param>
-        /// <returns></returns>
-        internal string GetRandomMerchantStringFromRange(int nMin, int nMax)
-        {
-            return _merchantStrings[GetRandomMerchantStringIndexFromRange(nMin, nMax)];
-        }
-
-        /// <summary>
-        ///     Returns a random integer between two integers
-        /// </summary>
-        /// <param name="nMin"></param>
-        /// <param name="nMax"></param>
-        /// <returns></returns>
-        internal int GetRandomIndexFromRange(int nMin, int nMax)
-        {
-            Debug.Assert(nMax > nMin);
-            int nDiff = nMax - nMin;
-
-            return _random.Next(nDiff) + nMin;
-        }
-
-        /// <summary>
         ///     Gets a shoppekeeper based on location and NPC type
         /// </summary>
         /// <param name="location"></param>
@@ -209,7 +211,7 @@ namespace Ultima5Redux.Dialogue
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">couldn't find the shoppe keeper at that particular location</exception>
         public ShoppeKeeper GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location location,
-            NonPlayerCharacterReference.NPCDialogTypeEnum npcType, PlayerCharacterRecords playerCharacterRecords, 
+            NonPlayerCharacterReference.NPCDialogTypeEnum npcType, PlayerCharacterRecords playerCharacterRecords,
             Inventory inventory)
         {
             switch (npcType)
@@ -243,7 +245,5 @@ namespace Ultima5Redux.Dialogue
                     throw new ArgumentOutOfRangeException(nameof(npcType), npcType, null);
             }
         }
-
-        private enum ShoppeKeeperChunkNames { Unused, AllData }
     }
 }

@@ -62,20 +62,6 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     Is there a talking word at the given index?
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public bool IsTalkingWord(int index)
-        {
-            // Note: I originally wrote this just to catch the exceptions, but it was SUPER SLOW, so I hopefully smartened it up
-            // is the index in the range that we can even lookup?
-            if (index > _compressWordLookupMap.Keys.Max() - _compressWordLookupMap.Keys.Min()) return false;
-            // if the index is in range, then does the key exist?
-            return _compressWordLookupMap.ContainsKey(index);
-        }
-
-        /// <summary>
         ///     Get a compressed word with an index
         ///     The index will be automatically adjusted
         /// </summary>
@@ -94,6 +80,17 @@ namespace Ultima5Redux.Dialogue
             {
                 throw new NoTalkingWordException("Couldn't find TalkWord at index " + index);
             }
+        }
+
+        /// <summary>
+        ///     Is this an expected letter or digit in the string
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns>true if it is acceptable</returns>
+        private bool IsAcceptableLettersOrDigits(char character)
+        {
+            return character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z' ||
+                   character >= '0' && character <= '9';
         }
 
         /// <summary>
@@ -121,14 +118,17 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     Is this an expected letter or digit in the string
+        ///     Is there a talking word at the given index?
         /// </summary>
-        /// <param name="character"></param>
-        /// <returns>true if it is acceptable</returns>
-        private bool IsAcceptableLettersOrDigits(char character)
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool IsTalkingWord(int index)
         {
-            return character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z' ||
-                   character >= '0' && character <= '9';
+            // Note: I originally wrote this just to catch the exceptions, but it was SUPER SLOW, so I hopefully smartened it up
+            // is the index in the range that we can even lookup?
+            if (index > _compressWordLookupMap.Keys.Max() - _compressWordLookupMap.Keys.Min()) return false;
+            // if the index is in range, then does the key exist?
+            return _compressWordLookupMap.ContainsKey(index);
         }
 
         /// <summary>

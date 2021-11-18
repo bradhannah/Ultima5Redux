@@ -15,6 +15,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         public enum RemedyTypes { Cure, Heal, Resurrect }
 
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        {
+            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyHealer)
+        };
+
+        public HealerServices Services { get; }
+
 
         public Healer(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
             ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(
@@ -23,12 +30,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             Services = new HealerServices(dataOvlReference);
         }
 
-        public HealerServices Services { get; }
-
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        public override string GetForSaleList()
         {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyHealer)
-        };
+            throw new NotImplementedException();
+        }
 
         public override string GetHelloResponse(TimeOfDay tod = null)
         {
@@ -37,6 +42,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
                 shoppeName: TheShoppeKeeperReference.ShoppeName,
                 tod: tod);
+        }
+
+        public override string GetThanksAfterPurchaseResponse()
+        {
+            //
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
+                       .N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N).Trim() + "\n" +
+                   DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
+                       .AID_THEE_Q).Trim();
         }
 
         public override string GetWhichWouldYouSee()
@@ -49,41 +63,19 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
         }
 
-        public string GetWhoNeedsAid()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                .N_N_DQ_WHO_NEEDS_MY_AID_Q_DQ).Trim();
-        }
-
-        public string GetRemedyVerb(RemedyTypes remedy)
+        public bool DoesPlayerNeedRemedy(RemedyTypes remedy, PlayerCharacterRecord record)
         {
             switch (remedy)
             {
                 case RemedyTypes.Cure:
-                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                        .CURING);
+                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned;
                 case RemedyTypes.Heal:
-                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                        .HEALING);
+                    return record.Stats.CurrentHp < record.Stats.MaximumHp;
                 case RemedyTypes.Resurrect:
-                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                        .RESURRECT);
+                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Dead;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null);
             }
-        }
-
-        public string NoNeedForMyArt()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
-                           DataOvlReference.ShoppeKeeperHealerStrings2
-                               .DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME).Trim().Replace("\n", " "),
-                       shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName) + "\n\n" +
-                   DataOvlReference.StringReferences.GetString(
-                           DataOvlReference.ShoppeKeeperHealerStrings.N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N)
-                       .Trim() + "\n"
-                   + DataOvlReference.StringReferences.GetString(
-                       DataOvlReference.ShoppeKeeperHealerStrings.AID_THEE_Q);
         }
 
         public string GetHealerRemedyOfferPrice(RemedyTypes remedy)
@@ -116,35 +108,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return offerStr;
         }
 
-        public bool DoesPlayerNeedRemedy(RemedyTypes remedy, PlayerCharacterRecord record)
-        {
-            switch (remedy)
-            {
-                case RemedyTypes.Cure:
-                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned;
-                case RemedyTypes.Heal:
-                    return record.Stats.CurrentHp < record.Stats.MaximumHp;
-                case RemedyTypes.Resurrect:
-                    return record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Dead;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null);
-            }
-        }
-
-        public override string GetForSaleList()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string GetThanksAfterPurchaseResponse()
-        {
-            //
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                       .N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N).Trim() + "\n" +
-                   DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
-                       .AID_THEE_Q).Trim();
-        }
-
         /// <summary>
         ///     Gets the price of the given service at the particular location
         /// </summary>
@@ -153,6 +116,43 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public int GetPrice(RemedyTypes remedy)
         {
             return Services.GetServicePrice(TheShoppeKeeperReference.ShoppeKeeperLocation, remedy);
+        }
+
+        public string GetRemedyVerb(RemedyTypes remedy)
+        {
+            switch (remedy)
+            {
+                case RemedyTypes.Cure:
+                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
+                        .CURING);
+                case RemedyTypes.Heal:
+                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
+                        .HEALING);
+                case RemedyTypes.Resurrect:
+                    return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
+                        .RESURRECT);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(remedy), remedy, null);
+            }
+        }
+
+        public string GetWhoNeedsAid()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
+                .N_N_DQ_WHO_NEEDS_MY_AID_Q_DQ).Trim();
+        }
+
+        public string NoNeedForMyArt()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
+                           DataOvlReference.ShoppeKeeperHealerStrings2
+                               .DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME).Trim().Replace("\n", " "),
+                       shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName) + "\n\n" +
+                   DataOvlReference.StringReferences.GetString(
+                           DataOvlReference.ShoppeKeeperHealerStrings.N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N)
+                       .Trim() + "\n"
+                   + DataOvlReference.StringReferences.GetString(
+                       DataOvlReference.ShoppeKeeperHealerStrings.AID_THEE_Q);
         }
     }
 }

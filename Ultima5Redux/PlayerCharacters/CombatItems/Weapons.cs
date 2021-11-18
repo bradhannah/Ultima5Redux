@@ -6,6 +6,12 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     public class Weapons : CombatItems<WeaponReference.WeaponTypeEnum, Weapon>
     {
+        public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; } =
+            new Dictionary<WeaponReference.WeaponTypeEnum, Weapon>();
+
+        private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =
+            new Dictionary<DataOvlReference.Equipment, Weapon>();
+
         public Weapons(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             foreach (WeaponReference weaponReference in GameReferences.CombatItemRefs.WeaponReferences)
@@ -26,17 +32,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             {
                 newWeapon = new Weapon(weaponReference, GameStateByteArray[(int)weaponReference.SpecificEquipment]);
             }
-            
+
             Items.Add(weaponReference.WeaponType, newWeapon);
-            
+
             ItemsFromEquipment.Add(weaponReference.SpecificEquipment, newWeapon);
         }
-        
-        private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =
-            new Dictionary<DataOvlReference.Equipment, Weapon>();
-
-        public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; } =
-            new Dictionary<WeaponReference.WeaponTypeEnum, Weapon>();
 
         public Weapon GetWeaponFromEquipment(DataOvlReference.Equipment equipment)
         {
@@ -44,7 +44,5 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             if (!ItemsFromEquipment.ContainsKey(equipment)) return null;
             return ItemsFromEquipment[equipment];
         }
-
-
     }
 }

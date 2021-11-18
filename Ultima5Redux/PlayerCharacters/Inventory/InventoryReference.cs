@@ -10,19 +10,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)] public class InventoryReference
     {
-        [JsonProperty] public int ItemSpriteExposed { get; set; }
+        [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
 
         [JsonProperty] public string ItemDescription { get; set; }
 
         [JsonProperty] public string ItemDescriptionAttribution { get; set; }
         [JsonProperty] public string ItemName { get; set; }
-        [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
         [JsonProperty] public string ItemNameHighlight { private get; set; }
-
-        [JsonProperty] public string ItemSprite { get; set; }
 
         public string[] ItemNameHighLights =>
             ItemNameHighlight.Length == 0 ? Array.Empty<string>() : ItemNameHighlight.Split(',');
+
+        [JsonProperty] public string ItemSprite { get; set; }
+        [JsonProperty] public int ItemSpriteExposed { get; set; }
 
         /// <summary>
         ///     Gets the Equipment equivalent if one exists

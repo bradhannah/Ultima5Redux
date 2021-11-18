@@ -13,20 +13,6 @@ namespace Ultima5Redux.External
         public Node Parent;
         public Point2D Position;
 
-        public Node(Point2D pos, bool walkable, float weight = 1)
-        {
-            Parent = null;
-            Position = pos;
-            DistanceToTarget = -1;
-            Cost = 1;
-            Weight = weight;
-            Walkable = walkable;
-        }
-        // Change this depending on what the desired size is for each element in the grid
-        //internal const int NODE_SIZE = 1;
-
-        public bool Walkable { get; set; }
-
         public float F
         {
             get
@@ -36,50 +22,33 @@ namespace Ultima5Redux.External
                 return -1;
             }
         }
+        // Change this depending on what the desired size is for each element in the grid
+        //internal const int NODE_SIZE = 1;
+
+        public bool Walkable { get; set; }
+
+        public Node(Point2D pos, bool walkable, float weight = 1)
+        {
+            Parent = null;
+            Position = pos;
+            DistanceToTarget = -1;
+            Cost = 1;
+            Weight = weight;
+            Walkable = walkable;
+        }
     }
 
     public class AStar
     {
         private readonly List<List<Node>> _grid;
 
-        public AStar(List<List<Node>> grid)
-        {
-            _grid = grid;
-        }
-
         private int GridCols => _grid.Count;
 
         private int GridRows => _grid[0].Count;
 
-        public string GetWalkableDebug()
+        public AStar(List<List<Node>> grid)
         {
-            string debugOut = "";
-            for (int i = 0; i < GridCols; i++)
-            {
-                for (int j = 0; j < GridRows; j++)
-                {
-                    debugOut += _grid[i][j].Walkable ? "O" : "X";
-                }
-
-                debugOut += "\n";
-            }
-
-            return debugOut;
-        }
-
-        public void SetWalkable(Point2D position, bool bWalkable)
-        {
-            GetNode(position).Walkable = bWalkable;
-        }
-
-        public bool GetWalkable(Point2D position) => GetNode(position).Walkable;
-
-        public Node GetNode(Point2D position)
-        {
-            if (position.X >= _grid.Count || position.Y >= _grid[position.X].Count)
-                throw new Ultima5ReduxException("Tried to get a node with position=" + position +
-                                                " but didn't exist in the astar grid");
-            return _grid[position.X][position.Y];
+            _grid = grid;
         }
 
         /// <summary>
@@ -187,6 +156,37 @@ namespace Ultima5Redux.External
             if (col + 1 < GridCols) temp.Add(_grid[col + 1][row]);
 
             return temp;
+        }
+
+        public Node GetNode(Point2D position)
+        {
+            if (position.X >= _grid.Count || position.Y >= _grid[position.X].Count)
+                throw new Ultima5ReduxException("Tried to get a node with position=" + position +
+                                                " but didn't exist in the astar grid");
+            return _grid[position.X][position.Y];
+        }
+
+        public bool GetWalkable(Point2D position) => GetNode(position).Walkable;
+
+        public string GetWalkableDebug()
+        {
+            string debugOut = "";
+            for (int i = 0; i < GridCols; i++)
+            {
+                for (int j = 0; j < GridRows; j++)
+                {
+                    debugOut += _grid[i][j].Walkable ? "O" : "X";
+                }
+
+                debugOut += "\n";
+            }
+
+            return debugOut;
+        }
+
+        public void SetWalkable(Point2D position, bool bWalkable)
+        {
+            GetNode(position).Walkable = bWalkable;
         }
     }
 }

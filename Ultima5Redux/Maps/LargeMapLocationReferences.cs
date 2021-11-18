@@ -10,6 +10,20 @@ namespace Ultima5Redux.Maps
         private const int N_TOTAL_LOCATIONS = 0x28;
 
         /// <summary>
+        ///     Maps the location to an actual 0,0 based map xy coordinates
+        /// </summary>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        // ReSharper disable once CollectionNeverQueried.Global
+        public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } =
+            new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
+
+        /// <summary>
+        ///     Maps the xy based on the location
+        /// </summary>
+        private Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXYLocations { get; } =
+            new Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location>();
+
+        /// <summary>
         ///     Constructor building xy table
         /// </summary>
         /// <param name="dataRef">data ovl reference for extracting xy coordinates</param>
@@ -29,20 +43,6 @@ namespace Ultima5Redux.Maps
                 LocationXYLocations.Add(mapPoint, location);
             }
         }
-
-        /// <summary>
-        ///     Maps the xy based on the location
-        /// </summary>
-        private Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location> LocationXYLocations { get; } =
-            new Dictionary<Point2D, SmallMapReferences.SingleMapReference.Location>();
-
-        /// <summary>
-        ///     Maps the location to an actual 0,0 based map xy coordinates
-        /// </summary>
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        // ReSharper disable once CollectionNeverQueried.Global
-        public Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> LocationXY { get; } =
-            new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>();
 
         /// <summary>
         ///     Gets the location at a particular xy

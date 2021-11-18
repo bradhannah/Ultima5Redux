@@ -9,6 +9,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public class EnemyReference
     {
+        private enum DefaultStats
+        {
+            // ReSharper disable once UnusedMember.Local
+            Strength = 0, Dexterity, Intelligence, Armour, Damage, Hitpoints, MaxPerMap, Treasure
+        }
+
         // 0x8000 - Bludgeons (I)
         // 0x4000 - Possesses (Charm) (J) 
         // 0x2000 - Undead (K)
@@ -38,6 +44,29 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         private readonly EnemyReferences.AdditionalEnemyFlags _additionalEnemyFlags;
 
         private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new Dictionary<EnemyAbility, bool>();
+
+        public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
+
+        public string AllCapsPluralName { get; }
+
+        public int AttackRange { get; }
+        public bool CanFlyOverWater => _additionalEnemyFlags.CanFlyOverWater;
+        public bool CanPassThroughWalls => _additionalEnemyFlags.CanPassThroughWalls;
+
+        public bool DoesNotMove => _additionalEnemyFlags.DoNotMove;
+        public int Experience => _additionalEnemyFlags.Experience; //_enemyExp[_monsterIndex]; 
+        public int FriendIndex { get; }
+
+        public bool IsNpc => KeyTileReference.IsNPC;
+
+        public bool IsWaterEnemy =>
+            _additionalEnemyFlags.IsWaterEnemy; //KeyTileReference.Index >= 384 && KeyTileReference.Index < 400;
+
+        public TileReference KeyTileReference { get; }
+        public string MixedCaseSingularName { get; }
+
+        public DefaultEnemyStats TheDefaultEnemyStats { get; }
+        public CombatItemReference.MissileType TheMissileType { get; }
 
         public EnemyReference(DataOvlReference dataOvlReference, TileReferences tileReferences, int nMonsterIndex,
             EnemyReferences.AdditionalEnemyFlags additionalEnemyFlags)
@@ -107,37 +136,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             KeyTileReference = tileReferences.GetTileReferenceOfKeyIndex(nKeySpriteIndex);
         }
 
-        public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
-        public bool CanFlyOverWater => _additionalEnemyFlags.CanFlyOverWater;
-        public bool CanPassThroughWalls => _additionalEnemyFlags.CanPassThroughWalls;
-
-        public bool DoesNotMove => _additionalEnemyFlags.DoNotMove;
-
-        public bool IsNpc => KeyTileReference.IsNPC;
-
-        public bool IsWaterEnemy =>
-            _additionalEnemyFlags.IsWaterEnemy; //KeyTileReference.Index >= 384 && KeyTileReference.Index < 400;
-
-        public DefaultEnemyStats TheDefaultEnemyStats { get; }
-
-        public int AttackRange { get; }
-        public int Experience => _additionalEnemyFlags.Experience; //_enemyExp[_monsterIndex]; 
-        public int FriendIndex { get; }
-        public CombatItemReference.MissileType TheMissileType { get; }
-
-        public string AllCapsPluralName { get; }
-        public string MixedCaseSingularName { get; }
-
-        public TileReference KeyTileReference { get; }
-
         public override string ToString()
         {
             return AllCapsPluralName + "-" + MixedCaseSingularName;
-        }
-
-        public bool IsEnemyAbility(EnemyAbility ability)
-        {
-            return (_enemyAbilities.ContainsKey(ability) && _enemyAbilities[ability]);
         }
 
         private int GetStat(DefaultStats stat, DataOvlReference dataOvlReference, int nMonsterIndex)
@@ -147,8 +148,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 .GetByte(nMonsterIndex * TotalBytesPerRecord + (int)stat);
         }
 
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] 
-        public class DefaultEnemyStats
+        public bool IsEnemyAbility(EnemyAbility ability)
+        {
+            return (_enemyAbilities.ContainsKey(ability) && _enemyAbilities[ability]);
+        }
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] public class DefaultEnemyStats
         {
             public int Armour { get; internal set; }
             public int Damage { get; internal set; }
@@ -158,12 +163,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             public int MaxPerMap { get; internal set; }
             public int Strength { get; internal set; }
             public int TreasureNumber { get; internal set; }
-        }
-
-        private enum DefaultStats
-        {
-            // ReSharper disable once UnusedMember.Local
-            Strength = 0, Dexterity, Intelligence, Armour, Damage, Hitpoints, MaxPerMap, Treasure
         }
     }
 }

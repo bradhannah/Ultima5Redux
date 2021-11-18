@@ -15,14 +15,14 @@ namespace Ultima5Redux.Dialogue
     public class TalkScripts
     {
         /// <summary>
-        ///     when you must adjust the offset into the compressed word lookup, subtract this
-        /// </summary>
-        private const int TALK_OFFSET_ADJUST = 0x80;
-
-        /// <summary>
         ///     a null byte signifies the end of the script line
         /// </summary>
         private const byte END_OF_SCRIPTLINE_BYTE = 0x00;
+
+        /// <summary>
+        ///     when you must adjust the offset into the compressed word lookup, subtract this
+        /// </summary>
+        private const int TALK_OFFSET_ADJUST = 0x80;
 
         /// <summary>
         ///     do I print Debug output to the Console
@@ -91,84 +91,6 @@ namespace Ultima5Redux.Dialogue
             if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC)
             ) return null;
             return _talkScriptRefs[smallMapRef][nNPC];
-        }
-
-        /// <summary>
-        ///     Initializes the talk scripts into a fairly raw byte[] format
-        /// </summary>
-        /// <param name="u5Directory">directory of Ultima 5 data files</param>
-        /// <param name="mapMaster">the small map reference (helps pick *.tlk file)</param>
-        private void InitializeTalkScriptsRaw(string u5Directory,
-            SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster)
-        {
-            // example NPC 1 at Castle in Lord British's castle
-            // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
-            // 65 108  69 
-
-            string talkFilename = Path.Combine(u5Directory,
-                SmallMapReferences.SingleMapReference.GetTlkFilenameFromMasterFile(mapMaster));
-
-            // the raw bytes of the talk file
-            List<byte> talkByteList = Utils.GetFileAsByteList(talkFilename);
-
-            // need this to make sure we don't fall of the end of the file when we read it
-            FileInfo fi = new FileInfo(talkFilename);
-            long talkFileSize = fi.Length;
-
-            // keep track of the NPC to file offset mappings
-            //List<NPC_TalkOffset> npcOffsets;
-
-            // the first word in the talk file tells you how many characters are referenced in script
-            int nEntries = Utils.LittleEndianConversion(talkByteList[0], talkByteList[1]);
-
-            //talkRefs.Add(mapMaster, new List<byte[]>(nEntries));
-            _talkRefs.Add(mapMaster, new Dictionary<int, byte[]>(nEntries));
-
-            // a list of all the offsets
-            //npcOffsets = new List<NPC_TalkOffset>(nEntries);
-            Dictionary<int, NPCTalkOffset> npcOffsets = new Dictionary<int, NPCTalkOffset>(nEntries);
-
-            unsafe
-            {
-                // you are in a single file right now
-                for (int i = 0; i < nEntries * sizeof(NPCTalkOffset); i += sizeof(NPCTalkOffset))
-                {
-                    // add 2 because we know we are starting at an offset
-                    NPCTalkOffset talkOffset =
-                        (NPCTalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPCTalkOffset));
-                    npcOffsets[talkOffset.npcIndex] = talkOffset;
-
-                    // OMG I'm tired.. figure out why this isn't printing properly....
-                    if (_bIsDebug)
-                        Console.WriteLine(@"NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + @" at offset " +
-                                          npcOffsets[talkOffset.npcIndex].fileOffset + @" in file " + talkFilename);
-                }
-
-                // you are in a single file right now
-                // repeat for every single NPC in the file
-                int count = 1;
-                foreach (int key in npcOffsets.Keys)
-                {
-                    long chunkLength; // didn't want a long, but the file size is long...
-
-                    // calculate the offset size
-                    if (count < npcOffsets.Keys.Count)
-                        chunkLength = npcOffsets[key + 1].fileOffset - npcOffsets[key].fileOffset;
-                    else
-                        chunkLength = talkFileSize - npcOffsets[key].fileOffset;
-
-                    count++;
-
-                    byte[] chunk = new byte[chunkLength];
-
-                    // copy only the bytes from the offset
-                    talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int)chunkLength);
-                    // Add the raw bytes to the specific Map+NPC#
-                    _talkRefs[mapMaster]
-                        .Add(key,
-                            chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
-                }
-            }
         }
 
 
@@ -317,6 +239,84 @@ namespace Ultima5Redux.Dialogue
 
             talkScript.InitScript();
             return talkScript;
+        }
+
+        /// <summary>
+        ///     Initializes the talk scripts into a fairly raw byte[] format
+        /// </summary>
+        /// <param name="u5Directory">directory of Ultima 5 data files</param>
+        /// <param name="mapMaster">the small map reference (helps pick *.tlk file)</param>
+        private void InitializeTalkScriptsRaw(string u5Directory,
+            SmallMapReferences.SingleMapReference.SmallMapMasterFiles mapMaster)
+        {
+            // example NPC 1 at Castle in Lord British's castle
+            // C1 EC  E9 F3 F4 E1 E9 F2 01 C2 E1 F2 E4 00
+            // 65 108  69 
+
+            string talkFilename = Path.Combine(u5Directory,
+                SmallMapReferences.SingleMapReference.GetTlkFilenameFromMasterFile(mapMaster));
+
+            // the raw bytes of the talk file
+            List<byte> talkByteList = Utils.GetFileAsByteList(talkFilename);
+
+            // need this to make sure we don't fall of the end of the file when we read it
+            FileInfo fi = new FileInfo(talkFilename);
+            long talkFileSize = fi.Length;
+
+            // keep track of the NPC to file offset mappings
+            //List<NPC_TalkOffset> npcOffsets;
+
+            // the first word in the talk file tells you how many characters are referenced in script
+            int nEntries = Utils.LittleEndianConversion(talkByteList[0], talkByteList[1]);
+
+            //talkRefs.Add(mapMaster, new List<byte[]>(nEntries));
+            _talkRefs.Add(mapMaster, new Dictionary<int, byte[]>(nEntries));
+
+            // a list of all the offsets
+            //npcOffsets = new List<NPC_TalkOffset>(nEntries);
+            Dictionary<int, NPCTalkOffset> npcOffsets = new Dictionary<int, NPCTalkOffset>(nEntries);
+
+            unsafe
+            {
+                // you are in a single file right now
+                for (int i = 0; i < nEntries * sizeof(NPCTalkOffset); i += sizeof(NPCTalkOffset))
+                {
+                    // add 2 because we know we are starting at an offset
+                    NPCTalkOffset talkOffset =
+                        (NPCTalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPCTalkOffset));
+                    npcOffsets[talkOffset.npcIndex] = talkOffset;
+
+                    // OMG I'm tired.. figure out why this isn't printing properly....
+                    if (_bIsDebug)
+                        Console.WriteLine(@"NPC #" + npcOffsets[talkOffset.npcIndex].npcIndex + @" at offset " +
+                                          npcOffsets[talkOffset.npcIndex].fileOffset + @" in file " + talkFilename);
+                }
+
+                // you are in a single file right now
+                // repeat for every single NPC in the file
+                int count = 1;
+                foreach (int key in npcOffsets.Keys)
+                {
+                    long chunkLength; // didn't want a long, but the file size is long...
+
+                    // calculate the offset size
+                    if (count < npcOffsets.Keys.Count)
+                        chunkLength = npcOffsets[key + 1].fileOffset - npcOffsets[key].fileOffset;
+                    else
+                        chunkLength = talkFileSize - npcOffsets[key].fileOffset;
+
+                    count++;
+
+                    byte[] chunk = new byte[chunkLength];
+
+                    // copy only the bytes from the offset
+                    talkByteList.CopyTo(npcOffsets[key].fileOffset, chunk, 0, (int)chunkLength);
+                    // Add the raw bytes to the specific Map+NPC#
+                    _talkRefs[mapMaster]
+                        .Add(key,
+                            chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
+                }
+            }
         }
 
 

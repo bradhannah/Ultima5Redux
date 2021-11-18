@@ -6,6 +6,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public sealed class ShadowlordShards : InventoryItems<ShadowlordShard.ShardType, ShadowlordShard>
     {
+        private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
+
+        public override Dictionary<ShadowlordShard.ShardType, ShadowlordShard> Items { get; } =
+            new Dictionary<ShadowlordShard.ShardType, ShadowlordShard>(3);
+
         public ShadowlordShards(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             Items[ShadowlordShard.ShardType.Falsehood] = new ShadowlordShard(ShadowlordShard.ShardType.Falsehood,
@@ -24,10 +29,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings.COWARDICE_DOT));
         }
-
-        public override Dictionary<ShadowlordShard.ShardType, ShadowlordShard> Items { get; } =
-            new Dictionary<ShadowlordShard.ShardType, ShadowlordShard>(3);
-
-        private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
     }
 }

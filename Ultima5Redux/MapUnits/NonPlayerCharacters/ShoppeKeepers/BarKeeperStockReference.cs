@@ -55,6 +55,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                     }
                 };
 
+        public static int GetAdjustedPrice(int nIntelligence, int nPrice)
+        {
+            return (int)(nPrice - nPrice * 0.015 * nIntelligence);
+        }
+
         public BarKeeperStock GetBarKeeperStock(SmallMapReferences.SingleMapReference.Location location)
         {
             if (!_barKeeperStockByLocation.ContainsKey(location))
@@ -64,13 +69,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return _barKeeperStockByLocation[location];
         }
 
-        public static int GetAdjustedPrice(int nIntelligence, int nPrice)
-        {
-            return (int)(nPrice - nPrice * 0.015 * nIntelligence);
-        }
-
         public class BarKeeperStock
         {
+            public int DrinkPrice { get; }
+            public DrinkType DrinkType { get; }
+            public int FoodPrice { get; }
+            public FoodType FoodType { get; }
+            public int RationPrice { get; }
+            public bool Rations { get; }
+
             public BarKeeperStock(FoodType foodType, int nFoodPrice, DrinkType drinkType, int nDrinkPrice,
                 bool bRations, int nRationPrice)
             {
@@ -81,13 +88,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 Rations = bRations;
                 RationPrice = nRationPrice;
             }
-
-            public bool Rations { get; }
-            public DrinkType DrinkType { get; }
-            public FoodType FoodType { get; }
-            public int DrinkPrice { get; }
-            public int FoodPrice { get; }
-            public int RationPrice { get; }
         }
     }
 }

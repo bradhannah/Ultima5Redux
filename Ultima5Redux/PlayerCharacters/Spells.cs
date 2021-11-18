@@ -37,6 +37,9 @@ namespace Ultima5Redux.PlayerCharacters
                 { "Zu", "Sleep" },
             };
 
+        public override Dictionary<MagicReference.SpellWords, Spell> Items { get; } =
+            new Dictionary<MagicReference.SpellWords, Spell>();
+
         public Spells(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             foreach (MagicReference.SpellWords spell in Enum.GetValues(typeof(MagicReference.SpellWords)))
@@ -45,31 +48,29 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public override Dictionary<MagicReference.SpellWords, Spell> Items { get; } = new Dictionary<MagicReference.SpellWords, Spell>();
+        public static string GetLiteralTranslation(string syllable)
+        {
+            return LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
+        }
 
         public static string GetSpellWordByChar(string spellCharacter)
         {
             var hey = LiteralTranslationDictionary.Where(sp => sp.Key.StartsWith(spellCharacter.ToUpper()));
             return hey.FirstOrDefault().Key;
         }
-        
+
         private void AddSpell(MagicReference.SpellWords spellWord, MagicReference magicReference)
         {
             if (spellWord == MagicReference.SpellWords.Nox)
             {
-                Items[spellWord] = new Spell(spellWord, 0, 
+                Items[spellWord] = new Spell(spellWord, 0,
                     magicReference);
                 return;
             }
 
-            Items[spellWord] = new Spell(spellWord, 
+            Items[spellWord] = new Spell(spellWord,
                 GameStateByteArray[(int)spellWord],
                 GameReferences.MagicRefs.GetMagicReference(spellWord));
-        }
-
-        public static string GetLiteralTranslation(string syllable)
-        {
-            return LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
         }
     }
 }

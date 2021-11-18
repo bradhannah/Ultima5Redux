@@ -12,35 +12,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         private readonly Inventory _inventory;
 
-        public MagicSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
-            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) :
-            base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
-        {
-            _inventory = inventory;
-        }
-
         public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyMagicSeller)
         };
 
-        public override string GetHelloResponse(TimeOfDay tod = null)
+        public MagicSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
+            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) :
+            base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
-            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
-            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
-                shoppeName: TheShoppeKeeperReference.ShoppeName,
-                tod: tod);
-        }
-
-        public override string GetWhichWouldYouSee()
-        {
-            string retStr = ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
-                DataOvlReference.ShoppeKeeperGeneralStrings
-                    .YES_N_N_FINE_BANG_WE_SELL_COLON), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
-            retStr = retStr.Replace("Yes", "");
-            retStr = retStr.Replace("\n\n", "\n").TrimEnd();
-            return retStr;
+            _inventory = inventory;
         }
 
         public override string GetForSaleList()
@@ -57,10 +38,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return sb.ToString().TrimEnd();
         }
 
-        public List<Reagent> GetReagentsForSale() //SmallMapReferences.SingleMapReference.Location location)
+        public override string GetHelloResponse(TimeOfDay tod = null)
         {
-            return _inventory.SpellReagents.GetReagentsForSale(TheShoppeKeeperReference
-                .ShoppeKeeperLocation); //location);
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
+            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
+                shoppeName: TheShoppeKeeperReference.ShoppeName,
+                tod: tod);
         }
 
         public override string GetPissedOffNotEnoughMoney()
@@ -73,6 +57,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             return DataOvlReference.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N)
                 .TrimStart();
+        }
+
+        public override string GetWhichWouldYouSee()
+        {
+            string retStr = ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
+                DataOvlReference.ShoppeKeeperGeneralStrings
+                    .YES_N_N_FINE_BANG_WE_SELL_COLON), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+            retStr = retStr.Replace("Yes", "");
+            retStr = retStr.Replace("\n\n", "\n").TrimEnd();
+            return retStr;
         }
 
         public string GetReagentBuyingOutput(Reagent reagent)
@@ -88,6 +82,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        nQuantity: nQuantity, nGold: nPrice) + "\n" +
                    DataOvlReference.StringReferences
                        .GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
+        }
+
+        public List<Reagent> GetReagentsForSale() //SmallMapReferences.SingleMapReference.Location location)
+        {
+            return _inventory.SpellReagents.GetReagentsForSale(TheShoppeKeeperReference
+                .ShoppeKeeperLocation); //location);
         }
     }
 }

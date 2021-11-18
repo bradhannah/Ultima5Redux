@@ -7,11 +7,23 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class Provision : InventoryItem
     {
-        public enum ProvisionSpritesTypeEnum { Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258 }
+        public enum ProvisionSpritesTypeEnum
+        {
+            Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258
+        }
 
-        public enum ProvisionTypeEnum { Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204 }
+        public enum ProvisionTypeEnum
+        {
+            Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
+        }
 
         private readonly GameState _state;
+
+        public override bool HideQuantity => false;
+
+        public override string InventoryReferenceString => ProvisionType.ToString();
+
+        public ProvisionTypeEnum ProvisionType { get; }
 
         /// <summary>
         ///     Creates a provision
@@ -27,12 +39,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ProvisionType = provisionTypeEnum;
             _state = state;
         }
-
-        public override bool HideQuantity => false;
-
-        public ProvisionTypeEnum ProvisionType { get; }
-
-        public override string InventoryReferenceString => ProvisionType.ToString();
 
         /// <summary>
         ///     Gets the cost of the provision based on the avatar's intelligence rating
@@ -61,15 +67,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         /// <summary>
-        ///     Gets the bundle quantity for the current provision
-        /// </summary>
-        /// <returns></returns>
-        public int GetBundleQuantity()
-        {
-            return ProvisionCostsAndQuantities.BundleQuantity[ProvisionType];
-        }
-
-        /// <summary>
         ///     Gets the base price which is later adjusted based on intelligence
         /// </summary>
         /// <param name="location"></param>
@@ -80,7 +77,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             foreach (byte b in GameReferences.DataOvlRef
                 .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
             {
-                SmallMapReferences.SingleMapReference.Location potentialLocation = (SmallMapReferences.SingleMapReference.Location)b;
+                SmallMapReferences.SingleMapReference.Location potentialLocation =
+                    (SmallMapReferences.SingleMapReference.Location)b;
                 if (potentialLocation == location)
                     // they sell it, now we find it
                     return ProvisionCostsAndQuantities.Prices[nIndex,
@@ -91,8 +89,23 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return -1;
         }
 
+        /// <summary>
+        ///     Gets the bundle quantity for the current provision
+        /// </summary>
+        /// <returns></returns>
+        public int GetBundleQuantity()
+        {
+            return ProvisionCostsAndQuantities.BundleQuantity[ProvisionType];
+        }
+
         private static class ProvisionCostsAndQuantities
         {
+            public static readonly Dictionary<ProvisionTypeEnum, int> BundleQuantity =
+                new Dictionary<ProvisionTypeEnum, int>
+                {
+                    { ProvisionTypeEnum.Torches, 5 }, { ProvisionTypeEnum.Keys, 3 }, { ProvisionTypeEnum.Gems, 4 }
+                };
+
             /// <summary>
             ///     the prices of provisions because I can't find it in the code!
             /// </summary>
@@ -108,12 +121,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     380, 510, 24
                 }
             };
-
-            public static readonly Dictionary<ProvisionTypeEnum, int> BundleQuantity =
-                new Dictionary<ProvisionTypeEnum, int>
-                {
-                    { ProvisionTypeEnum.Torches, 5 }, { ProvisionTypeEnum.Keys, 3 }, { ProvisionTypeEnum.Gems, 4 }
-                };
 
             // the order of the provisions in the _prices array
             public static readonly Dictionary<ProvisionTypeEnum, int> ProvisionOrder =

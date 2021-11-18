@@ -2,6 +2,10 @@
 {
     public class Ring : Armour
     {
+        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+            CharacterEquipped.EquippableSlot.Ring;
+
+        public override bool HideQuantity => false;
 
         // private const int RING_SPRITE = 266;
         // public RingEnum RingType;
@@ -12,15 +16,10 @@
         // {
         //     RingType = ringType;
         // }
-        
+
         public Ring(CombatItemReference combatItemReference, int nQuantity) :
             base(combatItemReference, nQuantity)
         {
-            
-        }        
-        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
-            CharacterEquipped.EquippableSlot.Ring;
-
-        public override bool HideQuantity => false;
+        }
     }
 }

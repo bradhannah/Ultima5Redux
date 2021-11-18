@@ -78,6 +78,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
+        private static Dictionary<int, ShoppeKeeperReference> LoadShoppeKeepersByIndex()
+        {
+            Dictionary<int, ShoppeKeeperReference> result =
+                JsonConvert.DeserializeObject<Dictionary<int, ShoppeKeeperReference>>(Resources.ShoppeKeeperMap);
+
+            return result;
+        }
+
         private List<DataOvlReference.Equipment> GetEquipmentList(int nTown)
         {
             if (nTown > 9) return new List<DataOvlReference.Equipment>();
@@ -106,14 +114,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 throw new Ultima5ReduxException("You asked for " + npcType + " in " + location +
                                                 " and it wasn't in the _shoppeKeepersByLocationAndType");
             return _shoppeKeepersByLocationAndType[location][npcType];
-        }
-
-        private static Dictionary<int, ShoppeKeeperReference> LoadShoppeKeepersByIndex()
-        {
-            Dictionary<int, ShoppeKeeperReference> result =
-                JsonConvert.DeserializeObject<Dictionary<int, ShoppeKeeperReference>>(Resources.ShoppeKeeperMap);
-
-            return result;
         }
 
         // Custom = -1, Guard = 0, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87,

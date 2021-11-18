@@ -16,6 +16,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         private readonly InnKeeperServiceReference _innKeeperServiceReference;
 
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions { get; } = null;
+
+        public InnKeeperServiceReference.InnKeeperServices InnKeeperServices => _innKeeperServiceReference
+            .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation);
+
         public Innkeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
             ShoppeKeeperReference theShoppeKeeperReference,
             DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference,
@@ -24,10 +29,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             _innKeeperServiceReference = new InnKeeperServiceReference(dataOvlReference);
         }
 
-        public InnKeeperServiceReference.InnKeeperServices InnKeeperServices => _innKeeperServiceReference
-            .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation);
-
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions { get; } = null;
+        public override string GetForSaleList()
+        {
+            throw new NotImplementedException();
+        }
 
         public override string GetHelloResponse(TimeOfDay tod = null)
         {
@@ -37,6 +42,24 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
                 shoppeName: TheShoppeKeeperReference.ShoppeName,
                 tod: tod);
+        }
+
+        public override string GetPissedOffNotEnoughMoney()
+        {
+            return AddSaysShoppeKeeper(ShoppeKeeperDialogueReference.GetMerchantString(
+                DataOvlReference.StringReferences.GetString(
+                    DataOvlReference.ShoppeKeeperInnkeeperStrings.HIGHWAYMAN_BANG_CHEAP_OUT_BANG),
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
+                shoppeName: TheShoppeKeeperReference.ShoppeName));
+        }
+
+        public override string GetPissedOffShoppeKeeperGoodbyeResponse()
+        {
+            // 178 - 181
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(178, 181);
+            return AddSaysShoppeKeeper(ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
+                shoppeName: TheShoppeKeeperReference.ShoppeName));
         }
 
         public override string GetWhichWouldYouSee()
@@ -50,58 +73,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             //N_N_NAME_ASKS_N_ART_THOU_HERE_TO_PICKUP_OR_N
         }
 
-        public override string GetForSaleList()
+        public int GetBaseCostOfInnStay()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string GetPissedOffShoppeKeeperGoodbyeResponse()
-        {
-            // 178 - 181
-            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(178, 181);
-            return AddSaysShoppeKeeper(ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
-                shoppeName: TheShoppeKeeperReference.ShoppeName));
-        }
-
-        public string GetOfferForRest(PlayerCharacterRecords records)
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(InnKeeperServices.DialogueOfferIndex,
-                GetCostOfRest(records));
-        }
-
-        public int GetCostOfRest(PlayerCharacterRecords records)
-        {
-            return InnKeeperServices.RestCost * records.TotalPartyMembers();
-        }
-
-        public override string GetPissedOffNotEnoughMoney()
-        {
-            return AddSaysShoppeKeeper(ShoppeKeeperDialogueReference.GetMerchantString(
-                DataOvlReference.StringReferences.GetString(
-                    DataOvlReference.ShoppeKeeperInnkeeperStrings.HIGHWAYMAN_BANG_CHEAP_OUT_BANG),
-                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
-                shoppeName: TheShoppeKeeperReference.ShoppeName));
-        }
-
-        public string GetNoRoomAtTheInn(PlayerCharacterRecords records)
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeperStrings
-                       .I_AM_SORRY_COMMA_N).Trim() + " " + GetGenderedFormalPronoun(records.AvatarRecord.Gender) +
-                   FlattenStr(DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeperStrings
-                       .COMMA_BUT_WE_HAVE_NO_ROOM_N_N));
-        }
-
-        public string GetNoOneAtTheInnForPickup()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings
-                .N_N_ONE_MUST_FIRST_BE_LEFT_BEHIND_BANG_N_N).Trim();
-        }
-
-        public string GetWhoWillYouCheckout()
-        {
-            return FlattenStr(DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings
-                .N_N_DQ_WHO_WILL_N_CHECK_OUT_Q_DQ));
+            return _innKeeperServiceReference
+                .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation).MonthlyLeaveCost;
         }
 
         public int GetCostOfInnStay(PlayerCharacterRecord record)
@@ -109,10 +84,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return GetBaseCostOfInnStay() * Math.Max(1, (int)record.MonthsSinceStayingAtInn);
         }
 
-        public int GetBaseCostOfInnStay()
+        public int GetCostOfRest(PlayerCharacterRecords records)
         {
-            return _innKeeperServiceReference
-                .GetInnKeeperServicesByLocation(TheShoppeKeeperReference.ShoppeKeeperLocation).MonthlyLeaveCost;
+            return InnKeeperServices.RestCost * records.TotalPartyMembers();
         }
 
         public string GetDoNotPossessNecessaryFundsForPickup()
@@ -130,11 +104,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        .IS_THERE_N_ANYTHING_MORE_N_I_CAN_DO_FOR_N_THEE_Q_DQ));
         }
 
-        public string GetWhoWillStay()
+        public string GetIThankThee()
         {
-            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
-                    DataOvlReference.ShoppeKeeperInnkeeper2Strings.ASKS_N_WHO_WILL_STAY_Q),
-                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+            return FlattenStr(ShoppeKeeperDialogueReference.GetMerchantString(
+                DataOvlReference.StringReferences.GetString(
+                    DataOvlReference.ShoppeKeeperInnkeeper2Strings.I_THANK_THEE_DQ_N_SAYS_NAME_DOT_N_N),
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName));
         }
 
         public string GetLeaveWithInnConfirmation()
@@ -151,12 +126,30 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        DataOvlReference.ShoppeKeeperInnkeeper2Strings.N_WILT_THOU_TAKE_IT_Q_DQ));
         }
 
-        public string GetIThankThee()
+        public string GetNoOneAtTheInnForPickup()
         {
-            return FlattenStr(ShoppeKeeperDialogueReference.GetMerchantString(
-                DataOvlReference.StringReferences.GetString(
-                    DataOvlReference.ShoppeKeeperInnkeeper2Strings.I_THANK_THEE_DQ_N_SAYS_NAME_DOT_N_N),
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings
+                .N_N_ONE_MUST_FIRST_BE_LEFT_BEHIND_BANG_N_N).Trim();
+        }
+
+        public string GetNoRoomAtTheInn(PlayerCharacterRecords records)
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeperStrings
+                       .I_AM_SORRY_COMMA_N).Trim() + " " + GetGenderedFormalPronoun(records.AvatarRecord.Gender) +
+                   FlattenStr(DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeperStrings
+                       .COMMA_BUT_WE_HAVE_NO_ROOM_N_N));
+        }
+
+        public string GetNotAMorgue()
+        {
+            return FlattenStr(ShoppeKeeperDialogueReference.GetMerchantString(192,
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName));
+        }
+
+        public string GetOfferForRest(PlayerCharacterRecords records)
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(InnKeeperServices.DialogueOfferIndex,
+                GetCostOfRest(records));
         }
 
         public string GetThatWillBeGold(PlayerCharacterRecord record)
@@ -174,10 +167,17 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 DataOvlReference.ShoppeKeeperInnkeeper2Strings.THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N));
         }
 
-        public string GetNotAMorgue()
+        public string GetWhoWillStay()
         {
-            return FlattenStr(ShoppeKeeperDialogueReference.GetMerchantString(192,
-                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName));
+            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
+                    DataOvlReference.ShoppeKeeperInnkeeper2Strings.ASKS_N_WHO_WILL_STAY_Q),
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
+        }
+
+        public string GetWhoWillYouCheckout()
+        {
+            return FlattenStr(DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings
+                .N_N_DQ_WHO_WILL_N_CHECK_OUT_Q_DQ));
         }
     }
 }

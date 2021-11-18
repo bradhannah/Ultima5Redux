@@ -11,6 +11,40 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [DataContract]
     public abstract class InventoryItem
     {
+        [DataMember] public virtual string FindDescription { get; }
+
+        [DataMember] public int SpriteNum { get; }
+
+        [DataMember]
+        public virtual int Quantity
+        {
+            get => _quantity;
+            set => _quantity = value;
+        }
+
+        [IgnoreDataMember] public abstract bool HideQuantity { get; }
+
+        [IgnoreDataMember] public abstract string InventoryReferenceString { get; }
+
+        [IgnoreDataMember] public virtual int BasePrice => 0;
+
+        [IgnoreDataMember] public virtual bool IsSellable => BasePrice > 0;
+
+        [IgnoreDataMember] public virtual string LongName => InvRef.FriendlyItemName;
+
+        [IgnoreDataMember] public virtual string ShortName => InvRef.ItemName;
+
+        [IgnoreDataMember]
+        public string QuantityString
+        {
+            get
+            {
+                if (HideQuantity) return string.Empty;
+                return Quantity == 0 ? "--" : Quantity.ToString();
+            }
+        }
+
+        [IgnoreDataMember] public InventoryReference InvRef { get; protected internal set; }
         private int _quantity;
 
         protected InventoryItem(int quantity, int spriteNum) : this(quantity, "", spriteNum)
@@ -22,39 +56,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             _quantity = quantity;
             SpriteNum = spriteNum;
             FindDescription = findDescription;
-        }
-
-        [DataMember] public virtual string FindDescription { get; }
-
-        [DataMember]
-        public virtual int Quantity
-        {
-            get => _quantity;
-            set => _quantity = value;
-        }
-
-        [DataMember] public int SpriteNum { get; }
-
-        [IgnoreDataMember] public InventoryReference InvRef { get; protected internal set; }
-
-        [IgnoreDataMember] public abstract bool HideQuantity { get; }
-
-        [IgnoreDataMember] public virtual bool IsSellable => BasePrice > 0;
-
-        [IgnoreDataMember] public virtual int BasePrice => 0;
-
-        [IgnoreDataMember] public abstract string InventoryReferenceString { get; }
-
-        [IgnoreDataMember] public virtual string LongName => InvRef.FriendlyItemName;
-        [IgnoreDataMember] public virtual string ShortName => InvRef.ItemName;
-
-        [IgnoreDataMember] public string QuantityString
-        {
-            get
-            {
-                if (HideQuantity) return string.Empty;
-                return Quantity == 0 ? "--" : Quantity.ToString();
-            }
         }
 
         public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records,

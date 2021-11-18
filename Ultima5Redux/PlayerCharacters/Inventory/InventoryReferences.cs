@@ -73,7 +73,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             // build reagent highlight table
-            foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Reagent) ) 
+            foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Reagent))
             {
                 invRefs.Add(invRef);
 
@@ -104,6 +104,33 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 if (Enum.IsDefined(typeof(DataOvlReference.Equipment), equipment))
                     _invRefsByEquipment.Add(equipment, invRef);
             }
+        }
+
+        /// <summary>
+        ///     Retrieve a specific inventory reference based on reference type and string index
+        /// </summary>
+        /// <param name="inventoryReferenceType"></param>
+        /// <param name="invItem"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public InventoryReference GetInventoryReference(InventoryReferenceType inventoryReferenceType, string invItem)
+        {
+            // todo: this is a really slow and inefficient way to search the list, albeit a small list
+            foreach (InventoryReference invRef in GetInventoryReferenceList(inventoryReferenceType))
+            {
+                if (invRef.ItemName.Trim() == invItem) return invRef;
+            }
+
+            throw new Ultima5ReduxException("Asked for an inventory reference : " + invItem + " but it doesn't exist");
+        }
+
+        public InventoryReference GetInventoryReference(DataOvlReference.Equipment equipment)
+        {
+            if (!_invRefsByEquipment.ContainsKey(equipment))
+                throw new Ultima5ReduxException(
+                    "You requested an equipment item that doesn't exist in the dictionary: " + (int)equipment);
+            return _invRefsByEquipment[equipment];
         }
 
         /// <summary>
@@ -148,33 +175,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             return finalDescription;
-        }
-
-        /// <summary>
-        ///     Retrieve a specific inventory reference based on reference type and string index
-        /// </summary>
-        /// <param name="inventoryReferenceType"></param>
-        /// <param name="invItem"></param>
-        /// <returns></returns>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public InventoryReference GetInventoryReference(InventoryReferenceType inventoryReferenceType, string invItem)
-        {
-            // todo: this is a really slow and inefficient way to search the list, albeit a small list
-            foreach (InventoryReference invRef in GetInventoryReferenceList(inventoryReferenceType))
-            {
-                if (invRef.ItemName.Trim() == invItem) return invRef;
-            }
-
-            throw new Ultima5ReduxException("Asked for an inventory reference : " + invItem + " but it doesn't exist");
-        }
-
-        public InventoryReference GetInventoryReference(DataOvlReference.Equipment equipment)
-        {
-            if (!_invRefsByEquipment.ContainsKey(equipment))
-                throw new Ultima5ReduxException(
-                    "You requested an equipment item that doesn't exist in the dictionary: " + (int)equipment);
-            return _invRefsByEquipment[equipment];
         }
     }
 }

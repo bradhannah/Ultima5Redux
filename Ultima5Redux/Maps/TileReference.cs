@@ -37,8 +37,6 @@ namespace Ultima5Redux.Maps
         [DataMember] public string Name;
         [DataMember] public bool RangeWeapon_Passable;
         [DataMember] public int SpeedFactor;
-
-
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
         public bool IsRangeWeaponPassable => RangeWeapon_Passable;
@@ -49,6 +47,24 @@ namespace Ultima5Redux.Maps
         public bool IsSolidSpriteButNotDoor => !IsWalking_Passable && !IsOpenable;
 
         public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC;
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        /// <summary>
+        ///     Makes a best guess on the directionality of the sprite
+        /// </summary>
+        /// <returns></returns>
+        public Point2D.Direction GetDirection()
+        {
+            if (Name.Contains("Left")) return Point2D.Direction.Left;
+            if (Name.Contains("Right")) return Point2D.Direction.Right;
+            if (Name.Contains("Down")) return Point2D.Direction.Down;
+            if (Name.Contains("Up")) return Point2D.Direction.Up;
+            return Point2D.Direction.None;
+        }
 
         public bool IsPassable(Avatar.AvatarState avatarState)
         {
@@ -69,24 +85,6 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
             }
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        /// <summary>
-        ///     Makes a best guess on the directionality of the sprite
-        /// </summary>
-        /// <returns></returns>
-        public Point2D.Direction GetDirection()
-        {
-            if (Name.Contains("Left")) return Point2D.Direction.Left;
-            if (Name.Contains("Right")) return Point2D.Direction.Right;
-            if (Name.Contains("Down")) return Point2D.Direction.Down;
-            if (Name.Contains("Up")) return Point2D.Direction.Up;
-            return Point2D.Direction.None;
         }
     }
 }

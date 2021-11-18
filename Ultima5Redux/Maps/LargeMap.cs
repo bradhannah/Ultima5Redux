@@ -9,15 +9,32 @@ namespace Ultima5Redux.Maps
 {
     public sealed class LargeMap : RegularMap
     {
+        private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
         private const int TILES_PER_CHUNK_X = 16; // number of tiles horizontal in each chunk
         private const int TILES_PER_CHUNK_Y = 16; // number of tiles vertically in each chunk
+        private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
         private const int TOTAL_CHUNKS_PER_X = 16; // total number of chunks horizontally
         private const int TOTAL_CHUNKS_PER_Y = 16; // total number of chunks vertically
-        private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
-        private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
         private Point2D _bottomRightExtent;
 
         private Point2D _topLeftExtent;
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static int
+            XTiles => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static int
+            YTiles => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
+
+        protected override bool IsRepeatingMap => true;
+
+        public override int NumOfXTiles => XTiles;
+        public override int NumOfYTiles => YTiles;
+
+        public override bool ShowOuterSmallMapTiles => false;
+
+        public override byte[][] TheMap { get; protected set; }
 
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
@@ -44,43 +61,6 @@ namespace Ultima5Redux.Maps
 
             InitializeAStarMap(WalkableType.StandardWalking);
             InitializeAStarMap(WalkableType.CombatWater);
-        }
-
-        public override bool ShowOuterSmallMapTiles => false;
-
-        public override byte[][] TheMap { get; protected set; }
-
-        public override int NumOfXTiles => XTiles;
-        public override int NumOfYTiles => YTiles;
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static int
-            XTiles => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static int
-            YTiles => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
-
-        protected override bool IsRepeatingMap => true;
-
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            switch (mapUnit)
-            {
-                case Enemy enemy:
-                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
-                case CombatPlayer _:
-                    return WalkableType.StandardWalking;
-                default:
-                    return WalkableType.StandardWalking;
-            }
-        }
-
-
-        // ReSharper disable once UnusedMember.Global
-        public void PrintMap()
-        {
-            PrintMapSection(TheMap, 0, 0, 160, 80);
         }
 
         /// <summary>
@@ -149,6 +129,44 @@ namespace Ultima5Redux.Maps
             return theMap;
         }
 
+        /// <summary>
+        ///     Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
+        ///     current extends
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        protected override Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
+        {
+            int nPositiveX = xy.X + NumOfXTiles;
+            int nPositiveY = xy.Y + NumOfYTiles;
+
+            if (nPositiveX <= _topLeftExtent.X + NumOfXTiles || xy.X >= _bottomRightExtent.X)
+                return null;
+            if (nPositiveY <= _topLeftExtent.Y + NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
+                return null;
+
+            return xy.GetAdjustedPosition(direction);
+        }
+
+        protected override float GetAStarWeight(Point2D xy)
+        {
+            return 1;
+        }
+
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            switch (mapUnit)
+            {
+                case Enemy enemy:
+                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
+                case CombatPlayer _:
+                    return WalkableType.StandardWalking;
+                default:
+                    return WalkableType.StandardWalking;
+            }
+        }
+
         public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
         {
             if (XRayMode)
@@ -180,29 +198,11 @@ namespace Ultima5Redux.Maps
             FloodFillMap(AvatarXyPos, true);
         }
 
-        protected override float GetAStarWeight(Point2D xy)
+
+        // ReSharper disable once UnusedMember.Global
+        public void PrintMap()
         {
-            return 1;
-        }
-
-        /// <summary>
-        ///     Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
-        ///     current extends
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        protected override Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
-        {
-            int nPositiveX = xy.X + NumOfXTiles;
-            int nPositiveY = xy.Y + NumOfYTiles;
-
-            if (nPositiveX <= _topLeftExtent.X + NumOfXTiles || xy.X >= _bottomRightExtent.X)
-                return null;
-            if (nPositiveY <= _topLeftExtent.Y + NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
-                return null;
-
-            return xy.GetAdjustedPosition(direction);
+            PrintMapSection(TheMap, 0, 0, 160, 80);
         }
     }
 }

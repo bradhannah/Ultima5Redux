@@ -16,6 +16,68 @@ namespace Ultima5Redux
 {
     [DataContract] public class GameState
     {
+        /// <summary>
+        ///     All player character records
+        /// </summary>
+        [DataMember]
+        public PlayerCharacterRecords CharacterRecords { get; }
+
+        /// <summary>
+        ///     Players current inventory
+        /// </summary>
+        [DataMember]
+        public Inventory PlayerInventory { get; }
+
+        /// <summary>
+        ///     Location and state of all moongates and moonstones
+        /// </summary>
+        [DataMember]
+        public Moongates TheMoongates { get; }
+
+        /// <summary>
+        ///     The current time of day
+        /// </summary>
+        [DataMember]
+        public TimeOfDay TheTimeOfDay { get; }
+
+        /// <summary>
+        ///     What is the index of the currently active player?
+        /// </summary>
+        [DataMember]
+        public int ActivePlayerNumber { get; set; }
+
+        /// <summary>
+        ///     Users Karma
+        /// </summary>
+        [DataMember]
+        public ushort Karma { get; set; }
+
+        /// <summary>
+        ///     NPC states such as if they are dead or have met the avatar
+        /// </summary>
+        [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates;
+
+        /// <summary>
+        ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
+        /// </summary>
+        [DataMember]
+        public VirtualMap TheVirtualMap { get; private set; }
+
+
+        /// <summary>
+        ///     How many turns until the Avatar's torch is extinguished
+        /// </summary>
+        [DataMember]
+        public int TurnsToExtinguish { get; set; }
+
+        [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
+
+        /// <summary>
+        ///     The name of the Avatar
+        /// </summary>
+        [IgnoreDataMember]
+        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
+
         /// Legacy save game state
         private readonly ImportedGameState _importedGameState;
 
@@ -29,6 +91,11 @@ namespace Ultima5Redux
 
         /// A random number generator - capable of seeding in future
         private readonly Random _ran = new Random();
+
+        /// <summary>
+        ///     Does the Avatar have a torch lit?
+        /// </summary>
+        public bool IsTorchLit => TurnsToExtinguish > 0;
 
         /// <summary>
         ///     Construct the GameState from a legacy save file
@@ -61,98 +128,12 @@ namespace Ultima5Redux
             PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, TheMoongates, this);
         }
 
-
-        public string Serialize()
-        {
-            string derp = JsonConvert.SerializeObject(this);
-            return derp;
-        }
-
-        /// <summary>
-        ///     Does the Avatar have a torch lit?
-        /// </summary>
-        public bool IsTorchLit => TurnsToExtinguish > 0;
-
-        /// <summary>
-        ///     Users Karma
-        /// </summary>
-        [DataMember]
-        public ushort Karma { get; set; }
-
-        [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
-
-        /// <summary>
-        ///     What is the index of the currently active player?
-        /// </summary>
-        [DataMember]
-        public int ActivePlayerNumber { get; set; }
-
-
-        /// <summary>
-        ///     How many turns until the Avatar's torch is extinguished
-        /// </summary>
-        [DataMember]
-        public int TurnsToExtinguish { get; set; }
-
-        /// <summary>
-        ///     Players current inventory
-        /// </summary>
-        [DataMember]
-        public Inventory PlayerInventory { get; }
-
-        /// <summary>
-        ///     Location and state of all moongates and moonstones
-        /// </summary>
-        [DataMember]
-        public Moongates TheMoongates { get; }
-
-        /// <summary>
-        ///     All player character records
-        /// </summary>
-        [DataMember]
-        public PlayerCharacterRecords CharacterRecords { get; }
-
-        /// <summary>
-        ///     The name of the Avatar
-        /// </summary>
-        [IgnoreDataMember]
-        public string AvatarsName => CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
-
-        /// <summary>
-        ///     The current time of day
-        /// </summary>
-        [DataMember]
-        public TimeOfDay TheTimeOfDay { get; }
-
-        /// <summary>
-        ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
-        /// </summary>
-        [DataMember]
-        public VirtualMap TheVirtualMap { get; private set; }
-
-        /// <summary>
-        /// NPC states such as if they are dead or have met the avatar
-        /// </summary>
-        [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates;
-
         /// <summary>
         ///     Take fall damage from klimbing mountains
         /// </summary>
         public void GrapplingFall()
         {
             // called when falling from a Klimb on a mountain
-        }
-
-        /// <summary>
-        ///     Using the random number generator, provides 1 in howMany odds of returning true
-        /// </summary>
-        /// <param name="howMany">1 in howMany odds of returning true</param>
-        /// <returns>true if odds are beat</returns>
-        public bool OneInXOdds(int howMany)
-        {
-            // if ran%howMany is zero then we beat the odds
-            int nextRan = _ran.Next();
-            return nextRan % howMany == 0;
         }
 
 
@@ -174,11 +155,30 @@ namespace Ultima5Redux
                     : smallMapReferences.GetSingleMapByLocation(_location, _nInitialFloor);
 
             TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap,
-                underworldMap, this, TheTimeOfDay, TheMoongates, CharacterRecords, _initialMap, mapRef, 
+                underworldMap, this, TheTimeOfDay, TheMoongates, CharacterRecords, _initialMap, mapRef,
                 bUseExtendedSprites, PlayerInventory, _importedGameState, TheNonPlayerCharacterStates);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);
+        }
+
+        /// <summary>
+        ///     Using the random number generator, provides 1 in howMany odds of returning true
+        /// </summary>
+        /// <param name="howMany">1 in howMany odds of returning true</param>
+        /// <returns>true if odds are beat</returns>
+        public bool OneInXOdds(int howMany)
+        {
+            // if ran%howMany is zero then we beat the odds
+            int nextRan = _ran.Next();
+            return nextRan % howMany == 0;
+        }
+
+
+        public string Serialize()
+        {
+            string derp = JsonConvert.SerializeObject(this);
+            return derp;
         }
     }
 }

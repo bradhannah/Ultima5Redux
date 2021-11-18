@@ -7,17 +7,7 @@ namespace Ultima5Redux.MapUnits
     {
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
-        public override bool IsActive => false;
-
-        public override bool IsAttackable => false;
-
         public override string BoardXitName => "EMPTY";
-
-        public override string FriendlyName => BoardXitName;
-
-        public override TileReference KeyTileReference { get; set; } = null;
-
-        public override TileReference NonBoardedTileReference { get; } = null;
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = null;
         //= new Dictionary<Point2D.Direction, string>();
@@ -26,5 +16,15 @@ namespace Ultima5Redux.MapUnits
         //new Dictionary<Point2D.Direction, string>();
 
         protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded { get; } = null;
+
+        public override string FriendlyName => BoardXitName;
+
+        public override bool IsActive => false;
+
+        public override bool IsAttackable => false;
+
+        public override TileReference KeyTileReference { get; set; } = null;
+
+        public override TileReference NonBoardedTileReference { get; } = null;
     }
 }

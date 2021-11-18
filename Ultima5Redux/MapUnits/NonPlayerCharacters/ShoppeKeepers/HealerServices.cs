@@ -21,11 +21,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             BuildServicesList();
         }
 
-        public int GetServicePrice(SmallMapReferences.SingleMapReference.Location location, Healer.RemedyTypes remedy)
-        {
-            return _priceDictionary[location][remedy];
-        }
-
         private void BuildServicesList()
         {
             IEnumerable<SmallMapReferences.SingleMapReference.Location> locations = ShoppeKeeper.GetLocations(
@@ -52,6 +47,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
                 nIndex++;
             }
+        }
+
+        public int GetServicePrice(SmallMapReferences.SingleMapReference.Location location, Healer.RemedyTypes remedy)
+        {
+            return _priceDictionary[location][remedy];
         }
     }
 }

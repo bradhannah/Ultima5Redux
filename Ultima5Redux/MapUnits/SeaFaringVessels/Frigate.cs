@@ -29,20 +29,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 { Point2D.Direction.Up, "ShipSailsUp" }
             };
 
-        public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location, 
-            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
-            this(mapUnitMovement, location, direction, npcState, mapUnitPosition)
-        {
-            Hitpoints = mapUnitState.Depends1;
-            SkiffsAboard = mapUnitState.Depends3;
-        }
-
-        public Frigate(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location, 
-            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
-            base(null, mapUnitMovement, location, direction, npcState, mapUnitPosition)
-        {
-        }
-
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
             {
@@ -53,12 +39,26 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             };
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
+        // {
+        //     get => TheMapUnitState.Depends3;
+        //     set => TheMapUnitState.Depends3 = (byte)value;
+        // }
+
+        public override string BoardXitName =>
+            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+            SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
+
+        public override string FriendlyName => BoardXitName;
 
         public override bool IsAttackable => false;
 
-        public bool SailsHoisted { get; set; } = false;
-
         public int Hitpoints { get; set; }
+
+        public bool SailsHoisted { get; set; } = false;
         // {
         //     get => TheMapUnitState.Depends1;
         //     set => TheMapUnitState.Depends1 = (byte)(value < 0 ? 0 : (value > 99 ? 99 : value));
@@ -68,20 +68,21 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         ///     How many skiffs does the frigate have aboard?
         /// </summary>
         public int SkiffsAboard { get; set; }
-        // {
-        //     get => TheMapUnitState.Depends3;
-        //     set => TheMapUnitState.Depends3 = (byte)value;
-        // }
 
-        public override string BoardXitName =>
-            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
+        public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
+            SmallMapReferences.SingleMapReference.Location location,
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
+            this(mapUnitMovement, location, direction, npcState, mapUnitPosition)
+        {
+            Hitpoints = mapUnitState.Depends1;
+            SkiffsAboard = mapUnitState.Depends3;
+        }
 
-        public override string FriendlyName => BoardXitName;
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
-            SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
+        public Frigate(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
+            base(null, mapUnitMovement, location, direction, npcState, mapUnitPosition)
+        {
+        }
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
             PlayerCharacterRecords records)

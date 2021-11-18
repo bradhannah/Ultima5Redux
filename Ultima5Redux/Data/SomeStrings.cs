@@ -9,6 +9,11 @@ namespace Ultima5Redux.Data
     public class SomeStrings
     {
         /// <summary>
+        ///     List of all strings
+        /// </summary>
+        public List<string> StringList { get; }
+
+        /// <summary>
         ///     Constructs a simple SomeStrings object
         /// </summary>
         /// <param name="byteArray">the array of bytes to sample from</param>
@@ -36,11 +41,6 @@ namespace Ultima5Redux.Data
                 // str = string.Empty;
             }
         }
-
-        /// <summary>
-        ///     List of all strings
-        /// </summary>
-        public List<string> StringList { get; }
 
         public void PrintSomeStrings()
         {

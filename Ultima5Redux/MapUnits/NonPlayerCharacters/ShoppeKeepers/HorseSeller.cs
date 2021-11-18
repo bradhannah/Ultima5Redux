@@ -15,6 +15,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         private readonly PlayerCharacterRecords _playerCharacterRecords;
 
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        {
+            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyHorses)
+        };
+
         public HorseSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
             ShoppeKeeperReference theShoppeKeeperReference,
             DataOvlReference dataOvlReference, PlayerCharacterRecords playerCharacterRecords) :
@@ -23,10 +28,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             _playerCharacterRecords = playerCharacterRecords;
         }
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        public override string GetForSaleList()
         {
-            new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyHorses)
-        };
+            throw new NotImplementedException();
+        }
 
         public override string GetHelloResponse(TimeOfDay tod = null)
         {
@@ -35,42 +40,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
                 shoppeName: TheShoppeKeeperReference.ShoppeName,
                 tod: tod);
-        }
-
-        public override string GetWhichWouldYouSee()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(104,
-                GetHorsePrice()).Trim();
-        }
-
-        public string GetStablesAreClosed()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
-                .THE_STABLES_ARE_CLOSED_DOT_N).Trim();
-        }
-
-        public int GetHorsePrice()
-        {
-            return Horse.GetPrice(TheShoppeKeeperReference.ShoppeKeeperLocation, _playerCharacterRecords);
-        }
-
-        public override string GetThanksAfterPurchaseResponse()
-        {
-            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(100, 103);
-            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
-                       shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName) + " says " +
-                   TheShoppeKeeperReference.ShoppeKeeperName + ".";
-        }
-
-        public override string GetThyInterest()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(103,
-                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName).Trim();
-        }
-
-        public override string GetForSaleList()
-        {
-            throw new NotImplementedException();
         }
 
         public override string GetPissedOffNotBuyingResponse()
@@ -88,6 +57,37 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                             DataOvlReference.ShoppeKeeperGeneralStrings
                                 .FEED_IT_BANG_QUOTE_N_YELLS_SK_N),
                         shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName)).Trim();
+        }
+
+        public override string GetThanksAfterPurchaseResponse()
+        {
+            int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(100, 103);
+            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
+                       shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName) + " says " +
+                   TheShoppeKeeperReference.ShoppeKeeperName + ".";
+        }
+
+        public override string GetThyInterest()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(103,
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName).Trim();
+        }
+
+        public override string GetWhichWouldYouSee()
+        {
+            return ShoppeKeeperDialogueReference.GetMerchantString(104,
+                GetHorsePrice()).Trim();
+        }
+
+        public int GetHorsePrice()
+        {
+            return Horse.GetPrice(TheShoppeKeeperReference.ShoppeKeeperLocation, _playerCharacterRecords);
+        }
+
+        public string GetStablesAreClosed()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
+                .THE_STABLES_ARE_CLOSED_DOT_N).Trim();
         }
     }
 }

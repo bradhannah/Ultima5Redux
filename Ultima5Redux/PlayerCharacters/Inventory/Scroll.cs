@@ -8,21 +8,22 @@
         }
 
         private const int SCROLL_SPRITE = 260;
+        public override int BasePrice => 0;
 
-        public Scroll(MagicReference.SpellWords spell, int quantity,  MagicReference scrollMagicReference) : base(quantity,
+        public override bool HideQuantity { get; } = false;
+
+        public override string InventoryReferenceString => ScrollSpell.ToString();
+        public override bool IsSellable => false;
+        public MagicReference ScrollMagicReference { get; }
+
+        public MagicReference.SpellWords ScrollSpell { get; }
+
+        public Scroll(MagicReference.SpellWords spell, int quantity, MagicReference scrollMagicReference) : base(
+            quantity,
             SCROLL_SPRITE)
         {
             ScrollSpell = spell;
             ScrollMagicReference = scrollMagicReference;
         }
-
-        public override bool HideQuantity { get; } = false;
-        public override bool IsSellable => false;
-        public override int BasePrice => 0;
-
-        public MagicReference.SpellWords ScrollSpell { get; }
-        public MagicReference ScrollMagicReference { get; }
-
-        public override string InventoryReferenceString => ScrollSpell.ToString();
     }
 }

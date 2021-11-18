@@ -11,6 +11,28 @@ namespace Ultima5Redux.Maps
         private readonly SmallMapReferences.SingleMapReference _singleSmallMapReference;
 
         /// <summary>
+        ///     Total tiles per row
+        /// </summary>
+        public static int XTiles => 32;
+
+        /// <summary>
+        ///     Total tiles per column
+        /// </summary>
+        public static int YTiles => 32;
+
+        public sealed override byte[][] TheMap { get; protected set; }
+
+        protected override bool IsRepeatingMap => false;
+
+        public override int NumOfXTiles => XTiles;
+        public override int NumOfYTiles => YTiles;
+
+        public override bool ShowOuterSmallMapTiles => true;
+        public int MapFloor => _singleSmallMapReference.Floor;
+
+        public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
+
+        /// <summary>
         ///     Creates a small map object using a pre-defined map reference
         /// </summary>
         /// <param name="u5Directory"></param>
@@ -27,28 +49,6 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.StandardWalking);
         }
 
-        public override bool ShowOuterSmallMapTiles => true;
-
-        public sealed override byte[][] TheMap { get; protected set; }
-        public int MapFloor => _singleSmallMapReference.Floor;
-
-        public override int NumOfXTiles => XTiles;
-        public override int NumOfYTiles => YTiles;
-
-        /// <summary>
-        ///     Total tiles per row
-        /// </summary>
-        public static int XTiles => 32;
-
-        /// <summary>
-        ///     Total tiles per column
-        /// </summary>
-        public static int YTiles => 32;
-
-        public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
-
-        protected override bool IsRepeatingMap => false;
-
         /// <summary>
         ///     Loads a small map into a 2D array
         /// </summary>
@@ -63,19 +63,6 @@ namespace Ultima5Redux.Maps
 
             // have to transpose the array because the ListTo2DArray function puts the map together backwards...
             return Utils.TransposeArray(smallMap);
-        }
-
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            switch (mapUnit)
-            {
-                case Enemy enemy:
-                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
-                case CombatPlayer _:
-                    return WalkableType.StandardWalking;
-                default:
-                    return WalkableType.StandardWalking;
-            }
         }
 
 
@@ -103,6 +90,19 @@ namespace Ultima5Redux.Maps
             if (xy.Y + 1 < YTiles) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
 
             return fCost;
+        }
+
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            switch (mapUnit)
+            {
+                case Enemy enemy:
+                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
+                case CombatPlayer _:
+                    return WalkableType.StandardWalking;
+                default:
+                    return WalkableType.StandardWalking;
+            }
         }
     }
 }

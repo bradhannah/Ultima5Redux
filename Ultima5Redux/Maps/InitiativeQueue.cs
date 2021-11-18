@@ -38,14 +38,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private int _nLowestDexterity;
 
-        public InitiativeQueue(MapUnits.MapUnits combatMapUnits, PlayerCharacterRecords playerCharacterRecords,
-            CombatMap combatMap)
-        {
-            _combatMapUnits = combatMapUnits;
-            _playerCharacterRecords = playerCharacterRecords;
-            _combatMap = combatMap;
-            InitializeInitiativeQueue();
-        }
+        public PlayerCharacterRecord ActivePlayerCharacterRecord { get; private set; }
 
         public int Round { get; private set; }
 
@@ -56,65 +49,44 @@ namespace Ultima5Redux.Maps
 
         public int TurnsLeftsInRound => _initiativeQueue?.Peek()?.Count ?? 0;
 
-        public PlayerCharacterRecord ActivePlayerCharacterRecord { get; private set; }
-
-        public void SetActivePlayerCharacter(PlayerCharacterRecord record)
+        public InitiativeQueue(MapUnits.MapUnits combatMapUnits, PlayerCharacterRecords playerCharacterRecords,
+            CombatMap combatMap)
         {
-            ActivePlayerCharacterRecord = record;
-            Turn += 1;
-        }
-
-        /// <summary>
-        ///     Is the map unit a combat map unit type?
-        /// </summary>
-        /// <param name="mapUnit"></param>
-        /// <returns></returns>
-        private bool IsCombatMapUnit(MapUnit mapUnit)
-        {
-            switch (mapUnit)
-            {
-                case CombatPlayer playerUnit:
-                    return CombatMapUnitIsPresent(playerUnit);
-                case Enemy enemyUnit:
-                    return CombatMapUnitIsPresent(enemyUnit);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///     Clears all queues and tallies, and populates with new data
-        /// </summary>
-        internal void InitializeInitiativeQueue()
-        {
-            _initiativeQueue.Clear();
-            _combatInitiativeTally.Clear();
-            _nLowestDexterity = 50;
-            _nHighestDexterity = 0;
-            Round = 0;
-            Turn = 0;
-
-            foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
-            {
-                //if (!IsCombatMapUnit(combatMapUnit)) continue;
-
-                int nDexterity = combatMapUnit.Dexterity;
-
-                // if it's an enemy and they aren't an active attacker such as a POISON FIELD
-                // then we just skip them since they have a DEX of 0
-                if (combatMapUnit is Enemy enemy && !enemy.EnemyReference.ActivelyAttacks) continue;
-
-                // get the highest and lowest dexterity values to be used in ongoing tally
-                if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
-                if (_nHighestDexterity < nDexterity) _nHighestDexterity = nDexterity;
-
-                AddCombatMapUnitToQueue(combatMapUnit);
-            }
+            _combatMapUnits = combatMapUnits;
+            _playerCharacterRecords = playerCharacterRecords;
+            _combatMap = combatMap;
+            InitializeInitiativeQueue();
         }
 
         public void AddCombatMapUnitToQueue(CombatMapUnit combatMapUnit)
         {
             _combatInitiativeTally.Add(combatMapUnit, 0);
+        }
+
+        /// <summary>
+        ///     Gets the next combat map unit that will be playing
+        /// </summary>
+        /// <returns></returns>
+        internal CombatMapUnit AdvanceToNextCombatMapUnit()
+        {
+            Debug.Assert(_initiativeQueue.Count > 0);
+            Turn++;
+
+            // we are done with this unit now, so we just toss them out
+            if (_initiativeQueue.Peek().Count > 0)
+            {
+                _initiativeQueue.Peek().Dequeue();
+            }
+            else
+            {
+                _initiativeQueue.Dequeue();
+            }
+
+            // if the queue is empty then we will recalculate it before continuing
+            if (_initiativeQueue.Count == 0) CalculateNextInitiativeQueue();
+
+            Debug.Assert(_initiativeQueue.Count > 0);
+            return GetCurrentCombatUnit();
         }
 
         /// <summary>
@@ -139,7 +111,8 @@ namespace Ultima5Redux.Maps
                     dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
 
                 // go through each combat map unit and place them in priority order based on their dexterity values 
-                foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(IsCombatMapUnit))
+                foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(
+                    IsCombatMapUnit))
                 {
                     Debug.Assert(IsCombatMapUnit(combatMapUnit));
 
@@ -214,44 +187,6 @@ namespace Ultima5Redux.Maps
             return true;
         }
 
-        internal List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
-        {
-            int nTally = 0;
-            List<CombatMapUnit> combatMapUnits = new List<CombatMapUnit>(nUnits);
-
-            while (!IsAtLeastNTurnsInQueue(nUnits))
-            {
-                // if we can't calculate any further initiatives then we break out
-                if (!CalculateNextInitiativeQueue())
-                    break;
-            }
-
-            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
-            {
-                foreach (CombatMapUnit combatMapUnit in mapUnits)
-                {
-                    if (CombatMapUnitIsPresentAndActive(combatMapUnit))
-                    {
-                        if (combatMapUnit is CombatPlayer player)
-                        {
-                            if (!CombatPlayerIsActive(player)) continue;
-                        }
-
-                        combatMapUnits.Add(combatMapUnit);
-                        nTally++;
-                    }
-
-                    if (nTally == nUnits) return combatMapUnits;
-                }
-            }
-
-            // we will return what we have which is likely zero
-            return combatMapUnits;
-
-            // throw new Ultima5ReduxException("Tried to get " + nUnits + " CombatMapUnits, but only had " + nTally +
-            //                                 " in queues");
-        }
-
         private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit)
         {
             // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
@@ -275,31 +210,6 @@ namespace Ultima5Redux.Maps
         private bool CombatPlayerIsActive(CombatPlayer player)
         {
             return ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
-        }
-
-        private bool IsAtLeastNTurnsInQueue(int nMin)
-        {
-            int nTally = 0;
-
-            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
-            {
-                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
-                // do a check inside the minimize the number of iterations once the minimum is met
-                if (nTally >= nMin) return true;
-            }
-
-            return (nTally >= nMin);
-        }
-
-        private int GetNumberOfTurnsInQueue()
-        {
-            int nTally = 0;
-            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
-            {
-                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
-            }
-
-            return nTally;
         }
 
         /// <summary>
@@ -340,30 +250,121 @@ namespace Ultima5Redux.Maps
             return combatMapUnit;
         }
 
-        /// <summary>
-        ///     Gets the next combat map unit that will be playing
-        /// </summary>
-        /// <returns></returns>
-        internal CombatMapUnit AdvanceToNextCombatMapUnit()
+        private int GetNumberOfTurnsInQueue()
         {
-            Debug.Assert(_initiativeQueue.Count > 0);
-            Turn++;
-
-            // we are done with this unit now, so we just toss them out
-            if (_initiativeQueue.Peek().Count > 0)
+            int nTally = 0;
+            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
             {
-                _initiativeQueue.Peek().Dequeue();
-            }
-            else
-            {
-                _initiativeQueue.Dequeue();
+                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
             }
 
-            // if the queue is empty then we will recalculate it before continuing
-            if (_initiativeQueue.Count == 0) CalculateNextInitiativeQueue();
+            return nTally;
+        }
 
-            Debug.Assert(_initiativeQueue.Count > 0);
-            return GetCurrentCombatUnit();
+        internal List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
+        {
+            int nTally = 0;
+            List<CombatMapUnit> combatMapUnits = new List<CombatMapUnit>(nUnits);
+
+            while (!IsAtLeastNTurnsInQueue(nUnits))
+            {
+                // if we can't calculate any further initiatives then we break out
+                if (!CalculateNextInitiativeQueue())
+                    break;
+            }
+
+            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
+            {
+                foreach (CombatMapUnit combatMapUnit in mapUnits)
+                {
+                    if (CombatMapUnitIsPresentAndActive(combatMapUnit))
+                    {
+                        if (combatMapUnit is CombatPlayer player)
+                        {
+                            if (!CombatPlayerIsActive(player)) continue;
+                        }
+
+                        combatMapUnits.Add(combatMapUnit);
+                        nTally++;
+                    }
+
+                    if (nTally == nUnits) return combatMapUnits;
+                }
+            }
+
+            // we will return what we have which is likely zero
+            return combatMapUnits;
+
+            // throw new Ultima5ReduxException("Tried to get " + nUnits + " CombatMapUnits, but only had " + nTally +
+            //                                 " in queues");
+        }
+
+        /// <summary>
+        ///     Clears all queues and tallies, and populates with new data
+        /// </summary>
+        internal void InitializeInitiativeQueue()
+        {
+            _initiativeQueue.Clear();
+            _combatInitiativeTally.Clear();
+            _nLowestDexterity = 50;
+            _nHighestDexterity = 0;
+            Round = 0;
+            Turn = 0;
+
+            foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
+            {
+                //if (!IsCombatMapUnit(combatMapUnit)) continue;
+
+                int nDexterity = combatMapUnit.Dexterity;
+
+                // if it's an enemy and they aren't an active attacker such as a POISON FIELD
+                // then we just skip them since they have a DEX of 0
+                if (combatMapUnit is Enemy enemy && !enemy.EnemyReference.ActivelyAttacks) continue;
+
+                // get the highest and lowest dexterity values to be used in ongoing tally
+                if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
+                if (_nHighestDexterity < nDexterity) _nHighestDexterity = nDexterity;
+
+                AddCombatMapUnitToQueue(combatMapUnit);
+            }
+        }
+
+        private bool IsAtLeastNTurnsInQueue(int nMin)
+        {
+            int nTally = 0;
+
+            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
+            {
+                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
+                // do a check inside the minimize the number of iterations once the minimum is met
+                if (nTally >= nMin) return true;
+            }
+
+            return (nTally >= nMin);
+        }
+
+        /// <summary>
+        ///     Is the map unit a combat map unit type?
+        /// </summary>
+        /// <param name="mapUnit"></param>
+        /// <returns></returns>
+        private bool IsCombatMapUnit(MapUnit mapUnit)
+        {
+            switch (mapUnit)
+            {
+                case CombatPlayer playerUnit:
+                    return CombatMapUnitIsPresent(playerUnit);
+                case Enemy enemyUnit:
+                    return CombatMapUnitIsPresent(enemyUnit);
+            }
+
+            return false;
+        }
+
+        public void SetActivePlayerCharacter(PlayerCharacterRecord record)
+        {
+            ActivePlayerCharacterRecord = record;
+            Turn += 1;
         }
     }
 }

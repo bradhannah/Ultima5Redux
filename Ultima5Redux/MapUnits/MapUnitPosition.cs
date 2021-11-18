@@ -6,9 +6,30 @@ namespace Ultima5Redux.MapUnits
     /// <summary>
     ///     Tracks the position of any character on the screen
     /// </summary>
-    [DataContract]
-    public class MapUnitPosition
+    [DataContract] public class MapUnitPosition
     {
+        [DataMember]
+        public int Floor
+        {
+            get => _floor;
+            set => _floor = value == 0xFF ? -1 : value;
+        }
+
+        [DataMember] public int X { get; set; }
+
+        [DataMember] public int Y { get; set; }
+
+        [IgnoreDataMember]
+        public Point2D XY
+        {
+            get => new Point2D(X, Y);
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
+
         private int _floor;
 
         public MapUnitPosition()
@@ -22,37 +43,14 @@ namespace Ultima5Redux.MapUnits
             Floor = floor;
         }
 
-        [DataMember]
-        public int Floor
+        public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2)
         {
-            get => _floor;
-            set => _floor = value == 0xFF ? -1 : value;
-        }
-
-        [DataMember]
-        public int X { get; set; }
-        [DataMember]
-        public int Y { get; set; }
-
-        [IgnoreDataMember]
-        public Point2D XY
-        {
-            get => new Point2D(X, Y);
-            set
-            {
-                X = value.X;
-                Y = value.Y;
-            }
+            return ReferenceEquals(pos1, null) ? ReferenceEquals(pos2, null) : pos1.Equals(pos2);
         }
 
         public static bool operator !=(MapUnitPosition pos1, MapUnitPosition pos2)
         {
             return !(pos1 == pos2);
-        }
-
-        public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2)
-        {
-            return ReferenceEquals(pos1, null) ? ReferenceEquals(pos2, null) : pos1.Equals(pos2);
         }
 
 

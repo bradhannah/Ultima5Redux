@@ -7,15 +7,15 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
     public abstract class SeaFaringVessel : MapUnit
     {
+        public override bool IsActive => true;
+
         protected SeaFaringVessel(SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location, 
+            MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition)
-            : base(smallMapTheSmallMapCharacterState, mapUnitMovement, location, direction, npcState, 
+            : base(smallMapTheSmallMapCharacterState, mapUnitMovement, location, direction, npcState,
                 GameReferences.SpriteTileReferences.GetTileReferenceByName("ShipSailsDown"), mapUnitPosition)
         {
         }
-
-        public override bool IsActive => true;
 
         protected static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
         {
