@@ -537,16 +537,17 @@ namespace Ultima5Redux.MapUnits
             return nIndex;
         }
 
-        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex,
-            NonPlayerCharacterReference npcRef)
+        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex)
         {
             Debug.Assert(_currentMapType == Map.Maps.Combat);
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
             if (nIndex == -1) return null;
 
             Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference,
-                _currentLocation, null);
-            enemy.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
+                _currentLocation, null)
+            {
+                MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0)
+            };
 
             nIndex = AddCombatMapUnit(enemy);
 

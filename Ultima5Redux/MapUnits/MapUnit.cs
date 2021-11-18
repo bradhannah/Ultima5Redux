@@ -99,7 +99,7 @@ namespace Ultima5Redux.MapUnits
         [DataMember] private int _keyTileIndex = -1;
         [DataMember] private int _npcRefIndex = -1;
 
-        public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef ?? null;
+        public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
 
         [IgnoreDataMember] public virtual TileReference KeyTileReference
         {

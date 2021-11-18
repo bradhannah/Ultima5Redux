@@ -965,6 +965,25 @@ namespace Ultima5ReduxTesting
 
             _ = "";
         }
+        
+        [Test] public void Test_Dungeon0WithDivide()
+        {
+            World world = new World(ActualSaveDirectory + @"\b_carpet");
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 0),
+                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
+            
+            TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            
+            CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
+            Assert.NotNull(combatMap);
+            combatMap.DivideEnemy(combatMap.AllEnemies[2]);
+            
+            _ = "";
+        }
 
         [Test] public void Test_HammerCombatMapInitiativeTest()
         {

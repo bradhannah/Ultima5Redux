@@ -682,7 +682,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns>the new enemy if they did divide, otherwise null</returns>
         /// <param name="enemy"></param>
-        private Enemy DivideEnemy(Enemy enemy)
+        public Enemy DivideEnemy(Enemy enemy)
         {
             // is there a free spot surrounding the enemy?
             Point2D newEnemyPosition = GetRandomEmptySpaceAroundEnemy(enemy);
@@ -692,7 +692,9 @@ namespace Ultima5Redux.Maps
             // creates a new enemy of the same type and returns it
             int nNextCombatMapUnitIndex = GetNextAvailableCombatMapUnitIndex();
             if (nNextCombatMapUnitIndex == -1) return null;
-            Enemy newEnemy = CreateEnemy(nNextCombatMapUnitIndex, TheCombatMapReference, enemy.EnemyReference, null);
+            
+            Enemy newEnemy = CreateEnemy(newEnemyPosition, enemy.EnemyReference);
+
             if (newEnemy == null)
                 throw new Ultima5ReduxException("Tried to divide enemy, but they were null: " +
                                                 enemy.EnemyReference.KeyTileReference.Name);
@@ -1174,6 +1176,13 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        private Enemy CreateEnemy(Point2D position, EnemyReference enemyReference)
+        {
+            Enemy enemy = CombatMapUnits.CreateEnemy(position, enemyReference, out int _);
+            return enemy;
+        }
+        
+
         /// <summary>
         ///     Creates a single enemy in the context of the combat map.
         /// </summary>
@@ -1201,12 +1210,12 @@ namespace Ultima5Redux.Maps
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
                     enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _, npcRef);
+                        GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
                     enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
-                        enemyReference, out int _, npcRef);
+                        enemyReference, out int _);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -1295,9 +1304,6 @@ namespace Ultima5Redux.Maps
         {
             foreach (CombatPlayer combatPlayer in CombatMapUnits.CurrentMapUnits.CombatPlayers)
             {
-                //if (!(combatPlayer is CombatPlayer)) continue;
-
-                //CombatPlayer combatPlayer = (CombatPlayer)combatPlayer;
                 if (combatPlayer.HasEscaped) continue;
 
                 MakePlayerEscape(combatPlayer);
