@@ -35,12 +35,12 @@ namespace Ultima5Redux.Maps
                 JsonConvert.DeserializeObject<Dictionary<SingleCombatMapReference.Territory, List<CombatMapData>>>(
                     Resources.CombatMaps);
 
-            string britCbtPath = Path.Combine(u5Directory, FileConstants.BRIT_CBT);
-            DataChunks<DataChunkName> britDataChunks = new DataChunks<DataChunkName>(britCbtPath, DataChunkName.Unused);
+            // string britCbtPath = Path.Combine(u5Directory, FileConstants.BRIT_CBT);
+            DataChunks<DataChunkName> britDataChunks = new DataChunks<DataChunkName>(u5Directory,FileConstants.BRIT_CBT, DataChunkName.Unused);
 
-            string dungeonCbtPath = Path.Combine(u5Directory, FileConstants.DUNGEON_CBT);
+            // string dungeonCbtPath = Path.Combine(u5Directory, FileConstants.DUNGEON_CBT);
             DataChunks<DataChunkName> dungeonDataChunks =
-                new DataChunks<DataChunkName>(dungeonCbtPath, DataChunkName.Unused);
+                new DataChunks<DataChunkName>(u5Directory, FileConstants.DUNGEON_CBT, DataChunkName.Unused);
 
             if (combatMapDataJson == null || !combatMapDataJson.ContainsKey(
                                               SingleCombatMapReference.Territory.Britannia)

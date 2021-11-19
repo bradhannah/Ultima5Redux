@@ -58,20 +58,31 @@ namespace Ultima5Redux.MapUnits
         /// <param name="mapUnitStatesType"></param>
         /// <param name="bLoadFromDisk"></param>
         /// <param name="nOffset"></param>
-        public void Load(MapUnitStatesFiles mapUnitStatesType, bool bLoadFromDisk, int nOffset = 0x00)
+        public void InitializeMapUnits(MapUnitStatesFiles mapUnitStatesType, bool bLoadFromDisk, int nOffset = 0x00)
         {
             MapUnitStatesType = mapUnitStatesType;
 
             _mapUnitStates.Clear();
 
-            if (!bLoadFromDisk) return;
+            if (!bLoadFromDisk)
+            {
+                _mapUnitStates.AddRange(new MapUnitState[MAX_CHARACTER_STATES]);
+                return;
+            }
 
             List<byte> characterStateBytes = _mapUnitStatesDataChunk.GetAsByteList();
 
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
-                _mapUnitStates.Add(new MapUnitState(characterStateBytes.GetRange(i * MapUnitState.NBYTES + nOffset,
-                    MapUnitState.NBYTES).ToArray()));
+                MapUnitState mapUnitState = new MapUnitState(characterStateBytes
+                    .GetRange(i * MapUnitState.NBYTES + nOffset, MapUnitState.NBYTES).ToArray());
+                
+                // cute little hack that makes sure the first unit is ALWAYS the Avatar. The init.gam does not properly
+                // set this up otherwise
+                if (i == 0 && mapUnitState.Tile1Ref.Index == 256)
+                    mapUnitState.SetTileReference(References.GameReferences.SpriteTileReferences.GetTileReferenceByName("BasicAvatar"));
+                
+                _mapUnitStates.Add(mapUnitState);
             }
         }
     }

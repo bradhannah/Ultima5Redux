@@ -1156,5 +1156,13 @@ namespace Ultima5ReduxTesting
 
             NonPlayerCharacter npc = world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
         }
+        
+        [Test] public void Test_LoadInitialSaveGame()
+        {
+            World world = new World(ActualSaveDirectory + @"\b_carpet", true, true);
+
+            NonPlayerCharacter npc = world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
+        }
+
     }
 }

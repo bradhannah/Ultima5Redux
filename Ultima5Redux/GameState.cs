@@ -92,6 +92,8 @@ namespace Ultima5Redux
         /// A random number generator - capable of seeding in future
         private readonly Random _ran = new Random();
 
+        private bool _bLoadedFromInitial;
+
         /// <summary>
         ///     Does the Avatar have a torch lit?
         /// </summary>
@@ -101,10 +103,11 @@ namespace Ultima5Redux
         ///     Construct the GameState from a legacy save file
         /// </summary>
         /// <param name="u5Directory">Directory of the game State files</param>
-        public GameState(string u5Directory)
+        public GameState(string u5Directory = "")
         {
+            _bLoadedFromInitial = u5Directory == "";
             // imports the legacy save game file data 
-            _importedGameState = new ImportedGameState(u5Directory);
+            _importedGameState = _bLoadedFromInitial ? new ImportedGameState() : new ImportedGameState(u5Directory);
 
             // one time copy of all imported state information
             CharacterRecords = _importedGameState.CharacterRecords;

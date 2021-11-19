@@ -306,7 +306,7 @@ namespace Ultima5Redux.MapUnits
                 newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement,
                     _timeOfDay, _playerCharacterRecords, bInitialLoad, location, mapUnitPosition, npcState);
             }
-            else if (tileReference == null)
+            else if (tileReference == null || tileReference.Index == 256)
             {
                 Debug.WriteLine("An empty map unit was created with no tile reference");
                 newUnit = new EmptyMapUnit();
@@ -542,6 +542,10 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
         {
+            if (location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine ||
+                location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
+            
             // wipe all existing characters since they cannot exist beyond the load
             SmallMapUnitCollection.Clear();
 

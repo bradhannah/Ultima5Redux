@@ -22,7 +22,7 @@ namespace Ultima5Redux
 
         /// <summary>
         ///     Divides a list of bytes into a two dimension byte array
-        ///     Ideal for searialized byte arrays from map files, into a more readable x,y
+        ///     Ideal for serialized byte arrays from map files, into a more readable x,y
         /// </summary>
         /// <param name="byteList"></param>
         /// <param name="splitEveryN">split into a new row every N bytes</param>

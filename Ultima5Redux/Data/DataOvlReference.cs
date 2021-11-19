@@ -1003,9 +1003,9 @@ namespace Ultima5Redux.Data
         /// <param name="u5Directory">directory of data.ovl file</param>
         public DataOvlReference(string u5Directory)
         {
-            string dataOvlFileAndPath = Path.Combine(u5Directory, FileConstants.DATA_OVL);
+            //string dataOvlFileAndPath = Path.Combine(u5Directory, FileConstants.DATA_OVL);
 
-            _dataChunks = new DataChunks<DataChunkName>(dataOvlFileAndPath, DataChunkName.Unused);
+            _dataChunks = new DataChunks<DataChunkName>(u5Directory, FileConstants.DATA_OVL, DataChunkName.Unused);
 
             //dataOvlByteArray = Utils.GetFileAsByteList(dataOvlFileAndPath);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x00, 0x18);

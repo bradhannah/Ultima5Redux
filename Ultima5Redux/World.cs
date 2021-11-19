@@ -96,7 +96,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="ultima5Directory">ultima 5 data and save game directory</param>
         /// <param name="bUseExtendedSprites"></param>
-        public World(string ultima5Directory, bool bUseExtendedSprites = false)
+        public World(string ultima5Directory, bool bUseExtendedSprites = false, bool bLoadedInitGam = false)
         {
             U5Directory = ultima5Directory;
 
@@ -108,7 +108,7 @@ namespace Ultima5Redux
 
             AllSmallMaps = new SmallMaps(U5Directory);
 
-            State = new GameState(U5Directory);
+            State = new GameState(bLoadedInitGam ? "" : U5Directory);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(GameReferences.SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap,

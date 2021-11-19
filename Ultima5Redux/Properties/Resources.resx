@@ -160,4 +160,24 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </data>
+    <data name="InitGam" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>..\DataFiles\InitialSaveGame\INIT.GAM;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </data>
+    <data name="InitOol" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>..\DataFiles\InitialSaveGame\INIT.OOL;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </data>
+    <data name="BritOol" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>..\DataFiles\InitialSaveGame\BRIT.OOL;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </data>
+    <data name="UnderOol" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>..\DataFiles\InitialSaveGame\UNDER.OOL;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </data>
 </root>

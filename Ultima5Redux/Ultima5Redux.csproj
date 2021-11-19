@@ -288,6 +288,10 @@
         </EmbeddedResource>
         <Content Include="DataFiles\DungeonCombatMapDetails.csv" />
         <Content Include="DataFiles\DungeonCombatMapReferences.csv" />
+        <EmbeddedResource Include="DataFiles\InitialSaveGame\INIT.GAM" />
+        <EmbeddedResource Include="DataFiles\InitialSaveGame\INIT.OOL" />
+        <EmbeddedResource Include="DataFiles\InitialSaveGame\BRIT.OOL" />
+        <EmbeddedResource Include="DataFiles\InitialSaveGame\UNDER.OOL" />
         <Content Include="DataFiles\InventoryDetails.csv" />
         <EmbeddedResource Include="DataFiles\MagicDefinitions.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -93,6 +93,16 @@ namespace Ultima5Redux.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] BritOol {
+            get {
+                object obj = ResourceManager.GetObject("BritOol", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;Britannia&quot;: [
         ///    {
@@ -130,6 +140,26 @@ namespace Ultima5Redux.Properties {
         internal static string CombatMaps {
             get {
                 return ResourceManager.GetString("CombatMaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] InitGam {
+            get {
+                object obj = ResourceManager.GetObject("InitGam", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] InitOol {
+            get {
+                object obj = ResourceManager.GetObject("InitOol", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -282,6 +312,16 @@ namespace Ultima5Redux.Properties {
         internal static string TileOverrides {
             get {
                 return ResourceManager.GetString("TileOverrides", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] UnderOol {
+            get {
+                object obj = ResourceManager.GetObject("UnderOol", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

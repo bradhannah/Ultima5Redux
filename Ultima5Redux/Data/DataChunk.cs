@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 
 namespace Ultima5Redux.Data
@@ -34,13 +35,23 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     Construct a collection of DataChunks
         /// </summary>
+        /// <param name="chunkDirectory"></param>
         /// <param name="chunkFile">The file that all chunks will be read from</param>
         /// <param name="unusedValue">The value to automatically assign all un-named data objects</param>
-        public DataChunks(string chunkFile, T unusedValue)
+        public DataChunks(string chunkDirectory, string chunkFile, T unusedValue)
+        {
+            string chunkFilePath = Path.Combine(chunkDirectory, chunkFile);
+            
+            _dataChunks = new List<DataChunk>();
+            _unusedValue = unusedValue;
+            FileByteList = Utils.GetFileAsByteList(chunkFilePath);
+        }
+
+        public DataChunks(IEnumerable<byte> chunkData, T unusedValue)
         {
             _dataChunks = new List<DataChunk>();
             _unusedValue = unusedValue;
-            FileByteList = Utils.GetFileAsByteList(chunkFile);
+            FileByteList = chunkData.ToList();
         }
 
         /// <summary>

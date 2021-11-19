@@ -36,10 +36,10 @@ namespace Ultima5Redux.Dialogue
         public ShoppeKeeperDialogueReference(string u5Directory, DataOvlReference dataOvlReference)
         {
             _dataOvlReference = dataOvlReference;
-            string shoppeKeeperDataFilePath = Path.Combine(u5Directory, FileConstants.SHOPPE_DAT);
+            // string shoppeKeeperDataFilePath = Path.Combine(u5Directory, FileConstants.SHOPPE_DAT);
 
             _dataChunks =
-                new DataChunks<ShoppeKeeperChunkNames>(shoppeKeeperDataFilePath, ShoppeKeeperChunkNames.Unused);
+                new DataChunks<ShoppeKeeperChunkNames>(u5Directory, FileConstants.SHOPPE_DAT, ShoppeKeeperChunkNames.Unused);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "All Shoppe Keeper Conversations", 0x00,
                 0x2797, 0, ShoppeKeeperChunkNames.AllData);

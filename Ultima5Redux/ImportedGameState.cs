@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
@@ -8,6 +9,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.Properties;
 
 namespace Ultima5Redux
 {
@@ -23,9 +25,7 @@ namespace Ultima5Redux
             CURRENT_HOUR, CURRENT_MINUTE, NPC_TYPES, NPC_MOVEMENT_LISTS, NPC_MOVEMENT_OFFSETS, NPC_SPRITE_INDEXES,
             PARTY_LOC, Z_COORD, X_COORD, Y_COORD, CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
             MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, GRAPPLE, SKULL_KEYS_QUANTITY,
-
             KARMA
-            //, MONSTERS_AND_STUFF_TABLE
         }
 
         private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }
@@ -35,7 +35,7 @@ namespace Ultima5Redux
 
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
-        internal MapUnitStates ActiveMapUnitStates { get; }
+        private MapUnitStates ActiveMapUnitStates { get; set; }
 
         // map overlay data chunks
         private DataChunk ActiveOverlayDataChunks =>
@@ -43,11 +43,11 @@ namespace Ultima5Redux
 
         internal byte ActivePlayerNumber => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
 
-        internal MapUnitMovements CharacterMovements { get; }
+        internal MapUnitMovements CharacterMovements { get; private set; }
 
-        internal PlayerCharacterRecords CharacterRecords { get; }
+        internal PlayerCharacterRecords CharacterRecords { get; private set; }
 
-        internal DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
+        private DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
 
         private DataChunks<DataChunkName> DataChunks { get; }
 
@@ -97,28 +97,28 @@ namespace Ultima5Redux
         internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
 
         // DataChunk based properties (not ideal) 
-        internal DataChunk NonPlayerCharacterMovementLists => DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS);
+        private DataChunk NonPlayerCharacterMovementLists => DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS);
 
-        internal DataChunk NonPlayerCharacterMovementOffsets =>
+        private DataChunk NonPlayerCharacterMovementOffsets =>
             DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
 
-        internal bool[][] NPCIsDeadArray { get; }
-        internal bool[][] NPCIsMetArray { get; }
+        internal bool[][] NPCIsDeadArray { get; private set; }
+        internal bool[][] NPCIsMetArray { get; private set; }
 
-        internal MapUnitStates OverworldMapUnitStates { get; }
+        private MapUnitStates OverworldMapUnitStates { get; set; }
 
         private DataChunk OverworldOverlayDataChunks =>
             _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
         internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
-        internal SmallMapCharacterStates SmallMapCharacterStates { get; }
-        private MapUnitStates SmallMapUnitStates { get; }
+        internal SmallMapCharacterStates SmallMapCharacterStates { get; set; }
+        private MapUnitStates SmallMapUnitStates { get; set; }
 
         internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
             GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS),
             GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
 
-        internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; }
+        internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
 
         internal TimeOfDay TheTimeOfDay => new TimeOfDay(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
             DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
@@ -132,7 +132,7 @@ namespace Ultima5Redux
         /// </summary>
         internal byte TorchTurnsLeft => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
 
-        internal MapUnitStates UnderworldMapUnitStates { get; }
+        private MapUnitStates UnderworldMapUnitStates { get; set; }
 
         private DataChunk UnderworldOverlayDataChunks =>
             _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
@@ -147,13 +147,61 @@ namespace Ultima5Redux
         /// </summary>
         internal int Y => DataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
 
+        /// <summary>
+        /// Load the default starting save game
+        /// </summary>
+        public ImportedGameState()
+        {
+            DataChunks = new DataChunks<DataChunkName>(Resources.InitGam, DataChunkName.Unused);
+            GameStateByteArray = Resources.InitGam.ToList();
+            
+            // load the default overworld and underworld overlays on first load
+            _overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(Resources.BritOol, OverlayChunkName.Unused);
+            _underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(Resources.UnderOol, OverlayChunkName.Unused);
+            
+            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Character Animation States - Overworld", 0x00, 0x100, 0x00,
+                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Character Animation States - Underworld", 0x00, 0x100, 0x00,
+                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            
+            Initialize(true);
+        }
+
         public ImportedGameState(string u5Directory)
         {
-            string saveFileAndPath = Path.Combine(u5Directory, FileConstants.SAVED_GAM);
+            DataChunks = new DataChunks<DataChunkName>(u5Directory, FileConstants.SAVED_GAM, DataChunkName.Unused);
+            GameStateByteArray = Utils.GetFileAsByteList(Path.Combine(u5Directory, FileConstants.SAVED_GAM));
+            
+            // load the overworld and underworld overlays
+            // they are stored in the saved.ool file - but also the brit.ool and under.ool file - not quite sure why it's stored in both...
+            _overworldOverlayDataChunks =
+                new DataChunks<OverlayChunkName>(u5Directory, FileConstants.SAVED_OOL, OverlayChunkName.Unused);
+            _underworldOverlayDataChunks =
+                new DataChunks<OverlayChunkName>(u5Directory, FileConstants.SAVED_OOL, OverlayChunkName.Unused);
 
-            DataChunks = new DataChunks<DataChunkName>(saveFileAndPath, DataChunkName.Unused);
+            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Character Animation States - Overworld", 0x00, 0x100, 0x00,
+                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "Character Animation States - Underworld", 0x100, 0x100, 0x00,
+                OverlayChunkName.CHARACTER_ANIMATION_STATES);
+            
+            Initialize(true);
+        }
+        
 
-            GameStateByteArray = Utils.GetFileAsByteList(saveFileAndPath);
+        private void Initialize(bool bLoadFromDisk)
+        {
+            //// MapUnitStates
+            // OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
+            // UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
+            // ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks);
+            //
+            // OverworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, bLoadFromDisk);
+            // UnderworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, bLoadFromDisk);
+            // ActiveMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, bLoadFromDisk);
 
             // import all character records
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02,
@@ -253,23 +301,6 @@ namespace Ultima5Redux
             DataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "NPC Movement Offset Lists", 0xFB8,
                 0x20 * sizeof(byte) * 2, 0x00, DataChunkName.NPC_MOVEMENT_OFFSETS);
 
-            // load the overworld and underworld overlays
-            // they are stored in the saved.ool file - but also the brit.ool and under.ool file - not quite sure why it's stored in both...
-            string savedOolFile = Path.Combine(u5Directory, FileConstants.SAVED_OOL);
-            string overworldOverlayPath = savedOolFile;
-            string underworldOverlayPath = savedOolFile;
-            _overworldOverlayDataChunks =
-                new DataChunks<OverlayChunkName>(overworldOverlayPath, OverlayChunkName.Unused);
-            _underworldOverlayDataChunks =
-                new DataChunks<OverlayChunkName>(underworldOverlayPath, OverlayChunkName.Unused);
-
-            _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Character Animation States - Overworld", 0x00, 0x100, 0x00,
-                OverlayChunkName.CHARACTER_ANIMATION_STATES);
-            _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Character Animation States - Underworld", 0x100, 0x100, 0x00,
-                OverlayChunkName.CHARACTER_ANIMATION_STATES);
-
             // this stores monsters, party, objects and NPC location info and other stuff too (apparently!?)
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Current Environment", 0x6B4, 0x100, 0x00,
@@ -287,11 +318,11 @@ namespace Ultima5Redux
             OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
             UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
             ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks);
-
-            OverworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, true);
-            UnderworldMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, true);
-            ActiveMapUnitStates.Load(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, true);
-
+            
+            OverworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, bLoadFromDisk);
+            UnderworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, bLoadFromDisk);
+            ActiveMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, bLoadFromDisk);
+            
             switch (InitialMap)
             {
                 case Map.Maps.Small:
@@ -309,7 +340,7 @@ namespace Ultima5Redux
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
+            
             SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk);
             CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists,
                 NonPlayerCharacterMovementOffsets);
