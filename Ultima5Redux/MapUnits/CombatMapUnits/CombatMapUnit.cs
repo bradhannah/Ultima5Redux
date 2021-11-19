@@ -83,14 +83,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
         }
 
-        protected CombatMapUnit(
-            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
-            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState,
-            TileReference tileReference) :
-            base(
-                smallMapTheSmallMapCharacterState, mapUnitMovement,
-                location, Point2D.Direction.None, npcState,
-                tileReference, new MapUnitPosition())
+        protected CombatMapUnit(SmallMapCharacterState smallMapTheSmallMapCharacterState,
+            MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
+            NonPlayerCharacterState npcState, TileReference tileReference) : base(smallMapTheSmallMapCharacterState,
+            mapUnitMovement, location, Point2D.Direction.None, npcState, tileReference, new MapUnitPosition())
         {
         }
 
@@ -107,18 +103,18 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             if (!bIsHit)
             {
                 stateOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
-                                               .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd()
-                                               .Replace("!", " ")
-                                           + enemyCombatMapUnit.FriendlyName + "!";
+                                  .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd()
+                                  .Replace("!", " ") +
+                              enemyCombatMapUnit.FriendlyName + "!";
                 return HitState.Missed;
             }
 
             if (nAttack == 0)
             {
                 stateOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
-                                               .GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd()
-                                               .Replace("!", " ")
-                                           + enemyCombatMapUnit.FriendlyName + "!";
+                                  .GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd()
+                                  .Replace("!", " ") +
+                              enemyCombatMapUnit.FriendlyName + "!";
                 return HitState.Grazed;
             }
 
@@ -144,10 +140,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return Attack(enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat, out stateOutput, out debugStr);
         }
 
-
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
-            (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange
-             && Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
+            (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange &&
+             Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
         // bool Creature::isHit(int hit_offset) {
         //     return (hit_offset + 128) >= xu4_random(0x100) ? true : false;
@@ -273,7 +268,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         //
         //            return(m->isHit(player->dex));
         //        }
-
 
         // CreatureStatus Creature::getState() const {
         //     int heavy_threshold, light_threshold, crit_threshold;

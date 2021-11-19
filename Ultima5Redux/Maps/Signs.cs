@@ -44,10 +44,8 @@ namespace Ultima5Redux.Maps
                 }
 
                 _signList.Add(new Sign((SmallMapReferences.SingleMapReference.Location)signsByteArray[nIndex],
-                    signsByteArray[nIndex + 1],
-                    signsByteArray[nIndex + 2],
-                    signsByteArray[nIndex + 3],
-                    rawSignTxt, nIndex));
+                    signsByteArray[nIndex + 1], signsByteArray[nIndex + 2], signsByteArray[nIndex + 3], rawSignTxt,
+                    nIndex));
                 nIndex += nRawSignTxtLength + 1 +
                           4; // we hop over the string plus it's null byte plus the four bytes for definition
                 // while we don't encounter four zero bytes in a row, which is essentially the end of the file

@@ -7,8 +7,7 @@
 
         public override bool HideQuantity => false;
 
-        public Amulet(CombatItemReference combatItemReference, int nQuantity) :
-            base(combatItemReference, nQuantity)
+        public Amulet(CombatItemReference combatItemReference, int nQuantity) : base(combatItemReference, nQuantity)
         {
         }
     }

@@ -40,7 +40,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
 
-
         public override string BoardXitName =>
             GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
 
@@ -57,24 +56,23 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public bool SailsHoisted { get; set; } = false;
 
-
         /// <summary>
         ///     How many skiffs does the frigate have aboard?
         /// </summary>
         public int SkiffsAboard { get; set; }
 
         public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
-            SmallMapReferences.SingleMapReference.Location location,
-            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
-            this(mapUnitMovement, location, direction, npcState, mapUnitPosition)
+            SmallMapReferences.SingleMapReference.Location location, Point2D.Direction direction,
+            NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : this(mapUnitMovement, location,
+            direction, npcState, mapUnitPosition)
         {
             Hitpoints = mapUnitState.Depends1;
             SkiffsAboard = mapUnitState.Depends3;
         }
 
         public Frigate(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
-            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
-            base(null, mapUnitMovement, location, direction, npcState, mapUnitPosition)
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,
+            mapUnitMovement, location, direction, npcState, mapUnitPosition)
         {
         }
 

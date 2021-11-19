@@ -35,18 +35,16 @@ namespace Ultima5Redux.Maps
                 : _tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
                     .Where(tile => nFloor == tile.Position.Floor).ToList();
 
-        public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference)
-            => GetTileOverrides(GetOverrideTerritory(singleCombatMapReference),
-                singleCombatMapReference.CombatMapNum, 0);
+        public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>
+            GetTileOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum, 0);
 
         /// <summary>
         ///     Gets all tile overrides by a single map location (which includes a single floor)
         /// </summary>
         /// <param name="singleMapReference"></param>
         /// <returns>a list of TileOverride object, can be empty, but never null</returns>
-        public List<TileOverrideReference> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference)
-            => GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id,
-                singleMapReference.Floor);
+        public List<TileOverrideReference> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference) =>
+            GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
 
         private Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
             int nFloor)
@@ -60,8 +58,8 @@ namespace Ultima5Redux.Maps
             {
                 Point2D xy = new Point2D(tileOverride.X, tileOverride.Y);
                 if (tileOverrideList.ContainsKey(xy))
-                    throw new Ultima5ReduxException("You have a duplicate record in TileOverrides: " +
-                                                    nMapNumber + " " + xy);
+                    throw new Ultima5ReduxException("You have a duplicate record in TileOverrides: " + nMapNumber +
+                                                    " " + xy);
                 tileOverrideList.Add(xy, tileOverride);
             }
 
@@ -70,11 +68,10 @@ namespace Ultima5Redux.Maps
 
         public Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(
             SmallMapReferences.SingleMapReference singleMapReference) => GetTileXYOverrides(
-            GetOverrideTerritory(singleMapReference), singleMapReference.Id,
-            singleMapReference.Floor);
+            GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
 
-        public Dictionary<Point2D, TileOverrideReference>
-            GetTileXYOverrides(SingleCombatMapReference singleCombatMapReference) =>
+        public Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(
+            SingleCombatMapReference singleCombatMapReference) =>
             GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum,
                 0);
 

@@ -27,15 +27,13 @@ namespace Ultima5Redux.PlayerCharacters
             Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never
         }
 
-        [DataMember]
-        private bool BlackPearl
+        [DataMember] private bool BlackPearl
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.BlackPearl);
             set => SetReagentState(Reagent.ReagentTypeEnum.BlackPearl, value);
         }
 
-        [DataMember]
-        private bool BloodMoss
+        [DataMember] private bool BloodMoss
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.BloodMoss);
             set => SetReagentState(Reagent.ReagentTypeEnum.BloodMoss, value);
@@ -43,15 +41,13 @@ namespace Ultima5Redux.PlayerCharacters
 
         [DataMember] public int Circle;
 
-        [DataMember]
-        private bool Garlic
+        [DataMember] private bool Garlic
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.Garlic);
             set => SetReagentState(Reagent.ReagentTypeEnum.Garlic, value);
         }
 
-        [DataMember]
-        private bool Ginseng
+        [DataMember] private bool Ginseng
         {
             get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.Ginseng);
             set => SetReagentState(Reagent.ReagentTypeEnum.Ginseng, value);
@@ -59,15 +55,13 @@ namespace Ultima5Redux.PlayerCharacters
 
         [DataMember] public int Gold;
 
-        [DataMember]
-        private bool MandrakeRoot
+        [DataMember] private bool MandrakeRoot
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot);
             set => SetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot, value);
         }
 
-        [DataMember]
-        private bool NightShade
+        [DataMember] private bool NightShade
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.NightShade);
             set => SetReagentState(Reagent.ReagentTypeEnum.NightShade, value);
@@ -80,15 +74,13 @@ namespace Ultima5Redux.PlayerCharacters
 
         [DataMember] public SpellWords SpellEnum;
 
-        [DataMember]
-        private bool SpiderSilk
+        [DataMember] private bool SpiderSilk
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.SpiderSilk);
             set => SetReagentState(Reagent.ReagentTypeEnum.SpiderSilk, value);
         }
 
-        [DataMember]
-        private bool SulfurAsh
+        [DataMember] private bool SulfurAsh
         {
             get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.SulfurAsh);
             set => SetReagentState(Reagent.ReagentTypeEnum.SulfurAsh, value);

@@ -45,8 +45,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool IsFleeing { get; set; } = false;
 
         public Enemy(MapUnitMovement mapUnitMovement, EnemyReference enemyReference,
-            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState)
-            : base(null, mapUnitMovement, location, npcState, enemyReference.KeyTileReference)
+            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState) : base(null,
+            mapUnitMovement, location, npcState, enemyReference.KeyTileReference)
         {
             EnemyReference = enemyReference;
 

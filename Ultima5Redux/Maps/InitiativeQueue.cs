@@ -107,8 +107,8 @@ namespace Ultima5Redux.Maps
                 _initiativeQueue.Enqueue(newInitiativeQueue);
 
                 // a mapping of dexterity values to an ordered list of combat map units 
-                Dictionary<int, List<CombatMapUnit>>
-                    dexterityToCombatUnits = new Dictionary<int, List<CombatMapUnit>>();
+                Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits =
+                    new Dictionary<int, List<CombatMapUnit>>();
 
                 // go through each combat map unit and place them in priority order based on their dexterity values 
                 foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(

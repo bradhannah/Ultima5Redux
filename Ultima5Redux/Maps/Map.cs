@@ -51,7 +51,6 @@ namespace Ultima5Redux.Maps
 
         public bool XRayMode { get; set; } = false;
 
-
         /// <summary>
         ///     Filthy little map to assign single letter to map elements
         /// </summary>
@@ -161,16 +160,14 @@ namespace Ultima5Redux.Maps
                 return tileReference.IsWaterEnemyPassable;
             }
 
-            bool bIsWalkable =
-                tileReference.IsWalking_Passable || tileReference.Index ==
-                                                 GameReferences.SpriteTileReferences
-                                                     .GetTileReferenceByName("RegularDoor").Index
-                                                 || tileReference.Index == GameReferences.SpriteTileReferences
-                                                     .GetTileReferenceByName("RegularDoorView").Index
-                                                 || tileReference.Index == GameReferences.SpriteTileReferences
-                                                     .GetTileReferenceByName("LockedDoor").Index
-                                                 || tileReference.Index == GameReferences.SpriteTileReferences
-                                                     .GetTileReferenceByName("LockedDoorView").Index;
+            bool bIsWalkable = tileReference.IsWalking_Passable ||
+                               tileReference.Index == GameReferences.SpriteTileReferences
+                                   .GetTileReferenceByName("RegularDoor").Index ||
+                               tileReference.Index == GameReferences.SpriteTileReferences
+                                   .GetTileReferenceByName("RegularDoorView").Index ||
+                               tileReference.Index == GameReferences.SpriteTileReferences
+                                   .GetTileReferenceByName("LockedDoor").Index || tileReference.Index ==
+                               GameReferences.SpriteTileReferences.GetTileReferenceByName("LockedDoorView").Index;
 
             return bIsWalkable;
         }
@@ -345,12 +342,11 @@ namespace Ultima5Redux.Maps
             TileReference tileReference =
                 GameReferences.SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
 
-            bool bBlocksLight =
-                tileReference.BlocksLight // if it says it blocks light AND 
-                && !bFirst // it is not the first tile (aka the one you are on) AND
-                && !IsOpenDoor(xy) // it's not an open door 
-                && !(tileReference.IsWindow && (characterPosition.IsWithinNFourDirections(adjustedXy) ||
-                                                bAlwaysLookThroughWindows)); //  you are not next to a window
+            bool bBlocksLight = tileReference.BlocksLight // if it says it blocks light AND 
+                                && !bFirst // it is not the first tile (aka the one you are on) AND
+                                && !IsOpenDoor(xy) // it's not an open door 
+                                && !(tileReference.IsWindow && (characterPosition.IsWithinNFourDirections(adjustedXy) ||
+                                                                bAlwaysLookThroughWindows)); //  you are not next to a window
 
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
@@ -439,5 +435,6 @@ namespace Ultima5Redux.Maps
         }
 
         #endregion
+
     }
 }

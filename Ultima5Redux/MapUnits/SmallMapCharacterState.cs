@@ -30,8 +30,8 @@ namespace Ultima5Redux.MapUnits
         /// <param name="npcRef"></param>
         /// <param name="nMapUnitAnimationStateIndex"></param>
         /// <param name="timeOfDay"></param>
-        public SmallMapCharacterState(NonPlayerCharacterReference npcRef,
-            int nMapUnitAnimationStateIndex, TimeOfDay timeOfDay)
+        public SmallMapCharacterState(NonPlayerCharacterReference npcRef, int nMapUnitAnimationStateIndex,
+            TimeOfDay timeOfDay)
         {
             NPCIndex = npcRef.DialogIndex;
             TileRef = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);

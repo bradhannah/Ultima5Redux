@@ -44,38 +44,31 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     the offset of the map data in the data file
             /// </summary>
-            [DataMember]
-            public int FileOffset { get; }
+            [DataMember] public int FileOffset { get; }
 
             /// <summary>
             ///     the floor that the single map represents
             /// </summary>
-            [DataMember]
-            public int Floor { get; }
+            [DataMember] public int Floor { get; }
 
             /// <summary>
             ///     the location (ie. single town like Moonglow)
             /// </summary>
-            [DataMember]
-            public Location MapLocation { get; }
-
+            [DataMember] public Location MapLocation { get; }
 
             /// <summary>
             ///     ID of the map location (used in saved.gam references)
             ///     Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
             /// </summary>
             // ReSharper disable once UnusedMember.Global
-            [IgnoreDataMember]
-            public byte Id => (byte)(MapLocation - 1);
+            [IgnoreDataMember] public byte Id => (byte)(MapLocation - 1);
 
             /// <summary>
             ///     name of the map file
             /// </summary>
-            [IgnoreDataMember]
-            public string MapFilename => GetFilenameFromLocation(MapLocation);
+            [IgnoreDataMember] public string MapFilename => GetFilenameFromLocation(MapLocation);
 
-            [IgnoreDataMember]
-            public Map.Maps MapType
+            [IgnoreDataMember] public Map.Maps MapType
             {
                 get
                 {
@@ -91,13 +84,11 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-
             /// <summary>
             ///     The master file
             /// </summary>
             // ReSharper disable once UnusedMember.Global
-            [IgnoreDataMember]
-            public SmallMapMasterFiles MasterFile
+            [IgnoreDataMember] public SmallMapMasterFiles MasterFile
             {
                 get
                 {
@@ -167,8 +158,7 @@ namespace Ultima5Redux.Maps
                 if (map == Map.Maps.Small)
                     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
 
-                return new SingleMapReference(Location.Britannia_Underworld,
-                    map == Map.Maps.Overworld ? 0 : -1, 0);
+                return new SingleMapReference(Location.Britannia_Underworld, map == Map.Maps.Overworld ? 0 : -1, 0);
             }
 
             /// <summary>

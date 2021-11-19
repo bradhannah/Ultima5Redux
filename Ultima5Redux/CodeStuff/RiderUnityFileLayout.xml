@@ -1,5 +1,5 @@
-<Patterns xmlns="urn:schemas-jetbrains-com:member-reordering-patterns"
-          xmlns:unity="urn:schemas-jetbrains-com:member-reordering-patterns-unity">
+<Patterns xmlns:unity="urn:schemas-jetbrains-com:member-reordering-patterns-unity"
+          xmlns="urn:schemas-jetbrains-com:member-reordering-patterns">
 
     <!-- Pattern to match classes used by Unity that contain serialised fields and event
          function methods. Based on the standard "Default Pattern", this will also order
@@ -7,19 +7,19 @@
          as this order is reflected in the Unity editor's Inspector -->
     <TypePattern DisplayName="Unity classes" Priority="100">
         <TypePattern.Match>
-            <unity:SerializableClass />
+            <unity:SerializableClass/>
         </TypePattern.Match>
 
         <Entry DisplayName="Public Delegates" Priority="100">
             <Entry.Match>
                 <And>
-                    <Access Is="Public" />
-                    <Kind Is="Delegate" />
+                    <Access Is="Public"/>
+                    <Kind Is="Delegate"/>
                 </And>
             </Entry.Match>
 
             <Entry.SortBy>
-                <Name />
+                <Name/>
             </Entry.SortBy>
         </Entry>
         <Entry DisplayName="Event Declarations">
@@ -53,10 +53,10 @@
         <Entry DisplayName="Static Fields and Constants">
             <Entry.Match>
                 <Or>
-                    <Kind Is="Constant" />
+                    <Kind Is="Constant"/>
                     <And>
-                        <Kind Is="Field" />
-                        <Static />
+                        <Kind Is="Field"/>
+                        <Static/>
                     </And>
                 </Or>
             </Entry.Match>
@@ -73,7 +73,7 @@
 
         <Entry DisplayName="Serialized Fields">
             <Entry.Match>
-                <unity:SerializedField />
+                <unity:SerializedField/>
             </Entry.Match>
 
             <!-- No sorting -->
@@ -82,9 +82,9 @@
         <Entry DisplayName="Non-serialised Fields">
             <Entry.Match>
                 <And>
-                    <Kind Is="Field" />
+                    <Kind Is="Field"/>
                     <Not>
-                        <unity:SerializedField />
+                        <unity:SerializedField/>
                     </Not>
                 </And>
             </Entry.Match>
@@ -107,8 +107,8 @@
         <Entry DisplayName="Properties, Indexers">
             <Entry.Match>
                 <Or>
-                    <Kind Is="Property" />
-                    <Kind Is="Indexer" />
+                    <Kind Is="Property"/>
+                    <Kind Is="Indexer"/>
                 </Or>
             </Entry.Match>
             <Entry.SortBy>
@@ -127,7 +127,7 @@
 
         <Entry DisplayName="Constructors">
             <Entry.Match>
-                <Kind Is="Constructor" />
+                <Kind Is="Constructor"/>
             </Entry.Match>
 
             <Entry.SortBy>
@@ -144,12 +144,12 @@
 
         <Entry DisplayName="Event Functions">
             <Entry.Match>
-                <unity:EventFunction />
+                <unity:EventFunction/>
             </Entry.Match>
 
             <Entry.SortBy>
                 <!-- Prioritises common event functions. For alphabetical, replace with <Name /> -->
-                <unity:EventFunctionName />
+                <unity:EventFunctionName/>
             </Entry.SortBy>
         </Entry>
         <Entry DisplayName="Methods">
@@ -170,25 +170,24 @@
         </Entry>
 
 
-
         <Entry DisplayName="Interface Implementations" Priority="100">
             <Entry.Match>
                 <And>
-                    <Kind Is="Member" />
-                    <ImplementsInterface />
+                    <Kind Is="Member"/>
+                    <ImplementsInterface/>
                 </And>
             </Entry.Match>
 
             <Entry.SortBy>
-                <ImplementsInterface Immediate="true" />
+                <ImplementsInterface Immediate="true"/>
             </Entry.SortBy>
         </Entry>
 
-        <Entry DisplayName="All other members" />
+        <Entry DisplayName="All other members"/>
 
         <Entry DisplayName="Nested Types">
             <Entry.Match>
-                <Kind Is="Type" />
+                <Kind Is="Type"/>
             </Entry.Match>
         </Entry>
     </TypePattern>

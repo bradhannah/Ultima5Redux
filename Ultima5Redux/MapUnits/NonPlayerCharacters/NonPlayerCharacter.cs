@@ -57,15 +57,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool ArrivedAtLocation { get; private set; }
 
-        public NonPlayerCharacter(
-            SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
-            TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, bool bLoadedFromDisk,
-            SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition,
-            NonPlayerCharacterState npcState)
-            : base(smallMapTheSmallMapCharacterState,
-                mapUnitMovement, location, Point2D.Direction.None,
-                npcState, GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
-                mapUnitPosition)
+        public NonPlayerCharacter(SmallMapCharacterState smallMapTheSmallMapCharacterState,
+            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
+            bool bLoadedFromDisk, SmallMapReferences.SingleMapReference.Location location,
+            MapUnitPosition mapUnitPosition, NonPlayerCharacterState npcState) : base(smallMapTheSmallMapCharacterState,
+            mapUnitMovement, location, Point2D.Direction.None, npcState,
+            GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite), mapUnitPosition)
         {
             NPCState = npcState;
             bool bLargeMap = TheSmallMapCharacterState == null && NPCState.NPCRef == null;
@@ -162,18 +159,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public override string GetDebugDescription(TimeOfDay timeOfDay)
         {
             if (NPCRef != null)
-                return "Name=" + NPCRef.FriendlyName
-                               + " " + MapUnitPosition + " Scheduled to be at: " +
-                               NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) +
-                               " with AI Mode: " +
-                               NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) +
-                               " <b>Movement Attempts</b>: " + MovementAttempts + " " +
-                               Movement;
+                return "Name=" + NPCRef.FriendlyName + " " + MapUnitPosition + " Scheduled to be at: " +
+                       NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay) + " with AI Mode: " +
+                       NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay) + " <b>Movement Attempts</b>: " +
+                       MovementAttempts + " " + Movement;
 
-            return "MapUnit " + KeyTileReference.Description
-                              + " " + MapUnitPosition + " Scheduled to be at: "
-                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
-                              + Movement;
+            return "MapUnit " + KeyTileReference.Description + " " + MapUnitPosition + " Scheduled to be at: " +
+                   " <b>Movement Attempts</b>: " + MovementAttempts + " " + Movement;
         }
 
         /// <summary>
@@ -231,8 +223,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                         stairsAndLadderLocations = virtualMap.GetBestStairsAndLadderLocation(
                             ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down
                                 ? VirtualMap.LadderOrStairDirection.Up
-                                : VirtualMap.LadderOrStairDirection.Down,
-                            npcXy.XY);
+                                : VirtualMap.LadderOrStairDirection.Down, npcXy.XY);
                         Debug.WriteLine(
                             $"{NPCRef.FriendlyName} couldn't find a ladder or stair going {ladderOrStairDirection.ToString()} {timeOfDay.FormattedTime}");
                         if (stairsAndLadderLocations.Count <= 0)

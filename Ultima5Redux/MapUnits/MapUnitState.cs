@@ -62,7 +62,6 @@ namespace Ultima5Redux.MapUnits
             Depends3 = stateBytes[7];
         }
 
-
         public MapUnitState(NonPlayerCharacterReference npcRef)
         {
             Tile1Ref = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
@@ -98,7 +97,6 @@ namespace Ultima5Redux.MapUnits
             return theAvatar;
         }
 
-
         public static MapUnitState CreateCombatPlayer(TileReferences tileReferences, PlayerCharacterRecord record,
             MapUnitPosition combatPlayerPosition)
         {
@@ -119,8 +117,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         public static MapUnitState CreateMapUnitState(TileReferences tileReferences,
-            MapUnitPosition mapUnitStatePosition,
-            int nSprite)
+            MapUnitPosition mapUnitStatePosition, int nSprite)
         {
             MapUnitState mapUnitState = new MapUnitState();
 

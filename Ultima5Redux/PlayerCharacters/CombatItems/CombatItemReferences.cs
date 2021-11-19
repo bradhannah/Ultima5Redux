@@ -18,7 +18,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public readonly List<WeaponReference> WeaponReferences = new List<WeaponReference>();
 
-
         public CombatItemReferences(InventoryReferences inventoryReferences)
         {
             List<InventoryReference> combatItems =
@@ -65,7 +64,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 //WeaponReference weaponReference = new WeaponReference(dataOvlReference, inventoryReference);
             }
         }
-
 
         internal static bool EquipmentMatches(Array theArray, ref DataOvlReference.Equipment equipment)
         {

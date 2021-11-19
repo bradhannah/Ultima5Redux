@@ -41,7 +41,7 @@ namespace Ultima5Redux.Data
         public DataChunks(string chunkDirectory, string chunkFile, T unusedValue)
         {
             string chunkFilePath = Path.Combine(chunkDirectory, chunkFile);
-            
+
             _dataChunks = new List<DataChunk>();
             _unusedValue = unusedValue;
             FileByteList = Utils.GetFileAsByteList(chunkFilePath);
@@ -446,7 +446,6 @@ namespace Ultima5Redux.Data
                     throw new ArgumentOutOfRangeException();
             }
         }
-
 
         public void SetChunkAsByte(byte data)
         {

@@ -79,8 +79,7 @@ namespace Ultima5Redux.MapUnits
                 if (nIterations == 0xFF || nIterations == 0) return;
 
                 if (!(direction == MovementCommandDirection.East || direction == MovementCommandDirection.West ||
-                      direction == MovementCommandDirection.North
-                      || direction == MovementCommandDirection.South))
+                      direction == MovementCommandDirection.North || direction == MovementCommandDirection.South))
                     throw new Ultima5ReduxException("a bad direction was set: " + direction);
 
                 // we have a proper movement instruction so let's add it to the queue
@@ -100,8 +99,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="direction"></param>
         /// <param name="nSpaces"></param>
         /// <returns></returns>
-        internal static Point2D GetAdjustedPos(Point2D xy, MovementCommandDirection direction,
-            int nSpaces = 1)
+        internal static Point2D GetAdjustedPos(Point2D xy, MovementCommandDirection direction, int nSpaces = 1)
         {
             Point2D adjustedPos = new Point2D(xy.X, xy.Y);
 
@@ -157,7 +155,6 @@ namespace Ultima5Redux.MapUnits
             _movementQueue.Clear();
         }
 
-
         /// <summary>
         ///     Gets the next movement command - expects you to have confirmed there is a movement first
         /// </summary>
@@ -186,7 +183,6 @@ namespace Ultima5Redux.MapUnits
 
             return direction;
         }
-
 
         /// <summary>
         ///     Checks to see if any movement commands are available

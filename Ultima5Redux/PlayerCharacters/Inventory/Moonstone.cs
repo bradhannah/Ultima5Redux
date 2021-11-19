@@ -30,8 +30,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public MoonPhaseReferences.MoonPhases Phase { get; }
 
-        public Moonstone(MoonPhaseReferences.MoonPhases phase, string findDescription, Moongates moongates)
-            : base(0, findDescription, MOONSTONE_SPRITE)
+        public Moonstone(MoonPhaseReferences.MoonPhases phase, string findDescription, Moongates moongates) : base(0,
+            findDescription, MOONSTONE_SPRITE)
         {
             Phase = phase;
             _moongates = moongates;

@@ -58,7 +58,6 @@ namespace Ultima5Redux.Maps
 
         public readonly byte[][] TheMap;
 
-
         /// <summary>
         ///     The number of the combat map (order in data file)
         /// </summary>
@@ -72,17 +71,15 @@ namespace Ultima5Redux.Maps
 
         public Dungeon DungeonLocation => Dungeon.Covetous;
 
-        public bool HasMagicDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor"))
-                                    || DoesTileReferenceOccurOnMap(
-                                        _tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
+        public bool HasMagicDoor =>
+            DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoor")) ||
+            DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("MagicLockDoorWithView"));
 
-        public bool HasRegularDoor => DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("RegularDoor"))
-                                      || DoesTileReferenceOccurOnMap(
-                                          _tileReferences.GetTileReferenceByName("LockedDoor"))
-                                      || DoesTileReferenceOccurOnMap(
-                                          _tileReferences.GetTileReferenceByName("RegularDoorView"))
-                                      || DoesTileReferenceOccurOnMap(
-                                          _tileReferences.GetTileReferenceByName("LockedDoorView"));
+        public bool HasRegularDoor =>
+            DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("RegularDoor")) ||
+            DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LockedDoor")) ||
+            DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("RegularDoorView")) ||
+            DoesTileReferenceOccurOnMap(_tileReferences.GetTileReferenceByName("LockedDoorView"));
 
         public bool HasTriggers => true;
 
@@ -110,7 +107,6 @@ namespace Ultima5Redux.Maps
         public bool SpecialEnemyComputation => false;
 
         private int TotalDirections => Enum.GetNames(typeof(EntryDirection)).Length;
-
 
         /// <summary>
         ///     Create the reference based on territory and a map number
@@ -162,11 +158,11 @@ namespace Ultima5Redux.Maps
                 // Supposed to be 1=east,2=west,3=south,4=north
                 // but in reality they are kind of all over!
                 List<byte> xPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                    "Player X positions for row #" + nRow,
-                    nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB, 0x06).GetAsByteList();
+                        "Player X positions for row #" + nRow, nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB, 0x06)
+                    .GetAsByteList();
                 List<byte> yPlayerPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                    "Player Y positions for row #" + nRow,
-                    nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB + 0x06, 0x06).GetAsByteList();
+                    "Player Y positions for row #" + nRow, nMapOffset + (nBytesPerRow * nOffsetFactor) + 0xB + 0x06,
+                    0x06).GetAsByteList();
                 for (int nPlayer = 0; nPlayer < NUM_PLAYERS; nPlayer++)
                 {
                     // if the X or Y value is above the number of tiles then it indicates a sprite number
@@ -206,8 +202,7 @@ namespace Ultima5Redux.Maps
             List<byte> yEnemyPosList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Y positions",
                 nEnemyYOffset, NUM_ENEMIES).GetAsByteList();
             List<byte> spriteEnemyList = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Enemy sprite index",
-                nEnemySpriteOffset, NUM_ENEMIES).GetAsByteList();
+                "Enemy sprite index", nEnemySpriteOffset, NUM_ENEMIES).GetAsByteList();
 
             Debug.Assert(xEnemyPosList.Count == NUM_ENEMIES);
             Debug.Assert(yEnemyPosList.Count == NUM_ENEMIES);
@@ -242,11 +237,9 @@ namespace Ultima5Redux.Maps
             // these are the Points that a player character hits and causes a triggering event
             const int nTriggerPositions = 8;
             List<byte> triggerXPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Trigger X positions",
-                nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList();
+                "Trigger X positions", nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList();
             List<byte> triggerYPositions = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Trigger Y positions",
-                nMapOffset + nBytesPerRow * 9 + YTILES, nTriggerPositions).GetAsByteList();
+                "Trigger Y positions", nMapOffset + nBytesPerRow * 9 + YTILES, nTriggerPositions).GetAsByteList();
             for (int i = 0; i < nTriggerPositions; i++)
             {
                 triggerPositions.Add(new Point2D(triggerXPositions[i], triggerYPositions[i]));
@@ -254,12 +247,10 @@ namespace Ultima5Redux.Maps
 
             // Gather all replacement tile references when trigger occurs
             List<byte> triggerTileIndexes = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Trigger tile indexes",
-                nMapOffset + XTILES, nTriggerPositions).GetAsByteList();
+                "Trigger tile indexes", nMapOffset + XTILES, nTriggerPositions).GetAsByteList();
             foreach (byte nIndex in triggerTileIndexes)
             {
-                triggerTileReferences.Add(tileReferences.GetTileReference(nIndex
-                ));
+                triggerTileReferences.Add(tileReferences.GetTileReference(nIndex));
                 //+ 0xFF));
             }
 
@@ -268,17 +259,17 @@ namespace Ultima5Redux.Maps
             List<byte> triggerResultXPositions = new List<byte>();
             List<byte> triggerResultYPositions = new List<byte>();
             triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Trigger Result X position #1",
-                nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions).GetAsByteList());
+                    "Trigger Result X position #1", nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions)
+                .GetAsByteList());
             triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Trigger Result Y position #1",
-                nMapOffset + nBytesPerRow * 9 + (XTILES * 2), nTriggerPositions).GetAsByteList());
+                    "Trigger Result Y position #1", nMapOffset + nBytesPerRow * 9 + (XTILES * 2), nTriggerPositions)
+                .GetAsByteList());
             triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Trigger Result X position #2",
-                nMapOffset + nBytesPerRow * 10 + XTILES, nTriggerPositions).GetAsByteList());
+                    "Trigger Result X position #2", nMapOffset + nBytesPerRow * 10 + XTILES, nTriggerPositions)
+                .GetAsByteList());
             triggerResultYPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Trigger Result Y position #2",
-                nMapOffset + nBytesPerRow * 10 + (XTILES * 2), nTriggerPositions).GetAsByteList());
+                    "Trigger Result Y position #2", nMapOffset + nBytesPerRow * 10 + (XTILES * 2), nTriggerPositions)
+                .GetAsByteList());
             for (int i = 0; i < nTriggerPositions; i++)
             {
                 TileReference newTriggeredTileReference = triggerTileReferences[i];

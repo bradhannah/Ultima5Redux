@@ -103,7 +103,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public abstract string GetForSaleList();
 
-
         public abstract string GetWhichWouldYouSee();
 
         /// <summary>
@@ -112,8 +111,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <returns></returns>
         public virtual string GetHappyShoppeKeeperGoodbyeResponse()
         {
-            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP)
-                        + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
+            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP) +
+                   " says " + TheShoppeKeeperReference.ShoppeKeeperName;
         }
 
         /// <summary>
@@ -125,8 +124,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             if (tod == null) throw new Ultima5ReduxException("can't pass null TOD to blacksmith");
             // todo: convert to data.ovl @ 0x8028
-            string response = @"Good " + tod.TimeOfDayName + ", and welcome to " +
-                              TheShoppeKeeperReference.ShoppeName + "!";
+            string response = @"Good " + tod.TimeOfDayName + ", and welcome to " + TheShoppeKeeperReference.ShoppeName +
+                              "!";
             return response;
         }
 
@@ -154,9 +153,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <returns></returns>
         public virtual string GetPissedOffShoppeKeeperGoodbyeResponse()
         {
-            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START,
-                            PISSED_OFF_STOP)
-                        + " says " + TheShoppeKeeperReference.ShoppeKeeperName;
+            return "\"" +
+                   ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP) +
+                   " says " + TheShoppeKeeperReference.ShoppeKeeperName;
         }
 
         /// <summary>
@@ -196,9 +195,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public string GetComeLaterResponse()
         {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
-                .MERCH_SEE_ME_AT_SHOP1) + DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings
-                .MERCH_SEE_ME_AT_SHOP2);
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP1) +
+                   DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP2);
         }
 
         /// <summary>
@@ -235,8 +233,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <returns></returns>
         protected string GetRandomStringFromChoices(DataOvlReference.DataChunkName chunkName)
         {
-            List<string> responses = DataOvlReference.GetDataChunk(chunkName)
-                .GetChunkAsStringList().StringList;
+            List<string> responses = DataOvlReference.GetDataChunk(chunkName).GetChunkAsStringList().StringList;
 
             // if this hasn't been access before, then lets add a chunk to make sure we don't repeat the same thing 
             // twice in a row

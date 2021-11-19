@@ -100,8 +100,8 @@ namespace Ultima5Redux.Dialogue
         /// <returns>true if it is acceptable</returns>
         private bool IsAcceptablePunctuation(char character)
         {
-            return character == ' ' || character == '"' || character == '!' || character == ',' || character == '\''
-                   || character == '.' || character == '-' || character == '?' || character == '\n' || character == ';';
+            return character == ' ' || character == '"' || character == '!' || character == ',' || character == '\'' ||
+                   character == '.' || character == '-' || character == '?' || character == '\n' || character == ';';
         }
 
         private bool IsReplacementCharacter(char character)
@@ -113,8 +113,8 @@ namespace Ultima5Redux.Dialogue
             // @ barkeeps food/drink etc
             // * location of thing
             // ^ quantity of thing (ie. reagent)
-            return character == '%' || character == '&' || character == '$' || character == '#' || character == '@'
-                   || character == '*' || character == '^';
+            return character == '%' || character == '&' || character == '$' || character == '#' || character == '@' ||
+                   character == '*' || character == '^';
         }
 
         /// <summary>

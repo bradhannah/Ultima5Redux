@@ -18,7 +18,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private readonly Dictionary<string, ShoppeKeeperReference> _shoppeKeepers =
             new Dictionary<string, ShoppeKeeperReference>();
 
-        private readonly Dictionary<SmallMapReferences.SingleMapReference.Location,
+        private readonly
+            Dictionary<SmallMapReferences.SingleMapReference.Location,
                 Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>>
             _shoppeKeepersByLocationAndType =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location,

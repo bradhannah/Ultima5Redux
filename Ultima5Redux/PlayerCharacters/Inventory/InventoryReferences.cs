@@ -158,11 +158,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
 
-                finalDescription = Regex.Replace(finalDescription, highlightKeyword, REAGENT_HIGHLIGHT_COLOR
-                    + highlightKeyword + "</color>");
+                finalDescription = Regex.Replace(finalDescription, highlightKeyword,
+                    REAGENT_HIGHLIGHT_COLOR + highlightKeyword + "</color>");
                 string upperCaseStr = char.ToUpper(highlightKeyword[0]) + highlightKeyword.Substring(1);
-                finalDescription = Regex.Replace(finalDescription, upperCaseStr, REAGENT_HIGHLIGHT_COLOR
-                    + upperCaseStr + "</color>");
+                finalDescription = Regex.Replace(finalDescription, upperCaseStr,
+                    REAGENT_HIGHLIGHT_COLOR + upperCaseStr + "</color>");
             }
 
             // highlight all spell names
@@ -170,8 +170,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             {
                 if (!Regex.IsMatch(description, highlightKeyword, RegexOptions.IgnoreCase)) continue;
 
-                finalDescription = Regex.Replace(finalDescription, highlightKeyword, SPELL_HIGHLIGHT_COLOR
-                    + highlightKeyword + "</color>");
+                finalDescription = Regex.Replace(finalDescription, highlightKeyword,
+                    SPELL_HIGHLIGHT_COLOR + highlightKeyword + "</color>");
             }
 
             return finalDescription;

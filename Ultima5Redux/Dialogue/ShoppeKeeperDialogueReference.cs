@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ultima5Redux.Data;
@@ -23,8 +22,7 @@ namespace Ultima5Redux.Dialogue
         private readonly DataOvlReference _dataOvlReference;
         private readonly List<string> _merchantStrings = new List<string>();
 
-        private readonly Dictionary<int, int> _previousRandomSelectionByMin =
-            new Dictionary<int, int>();
+        private readonly Dictionary<int, int> _previousRandomSelectionByMin = new Dictionary<int, int>();
 
         private readonly Random _random = new Random();
 
@@ -38,8 +36,8 @@ namespace Ultima5Redux.Dialogue
             _dataOvlReference = dataOvlReference;
             // string shoppeKeeperDataFilePath = Path.Combine(u5Directory, FileConstants.SHOPPE_DAT);
 
-            _dataChunks =
-                new DataChunks<ShoppeKeeperChunkNames>(u5Directory, FileConstants.SHOPPE_DAT, ShoppeKeeperChunkNames.Unused);
+            _dataChunks = new DataChunks<ShoppeKeeperChunkNames>(u5Directory, FileConstants.SHOPPE_DAT,
+                ShoppeKeeperChunkNames.Unused);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "All Shoppe Keeper Conversations", 0x00,
                 0x2797, 0, ShoppeKeeperChunkNames.AllData);
@@ -101,8 +99,8 @@ namespace Ultima5Redux.Dialogue
         /// <param name="dataOvlReference"></param>
         private void BuildConversationTable(DataOvlReference dataOvlReference)
         {
-            IEnumerable<string> rawShoppeStrings =
-                _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData).GetChunkAsStringList().StringList;
+            IEnumerable<string> rawShoppeStrings = _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData)
+                .GetChunkAsStringList().StringList;
             CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
             //int i = 0;
             foreach (string rawShoppeString in rawShoppeStrings)
@@ -141,8 +139,8 @@ namespace Ultima5Redux.Dialogue
             string locationToFindPersonOfInterest = "", bool bHighlightDetails = false)
         {
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
-            return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName,
-                shoppeName, tod, nQuantity, genderedAddress, personOfInterest, locationToFindPersonOfInterest);
+            return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName, shoppeName, tod,
+                nQuantity, genderedAddress, personOfInterest, locationToFindPersonOfInterest);
         }
 
         /// <summary>
@@ -194,8 +192,7 @@ namespace Ultima5Redux.Dialogue
             // if this response is the same as the last response, then we add one and make sure it is still in bounds 
             // by modding it 
             if (nResponseIndex == _previousRandomSelectionByMin[nMin])
-                nResponseIndex =
-                    nMin + (nResponseIndex + 1) % nTotalResponses;
+                nResponseIndex = nMin + (nResponseIndex + 1) % nTotalResponses;
 
             _previousRandomSelectionByMin[nMin] = nResponseIndex;
             return nResponseIndex;
@@ -230,8 +227,8 @@ namespace Ultima5Redux.Dialogue
                     return new Shipwright(this,
                         GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.Healer:
-                    return new Healer(this,
-                        GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);
+                    return new Healer(this, GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType),
+                        _dataOvlReference);
                 case NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper:
                     return new Innkeeper(this,
                         GameReferences.ShoppeKeeperRefs.GetShoppeKeeperReference(location, npcType), _dataOvlReference);

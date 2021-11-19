@@ -36,9 +36,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             _barKeeperStockReference.GetBarKeeperStock(TheShoppeKeeperReference.ShoppeKeeperLocation);
 
         public BarKeeper(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
-            ShoppeKeeperReference theShoppeKeeperReference,
-            DataOvlReference dataOvlReference) : base(shoppeKeeperDialogueReference, theShoppeKeeperReference,
-            dataOvlReference)
+            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(
+            shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
             // the words the bar keeper knows about
             List<string> gossipWordByPosition = dataOvlReference
@@ -50,8 +49,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             List<string> gossipLocations = dataOvlReference
                 .GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_PLACES).GetChunkAsStringList().StringList;
             // the map of word to the location
-            List<byte> gossipListMap =
-                dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_MAP).GetAsByteList();
+            List<byte> gossipListMap = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.BAR_KEEP_GOSSIP_MAP)
+                .GetAsByteList();
 
             // List<byte> locations = dataOvlReference
             //     .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_TAVERN).GetAsByteList();
@@ -98,7 +97,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
                 shoppeName: TheShoppeKeeperReference.ShoppeName);
         }
-
 
         public override string GetPissedOffNotEnoughMoney()
         {
@@ -158,22 +156,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             PlayerCharacterRecord.CharacterGender avatarGender)
         {
             int nTotalPrice = GetPriceBasedOnParty(nPricePerPartyMember, nPartMembers);
-            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
-                                                                       DataOvlReference.ShoppeKeeperBarKeepStrings2
-                                                                           .THAT_WILL_BE_SP) + nTotalPrice +
-                                                                   DataOvlReference.StringReferences.GetString(
-                                                                       DataOvlReference.ShoppeKeeperBarKeepStrings2
-                                                                           .SP_GOLD_FOR_THE_SP) +
-                                                                   GetNumberInPartyAsStringWord(nPartMembers) +
-                                                                   DataOvlReference.StringReferences
-                                                                       .GetString(DataOvlReference
-                                                                           .ShoppeKeeperBarKeepStrings2.S_OF_YE_COMMA_N)
-                                                                       .TrimEnd() +
-                                                                   " " + GetGenderedFormalPronoun(avatarGender) + ". " +
-                                                                   DataOvlReference.StringReferences
-                                                                       .GetString(DataOvlReference
-                                                                           .ShoppeKeeperBarKeepStrings2.N_ENJOY_BANG_DQ)
-                                                                       .TrimStart().Replace("\"", ""));
+            return ShoppeKeeperDialogueReference.GetMerchantString(
+                DataOvlReference.StringReferences.GetString(
+                    DataOvlReference.ShoppeKeeperBarKeepStrings2.THAT_WILL_BE_SP) + nTotalPrice +
+                DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
+                    .SP_GOLD_FOR_THE_SP) + GetNumberInPartyAsStringWord(nPartMembers) +
+                DataOvlReference.StringReferences
+                    .GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.S_OF_YE_COMMA_N).TrimEnd() + " " +
+                GetGenderedFormalPronoun(avatarGender) + ". " + DataOvlReference.StringReferences
+                    .GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2.N_ENJOY_BANG_DQ).TrimStart()
+                    .Replace("\"", ""));
         }
 
         public string GetGossipQuestion(PlayerCharacterRecord.CharacterGender avatarGender)
@@ -189,8 +181,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(85, 88);
             return ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
                 personOfInterest: _gossipWordToPersonMap[cleanedWord],
-                locationToFindPersonOfInterest: _gossipWordToPlaceMap[cleanedWord],
-                bUseRichText: bHighlightDetails);
+                locationToFindPersonOfInterest: _gossipWordToPlaceMap[cleanedWord], bUseRichText: bHighlightDetails);
         }
 
         public string GetMoneyForGossipResponse(string word)
@@ -205,8 +196,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
                        .SORRY_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) +
-                   ", I must attend to my PAYING customers!\" says "
-                   + TheShoppeKeeperReference.ShoppeKeeperName;
+                   ", I must attend to my PAYING customers!\" says " + TheShoppeKeeperReference.ShoppeKeeperName;
         }
 
         public string GetPissedOffNotEnoughMoneyRations()

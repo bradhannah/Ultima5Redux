@@ -19,8 +19,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 gameStateByteArray[(int)SpecialItem.ItemTypeEnum.Grapple]);
             // "Grappling Hook",
             // "Grapple");
-            Items[SpecialItem.ItemTypeSpriteEnum.Spyglass] = new SpecialItem(
-                SpecialItem.ItemTypeSpriteEnum.Spyglass,
+            Items[SpecialItem.ItemTypeSpriteEnum.Spyglass] = new SpecialItem(SpecialItem.ItemTypeSpriteEnum.Spyglass,
                 gameStateByteArray[(int)SpecialItem.ItemTypeEnum.Spyglass]);
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.SPYGLASS),
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.SPYGLASS));
@@ -32,9 +31,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 gameStateByteArray[(int)SpecialItem.ItemTypeEnum.Sextant]);
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.SEXTANT),
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.SEXTANT));
-            Items[SpecialItem.ItemTypeSpriteEnum.PocketWatch] = new SpecialItem(
-                SpecialItem.ItemTypeSpriteEnum.PocketWatch,
-                1);
+            Items[SpecialItem.ItemTypeSpriteEnum.PocketWatch] =
+                new SpecialItem(SpecialItem.ItemTypeSpriteEnum.PocketWatch, 1);
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.POCKET_WATCH),
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.POCKET_WATCH));
             Items[SpecialItem.ItemTypeSpriteEnum.BlackBadge] = new SpecialItem(
@@ -42,8 +40,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 gameStateByteArray[(int)SpecialItem.ItemTypeEnum.BlackBadge]);
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.BLACK_BADGE),
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.BLACK_BADGE));
-            Items[SpecialItem.ItemTypeSpriteEnum.WoodenBox] = new SpecialItem(
-                SpecialItem.ItemTypeSpriteEnum.WoodenBox,
+            Items[SpecialItem.ItemTypeSpriteEnum.WoodenBox] = new SpecialItem(SpecialItem.ItemTypeSpriteEnum.WoodenBox,
                 gameStateByteArray[(int)SpecialItem.ItemTypeEnum.WoodenBox]);
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.WOODEN_BOX),
             // dataOvlRef.StringReferences.GetString(DataOvlReference.SpecialItemNames2Strings.WOODEN_BOX));

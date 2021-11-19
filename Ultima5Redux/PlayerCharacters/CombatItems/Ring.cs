@@ -7,8 +7,7 @@
 
         public override bool HideQuantity => false;
 
-        public Ring(CombatItemReference combatItemReference, int nQuantity) :
-            base(combatItemReference, nQuantity)
+        public Ring(CombatItemReference combatItemReference, int nQuantity) : base(combatItemReference, nQuantity)
         {
         }
     }

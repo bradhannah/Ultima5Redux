@@ -8,8 +8,7 @@ namespace Ultima5Redux.MapUnits
     /// </summary>
     [DataContract] public class MapUnitPosition
     {
-        [DataMember]
-        public int Floor
+        [DataMember] public int Floor
         {
             get => _floor;
             set => _floor = value == 0xFF ? -1 : value;
@@ -19,8 +18,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public int Y { get; set; }
 
-        [IgnoreDataMember]
-        public Point2D XY
+        [IgnoreDataMember] public Point2D XY
         {
             get => new Point2D(X, Y);
             set
@@ -53,16 +51,12 @@ namespace Ultima5Redux.MapUnits
             return !(pos1 == pos2);
         }
 
-
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            return obj is MapUnitPosition position &&
-                   X == position.X &&
-                   Y == position.Y &&
-                   Floor == position.Floor;
+            return obj is MapUnitPosition position && X == position.X && Y == position.Y && Floor == position.Floor;
         }
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")] public override int GetHashCode()

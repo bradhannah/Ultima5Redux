@@ -20,8 +20,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 if (phase == MoonPhaseReferences.MoonPhases.NoMoon) continue;
                 Items[phase] = new Moonstone(phase,
                     GameReferences.DataOvlRef.StringReferences
-                        .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N)
-                        .TrimEnd(), moongates);
+                        .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N).TrimEnd(), moongates);
             }
         }
     }

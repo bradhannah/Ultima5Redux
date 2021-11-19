@@ -29,8 +29,8 @@ namespace Ultima5Redux.MapUnits
 
         public override string BoardXitName => "You can't board the Avatar you silly goose!";
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
-            = new Dictionary<Point2D.Direction, string>
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>
             {
                 { Point2D.Direction.None, "BasicAvatar" },
                 { Point2D.Direction.Left, "BasicAvatar" },
@@ -82,9 +82,8 @@ namespace Ultima5Redux.MapUnits
 
         private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
 
-        private Avatar(SmallMapReferences.SingleMapReference.Location location,
-            MapUnitMovement movement, MapUnitPosition mapUnitPosition, TileReference tileReference,
-            bool bUseExtendedSprites)
+        private Avatar(SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
+            MapUnitPosition mapUnitPosition, TileReference tileReference, bool bUseExtendedSprites)
         {
             _bUseExtendedSprites = bUseExtendedSprites;
 

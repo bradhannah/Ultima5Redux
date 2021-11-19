@@ -59,15 +59,13 @@ namespace Ultima5Redux.PlayerCharacters
 
         [DataMember] public bool IsRat { get; private set; }
 
-        [DataMember]
-        public byte MonthsSinceStayingAtInn
+        [DataMember] public byte MonthsSinceStayingAtInn
         {
             get => _monthsSinceStayingAtInn;
             set => _monthsSinceStayingAtInn = (byte)(value % byte.MaxValue);
         }
 
-        [DataMember]
-        public CharacterPartyStatus PartyStatus
+        [DataMember] public CharacterPartyStatus PartyStatus
         {
             get
             {
@@ -81,12 +79,10 @@ namespace Ultima5Redux.PlayerCharacters
             set => InnOrParty = (byte)value;
         }
 
-        [IgnoreDataMember]
-        public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
+        [IgnoreDataMember] public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
             (SmallMapReferences.SingleMapReference.Location)InnOrParty;
 
-        [IgnoreDataMember]
-        public int PrimarySpriteIndex =>
+        [IgnoreDataMember] public int PrimarySpriteIndex =>
             Class switch
             {
                 CharacterClass.Avatar => 284,
@@ -333,7 +329,6 @@ namespace Ultima5Redux.PlayerCharacters
         {
             IsInvisible = false;
         }
-
 
         /// <summary>
         ///     Unequips and item from the user and

@@ -85,7 +85,6 @@ namespace Ultima5Redux.External
             return nBestPathNodes == 0xFFFF ? null : bestPath;
         }
 
-
         public Stack<Node> FindPath(Point2D startPosition, Point2D endPosition)
         {
             if (!_grid[endPosition.X][endPosition.Y].Walkable)
@@ -94,8 +93,7 @@ namespace Ultima5Redux.External
                 return null;
             }
 
-            Node start =
-                new Node(startPosition, true);
+            Node start = new Node(startPosition, true);
             Node end = new Node(endPosition, true);
 
             Stack<Node> path = new Stack<Node>();

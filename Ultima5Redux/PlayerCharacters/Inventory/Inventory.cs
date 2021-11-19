@@ -26,15 +26,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public Weapons TheWeapons { get; set; }
         [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
 
-
         [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
         [IgnoreDataMember] public int Food => TheProvisions.Items[Provision.ProvisionTypeEnum.Food].Quantity;
 
         [IgnoreDataMember] public int Gold => TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity;
         [IgnoreDataMember] public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
 
-        [IgnoreDataMember]
-        public List<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems.Cast<InventoryItem>().ToList();
+        [IgnoreDataMember] public List<InventoryItem> ReadyItemsAsInventoryItem =>
+            ReadyItems.Cast<InventoryItem>().ToList();
 
         [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
         private readonly List<byte> _gameStateByteArray;
@@ -72,9 +71,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public int GetCharacterTotalAttack(PlayerCharacterRecord record)
         {
             return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
-                   GetAttack(record.Equipped.Helmet)
-                   + GetAttack(record.Equipped.Ring) + GetAttack(record.Equipped.LeftHand) +
-                   GetAttack(record.Equipped.RightHand);
+                   GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
+                   GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
         }
 
         /// <summary>
@@ -85,9 +83,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public int GetCharacterTotalDefense(PlayerCharacterRecord record)
         {
             return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
-                   GetDefense(record.Equipped.Helmet) +
-                   GetDefense(record.Equipped.LeftHand) + GetDefense(record.Equipped.RightHand) +
-                   GetDefense(record.Equipped.Ring);
+                   GetDefense(record.Equipped.Helmet) + GetDefense(record.Equipped.LeftHand) +
+                   GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
         }
 
         /// <summary>
@@ -104,15 +101,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return armour?.TheCombatItemReference.DefendStat ?? 0;
         }
 
-
         /// <summary>
         ///     Gets the Combat Item (inventory item) based on the equipped item
         /// </summary>
         /// <param name="equipment">type of combat equipment</param>
         /// <returns>combat item object</returns>
         public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment) =>
-            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment)
-            ??
+            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ??
             throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
 
         [OnDeserialized] internal void OnDeserializedMethod(StreamingContext context)

@@ -51,10 +51,10 @@ namespace Ultima5Redux.MapUnits
 
         public override bool IsAttackable => false;
 
-        public MagicCarpet(SmallMapReferences.SingleMapReference.Location location,
-            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) :
-            base(null, new MapUnitMovement(0), location, direction, npcState,
-                GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition)
+        public MagicCarpet(SmallMapReferences.SingleMapReference.Location location, Point2D.Direction direction,
+            NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null, new MapUnitMovement(0),
+            location, direction, npcState,
+            GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition)
         {
             KeyTileReference = NonBoardedTileReference;
         }

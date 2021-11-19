@@ -8,34 +8,33 @@ namespace Ultima5Redux.PlayerCharacters
 {
     public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
     {
-        private static readonly Dictionary<string, string> LiteralTranslationDictionary =
-            new Dictionary<string, string>
-            {
-                { "An", "Negate" },
-                { "Bet", "Small" },
-                { "Corp", "Death" },
-                { "Des", "Down" },
-                { "Ex", "Freedom" },
-                { "Flam", "Flame" },
-                { "Grav", "Energy" },
-                { "Hur", "Wind" },
-                { "In", "Create" },
-                { "Kal", "Invoke" },
-                { "Lor", "Light" },
-                { "Mani", "Life" },
-                { "Nox", "Poison" },
-                { "Por", "Movement" },
-                { "Quas", "Illusion" },
-                { "Rel", "Change" },
-                { "Sanct", "Protection" },
-                { "Tym", "Time" },
-                { "Uus", "Up" },
-                { "Vas", "Great" },
-                { "Wis", "Knowledge" },
-                { "Xen", "Creature" },
-                { "Ylem", "Matter" },
-                { "Zu", "Sleep" },
-            };
+        private static readonly Dictionary<string, string> LiteralTranslationDictionary = new Dictionary<string, string>
+        {
+            { "An", "Negate" },
+            { "Bet", "Small" },
+            { "Corp", "Death" },
+            { "Des", "Down" },
+            { "Ex", "Freedom" },
+            { "Flam", "Flame" },
+            { "Grav", "Energy" },
+            { "Hur", "Wind" },
+            { "In", "Create" },
+            { "Kal", "Invoke" },
+            { "Lor", "Light" },
+            { "Mani", "Life" },
+            { "Nox", "Poison" },
+            { "Por", "Movement" },
+            { "Quas", "Illusion" },
+            { "Rel", "Change" },
+            { "Sanct", "Protection" },
+            { "Tym", "Time" },
+            { "Uus", "Up" },
+            { "Vas", "Great" },
+            { "Wis", "Knowledge" },
+            { "Xen", "Creature" },
+            { "Ylem", "Matter" },
+            { "Zu", "Sleep" },
+        };
 
         public override Dictionary<MagicReference.SpellWords, Spell> Items { get; } =
             new Dictionary<MagicReference.SpellWords, Spell>();
@@ -63,13 +62,11 @@ namespace Ultima5Redux.PlayerCharacters
         {
             if (spellWord == MagicReference.SpellWords.Nox)
             {
-                Items[spellWord] = new Spell(spellWord, 0,
-                    magicReference);
+                Items[spellWord] = new Spell(spellWord, 0, magicReference);
                 return;
             }
 
-            Items[spellWord] = new Spell(spellWord,
-                GameStateByteArray[(int)spellWord],
+            Items[spellWord] = new Spell(spellWord, GameStateByteArray[(int)spellWord],
                 GameReferences.MagicRefs.GetMagicReference(spellWord));
         }
     }

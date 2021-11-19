@@ -21,9 +21,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         public DataOvlReference.Equipment SpecificEquipment => TheCombatItemReference.SpecificEquipment;
         public CombatItemReference TheCombatItemReference { get; }
 
-
-        public CombatItem(CombatItemReference theCombatItemReference, int nQuantity)
-            : base(nQuantity, theCombatItemReference.Sprite)
+        public CombatItem(CombatItemReference theCombatItemReference, int nQuantity) : base(nQuantity,
+            theCombatItemReference.Sprite)
         {
             TheCombatItemReference = theCombatItemReference;
         }

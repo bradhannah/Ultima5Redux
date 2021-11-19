@@ -222,8 +222,8 @@ namespace Ultima5Redux.PlayerCharacters
         {
             int nActiveRecs = TotalPartyMembers();
             if (nFirstPos > nActiveRecs || nSecondPos > nActiveRecs)
-                throw new Ultima5ReduxException("Asked to swap a party member who doesn't exist First:#" + nFirstPos
-                    + " Second:#" + nSecondPos);
+                throw new Ultima5ReduxException("Asked to swap a party member who doesn't exist First:#" + nFirstPos +
+                                                " Second:#" + nSecondPos);
 
             (Records[nFirstPos], Records[nSecondPos]) = (Records[nSecondPos], Records[nFirstPos]);
         }

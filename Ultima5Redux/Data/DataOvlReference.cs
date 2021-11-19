@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -34,7 +33,6 @@ namespace Ultima5Redux.Data
         // [19] = {string} ":\n"
         // [20] = {string} "Attack-"
         // [21] = {string} "Attack-"
-
 
         public enum AdditionalStrings
         {
@@ -405,7 +403,6 @@ namespace Ultima5Redux.Data
             Shame = 32, Hythloth = 33, Doom = 34
         }
 
-
         // [43] = {string} "Slept!\n"
         // [44] = {string} "Poof!\n"
         // [45] = {string} "Invisible!\n"
@@ -479,7 +476,6 @@ namespace Ultima5Redux.Data
             SULFUR_ASH, GINSENG, GARLIC, SPIDER_SILK, BLOOD_MOSS, BLACK_PEARL, NIGHTSHADE, MANDRAKE_ROOT
         }
 
-
         public enum ShadowlordStrings
         {
             GEM_SHARD_THOU_HOLD_EVIL_SHARD, FALSEHOOD_DOT, HATRED_DOT, COWARDICE_DOT, N_N_NO_EFFECT,
@@ -512,7 +508,6 @@ namespace Ultima5Redux.Data
         // [43] = {string} "Nothing"
         // [44] = {string} "\n\n"Is there any other way in which I may\n"
         // [45] = {string} "aid thee?" "
-
 
         public enum ShoppeKeeperBarKeepStrings
         {
@@ -635,7 +630,6 @@ namespace Ultima5Redux.Data
         // [22] = {string} "\n\n$ asks,\n"Art thou here\nto Pick up or\n"
         // [23] = {string} "Leave a\ncompanion, or\nto Rest for the\nnight?" "
         // [24] = {string} ""Is there\nanything more\nI can do for\nthee?" "
-
 
         public enum ShoppeKeeperGeneral2Strings
         {
@@ -996,7 +990,6 @@ namespace Ultima5Redux.Data
 
         public U5StringRef StringReferences { get; }
 
-
         /// <summary>
         ///     Construct the DataOvlReference
         /// </summary>
@@ -1016,12 +1009,12 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Ring and amulet strings (5 of them)", 0x179,
                 0x5a);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)",
-                0x1d3, 0x158, 0x00, DataChunkName.MONSTER_NAMES_MIXED);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)", 0x1d3, 0x158,
+                0x00, DataChunkName.MONSTER_NAMES_MIXED);
             //SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_MIXED).GetChunkAsStringList();
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (upper case)",
-                0x32b, 0x165, 0x00, DataChunkName.MONSTER_NAMES_UPPER);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (upper case)", 0x32b, 0x165,
+                0x00, DataChunkName.MONSTER_NAMES_UPPER);
             // SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
@@ -1066,18 +1059,18 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
 
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Stats", 0x13CC,
-                0x30 * 8, 0x00, DataChunkName.ENEMY_STATS);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Ability Flags", 0x154C,
-                0x30 * 2, 0x00, DataChunkName.ENEMY_FLAGS);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Attack Range (1-9)", 0x15AC,
-                0x30, 0x00, DataChunkName.ENEMY_ATTACK_RANGE);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Range THING", 0x15DC,
-                0x30, 0x00, DataChunkName.ENEMY_RANGE_THING);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Friends", 0x16E4,
-                0x30, 0x00, DataChunkName.ENEMY_FRIENDS);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy THING", 0x1714,
-                0x30, 0x00, DataChunkName.ENEMY_THING);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Stats", 0x13CC, 0x30 * 8, 0x00,
+                DataChunkName.ENEMY_STATS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Ability Flags", 0x154C, 0x30 * 2, 0x00,
+                DataChunkName.ENEMY_FLAGS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Attack Range (1-9)", 0x15AC, 0x30, 0x00,
+                DataChunkName.ENEMY_ATTACK_RANGE);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Range THING", 0x15DC, 0x30, 0x00,
+                DataChunkName.ENEMY_RANGE_THING);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy Friends", 0x16E4, 0x30, 0x00,
+                DataChunkName.ENEMY_FRIENDS);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Enemy THING", 0x1714, 0x30, 0x00,
+                DataChunkName.ENEMY_THING);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Attack values", 0x160C, 0x37, 0x00,
                 DataChunkName.ATTACK_VALUES);
@@ -1092,8 +1085,8 @@ namespace Ultima5Redux.Data
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Additional Weapon/Armour strings", 0x175c,
                 0xa9, 0x10);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List,
-                "String indexes for all equipment (except scrolls) (add 0x10 to index)",
-                0x1806, 0x2F * 2 + 2, 0x10, DataChunkName.EQUIP_INDEXES);
+                "String indexes for all equipment (except scrolls) (add 0x10 to index)", 0x1806, 0x2F * 2 + 2, 0x10,
+                DataChunkName.EQUIP_INDEXES);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Required Strength for Equipment Values",
                 0x1ABE, 0x2F, 0x00, DataChunkName.REQ_STRENGTH_EQUIP);
@@ -1218,12 +1211,12 @@ namespace Ultima5Redux.Data
                 0x3af2, 0x48, 0, DataChunkName.WEAPONS_SOLD_BY_MERCHANTS);
 
             // Healer prices
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Heal Prices", 0x3d96, 0x08, 0, DataChunkName.HEALER_HEAL_PRICES);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "Cure Prices", 0x3d9e, 0x08, 0, DataChunkName.HEALER_CURE_PRICES);
-            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List,
-                "Resurrect Prices", 0x3da6, 0x10, 0, DataChunkName.HEALER_RESURRECT_PRICES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Heal Prices", 0x3d96, 0x08, 0,
+                DataChunkName.HEALER_HEAL_PRICES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "Cure Prices", 0x3d9e, 0x08, 0,
+                DataChunkName.HEALER_CURE_PRICES);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List, "Resurrect Prices", 0x3da6, 0x10, 0,
+                DataChunkName.HEALER_RESURRECT_PRICES);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x3b3a, 0x38);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.UINT16List,

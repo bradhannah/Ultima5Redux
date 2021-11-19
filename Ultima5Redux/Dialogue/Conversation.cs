@@ -208,9 +208,9 @@ namespace Ultima5Redux.Dialogue
                 // OR if the Name line contains an IfElseKnowsName (#Eb)
                 if (!npcKnowsAvatar &&
                     _conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting &&
-                    (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) ||
-                     _script.GetScriptLine(TalkScript.TalkConstants.Name)
-                         .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
+                    (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) || _script
+                        .GetScriptLine(TalkScript.TalkConstants.Name)
+                        .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
                     // randomly add an introduction of the Avatar since they haven't met him
                     if (_gameState.OneInXOdds(2)) // || true)
                         // okay, tell them who you are
@@ -284,8 +284,8 @@ namespace Ultima5Redux.Dialogue
                     if (scriptLabel.QuestionAnswers.AnswerIsAvailable(userResponse))
                     {
                         // let's get the answer details including the ScriptLine that will follow
-                        TalkScript.ScriptQuestionAnswer
-                            qa = scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
+                        TalkScript.ScriptQuestionAnswer qa =
+                            scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
                         // TalkScript.ScriptLine npcResponseLine = qa.Answer;
 
                         await ProcessMultipleLines(qa.Answer.SplitIntoSections(), nTalkLineIndex);
@@ -321,7 +321,6 @@ namespace Ultima5Redux.Dialogue
                 return _outputBufferQueue.Dequeue();
             }
         }
-
 
         /// <summary>
         ///     Add a ScriptItem to the output buffer that will be consumed by the outside process (ie. World)

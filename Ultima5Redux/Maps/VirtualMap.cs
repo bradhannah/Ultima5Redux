@@ -26,16 +26,14 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
         /// </summary>
-        [DataMember]
-        private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
+        [DataMember] private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
 
         [DataMember] public MapUnits.MapUnits TheMapUnits { get; }
 
         /// <summary>
         ///     Detailed reference of current small map
         /// </summary>
-        [DataMember]
-        public SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        [DataMember] public SmallMapReferences.SingleMapReference CurrentSingleMapReference
         {
             get
             {
@@ -53,14 +51,12 @@ namespace Ultima5Redux.Maps
         ///     The current small map (null if on large map)
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        [DataMember]
-        public SmallMap CurrentSmallMap { get; private set; }
+        [DataMember] public SmallMap CurrentSmallMap { get; private set; }
 
         /// <summary>
         ///     Which map was the avatar on before this one?
         /// </summary>
-        [DataMember]
-        private RegularMap PreCombatMap { get; set; }
+        [DataMember] private RegularMap PreCombatMap { get; set; }
 
         [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
 
@@ -77,26 +73,28 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Details of where the moongates are
         /// </summary>
-        [IgnoreDataMember] private readonly Moongates _moongates;
+        [IgnoreDataMember]
+        private readonly Moongates _moongates;
 
         /// <summary>
         ///     All the small maps
         /// </summary>
-        [IgnoreDataMember] private readonly SmallMaps _smallMaps;
+        [IgnoreDataMember]
+        private readonly SmallMaps _smallMaps;
 
         [IgnoreDataMember] private readonly GameState _state;
 
         /// <summary>
         ///     Current time of day
         /// </summary>
-        [IgnoreDataMember] private readonly TimeOfDay _timeOfDay;
+        [IgnoreDataMember]
+        private readonly TimeOfDay _timeOfDay;
 
         /// <summary>
         ///     The abstracted Map object for the current map
         ///     Returns large or small depending on what is active
         /// </summary>
-        [IgnoreDataMember]
-        public Map CurrentMap
+        [IgnoreDataMember] public Map CurrentMap
         {
             get
             {
@@ -115,8 +113,8 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
         [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
 
-        [IgnoreDataMember]
-        public bool IsAvatarRidingCarpet => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
+        [IgnoreDataMember] public bool IsAvatarRidingCarpet =>
+            TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
 
         [IgnoreDataMember] public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
         [IgnoreDataMember] public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
@@ -126,39 +124,33 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Are we currently on a large map?
         /// </summary>
-        [IgnoreDataMember]
-        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
+        [IgnoreDataMember] public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
 
         //set => TheMapUnits.CurrentAvatarPosition = value;
         /// <summary>
         ///     Number of total columns for current map
         /// </summary>
-        [IgnoreDataMember]
-        public int NumberOfColumnTiles => CurrentMap.NumOfXTiles;
+        [IgnoreDataMember] public int NumberOfColumnTiles => CurrentMap.NumOfXTiles;
 
         /// <summary>
         ///     Number of total rows for current map
         /// </summary>
-        [IgnoreDataMember]
-        public int NumberOfRowTiles => CurrentMap.NumOfYTiles;
+        [IgnoreDataMember] public int NumberOfRowTiles => CurrentMap.NumOfYTiles;
 
         /// <summary>
         ///     The persistant overworld map
         /// </summary>
-        [IgnoreDataMember]
-        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+        [IgnoreDataMember] public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
 
         /// <summary>
         ///     All small map references
         /// </summary>
-        [IgnoreDataMember]
-        public SmallMapReferences SmallMapRefs { get; }
+        [IgnoreDataMember] public SmallMapReferences SmallMapRefs { get; }
 
         /// <summary>
         ///     The persistant underworld map
         /// </summary>
-        [IgnoreDataMember]
-        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+        [IgnoreDataMember] public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
 
         [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
@@ -168,18 +160,16 @@ namespace Ultima5Redux.Maps
         ///     Current large map (null if on small map)
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        [IgnoreDataMember]
-        public LargeMap CurrentLargeMap { get; private set; }
+        [IgnoreDataMember] public LargeMap CurrentLargeMap { get; private set; }
 
-        [IgnoreDataMember]
-        public MapUnitPosition CurrentPosition
+        [IgnoreDataMember] public MapUnitPosition CurrentPosition
         {
             get
             {
                 if (CurrentMap is CombatMap combatMap)
                 {
-                    return combatMap.CurrentCombatMapUnit?.MapUnitPosition
-                           ?? throw new Ultima5ReduxException("Combat map was unexpectedly null");
+                    return combatMap.CurrentCombatMapUnit?.MapUnitPosition ??
+                           throw new Ultima5ReduxException("Combat map was unexpectedly null");
                 }
 
                 return TheMapUnits.CurrentAvatarPosition;
@@ -190,8 +180,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     If we are on a large map - then are we on overworld or underworld
         /// </summary>
-        [IgnoreDataMember]
-        public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
+        [IgnoreDataMember] public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
 
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
@@ -215,8 +204,7 @@ namespace Ultima5Redux.Maps
             LargeMap underworldMap, GameState state, TimeOfDay timeOfDay, Moongates moongates,
             PlayerCharacterRecords playerCharacterRecords, Map.Maps initialMap,
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
-            Inventory inventory, ImportedGameState importedGameState,
-            NonPlayerCharacterStates npcStates)
+            Inventory inventory, ImportedGameState importedGameState, NonPlayerCharacterStates npcStates)
         {
             SmallMapRefs = smallMapReferences;
 
@@ -229,9 +217,9 @@ namespace Ultima5Redux.Maps
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
 
-            SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation
-                                                                         ?? SmallMapReferences.SingleMapReference
-                                                                             .Location.Britannia_Underworld;
+            SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
+                                                                         SmallMapReferences.SingleMapReference.Location
+                                                                             .Britannia_Underworld;
 
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
@@ -258,10 +246,10 @@ namespace Ultima5Redux.Maps
 
         public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            List<byte> xDockCoords =
-                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS).GetAsByteList();
-            List<byte> yDockCoords =
-                GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS).GetAsByteList();
+            List<byte> xDockCoords = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.X_DOCKS)
+                .GetAsByteList();
+            List<byte> yDockCoords = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS)
+                .GetAsByteList();
             Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>
                 {
@@ -307,8 +295,8 @@ namespace Ultima5Redux.Maps
             Random ran = new Random();
             Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
             Horse horse = TheMapUnits.CreateHorse(
-                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor),
-                LargeMapOverUnder, out int nIndex);
+                new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor), LargeMapOverUnder,
+                out int nIndex);
 
             if (nIndex == -1 || horse == null) return null;
 
@@ -340,8 +328,7 @@ namespace Ultima5Redux.Maps
             // to make it more familiar, we will transfer to an ordered list
             foreach (Point2D xy in sortedPoints.Values)
             {
-                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy,
-                    Map.WalkableType.StandardWalking) > 0;
+                bool bPathBuilt = GetTotalMovesToLocation(destinedPosition, xy, Map.WalkableType.StandardWalking) > 0;
                 // we first make sure that the path even exists before we add it to the list
                 if (bPathBuilt) bestChoiceList.Add(xy);
             }
@@ -372,8 +359,7 @@ namespace Ultima5Redux.Maps
             // to make it more familiar, we will transfer to an ordered list
             foreach (Point2D xy in sortedPoints.Values)
             {
-                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy,
-                    Map.WalkableType.StandardWalking) > 0;
+                bool bPathBuilt = GetTotalMovesToLocation(currentPosition, xy, Map.WalkableType.StandardWalking) > 0;
                 // we first make sure that the path even exists before we add it to the list
                 if (bPathBuilt) bestChoiceList.Add(xy);
             }
@@ -381,8 +367,8 @@ namespace Ultima5Redux.Maps
             return bestChoiceList;
         }
 
-        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, Point2D tilePosInMap,
-            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
+        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, Point2D tilePosInMap, bool bIsAvatarTile,
+            bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
             bool bIsMirror = GameReferences.SpriteTileReferences.IsUnbrokenMirror(nSprite);
@@ -423,9 +409,8 @@ namespace Ultima5Redux.Maps
             }
             else
             {
-                nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite,
-                    bIsMapUnitOccupiedTile, bIsAvatarTile,
-                    bIsFoodNearby, _state.TheTimeOfDay.IsDayLight);
+                nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite, bIsMapUnitOccupiedTile,
+                    bIsAvatarTile, bIsFoodNearby, _state.TheTimeOfDay.IsDayLight);
             }
 
             if (nNewSpriteIndex == -2)
@@ -454,16 +439,14 @@ namespace Ultima5Redux.Maps
         public Point3D GetCurrent3DPosition()
         {
             if (LargeMapOverUnder == Map.Maps.Small)
-                return new Point3D(CurrentPosition.X,
-                    CurrentPosition.Y, CurrentSmallMap.MapFloor);
+                return new Point3D(CurrentPosition.X, CurrentPosition.Y, CurrentSmallMap.MapFloor);
 
-            return new Point3D(CurrentPosition.X,
-                CurrentPosition.Y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF);
+            return new Point3D(CurrentPosition.X, CurrentPosition.Y,
+                LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF);
         }
 
         public IEnumerable<InventoryItem> GetExposedSearchItems(Point2D xy) =>
             TheMapOverrides.GetExposedSearchItems(xy);
-
 
         /// <summary>
         ///     Create a list of the free spaces surrounding around the Avatar suitable for something to be generated onto
@@ -523,7 +506,6 @@ namespace Ultima5Redux.Maps
             return laddersAndStairs;
         }
 
-
         /// <summary>
         ///     Gets a map unit on the current tile (that ISN'T the Avatar)
         /// </summary>
@@ -557,8 +539,7 @@ namespace Ultima5Redux.Maps
         {
             Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction);
 
-            NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
-            (LargeMapOverUnder,
+            NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>(LargeMapOverUnder,
                 adjustedPosition, CurrentSingleMapReference.Floor);
 
             if (npc != null) return npc;
@@ -567,8 +548,7 @@ namespace Ultima5Redux.Maps
                 return null;
 
             Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
-            return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>
-            (LargeMapOverUnder,
+            return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>(LargeMapOverUnder,
                 adjustedPosition2Away, CurrentSingleMapReference.Floor);
         }
 
@@ -599,8 +579,7 @@ namespace Ultima5Redux.Maps
         /// <param name="bNoStaircases"></param>
         /// <returns></returns>
         private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition,
-            Point2D scheduledPosition,
-            int nMaxDistance, bool bNoStaircases)
+            Point2D scheduledPosition, int nMaxDistance, bool bNoStaircases)
         {
             List<MapUnitMovement.MovementCommandDirection> directionList =
                 new List<MapUnitMovement.MovementCommandDirection>();
@@ -631,8 +610,7 @@ namespace Ultima5Redux.Maps
             // 3 = Buccaneer's Den
 
             SeaFaringVessel seaFaringVessel = TheMapUnits.GetSpecificMapUnitByLocation<SeaFaringVessel>(
-                Map.Maps.Overworld,
-                GetLocationOfDock(location), 0, true);
+                Map.Maps.Overworld, GetLocationOfDock(location), 0, true);
             return seaFaringVessel;
         }
 
@@ -722,7 +700,6 @@ namespace Ultima5Redux.Maps
             return nSpriteNum;
         }
 
-
         /// <summary>
         ///     Gets a tile reference from the given coordinate
         /// </summary>
@@ -746,8 +723,7 @@ namespace Ultima5Redux.Maps
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
             if (!bIgnoreMoongate && IsLargeMap &&
-                _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF))
-            )
+                _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF)))
             {
                 return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
                        throw new Ultima5ReduxException("Supposed to get a moongate override: " + new Point2D(x, y));
@@ -943,14 +919,14 @@ namespace Ultima5Redux.Maps
         {
             bool isFoodTable(int nSprite)
             {
-                return nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index
-                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index
-                       || nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
+                return nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index ||
+                       nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index ||
+                       nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
             }
 
             // yuck, but if the food is up one tile or down one tile, then food is nearby
-            bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index)
-                                 || isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index);
+            bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index) ||
+                                 isFoodTable(GetTileReference(characterPos.X, characterPos.Y + 1).Index);
             return bIsFoodNearby;
         }
 
@@ -964,24 +940,24 @@ namespace Ultima5Redux.Maps
             if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
             if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
 
-            return (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC)
-                   || (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC);
+            return (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC) ||
+                   (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC);
         }
 
         public bool IsLandNearby() =>
             IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
         public bool IsLandNearby(Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState)
-            || IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
 
         public bool IsLandNearby(Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState)
-            || IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState)
-            || IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState)
-            || IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
+            IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState) ||
+            IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState) ||
+            IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState) ||
+            IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
 
         /// <summary>
         ///     Gets a map unit if it's on the current tile
@@ -1028,7 +1004,6 @@ namespace Ultima5Redux.Maps
         {
             return GetSeaFaringVesselAtDock(location) != null;
         }
-
 
         /// <summary>
         ///     Are the stairs at the given position going down?
@@ -1085,7 +1060,6 @@ namespace Ultima5Redux.Maps
         internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState) =>
             IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
 
-
         /// <summary>
         ///     Is the particular tile eligible to be moved onto
         /// </summary>
@@ -1113,8 +1087,7 @@ namespace Ultima5Redux.Maps
 
             // if it's nighttime then the portcullises go down and you cannot pass
             bool bPortcullisDown = GameReferences.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") ==
-                                   tileReference.Index &&
-                                   !_timeOfDay.IsDayLight;
+                tileReference.Index && !_timeOfDay.IsDayLight;
 
             // we check both the tile reference below as well as the map unit that occupies the tile
             bool bIsWalkable;
@@ -1150,9 +1123,8 @@ namespace Ultima5Redux.Maps
         /// <param name="npcRef"></param>
         private void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
-            EnemyReference primaryEnemyReference, int nPrimaryEnemies,
-            EnemyReference secondaryEnemyReference, int nSecondaryEnemies,
-            NonPlayerCharacterReference npcRef)
+            EnemyReference primaryEnemyReference, int nPrimaryEnemies, EnemyReference secondaryEnemyReference,
+            int nSecondaryEnemies, NonPlayerCharacterReference npcRef)
         {
             if (npcRef != null)
                 Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0,
@@ -1188,8 +1160,7 @@ namespace Ultima5Redux.Maps
 
             CurrentCombatMap.CreateParty(entryDirection, records);
 
-            CurrentCombatMap.CreateEnemies(singleCombatMapReference,
-                primaryEnemyReference, nPrimaryEnemies,
+            CurrentCombatMap.CreateEnemies(singleCombatMapReference, primaryEnemyReference, nPrimaryEnemies,
                 secondaryEnemyReference, nSecondaryEnemies, npcRef);
 
             CurrentCombatMap.InitializeInitiativeQueue();
@@ -1200,19 +1171,16 @@ namespace Ultima5Redux.Maps
             EnemyReference primaryEnemyReference = null, int nPrimaryEnemies = 0,
             EnemyReference secondaryEnemyReference = null, int nSecondaryEnemies = 0)
         {
-            LoadCombatMap(singleCombatMapReference, entryDirection, records,
-                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies, null);
+            LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, nPrimaryEnemies,
+                secondaryEnemyReference, nSecondaryEnemies, null);
         }
 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
         {
-            LoadCombatMap(singleCombatMapReference, entryDirection, records,
-                primaryEnemyReference, 1, null, 0,
-                npcRef);
+            LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, 1, null, 0, npcRef);
         }
-
 
         /// <summary>
         ///     Loads a combat map, but aut
@@ -1233,8 +1201,8 @@ namespace Ultima5Redux.Maps
             EnemyReference primaryEnemyReference = enemyReference;
             EnemyReference secondaryEnemyReference = GameReferences.EnemyRefs.GetFriendReference(primaryEnemyReference);
 
-            LoadCombatMap(singleCombatMapReference, entryDirection, records,
-                primaryEnemyReference, nPrimaryEnemies, secondaryEnemyReference, nSecondaryEnemies);
+            LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, nPrimaryEnemies,
+                secondaryEnemyReference, nSecondaryEnemies);
         }
 
         /// <summary>
@@ -1264,8 +1232,7 @@ namespace Ultima5Redux.Maps
 
             LargeMapOverUnder = map;
 
-            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map),
-                map);
+            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map);
         }
 
         public void LoadSmallMap(SmallMapReferences.SingleMapReference singleMapReference, Point2D xy = null,
@@ -1374,9 +1341,9 @@ namespace Ultima5Redux.Maps
         public void UseStairs(Point2D xy, bool bForceDown = false)
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
-            LoadSmallMap(SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
-                    CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)),
-                xy.Copy());
+            LoadSmallMap(
+                SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
+                    CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
         }
     }
 }

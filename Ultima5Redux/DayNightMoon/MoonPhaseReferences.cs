@@ -138,11 +138,9 @@ namespace Ultima5Redux.DayNightMoon
             if (timeOfDay.IsDayLight) return MoonPhases.NoMoon;
 
             if (timeOfDay.Hour <= 4)
-                return
-                    GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun .Felucca);
+                return GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun.Felucca);
             if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23)
-                return
-                    GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun .Trammel);
+                return GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun.Trammel);
 
             throw new Ultima5ReduxException("We have asked for a moongate phase but did not met the criteria. " +
                                             timeOfDay);

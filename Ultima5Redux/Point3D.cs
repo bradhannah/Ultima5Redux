@@ -21,7 +21,6 @@ namespace Ultima5Redux
             Z = z;
         }
 
-
         public static bool operator ==(Point3D left, Point3D right)
         {
             return Equals(left, right);

@@ -144,7 +144,6 @@ namespace Ultima5Redux
             return intersectingPoints;
         }
 
-
         public override bool Equals(object obj)
         {
             return obj is Point2D point2D && Equals(point2D);
@@ -172,7 +171,6 @@ namespace Ultima5Redux
             if (Y >= nMax) Y -= nMax;
             Y %= nMax;
         }
-
 
         public Point2D Copy()
         {

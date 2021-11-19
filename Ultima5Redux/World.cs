@@ -148,8 +148,8 @@ namespace Ultima5Redux
                 bWasSuccessful = false;
                 // can't board it
                 return GameReferences.DataOvlRef.StringReferences
-                           .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() +
-                       " " + GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT);
+                           .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + " " +
+                       GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT);
             }
 
             bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
@@ -163,15 +163,12 @@ namespace Ultima5Redux
             string getOnFootResponse()
             {
                 return GameReferences.DataOvlRef.StringReferences
-                           .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() +
-                       "\n" + GameReferences.DataOvlRef.StringReferences
-                           .GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT)
-                           .Trim();
+                    .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + "\n" + GameReferences.DataOvlRef
+                    .StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT).Trim();
             }
 
             string retStr = GameReferences.DataOvlRef.StringReferences
-                .GetString(DataOvlReference.KeypressCommandsStrings.BOARD)
-                .Trim() + " " + boardableMapUnit.BoardXitName;
+                .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + " " + boardableMapUnit.BoardXitName;
 
             switch (boardableMapUnit)
             {
@@ -279,15 +276,17 @@ namespace Ultima5Redux
                 // set us to the front of the building
                 State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
 
-                retStr = GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE)
-                         + GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
-                         GameReferences.SmallMapRef.GetLocationName(location);
+                retStr =
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
+                    GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
+                    GameReferences.SmallMapRef.GetLocationName(location);
                 bWasSuccessful = true;
             }
             else
             {
-                retStr = GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE)
-                         + GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT);
+                retStr =
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT);
                 bWasSuccessful = false;
             }
 
@@ -450,8 +449,8 @@ namespace Ultima5Redux
                 if (mapUnits.Count <= 0)
                     throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
                 retStr = GameReferences.DataOvlRef.StringReferences
-                             .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                         + " " + Maps.Look.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
+                             .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                         Maps.Look.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (GameReferences.SpriteTileReferences.IsSign(tileReference.Index))
@@ -462,15 +461,15 @@ namespace Ultima5Redux
             else if (GameReferences.SpriteTileReferences.GetTileNumberByName("Clock1") == tileReference.Index)
             {
                 retStr = GameReferences.DataOvlRef.StringReferences
-                             .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                         + " " + Maps.Look.GetLookDescription(tileReference.Index).TrimStart() +
+                             .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                         Maps.Look.GetLookDescription(tileReference.Index).TrimStart() +
                          State.TheTimeOfDay.FormattedTime;
             }
             else // lets see what we've got here!
             {
                 retStr = GameReferences.DataOvlRef.StringReferences
-                             .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim()
-                         + " " + Maps.Look.GetLookDescription(tileReference.Index).TrimStart();
+                             .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                         Maps.Look.GetLookDescription(tileReference.Index).TrimStart();
             }
 
             // pass time at the end to make sure moving characters are accounted for
@@ -547,8 +546,7 @@ namespace Ultima5Redux
         private string ThouDostFind(string thingYouFound)
         {
             return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
-                       .N_THOU_DOST_FIND_N)
-                   + thingYouFound;
+                .N_THOU_DOST_FIND_N) + thingYouFound;
         }
 
         public string TryToAttack(Point2D xy, out bool bCanAttack, out MapUnit mapUnit,
@@ -595,8 +593,7 @@ namespace Ultima5Redux
                 State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity++;
 
                 State.TheVirtualMap.SetOverridingTileReferece(
-                    GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"),
-                    xy);
+                    GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
                 bGotAThing = true;
                 return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED);
             }
@@ -696,7 +693,6 @@ namespace Ultima5Redux
             PassTime();
             return retStr;
         }
-
 
         /// <summary>
         ///     Climbs the ladder on the current tile that the Avatar occupies
@@ -855,9 +851,8 @@ namespace Ultima5Redux
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
 
             // would we be leaving a small map if we went forward?
-            if (!State.TheVirtualMap.IsLargeMap &&
-                IsLeavingMap(new Point2D(State.TheVirtualMap.CurrentPosition.X + xAdjust,
-                    State.TheVirtualMap.CurrentPosition.Y + yAdjust)))
+            if (!State.TheVirtualMap.IsLargeMap && IsLeavingMap(new Point2D(
+                State.TheVirtualMap.CurrentPosition.X + xAdjust, State.TheVirtualMap.CurrentPosition.Y + yAdjust)))
             {
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space
@@ -1097,9 +1092,9 @@ namespace Ultima5Redux
             return retStr.TrimEnd();
         }
 
-        public string TryToMoveCombatMap(Point2D.Direction direction, out TryToMoveResult tryToMoveResult)
-            => TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer,
-                direction, out tryToMoveResult);
+        public string TryToMoveCombatMap(Point2D.Direction direction, out TryToMoveResult tryToMoveResult) =>
+            TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer, direction,
+                out tryToMoveResult);
 
         public string TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction,
             out TryToMoveResult tryToMoveResult)
@@ -1175,8 +1170,7 @@ namespace Ultima5Redux
                     .LOCKED_N);
 
             State.TheVirtualMap.SetOverridingTileReferece(
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"),
-                xy);
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
 
             Map currentMap = State.TheVirtualMap.CurrentMap;
             currentMap.SetOpenDoor(xy);
@@ -1322,27 +1316,23 @@ namespace Ultima5Redux
             {
                 case LordBritishArtifact.ArtifactType.Amulet:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
-                               .AMULET_N_N) +
-                           "\n" + GameReferences.DataOvlRef.StringReferences.GetString(
-                               DataOvlReference.WearUseItemStrings.WEARING_AMULET) + "\n" +
+                               .AMULET_N_N) + "\n" +
+                           GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                               .WEARING_AMULET) + "\n" +
                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                                .SPACE_OF_LORD_BRITISH_DOT_N);
                 case LordBritishArtifact.ArtifactType.Crown:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
-                               .CROWN_N_N) +
-                           "\n" + GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                               .WearUseItemStrings
+                               .CROWN_N_N) + "\n" +
+                           GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                                .DON_THE_CROWN) + "\n" + GameReferences.DataOvlRef.StringReferences.GetString(
-                               DataOvlReference.WearUseItemStrings
-                                   .SPACE_OF_LORD_BRITISH_DOT_N);
+                               DataOvlReference.WearUseItemStrings.SPACE_OF_LORD_BRITISH_DOT_N);
                 case LordBritishArtifact.ArtifactType.Sceptre:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
-                               .SCEPTRE_N_N) +
-                           "\n" + GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                               .WearUseItemStrings
+                               .SCEPTRE_N_N) + "\n" +
+                           GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                                .WIELD_SCEPTRE) + "\n" + GameReferences.DataOvlRef.StringReferences.GetString(
-                               DataOvlReference.WearUseItemStrings
-                                   .SPACE_OF_LORD_BRITISH_DOT_N);
+                               DataOvlReference.WearUseItemStrings.SPACE_OF_LORD_BRITISH_DOT_N);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -1375,8 +1365,8 @@ namespace Ultima5Redux
 
             State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity--;
             MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
-                State.TheVirtualMap.CurrentPosition.XY,
-                State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection, out int _);
+                State.TheVirtualMap.CurrentPosition.XY, State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection,
+                out int _);
             BoardAndCleanFromWorld(carpet);
             return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                 .CARPET_BANG);
@@ -1389,9 +1379,9 @@ namespace Ultima5Redux
 
             if (!IsAllowedToBuryMoongate())
                 return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                    .MOONSTONE_SPACE) + GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                    .ExclaimStrings
-                    .CANNOT_BE_BURIED_HERE_BANG_N);
+                           .MOONSTONE_SPACE) +
+                       GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                           .CANNOT_BE_BURIED_HERE_BANG_N);
 
             State.TheMoongates.SetMoonstoneBuried(moonstone.MoongateIndex, true,
                 State.TheVirtualMap.GetCurrent3DPosition());
@@ -1503,7 +1493,6 @@ namespace Ultima5Redux
                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.YellingStrings.FURL_BANG_N)
                        .Trim();
         }
-
 
         public void YellWord(string word)
         {

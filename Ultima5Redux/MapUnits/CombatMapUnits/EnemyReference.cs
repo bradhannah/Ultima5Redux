@@ -83,20 +83,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 }
             }
 
-            AttackRange =
-                dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_ATTACK_RANGE).GetByte(nMonsterIndex);
+            AttackRange = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_ATTACK_RANGE)
+                .GetByte(nMonsterIndex);
 
             if (AttackRange == 1)
                 TheMissileType = CombatItemReference.MissileType.None;
             else
                 TheMissileType = (CombatItemReference.MissileType)dataOvlReference
-                    .GetDataChunk(DataOvlReference.DataChunkName.ENEMY_RANGE_THING)
-                    .GetByte(nMonsterIndex);
+                    .GetDataChunk(DataOvlReference.DataChunkName.ENEMY_RANGE_THING).GetByte(nMonsterIndex);
 
             // the friend index technically starts at the Mage, and skips 4 animations frames per enemy
             //const int StartFriendIndex = 320;
-            FriendIndex =
-                dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_FRIENDS).GetByte(nMonsterIndex);
+            FriendIndex = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_FRIENDS)
+                .GetByte(nMonsterIndex);
 
             dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_THING).GetByte(nMonsterIndex);
 

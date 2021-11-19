@@ -46,8 +46,8 @@ namespace Ultima5Redux.Dialogue
         private readonly
             Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>
             _talkScriptRefs =
-                new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>
-                >();
+                new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles,
+                    Dictionary<int, TalkScript>>();
 
         /// <summary>
         ///     Build the talk scripts
@@ -88,11 +88,10 @@ namespace Ultima5Redux.Dialogue
 
         public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
         {
-            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC)
-            ) return null;
+            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC))
+                return null;
             return _talkScriptRefs[smallMapRef][nNPC];
         }
-
 
         /// <summary>
         ///     Initializes an individual TalkingScript using the raw data created from InitializeTalkScriptsRaw
@@ -105,15 +104,14 @@ namespace Ultima5Redux.Dialogue
         {
             TalkScript talkScript = new TalkScript(); // the script we are building and will return
 
-            List<bool>
-                labelsSeenList =
-                    new List<bool>(TalkScript.TOTAL_LABELS); // keeps track of the labels we have already seen
+            List<bool> labelsSeenList =
+                new List<bool>(TalkScript.TOTAL_LABELS); // keeps track of the labels we have already seen
             labelsSeenList.AddRange(Enumerable.Repeat(false,
                 TalkScript.TOTAL_LABELS)); // creates a list of "false" bools to set the default labelsSeenList
 
             bool writingSingleCharacters = false; // are we currently writing a single character at a time?
-            string
-                buildAWord = string.Empty; // the word we are currently building if we are writingSingleCharacters=true
+            string buildAWord =
+                string.Empty; // the word we are currently building if we are writingSingleCharacters=true
 
             int nGoldCharsLeft = 0;
 
@@ -318,7 +316,6 @@ namespace Ultima5Redux.Dialogue
                 }
             }
         }
-
 
         /// <summary>
         ///     the mapping of NPC # to file .tlk file offset

@@ -26,8 +26,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public ItemTypeSpriteEnum ItemType { get; }
 
-        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) :
-            base(quantity, (int)itemType)
+        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) : base(quantity, (int)itemType)
         {
             ItemType = itemType;
         }

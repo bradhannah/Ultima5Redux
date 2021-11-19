@@ -15,8 +15,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     The characters current position on the map
         /// </summary>
-        [DataMember]
-        public sealed override MapUnitPosition MapUnitPosition
+        [DataMember] public sealed override MapUnitPosition MapUnitPosition
         {
             get => _mapMapUnitPosition;
             internal set
@@ -41,29 +40,24 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
 
-
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
 
-        [IgnoreDataMember]
-        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+        [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
         // ReSharper disable once MemberCanBeProtected.Global
-        [IgnoreDataMember]
-        public virtual TileReference NonBoardedTileReference =>
+        [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
         [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
 
-        [IgnoreDataMember]
-        public TileReference BoardedTileReference =>
+        [IgnoreDataMember] public TileReference BoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
                 ? FourDirectionToTileNameBoarded[Direction]
                 : DirectionToTileNameBoarded[Direction]);
 
-        [IgnoreDataMember]
-        public virtual TileReference KeyTileReference
+        [IgnoreDataMember] public virtual TileReference KeyTileReference
         {
             get => NPCRef == null
                 ? GameReferences.SpriteTileReferences.GetTileReference(_keyTileIndex)
@@ -72,7 +66,6 @@ namespace Ultima5Redux.MapUnits
         }
 
         public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
-
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
@@ -95,12 +88,9 @@ namespace Ultima5Redux.MapUnits
         /// <param name="npcState"></param>
         /// <param name="mapUnitPosition"></param>
         /// <param name="tileReference"></param>
-        protected MapUnit(
-            SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
-            Point2D.Direction direction,
-            NonPlayerCharacterState npcState, TileReference tileReference,
-            MapUnitPosition mapUnitPosition)
+        protected MapUnit(SmallMapCharacterState smallMapTheSmallMapCharacterState, MapUnitMovement mapUnitMovement,
+            SmallMapReferences.SingleMapReference.Location location, Point2D.Direction direction,
+            NonPlayerCharacterState npcState, TileReference tileReference, MapUnitPosition mapUnitPosition)
         {
             MapLocation = location;
             TheSmallMapCharacterState = smallMapTheSmallMapCharacterState;
@@ -128,8 +118,7 @@ namespace Ultima5Redux.MapUnits
         {
             if (mapUnit.MapUnitPosition.XY == targetXy)
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.FriendlyName +
-                                                " is already at " + targetXy.X + "," +
-                                                targetXy.Y);
+                                                " is already at " + targetXy.X + "," + targetXy.Y);
 
             // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
 
@@ -196,10 +185,8 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once UnusedMember.Global
         public virtual string GetDebugDescription(TimeOfDay timeOfDay)
         {
-            return "MapUnit " + KeyTileReference.Description
-                              + " " + MapUnitPosition + " Scheduled to be at: "
-                              + " <b>Movement Attempts</b>: " + MovementAttempts + " "
-                              + Movement;
+            return "MapUnit " + KeyTileReference.Description + " " + MapUnitPosition + " Scheduled to be at: " +
+                   " <b>Movement Attempts</b>: " + MovementAttempts + " " + Movement;
         }
 
         /// <summary>

@@ -101,8 +101,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <returns></returns>
         public string DontDealInAmmoOutput()
         {
-            return ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
-                DataOvlReference.ShoppeKeeperSellingStrings
+            return ShoppeKeeperDialogueReference.GetMerchantString(
+                DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperSellingStrings
                     .DONT_DEAL_AMMO_GROWL_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
         }
 
@@ -166,7 +166,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
         }
 
-
         /// <summary>
         ///     Gets request of which item you would like to sell to the blacksmith
         /// </summary>
@@ -183,9 +182,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public string GetYouCanBuy()
         {
             return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM)
-                    .Trim() + " "
-                            + GetRandomStringFromChoices(
-                                DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
+                       .Trim() + " " +
+                   GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
         }
     }
 }

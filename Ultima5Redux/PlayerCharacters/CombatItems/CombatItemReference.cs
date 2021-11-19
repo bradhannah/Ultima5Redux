@@ -112,8 +112,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             if (nIndex == BARE_HANDS_INDEX) return 1;
 
-            List<byte> rangeValueList =
-                dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_RANGE_VALUES).GetAsByteList();
+            List<byte> rangeValueList = dataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.ATTACK_RANGE_VALUES)
+                .GetAsByteList();
             if (nIndex >= rangeValueList.Count) return 1;
             return rangeValueList[nIndex];
         }
@@ -137,8 +137,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
 
             BasePrice = _dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.EQUIPMENT_BASE_PRICE)
-                .GetChunkAsUint16List()[
-                    (int)SpecificEquipment];
+                .GetChunkAsUint16List()[(int)SpecificEquipment];
         }
     }
 }

@@ -7,8 +7,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     {
         [DataMember] public int NPCRefIndex => NPCRef.DialogIndex;
 
-        [DataMember]
-        public bool HasMetAvatar
+        [DataMember] public bool HasMetAvatar
         {
             get
             {

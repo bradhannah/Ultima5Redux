@@ -22,8 +22,7 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public List<CombatMapUnit> AllCombatMapUnits => GetMapUnitByType<CombatMapUnit>();
         [IgnoreDataMember] public List<MapUnit> AllMapUnits { get; } = new List<MapUnit>(MapUnits.MAX_MAP_CHARACTERS);
 
-        [IgnoreDataMember]
-        public Avatar TheAvatar
+        [IgnoreDataMember] public Avatar TheAvatar
         {
             get
             {

@@ -264,7 +264,6 @@ namespace Ultima5Redux.Maps
             return bIsDoorLocked;
         }
 
-
         /// <summary>
         ///     Is it a magical door?
         /// </summary>
@@ -293,8 +292,8 @@ namespace Ultima5Redux.Maps
 
         public bool IsFrigate(int nSprite)
         {
-            return GetTileReference(nSprite).Name.StartsWith("Ship")
-                   || GetTileReference(nSprite).Name.StartsWith("Pirate");
+            return GetTileReference(nSprite).Name.StartsWith("Ship") ||
+                   GetTileReference(nSprite).Name.StartsWith("Pirate");
         }
 
         /// <summary>
@@ -346,7 +345,6 @@ namespace Ultima5Redux.Maps
             return nSprite == GetTileNumberByName("LadderDown");
         }
 
-
         /// <summary>
         ///     Is the sprite an up ladder?
         /// </summary>
@@ -382,8 +380,9 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once UnusedMember.Global
         public bool IsMirror(int nSprite)
         {
-            bool bIsMirror = nSprite == GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar")
-                                                                      || nSprite == GetTileNumberByName("MirrorBroken");
+            bool bIsMirror = nSprite == GetTileNumberByName("Mirror") ||
+                             nSprite == GetTileNumberByName("MirrorAvatar") ||
+                             nSprite == GetTileNumberByName("MirrorBroken");
             return bIsMirror;
         }
 
@@ -401,8 +400,8 @@ namespace Ultima5Redux.Maps
         public bool IsMoonstoneBuriable(int nSprite)
         {
             TileReference tileRef = GetTileReference(nSprite);
-            return tileRef.Name == "Grass" || tileRef.Name == "Swamp" || tileRef.Name == "Desert1"
-                   || tileRef.Name.Contains("Forest");
+            return tileRef.Name == "Grass" || tileRef.Name == "Swamp" || tileRef.Name == "Desert1" ||
+                   tileRef.Name.Contains("Forest");
         }
 
         /// <summary>
@@ -423,10 +422,8 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsSign(int nSprite)
         {
-            return GetTileNumberByName("Sign") == nSprite ||
-                   GetTileNumberByName("SimpleCross") == nSprite ||
-                   GetTileNumberByName("StoneHeadstone") == nSprite ||
-                   GetTileNumberByName("SmallSign") == nSprite ||
+            return GetTileNumberByName("Sign") == nSprite || GetTileNumberByName("SimpleCross") == nSprite ||
+                   GetTileNumberByName("StoneHeadstone") == nSprite || GetTileNumberByName("SmallSign") == nSprite ||
                    GetTileNumberByName("SignWarning") == nSprite;
         }
 
@@ -442,11 +439,10 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsStaircase(int nSprite)
         {
-            bool bIsLadder =
-                nSprite == GetTileNumberByName("StairsWest") || nSprite == GetTileNumberByName("StairsEast")
-                                                             || nSprite == GetTileNumberByName("StairsNorth") ||
-                                                             nSprite == GetTileNumberByName(
-                                                                 "StairsSouth"); // is it a ladder
+            bool bIsLadder = nSprite == GetTileNumberByName("StairsWest") ||
+                             nSprite == GetTileNumberByName("StairsEast") ||
+                             nSprite == GetTileNumberByName("StairsNorth") ||
+                             nSprite == GetTileNumberByName("StairsSouth"); // is it a ladder
             return bIsLadder;
         }
 

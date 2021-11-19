@@ -34,7 +34,6 @@ namespace Ultima5Redux
         public const string SIGNS_DAT = "signs.dat";
         public static readonly string[] SmallMapFiles = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };
 
-
         public const string TOWNE_DAT = "towne.dat";
         public const string TOWNE_NPC = "towne.Npc";
         public const string TOWNE_TLK = "towne.tlk";

@@ -40,9 +40,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         public override bool IsAttackable => false;
 
         public Skiff(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
-            Point2D.Direction direction, NonPlayerCharacterState npcState,
-            MapUnitPosition mapUnitPosition) :
-            base(null, mapUnitMovement, location, direction, npcState, mapUnitPosition)
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,
+            mapUnitMovement, location, direction, npcState, mapUnitPosition)
         {
             KeyTileReference = NonBoardedTileReference;
         }

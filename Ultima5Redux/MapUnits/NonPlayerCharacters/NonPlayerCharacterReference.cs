@@ -43,7 +43,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// </summary>
         public string FriendlyName => Name == "" ? NPCType.ToString() : Name;
 
-
         public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.None;
 
         /// <summary>
@@ -117,8 +116,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <param name="talkScript">their conversation script</param>
         /// <param name="location"></param>
         public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location,
-            NPCSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex,
-            TalkScript talkScript)
+            NPCSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
         {
             Schedule = new NonPlayerCharacterSchedule(schedule);
 

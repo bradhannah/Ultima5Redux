@@ -18,8 +18,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         };
 
         public MagicSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
-            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) :
-            base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
+            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(
+            shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
             _inventory = inventory;
         }
@@ -43,8 +43,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             int nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(127, 130);
             return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nIndex,
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
-                shoppeName: TheShoppeKeeperReference.ShoppeName,
-                tod: tod);
+                shoppeName: TheShoppeKeeperReference.ShoppeName, tod: tod);
         }
 
         public override string GetPissedOffNotEnoughMoney()
@@ -61,8 +60,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public override string GetWhichWouldYouSee()
         {
-            string retStr = ShoppeKeeperDialogueReference.GetMerchantString(DataOvlReference.StringReferences.GetString(
-                DataOvlReference.ShoppeKeeperGeneralStrings
+            string retStr = ShoppeKeeperDialogueReference.GetMerchantString(
+                DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
                     .YES_N_N_FINE_BANG_WE_SELL_COLON), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
             retStr = retStr.Replace("Yes", "");
             retStr = retStr.Replace("\n\n", "\n").TrimEnd();
@@ -78,9 +77,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             int nPrice = reagent.GetAdjustedBuyPrice(null, TheShoppeKeeperReference.NpcRef.MapLocation);
             int nQuantity = reagent.GetQuantityForSale(TheShoppeKeeperReference.NpcRef.MapLocation);
             Debug.Assert(nQuantity > 0);
-            return "\"" + ShoppeKeeperDialogueReference.GetMerchantString(nStartReagentBuyStrings + nIndex,
-                       nQuantity: nQuantity, nGold: nPrice) + "\n" +
-                   DataOvlReference.StringReferences
+            return "\"" +
+                   ShoppeKeeperDialogueReference.GetMerchantString(nStartReagentBuyStrings + nIndex,
+                       nQuantity: nQuantity, nGold: nPrice) + "\n" + DataOvlReference.StringReferences
                        .GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
         }
 

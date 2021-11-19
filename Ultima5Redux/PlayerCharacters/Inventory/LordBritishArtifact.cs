@@ -12,8 +12,8 @@
 
         public string EquipMessage { get; }
 
-        public LordBritishArtifact(ArtifactType artifact, int quantity, string equipMessage) : base(
-            quantity, (int)artifact)
+        public LordBritishArtifact(ArtifactType artifact, int quantity, string equipMessage) : base(quantity,
+            (int)artifact)
         {
             Artifact = artifact;
             EquipMessage = equipMessage;

@@ -19,8 +19,7 @@
         public MagicReference.SpellWords ScrollSpell { get; }
 
         public Scroll(MagicReference.SpellWords spell, int quantity, MagicReference scrollMagicReference) : base(
-            quantity,
-            SCROLL_SPRITE)
+            quantity, SCROLL_SPRITE)
         {
             ScrollSpell = spell;
             ScrollMagicReference = scrollMagicReference;

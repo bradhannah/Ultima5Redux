@@ -122,18 +122,18 @@ namespace Ultima5Redux.Data
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_SELLING).GetChunkAsStringList()
                 },
                 {
-                    typeof(DataOvlReference.ShoppeKeeperBlacksmithPositiveExclamation), dataRef
-                        .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM)
+                    typeof(DataOvlReference.ShoppeKeeperBlacksmithPositiveExclamation),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM)
                         .GetChunkAsStringList()
                 },
                 {
-                    typeof(DataOvlReference.ShoppeKeeperBlacksmithHello), dataRef
-                        .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO)
+                    typeof(DataOvlReference.ShoppeKeeperBlacksmithHello),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_HELLO)
                         .GetChunkAsStringList()
                 },
                 {
-                    typeof(DataOvlReference.ShoppeKeeperBlacksmithWeHave), dataRef
-                        .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE)
+                    typeof(DataOvlReference.ShoppeKeeperBlacksmithWeHave),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE)
                         .GetChunkAsStringList()
                 },
                 {
@@ -145,8 +145,8 @@ namespace Ultima5Redux.Data
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_INNKEEPER).GetChunkAsStringList()
                 },
                 {
-                    typeof(DataOvlReference.ShoppeKeeperInnkeeper2Strings), dataRef
-                        .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_INNKEEPER_2)
+                    typeof(DataOvlReference.ShoppeKeeperInnkeeper2Strings),
+                    dataRef.GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_INNKEEPER_2)
                         .GetChunkAsStringList()
                 },
                 {

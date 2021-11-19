@@ -43,8 +43,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
         /// </summary>
-        [IgnoreDataMember]
-        internal MapUnitPosition CurrentAvatarPosition
+        [IgnoreDataMember] internal MapUnitPosition CurrentAvatarPosition
         {
             get => AvatarMapUnit.MapUnitPosition;
             set => AvatarMapUnit.MapUnitPosition = value;
@@ -52,7 +51,6 @@ namespace Ultima5Redux.MapUnits
 
         private readonly bool _bUseExtendedSprites;
         private readonly ImportedGameState _importedGameState;
-
 
         /// <summary>
         ///     static references to all NPCs in the world
@@ -73,9 +71,8 @@ namespace Ultima5Redux.MapUnits
         /// <param name="importedGameState"></param>
         /// <param name="npcStates"></param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
-        internal MapUnits(TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
-            Map.Maps initialMap, bool bUseExtendedSprites, ImportedGameState importedGameState,
-            NonPlayerCharacterStates npcStates,
+        internal MapUnits(TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords, Map.Maps initialMap,
+            bool bUseExtendedSprites, ImportedGameState importedGameState, NonPlayerCharacterStates npcStates,
             SmallMapReferences.SingleMapReference.Location currentSmallMap =
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
@@ -134,7 +131,6 @@ namespace Ultima5Redux.MapUnits
 
             return nIndex;
         }
-
 
         /// <summary>
         ///     Adds a new map unit to the next position available
@@ -197,8 +193,7 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
             if (nIndex == -1) return null;
 
-            Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference,
-                _currentLocation, null)
+            Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference, _currentLocation, null)
             {
                 MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0)
             };
@@ -223,8 +218,8 @@ namespace Ultima5Redux.MapUnits
             if (nIndex == -1) return null;
 
             Frigate frigate = new Frigate(_importedMovements.GetMovement(nIndex),
-                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
-                direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
+                new MapUnitPosition(xy.X, xy.Y, 0));
 
             // set position of frigate in the world
             frigate.SkiffsAboard = nSkiffsAboard;
@@ -259,7 +254,6 @@ namespace Ultima5Redux.MapUnits
             AddNewMapUnit(map, horse, nIndex);
             return horse;
         }
-
 
         /// <summary>
         ///     Creates a new Magic Carpet and places it on the map
@@ -303,8 +297,8 @@ namespace Ultima5Redux.MapUnits
             if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active &&
                 npcState.NPCRef.NormalNPC)
             {
-                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement,
-                    _timeOfDay, _playerCharacterRecords, bInitialLoad, location, mapUnitPosition, npcState);
+                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, _timeOfDay,
+                    _playerCharacterRecords, bInitialLoad, location, mapUnitPosition, npcState);
             }
             else if (tileReference == null || tileReference.Index == 256)
             {
@@ -360,8 +354,8 @@ namespace Ultima5Redux.MapUnits
             if (nIndex == -1) return null;
 
             Skiff skiff = new Skiff(_importedMovements.GetMovement(nIndex),
-                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
-                direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
+                new MapUnitPosition(xy.X, xy.Y, 0));
 
             AddNewMapUnit(Map.Maps.Overworld, skiff, nIndex);
             return skiff;
@@ -375,10 +369,8 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once UnusedMethodReturnValue.Global
         public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
-            return CreateSkiff(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right,
-                out _);
+            return CreateSkiff(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _);
         }
-
 
         /// <summary>
         ///     Finds the next available index in the available map unit list
@@ -454,20 +446,19 @@ namespace Ultima5Redux.MapUnits
                 if (i == 0)
                 {
                     MapUnit theAvatar = Avatar.CreateAvatar(
-                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
-                        mapUnitMovement, mapUnitPosition, tileReference, _bUseExtendedSprites);
+                        SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement,
+                        mapUnitPosition, tileReference, _bUseExtendedSprites);
                     mapUnits.Add(theAvatar);
                     continue;
                 }
 
                 MapUnit newUnit = CreateNewMapUnit(mapUnitMovement, bInitialLoad,
-                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, null,
-                    mapUnitPosition, tileReference);
+                    SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, null, mapUnitPosition,
+                    tileReference);
                 // add the new character to our list of characters currently on the map
                 mapUnits.Add(newUnit);
             }
         }
-
 
         /// <summary>
         ///     Gets a particular map unit on a tile in a given location
@@ -504,8 +495,8 @@ namespace Ultima5Redux.MapUnits
             };
         }
 
-        public T GetSpecificMapUnitByLocation<T>(Map.Maps map,
-            Point2D xy, int nFloor, bool bCheckBaseToo = false) where T : MapUnit
+        public T GetSpecificMapUnitByLocation<T>(Map.Maps map, Point2D xy, int nFloor, bool bCheckBaseToo = false)
+            where T : MapUnit
         {
             foreach (T mapUnit in GetMapUnitCollection(map).GetMapUnitByType<T>())
             {
@@ -545,7 +536,7 @@ namespace Ultima5Redux.MapUnits
             if (location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine ||
                 location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                 throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
-            
+
             // wipe all existing characters since they cannot exist beyond the load
             SmallMapUnitCollection.Clear();
 
@@ -591,8 +582,7 @@ namespace Ultima5Redux.MapUnits
                 MapUnitPosition mapUnitPosition = new MapUnitPosition((byte)smallMapCharacterState.TheMapUnitPosition.X,
                     (byte)smallMapCharacterState.TheMapUnitPosition.Y,
                     (byte)smallMapCharacterState.TheMapUnitPosition.Floor);
-                MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location,
-                    npcState, mapUnitPosition,
+                MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState, mapUnitPosition,
                     GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
                     smallMapCharacterState);
 

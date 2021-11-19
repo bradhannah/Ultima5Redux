@@ -20,11 +20,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
         }
 
-        private void AddReagent(Reagent.ReagentTypeEnum reagentType,
-            GameState state)
+        private void AddReagent(Reagent.ReagentTypeEnum reagentType, GameState state)
         {
-            Reagent reagent = new Reagent(reagentType,
-                GameStateByteArray[(int)reagentType], state);
+            Reagent reagent = new Reagent(reagentType, GameStateByteArray[(int)reagentType], state);
             Items[reagentType] = reagent;
         }
 

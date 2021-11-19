@@ -115,8 +115,7 @@ namespace Ultima5Redux.Maps
         /// <param name="virtualMap"></param>
         /// <param name="singleCombatMapReference"></param>
         /// <param name="inventory"></param>
-        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatMapReference,
-            Inventory inventory)
+        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatMapReference, Inventory inventory)
         {
             _virtualMap = virtualMap;
             CombatMapUnits = _virtualMap.TheMapUnits;
@@ -132,10 +131,8 @@ namespace Ultima5Redux.Maps
 
         // if hit, but not killed
         private static bool IsHitButNotKilled(CombatMapUnit.HitState hitState) =>
-            hitState == CombatMapUnit.HitState.BarelyWounded ||
-            hitState == CombatMapUnit.HitState.LightlyWounded ||
-            hitState == CombatMapUnit.HitState.HeavilyWounded ||
-            hitState == CombatMapUnit.HitState.CriticallyWounded ||
+            hitState == CombatMapUnit.HitState.BarelyWounded || hitState == CombatMapUnit.HitState.LightlyWounded ||
+            hitState == CombatMapUnit.HitState.HeavilyWounded || hitState == CombatMapUnit.HitState.CriticallyWounded ||
             hitState == CombatMapUnit.HitState.Fleeing;
 
         protected override float GetAStarWeight(Point2D xy) => 1.0f;
@@ -191,8 +188,7 @@ namespace Ultima5Redux.Maps
             {
                 // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
                 TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-                FloodFillMap(combatPlayers[i].MapUnitPosition.XY, true, i, combatPlayers[i].MapUnitPosition.XY,
-                    true);
+                FloodFillMap(combatPlayers[i].MapUnitPosition.XY, true, i, combatPlayers[i].MapUnitPosition.XY, true);
             }
 
             TouchedOuterBorder = false;
@@ -219,7 +215,6 @@ namespace Ultima5Redux.Maps
                 _currentCombatItemQueue.Clear();
         }
 
-
         /// <summary>
         ///     Creates enemies in the combat map. If the map contains hard coded enemies then it will ignore the
         ///     specified enemies
@@ -231,8 +226,8 @@ namespace Ultima5Redux.Maps
         /// <param name="nSecondaryEnemies"></param>
         /// <param name="npcRef"></param>
         internal void CreateEnemies(SingleCombatMapReference singleCombatMapReference,
-            EnemyReference primaryEnemyReference, int nPrimaryEnemies,
-            EnemyReference secondaryEnemyReference, int nSecondaryEnemies, NonPlayerCharacterReference npcRef)
+            EnemyReference primaryEnemyReference, int nPrimaryEnemies, EnemyReference secondaryEnemyReference,
+            int nSecondaryEnemies, NonPlayerCharacterReference npcRef)
         {
             int nEnemyIndex = 0;
 
@@ -275,7 +270,6 @@ namespace Ultima5Redux.Maps
             Enemy enemy = CombatMapUnits.CreateEnemy(position, enemyReference, out int _);
             return enemy;
         }
-
 
         /// <summary>
         ///     Creates a single enemy in the context of the combat map.
@@ -334,16 +328,14 @@ namespace Ultima5Redux.Maps
             // clear any previous combat map units
             CombatMapUnits.InitializeCombatMapReferences();
 
-            List<Point2D> playerStartPositions =
-                TheCombatMapReference.GetPlayerStartPositions(entryDirection);
+            List<Point2D> playerStartPositions = TheCombatMapReference.GetPlayerStartPositions(entryDirection);
 
             // cycle through each player and make a map unit
             for (int nPlayer = 0; nPlayer < activeRecords.GetNumberOfActiveCharacters(); nPlayer++)
             {
                 PlayerCharacterRecord record = activeRecords.Records[nPlayer];
 
-                CombatPlayer combatPlayer = new CombatPlayer(record,
-                    playerStartPositions[nPlayer], _inventory);
+                CombatPlayer combatPlayer = new CombatPlayer(record, playerStartPositions[nPlayer], _inventory);
 
                 // make sure the tile that the player occupies is not walkable
                 GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
@@ -544,7 +536,6 @@ namespace Ultima5Redux.Maps
             return -1;
         }
 
-
         public Enemy GetNextEnemy(Enemy currentEnemy, CombatItem combatItem)
         {
             int nOffset = GetCombatMapUnitIndex(currentEnemy);
@@ -606,8 +597,7 @@ namespace Ultima5Redux.Maps
         private Point2D GetRandomSurroundingPointThatIsnt(Point2D surroundThisPoint, Point2D notThisPoint)
         {
             List<Point2D> surroundingCombatPlayerPoints =
-                surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1,
-                    NumOfYTiles - 1);
+                surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
             Point2D randomSurroundingPoint;
             Random random = new Random();
             for (;;)
@@ -655,8 +645,7 @@ namespace Ultima5Redux.Maps
             {
                 // do they multiply?
                 if (affectedCombatMapUnit is Enemy enemy &&
-                    enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) &&
-                    Utils.OneInXOdds(2))
+                    enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) && Utils.OneInXOdds(2))
                 {
                     Enemy newEnemy = DivideEnemy(enemy);
                     if (newEnemy != null) additionalHitStateAction = AdditionalHitStateAction.EnemyDivided;
@@ -704,7 +693,6 @@ namespace Ultima5Redux.Maps
             return additionalHitStateAction;
         }
 
-
         private TurnResult HandleRangedMissed(CombatMapUnit attackingCombatMapUnit, Point2D attackPosition,
             out CombatMapUnit targetedCombatMapUnit, int nAttackMax, out Point2D missedPoint, out string outputStr)
         {
@@ -713,8 +701,7 @@ namespace Ultima5Redux.Maps
             outputStr = "";
             missedPoint = null;
 
-            Point2D newAttackPosition = GetRandomSurroundingPointThatIsnt(attackPosition,
-                attackPosition);
+            Point2D newAttackPosition = GetRandomSurroundingPointThatIsnt(attackPosition, attackPosition);
             Debug.Assert(newAttackPosition != null);
 
             targetedCombatMapUnit = GetCombatUnit(newAttackPosition);
@@ -722,8 +709,8 @@ namespace Ultima5Redux.Maps
             // We will check the raycast and determine if the missed shot in fact actually gets blocked - 
             // doing it in here will ensure that no damage is computed against an enemy if they are targeted
             // OR if the attack position is outside of the current map area, it means that a player has left the map
-            if (IsRangedPathBlocked(attackPosition, newAttackPosition, out missedPoint)
-                || newAttackPosition.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
+            if (IsRangedPathBlocked(attackPosition, newAttackPosition, out missedPoint) ||
+                newAttackPosition.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
             {
                 AdvanceToNextCombatMapUnit();
                 return TurnResult.EnemyMissed;
@@ -738,8 +725,8 @@ namespace Ultima5Redux.Maps
 
             outputStr += "\nBut they accidentally hit another!";
             // we attack the thing we accidentally hit
-            CombatMapUnit.HitState _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit,
-                nAttackMax, out string missedAttackOutputStr, out string debugStr, true);
+            CombatMapUnit.HitState _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit, nAttackMax,
+                out string missedAttackOutputStr, out string debugStr, true);
             // temporary for debugging
             missedAttackOutputStr += "\n" + debugStr;
             outputStr += "\n" + missedAttackOutputStr;
@@ -798,9 +785,8 @@ namespace Ultima5Redux.Maps
                                                                        tileReference.Index == GameReferences
                                                                            .SpriteTileReferences
                                                                            .GetTileReferenceByName("RegularDoor")
-                                                                           .Index ||
-                                                                       tileReference.Index == GameReferences
-                                                                           .SpriteTileReferences
+                                                                           .Index || tileReference.Index ==
+                                                                       GameReferences.SpriteTileReferences
                                                                            .GetTileReferenceByName("RegularDoorView")
                                                                            .Index;
 
@@ -1007,7 +993,6 @@ namespace Ultima5Redux.Maps
 
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
 
-
         public TurnResult ProcessCombatPlayerTurn(SelectionAction selectedAction, Point2D actionPosition,
             out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit,
             out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint,
@@ -1083,15 +1068,14 @@ namespace Ultima5Redux.Maps
                             throw new Ultima5ReduxException("Combat player is null");
 
                         bool bIsBlocked = IsRangedPathBlocked(combatPlayer.MapUnitPosition.XY,
-                            opponentMapUnit.MapUnitPosition.XY,
-                            out missedPoint);
+                            opponentMapUnit.MapUnitPosition.XY, out missedPoint);
                         if (bIsBlocked)
                         {
-                            postAttackOutputStr =
-                                combatPlayer.FriendlyName + GameReferences.DataOvlRef.StringReferences
-                                                              .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
-                                                              .TrimEnd().Replace("!", " ")
-                                                          + opponentMapUnit.FriendlyName + " because it was blocked!";
+                            postAttackOutputStr = combatPlayer.FriendlyName +
+                                                  GameReferences.DataOvlRef.StringReferences
+                                                      .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N)
+                                                      .TrimEnd().Replace("!", " ") + opponentMapUnit.FriendlyName +
+                                                  " because it was blocked!";
 
                             AdvanceToNextCombatMapUnit();
                             targetedHitState = CombatMapUnit.HitState.Missed;
@@ -1135,10 +1119,8 @@ namespace Ultima5Redux.Maps
                     switch (additionalHitStateAction)
                     {
                         case AdditionalHitStateAction.EnemyDivided:
-                            postAttackOutputStr += "\n" + targetedCombatMapUnit.FriendlyName +
-                                                   GameReferences.DataOvlRef.StringReferences
-                                                       .GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N)
-                                                       .TrimEnd();
+                            postAttackOutputStr += "\n" + targetedCombatMapUnit.FriendlyName + GameReferences.DataOvlRef
+                                .StringReferences.GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N).TrimEnd();
                             break;
                         case AdditionalHitStateAction.None:
                         default:
@@ -1173,8 +1155,8 @@ namespace Ultima5Redux.Maps
         /// <param name="missedPoint">if the target is empty or missed then this gives the point that the attack landed</param>
         /// <returns></returns>
         public TurnResult ProcessEnemyTurn(out CombatMapUnit activeCombatMapUnit,
-            out CombatMapUnit targetedCombatMapUnit,
-            out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint)
+            out CombatMapUnit targetedCombatMapUnit, out string preAttackOutputStr, out string postAttackOutputStr,
+            out Point2D missedPoint)
         {
             activeCombatMapUnit = _initiativeQueue.GetCurrentCombatUnit();
             targetedCombatMapUnit = null;
@@ -1285,8 +1267,7 @@ namespace Ultima5Redux.Maps
             if (bestCombatPlayer != null)
             {
                 CombatMapUnit.HitState hitState = enemy.Attack(bestCombatPlayer,
-                    enemy.EnemyReference.TheDefaultEnemyStats.Damage,
-                    out postAttackOutputStr, out string debugStr);
+                    enemy.EnemyReference.TheDefaultEnemyStats.Damage, out postAttackOutputStr, out string debugStr);
                 // temporary for debugging
                 postAttackOutputStr += "\n" + debugStr;
                 switch (hitState)
@@ -1302,9 +1283,9 @@ namespace Ultima5Redux.Maps
                         Debug.Assert(enemy.EnemyReference.AttackRange > 1,
                             "Cannot have a ranged weapon if no missile type set");
 
-                        TurnResult turnResult = HandleRangedMissed(enemy,
-                            bestCombatPlayer.MapUnitPosition.XY, out targetedCombatMapUnit,
-                            enemy.EnemyReference.TheDefaultEnemyStats.Damage, out missedPoint, out string addStr);
+                        TurnResult turnResult = HandleRangedMissed(enemy, bestCombatPlayer.MapUnitPosition.XY,
+                            out targetedCombatMapUnit, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
+                            out missedPoint, out string addStr);
 
                         postAttackOutputStr += addStr;
                         return turnResult;
@@ -1351,7 +1332,6 @@ namespace Ultima5Redux.Maps
             return TurnResult.EnemyMoved;
         }
 
-
         private void RefreshCurrentCombatPlayer()
         {
             if (CurrentCombatPlayer is null)
@@ -1360,8 +1340,7 @@ namespace Ultima5Redux.Maps
                 return;
             }
 
-            List<CombatItem> combatItems =
-                CurrentCombatPlayer.GetAttackWeapons();
+            List<CombatItem> combatItems = CurrentCombatPlayer.GetAttackWeapons();
             BuildCombatItemQueue(combatItems);
         }
 

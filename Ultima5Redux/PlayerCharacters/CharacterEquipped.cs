@@ -25,7 +25,6 @@ namespace Ultima5Redux.PlayerCharacters
             Amulet = DataOvlReference.Equipment.Nothing;
         }
 
-
         public DataOvlReference.Equipment GetEquippedEquipment(EquippableSlot equippableSlot)
         {
             return equippableSlot switch

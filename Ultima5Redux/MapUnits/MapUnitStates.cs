@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ultima5Redux.Data;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -76,12 +77,13 @@ namespace Ultima5Redux.MapUnits
             {
                 MapUnitState mapUnitState = new MapUnitState(characterStateBytes
                     .GetRange(i * MapUnitState.NBYTES + nOffset, MapUnitState.NBYTES).ToArray());
-                
+
                 // cute little hack that makes sure the first unit is ALWAYS the Avatar. The init.gam does not properly
                 // set this up otherwise
                 if (i == 0 && mapUnitState.Tile1Ref.Index == 256)
-                    mapUnitState.SetTileReference(References.GameReferences.SpriteTileReferences.GetTileReferenceByName("BasicAvatar"));
-                
+                    mapUnitState.SetTileReference(
+                        GameReferences.SpriteTileReferences.GetTileReferenceByName("BasicAvatar"));
+
                 _mapUnitStates.Add(mapUnitState);
             }
         }

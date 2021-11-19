@@ -7,8 +7,8 @@
 
         public override bool HideQuantity => false;
 
-        public ChestArmour(CombatItemReference combatItemReference, int nQuantity) :
-            base(combatItemReference, nQuantity)
+        public ChestArmour(CombatItemReference combatItemReference, int nQuantity) : base(combatItemReference,
+            nQuantity)
         {
         }
     }

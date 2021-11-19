@@ -20,12 +20,12 @@ namespace Ultima5Redux.Maps
         private Point2D _topLeftExtent;
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public static int
-            XTiles => TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+        public static int XTiles =>
+            TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public static int
-            YTiles => TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
+        public static int YTiles =>
+            TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
         protected override bool IsRepeatingMap => true;
 
@@ -197,7 +197,6 @@ namespace Ultima5Redux.Maps
 
             FloodFillMap(AvatarXyPos, true);
         }
-
 
         // ReSharper disable once UnusedMember.Global
         public void PrintMap()

@@ -12,13 +12,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
     {
         public enum ArmourTypeEnum { Shield, Chest, Helm, Ring, Amulet }
 
-        [DataMember]
-        private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
+        [DataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Armour>();
 
         // override to allow for inserting entire lists
-        [IgnoreDataMember]
-        public override IEnumerable<InventoryItem> GenericItemList
+        [IgnoreDataMember] public override IEnumerable<InventoryItem> GenericItemList
         {
             get
             {
@@ -30,8 +28,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
         }
 
-        [IgnoreDataMember]
-        public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
+        [IgnoreDataMember] public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
             new Dictionary<ArmourTypeEnum, List<Armour>>();
 
         public readonly List<Amulet> Amulets = new List<Amulet>();

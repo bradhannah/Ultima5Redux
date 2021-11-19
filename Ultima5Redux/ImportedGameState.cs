@@ -115,15 +115,14 @@ namespace Ultima5Redux
         private MapUnitStates SmallMapUnitStates { get; set; }
 
         internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
-            GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS),
-            GetDataChunk(DataChunkName.MOONSTONE_BURIED), GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
+            GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS), GetDataChunk(DataChunkName.MOONSTONE_BURIED),
+            GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
 
         internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
 
         internal TimeOfDay TheTimeOfDay => new TimeOfDay(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
-            DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH),
-            DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY), DataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR),
-            DataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
+            DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH), DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY),
+            DataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR), DataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
 
         internal byte Torches => DataChunks.GetDataChunk(DataChunkName.TORCHES_QUANTITY).GetChunkAsByte();
 
@@ -148,24 +147,25 @@ namespace Ultima5Redux
         internal int Y => DataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
 
         /// <summary>
-        /// Load the default starting save game
+        ///     Load the default starting save game
         /// </summary>
         public ImportedGameState()
         {
             DataChunks = new DataChunks<DataChunkName>(Resources.InitGam, DataChunkName.Unused);
             GameStateByteArray = Resources.InitGam.ToList();
-            
+
             // load the default overworld and underworld overlays on first load
             _overworldOverlayDataChunks = new DataChunks<OverlayChunkName>(Resources.BritOol, OverlayChunkName.Unused);
-            _underworldOverlayDataChunks = new DataChunks<OverlayChunkName>(Resources.UnderOol, OverlayChunkName.Unused);
-            
+            _underworldOverlayDataChunks =
+                new DataChunks<OverlayChunkName>(Resources.UnderOol, OverlayChunkName.Unused);
+
             _overworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Overworld", 0x00, 0x100, 0x00,
                 OverlayChunkName.CHARACTER_ANIMATION_STATES);
             _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Underworld", 0x00, 0x100, 0x00,
                 OverlayChunkName.CHARACTER_ANIMATION_STATES);
-            
+
             Initialize(true);
         }
 
@@ -173,7 +173,7 @@ namespace Ultima5Redux
         {
             DataChunks = new DataChunks<DataChunkName>(u5Directory, FileConstants.SAVED_GAM, DataChunkName.Unused);
             GameStateByteArray = Utils.GetFileAsByteList(Path.Combine(u5Directory, FileConstants.SAVED_GAM));
-            
+
             // load the overworld and underworld overlays
             // they are stored in the saved.ool file - but also the brit.ool and under.ool file - not quite sure why it's stored in both...
             _overworldOverlayDataChunks =
@@ -187,10 +187,27 @@ namespace Ultima5Redux
             _underworldOverlayDataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                 "Character Animation States - Underworld", 0x100, 0x100, 0x00,
                 OverlayChunkName.CHARACTER_ANIMATION_STATES);
-            
+
             Initialize(true);
         }
-        
+
+        private DataChunk GetDataChunk(DataChunkName dataChunkName)
+        {
+            return DataChunks.GetDataChunk(dataChunkName);
+        }
+
+        public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)
+        {
+            return map switch
+            {
+                Map.Maps.Small => SmallMapUnitStates,
+                Map.Maps.Overworld => OverworldMapUnitStates,
+                Map.Maps.Underworld => UnderworldMapUnitStates,
+                Map.Maps.Combat => throw new Ultima5ReduxException(
+                    "Can't return a map state for a combat map from the imported game state"),
+                _ => throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" + map)
+            };
+        }
 
         private void Initialize(bool bLoadFromDisk)
         {
@@ -318,11 +335,11 @@ namespace Ultima5Redux
             OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
             UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
             ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks);
-            
+
             OverworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, bLoadFromDisk);
             UnderworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, bLoadFromDisk);
             ActiveMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, bLoadFromDisk);
-            
+
             switch (InitialMap)
             {
                 case Map.Maps.Small:
@@ -340,30 +357,12 @@ namespace Ultima5Redux
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk);
             CharacterMovements = new MapUnitMovements(NonPlayerCharacterMovementLists,
                 NonPlayerCharacterMovementOffsets);
 
             TheNonPlayerCharacterStates = new NonPlayerCharacterStates(this);
-        }
-
-        private DataChunk GetDataChunk(DataChunkName dataChunkName)
-        {
-            return DataChunks.GetDataChunk(dataChunkName);
-        }
-
-        public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)
-        {
-            return map switch
-            {
-                Map.Maps.Small => SmallMapUnitStates,
-                Map.Maps.Overworld => OverworldMapUnitStates,
-                Map.Maps.Underworld => UnderworldMapUnitStates,
-                Map.Maps.Combat => throw new Ultima5ReduxException(
-                    "Can't return a map state for a combat map from the imported game state"),
-                _ => throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" + map)
-            };
         }
     }
 }

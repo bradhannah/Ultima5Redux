@@ -10,8 +10,7 @@ namespace Ultima5Redux.DayNightMoon
     {
         [DataMember] public byte Day { get; set; }
 
-        [DataMember]
-        public byte Hour
+        [DataMember] public byte Hour
         {
             get => _nHour;
             set
@@ -21,8 +20,7 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [DataMember]
-        public byte Minute
+        [DataMember] public byte Minute
         {
             get => _nMinute;
             set
@@ -39,8 +37,7 @@ namespace Ultima5Redux.DayNightMoon
         // ReSharper disable once UnusedMember.Global
         [IgnoreDataMember] public string FormattedDate => Month + "-" + Day + "-" + Year;
 
-        [IgnoreDataMember]
-        public string FormattedTime
+        [IgnoreDataMember] public string FormattedTime
         {
             get
             {
@@ -51,13 +48,11 @@ namespace Ultima5Redux.DayNightMoon
 
         [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
 
-
         /// <summary>
         ///     Gets a string describing the current time of day
         /// </summary>
         /// <returns></returns>
-        [IgnoreDataMember]
-        public string TimeOfDayName
+        [IgnoreDataMember] public string TimeOfDayName
         {
             get
             {
@@ -89,8 +84,7 @@ namespace Ultima5Redux.DayNightMoon
         /// <param name="currentHourDataChunk"></param>
         /// <param name="currentMinuteDataChunk"></param>
         public TimeOfDay(DataChunk currentYearDataChunk, DataChunk currentMonthDataChunk, DataChunk currentDayDataChunk,
-            DataChunk currentHourDataChunk,
-            DataChunk currentMinuteDataChunk)
+            DataChunk currentHourDataChunk, DataChunk currentMinuteDataChunk)
         {
             Year = currentYearDataChunk.GetChunkAsUint16();
             Month = currentMonthDataChunk.GetChunkAsByte();
@@ -172,7 +166,6 @@ namespace Ultima5Redux.DayNightMoon
             _timeHasChangedDictionary[nChangeTrackerId] = false;
             return bTimeChangeOccured;
         }
-
 
         /// <summary>
         ///     Registers a change tracker, returning the int handle to it that will need to be stored

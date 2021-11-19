@@ -9,8 +9,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     [DataContract] public class NonPlayerCharacterStates
     {
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>
-            _npcMap =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>();
+            _npcMap = new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>();
 
         internal NonPlayerCharacterStates(ImportedGameState importedGameState)
         {
@@ -42,10 +41,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         public NonPlayerCharacterState GetStateByLocationAndIndex(
-            SmallMapReferences.SingleMapReference.Location location,
-            int nIndex) => _npcMap[location][nIndex];
+            SmallMapReferences.SingleMapReference.Location location, int nIndex) => _npcMap[location][nIndex];
 
-        public NonPlayerCharacterState GetStateByNPCRef(NonPlayerCharacterReference npcRef)
-            => _npcMap[npcRef.MapLocation][npcRef.DialogIndex];
+        public NonPlayerCharacterState GetStateByNPCRef(NonPlayerCharacterReference npcRef) =>
+            _npcMap[npcRef.MapLocation][npcRef.DialogIndex];
     }
 }

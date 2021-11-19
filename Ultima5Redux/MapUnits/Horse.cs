@@ -17,7 +17,6 @@ namespace Ultima5Redux.MapUnits
                 { SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 260 }
             };
 
-
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Horse;
 
         public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
@@ -59,13 +58,10 @@ namespace Ultima5Redux.MapUnits
 
         public override bool IsAttackable => false;
 
-        public Horse(MapUnitMovement mapUnitMovement,
-            SmallMapReferences.SingleMapReference.Location location,
-            Point2D.Direction direction, NonPlayerCharacterState npcState,
-            MapUnitPosition mapUnitPosition)
-            : base(null, mapUnitMovement, location, direction, npcState,
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("HorseLeft"),
-                mapUnitPosition)
+        public Horse(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
+            Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,
+            mapUnitMovement, location, direction, npcState,
+            GameReferences.SpriteTileReferences.GetTileReferenceByName("HorseLeft"), mapUnitPosition)
         {
             KeyTileReference = NonBoardedTileReference;
         }

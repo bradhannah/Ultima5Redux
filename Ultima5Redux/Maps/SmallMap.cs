@@ -65,7 +65,6 @@ namespace Ultima5Redux.Maps
             return Utils.TransposeArray(smallMap);
         }
 
-
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
         /// </summary>

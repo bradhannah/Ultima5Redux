@@ -15,8 +15,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public ShardType Shard { get; }
 
-        public ShadowlordShard(ShardType shardType, int quantity, string equipMessage) : base(quantity,
-            SHARD_SPRITE)
+        public ShadowlordShard(ShardType shardType, int quantity, string equipMessage) : base(quantity, SHARD_SPRITE)
         {
             Debug.WriteLine("Shard: " + shardType);
             Shard = shardType;

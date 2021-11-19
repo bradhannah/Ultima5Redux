@@ -21,8 +21,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         };
 
         public Shipwright(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
-            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) :
-            base(shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
+            ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(
+            shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
         {
         }
 
@@ -44,8 +44,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return ShoppeKeeperDialogueReference.GetMerchantString(
                 ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(105, 108),
                 shoppeName: TheShoppeKeeperReference.ShoppeName,
-                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName,
-                tod: tod).TrimStart();
+                shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName, tod: tod).TrimStart();
         }
 
         public override string GetPissedOffNotEnoughMoney()
@@ -55,9 +54,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public override string GetThanksAfterPurchaseResponse()
         {
-            return ShoppeKeeperDialogueReference.GetMerchantString(123).TrimStart() + "\n\n"
-                + ShoppeKeeperDialogueReference.GetMerchantString(124).Trim() +
-                " Avatar?\"";
+            return ShoppeKeeperDialogueReference.GetMerchantString(123).TrimStart() + "\n\n" +
+                   ShoppeKeeperDialogueReference.GetMerchantString(124).Trim() + " Avatar?\"";
             // I'm lazy, may fix later
             // genderedAddress:records.Records[0].Gender == PlayerCharacterRecord.CharacterGender.Male ? "sir":"mam");
         }

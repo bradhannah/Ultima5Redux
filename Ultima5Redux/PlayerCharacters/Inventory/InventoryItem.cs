@@ -15,8 +15,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [DataMember] public int SpriteNum { get; }
 
-        [DataMember]
-        public virtual int Quantity
+        [DataMember] public virtual int Quantity
         {
             get => _quantity;
             set => _quantity = value;
@@ -34,8 +33,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public virtual string ShortName => InvRef.ItemName;
 
-        [IgnoreDataMember]
-        public string QuantityString
+        [IgnoreDataMember] public string QuantityString
         {
             get
             {

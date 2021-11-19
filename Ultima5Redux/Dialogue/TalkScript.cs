@@ -36,7 +36,6 @@ namespace Ultima5Redux.Dialogue
         /// </summary>
         public const byte MAX_LABEL = 0x91 + 0x0A;
 
-
         /// <summary>
         ///     the minimum talk code for labels (in .tlk files)
         /// </summary>
@@ -156,7 +155,6 @@ namespace Ultima5Redux.Dialogue
         {
             return _scriptLines[index];
         }
-
 
         /// <summary>
         ///     Gets a scriptline based on the label index
@@ -902,7 +900,6 @@ namespace Ultima5Redux.Dialogue
             {
                 ScriptItems.Insert(0, scriptItem);
             }
-
 
             /// <summary>
             ///     Does this line represent a new label definition

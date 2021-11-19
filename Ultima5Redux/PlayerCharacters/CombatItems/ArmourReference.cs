@@ -22,8 +22,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public ArmourType TheArmourType { get; }
 
-        public ArmourReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference)
-            : base(dataOvlReference, inventoryReference)
+        public ArmourReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) : base(
+            dataOvlReference, inventoryReference)
         {
             TheArmourType = GetArmourTypeByEquipment(inventoryReference.GetAsEquipment());
         }

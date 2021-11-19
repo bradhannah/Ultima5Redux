@@ -27,7 +27,6 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int Offset { get; }
 
-
         private string RawSignText { get; }
 
         /// <summary>
@@ -49,12 +48,10 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public int Y { get; }
 
-        public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y,
-            byte[] signText, int nOffset)
-            : this(location, floor, x, y, ScrubSignText(signText), nOffset)
+        public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y, byte[] signText,
+            int nOffset) : this(location, floor, x, y, ScrubSignText(signText), nOffset)
         {
         }
-
 
         /// <summary>
         ///     Create a sign object
@@ -65,8 +62,8 @@ namespace Ultima5Redux.Maps
         /// <param name="y">y coord of sign</param>
         /// <param name="signText">Text of sign (may contain unprintable txt that requires fonts from ibm.ch and runes.ch</param>
         /// <param name="nOffset"></param>
-        public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y,
-            string signText, int nOffset)
+        public Sign(SmallMapReferences.SingleMapReference.Location location, int floor, int x, int y, string signText,
+            int nOffset)
         {
             Location = location;
             Floor = floor;

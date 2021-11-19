@@ -61,7 +61,6 @@ namespace Ultima5Redux
             return str;
         }
 
-
         /// <summary>
         ///     Converts a byte[] to a readable string, assumes it ends with a NULL (0x00) byte
         /// </summary>
@@ -261,7 +260,6 @@ namespace Ultima5Redux
             return a | (b << 8);
         }
 
-
         /// <summary>
         ///     Using the random number generator, provides 1 in howMany odds of returning true
         /// </summary>
@@ -282,17 +280,10 @@ namespace Ultima5Redux
         /// <returns></returns>
         public static object ReadStruct(FileStream fs, Type t)
         {
-            byte[] buffer =
-                new byte[Marshal.SizeOf(t)];
-            fs.Read(buffer, 0,
-                Marshal.SizeOf(t));
-            GCHandle handle =
-                GCHandle.Alloc(buffer,
-                    GCHandleType.Pinned);
-            object temp =
-                Marshal.PtrToStructure(
-                    handle.AddrOfPinnedObject(),
-                    t);
+            byte[] buffer = new byte[Marshal.SizeOf(t)];
+            fs.Read(buffer, 0, Marshal.SizeOf(t));
+            GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
             handle.Free();
             return temp;
         }

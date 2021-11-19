@@ -18,8 +18,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public WeaponTypeEnum WeaponType { get; }
 
-        public WeaponReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) :
-            base(dataOvlReference, inventoryReference)
+        public WeaponReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) : base(
+            dataOvlReference, inventoryReference)
         {
             WeaponType =
                 (WeaponTypeEnum)Enum.Parse(typeof(WeaponTypeEnum), inventoryReference.GetAsEquipment().ToString());

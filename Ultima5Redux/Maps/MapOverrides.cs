@@ -69,7 +69,6 @@ namespace Ultima5Redux.Maps
             return _exposedSearchItems[xy];
         }
 
-
         public int GetOverrideTileIndex(Point2D xy)
         {
             if (!_overrideMap.ContainsKey(xy)) return -1;
@@ -84,7 +83,6 @@ namespace Ultima5Redux.Maps
             if (nIndex == -1) return null;
             return GameReferences.SpriteTileReferences.GetTileReference(nIndex);
         }
-
 
         // SEARCH ITEMS
 
