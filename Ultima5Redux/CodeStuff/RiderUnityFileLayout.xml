@@ -1,5 +1,5 @@
-<Patterns xmlns:unity="urn:schemas-jetbrains-com:member-reordering-patterns-unity"
-          xmlns="urn:schemas-jetbrains-com:member-reordering-patterns">
+<Patterns xmlns="urn:schemas-jetbrains-com:member-reordering-patterns"
+          xmlns:unity="urn:schemas-jetbrains-com:member-reordering-patterns-unity">
 
     <!-- Pattern to match classes used by Unity that contain serialised fields and event
          function methods. Based on the standard "Default Pattern", this will also order
@@ -22,7 +22,22 @@
                 <Name />
             </Entry.SortBy>
         </Entry>
-
+        <Entry DisplayName="Event Declarations">
+            <Entry.Match>
+                <Kind Is="Event"/>
+            </Entry.Match>
+            <Entry.SortBy>
+                <Static/>
+                <Override/>
+                <Abstract/>
+                <Virtual/>
+                <Sealed/>
+                <Name/>
+                <Access Order="Internal Private Public ProtectedInternal"/>
+                <Type/>
+                <Name/>
+            </Entry.SortBy>
+        </Entry>
         <Entry Priority="100" DisplayName="Enums">
             <Entry.Match>
                 <And>
@@ -137,7 +152,6 @@
                 <unity:EventFunctionName />
             </Entry.SortBy>
         </Entry>
-
         <Entry DisplayName="Methods">
             <Entry.Match>
                 <Kind Is="Method"/>

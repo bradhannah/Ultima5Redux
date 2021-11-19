@@ -119,7 +119,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             nIndex = ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(69, 72);
             return ShoppeKeeperDialogueReference.GetMerchantString(nIndex);
             //69-76
-            //throw new System.NotImplementedException();
 
             // 69,"What'll it be... a leg of our tender roast Mutton, a tankard of Ale, or Rations for thy travels?"
             // 70,"How may I serve thee? Our fine Wines, perhaps, or possibly a bite of_Cheese?"

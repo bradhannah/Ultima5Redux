@@ -73,7 +73,6 @@ namespace Ultima5Redux.MapUnits
         {
             // if a null map unit state is passed in then we are the default Avatar sprite
             // otherwise we may be on a horse, ship etc.
-            //bool bDefaultState = mapUnitState != null;
             MapUnitState theAvatar;
             TileReference avatarTileRef;
 

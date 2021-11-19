@@ -39,10 +39,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             };
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Frigate;
-        // {
-        //     get => TheMapUnitState.Depends3;
-        //     set => TheMapUnitState.Depends3 = (byte)value;
-        // }
+
 
         public override string BoardXitName =>
             GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
@@ -59,10 +56,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         public int Hitpoints { get; set; }
 
         public bool SailsHoisted { get; set; } = false;
-        // {
-        //     get => TheMapUnitState.Depends1;
-        //     set => TheMapUnitState.Depends1 = (byte)(value < 0 ? 0 : (value > 99 ? 99 : value));
-        // }
+
 
         /// <summary>
         ///     How many skiffs does the frigate have aboard?

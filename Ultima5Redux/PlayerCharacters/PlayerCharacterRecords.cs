@@ -113,14 +113,6 @@ namespace Ultima5Redux.PlayerCharacters
             Debug.Assert(nPosition < TotalPartyMembers(), "You cannot request a character that isn't on the roster");
 
             return GetActiveCharacterRecords()[nPosition];
-
-            // int nPartyMember = 0;
-            // foreach (PlayerCharacterRecord characterRecord in Records)
-            // {
-            //     if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty)
-            //         if (nPartyMember++ == nPosition) return characterRecord;
-            // }
-            // throw new Ultima5ReduxException("I've asked for member of the party who is apparently not there...");
         }
 
         public int GetCharacterIndexByNPC(NonPlayerCharacterReference npc)

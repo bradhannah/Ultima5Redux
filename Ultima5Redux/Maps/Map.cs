@@ -51,13 +51,6 @@ namespace Ultima5Redux.Maps
 
         public bool XRayMode { get; set; } = false;
 
-        // public void SetTileOverride(Point2D xy, TileReference tileReference)
-        // {
-        //     TileOverride tileOverride = new TileOverride();
-        //     tileOverride.
-        //     XYOverrides.Add(xy, tileReference);
-        // }
-
 
         /// <summary>
         ///     Filthy little map to assign single letter to map elements

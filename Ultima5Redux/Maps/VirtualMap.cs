@@ -66,13 +66,7 @@ namespace Ultima5Redux.Maps
 
         [DataMember] private MapOverrides TheMapOverrides { get; set; }
 
-        // [IgnoreDataMember] private readonly CombatMapReferences _combatMapRefs;
-        // [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
-        // [IgnoreDataMember] private readonly EnemyReferences _enemyReferences;
         [IgnoreDataMember] private readonly Inventory _inventory;
-
-        // ReSharper disable once NotAccessedField.Local
-        // [IgnoreDataMember] private readonly InventoryReferences _inventoryReferences;
 
         /// <summary>
         ///     Both underworld and overworld maps
@@ -451,18 +445,6 @@ namespace Ultima5Redux.Maps
             return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
                 (int)tileReference.CombatMapIndex);
         }
-
-        // internal bool IsAnyExposedItems(Point2D xy)
-        // {
-        //     if (_exposedSearchItems[xy.X][xy.Y] == null) return false;
-        //     return _exposedSearchItems[xy.X][xy.Y].Count > 0;
-        // }
-
-        // internal InventoryItem DequeuExposedItem(Point2D xy)
-        // {
-        //     if (TheMapOverrides.HasExposedSearchItems(xy)) return TheMapOverrides.DequeueSearchItem(xy);
-        //     throw new Ultima5ReduxException("Tried to deque an item at " + xy + " but there is no item on it");
-        // }
 
         /// <summary>
         ///     Gets the Avatar's current position in 3D spaces

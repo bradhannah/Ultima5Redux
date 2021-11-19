@@ -134,25 +134,15 @@ namespace Ultima5Redux.DayNightMoon
         /// <exception cref="Ultima5ReduxException"></exception>
         public MoonPhases GetMoonGateMoonPhase(TimeOfDay timeOfDay)
         {
-            // the value stored is an offset and needs to be adjusted to a zero based index
-            // int getAdjustedValue(int nValue)
-            // {
-            //     return nValue - N_OFFSET_ADJUST;
-            // }
-
             // we don't have a moon phase in the day time
             if (timeOfDay.IsDayLight) return MoonPhases.NoMoon;
 
             if (timeOfDay.Hour <= 4)
                 return
-                    GetMoonPhasesByTimeOfDay(timeOfDay,
-                        MoonsAndSun
-                            .Felucca); //return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2]);
+                    GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun .Felucca);
             if (timeOfDay.Hour >= 20 && timeOfDay.Hour <= 23)
                 return
-                    GetMoonPhasesByTimeOfDay(timeOfDay,
-                        MoonsAndSun
-                            .Trammel); //return (MoonPhases)getAdjustedValue(_moonPhaseChunk.GetAsByteList()[(timeOfDay.Day - 1)*2 + 1]);
+                    GetMoonPhasesByTimeOfDay(timeOfDay, MoonsAndSun .Trammel);
 
             throw new Ultima5ReduxException("We have asked for a moongate phase but did not met the criteria. " +
                                             timeOfDay);

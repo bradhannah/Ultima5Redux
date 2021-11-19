@@ -13,13 +13,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     /// </summary>
     public partial class NonPlayerCharacterReference
     {
-        // private enum NPCKeySpriteEnum
-        // {
-        //     Custom = -1, Guard = 368, Merchant = 340, Healer = 320, UnknownX86 = 368, Bard = 324, Fighter = 328,
-        //     Towny = 336, BardPlaying = 348, Jester = 344, Child = 360, Beggar = 364, Apparition = 372, BlackThorn = 376,
-        //     LordBritish = 380, Unknown = 0xFF
-        // }
-
         /// <summary>
         ///     NPC Type, any other value is a specific character
         /// </summary>

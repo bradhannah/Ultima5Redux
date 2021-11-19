@@ -282,13 +282,6 @@ namespace Ultima5Redux.Dialogue
 
                 do // called for each label #
                 {
-                    // Debug code for narrowing down to a single NPC
-                    //if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sutek".ToLower())
-                    //if (scriptLines[0].GetScriptItem(0).Str.ToLower().Trim() == "sir arbuthnot")
-                    //{
-                    //        Console.WriteLine("AH");
-                    //}
-
                     line = _scriptLines[nIndex];
 
                     // let's make sure there are actually labels to look at
@@ -780,9 +773,6 @@ namespace Ultima5Redux.Dialogue
                 // AND doesn't contain spaces
 
                 return str.Trim().Length <= 6 && str.Trim().Length >= 1 && !str.Contains(" ");
-
-                // there are some answers that are capitalized...
-                //&& (Str.ToLower() == Str));
             }
 
             /// <summary>

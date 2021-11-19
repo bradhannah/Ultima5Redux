@@ -182,13 +182,10 @@ namespace Ultima5Redux.PlayerCharacters
             // put the old one back in your inventory
             CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment);
             oldEquippedCombatItem.Quantity--;
-            //if (oldEquippedCombatItem!=null) 
 
             // there should be at least one in your inventory to do this
             CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment);
-            // if (newEquippedCombatItem == null)
-            //     throw new Ultima5ReduxException(
-            //         "Tried to equip equipment that doesn't appear to be in your inventory: " + newEquipment);
+
             Debug.Assert(newEquippedCombatItem.Quantity > 0);
 
             // let's make sure they have enough strength to wield/wear the Equipment

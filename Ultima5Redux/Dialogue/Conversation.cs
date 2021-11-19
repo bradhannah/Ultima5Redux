@@ -200,7 +200,7 @@ namespace Ultima5Redux.Dialogue
 
                 // currentLine = unsplit line with all content
                 // splitLines = a list of all the split up lines
-                // curentSplitLine = current section of the currentLine
+                // currentSplitLine = current section of the currentLine
                 Debug.Assert(splitLines.Count > 0);
 
                 // If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether

@@ -142,7 +142,6 @@ namespace Ultima5Redux.MapUnits
         {
             //MapUnitState vehicleState = new MapUnitState();
             // we copy the Avatar map unit state as a starting point
-            //TheMapUnitState.CopyTo(vehicleState);
             MapUnitMovement emptyMapUnitMovement = new MapUnitMovement(0, null, null);
 
             switch (avatarState)

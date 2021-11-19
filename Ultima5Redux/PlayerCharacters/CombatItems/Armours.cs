@@ -16,11 +16,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Armour>();
 
-        // [OnDeserialized] public void OnDeserialized(StreamingContext context)
-        // {
-        //     
-        // }
-
         // override to allow for inserting entire lists
         [IgnoreDataMember]
         public override IEnumerable<InventoryItem> GenericItemList
