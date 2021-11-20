@@ -27,6 +27,22 @@ using Ultima5Redux.References;
 
 namespace Ultima5ReduxTesting
 {
+    // [SetUpFixture]
+    // public class SetupTrace
+    // {
+    //     [OneTimeSetUp]
+    //     public void StartTest()
+    //     {
+    //         Trace.Listeners.Add(new ConsoleTraceListener());
+    //     }
+    //
+    //     [OneTimeTearDown]
+    //     public void EndTest()
+    //     {
+    //         Trace.Flush();
+    //     }
+    // }
+    
     [TestFixture] public class Tests
     {
         public enum SaveFiles
@@ -52,9 +68,13 @@ namespace Ultima5ReduxTesting
                 RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? @"/Users/bradhannah/games/u5tests" : 
                     @"C:\games\ultima5tests");
 
-        private World CreateWorld(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false) =>
-            new World(GetSaveDirectory(saveFiles), bUseExtendedSprites, bLoadInitGam, DataDirectory);
-        
+        private World CreateWorld(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false)
+        {
+            TestContext.Out.WriteLine("CWD: " + Directory.GetCurrentDirectory());
+            //Debug.WriteLine("CWD: " + Directory.GetCurrentDirectory());
+            return new World(GetSaveDirectory(saveFiles), bUseExtendedSprites, bLoadInitGam, DataDirectory);
+        }
+
         [Test]
         [TestCase(SaveFiles.Britain)]
         public void AllSmallMapsLoadTest(SaveFiles saveFiles)
