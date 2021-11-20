@@ -21,7 +21,7 @@ jobs:
       - name: Checkout Ultima5ReduxTestDependancies
         uses: actions/checkout@v2
         with:
-          repository: Ultima5ReduxTestDependancies
+          repository: bradhannah/Ultima5ReduxTestDependancies
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: Ultima5ReduxTestDependancies
       
