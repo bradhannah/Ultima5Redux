@@ -56,7 +56,16 @@ namespace Ultima5ReduxTesting
         {
             TestContext.Out.WriteLine("CWD: " + Directory.GetCurrentDirectory());
             TestContext.Out.WriteLine("CWD Dump: " + Directory.EnumerateDirectories(Directory.GetCurrentDirectory()));
-            TestContext.Out.WriteLine("../ DUMP: " + Directory.EnumerateDirectories(Directory.GetCurrentDirectory()));
+            OutputDirectories(Directory.GetCurrentDirectory());
+            //TestContext.Out.WriteLine("../ DUMP: " + Directory.EnumerateDirectories(Directory.GetCurrentDirectory()));
+        }
+
+        private void OutputDirectories(string dir)
+        {
+            foreach (string subDir in Directory.EnumerateDirectories(dir))
+            {
+                TestContext.Out.WriteLine(subDir);
+            }
         }
 
         [TearDown] public void TearDown()
