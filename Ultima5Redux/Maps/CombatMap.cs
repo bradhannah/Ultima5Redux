@@ -236,7 +236,7 @@ namespace Ultima5Redux.Maps
             {
                 for (nEnemyIndex = 0; nEnemyIndex < SingleCombatMapReference.NUM_ENEMIES; nEnemyIndex++)
                 {
-                    CreateEnemy(nEnemyIndex, singleCombatMapReference, primaryEnemyReference, npcRef);
+                    _ = CreateEnemy(nEnemyIndex, singleCombatMapReference, primaryEnemyReference);
                 }
 
                 return;
@@ -247,7 +247,7 @@ namespace Ultima5Redux.Maps
             // if there is only a single enemy then we always give them first position (such as NPC fights)
             if (nPrimaryEnemies == 1 && nSecondaryEnemies == 0)
             {
-                CreateEnemy(0, singleCombatMapReference, primaryEnemyReference, npcRef);
+                _ = CreateEnemy(0, singleCombatMapReference, primaryEnemyReference);
                 return;
             }
 
@@ -256,12 +256,12 @@ namespace Ultima5Redux.Maps
 
             for (int nIndex = 0; nIndex < nPrimaryEnemies; nIndex++, nEnemyIndex++)
             {
-                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, primaryEnemyReference, null);
+                _ = CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, primaryEnemyReference);
             }
 
             for (int nIndex = 0; nIndex < nSecondaryEnemies; nIndex++, nEnemyIndex++)
             {
-                CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference, null);
+                _ = CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference);
             }
         }
 
@@ -277,11 +277,10 @@ namespace Ultima5Redux.Maps
         /// <param name="nEnemyIndex">0 based index that reflects the combat maps enemy index list</param>
         /// <param name="singleCombatMapReference">reference of the combat map</param>
         /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
-        /// <param name="npcRef"></param>
         /// <returns>the enemy that was just created</returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private Enemy CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
-            EnemyReference enemyReference, NonPlayerCharacterReference npcRef)
+            EnemyReference enemyReference)
         {
             SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType =
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);

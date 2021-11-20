@@ -15,7 +15,15 @@ jobs:
         dotnet: [ '3.1.x' ]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Main branch of Ultima5Redux
+        uses: actions/checkout@v2
+      
+      - name: Checkout Ultima5ReduxTestDependancies
+        uses: actions/checkout@v2
+        with:
+          repository: Ultima5ReduxTestDependancies
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+          path: Ultima5ReduxTestDependancies
       
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
@@ -32,4 +40,4 @@ jobs:
         run: msbuild Ultima5ReduxSolution.sln
 
       - name: NUnit Console Runner
-        run: .\packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe Ultima5ReduxTesting\bin\Debug\Ultima5ReduxTesting.dll
+        run: .\packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe Ultima5ReduxTesting\bin\Debug\Ultima5ReduxTesting.dll --testparam:DataDirectory="../Ultima5ReduxTestDependancies/DataFiles" --testparam:SaveRootDirectory="../Ultima5ReduxTestDependancies/Saves"

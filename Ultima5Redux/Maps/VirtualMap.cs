@@ -199,7 +199,6 @@ namespace Ultima5Redux.Maps
         /// <param name="inventory"></param>
         /// <param name="importedGameState"></param>
         /// <param name="npcStates"></param>
-        /// <param name="bLoadedInitGam"></param>
         internal VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
             LargeMap underworldMap, GameState state, TimeOfDay timeOfDay, Moongates moongates,
             PlayerCharacterRecords playerCharacterRecords, Map.Maps initialMap,
