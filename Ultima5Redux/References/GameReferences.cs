@@ -1,4 +1,5 @@
-﻿using Ultima5Redux.Data;
+﻿using System.IO;
+using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
@@ -75,7 +76,25 @@ namespace Ultima5Redux.References
         public static TalkScripts TalkScriptsRef { get; }
 
         public static TileOverrideReferences TileOverrideRefs { get; }
-        private static string U5Directory => @"C:\games\Ultima_5\Gold";
+
+        private static string U5Directory
+        {
+            get
+            {
+                if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
+                if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
+                if (Directory.Exists(GOLD_DIR)) return GOLD_DIR;
+                throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
+                                                Directory.GetCurrentDirectory() + "\nDirs: " +
+                                                Directory.GetDirectories(Directory.GetCurrentDirectory()));
+            }
+        }
+
+        private const string GOLD_DIR = @"C:\games\Ultima_5\Gold";
+        private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
+        private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
+
+        //=> ;
 
         static GameReferences()
         {
