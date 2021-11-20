@@ -52,6 +52,18 @@ namespace Ultima5ReduxTesting
             b_carpet, b_frigat, b_horse, b_skiff
         }
 
+        [SetUp] public void Setup()
+        {
+            TestContext.Out.WriteLine("CWD: " + Directory.GetCurrentDirectory());
+            TestContext.Out.WriteLine("CWD Dump: " + Directory.EnumerateDirectories(Directory.GetCurrentDirectory()));
+            TestContext.Out.WriteLine("../ DUMP: " + Directory.EnumerateDirectories(Directory.GetCurrentDirectory()));
+        }
+
+        [TearDown] public void TearDown()
+        {
+        }
+        
+
         private string GetSaveDirectory(SaveFiles saveFiles)
         {
             if (!Enum.IsDefined(typeof(SaveFiles), saveFiles))
@@ -68,12 +80,8 @@ namespace Ultima5ReduxTesting
                 RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? @"/Users/bradhannah/games/u5tests" : 
                     @"C:\games\ultima5tests");
 
-        private World CreateWorld(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false)
-        {
-            TestContext.Out.WriteLine("CWD: " + Directory.GetCurrentDirectory());
-            //Debug.WriteLine("CWD: " + Directory.GetCurrentDirectory());
-            return new World(GetSaveDirectory(saveFiles), bUseExtendedSprites, bLoadInitGam, DataDirectory);
-        }
+        private World CreateWorld(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false) =>
+            new World(GetSaveDirectory(saveFiles), bUseExtendedSprites, bLoadInitGam, DataDirectory);
 
         [Test]
         [TestCase(SaveFiles.Britain)]
