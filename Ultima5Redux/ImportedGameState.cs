@@ -10,6 +10,7 @@ using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.Properties;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux
 {

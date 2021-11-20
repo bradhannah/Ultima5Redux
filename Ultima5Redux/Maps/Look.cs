@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {

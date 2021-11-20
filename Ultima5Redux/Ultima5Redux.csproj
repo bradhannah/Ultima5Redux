@@ -232,7 +232,7 @@
         <Compile Include="Point3D.cs"/>
         <Compile Include="Maps\CombatMapReferences.cs"/>
         <Compile Include="Maps\SmallMapReference.cs"/>
-        <Compile Include="Constants.cs"/>
+        <Compile Include="References\FileConstants.cs"/>
         <Compile Include="References\GameReferences.cs"/>
         <Compile Include="Ultima5ReduxException.cs"/>
         <Compile Include="Utils.cs"/>

@@ -82,7 +82,12 @@ namespace Ultima5Redux
         /// <summary>
         ///     Ultima 5 data and save files directory
         /// </summary>
-        public string U5Directory { get; }
+        public string SaveGameDirectory { get; }
+
+        /// <summary>
+        ///     Ultima 5 data files directory (static content)
+        /// </summary>
+        public string DataDirectory { get; } 
 
         /// <summary>
         ///     the underworld map object
@@ -94,21 +99,25 @@ namespace Ultima5Redux
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="ultima5Directory">ultima 5 data and save game directory</param>
+        /// <param name="saveGameDirectory">ultima 5 data and save game directory</param>
         /// <param name="bUseExtendedSprites"></param>
-        public World(string ultima5Directory, bool bUseExtendedSprites = false, bool bLoadedInitGam = false)
+        /// <param name="bLoadedInitGam"></param>
+        /// <param name="dataDirectory"></param>
+        public World(string saveGameDirectory, bool bUseExtendedSprites = false, bool bLoadedInitGam = false,
+            string dataDirectory = "")
         {
-            U5Directory = ultima5Directory;
+            SaveGameDirectory = saveGameDirectory;
+            DataDirectory = dataDirectory;
 
             // build the overworld map
-            OverworldMap = new LargeMap(U5Directory, Map.Maps.Overworld);
+            OverworldMap = new LargeMap(DataDirectory, Map.Maps.Overworld);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(U5Directory, Map.Maps.Underworld);
+            UnderworldMap = new LargeMap(DataDirectory, Map.Maps.Underworld);
 
-            AllSmallMaps = new SmallMaps(U5Directory);
+            AllSmallMaps = new SmallMaps(DataDirectory);
 
-            State = new GameState(bLoadedInitGam ? "" : U5Directory);
+            State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             State.InitializeVirtualMap(GameReferences.SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap,

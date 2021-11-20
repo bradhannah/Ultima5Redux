@@ -4,6 +4,7 @@ using System.IO;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
@@ -39,19 +40,19 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
         /// </summary>
-        /// <param name="u5Directory"></param>
+        /// <param name="dataDirectory"></param>
         /// <param name="mapChoice"></param>
-        public LargeMap(string u5Directory, Maps mapChoice) : base(
+        public LargeMap(string dataDirectory, Maps mapChoice) : base(
             SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
             switch (mapChoice)
             {
                 case Maps.Overworld:
-                    TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.BRIT_DAT),
-                        Path.Combine(u5Directory, FileConstants.DATA_OVL), false);
+                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.BRIT_DAT),
+                        Path.Combine(dataDirectory, FileConstants.DATA_OVL), false);
                     break;
                 case Maps.Underworld:
-                    TheMap = BuildGenericMap(Path.Combine(u5Directory, FileConstants.UNDER_DAT), "", true);
+                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.UNDER_DAT), "", true);
                     break;
                 case Maps.Small:
                     throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.References;
 
 // ReSharper disable InconsistentNaming
 

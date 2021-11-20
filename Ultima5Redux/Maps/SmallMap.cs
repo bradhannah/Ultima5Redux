@@ -35,15 +35,15 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
         /// </summary>
-        /// <param name="u5Directory"></param>
+        /// <param name="dataDirectory"></param>
         /// <param name="singleSmallMapReference"></param>
-        public SmallMap(string u5Directory, SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
+        public SmallMap(string dataDirectory, SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
             singleSmallMapReference)
         {
             _singleSmallMapReference = singleSmallMapReference;
 
             // load the map into memory
-            TheMap = LoadSmallMapFile(Path.Combine(u5Directory, singleSmallMapReference.MapFilename),
+            TheMap = LoadSmallMapFile(Path.Combine(dataDirectory, singleSmallMapReference.MapFilename),
                 singleSmallMapReference.FileOffset);
 
             InitializeAStarMap(WalkableType.StandardWalking);

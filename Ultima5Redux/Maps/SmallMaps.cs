@@ -10,12 +10,12 @@ namespace Ultima5Redux.Maps
             _mapLocationDictionary =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
 
-        public SmallMaps(string u5Directory)
+        public SmallMaps(string dataDirectory)
         {
             foreach (SmallMapReferences.SingleMapReference mapRef in GameReferences.SmallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(u5Directory, mapRef);
+                SmallMap smallMap = new SmallMap(dataDirectory, mapRef);
 
                 // we make a map that allows us to map the _location and Floor number to the small map with 
                 // details such as the grid

@@ -5,6 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Properties;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {

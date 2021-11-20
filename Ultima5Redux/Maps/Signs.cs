@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Ultima5Redux.Data;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {

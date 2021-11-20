@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Ultima5Redux
+namespace Ultima5Redux.References
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")] public static class FileConstants
     {
