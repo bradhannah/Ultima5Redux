@@ -7,7 +7,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     public class ProvisionReferences
     {
-        public static readonly Dictionary<Provision.ProvisionTypeEnum, int> BundleQuantity =
+        private static readonly Dictionary<Provision.ProvisionTypeEnum, int> BundleQuantity =
             new Dictionary<Provision.ProvisionTypeEnum, int>
             {
                 { Provision.ProvisionTypeEnum.Torches, 5 }, { Provision.ProvisionTypeEnum.Keys, 3 },
@@ -60,6 +60,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             return -1;
+        }
+
+        /// <summary>
+        ///     Gets the bundle quantity for the current provision
+        /// </summary>
+        /// <returns></returns>
+        public int GetBundleQuantity(Provision.ProvisionTypeEnum provisionType)
+        {
+            return BundleQuantity[provisionType];
         }
     }
 }

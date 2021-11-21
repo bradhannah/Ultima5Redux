@@ -22,6 +22,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => ProvisionType.ToString();
 
+        [IgnoreDataMember] public int BundleQuantity =>
+            GameReferences.ProvisionReferences.GetBundleQuantity(ProvisionType);
+        
         [DataMember] public ProvisionTypeEnum ProvisionType { get; private set; }
 
         [JsonConstructor] private Provision()

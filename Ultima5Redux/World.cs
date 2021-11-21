@@ -61,6 +61,11 @@ namespace Ultima5Redux
         /// </summary>
         public Conversation CurrentConversation { get; private set; }
 
+        /// <summary>
+        ///     Ultima 5 data files directory (static content)
+        /// </summary>
+        public string DataDirectory { get; }
+
         public bool IsCombatMap => State.TheVirtualMap.IsCombatMap;
 
         /// <summary>
@@ -75,19 +80,14 @@ namespace Ultima5Redux
         private LargeMap OverworldMap { get; }
 
         /// <summary>
-        ///     The current game state
-        /// </summary>
-        public GameState State { get; private set; }
-
-        /// <summary>
         ///     Ultima 5 data and save files directory
         /// </summary>
         public string SaveGameDirectory { get; }
 
         /// <summary>
-        ///     Ultima 5 data files directory (static content)
+        ///     The current game state
         /// </summary>
-        public string DataDirectory { get; } 
+        public GameState State { get; private set; }
 
         /// <summary>
         ///     the underworld map object
@@ -107,7 +107,7 @@ namespace Ultima5Redux
             string dataDirectory = "")
         {
             SaveGameDirectory = saveGameDirectory;
-            DataDirectory = dataDirectory;
+            DataDirectory = dataDirectory == "" ? SaveGameDirectory : dataDirectory;
 
             // build the overworld map
             OverworldMap = new LargeMap(DataDirectory, Map.Maps.Overworld);
@@ -122,18 +122,9 @@ namespace Ultima5Redux
             GameStateReference.State = State;
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap,
-                bUseExtendedSprites);
+            State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap, bUseExtendedSprites);
         }
 
-        public void ReLoadFromJson()
-        {
-            string stateJson = State.Serialize();
-            GameState newState = GameState.Deserialize(stateJson);
-            GameStateReference.State = newState;
-            State = newState;
-        }
-        
         /// <summary>
         ///     Advances time and takes care of all day, month, year calculations
         /// </summary>
@@ -552,6 +543,14 @@ namespace Ultima5Redux
             PassTime();
 
             return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N);
+        }
+
+        public void ReLoadFromJson()
+        {
+            string stateJson = State.Serialize();
+            GameState newState = GameState.Deserialize(stateJson);
+            GameStateReference.State = newState;
+            State = newState;
         }
 
         // ReSharper disable once UnusedMember.Global
