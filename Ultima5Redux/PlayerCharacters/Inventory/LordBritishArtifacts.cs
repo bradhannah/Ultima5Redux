@@ -1,15 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
+    [DataContract]
     public sealed class LordBritishArtifacts : InventoryItems<LordBritishArtifact.ArtifactType, LordBritishArtifact>
     {
-        private enum Offsets { AMULET = 0x20D, CROWN = 0x20E, SCEPTRE = 0x20F }
+        [JsonConverter(typeof(StringEnumConverter))] private enum Offsets
+        {
+            AMULET = 0x20D, CROWN = 0x20E, SCEPTRE = 0x20F
+        }
 
-        public override Dictionary<LordBritishArtifact.ArtifactType, LordBritishArtifact> Items { get; } =
+        [DataMember] public override Dictionary<LordBritishArtifact.ArtifactType, LordBritishArtifact> Items { get; } =
             new Dictionary<LordBritishArtifact.ArtifactType, LordBritishArtifact>(3);
+
+        [JsonConstructor] private LordBritishArtifacts()
+        {
+        }
 
         public LordBritishArtifacts(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {

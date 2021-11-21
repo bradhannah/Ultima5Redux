@@ -59,6 +59,7 @@ namespace Ultima5ReduxTesting
             // OutputDirectories(Directory.GetCurrentDirectory());
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void OutputDirectories(string dir)
         {
             foreach (string subDir in Directory.EnumerateDirectories(dir))
@@ -1294,9 +1295,15 @@ namespace Ultima5ReduxTesting
         [TestCase(SaveFiles.b_carpet)]
         public void Test_LoadInitialSaveGame(SaveFiles saveFiles)
         {
-            World world = CreateWorld((SaveFiles.b_carpet), true, true);
+            World world = CreateWorld(saveFiles, true, true);
 
             NonPlayerCharacter npc = world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAndReloadInitialSave(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, true);
+            world.ReLoadFromJson();
         }
 
     }

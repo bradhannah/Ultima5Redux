@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
@@ -10,9 +12,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public class Armours : CombatItems<Armours.ArmourTypeEnum, List<Armour>>
     {
-        public enum ArmourTypeEnum { Shield, Chest, Helm, Ring, Amulet }
+        [JsonConverter(typeof(StringEnumConverter))] public enum ArmourTypeEnum { Shield, Chest, Helm, Ring, Amulet }
 
-        [DataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
+        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Armour>();
 
         // override to allow for inserting entire lists
@@ -31,10 +33,14 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         [IgnoreDataMember] public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
             new Dictionary<ArmourTypeEnum, List<Armour>>();
 
-        public readonly List<Amulet> Amulets = new List<Amulet>();
-        public readonly List<ChestArmour> ChestArmours = new List<ChestArmour>();
-        public readonly List<Helm> Helms = new List<Helm>();
-        public readonly List<Ring> Rings = new List<Ring>();
+        [DataMember] public readonly List<Amulet> Amulets = new List<Amulet>();
+        [DataMember] public readonly List<ChestArmour> ChestArmours = new List<ChestArmour>();
+        [DataMember] public readonly List<Helm> Helms = new List<Helm>();
+        [DataMember] public readonly List<Ring> Rings = new List<Ring>();
+
+        [JsonConstructor] public Armours()
+        {
+        }
 
         public Armours(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {

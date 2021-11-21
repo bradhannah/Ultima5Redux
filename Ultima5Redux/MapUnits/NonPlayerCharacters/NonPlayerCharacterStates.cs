@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Maps;
 using Ultima5Redux.References;
 
@@ -8,9 +9,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public class NonPlayerCharacterStates
     {
+        [DataMember]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>
             _npcMap = new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>();
 
+        [JsonConstructor] private NonPlayerCharacterStates()
+        {
+        }
+        
         internal NonPlayerCharacterStates(ImportedGameState importedGameState)
         {
             Debug.Assert(importedGameState.NPCIsDeadArray.Length == importedGameState.NPCIsMetArray.Length);

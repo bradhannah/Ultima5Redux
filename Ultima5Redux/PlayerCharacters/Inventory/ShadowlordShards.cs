@@ -1,16 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public sealed class ShadowlordShards : InventoryItems<ShadowlordShard.ShardType, ShadowlordShard>
+    [DataContract] public sealed class ShadowlordShards : InventoryItems<ShadowlordShard.ShardType, ShadowlordShard>
     {
         private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
 
-        public override Dictionary<ShadowlordShard.ShardType, ShadowlordShard> Items { get; } =
+        [DataMember] public override Dictionary<ShadowlordShard.ShardType, ShadowlordShard> Items { get; } =
             new Dictionary<ShadowlordShard.ShardType, ShadowlordShard>(3);
 
+        [JsonConstructor] private ShadowlordShards()
+        {
+        }
+        
         public ShadowlordShards(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             Items[ShadowlordShard.ShardType.Falsehood] = new ShadowlordShard(ShadowlordShard.ShardType.Falsehood,

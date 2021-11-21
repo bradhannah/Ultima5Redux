@@ -94,6 +94,10 @@ namespace Ultima5Redux.PlayerCharacters
 
         private byte _monthsSinceStayingAtInn;
 
+        [JsonConstructor] private PlayerCharacterRecord()
+        {
+        }
+        
         /// <summary>
         ///     Creates a character record from a raw record that begins at offset 0
         /// </summary>

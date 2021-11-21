@@ -1,37 +1,45 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] public class CombatItemReference
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] [DataContract]
+    public class CombatItemReference
     {
-        public enum MissileType { None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock }
+        [JsonConverter(typeof(StringEnumConverter))] public enum MissileType
+        {
+            None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock
+        }
 
-        public const int BARE_HANDS_INDEX = -2;
+        [IgnoreDataMember] public const int BARE_HANDS_INDEX = -2;
 
-        private readonly DataOvlReference _dataOvlReference;
+        [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
 
-        public readonly DataOvlReference.Equipment SpecificEquipment;
+        [DataMember] public readonly DataOvlReference.Equipment SpecificEquipment;
 
-        public virtual bool CanSell => BasePrice > 0;
+        [IgnoreDataMember] public virtual bool CanSell => BasePrice > 0;
 
-        public int AttackStat { get; }
-        public int BasePrice { get; private set; }
-        public int DefendStat { get; }
-        public string EquipmentName { get; }
+        [DataMember] public int AttackStat { get; }
+        [DataMember] public int BasePrice { get; private set; }
+        [DataMember] public int DefendStat { get; }
+        [DataMember] public string EquipmentName { get; }
 
-        public bool IsAmmo => SpecificEquipment == DataOvlReference.Equipment.Quarrels ||
-                              SpecificEquipment == DataOvlReference.Equipment.Arrows;
+        [IgnoreDataMember] public bool IsAmmo => SpecificEquipment == DataOvlReference.Equipment.Quarrels ||
+                                                 SpecificEquipment == DataOvlReference.Equipment.Arrows;
 
-        public bool IsShield =>
+        [IgnoreDataMember] public bool IsShield =>
             SpecificEquipment == DataOvlReference.Equipment.SmallShield ||
             SpecificEquipment == DataOvlReference.Equipment.LargeShield ||
             SpecificEquipment == DataOvlReference.Equipment.SpikedShield ||
             SpecificEquipment == DataOvlReference.Equipment.MagicShield ||
             SpecificEquipment == DataOvlReference.Equipment.JewelShield;
 
+        [IgnoreDataMember] 
         public bool IsTwoHanded => SpecificEquipment == DataOvlReference.Equipment.TwoHAxe ||
                                    SpecificEquipment == DataOvlReference.Equipment.TwoHSword ||
                                    SpecificEquipment == DataOvlReference.Equipment.TwoHHammer ||
@@ -41,11 +49,15 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                                    SpecificEquipment == DataOvlReference.Equipment.Halberd ||
                                    SpecificEquipment == DataOvlReference.Equipment.FlamingOil;
 
-        public MissileType Missile { get; }
-        public int Range { get; }
+        [DataMember] public MissileType Missile { get; }
+        [DataMember] public int Range { get; }
 
-        public int RequiredStrength { get; }
-        public int Sprite { get; }
+        [DataMember] public int RequiredStrength { get; }
+        [DataMember] public int Sprite { get; }
+
+        [JsonConstructor] protected CombatItemReference()
+        {
+        }
 
         public CombatItemReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference)
         {

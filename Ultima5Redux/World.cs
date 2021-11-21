@@ -77,7 +77,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     The current game state
         /// </summary>
-        public GameState State { get; }
+        public GameState State { get; private set; }
 
         /// <summary>
         ///     Ultima 5 data and save files directory
@@ -123,9 +123,16 @@ namespace Ultima5Redux
             State.InitializeVirtualMap(GameReferences.SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap,
                 bUseExtendedSprites);
 
-            State.Serialize();
+            // State.Serialize();
         }
 
+        public void ReLoadFromJson()
+        {
+            string stateJson = State.Serialize();
+            GameState newState = GameState.Deserialize(stateJson);
+            State = newState;
+        }
+        
         /// <summary>
         ///     Advances time and takes care of all day, month, year calculations
         /// </summary>

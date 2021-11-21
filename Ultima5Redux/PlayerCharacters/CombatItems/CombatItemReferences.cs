@@ -6,7 +6,7 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    public class CombatItemReferences
+    public sealed class CombatItemReferences
     {
         private enum CombatItemType { Armour, Weapon, Other }
 
@@ -61,7 +61,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                //WeaponReference weaponReference = new WeaponReference(dataOvlReference, inventoryReference);
             }
         }
 

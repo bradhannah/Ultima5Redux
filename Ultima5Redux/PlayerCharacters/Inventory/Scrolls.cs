@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class Scrolls : InventoryItems<MagicReference.SpellWords, Scroll>
+    [DataContract] public class Scrolls : InventoryItems<MagicReference.SpellWords, Scroll>
     {
-        public override Dictionary<MagicReference.SpellWords, Scroll> Items { get; } =
+        [DataMember] public override Dictionary<MagicReference.SpellWords, Scroll> Items { get; } =
             new Dictionary<MagicReference.SpellWords, Scroll>(8);
 
+        [JsonConstructor] private Scrolls()
+        {
+        }
+        
         public Scrolls(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             AddScroll(MagicReference.SpellWords.Vas_Lor);

@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class Moonstones : InventoryItems<MoonPhaseReferences.MoonPhases, Moonstone>
+    [DataContract] public sealed class Moonstones : InventoryItems<MoonPhaseReferences.MoonPhases, Moonstone>
     {
-        public sealed override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; } =
+        [DataMember] public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; } =
             new Dictionary<MoonPhaseReferences.MoonPhases, Moonstone>();
+
+        [JsonConstructor] private Moonstones()
+        {
+        }
 
         public Moonstones(Moongates moongates) : base(null)
         {

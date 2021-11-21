@@ -1,17 +1,28 @@
-﻿namespace Ultima5Redux.PlayerCharacters.Inventory
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public sealed class LordBritishArtifact : InventoryItem
+    [DataContract] public sealed class LordBritishArtifact : InventoryItem
     {
-        public enum ArtifactType { Amulet = 439, Crown = 437, Sceptre = 438 }
+        [JsonConverter(typeof(StringEnumConverter))] public enum ArtifactType
+        {
+            Amulet = 439, Crown = 437, Sceptre = 438
+        }
 
-        public override bool HideQuantity { get; } = true;
+        [IgnoreDataMember] public override bool HideQuantity => true;
 
-        public override string InventoryReferenceString => Artifact.ToString();
+        [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();
 
-        public ArtifactType Artifact { get; }
+        [DataMember] public ArtifactType Artifact { get; }
 
-        public string EquipMessage { get; }
+        [DataMember] public string EquipMessage { get; }
 
+        [JsonConstructor] private LordBritishArtifact()
+        {
+        }
+        
         public LordBritishArtifact(ArtifactType artifact, int quantity, string equipMessage) : base(quantity,
             (int)artifact)
         {

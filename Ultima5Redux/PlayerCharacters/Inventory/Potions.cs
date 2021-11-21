@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class Potions : InventoryItems<Potion.PotionColor, Potion>
+    [DataContract] public class Potions : InventoryItems<Potion.PotionColor, Potion>
     {
-        public override Dictionary<Potion.PotionColor, Potion> Items { get; } =
+        [DataMember] public override Dictionary<Potion.PotionColor, Potion> Items { get; } =
             new Dictionary<Potion.PotionColor, Potion>(8);
+
+        [JsonConstructor] private Potions()
+        {
+        }
 
         public Potions(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {

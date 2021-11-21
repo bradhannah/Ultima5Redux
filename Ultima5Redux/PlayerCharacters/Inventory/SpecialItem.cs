@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class SpecialItem : InventoryItem
+    [DataContract] public class SpecialItem : InventoryItem
     {
         public enum ItemTypeEnum
         {
@@ -16,16 +18,20 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             WoodenBox = 270, Sextant = 256
         }
 
-        public override bool HideQuantity => ItemType != ItemTypeSpriteEnum.Carpet;
+        [DataMember] public override bool HideQuantity => ItemType != ItemTypeSpriteEnum.Carpet;
 
-        public override string InventoryReferenceString => ItemType.ToString();
+        [DataMember] public override string InventoryReferenceString => ItemType.ToString();
 
-        public override bool IsSellable => false;
+        [IgnoreDataMember] public override bool IsSellable => false;
 
-        public bool HasOneOfMore => Quantity > 0;
+        [IgnoreDataMember] public bool HasOneOfMore => Quantity > 0;
 
-        public ItemTypeSpriteEnum ItemType { get; }
+        [DataMember] public ItemTypeSpriteEnum ItemType { get; }
 
+        [JsonConstructor] private SpecialItem()
+        {
+        }
+        
         public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) : base(quantity, (int)itemType)
         {
             ItemType = itemType;

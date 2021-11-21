@@ -1,11 +1,13 @@
-﻿using System.Text;
-using Ultima5Redux.PlayerCharacters.Inventory;
+﻿using System.Runtime.Serialization;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class Spell : InventoryItem
+    [DataContract] public class Spell : InventoryItem
     {
-        public enum UnpublishedSpells
+        [JsonConverter(typeof(StringEnumConverter))] public enum UnpublishedSpells
         {
             An_Ylem, // negate matter 
             In_Xen_Mani, //create create life
@@ -15,16 +17,20 @@ namespace Ultima5Redux.PlayerCharacters
 
         private const int SPRITE_NUM = 260;
 
-        public override bool HideQuantity { get; } = false;
+        [IgnoreDataMember] public override bool HideQuantity => false;
 
-        public override string InventoryReferenceString => SpellIncantation.ToString();
-        public override bool IsSellable => false;
+        [IgnoreDataMember] public override string InventoryReferenceString => SpellIncantation.ToString();
+        [IgnoreDataMember] public override bool IsSellable => false;
 
-        public int MinCircle => SpellMagicReference.Circle;
+        [IgnoreDataMember] public int MinCircle => SpellMagicReference.Circle;
 
-        public MagicReference.SpellWords SpellIncantation { get; }
+        [DataMember] public MagicReference.SpellWords SpellIncantation { get; }
 
-        public MagicReference SpellMagicReference { get; }
+        [DataMember] public MagicReference SpellMagicReference { get; }
+
+        [JsonConstructor] public Spell()
+        {
+        }
 
         public Spell(MagicReference.SpellWords spellWord, int quantity, MagicReference magicReference) : base(quantity,
             SPRITE_NUM)

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.References;
@@ -19,7 +22,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         //0x2AF 1 0-99 Black Pearl
         //0x2B0 1 0-99 Nightshade
         //0x2B1 1 0-99 Mandrake Root
-        public enum ReagentTypeEnum
+        [JsonConverter(typeof(StringEnumConverter))] public enum ReagentTypeEnum
         {
             SulfurAsh = 0x2AA, Ginseng = 0x2AB, Garlic = 0x2AC, SpiderSilk = 0x2AD, BloodMoss = 0x2AE,
             BlackPearl = 0x2AF, NightShade = 0x2B0, MandrakeRoot = 0x2B1
@@ -27,18 +30,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int REAGENT_SPRITE = 259;
 
+        [DataMember]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, ReagentPriceAndQuantity>
             _reagentPriceAndQuantities;
 
-        private readonly GameState _state;
-        public override int BasePrice => 0;
+        [IgnoreDataMember] private readonly GameState _state;
+        [IgnoreDataMember] public override int BasePrice => 0;
 
-        public override bool HideQuantity => false;
+        [IgnoreDataMember] public override bool HideQuantity => false;
 
-        public override string InventoryReferenceString => ReagentType.ToString();
-        public override bool IsSellable => false;
+        [IgnoreDataMember] public override string InventoryReferenceString => ReagentType.ToString();
+        [IgnoreDataMember] public override bool IsSellable => false;
 
-        public override int Quantity
+        [DataMember] public override int Quantity
         {
             get => base.Quantity;
             set => base.Quantity = value > 99 ? 99 : value;
@@ -47,10 +51,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Standard index/order of reagents in data files
         /// </summary>
-        public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
+        [IgnoreDataMember] public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
 
-        public ReagentTypeEnum ReagentType { get; }
+        [DataMember] public ReagentTypeEnum ReagentType { get; }
 
+        [JsonConstructor] private Reagent()
+        {
+        }
+        
         /// <summary>
         ///     Create a reagent
         /// </summary>

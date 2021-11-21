@@ -1,19 +1,25 @@
 ﻿using System.Diagnostics;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class ShadowlordShard : InventoryItem
+    [DataContract] public class ShadowlordShard : InventoryItem
     {
-        public enum ShardType { Falsehood, Hatred, Cowardice }
+        [JsonConverter(typeof(StringEnumConverter))] public enum ShardType { Falsehood, Hatred, Cowardice }
 
         private const int SHARD_SPRITE = 436;
 
-        public override bool HideQuantity { get; } = true;
+        [IgnoreDataMember] public override bool HideQuantity { get; } = true;
 
-        public override string InventoryReferenceString => Shard.ToString();
-        public string EquipMessage { get; }
+        [IgnoreDataMember] public override string InventoryReferenceString => Shard.ToString();
+        [DataMember] public string EquipMessage { get; }
+        [DataMember] public ShardType Shard { get; }
 
-        public ShardType Shard { get; }
+        [JsonConstructor] private ShadowlordShard()
+        {
+        }
 
         public ShadowlordShard(ShardType shardType, int quantity, string equipMessage) : base(quantity, SHARD_SPRITE)
         {

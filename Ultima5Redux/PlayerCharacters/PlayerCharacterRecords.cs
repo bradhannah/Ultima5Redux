@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -38,6 +39,10 @@ namespace Ultima5Redux.PlayerCharacters
         }
 
         public int MaxCharactersInParty => MAX_PARTY_MEMBERS;
+
+        [JsonConstructor] private PlayerCharacterRecords()
+        {
+        }
 
         public PlayerCharacterRecords(List<byte> rawByteList)
         {

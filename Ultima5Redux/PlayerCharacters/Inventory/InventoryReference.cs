@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
@@ -8,21 +7,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// <summary>
     ///     Specific inventory item reference
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)] public class InventoryReference
+    [DataContract] public class InventoryReference
     {
         [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
 
-        [JsonProperty] public string ItemDescription { get; set; }
+        [DataMember] public string ItemDescription { get; set; }
 
-        [JsonProperty] public string ItemDescriptionAttribution { get; set; }
-        [JsonProperty] public string ItemName { get; set; }
-        [JsonProperty] public string ItemNameHighlight { private get; set; }
+        [DataMember] public string ItemDescriptionAttribution { get; set; }
+        [DataMember] public string ItemName { get; set; }
+        [DataMember] public string ItemNameHighlight { private get; set; }
 
         public string[] ItemNameHighLights =>
             ItemNameHighlight.Length == 0 ? Array.Empty<string>() : ItemNameHighlight.Split(',');
 
-        [JsonProperty] public string ItemSprite { get; set; }
-        [JsonProperty] public int ItemSpriteExposed { get; set; }
+        [DataMember] public string ItemSprite { get; set; }
+        [DataMember] public int ItemSpriteExposed { get; set; }
 
         /// <summary>
         ///     Gets the Equipment equivalent if one exists

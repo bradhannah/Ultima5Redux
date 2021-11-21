@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
@@ -7,11 +9,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// <summary>
     ///     All reagents collection
     /// </summary>
-    public class Reagents : InventoryItems<Reagent.ReagentTypeEnum, Reagent>
+    [DataContract] public class Reagents : InventoryItems<Reagent.ReagentTypeEnum, Reagent>
     {
-        public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; } =
+        [DataMember] public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; } =
             new Dictionary<Reagent.ReagentTypeEnum, Reagent>();
 
+        [JsonConstructor] private Reagents()
+        {
+        }
+        
         public Reagents(List<byte> gameStateByteArray, GameState state) : base(gameStateByteArray)
         {
             foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))

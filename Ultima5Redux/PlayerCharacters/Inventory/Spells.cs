@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ultima5Redux.PlayerCharacters.Inventory;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.References;
 
-namespace Ultima5Redux.PlayerCharacters
+namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
+    [DataContract] public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
     {
+        [IgnoreDataMember]
         private static readonly Dictionary<string, string> LiteralTranslationDictionary = new Dictionary<string, string>
         {
             { "An", "Negate" },
@@ -36,8 +38,12 @@ namespace Ultima5Redux.PlayerCharacters
             { "Zu", "Sleep" },
         };
 
-        public override Dictionary<MagicReference.SpellWords, Spell> Items { get; } =
+        [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; } =
             new Dictionary<MagicReference.SpellWords, Spell>();
+
+        [JsonConstructor] public Spells()
+        {
+        }
 
         public Spells(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {

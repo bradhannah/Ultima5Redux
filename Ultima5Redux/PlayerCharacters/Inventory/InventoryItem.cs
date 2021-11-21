@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Maps;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -42,8 +43,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
         }
 
-        [IgnoreDataMember] public InventoryReference InvRef { get; protected internal set; }
+        [DataMember] public InventoryReference InvRef { get; protected internal set; }
         private int _quantity;
+
+        [JsonConstructor] protected InventoryItem()
+        {
+        }
 
         protected InventoryItem(int quantity, int spriteNum) : this(quantity, "", spriteNum)
         {

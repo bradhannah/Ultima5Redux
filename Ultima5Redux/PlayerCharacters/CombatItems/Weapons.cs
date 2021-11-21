@@ -1,16 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    public class Weapons : CombatItems<WeaponReference.WeaponTypeEnum, Weapon>
+    [DataContract] public sealed class Weapons : CombatItems<WeaponReference.WeaponTypeEnum, Weapon>
     {
-        public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; } =
+        [DataMember] public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; } =
             new Dictionary<WeaponReference.WeaponTypeEnum, Weapon>();
 
-        private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =
+        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Weapon>();
+
+        [JsonConstructor] private Weapons()
+        {
+        }
 
         public Weapons(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {

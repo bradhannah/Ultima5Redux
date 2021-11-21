@@ -197,6 +197,8 @@
         <Compile Include="PlayerCharacters\Inventory\SpecialItem.cs"/>
         <Compile Include="PlayerCharacters\Inventory\SpecialItems.cs"/>
         <Compile Include="PlayerCharacters\CharacterStats.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\Spell.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\Spells.cs"/>
         <Compile Include="PlayerCharacters\MagicReference.cs"/>
         <Compile Include="PlayerCharacters\MagicReferences.cs"/>
         <Compile Include="PlayerCharacters\PlayerCharacterRecord.cs"/>
@@ -209,8 +211,6 @@
         <Compile Include="MapUnits\MapUnit.cs"/>
         <Compile Include="MapUnits\MapUnits.cs"/>
         <Compile Include="MapUnits\MapUnitMovement.cs"/>
-        <Compile Include="PlayerCharacters\Spell.cs"/>
-        <Compile Include="PlayerCharacters\Spells.cs"/>
         <Compile Include="Point2D.cs"/>
         <Compile Include="Properties\Resources.Designer.cs">
             <AutoGen>True</AutoGen>

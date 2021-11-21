@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.CombatItems;
@@ -10,7 +11,7 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class Inventory
+    [DataContract] public sealed class Inventory
     {
         [DataMember] public LordBritishArtifacts Artifacts { get; set; }
         [DataMember] public Potions MagicPotions { get; set; }
@@ -22,7 +23,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public Reagents SpellReagents { get; set; }
         [DataMember] public Moonstones TheMoonstones { get; set; }
         [DataMember] public Provisions TheProvisions { get; set; }
-
         [DataMember] public Weapons TheWeapons { get; set; }
         [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
 
@@ -39,6 +39,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private readonly List<byte> _gameStateByteArray;
         private readonly Moongates _moongates;
         private readonly GameState _state;
+
+        [JsonConstructor] private Inventory()
+        {
+        }
 
         internal Inventory(List<byte> gameStateByteArray, Moongates moongates, GameState state)
         {
@@ -139,7 +143,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             SpellReagents = new Reagents(_gameStateByteArray, _state);
             MagicSpells = new Spells(_gameStateByteArray);
             TheMoonstones = new Moonstones(_moongates);
-            TheProvisions = new Provisions(_state);
+            TheProvisions = new Provisions();
 
             RefreshRollupInventory();
 

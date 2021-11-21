@@ -1,29 +1,34 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    public class Provision : InventoryItem
+    [DataContract] public sealed class Provision : InventoryItem
     {
-        public enum ProvisionSpritesTypeEnum
+        [JsonConverter(typeof(StringEnumConverter))] public enum ProvisionSpritesTypeEnum
         {
             Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258
         }
 
-        public enum ProvisionTypeEnum
+        [JsonConverter(typeof(StringEnumConverter))] public enum ProvisionTypeEnum
         {
             Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
         }
 
-        private readonly GameState _state;
+        [IgnoreDataMember] public override bool HideQuantity => false;
 
-        public override bool HideQuantity => false;
+        [DataMember] public override string InventoryReferenceString => ProvisionType.ToString();
 
-        public override string InventoryReferenceString => ProvisionType.ToString();
+        [JsonConverter(typeof(StringEnumConverter))] public ProvisionTypeEnum ProvisionType { get; }
 
-        public ProvisionTypeEnum ProvisionType { get; }
+        [JsonConstructor] private Provision()
+        {
+        }
 
         /// <summary>
         ///     Creates a provision
@@ -31,12 +36,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="provisionTypeEnum">what kind of provision</param>
         /// <param name="findDescription"></param>
         /// <param name="spriteNum"></param>
-        /// <param name="state"></param>
-        public Provision(ProvisionTypeEnum provisionTypeEnum, string findDescription, int spriteNum, GameState state) :
+        public Provision(ProvisionTypeEnum provisionTypeEnum, string findDescription, int spriteNum) :
             base(0, findDescription, spriteNum)
         {
             ProvisionType = provisionTypeEnum;
-            _state = state;
         }
 
         /// <summary>
@@ -59,9 +62,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // up to a theoretical 66.6 Intelligence points. Therefore, only the 'base prices' need be listed here.
             // Note that buying prices are rounded down, while selling prices are rounded up.
             // http://infinitron.nullneuron.net/u5eco.html
-            int nAdjustedPrice = nBasePrice -
-                                 _state.CharacterRecords.AvatarRecord.Stats.Intelligence * (int)(nBasePrice * 0.015f);
-            //* (1 + (100 - (int)_state.CharacterRecords.AvatarRecord.Stats.Intelligence) / 100)); 
+            int nAdjustedPrice = nBasePrice - records.AvatarRecord.Stats.Intelligence * (int)(nBasePrice * 0.015f);
+            //_state.CharacterRecords.AvatarRecord.Stats.Intelligence * (int)(nBasePrice * 0.015f);
             return nAdjustedPrice;
         }
 

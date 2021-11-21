@@ -1,11 +1,18 @@
-﻿namespace Ultima5Redux.PlayerCharacters.CombatItems
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
+
+namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    public class ChestArmour : Armour
+    [DataContract] public sealed class ChestArmour : Armour
     {
-        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+        [IgnoreDataMember] public override CharacterEquipped.EquippableSlot EquippableSlot =>
             CharacterEquipped.EquippableSlot.Armour;
 
-        public override bool HideQuantity => false;
+        [IgnoreDataMember] public override bool HideQuantity => false;
+
+        [JsonConstructor] private ChestArmour()
+        {
+        }
 
         public ChestArmour(CombatItemReference combatItemReference, int nQuantity) : base(combatItemReference,
             nQuantity)

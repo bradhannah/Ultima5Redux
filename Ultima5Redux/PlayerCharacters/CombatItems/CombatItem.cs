@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -10,16 +11,23 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public abstract class CombatItem : InventoryItem
     {
-        public override int BasePrice => TheCombatItemReference.BasePrice;
+        [IgnoreDataMember] public override int BasePrice => TheCombatItemReference.BasePrice;
 
-        public override string InventoryReferenceString => TheCombatItemReference.SpecificEquipment.ToString();
+        [IgnoreDataMember] public override string InventoryReferenceString =>
+            TheCombatItemReference.SpecificEquipment.ToString();
 
-        public override string LongName => TheCombatItemReference.EquipmentName;
+        [IgnoreDataMember] public override string LongName => TheCombatItemReference.EquipmentName;
 
-        public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
+        [DataMember] public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
 
-        public DataOvlReference.Equipment SpecificEquipment => TheCombatItemReference.SpecificEquipment;
-        public CombatItemReference TheCombatItemReference { get; }
+        [IgnoreDataMember] public DataOvlReference.Equipment SpecificEquipment =>
+            TheCombatItemReference.SpecificEquipment;
+
+        [DataMember] public CombatItemReference TheCombatItemReference { get; }
+
+        [JsonConstructor] protected CombatItem()
+        {
+        }
 
         public CombatItem(CombatItemReference theCombatItemReference, int nQuantity) : base(nQuantity,
             theCombatItemReference.Sprite)

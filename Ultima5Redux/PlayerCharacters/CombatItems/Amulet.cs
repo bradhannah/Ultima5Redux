@@ -1,11 +1,18 @@
-﻿namespace Ultima5Redux.PlayerCharacters.CombatItems
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
+
+namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    public class Amulet : Armour
+    [DataContract] public sealed class Amulet : Armour
     {
-        public override CharacterEquipped.EquippableSlot EquippableSlot { get; } =
+        [IgnoreDataMember] public override CharacterEquipped.EquippableSlot EquippableSlot =>
             CharacterEquipped.EquippableSlot.Amulet;
 
-        public override bool HideQuantity => false;
+        [IgnoreDataMember] public override bool HideQuantity => false;
+
+        [JsonConstructor] private Amulet()
+        {
+        }
 
         public Amulet(CombatItemReference combatItemReference, int nQuantity) : base(combatItemReference, nQuantity)
         {
