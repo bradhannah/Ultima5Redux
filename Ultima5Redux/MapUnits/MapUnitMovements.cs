@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.MapUnits
@@ -6,31 +8,26 @@ namespace Ultima5Redux.MapUnits
     /// <summary>
     ///     Stores all movements of current NPC/monsters on current map
     /// </summary>
-    public class MapUnitMovements
+    [DataContract] public sealed class MapUnitMovements
     {
         private const int MAX_PLAYERS = 0x020;
 
         /// <summary>
         ///     All available movement lists
         /// </summary>
+        [DataMember(Name = "MovementList")]
         private readonly List<MapUnitMovement> _movementList = new List<MapUnitMovement>(MAX_PLAYERS);
 
-        /// <summary>
-        ///     DataChunk of all loaded instructions (only needed during save and load)
-        /// </summary>
-        // ReSharper disable once NotAccessedField.Local
-        private DataChunk _movementInstructionDataChunk;
-
-        /// <summary>
-        ///     DataChunk of all loaded offsets into the movement lists (only needed during save and load)
-        /// </summary>
-        // ReSharper disable once NotAccessedField.Local
-        private DataChunk _movementOffsetDataChunk;
+        [JsonConstructor] public MapUnitMovements()
+        {
+            // _movementList = new List<MapUnitMovement>() { new MapUnitMovement(0) };
+            // _movementList = Enumerable.Repeat(new MapUnitMovement(MAX_PLAYERS), 
+            // var bookList = Enumerable.Repeat(new Book(), 2).ToList();
+            // _movementList.Add(new MapUnitMovement(0));
+        }
 
         public MapUnitMovements(DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)
         {
-            _movementInstructionDataChunk = movementInstructionDataChunk;
-            _movementOffsetDataChunk = movementOffsetDataChunk;
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 _movementList.Add(new MapUnitMovement(i, movementInstructionDataChunk, movementOffsetDataChunk));

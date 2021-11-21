@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.References;
 
@@ -22,9 +20,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override bool HideQuantity => false;
 
-        [DataMember] public override string InventoryReferenceString => ProvisionType.ToString();
+        [IgnoreDataMember] public override string InventoryReferenceString => ProvisionType.ToString();
 
-        [JsonConverter(typeof(StringEnumConverter))] public ProvisionTypeEnum ProvisionType { get; }
+        [DataMember] public ProvisionTypeEnum ProvisionType { get; private set; }
 
         [JsonConstructor] private Provision()
         {
@@ -36,8 +34,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="provisionTypeEnum">what kind of provision</param>
         /// <param name="findDescription"></param>
         /// <param name="spriteNum"></param>
-        public Provision(ProvisionTypeEnum provisionTypeEnum, string findDescription, int spriteNum) :
-            base(0, findDescription, spriteNum)
+        public Provision(ProvisionTypeEnum provisionTypeEnum, string findDescription, int spriteNum) : base(0,
+            findDescription, spriteNum)
         {
             ProvisionType = provisionTypeEnum;
         }
@@ -52,7 +50,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public override int GetAdjustedBuyPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location)
         {
-            int nBasePrice = GetBasePrice(location);
+            int nBasePrice = GameReferences.ProvisionReferences.GetBasePrice(location, ProvisionType);
             if (nBasePrice == -1)
                 throw new Ultima5ReduxException("Requested provision " + LongName + " from " + location +
                                                 " which is not sold here");
@@ -67,68 +65,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return nAdjustedPrice;
         }
 
-        /// <summary>
-        ///     Gets the base price which is later adjusted based on intelligence
-        /// </summary>
-        /// <param name="location"></param>
-        /// <returns>Greater than zero if it is sold, otherwise returns -1</returns>
-        private int GetBasePrice(SmallMapReferences.SingleMapReference.Location location)
-        {
-            int nIndex = 0;
-            foreach (byte b in GameReferences.DataOvlRef
-                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
-            {
-                SmallMapReferences.SingleMapReference.Location potentialLocation =
-                    (SmallMapReferences.SingleMapReference.Location)b;
-                if (potentialLocation == location)
-                    // they sell it, now we find it
-                    return ProvisionCostsAndQuantities.Prices[nIndex,
-                        ProvisionCostsAndQuantities.ProvisionOrder[ProvisionType]];
-                nIndex++;
-            }
-
-            return -1;
-        }
-
-        /// <summary>
-        ///     Gets the bundle quantity for the current provision
-        /// </summary>
-        /// <returns></returns>
-        public int GetBundleQuantity()
-        {
-            return ProvisionCostsAndQuantities.BundleQuantity[ProvisionType];
-        }
-
-        private static class ProvisionCostsAndQuantities
-        {
-            public static readonly Dictionary<ProvisionTypeEnum, int> BundleQuantity =
-                new Dictionary<ProvisionTypeEnum, int>
-                {
-                    { ProvisionTypeEnum.Torches, 5 }, { ProvisionTypeEnum.Keys, 3 }, { ProvisionTypeEnum.Gems, 4 }
-                };
-
-            /// <summary>
-            ///     the prices of provisions because I can't find it in the code!
-            /// </summary>
-            public static readonly int[,] Prices =
-            {
-                {
-                    320, 400, 22
-                },
-                {
-                    370, 450, 50
-                },
-                {
-                    380, 510, 24
-                }
-            };
-
-            // the order of the provisions in the _prices array
-            public static readonly Dictionary<ProvisionTypeEnum, int> ProvisionOrder =
-                new Dictionary<ProvisionTypeEnum, int>
-                {
-                    { ProvisionTypeEnum.Keys, 0 }, { ProvisionTypeEnum.Gems, 1 }, { ProvisionTypeEnum.Torches, 2 }
-                };
-        }
     }
 }

@@ -58,7 +58,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         public bool ArrivedAtLocation { get; private set; }
 
         public NonPlayerCharacter(SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement, TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
+            MapUnitMovement mapUnitMovement,
+            // TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
             bool bLoadedFromDisk, SmallMapReferences.SingleMapReference.Location location,
             MapUnitPosition mapUnitPosition, NonPlayerCharacterState npcState) : base(smallMapTheSmallMapCharacterState,
             mapUnitMovement, location, Point2D.Direction.None, npcState,
@@ -71,9 +72,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
             // gets the player character record for an NPC if one exists
             // this is commonly used when meeting NPCs who have not yet joined your party 
-            if (NPCState.NPCRef != null) record = playerCharacterRecords.GetCharacterRecordByNPC(NPCState.NPCRef);
+            if (NPCState.NPCRef != null)
+                record = GameStateReference.State.CharacterRecords.GetCharacterRecordByNPC(NPCState.NPCRef);
 
-            _playerCharacterRecordIndex = playerCharacterRecords.GetCharacterIndexByNPC(NPCState.NPCRef);
+            _playerCharacterRecordIndex =
+                GameStateReference.State.CharacterRecords.GetCharacterIndexByNPC(NPCState.NPCRef);
 
             // is the NPC you are loading currently in the party?
             IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
@@ -88,7 +91,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // there is no TheSmallMapCharacterState which indicates that it is a large map
                 if (!bLoadedFromDisk)
                 {
-                    if (NPCState.NPCRef != null) MoveNpcToDefaultScheduledPosition(timeOfDay);
+                    if (NPCState.NPCRef != null)
+                        MoveNpcToDefaultScheduledPosition(GameStateReference.State.TheTimeOfDay);
                 }
                 else
                 {
@@ -458,7 +462,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
 
             // add the single instruction to the queue
-            Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(direction, 1));
+            Movement.AddNewMovementInstruction(new MovementCommand(direction, 1));
         }
     }
 }

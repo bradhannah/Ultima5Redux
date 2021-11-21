@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -49,7 +48,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             foreach (MagicReference.SpellWords spell in Enum.GetValues(typeof(MagicReference.SpellWords)))
             {
-                AddSpell(spell, GameReferences.MagicRefs.GetMagicReference(spell));
+                AddSpell(spell);
             }
         }
 
@@ -64,16 +63,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return hey.FirstOrDefault().Key;
         }
 
-        private void AddSpell(MagicReference.SpellWords spellWord, MagicReference magicReference)
+        private void AddSpell(MagicReference.SpellWords spellWord)
         {
             if (spellWord == MagicReference.SpellWords.Nox)
             {
-                Items[spellWord] = new Spell(spellWord, 0, magicReference);
+                Items[spellWord] = new Spell(spellWord, 0);
                 return;
             }
 
-            Items[spellWord] = new Spell(spellWord, GameStateByteArray[(int)spellWord],
-                GameReferences.MagicRefs.GetMagicReference(spellWord));
+            Items[spellWord] = new Spell(spellWord, GameStateByteArray[(int)spellWord]);
         }
     }
 }

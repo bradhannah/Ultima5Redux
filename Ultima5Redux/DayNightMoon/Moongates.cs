@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 
@@ -27,26 +28,10 @@ namespace Ultima5Redux.DayNightMoon
         [DataMember(Name = "MoonstoneBuried")]
         private readonly List<bool> _moonstonesBuried = new List<bool>(TOTAL_MOONSTONES);
 
-        /// <summary>
-        ///     Saved flag indicating if it's buried or in players inventory
-        /// </summary>
-        private DataChunk BuriedFlags { get; }
-
-        /// <summary>
-        ///     Saved X position
-        /// </summary>
-        private DataChunk XPos { get; }
-
-        /// <summary>
-        ///     Saved Y position
-        /// </summary>
-        private DataChunk YPos { get; }
-
-        /// <summary>
-        ///     Saved Z (floor) position
-        /// </summary>
-        private DataChunk ZPos { get; }
-
+        [JsonConstructor] private Moongates()
+        {
+        }
+        
         /// <summary>
         ///     Constructor. Built with DataChunk references from save file
         /// </summary>
@@ -56,11 +41,6 @@ namespace Ultima5Redux.DayNightMoon
         /// <param name="zPos"></param>
         public Moongates(DataChunk xPos, DataChunk yPos, DataChunk buriedFlags, DataChunk zPos)
         {
-            // save datachunks for saving later
-            XPos = xPos;
-            YPos = yPos;
-            BuriedFlags = buriedFlags;
-            ZPos = zPos;
             List<byte> xPositions = xPos.GetAsByteList();
             List<byte> yPositions = yPos.GetAsByteList();
             List<byte> zPositions = zPos.GetAsByteList();
@@ -91,7 +71,6 @@ namespace Ultima5Redux.DayNightMoon
             if (!IsMoonstoneBuried(position, map))
                 throw new Ultima5ReduxException("Can't get a moonphase for a stone that ain't there at " + position);
             int nPos = -1;
-            //foreach (Point3D xy in _moongatePositions)
             Point3D xyzPos = new Point3D(position.X, position.Y, (int)map);
             for (int nMoonstone = 0; nMoonstone < 8; nMoonstone++)
             {
@@ -139,8 +118,6 @@ namespace Ultima5Redux.DayNightMoon
             }
 
             return false;
-            // if (!_moongateBuriedAtPositionDictionary.ContainsKey(position)) return false;
-            // return _moongateBuriedAtPositionDictionary[position];
         }
 
         public bool IsMoonstoneBuried(Point2D position, Map.Maps map)

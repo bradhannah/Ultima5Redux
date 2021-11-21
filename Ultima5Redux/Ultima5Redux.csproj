@@ -106,6 +106,7 @@
         <Compile Include="DayNightMoon\TimeOfDay.cs"/>
         <Compile Include="Dialogue\ShoppeKeeperDialogueReference.cs"/>
         <Compile Include="External\AStarSharp.cs"/>
+        <Compile Include="GameStateReference.cs"/>
         <Compile Include="ImportedGameState.cs"/>
         <Compile Include="Maps\CombatMap.cs"/>
         <Compile Include="Maps\InitiativeQueue.cs"/>
@@ -187,6 +188,7 @@
         <Compile Include="PlayerCharacters\Inventory\Potion.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Potions.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Provision.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\ProvisionReferences.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Provisions.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Reagent.cs"/>
         <Compile Include="PlayerCharacters\Inventory\ReagentReferences.cs"/>

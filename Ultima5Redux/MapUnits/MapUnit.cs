@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
@@ -10,7 +11,7 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
-    public abstract class MapUnit : MapUnitDetails
+    [DataContract] public abstract class MapUnit : MapUnitDetails
     {
         /// <summary>
         ///     The characters current position on the map
@@ -21,9 +22,6 @@ namespace Ultima5Redux.MapUnits
             internal set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
-                // this is a bit redundant but we have a backing field and also store the XY positions
-                // in the TheSmallMapCharacterState, but we have to do this because the .XY
-                // of the MapUnitPosition is often edited directly
                 _mapMapUnitPosition.X = value.X;
                 _mapMapUnitPosition.Y = value.Y;
                 _mapMapUnitPosition.Floor = value.Floor;
@@ -35,8 +33,8 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        [DataMember] private int _keyTileIndex = -1;
-        [DataMember] private int _npcRefIndex = -1;
+        [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;
+        [DataMember(Name = "NpcRefIndex")] private int _npcRefIndex = -1;
 
         [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
 
@@ -65,14 +63,13 @@ namespace Ultima5Redux.MapUnits
             set => _keyTileIndex = value.Index;
         }
 
-        public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
+        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
         /// </summary>
-        protected MapUnit()
+        [JsonConstructor] protected MapUnit()
         {
-            //TheMapUnitState = null;
             TheSmallMapCharacterState = null;
             Movement = null;
             Direction = Point2D.Direction.None;
@@ -147,8 +144,7 @@ namespace Ultima5Redux.MapUnits
                 else
                 {
                     // if the direction has changed then we add the previous direction and reset the concurrent counter
-                    mapUnit.Movement.AddNewMovementInstruction(
-                        new MapUnitMovement.MovementCommand(prevDirection, nInARow));
+                    mapUnit.Movement.AddNewMovementInstruction(new MovementCommand(prevDirection, nInARow));
                     nInARow = 1;
                 }
 
@@ -157,7 +153,7 @@ namespace Ultima5Redux.MapUnits
             }
 
             if (nInARow > 0)
-                mapUnit.Movement.AddNewMovementInstruction(new MapUnitMovement.MovementCommand(newDirection, nInARow));
+                mapUnit.Movement.AddNewMovementInstruction(new MovementCommand(newDirection, nInARow));
             return true;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -28,9 +29,9 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private int _floor;
+        [IgnoreDataMember] private int _floor;
 
-        public MapUnitPosition()
+        [JsonConstructor] public MapUnitPosition()
         {
         }
 

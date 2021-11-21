@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.MapUnits
 {
-    public partial class MapUnitMovement
+    [DataContract] public class MapUnitMovement
     {
         /// <summary>
         ///     The direction of the movement as defined in saved.gam
         /// </summary>
-        public enum MovementCommandDirection { None = 0, East = 1, North = 2, West = 3, South = 4 }
+        [JsonConverter(typeof(StringEnumConverter))] public enum MovementCommandDirection
+        {
+            None = 0, East = 1, North = 2, West = 3, South = 4
+        }
 
         /// <summary>
         ///     Maximum number of movement commands per map character
@@ -25,13 +31,19 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     all movements
         /// </summary>
+        [DataMember]
         private readonly Queue<MovementCommand> _movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
 
         /// <summary>
         ///     Dialog index of the map character
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
+        [DataMember(Name = "DialogIndex")]
         private int _nDialogIndex;
+
+        [JsonConstructor] private MapUnitMovement()
+        {
+        }
 
         public MapUnitMovement(int nDialogIndex)
         {

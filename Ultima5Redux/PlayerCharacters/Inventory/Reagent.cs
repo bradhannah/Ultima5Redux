@@ -46,7 +46,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         [IgnoreDataMember] public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
 
-        [DataMember] public ReagentTypeEnum ReagentType { get; }
+        [DataMember] public ReagentTypeEnum ReagentType { get; private set; }
 
         [JsonConstructor] private Reagent()
         {

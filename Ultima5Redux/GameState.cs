@@ -6,6 +6,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -138,17 +139,16 @@ namespace Ultima5Redux
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
         /// <param name="bUseExtendedSprites"></param>
-        internal void InitializeVirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps,
+        internal void InitializeVirtualMap(SmallMaps smallMaps,
             LargeMap overworldMap, LargeMap underworldMap, bool bUseExtendedSprites)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 _location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
                     ? null
-                    : smallMapReferences.GetSingleMapByLocation(_location, _nInitialFloor);
+                    : GameReferences.SmallMapRef.GetSingleMapByLocation(_location, _nInitialFloor);
 
-            TheVirtualMap = new VirtualMap(smallMapReferences, smallMaps, overworldMap, underworldMap, this,
-                TheTimeOfDay, TheMoongates, CharacterRecords, _initialMap, mapRef, bUseExtendedSprites, PlayerInventory,
-                _importedGameState, TheNonPlayerCharacterStates);
+            TheVirtualMap = new VirtualMap(smallMaps, overworldMap, underworldMap, _initialMap, mapRef,
+                bUseExtendedSprites, _importedGameState);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(_nInitialX, _nInitialY);

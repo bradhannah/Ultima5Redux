@@ -1,6 +1,9 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.Data;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -15,24 +18,35 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();
 
-        [DataMember] public ArtifactType Artifact { get; }
+        [DataMember] public ArtifactType Artifact { get; private set; }
 
-        [DataMember] public string EquipMessage { get; }
+        [DataMember] public string EquipMessage
+        {
+            get
+            {
+                return Artifact switch
+                {
+                    ArtifactType.Amulet => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET),
+                    ArtifactType.Crown => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN),
+                    ArtifactType.Sceptre => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            }
+        }
 
         [JsonConstructor] private LordBritishArtifact()
         {
         }
-        
-        public LordBritishArtifact(ArtifactType artifact, int quantity, string equipMessage) : base(quantity,
-            (int)artifact)
+
+        public LordBritishArtifact(ArtifactType artifact, int quantity) : base(quantity, (int)artifact)
         {
             Artifact = artifact;
-            EquipMessage = equipMessage;
         }
 
         public bool HasItem()
         {
             return Quantity != 0;
         }
+
     }
 }

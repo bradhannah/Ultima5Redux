@@ -2,6 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -24,19 +25,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public int MinCircle => SpellMagicReference.Circle;
 
-        [DataMember] public MagicReference.SpellWords SpellIncantation { get; }
+        [DataMember] public MagicReference.SpellWords SpellIncantation { get; private set; }
 
-        [DataMember] public MagicReference SpellMagicReference { get; }
+        [IgnoreDataMember] public MagicReference SpellMagicReference =>
+            GameReferences.MagicRefs.GetMagicReference(SpellIncantation);
 
         [JsonConstructor] public Spell()
         {
         }
 
-        public Spell(MagicReference.SpellWords spellWord, int quantity, MagicReference magicReference) : base(quantity,
+        public Spell(MagicReference.SpellWords spellWord, int quantity) : base(quantity,
             SPRITE_NUM)
         {
             SpellIncantation = spellWord;
-            SpellMagicReference = magicReference;
         }
 
         public string GetLiteralTranslation()

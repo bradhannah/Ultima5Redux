@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 
 namespace Ultima5Redux.MapUnits
 {
-    [DataContract] public class MapUnitCollection
+    [DataContract] public sealed class MapUnitCollection
     {
         [DataMember] public List<Avatar> Avatars => GetMapUnitByType<Avatar>();
         [DataMember] public List<CombatPlayer> CombatPlayers => GetMapUnitByType<CombatPlayer>();
@@ -30,6 +31,10 @@ namespace Ultima5Redux.MapUnits
                     throw new Ultima5ReduxException("Tried to get a single Avatar and had " + Avatars.Count);
                 return Avatars[0];
             }
+        }
+
+        [JsonConstructor] public MapUnitCollection()
+        {
         }
 
         public void Add(MapUnit mapUnit)

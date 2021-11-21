@@ -9,7 +9,6 @@ using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
-using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
@@ -30,10 +29,10 @@ namespace Ultima5Redux.Maps
             CombatPlayerBlocked, NoAction, Sleeping
         }
 
-        private readonly Inventory _inventory;
+        // private readonly Inventory _inventory;
 
         // world references
-        private readonly VirtualMap _virtualMap;
+        // private readonly VirtualMap _virtualMap;
 
         private bool _bPlayerHasChanged = true;
 
@@ -112,15 +111,12 @@ namespace Ultima5Redux.Maps
         ///     Creates CombatMap.
         ///     Note: Does not initialize the combat map units.
         /// </summary>
-        /// <param name="virtualMap"></param>
         /// <param name="singleCombatMapReference"></param>
-        /// <param name="inventory"></param>
-        public CombatMap(VirtualMap virtualMap, SingleCombatMapReference singleCombatMapReference, Inventory inventory)
+        public CombatMap(SingleCombatMapReference singleCombatMapReference)
         {
-            _virtualMap = virtualMap;
-            CombatMapUnits = _virtualMap.TheMapUnits;
+            CombatMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
             TheCombatMapReference = singleCombatMapReference;
-            _inventory = inventory;
+            // _inventory = inventory;
             XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
 
             InitializeAStarMap(WalkableType.CombatLand);
@@ -334,7 +330,7 @@ namespace Ultima5Redux.Maps
             {
                 PlayerCharacterRecord record = activeRecords.Records[nPlayer];
 
-                CombatPlayer combatPlayer = new CombatPlayer(record, playerStartPositions[nPlayer], _inventory);
+                CombatPlayer combatPlayer = new CombatPlayer(record, playerStartPositions[nPlayer]);
 
                 // make sure the tile that the player occupies is not walkable
                 GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
@@ -444,7 +440,7 @@ namespace Ultima5Redux.Maps
 
         public CombatMapUnit GetCombatUnit(Point2D unitPosition)
         {
-            MapUnit mapUnit = _virtualMap.GetTopVisibleMapUnit(unitPosition, true);
+            MapUnit mapUnit = GameStateReference.State.TheVirtualMap.GetTopVisibleMapUnit(unitPosition, true);
 
             if (mapUnit is CombatMapUnit unit) return unit;
 

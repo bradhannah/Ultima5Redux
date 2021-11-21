@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.DayNightMoon
@@ -65,15 +66,21 @@ namespace Ultima5Redux.DayNightMoon
         /// <summary>
         ///     Dictionary of all change trackers and if time has changed since last check
         /// </summary>
+        [DataMember(Name = "TimeHasChangedDictionary")]
         private readonly Dictionary<int, bool> _timeHasChangedDictionary = new Dictionary<int, bool>();
 
-        private byte _nHour;
-        private byte _nMinute;
+        [IgnoreDataMember] private byte _nHour;
+        [IgnoreDataMember] private byte _nMinute;
 
         /// <summary>
         ///     tracks the total number of registered change trackers
         /// </summary>
+        [DataMember]
         private int _nTotalChangeTrackers;
+
+        [JsonConstructor] private TimeOfDay()
+        {
+        }
 
         /// <summary>
         ///     Constructor. Builds with datachunks from save game file

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Data;
-using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -20,20 +18,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public ShadowlordShards(List<byte> gameStateByteArray) : base(gameStateByteArray)
         {
             Items[ShadowlordShard.ShardType.Falsehood] = new ShadowlordShard(ShadowlordShard.ShardType.Falsehood,
-                gameStateByteArray[(int)Offsets.FALSEHOOD],
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
-                    .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings.FALSEHOOD_DOT));
+                gameStateByteArray[(int)Offsets.FALSEHOOD]);
             Items[ShadowlordShard.ShardType.Hatred] = new ShadowlordShard(ShadowlordShard.ShardType.Hatred,
-                gameStateByteArray[(int)Offsets.HATRED],
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
-                    .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings.HATRED_DOT));
+                gameStateByteArray[(int)Offsets.HATRED]);
             Items[ShadowlordShard.ShardType.Cowardice] = new ShadowlordShard(ShadowlordShard.ShardType.Cowardice,
-                gameStateByteArray[(int)Offsets.COWARDICE],
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
-                    .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings.COWARDICE_DOT));
+                gameStateByteArray[(int)Offsets.COWARDICE]);
         }
     }
 }

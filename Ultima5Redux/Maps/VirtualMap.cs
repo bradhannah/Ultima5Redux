@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
@@ -22,13 +23,6 @@ namespace Ultima5Redux.Maps
     [DataContract] public class VirtualMap
     {
         internal enum LadderOrStairDirection { Up, Down }
-
-        /// <summary>
-        ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
-        /// </summary>
-        [DataMember] private MapUnitPosition PreMapUnitPosition { get; } = new MapUnitPosition();
-
-        [DataMember] public MapUnits.MapUnits TheMapUnits { get; }
 
         /// <summary>
         ///     Detailed reference of current small map
@@ -58,11 +52,16 @@ namespace Ultima5Redux.Maps
         /// </summary>
         [DataMember] private RegularMap PreCombatMap { get; set; }
 
+        /// <summary>
+        ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
+        /// </summary>
+        [DataMember] private MapUnitPosition PreMapUnitPosition { get; set; } = new MapUnitPosition();
+
         [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
 
         [DataMember] private MapOverrides TheMapOverrides { get; set; }
 
-        [IgnoreDataMember] private readonly Inventory _inventory;
+        [DataMember] public MapUnits.MapUnits TheMapUnits { get; private set; }
 
         /// <summary>
         ///     Both underworld and overworld maps
@@ -71,24 +70,10 @@ namespace Ultima5Redux.Maps
         private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
 
         /// <summary>
-        ///     Details of where the moongates are
-        /// </summary>
-        [IgnoreDataMember]
-        private readonly Moongates _moongates;
-
-        /// <summary>
         ///     All the small maps
         /// </summary>
         [IgnoreDataMember]
         private readonly SmallMaps _smallMaps;
-
-        [IgnoreDataMember] private readonly GameState _state;
-
-        /// <summary>
-        ///     Current time of day
-        /// </summary>
-        [IgnoreDataMember]
-        private readonly TimeOfDay _timeOfDay;
 
         /// <summary>
         ///     The abstracted Map object for the current map
@@ -143,11 +128,6 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
 
         /// <summary>
-        ///     All small map references
-        /// </summary>
-        [IgnoreDataMember] public SmallMapReferences SmallMapRefs { get; }
-
-        /// <summary>
         ///     The persistant underworld map
         /// </summary>
         [IgnoreDataMember] public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
@@ -185,34 +165,18 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
-        /// <param name="smallMapReferences"></param>
         /// <param name="smallMaps"></param>
         /// <param name="overworldMap"></param>
         /// <param name="underworldMap"></param>
-        /// <param name="state"></param>
-        /// <param name="timeOfDay"></param>
-        /// <param name="moongates"></param>
-        /// <param name="playerCharacterRecords"></param>
         /// <param name="initialMap"></param>
         /// <param name="currentSmallMapReference"></param>
         /// <param name="bUseExtendedSprites"></param>
-        /// <param name="inventory"></param>
         /// <param name="importedGameState"></param>
-        /// <param name="npcStates"></param>
-        internal VirtualMap(SmallMapReferences smallMapReferences, SmallMaps smallMaps, LargeMap overworldMap,
-            LargeMap underworldMap, GameState state, TimeOfDay timeOfDay, Moongates moongates,
-            PlayerCharacterRecords playerCharacterRecords, Map.Maps initialMap,
+        internal VirtualMap(SmallMaps smallMaps, LargeMap overworldMap, LargeMap underworldMap, Map.Maps initialMap,
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
-            Inventory inventory, ImportedGameState importedGameState, NonPlayerCharacterStates npcStates)
+            ImportedGameState importedGameState)
         {
-            SmallMapRefs = smallMapReferences;
-
             _smallMaps = smallMaps;
-            _state = state;
-            _timeOfDay = timeOfDay;
-            _moongates = moongates;
-            _inventory = inventory;
-
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
 
@@ -222,15 +186,12 @@ namespace Ultima5Redux.Maps
 
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
-            TheMapUnits = new MapUnits.MapUnits(timeOfDay, playerCharacterRecords, initialMap, bUseExtendedSprites,
-                importedGameState, npcStates, mapLocation);
+            TheMapUnits = new MapUnits.MapUnits(initialMap, bUseExtendedSprites, importedGameState, mapLocation);
 
             switch (initialMap)
             {
                 case Map.Maps.Small:
                     LoadSmallMap(currentSmallMapReference, null, true);
-                    // if (currentSmallMapReference == null)
-                    //     throw new Ultima5ReduxException("Requested to load a small map without a small map reference");
                     break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
@@ -241,6 +202,10 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(initialMap), initialMap, null);
             }
+        }
+
+        [JsonConstructor] private VirtualMap()
+        {
         }
 
         public static Point2D GetLocationOfDock(SmallMapReferences.SingleMapReference.Location location)
@@ -279,7 +244,7 @@ namespace Ultima5Redux.Maps
         public bool ContainsSearchableThings(Point2D xy)
         {
             // moonstone check
-            return IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
+            return IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
         }
 
         /// <summary>
@@ -409,7 +374,7 @@ namespace Ultima5Redux.Maps
             else
             {
                 nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite, bIsMapUnitOccupiedTile,
-                    bIsAvatarTile, bIsFoodNearby, _state.TheTimeOfDay.IsDayLight);
+                    bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
             }
 
             if (nNewSpriteIndex == -2)
@@ -722,7 +687,8 @@ namespace Ultima5Redux.Maps
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
             if (!bIgnoreMoongate && IsLargeMap &&
-                _moongates.IsMoonstoneBuried(new Point3D(x, y, LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF)))
+                GameStateReference.State.TheMoongates.IsMoonstoneBuried(new Point3D(x, y,
+                    LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF)))
             {
                 return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
                        throw new Ultima5ReduxException("Supposed to get a moongate override: " + new Point2D(x, y));
@@ -1086,7 +1052,7 @@ namespace Ultima5Redux.Maps
 
             // if it's nighttime then the portcullises go down and you cannot pass
             bool bPortcullisDown = GameReferences.SpriteTileReferences.GetTileNumberByName("BrickWallArchway") ==
-                tileReference.Index && !_timeOfDay.IsDayLight;
+                tileReference.Index && !GameStateReference.State.TheTimeOfDay.IsDayLight;
 
             // we check both the tile reference below as well as the map unit that occupies the tile
             bool bIsWalkable;
@@ -1143,7 +1109,7 @@ namespace Ultima5Redux.Maps
 
             CurrentSingleMapReference = SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
 
-            CurrentCombatMap = new CombatMap(this, singleCombatMapReference, _inventory);
+            CurrentCombatMap = new CombatMap(singleCombatMapReference);
 
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
@@ -1267,7 +1233,8 @@ namespace Ultima5Redux.Maps
             // go through each of the NPCs on the map
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
-                mapUnit.CompleteNextMove(this, _timeOfDay, CurrentMap.GetAStarByMapUnit(mapUnit));
+                mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
+                    CurrentMap.GetAStarByMapUnit(mapUnit));
             }
         }
 
@@ -1296,13 +1263,15 @@ namespace Ultima5Redux.Maps
         {
             // check for moonstones
             // moonstone check
-            if (IsLargeMap && _moongates.IsMoonstoneBuried(xy, LargeMapOverUnder) && _timeOfDay.IsDayLight)
+            if (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder) &&
+                GameStateReference.State.TheTimeOfDay.IsDayLight)
             {
-                MoonPhaseReferences.MoonPhases moonPhase = _moongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
-                InventoryItem invItem = _state.PlayerInventory.TheMoonstones.Items[moonPhase];
+                MoonPhaseReferences.MoonPhases moonPhase =
+                    GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
+                InventoryItem invItem = GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
                 TheMapOverrides.EnqueueSearchItem(xy, invItem);
 
-                _moongates.SetMoonstoneBuried((int)moonPhase, false);
+                GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
 
                 return 1;
             }
@@ -1340,8 +1309,7 @@ namespace Ultima5Redux.Maps
         public void UseStairs(Point2D xy, bool bForceDown = false)
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
-            LoadSmallMap(
-                SmallMapRefs.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
+            LoadSmallMap(GameReferences.SmallMapRef.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
                     CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
         }
     }

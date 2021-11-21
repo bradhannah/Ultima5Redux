@@ -1,30 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Ultima5Redux.Maps;
 
 namespace Ultima5Redux.MapUnits
 {
-    public class EmptyMapUnit : MapUnit
+    [DataContract] public sealed class EmptyMapUnit : MapUnit
     {
-        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
+        [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
-        public override string BoardXitName => "EMPTY";
+        [IgnoreDataMember] public override string BoardXitName => "EMPTY";
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = null;
-        //= new Dictionary<Point2D.Direction, string>();
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName => null;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = null;
-        //new Dictionary<Point2D.Direction, string>();
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => null;
 
-        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded { get; } = null;
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+            null;
 
-        public override string FriendlyName => BoardXitName;
+        [IgnoreDataMember] public override string FriendlyName => BoardXitName;
 
-        public override bool IsActive => false;
+        [IgnoreDataMember] public override bool IsActive => false;
 
-        public override bool IsAttackable => false;
+        [IgnoreDataMember] public override bool IsAttackable => false;
 
-        public override TileReference KeyTileReference { get; set; } = null;
+        [IgnoreDataMember] public override TileReference KeyTileReference { get; set; } = null;
 
-        public override TileReference NonBoardedTileReference { get; } = null;
+        [IgnoreDataMember] public override TileReference NonBoardedTileReference => null;
     }
 }

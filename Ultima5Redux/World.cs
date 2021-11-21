@@ -119,17 +119,18 @@ namespace Ultima5Redux
 
             State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory);
 
-            // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(GameReferences.SmallMapRef, AllSmallMaps, OverworldMap, UnderworldMap,
-                bUseExtendedSprites);
+            GameStateReference.State = State;
 
-            // State.Serialize();
+            // sadly I have to initialize this after the NPCs are created because there is a circular dependency
+            State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap,
+                bUseExtendedSprites);
         }
 
         public void ReLoadFromJson()
         {
             string stateJson = State.Serialize();
             GameState newState = GameState.Deserialize(stateJson);
+            GameStateReference.State = newState;
             State = newState;
         }
         
@@ -751,8 +752,8 @@ namespace Ultima5Redux
             SmallMapReferences.SingleMapReference.Location location =
                 State.TheVirtualMap.CurrentSingleMapReference.MapLocation;
             int nCurrentFloor = State.TheVirtualMap.CurrentSingleMapReference.Floor;
-            bool hasBasement = State.TheVirtualMap.SmallMapRefs.HasBasement(location);
-            int nTotalFloors = State.TheVirtualMap.SmallMapRefs.GetNumberOfFloors(location);
+            bool hasBasement = GameReferences.SmallMapRef.HasBasement(location);
+            int nTotalFloors = GameReferences.SmallMapRef.GetNumberOfFloors(location);
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);

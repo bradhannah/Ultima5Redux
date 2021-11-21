@@ -18,7 +18,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string InventoryReferenceString => Color.ToString();
 
-        [DataMember] public PotionColor Color { get; }
+        [DataMember] public PotionColor Color { get; private set; }
 
         [JsonConstructor] private Potion()
         {

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -7,8 +9,9 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
-    public sealed class Horse : MapUnit
+    [DataContract] public sealed class Horse : MapUnit
     {
+        [IgnoreDataMember]
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
             {
@@ -17,12 +20,12 @@ namespace Ultima5Redux.MapUnits
                 { SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 260 }
             };
 
-        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Horse;
+        [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Horse;
 
-        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
+        [IgnoreDataMember] public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.HORSE_N).Trim();
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>
             {
                 { Point2D.Direction.None, "HorseLeft" },
@@ -32,6 +35,7 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, "HorseRight" }
             };
 
+        [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new Dictionary<Point2D.Direction, string>
             {
@@ -42,7 +46,7 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, "RidingHorseRight" }
             };
 
-        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             new Dictionary<Point2D.Direction, string>
             {
                 { Point2D.Direction.None, "RidingHorseLeft" },
@@ -52,11 +56,15 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, "RidingHorseUp" }
             };
 
-        public override string FriendlyName => BoardXitName;
+        [IgnoreDataMember] public override string FriendlyName => BoardXitName;
 
-        public override bool IsActive => true;
+        [IgnoreDataMember] public override bool IsActive => true;
 
-        public override bool IsAttackable => false;
+        [IgnoreDataMember] public override bool IsAttackable => false;
+
+        [JsonConstructor] private Horse()
+        {
+        }
 
         public Horse(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,

@@ -25,7 +25,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             get => GameReferences.MagicRefs.GetMagicReference(ScrollSpell);
             set => ScrollSpell = value.SpellEnum;
-
         }
 
         [DataMember] public MagicReference.SpellWords ScrollSpell { get; private set; }

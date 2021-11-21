@@ -1,20 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits
 {
-    public sealed class Avatar : MapUnit
+    [DataContract] public sealed class Avatar : MapUnit
     {
-        public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
+        [JsonConverter(typeof(StringEnumConverter))] public enum AvatarState
+        {
+            Regular, Carpet, Horse, Frigate, Skiff, Hidden
+        }
 
-        private readonly bool _bUseExtendedSprites;
+        [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
+
+        [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
+
+        /// <summary>
+        ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
+        ///     the current MapUnits object
+        /// </summary>
+        [DataMember] public MapUnit CurrentBoardedMapUnit { get; private set; }
+
+        [DataMember] public Point2D.Direction CurrentDirection { get; private set; }
+
+        [DataMember] private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
+
+        [IgnoreDataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
+
+        [IgnoreDataMember] public override string BoardXitName => "You can't board the Avatar you silly goose!";
+
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>
+            {
+                { Point2D.Direction.None, "BasicAvatar" },
+                { Point2D.Direction.Left, "BasicAvatar" },
+                { Point2D.Direction.Down, "BasicAvatar" },
+                { Point2D.Direction.Right, "BasicAvatar" },
+                { Point2D.Direction.Up, "BasicAvatar" }
+            };
+
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+            DirectionToTileName;
+
+        [IgnoreDataMember] public override string FriendlyName => "Avatar";
+
+        [IgnoreDataMember] public override bool IsActive => true;
+
+        [IgnoreDataMember] public override bool IsAttackable => false;
 
         /// <summary>
         ///     Describes if there are only left right sprites
         /// </summary>
+        [IgnoreDataMember]
         private readonly Dictionary<AvatarState, bool> _onlyLeftRight = new Dictionary<AvatarState, bool>
         {
             { AvatarState.Carpet, true },
@@ -25,29 +67,16 @@ namespace Ultima5Redux.MapUnits
             { AvatarState.Regular, false }
         };
 
-        public override AvatarState BoardedAvatarState => AvatarState.Regular;
+        [IgnoreDataMember] public bool AreSailsHoisted =>
+            IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate && frigate.SailsHoisted;
 
-        public override string BoardXitName => "You can't board the Avatar you silly goose!";
+        /// <summary>
+        ///     Is the Avatar currently boarded onto a thing
+        /// </summary>
+        [IgnoreDataMember] public bool IsAvatarOnBoardedThing =>
+            CurrentAvatarState != AvatarState.Regular && CurrentAvatarState != AvatarState.Hidden;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>
-            {
-                { Point2D.Direction.None, "BasicAvatar" },
-                { Point2D.Direction.Left, "BasicAvatar" },
-                { Point2D.Direction.Down, "BasicAvatar" },
-                { Point2D.Direction.Right, "BasicAvatar" },
-                { Point2D.Direction.Up, "BasicAvatar" }
-            };
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
-
-        public override string FriendlyName => "Avatar";
-
-        public override bool IsActive => true;
-
-        public override bool IsAttackable => false;
-
-        public override TileReference KeyTileReference
+        [IgnoreDataMember] public override TileReference KeyTileReference
         {
             get =>
                 IsAvatarOnBoardedThing
@@ -61,26 +90,9 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public bool AreSailsHoisted => IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate &&
-                                       frigate.SailsHoisted;
-
-        internal AvatarState CurrentAvatarState { get; private set; }
-
-        /// <summary>
-        ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
-        ///     the current MapUnits object
-        /// </summary>
-        public MapUnit CurrentBoardedMapUnit { get; private set; }
-
-        public Point2D.Direction CurrentDirection { get; private set; }
-
-        /// <summary>
-        ///     Is the Avatar currently boarded onto a thing
-        /// </summary>
-        public bool IsAvatarOnBoardedThing =>
-            CurrentAvatarState != AvatarState.Regular && CurrentAvatarState != AvatarState.Hidden;
-
-        private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
+        [JsonConstructor] private Avatar()
+        {
+        }
 
         private Avatar(SmallMapReferences.SingleMapReference.Location location, MapUnitMovement movement,
             MapUnitPosition mapUnitPosition, TileReference tileReference, bool bUseExtendedSprites)

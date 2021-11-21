@@ -5,26 +5,25 @@ using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
-using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public sealed class CombatPlayer : CombatMapUnit
     {
-        private readonly Inventory _inventory;
+        // private readonly Inventory _inventory;
 
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
 
         public override int ClosestAttackRange => GetAttackWeapons().Min(item => item.TheCombatItemReference.Range);
 
-        public override int Defense => _inventory.GetCharacterTotalDefense(Record);
+        public override int Defense => GameStateReference.State.PlayerInventory.GetCharacterTotalDefense(Record);
 
         public override int Dexterity => (byte)Record.Stats.Dexterity;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = default;
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = default;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => default;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => default;
         public override int Experience => 0;
         public override string FriendlyName => Record.Name;
         public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
@@ -66,9 +65,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public PlayerCharacterRecord Record { get; }
 
-        public CombatPlayer(PlayerCharacterRecord record, Point2D xy, Inventory inventory)
+        public CombatPlayer(PlayerCharacterRecord record, Point2D xy)
         {
-            _inventory = inventory;
+            // _inventory = inventory;
+            // _inventory = inventory;
             Record = record;
             KeyTileReference = GameReferences.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
             MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
@@ -97,28 +97,28 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             bool isAttackingCombatItem(DataOvlReference.Equipment equipment)
             {
                 if (equipment == DataOvlReference.Equipment.Nothing) return false;
-                CombatItem combatItem = _inventory.GetItemFromEquipment(equipment);
+                CombatItem combatItem = GameStateReference.State.PlayerInventory.GetItemFromEquipment(equipment);
                 return combatItem.TheCombatItemReference.AttackStat > 0;
             }
 
             if (isAttackingCombatItem(Record.Equipped.Helmet))
-                weapons.Add(_inventory.GetItemFromEquipment(Record.Equipped.Helmet));
+                weapons.Add(GameStateReference.State.PlayerInventory.GetItemFromEquipment(Record.Equipped.Helmet));
 
             if (isAttackingCombatItem(Record.Equipped.LeftHand))
-                weapons.Add(_inventory.GetItemFromEquipment(Record.Equipped.LeftHand));
+                weapons.Add(GameStateReference.State.PlayerInventory.GetItemFromEquipment(Record.Equipped.LeftHand));
             else
                 bBareHands = true;
 
             if (isAttackingCombatItem(Record.Equipped.RightHand))
-                weapons.Add(_inventory.GetItemFromEquipment(Record.Equipped.RightHand));
+                weapons.Add(GameStateReference.State.PlayerInventory.GetItemFromEquipment(Record.Equipped.RightHand));
             else
                 bBareHands = true;
 
-            if (weapons.Count == 0)
-            {
-                Debug.Assert(bBareHands);
-                weapons.Add(_inventory.GetItemFromEquipment(DataOvlReference.Equipment.BareHands));
-            }
+            if (weapons.Count != 0) return weapons;
+
+            Debug.Assert(bBareHands);
+            weapons.Add(
+                GameStateReference.State.PlayerInventory.GetItemFromEquipment(DataOvlReference.Equipment.BareHands));
 
             return weapons;
         }
@@ -130,8 +130,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public string GetAttackWeaponsString()
         {
             List<CombatItem> combatItems = GetAttackWeapons();
-
-            // if (combatItems == null) return "bare hands";
 
             string combatItemString = "";
             for (int index = 0; index < combatItems.Count; index++)
