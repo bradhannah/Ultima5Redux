@@ -64,17 +64,20 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Armament))
             {
+                invRef.InvRefType = InventoryReferenceType.Armament;
                 invRefs.Add(invRef);
             }
 
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Item))
             {
+                invRef.InvRefType = InventoryReferenceType.Item;
                 invRefs.Add(invRef);
             }
 
             // build reagent highlight table
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Reagent))
             {
+                invRef.InvRefType = InventoryReferenceType.Reagent;
                 invRefs.Add(invRef);
 
                 if (invRef.ItemNameHighLights.Length == 0) continue;
@@ -88,6 +91,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             //build spell name highlight table
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Spell))
             {
+                invRef.InvRefType = InventoryReferenceType.Spell;
                 invRefs.Add(invRef);
 
                 if (invRef.ItemNameHighLights.Length == 0) continue;

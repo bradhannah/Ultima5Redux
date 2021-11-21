@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Maps;
+using Ultima5Redux.References;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -20,6 +21,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             get => _quantity;
             set => _quantity = value;
+        }
+
+        [DataMember] public string InvRefName { get; set; }
+        [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; set; }
+
+        [IgnoreDataMember] public InventoryReference InvRef
+        {
+            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InvRefName);
+            protected internal set
+            {
+                InvRefName = value.ItemName;
+                InvRefType = value.InvRefType;
+            }
         }
 
         [IgnoreDataMember] public abstract bool HideQuantity { get; }
@@ -43,7 +57,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
         }
 
-        [DataMember] public InventoryReference InvRef { get; protected internal set; }
         private int _quantity;
 
         [JsonConstructor] protected InventoryItem()
@@ -62,10 +75,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records,
-            SmallMapReferences.SingleMapReference.Location location)
-        {
-            return 0;
-        }
+            SmallMapReferences.SingleMapReference.Location location) => 0;
 
         public virtual int GetAdjustedSellPrice(PlayerCharacterRecords records,
             SmallMapReferences.SingleMapReference.Location location)

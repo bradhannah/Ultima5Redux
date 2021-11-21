@@ -10,14 +10,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [DataContract] public class InventoryReference
     {
         [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
-
+        [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; internal set; }
         [DataMember] public string ItemDescription { get; set; }
 
         [DataMember] public string ItemDescriptionAttribution { get; set; }
         [DataMember] public string ItemName { get; set; }
         [DataMember] public string ItemNameHighlight { private get; set; }
 
-        public string[] ItemNameHighLights =>
+        [IgnoreDataMember] public string[] ItemNameHighLights =>
             ItemNameHighlight.Length == 0 ? Array.Empty<string>() : ItemNameHighlight.Split(',');
 
         [DataMember] public string ItemSprite { get; set; }

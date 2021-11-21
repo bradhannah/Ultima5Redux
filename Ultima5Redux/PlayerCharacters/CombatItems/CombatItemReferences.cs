@@ -18,6 +18,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         public readonly List<WeaponReference> WeaponReferences = new List<WeaponReference>();
 
+        private readonly Dictionary<DataOvlReference.Equipment, CombatItemReference> _equipmentToCombatItemReference =
+            new Dictionary<DataOvlReference.Equipment, CombatItemReference>();
+
         public CombatItemReferences(InventoryReferences inventoryReferences)
         {
             List<InventoryReference> combatItems =
@@ -32,6 +35,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                     case CombatItemType.Armour:
                         ArmourReference armourReference =
                             new ArmourReference(GameReferences.DataOvlRef, inventoryReference);
+                        _equipmentToCombatItemReference.Add(equipment, armourReference);
 
                         AllArmour.Add(armourReference);
                         switch (armourReference.TheArmourType)
@@ -54,7 +58,10 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
                         break;
                     case CombatItemType.Weapon:
-                        WeaponReferences.Add(new WeaponReference(GameReferences.DataOvlRef, inventoryReference));
+                        WeaponReference weaponReference =
+                            new WeaponReference(GameReferences.DataOvlRef, inventoryReference);
+                        WeaponReferences.Add(weaponReference);
+                        _equipmentToCombatItemReference.Add(equipment, weaponReference);
                         break;
                     case CombatItemType.Other:
                         throw new Ultima5ReduxException("Tried to create CombatItemReference from " + equipment);
@@ -75,6 +82,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             return false;
         }
 
+        public CombatItemReference GetCombatItemReferenceFromEquipment(DataOvlReference.Equipment equipment)
+        {
+            return _equipmentToCombatItemReference[equipment];
+        }
+        
         private static CombatItemType GetCombatItemTypeByEquipment(DataOvlReference.Equipment equipment)
         {
             if (EquipmentMatches(Enum.GetValues(typeof(WeaponReference.WeaponTypeEnum)), ref equipment))

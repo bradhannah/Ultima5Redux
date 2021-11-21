@@ -77,6 +77,8 @@ namespace Ultima5Redux.References
 
         public static TileOverrideReferences TileOverrideRefs { get; }
 
+        public static ReagentReferences ReagentReferences { get; }
+
         private static string U5Directory
         {
             get
@@ -118,6 +120,7 @@ namespace Ultima5Redux.References
             ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef);
             ShoppeKeeperRefs = new ShoppeKeeperReferences(DataOvlRef, NpcRefs);
             TileOverrideRefs = new TileOverrideReferences();
+            ReagentReferences = new ReagentReferences();
         }
     }
 }

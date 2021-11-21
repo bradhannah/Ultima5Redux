@@ -11,7 +11,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int SHARD_SPRITE = 436;
 
-        [IgnoreDataMember] public override bool HideQuantity { get; } = true;
+        [IgnoreDataMember] public override bool HideQuantity => true;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Shard.ToString();
         [DataMember] public string EquipMessage { get; }

@@ -189,6 +189,7 @@
         <Compile Include="PlayerCharacters\Inventory\Provision.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Provisions.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Reagent.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\ReagentReferences.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Reagents.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Scroll.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Scrolls.cs"/>

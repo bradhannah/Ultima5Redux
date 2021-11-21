@@ -14,7 +14,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int POTION_SPRITE = 259;
 
-        [IgnoreDataMember] public override bool HideQuantity { get; } = false;
+        [IgnoreDataMember] public override bool HideQuantity => false;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Color.ToString();
 

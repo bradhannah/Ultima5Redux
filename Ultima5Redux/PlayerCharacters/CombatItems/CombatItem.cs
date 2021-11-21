@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -20,16 +21,19 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         [DataMember] public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
 
-        [IgnoreDataMember] public DataOvlReference.Equipment SpecificEquipment =>
-            TheCombatItemReference.SpecificEquipment;
+        [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
 
-        [DataMember] public CombatItemReference TheCombatItemReference { get; }
+        [IgnoreDataMember] public CombatItemReference TheCombatItemReference
+        {
+            get => GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(SpecificEquipment);
+            private set => SpecificEquipment = value.SpecificEquipment;
+        }
 
         [JsonConstructor] protected CombatItem()
         {
         }
 
-        public CombatItem(CombatItemReference theCombatItemReference, int nQuantity) : base(nQuantity,
+        protected CombatItem(CombatItemReference theCombatItemReference, int nQuantity) : base(nQuantity,
             theCombatItemReference.Sprite)
         {
             TheCombatItemReference = theCombatItemReference;

@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -15,12 +16,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private const int SCROLL_SPRITE = 260;
         [IgnoreDataMember] public override int BasePrice => 0;
 
-        [DataMember] public override bool HideQuantity { get; }
+        [IgnoreDataMember] public override bool HideQuantity => false;
 
         [IgnoreDataMember] public override string InventoryReferenceString => ScrollSpell.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
-        [DataMember] public MagicReference ScrollMagicReference { get; }
-        [DataMember] public MagicReference.SpellWords ScrollSpell { get; }
+
+        [IgnoreDataMember] public MagicReference ScrollMagicReference
+        {
+            get => GameReferences.MagicRefs.GetMagicReference(ScrollSpell);
+            set => ScrollSpell = value.SpellEnum;
+
+        }
+
+        [DataMember] public MagicReference.SpellWords ScrollSpell { get; private set; }
 
         [JsonConstructor] private Scroll()
         {
