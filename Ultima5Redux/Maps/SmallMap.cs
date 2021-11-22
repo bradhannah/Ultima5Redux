@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
@@ -7,34 +8,47 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
-    public class SmallMap : RegularMap
+    [DataContract] public class SmallMap : RegularMap
     {
+        [DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
+
+        [DataMember(Name = "SingleSmallMapReference")]
         private readonly SmallMapReferences.SingleMapReference _singleSmallMapReference;
 
         /// <summary>
         ///     Total tiles per row
         /// </summary>
-        public static int XTiles => 32;
+        [IgnoreDataMember] public static int XTiles => 32;
 
         /// <summary>
         ///     Total tiles per column
         /// </summary>
-        public static int YTiles => 32;
+        [IgnoreDataMember] public static int YTiles => 32;
 
-        public sealed override byte[][] TheMap { get; protected set; }
+        [IgnoreDataMember] protected override bool IsRepeatingMap => false;
 
-        protected override bool IsRepeatingMap => false;
+        [IgnoreDataMember] public override int NumOfXTiles => XTiles;
+        [IgnoreDataMember] public override int NumOfYTiles => YTiles;
 
-        public override int NumOfXTiles => XTiles;
-        public override int NumOfYTiles => YTiles;
+        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
+        [IgnoreDataMember] public int MapFloor => _singleSmallMapReference.Floor;
 
-        public override bool ShowOuterSmallMapTiles => true;
-        public int MapFloor => _singleSmallMapReference.Floor;
+        [IgnoreDataMember] public SmallMapReferences.SingleMapReference.Location MapLocation =>
+            _singleSmallMapReference.MapLocation;
 
-        public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
+        [IgnoreDataMember] public sealed override byte[][] TheMap { get; protected set; }
 
         [JsonConstructor] private SmallMap()
         {
+        
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            TheMap = LoadSmallMapFile(Path.Combine(_dataDirectory, _singleSmallMapReference.MapFilename),
+                _singleSmallMapReference.FileOffset);
+
+            InitializeAStarMap(WalkableType.StandardWalking);
         }
 
         /// <summary>
@@ -45,6 +59,7 @@ namespace Ultima5Redux.Maps
         public SmallMap(string dataDirectory, SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
             singleSmallMapReference)
         {
+            _dataDirectory = dataDirectory;
             _singleSmallMapReference = singleSmallMapReference;
 
             // load the map into memory

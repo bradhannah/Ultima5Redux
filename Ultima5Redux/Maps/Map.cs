@@ -20,15 +20,17 @@ namespace Ultima5Redux.Maps
             StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater
         }
 
-        [DataMember(Name = "AStarDictionary")]
-        private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new Dictionary<WalkableType, AStar>();
-
-        [DataMember(Name = "AStarNodes")]
-        private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes =
-            new Dictionary<WalkableType, List<List<Node>>>();
-
         [DataMember(Name = "OpenDoors")]
         private readonly Dictionary<Point2D, int> _openDoors = new Dictionary<Point2D, int>();
+
+        [DataMember] public bool XRayMode { get; set; }
+
+        [IgnoreDataMember] //(Name = "AStarDictionary")]
+        private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new Dictionary<WalkableType, AStar>();
+
+        [IgnoreDataMember] //[DataMember(Name = "AStarNodes")]
+        private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes =
+            new Dictionary<WalkableType, List<List<Node>>>();
 
         public abstract int NumOfXTiles { get; }
 
@@ -43,12 +45,10 @@ namespace Ultima5Redux.Maps
 
         protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
 
-        [DataMember] public bool XRayMode { get; set; }
-
         [JsonConstructor] protected Map()
         {
         }
-        
+
         /// <summary>
         ///     Filthy little map to assign single letter to map elements
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
@@ -9,7 +10,7 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
-    public sealed class LargeMap : RegularMap
+    [DataContract] public sealed class LargeMap : RegularMap
     {
         private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
         private const int TILES_PER_CHUNK_X = 16; // number of tiles horizontal in each chunk
@@ -17,26 +18,29 @@ namespace Ultima5Redux.Maps
         private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
         private const int TOTAL_CHUNKS_PER_X = 16; // total number of chunks horizontally
         private const int TOTAL_CHUNKS_PER_Y = 16; // total number of chunks vertically
-        private Point2D _bottomRightExtent;
+        [DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
+        [DataMember(Name = "MapChoice")] private readonly Maps _mapChoice;
 
-        private Point2D _topLeftExtent;
+        [DataMember] private Point2D _bottomRightExtent;
+
+        [DataMember] private Point2D _topLeftExtent;
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public static int XTiles =>
+        [IgnoreDataMember] public static int XTiles =>
             TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public static int YTiles =>
+        [IgnoreDataMember] public static int YTiles =>
             TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
-        protected override bool IsRepeatingMap => true;
+        [IgnoreDataMember] protected override bool IsRepeatingMap => true;
 
-        public override int NumOfXTiles => XTiles;
-        public override int NumOfYTiles => YTiles;
+        [IgnoreDataMember] public override int NumOfXTiles => XTiles;
+        [IgnoreDataMember] public override int NumOfYTiles => YTiles;
 
-        public override bool ShowOuterSmallMapTiles => false;
+        [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => false;
 
-        public override byte[][] TheMap { get; protected set; }
+        [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
         [JsonConstructor] private LargeMap()
         {
@@ -50,23 +54,10 @@ namespace Ultima5Redux.Maps
         public LargeMap(string dataDirectory, Maps mapChoice) : base(
             SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
         {
-            switch (mapChoice)
-            {
-                case Maps.Overworld:
-                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.BRIT_DAT),
-                        Path.Combine(dataDirectory, FileConstants.DATA_OVL), false);
-                    break;
-                case Maps.Underworld:
-                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.UNDER_DAT), "", true);
-                    break;
-                case Maps.Small:
-                    throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
-            }
-
-            InitializeAStarMap(WalkableType.StandardWalking);
-            InitializeAStarMap(WalkableType.CombatWater);
+            _dataDirectory = dataDirectory;
+            _mapChoice = mapChoice;
+            BuildMap(dataDirectory, mapChoice);
+            BuildAStar();
         }
 
         /// <summary>
@@ -201,6 +192,36 @@ namespace Ultima5Redux.Maps
                 AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
 
             FloodFillMap(AvatarXyPos, true);
+        }
+
+        private void BuildAStar()
+        {
+            InitializeAStarMap(WalkableType.StandardWalking);
+            InitializeAStarMap(WalkableType.CombatWater);
+        }
+
+        private void BuildMap(string dataDirectory, Maps mapChoice)
+        {
+            switch (mapChoice)
+            {
+                case Maps.Overworld:
+                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.BRIT_DAT),
+                        Path.Combine(dataDirectory, FileConstants.DATA_OVL), false);
+                    break;
+                case Maps.Underworld:
+                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.UNDER_DAT), "", true);
+                    break;
+                case Maps.Small:
+                    throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
+            }
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            BuildMap(_dataDirectory, _mapChoice);
+            BuildAStar();
         }
 
         // ReSharper disable once UnusedMember.Global

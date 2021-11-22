@@ -1,14 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
-    public class SmallMaps
+    [DataContract] public class SmallMaps
     {
+        [DataMember]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>
             _mapLocationDictionary =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
+
+        [JsonConstructor] private SmallMaps()
+        {
+        }
 
         public SmallMaps(string dataDirectory)
         {

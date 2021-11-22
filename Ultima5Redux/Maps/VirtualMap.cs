@@ -67,13 +67,13 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
-        [IgnoreDataMember]
+        [DataMember]
         private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
 
         /// <summary>
         ///     All the small maps
         /// </summary>
-        [IgnoreDataMember]
+        [DataMember]
         private readonly SmallMaps _smallMaps;
 
         /// <summary>
