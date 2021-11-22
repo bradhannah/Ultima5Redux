@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -38,6 +39,10 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         public override string FriendlyName => BoardXitName;
 
         public override bool IsAttackable => false;
+
+        [JsonConstructor] private Skiff()
+        {
+        }
 
         public Skiff(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,

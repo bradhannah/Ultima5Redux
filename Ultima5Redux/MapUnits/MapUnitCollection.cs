@@ -10,12 +10,10 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public sealed class MapUnitCollection
     {
-        [DataMember] public List<Avatar> Avatars => GetMapUnitByType<Avatar>();
-
-        private void ReplaceAll<T>(IEnumerable<T> newMapUnits) where T : MapUnit
+        [DataMember] public List<Avatar> Avatars
         {
-            AllMapUnits.RemoveAll(item => item is T);
-            AllMapUnits.AddRange(newMapUnits);
+            get => GetMapUnitByType<Avatar>();
+            set => ReplaceAll(value);
         }
 
         [DataMember] public List<CombatPlayer> CombatPlayers
@@ -92,5 +90,11 @@ namespace Ultima5Redux.MapUnits
         public void Clear() => AllMapUnits.Clear();
 
         internal List<T> GetMapUnitByType<T>() where T : MapUnit => AllMapUnits.OfType<T>().ToList();
+
+        private void ReplaceAll<T>(IEnumerable<T> newMapUnits) where T : MapUnit
+        {
+            AllMapUnits.RemoveAll(item => item is T);
+            AllMapUnits.AddRange(newMapUnits);
+        }
     }
 }

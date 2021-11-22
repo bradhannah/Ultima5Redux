@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -60,6 +61,10 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         ///     How many skiffs does the frigate have aboard?
         /// </summary>
         public int SkiffsAboard { get; set; }
+
+        [JsonConstructor] private Frigate()
+        {
+        }
 
         public Frigate(MapUnitState mapUnitState, MapUnitMovement mapUnitMovement,
             SmallMapReferences.SingleMapReference.Location location, Point2D.Direction direction,

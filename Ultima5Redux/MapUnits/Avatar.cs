@@ -16,21 +16,27 @@ namespace Ultima5Redux.MapUnits
             Regular, Carpet, Horse, Frigate, Skiff, Hidden
         }
 
+        [DataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
+
         [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
 
-        [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
+        [DataMember] private Frigate CurrentBoardedFrigate =>
+            CurrentBoardedMapUnit is Frigate frigate ? frigate : null;
 
-        /// <summary>
-        ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
-        ///     the current MapUnits object
-        /// </summary>
-        [DataMember] public MapUnit CurrentBoardedMapUnit { get; private set; }
+        [DataMember] private Horse CurrentBoardedHorse =>
+            CurrentBoardedMapUnit is Horse horse ? horse : null;
+
+        [DataMember] private MagicCarpet CurrentBoardedMagicCarpet =>
+            CurrentBoardedMapUnit is MagicCarpet magicCarpet ? magicCarpet : null;
+
+        [DataMember] private Skiff CurrentBoardedSkiff =>
+            CurrentBoardedMapUnit is Skiff skiff ? skiff : null;
+
+        [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
 
         [DataMember] public Point2D.Direction CurrentDirection { get; private set; }
 
         [DataMember] private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
-
-        [IgnoreDataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
         [IgnoreDataMember] public override string BoardXitName => "You can't board the Avatar you silly goose!";
 
@@ -89,6 +95,12 @@ namespace Ultima5Redux.MapUnits
                 base.KeyTileReference = value;
             }
         }
+
+        /// <summary>
+        ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
+        ///     the current MapUnits object
+        /// </summary>
+        [IgnoreDataMember] public MapUnit CurrentBoardedMapUnit { get; private set; }
 
         [JsonConstructor] private Avatar()
         {
