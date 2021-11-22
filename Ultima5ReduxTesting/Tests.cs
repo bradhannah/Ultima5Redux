@@ -1306,5 +1306,10 @@ namespace Ultima5ReduxTesting
             world.ReLoadFromJson();
         }
 
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAndReloadCarpetOverworld(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, false);
+            world.ReLoadFromJson();
+        }
     }
 }

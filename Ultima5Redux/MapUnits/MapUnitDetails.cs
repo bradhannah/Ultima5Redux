@@ -6,15 +6,15 @@ namespace Ultima5Redux.MapUnits
     [DataContract] public abstract class MapUnitDetails
     {
         [DataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
-        [DataMember] public abstract string BoardXitName { get; }
-        [DataMember] public abstract string FriendlyName { get; }
+        [IgnoreDataMember] public abstract string BoardXitName { get; }
+        [IgnoreDataMember] public abstract string FriendlyName { get; }
 
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>
         [DataMember] public abstract bool IsActive { get; }
 
-        [DataMember] public abstract bool IsAttackable { get; }
+        [IgnoreDataMember] public abstract bool IsAttackable { get; }
         [DataMember] public virtual MapUnitPosition MapUnitPosition { get; internal set; }
         [DataMember] public Point2D.Direction Direction { get; set; }
 
@@ -44,6 +44,6 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         [DataMember] protected internal SmallMapCharacterState TheSmallMapCharacterState { get; set; }
 
-        [DataMember] public bool UseFourDirections { get; set; }
+        [IgnoreDataMember] public bool UseFourDirections { get; set; }
     }
 }

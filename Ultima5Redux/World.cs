@@ -546,8 +546,10 @@ namespace Ultima5Redux
 
         public void ReLoadFromJson()
         {
-            string stateJson = State.Serialize();
-            GameState newState = GameState.Deserialize(stateJson);
+            string stateJsonOrig = State.Serialize();
+            GameState newState = GameState.Deserialize(stateJsonOrig);
+            // string stateJsonNew = State.Serialize();
+            // GameState newState2 = GameState.Deserialize(stateJsonNew);
             //GameStateReference.State = newState;
             State = newState;
         }

@@ -43,7 +43,7 @@ namespace Ultima5Redux.Maps
 
         protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
 
-        [DataMember] protected bool XRayMode { get; set; }
+        [DataMember] public bool XRayMode { get; set; }
 
         [JsonConstructor] protected Map()
         {
