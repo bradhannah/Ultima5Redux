@@ -117,12 +117,11 @@ namespace Ultima5Redux
 
             AllSmallMaps = new SmallMaps(DataDirectory);
 
-            State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory);
-
-            GameStateReference.State = State;
+            State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory, AllSmallMaps, OverworldMap, UnderworldMap,
+                bUseExtendedSprites);
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap, bUseExtendedSprites);
+            //State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap, bUseExtendedSprites);
         }
 
         /// <summary>
@@ -549,7 +548,7 @@ namespace Ultima5Redux
         {
             string stateJson = State.Serialize();
             GameState newState = GameState.Deserialize(stateJson);
-            GameStateReference.State = newState;
+            //GameStateReference.State = newState;
             State = newState;
         }
 

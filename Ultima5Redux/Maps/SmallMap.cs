@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.References;
@@ -31,6 +32,10 @@ namespace Ultima5Redux.Maps
         public int MapFloor => _singleSmallMapReference.Floor;
 
         public SmallMapReferences.SingleMapReference.Location MapLocation => _singleSmallMapReference.MapLocation;
+
+        [JsonConstructor] private SmallMap()
+        {
+        }
 
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference

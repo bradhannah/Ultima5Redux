@@ -1,48 +1,62 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    public class Enemy : CombatMapUnit
+    [DataContract] public class Enemy : CombatMapUnit
     {
-        public sealed override CharacterStats Stats { get; } = new CharacterStats();
-        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
-        public override string BoardXitName => "Hostile creates don't not like to be boarded!";
+        [DataMember] public sealed override CharacterStats Stats { get; } = new CharacterStats();
 
-        public override int ClosestAttackRange => EnemyReference.AttackRange;
+        [DataMember] private int _enemyReferenceIndex = -1;
+        [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
+        [IgnoreDataMember] public override string BoardXitName => "Hostile creates don't not like to be boarded!";
 
-        public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
+        [IgnoreDataMember] public override int ClosestAttackRange => EnemyReference.AttackRange;
 
-        public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
+        [IgnoreDataMember] public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+        [IgnoreDataMember] public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
+
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>();
 
+        [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new Dictionary<Point2D.Direction, string>();
 
         // temporary until I read them in dynamically (somehow!?)
-        public override int Experience => EnemyReference.Experience;
-        public override string FriendlyName => SingularName;
-        public override bool IsActive => Stats.CurrentHp > 0;
+        [IgnoreDataMember] public override int Experience => EnemyReference.Experience;
+        [IgnoreDataMember] public override string FriendlyName => SingularName;
+        [IgnoreDataMember] public override bool IsActive => Stats.CurrentHp > 0;
 
-        public override bool IsAttackable => Stats.CurrentHp > 0;
+        [IgnoreDataMember] public override bool IsAttackable => Stats.CurrentHp > 0;
 
-        public override bool IsInvisible => false;
-        public override TileReference KeyTileReference => EnemyReference.KeyTileReference;
-        public override string Name => EnemyReference.MixedCaseSingularName.Trim();
-        public override TileReference NonBoardedTileReference => KeyTileReference;
-        public override string PluralName => EnemyReference.AllCapsPluralName;
-        public override string SingularName => EnemyReference.MixedCaseSingularName;
+        [IgnoreDataMember] public override bool IsInvisible => false;
+        [IgnoreDataMember] public override string Name => EnemyReference.MixedCaseSingularName.Trim();
+        [IgnoreDataMember] public override TileReference NonBoardedTileReference => KeyTileReference;
+        [IgnoreDataMember] public override string PluralName => EnemyReference.AllCapsPluralName;
+        [IgnoreDataMember] public override string SingularName => EnemyReference.MixedCaseSingularName;
+        [IgnoreDataMember] public override TileReference KeyTileReference => EnemyReference.KeyTileReference;
 
-        public EnemyReference EnemyReference { get; }
+        [IgnoreDataMember] public EnemyReference EnemyReference
+        {
+            get => GameReferences.EnemyRefs.GetEnemyReference(_enemyReferenceIndex);
+            private set => _enemyReferenceIndex = value.KeyTileReference.Index;
+        }
 
-        public Stack<Node> FleeingPath { get; set; } = null;
+        [IgnoreDataMember] public Stack<Node> FleeingPath { get; set; }
 
-        public bool IsFleeing { get; set; } = false;
+        [IgnoreDataMember] public bool IsFleeing { get; set; }
+
+        [JsonConstructor] private Enemy()
+        {
+        }
 
         public Enemy(MapUnitMovement mapUnitMovement, EnemyReference enemyReference,
             SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState) : base(null,

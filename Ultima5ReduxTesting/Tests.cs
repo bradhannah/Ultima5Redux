@@ -1300,11 +1300,11 @@ namespace Ultima5ReduxTesting
             NonPlayerCharacter npc = world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
         }
 
-        // [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAndReloadInitialSave(SaveFiles saveFiles)
-        // {
-        //     World world = CreateWorld(saveFiles, true, true);
-        //     world.ReLoadFromJson();
-        // }
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAndReloadInitialSave(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, true);
+            world.ReLoadFromJson();
+        }
 
     }
 }

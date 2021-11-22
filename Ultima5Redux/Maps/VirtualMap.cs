@@ -32,7 +32,8 @@ namespace Ultima5Redux.Maps
             get
             {
                 if (_currentSingleMapReference == null)
-                    throw new Ultima5ReduxException("Unexpected _currentSingleMapReference is null");
+                    return null;
+                //     throw new Ultima5ReduxException("Unexpected _currentSingleMapReference is null");
                 if (_currentSingleMapReference.MapLocation ==
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
                     return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();

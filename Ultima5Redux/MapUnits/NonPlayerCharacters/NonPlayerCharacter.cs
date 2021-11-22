@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
 using Ultima5Redux.Maps;
@@ -10,27 +11,29 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    public sealed class NonPlayerCharacter : MapUnit
+    [DataContract] public sealed class NonPlayerCharacter : MapUnit
     {
         [DataMember] private int _playerCharacterRecordIndex;
-        private int _scheduleIndex = -1;
+        [DataMember] private int _scheduleIndex = -1;
+        [DataMember] public bool ArrivedAtLocation { get; private set; }
 
-        public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
+        [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
-        public override string BoardXitName => "Board them? You hardly know them!";
+        [IgnoreDataMember] public override string BoardXitName => "Board them? You hardly know them!";
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>();
 
+        [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new Dictionary<Point2D.Direction, string>();
 
-        public override string FriendlyName => NPCRef.FriendlyName;
+        [IgnoreDataMember] public override string FriendlyName => NPCRef.FriendlyName;
 
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>
-        public override bool IsActive
+        [IgnoreDataMember] public override bool IsActive
         {
             get
             {
@@ -50,19 +53,19 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
-        public override bool IsAttackable => true;
+        [IgnoreDataMember] public override bool IsAttackable => true;
 
-        public override TileReference NonBoardedTileReference => KeyTileReference;
+        [IgnoreDataMember] public override TileReference NonBoardedTileReference => KeyTileReference;
 
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public bool ArrivedAtLocation { get; private set; }
+        [JsonConstructor] public NonPlayerCharacter()
+        {
+        }
 
         public NonPlayerCharacter(SmallMapCharacterState smallMapTheSmallMapCharacterState,
-            MapUnitMovement mapUnitMovement,
-            // TimeOfDay timeOfDay, PlayerCharacterRecords playerCharacterRecords,
-            bool bLoadedFromDisk, SmallMapReferences.SingleMapReference.Location location,
-            MapUnitPosition mapUnitPosition, NonPlayerCharacterState npcState) : base(smallMapTheSmallMapCharacterState,
-            mapUnitMovement, location, Point2D.Direction.None, npcState,
+            MapUnitMovement mapUnitMovement, bool bLoadedFromDisk,
+            SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition,
+            NonPlayerCharacterState npcState) : base(smallMapTheSmallMapCharacterState, mapUnitMovement, location,
+            Point2D.Direction.None, npcState,
             GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite), mapUnitPosition)
         {
             NPCState = npcState;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
@@ -7,6 +8,10 @@ namespace Ultima5Redux.Maps
     {
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
         public SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+
+        [JsonConstructor] protected RegularMap()
+        {
+        }
 
         protected RegularMap(SmallMapReferences.SingleMapReference singleSmallMapReference)
         {

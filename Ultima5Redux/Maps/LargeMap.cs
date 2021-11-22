@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.PlayerCharacters;
@@ -36,6 +37,10 @@ namespace Ultima5Redux.Maps
         public override bool ShowOuterSmallMapTiles => false;
 
         public override byte[][] TheMap { get; protected set; }
+
+        [JsonConstructor] private LargeMap()
+        {
+        }
 
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
@@ -179,7 +184,6 @@ namespace Ultima5Redux.Maps
             NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
 
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-            //TestForVisibility = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
             TestForVisibility = new List<bool[][]>();
             // reinitialize the array for all potential party members
             for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)

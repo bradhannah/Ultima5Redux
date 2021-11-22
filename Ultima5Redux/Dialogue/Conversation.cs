@@ -212,7 +212,7 @@ namespace Ultima5Redux.Dialogue
                         .GetScriptLine(TalkScript.TalkConstants.Name)
                         .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
                     // randomly add an introduction of the Avatar since they haven't met him
-                    if (_gameState.OneInXOdds(2)) // || true)
+                    if (Utils.OneInXOdds(2)) // || true)
                         // okay, tell them who you are
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                             "\nI am called " + TheNonPlayerCharacterState.NPCRef.Name));

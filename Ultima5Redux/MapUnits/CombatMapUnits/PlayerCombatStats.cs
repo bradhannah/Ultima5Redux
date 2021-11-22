@@ -2,9 +2,9 @@
 {
     public class PlayerCombatStats
     {
-        public int AdditionalExperience { get; set; } = 0;
-        public int TotalDamageGiven { get; set; } = 0;
-        public int TotalDamageTaken { get; set; } = 0;
-        public int TotalKills { get; set; } = 0;
+        public int AdditionalExperience { get; set; }
+        public int TotalDamageGiven { get; set; }
+        public int TotalDamageTaken { get; set; }
+        public int TotalKills { get; set; }
     }
 }

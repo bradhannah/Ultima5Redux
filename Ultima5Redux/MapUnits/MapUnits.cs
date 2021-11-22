@@ -118,7 +118,7 @@ namespace Ultima5Redux.MapUnits
             CurrentMapType = initialMap;
         }
 
-        [JsonConstructor] MapUnits()
+        [JsonConstructor] private MapUnits()
         {
             _importedMovements = new MapUnitMovements();
         }

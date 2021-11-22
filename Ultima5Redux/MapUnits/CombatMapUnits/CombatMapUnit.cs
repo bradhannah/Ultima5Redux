@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -15,7 +17,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None
         }
 
-        private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
+        [IgnoreDataMember] private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
 
         public abstract int ClosestAttackRange { get; }
 
@@ -33,9 +35,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public abstract CharacterStats Stats { get; }
 
-        public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
+        [IgnoreDataMember] public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
 
-        internal HitState CurrentHitState
+        [IgnoreDataMember] internal HitState CurrentHitState
         {
             get
             {
@@ -72,14 +74,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
-        public bool HasEscaped { get; set; } = false;
+        [IgnoreDataMember] public bool HasEscaped { get; set; }
 
-        public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
-        public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
+        [IgnoreDataMember] public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
+        [IgnoreDataMember] public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
 
-        public CombatMapUnit PreviousAttackTarget { get; private set; }
+        [IgnoreDataMember] public CombatMapUnit PreviousAttackTarget { get; private set; }
 
-        protected CombatMapUnit()
+        [JsonConstructor] protected CombatMapUnit()
         {
         }
 

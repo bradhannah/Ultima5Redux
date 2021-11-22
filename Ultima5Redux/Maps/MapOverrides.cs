@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 
@@ -25,6 +26,10 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public int NumOfRows => TheMap.NumOfXTiles;
 
         [IgnoreDataMember] internal Map TheMap { get; }
+
+        [JsonConstructor] private MapOverrides()
+        {
+        }
 
         public MapOverrides(Map map)
         {
