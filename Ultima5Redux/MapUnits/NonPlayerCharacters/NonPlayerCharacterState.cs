@@ -1,11 +1,13 @@
 ﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Dialogue;
+using Ultima5Redux.Maps;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public class NonPlayerCharacterState
     {
-        [DataMember] public int NPCRefIndex => NPCRef.DialogIndex;
 
         [DataMember] public bool HasMetAvatar
         {
@@ -30,9 +32,24 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         [DataMember] public bool IsDead { get; set; }
+        [DataMember] public SmallMapReferences.SingleMapReference.Location NPCLocation { get; private set; }
+        [DataMember] public int NPCRefIndex { get; private set; }
 
-        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef { get; }
         [IgnoreDataMember] private bool _bHasMetAvatar;
+
+        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef
+        {
+            get => GameReferences.NpcRefs.GetNonPlayerCharactersByLocation(NPCLocation)[NPCRefIndex];
+            private set
+            {
+                NPCRefIndex = value.DialogIndex;
+                NPCLocation = value.MapLocation;
+            }
+        }
+
+        [JsonConstructor] private NonPlayerCharacterState()
+        {
+        }
 
         public NonPlayerCharacterState(NonPlayerCharacterReference npcRef)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
@@ -8,7 +9,7 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
-    public sealed class Skiff : SeaFaringVessel
+    [DataContract] public sealed class Skiff : SeaFaringVessel
     {
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
             new Dictionary<SmallMapReferences.SingleMapReference.Location, int>

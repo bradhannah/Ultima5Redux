@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
@@ -9,10 +10,8 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    public sealed class CombatPlayer : CombatMapUnit
+    [DataContract] public sealed class CombatPlayer : CombatMapUnit
     {
-        // private readonly Inventory _inventory;
-
         public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         public override string BoardXitName => "GET OFF ME YOU BRUTE!";
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
@@ -8,7 +9,7 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.MapUnits.SeaFaringVessels
 {
-    public class Frigate : SeaFaringVessel
+    [DataContract] public class Frigate : SeaFaringVessel
     {
         private readonly Dictionary<Point2D.Direction, string> _sailsFurledTiles =
             new Dictionary<Point2D.Direction, string>

@@ -1311,5 +1311,17 @@ namespace Ultima5ReduxTesting
             World world = CreateWorld(saveFiles, true, false);
             world.ReLoadFromJson();
         }
+
+        [Test]
+        [TestCase(SaveFiles.b_carpet)]
+        [TestCase(SaveFiles.BucDen1)]
+        [TestCase(SaveFiles.Britain2)]
+        [TestCase(SaveFiles.b_frigat)]
+        public void test_ReloadStressTest(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, false);
+            world.ReLoadFromJson();
+            _ = world.State.TheVirtualMap.CurrentPosition;
+        }
     }
 }
