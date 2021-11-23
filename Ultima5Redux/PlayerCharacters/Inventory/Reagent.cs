@@ -26,6 +26,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         private const int REAGENT_SPRITE = 259;
+        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
 
         [IgnoreDataMember] private readonly GameState _state;
         [IgnoreDataMember] public override int BasePrice => 0;

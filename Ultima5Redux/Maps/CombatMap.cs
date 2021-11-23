@@ -29,11 +29,6 @@ namespace Ultima5Redux.Maps
             CombatPlayerBlocked, NoAction, Sleeping
         }
 
-        // private readonly Inventory _inventory;
-
-        // world references
-        // private readonly VirtualMap _virtualMap;
-
         private bool _bPlayerHasChanged = true;
 
         private Queue<CombatItem> _currentCombatItemQueue;

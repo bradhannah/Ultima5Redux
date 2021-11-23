@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -76,15 +77,15 @@ namespace Ultima5Redux
         }
     }
 
-    public class Point2D
+    [DataContract] public class Point2D
     {
         /// <summary>
         ///     4 way direction
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))] public enum Direction { Up, Down, Left, Right, None }
 
-        public int X { get; set; }
-        public int Y { get; set; }
+        [DataMember] public int X { get; set; }
+        [DataMember] public int Y { get; set; }
 
         public Point2D(int x, int y)
         {
@@ -157,10 +158,10 @@ namespace Ultima5Redux
             return hashCode;
         }
 
-        public override string ToString()
-        {
-            return "X=" + X + ",Y=" + Y;
-        }
+        // public override string ToString()
+        // {
+        //     return "X=" + X + ",Y=" + Y;
+        // }
 
         public void AdjustXAndYToMax(int nMax)
         {

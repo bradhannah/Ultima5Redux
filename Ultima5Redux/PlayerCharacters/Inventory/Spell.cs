@@ -18,6 +18,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int SPRITE_NUM = 260;
 
+        [IgnoreDataMember] public override string FindDescription => SpellMagicReference.Spell;
+
         [IgnoreDataMember] public override bool HideQuantity => false;
 
         [IgnoreDataMember] public override string InventoryReferenceString => SpellIncantation.ToString();

@@ -44,6 +44,8 @@ namespace Ultima5Redux.Maps
 
         [JsonConstructor] private LargeMap()
         {
+            // for now combat maps don't have overrides
+            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
         }
 
         /// <summary>
@@ -52,10 +54,17 @@ namespace Ultima5Redux.Maps
         /// <param name="dataDirectory"></param>
         /// <param name="mapChoice"></param>
         public LargeMap(string dataDirectory, Maps mapChoice) : base(
-            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(mapChoice))
+            SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapChoice == Maps.Overworld ? 0 : -1)
         {
+            if (mapChoice != Maps.Overworld && mapChoice != Maps.Underworld)
+                throw new Ultima5ReduxException("Tried to create a large map with " + mapChoice);
+            
             _dataDirectory = dataDirectory;
             _mapChoice = mapChoice;
+
+            // for now combat maps don't have overrides
+            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+            
             BuildMap(dataDirectory, mapChoice);
             BuildAStar();
         }
@@ -229,5 +238,8 @@ namespace Ultima5Redux.Maps
         {
             PrintMapSection(TheMap, 0, 0, 160, 80);
         }
+
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(_mapChoice);
     }
 }

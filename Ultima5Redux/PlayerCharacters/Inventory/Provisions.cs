@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Data;
-using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -53,31 +51,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             Items.Add(Provision.ProvisionTypeEnum.Torches,
                 new Provision(Provision.ProvisionTypeEnum.Torches,
-                    GameReferences.DataOvlRef.StringReferences
-                        .GetString(DataOvlReference.ThingsIFindStrings.SOME_TORCHES_BANG_N).Trim(),
                     (int)Provision.ProvisionSpritesTypeEnum.Torches));
             Items.Add(Provision.ProvisionTypeEnum.Gems,
                 new Provision(Provision.ProvisionTypeEnum.Gems,
-                    GameReferences.DataOvlRef.StringReferences
-                        .GetString(DataOvlReference.ThingsIFindStrings.A_GEM_BANG_N).Trim(),
                     (int)Provision.ProvisionSpritesTypeEnum.Gems));
             Items.Add(Provision.ProvisionTypeEnum.Keys,
                 new Provision(Provision.ProvisionTypeEnum.Keys,
-                    GameReferences.DataOvlRef.StringReferences
-                        .GetString(DataOvlReference.ThingsIFindStrings.A_RING_OF_KEYS_BANG_N).Trim(),
                     (int)Provision.ProvisionSpritesTypeEnum.Keys));
             Items.Add(Provision.ProvisionTypeEnum.SkullKeys,
-                new Provision(Provision.ProvisionTypeEnum.SkullKeys,
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY)
-                        .Trim(), (int)Provision.ProvisionSpritesTypeEnum.Torches));
+                new Provision(Provision.ProvisionTypeEnum.SkullKeys, (int)Provision.ProvisionSpritesTypeEnum.Torches));
             Items.Add(Provision.ProvisionTypeEnum.Food,
-                new Provision(Provision.ProvisionTypeEnum.Food,
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_FOOD)
-                        .Trim(), (int)Provision.ProvisionSpritesTypeEnum.Food));
+                new Provision(Provision.ProvisionTypeEnum.Food, (int)Provision.ProvisionSpritesTypeEnum.Food));
             Items.Add(Provision.ProvisionTypeEnum.Gold,
-                new Provision(Provision.ProvisionTypeEnum.Gold,
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.S_GOLD)
-                        .Trim(), (int)Provision.ProvisionSpritesTypeEnum.Gold));
+                new Provision(Provision.ProvisionTypeEnum.Gold, (int)Provision.ProvisionSpritesTypeEnum.Gold));
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public abstract class CombatItem : InventoryItem
     {
+        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
+        
         [IgnoreDataMember] public override int BasePrice => TheCombatItemReference.BasePrice;
 
         [IgnoreDataMember] public override string InventoryReferenceString =>

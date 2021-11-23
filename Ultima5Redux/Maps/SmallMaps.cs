@@ -13,16 +13,15 @@ namespace Ultima5Redux.Maps
             _mapLocationDictionary =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
 
-        [JsonConstructor] private SmallMaps()
+        [JsonConstructor] public SmallMaps()
         {
-        }
-
-        public SmallMaps(string dataDirectory)
-        {
+            // if the _mapLocationDictionary already has elements, then we assume it was deserialized and skip this step
+            if (_mapLocationDictionary.Count > 0) return;
+            
             foreach (SmallMapReferences.SingleMapReference mapRef in GameReferences.SmallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(dataDirectory, mapRef);
+                SmallMap smallMap = new SmallMap(mapRef);
 
                 // we make a map that allows us to map the _location and Floor number to the small map with 
                 // details such as the grid

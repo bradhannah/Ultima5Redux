@@ -1,6 +1,8 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -14,6 +16,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override string InventoryReferenceString => Phase.ToString();
 
         [IgnoreDataMember] public override string LongName => Utils.AddSpacesBeforeCaps(Phase.ToString());
+
+        public override string FindDescription => GameReferences.DataOvlRef.StringReferences
+            .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N).TrimEnd();
 
         /// <summary>
         ///     If the moonstone is buried, then it's not in your inventory
@@ -36,8 +41,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public Moonstone(MoonPhaseReferences.MoonPhases phase, string findDescription, Moongates moongates) : base(0,
-            findDescription, MOONSTONE_SPRITE)
+        public Moonstone(MoonPhaseReferences.MoonPhases phase, Moongates moongates) : base(0, MOONSTONE_SPRITE)
         {
             Phase = phase;
             _moongates = moongates;

@@ -19,6 +19,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             WoodenBox = 270, Sextant = 256
         }
 
+        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
+        
         [IgnoreDataMember] public override bool HideQuantity => ItemType != ItemTypeSpriteEnum.Carpet;
 
         [IgnoreDataMember] public override string InventoryReferenceString => ItemType.ToString();

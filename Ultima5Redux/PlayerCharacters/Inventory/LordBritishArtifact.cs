@@ -14,6 +14,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Amulet = 439, Crown = 437, Sceptre = 438
         }
 
+        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
         [IgnoreDataMember] public override bool HideQuantity => true;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 using Ultima5Redux.Properties;
 
@@ -16,7 +17,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Inventory reference types
         /// </summary>
-        public enum InventoryReferenceType { Reagent, Armament, Spell, Item }
+        [JsonConverter(typeof(StringEnumConverter))] public enum InventoryReferenceType
+        {
+            Reagent, Armament, Spell, Item
+        }
 
         /// <summary>
         ///     reagents are highlighted green

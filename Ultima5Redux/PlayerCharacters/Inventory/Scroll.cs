@@ -14,6 +14,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         private const int SCROLL_SPRITE = 260;
+        [IgnoreDataMember] public override string FindDescription => ScrollMagicReference.Spell + " scroll";
+        
         [IgnoreDataMember] public override int BasePrice => 0;
 
         [IgnoreDataMember] public override bool HideQuantity => false;

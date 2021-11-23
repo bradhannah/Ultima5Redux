@@ -446,9 +446,9 @@ namespace Ultima5Redux.Maps
             List<Point2D> laddersAndStairs = new List<Point2D>();
 
             // go through every single tile on the map looking for ladders and stairs
-            for (int x = 0; x < SmallMap.XTiles; x++)
+            for (int x = 0; x < SmallMap.X_TILES; x++)
             {
-                for (int y = 0; y < SmallMap.YTiles; y++)
+                for (int y = 0; y < SmallMap.Y_TILES; y++)
                 {
                     TileReference tileReference = GetTileReference(x, y);
                     if (ladderOrStairDirection == LadderOrStairDirection.Down)

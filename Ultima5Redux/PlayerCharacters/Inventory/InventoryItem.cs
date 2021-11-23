@@ -13,7 +13,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [DataContract]
     public abstract class InventoryItem
     {
-        [DataMember] public virtual string FindDescription { get; }
+        [IgnoreDataMember] public abstract string FindDescription { get; }
 
         [DataMember] public int SpriteNum { get; }
 
@@ -63,15 +63,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        protected InventoryItem(int quantity, int spriteNum) : this(quantity, "", spriteNum)
-        {
-        }
+        // protected InventoryItem(int quantity, int spriteNum) : this(quantity, "", spriteNum)
+        // {
+        // }
 
-        protected InventoryItem(int quantity, string findDescription, int spriteNum)
+        protected InventoryItem(int quantity, int spriteNum)
         {
             _quantity = quantity;
             SpriteNum = spriteNum;
-            FindDescription = findDescription;
+            //FindDescription = findDescription;
         }
 
         public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records,

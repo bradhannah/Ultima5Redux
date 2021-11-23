@@ -12,6 +12,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             White = 0x289
         }
 
+        [IgnoreDataMember] public override string FindDescription => Color + " potion";
+
         private const int POTION_SPRITE = 259;
 
         [IgnoreDataMember] public override bool HideQuantity => false;

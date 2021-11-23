@@ -5,6 +5,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public abstract class Armour : CombatItem
     {
+
         [JsonConstructor] protected Armour()
         {
         }

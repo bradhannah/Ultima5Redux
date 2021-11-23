@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
@@ -170,19 +171,19 @@ namespace Ultima5Redux.Maps
         /// <param name="nFloors"></param>
         /// <param name="roomOffset"></param>
         /// <returns></returns>
-        private IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
+        private static IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
             int startFloor, short nFloors, short roomOffset)
         {
             List<SingleMapReference> mapRefs = new List<SingleMapReference>();
 
             int fileOffset =
-                roomOffset * SmallMap.XTiles *
-                SmallMap.YTiles; // the number of rooms offset, converted to number of bytes to skip
+                roomOffset * SmallMap.X_TILES *
+                SmallMap.Y_TILES; // the number of rooms offset, converted to number of bytes to skip
 
             for (int i = 0; i < nFloors; i++)
             {
-                mapRefs.Add(new SingleMapReference(location, startFloor + i,
-                    fileOffset + i * SmallMap.XTiles * SmallMap.YTiles));
+                mapRefs.Add(new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, location, startFloor + i,
+                    fileOffset + i * SmallMap.X_TILES * SmallMap.Y_TILES));
             }
 
             return mapRefs;
@@ -217,21 +218,15 @@ namespace Ultima5Redux.Maps
             if ((int)newLocStrEnum >= 0) return getLocationNameStr(newLocStrEnum);
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (newLocStrEnum)
+            return newLocStrEnum switch
             {
-                case DataOvlReference.LocationStrings.Suteks_Hut:
-                    return "SUTEK'S HUT";
-                case DataOvlReference.LocationStrings.SinVraals_Hut:
-                    return "SIN VRAAL'S HUT";
-                case DataOvlReference.LocationStrings.Grendels_Hut:
-                    return "GRENDAL'S HUT";
-                case DataOvlReference.LocationStrings.Lord_Britishs_Castle:
-                    return "LORD BRITISH'S CASTLE";
-                case DataOvlReference.LocationStrings.Palace_of_Blackthorn:
-                    return "PALACE OF BLACKTHORN";
-                default:
-                    throw new Ultima5ReduxException("Ummm asked for a location name and wasn't on the guest list.");
-            }
+                DataOvlReference.LocationStrings.Suteks_Hut => "SUTEK'S HUT",
+                DataOvlReference.LocationStrings.SinVraals_Hut => "SIN VRAAL'S HUT",
+                DataOvlReference.LocationStrings.Grendels_Hut => "GRENDAL'S HUT",
+                DataOvlReference.LocationStrings.Lord_Britishs_Castle => "LORD BRITISH'S CASTLE",
+                DataOvlReference.LocationStrings.Palace_of_Blackthorn => "PALACE OF BLACKTHORN",
+                _ => throw new Ultima5ReduxException("Ummm asked for a location name and wasn't on the guest list.")
+            };
         }
 
         public string GetLocationTypeStr(SingleMapReference.Location location)

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -13,6 +15,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         public class SingleMapReference
         {
+            private readonly string _dataDirectory;
+
             [SuppressMessage("ReSharper", "IdentifierTypo")] [JsonConverter(typeof(StringEnumConverter))]
             public enum Location
             {
@@ -28,6 +32,28 @@ namespace Ultima5Redux.Maps
                 Doom = 40, // Dungeons
                 Combat_resting_shrine = 41
             }
+
+            /// <summary>
+            ///     Total tiles per row
+            /// </summary>
+            [IgnoreDataMember] public int XTiles =>
+                MapLocation switch
+                {
+                    Location.Combat_resting_shrine => 16,
+                    Location.Britannia_Underworld => 256,
+                    _ => SmallMap.X_TILES
+                };
+
+            /// <summary>
+            ///     Total tiles per column
+            /// </summary>
+            [IgnoreDataMember] public int YTiles =>
+                MapLocation switch
+                {
+                    Location.Combat_resting_shrine => 16,
+                    Location.Britannia_Underworld => 256,
+                    _ => SmallMap.Y_TILES
+                };
 
             /// <summary>
             ///     Map master files. These represent .DAT, .NPC and .TLK files
@@ -112,23 +138,20 @@ namespace Ultima5Redux.Maps
             /// <summary>
             ///     Construct a single map reference
             /// </summary>
+            /// <param name="dataDirectory"></param>
             /// <param name="mapLocation">overall location (ie. Moonglow)</param>
             /// <param name="floor">the floor in the location (-1 basement, 0 main level, 1+ upstairs)</param>
             /// <param name="fileOffset">location of data offset in map file</param>
-            public SingleMapReference(Location mapLocation, int floor, int fileOffset)
+            public SingleMapReference(string dataDirectory, Location mapLocation, int floor, int fileOffset)
             {
+                _dataDirectory = dataDirectory;
                 MapLocation = mapLocation;
                 Floor = floor;
                 FileOffset = fileOffset;
             }
 
-            public static SingleMapReference GetCombatMapSingleInstance()
-            {
-                // if (map == Map.Maps.Small)
-                //     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
-
-                return new SingleMapReference(Location.Combat_resting_shrine, 0, 0);
-            }
+            public static SingleMapReference GetCombatMapSingleInstance() =>
+                new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, Location.Combat_resting_shrine, 0, 0);
 
             /// <summary>
             ///     Get the filename of the map data based on the location
@@ -159,8 +182,17 @@ namespace Ultima5Redux.Maps
                 if (map == Map.Maps.Small)
                     throw new Ultima5ReduxException("Can't ask for a small map when you need a large one");
 
-                return new SingleMapReference(Location.Britannia_Underworld, map == Map.Maps.Overworld ? 0 : -1, 0);
+                return new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, Location.Britannia_Underworld,
+                    map == Map.Maps.Overworld ? 0 : -1, 0);
             }
+
+            // public static SingleMapReference GetSmallMapSingleInstance(Location location)
+            // {
+            //     SmallMapReference.GenerateSingleMapReferences()
+            //     return new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, location,)
+            //     return new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, 
+            //         Location.Britannia_Underworld, map == Map.Maps.Overworld ? 0 : -1, 0);
+            // }
 
             /// <summary>
             ///     Gets the master file type based on the location
@@ -281,6 +313,28 @@ namespace Ultima5Redux.Maps
                 else mapStr += "Floor " + Floor;
                 return mapStr;
             }
+
+            /// <summary>
+            ///     Loads a small map into a 2D array
+            /// </summary>
+            /// <param name="mapFilename">name of the file that contains the map</param>
+            /// <param name="fileOffset">the file offset to begin reading the file at</param>
+            /// <returns></returns>
+            private byte[][] LoadSmallMapFile(string mapFilename, int fileOffset)
+            {
+                List<byte> mapBytes = Utils.GetFileAsByteList(mapFilename);
+
+                byte[][] smallMap = Utils.ListTo2DArray(mapBytes, (short)XTiles, fileOffset, XTiles * YTiles);
+
+                // have to transpose the array because the ListTo2DArray function puts the map together backwards...
+                return Utils.TransposeArray(smallMap);
+            }
+
+            public byte[][] GetDefaultMap()
+            {
+                return LoadSmallMapFile(Path.Combine(_dataDirectory, GetFilenameFromLocation(MapLocation)), FileOffset);
+            }
+
         }
     }
 }

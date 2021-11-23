@@ -1,6 +1,8 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.References;
 
@@ -18,13 +20,35 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
         }
 
+        public override string FindDescription
+        {
+            get
+            {
+                string getProvStr(DataOvlReference.ThingsIFindStrings provType) =>
+                    GameReferences.DataOvlRef.StringReferences.GetString(provType).Trim();
+
+                return ProvisionType switch
+                {
+                    ProvisionTypeEnum.Torches => getProvStr(DataOvlReference.ThingsIFindStrings.SOME_TORCHES_BANG_N),
+                    ProvisionTypeEnum.Gems => getProvStr(DataOvlReference.ThingsIFindStrings.A_GEM_BANG_N),
+                    ProvisionTypeEnum.Keys => getProvStr(DataOvlReference.ThingsIFindStrings.A_RING_OF_KEYS_BANG_N),
+                    ProvisionTypeEnum.SkullKeys => GameReferences.DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY).Trim(),
+                    ProvisionTypeEnum.Food => GameReferences.DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim(),
+                    ProvisionTypeEnum.Gold => GameReferences.DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim(),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            }
+        }
         [IgnoreDataMember] public override bool HideQuantity => false;
 
         [IgnoreDataMember] public override string InventoryReferenceString => ProvisionType.ToString();
 
         [IgnoreDataMember] public int BundleQuantity =>
             GameReferences.ProvisionReferences.GetBundleQuantity(ProvisionType);
-        
+
         [DataMember] public ProvisionTypeEnum ProvisionType { get; private set; }
 
         [JsonConstructor] private Provision()
@@ -35,10 +59,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         ///     Creates a provision
         /// </summary>
         /// <param name="provisionTypeEnum">what kind of provision</param>
-        /// <param name="findDescription"></param>
         /// <param name="spriteNum"></param>
-        public Provision(ProvisionTypeEnum provisionTypeEnum, string findDescription, int spriteNum) : base(0,
-            findDescription, spriteNum)
+        public Provision(ProvisionTypeEnum provisionTypeEnum, int spriteNum) : base(0, spriteNum)
         {
             ProvisionType = provisionTypeEnum;
         }

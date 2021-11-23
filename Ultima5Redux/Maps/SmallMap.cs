@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
@@ -8,81 +6,52 @@ using Ultima5Redux.References;
 
 namespace Ultima5Redux.Maps
 {
-    [DataContract] public class SmallMap : RegularMap
+    [DataContract] public sealed class SmallMap : RegularMap
     {
-        [DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
+        // [DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
 
-        [DataMember(Name = "SingleSmallMapReference")]
-        private readonly SmallMapReferences.SingleMapReference _singleSmallMapReference;
+        //[DataMember] public SmallMapReferences.SingleMapReference SingleSmallMapReference { get; }
 
-        /// <summary>
-        ///     Total tiles per row
-        /// </summary>
-        [IgnoreDataMember] public static int XTiles => 32;
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        {
+            get => GameReferences.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
+        }
 
-        /// <summary>
-        ///     Total tiles per column
-        /// </summary>
-        [IgnoreDataMember] public static int YTiles => 32;
-
+        public const int X_TILES = 32;
+        public const int Y_TILES = 32;
+        
         [IgnoreDataMember] protected override bool IsRepeatingMap => false;
 
-        [IgnoreDataMember] public override int NumOfXTiles => XTiles;
-        [IgnoreDataMember] public override int NumOfYTiles => YTiles;
+        [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
+        [IgnoreDataMember] public override int NumOfYTiles => CurrentSingleMapReference.YTiles;
 
         [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
-        [IgnoreDataMember] public int MapFloor => _singleSmallMapReference.Floor;
-
-        [IgnoreDataMember] public SmallMapReferences.SingleMapReference.Location MapLocation =>
-            _singleSmallMapReference.MapLocation;
 
         [IgnoreDataMember] public sealed override byte[][] TheMap { get; protected set; }
 
         [JsonConstructor] private SmallMap()
         {
-        
-        }
-
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            TheMap = LoadSmallMapFile(Path.Combine(_dataDirectory, _singleSmallMapReference.MapFilename),
-                _singleSmallMapReference.FileOffset);
-
-            InitializeAStarMap(WalkableType.StandardWalking);
         }
 
         /// <summary>
         ///     Creates a small map object using a pre-defined map reference
         /// </summary>
-        /// <param name="dataDirectory"></param>
         /// <param name="singleSmallMapReference"></param>
-        public SmallMap(string dataDirectory, SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
-            singleSmallMapReference)
+        public SmallMap(SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
+            singleSmallMapReference.MapLocation, singleSmallMapReference.Floor)
         {
-            _dataDirectory = dataDirectory;
-            _singleSmallMapReference = singleSmallMapReference;
+            // _dataDirectory = dataDirectory;
+            //CurrentSingleMapReference = singleSmallMapReference;
+
+            // for now combat maps don't have overrides
+            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
             // load the map into memory
-            TheMap = LoadSmallMapFile(Path.Combine(dataDirectory, singleSmallMapReference.MapFilename),
-                singleSmallMapReference.FileOffset);
+            TheMap = CurrentSingleMapReference.GetDefaultMap();
+            //LoadSmallMapFile(Path.Combine(dataDirectory, singleSmallMapReference.MapFilename),
+            //singleSmallMapReference.FileOffset);
 
             InitializeAStarMap(WalkableType.StandardWalking);
-        }
-
-        /// <summary>
-        ///     Loads a small map into a 2D array
-        /// </summary>
-        /// <param name="mapFilename">name of the file that contains the map</param>
-        /// <param name="fileOffset">the file offset to begin reading the file at</param>
-        /// <returns></returns>
-        private static byte[][] LoadSmallMapFile(string mapFilename, int fileOffset)
-        {
-            List<byte> mapBytes = Utils.GetFileAsByteList(mapFilename);
-
-            byte[][] smallMap = Utils.ListTo2DArray(mapBytes, (short)XTiles, fileOffset, XTiles * YTiles);
-
-            // have to transpose the array because the ListTo2DArray function puts the map together backwards...
-            return Utils.TransposeArray(smallMap);
         }
 
         /// <summary>
@@ -104,9 +73,11 @@ namespace Ultima5Redux.Maps
 
             // we reduce the weight for the A* for each adjacent brick floor or path tile
             if (xy.X - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X - 1][xy.Y]) ? fDefaultDeduction : 0;
-            if (xy.X + 1 < XTiles) fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
+            if (xy.X + 1 < CurrentSingleMapReference.XTiles)
+                fCost -= isPreferredIndex(TheMap[xy.X + 1][xy.Y]) ? fDefaultDeduction : 0;
             if (xy.Y - 1 >= 0) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y - 1]) ? fDefaultDeduction : 0;
-            if (xy.Y + 1 < YTiles) fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
+            if (xy.Y + 1 < CurrentSingleMapReference.YTiles)
+                fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
 
             return fCost;
         }
@@ -122,6 +93,16 @@ namespace Ultima5Redux.Maps
                 default:
                     return WalkableType.StandardWalking;
             }
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            TheMap = CurrentSingleMapReference.GetDefaultMap();
+
+            // for now combat maps don't have overrides
+            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+
+            InitializeAStarMap(WalkableType.StandardWalking);
         }
     }
 }

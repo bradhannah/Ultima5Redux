@@ -115,7 +115,7 @@ namespace Ultima5Redux
             // build the underworld map
             UnderworldMap = new LargeMap(DataDirectory, Map.Maps.Underworld);
 
-            AllSmallMaps = new SmallMaps(DataDirectory);
+            AllSmallMaps = new SmallMaps();
 
             State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory, AllSmallMaps, OverworldMap, UnderworldMap,
                 bUseExtendedSprites);

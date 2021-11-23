@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.PlayerCharacters
 {
     [DataContract] public class CharacterEquipped
     {
-        public enum EquippableSlot { None, Helm, Amulet, LeftHand, RightHand, Ring, Armour }
+        [JsonConverter(typeof(StringEnumConverter))] public enum EquippableSlot
+        {
+            None, Helm, Amulet, LeftHand, RightHand, Ring, Armour
+        }
 
         [DataMember] public DataOvlReference.Equipment Amulet { get; set; }
         [DataMember] public DataOvlReference.Equipment Armour { get; set; }
