@@ -1,7 +1,5 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Data;
-using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.References;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
