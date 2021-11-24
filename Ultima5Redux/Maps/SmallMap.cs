@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Diagnostics;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
@@ -10,15 +10,16 @@ namespace Ultima5Redux.MapUnits
     ///     only a single collection of SmallMapCharacterStates can be saved at a time, so when switching between
     ///     small and large maps, the state will be lost
     /// </summary>
-    [DataContract] public class SmallMapCharacterStates
+    public class SmallMapCharacterStates
     {
         private const int MAX_CHARACTER_STATES = 0x20;
 
-        [DataMember] private List<SmallMapCharacterState> CharacterStates { get; set; } =
+        private List<SmallMapCharacterState> CharacterStates { get; } =
             new List<SmallMapCharacterState>(MAX_CHARACTER_STATES);
 
-        [JsonConstructor] SmallMapCharacterStates()
+        [JsonConstructor] private SmallMapCharacterStates()
         {
+            Debug.Assert(true, "If you are deserializing then a mistake was made");
         }
         
         public SmallMapCharacterStates(DataChunk charStatesDataChunk)
@@ -32,11 +33,6 @@ namespace Ultima5Redux.MapUnits
                 CharacterStates.Add(new SmallMapCharacterState(
                     characterStateBytes.GetRange(nIndex * MapUnitState.NBYTES, MapUnitState.NBYTES).ToArray(), nIndex));
             }
-        }
-
-        public void EmptyState(int nIndex)
-        {
-            CharacterStates[nIndex] = new SmallMapCharacterState();
         }
 
         public SmallMapCharacterState GetCharacterState(int nIndex)

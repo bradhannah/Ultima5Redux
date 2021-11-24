@@ -11,6 +11,8 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.Properties;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux
 {
@@ -112,7 +114,7 @@ namespace Ultima5Redux
             _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
         internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
-        internal SmallMapCharacterStates SmallMapCharacterStates { get; set; }
+        internal SmallMapCharacterStates SmallMapCharacterStates { get; private set; }
         private MapUnitStates SmallMapUnitStates { get; set; }
 
         internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),

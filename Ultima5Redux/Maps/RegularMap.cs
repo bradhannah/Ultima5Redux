@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {

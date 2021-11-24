@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Ultima5Redux.Data;
-using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
@@ -13,6 +11,8 @@ using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux
 {

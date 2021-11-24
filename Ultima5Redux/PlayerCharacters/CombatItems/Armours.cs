@@ -4,9 +4,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Ultima5Redux.Data;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {

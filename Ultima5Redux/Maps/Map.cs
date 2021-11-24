@@ -8,6 +8,7 @@ using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.Maps
 {

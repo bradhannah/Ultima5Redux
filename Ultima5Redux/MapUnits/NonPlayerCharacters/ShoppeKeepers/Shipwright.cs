@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.Dialogue;
-using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global

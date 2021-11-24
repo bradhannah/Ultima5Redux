@@ -2,8 +2,9 @@
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Maps;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {

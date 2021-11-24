@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Data;
-using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global

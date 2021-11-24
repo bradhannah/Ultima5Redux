@@ -2,9 +2,8 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Ultima5Redux.Data;
-using Ultima5Redux.Maps;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {

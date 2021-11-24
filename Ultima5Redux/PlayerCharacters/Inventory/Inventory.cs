@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.CombatItems;
+using Ultima5Redux.References;
 
 // ReSharper disable MemberCanBePrivate.Global
 

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using Ultima5Redux;
-using Ultima5Redux.Data;
 using Ultima5Redux.Dialogue;
-using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Dialogue;
+using Ultima5Redux.References.Maps;
 
 namespace U5ConversationSimulator
 {

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
+using Ultima5Redux.References;
 
 namespace Ultima5Redux.DayNightMoon
 {

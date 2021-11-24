@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Ultima5Redux.Maps;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits
 {

@@ -2,11 +2,10 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
-using Ultima5Redux.Data;
-using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {

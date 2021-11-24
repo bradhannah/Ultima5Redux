@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.Dialogue;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {

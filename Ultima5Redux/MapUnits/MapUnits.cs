@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -27,7 +28,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] private Map.Maps CurrentMapType { get; set; }
 
-        [DataMember] private SmallMapCharacterStates MapCharacterStates { get; set; }
+        //[DataMember] private SmallMapCharacterStates MapCharacterStates { get; set; }
 
         [DataMember] public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } =
             new MapUnitCollection();
@@ -80,7 +81,7 @@ namespace Ultima5Redux.MapUnits
             CurrentLocation = currentSmallMap;
 
             // map character states pertain to whichever map was loaded from disk
-            MapCharacterStates = importedGameState.SmallMapCharacterStates;
+            //MapCharacterStates = importedGameState.SmallMapCharacterStates;
 
             // movements pertain to whichever map was loaded from disk
             _importedMovements = importedGameState.CharacterMovements;
@@ -576,12 +577,17 @@ namespace Ultima5Redux.MapUnits
                 mapUnitMovement.ClearMovements();
 
                 // set a default SmallMapCharacterState based on the given NPC
-                SmallMapCharacterState smallMapCharacterState = new SmallMapCharacterState(npcState.NPCRef, i);
+                bool bInitialMapAndSmall = bInitialLoad && _importedGameState.InitialMap == Map.Maps.Small;
+                // if it's an initial load we use the imported state, otherwise we assume it's fresh and new
+                SmallMapCharacterState smallMapCharacterState = bInitialMapAndSmall
+                    ? _importedGameState.SmallMapCharacterStates.GetCharacterState(i)
+                    : new SmallMapCharacterState(npcState.NPCRef, i);
 
-                MapUnitPosition mapUnitPosition = new MapUnitPosition((byte)smallMapCharacterState.TheMapUnitPosition.X,
-                    (byte)smallMapCharacterState.TheMapUnitPosition.Y,
-                    (byte)smallMapCharacterState.TheMapUnitPosition.Floor);
-                MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState, mapUnitPosition,
+                // MapUnitPosition mapUnitPosition = new MapUnitPosition((byte)smallMapCharacterState.TheMapUnitPosition.X,
+                //     (byte)smallMapCharacterState.TheMapUnitPosition.Y,
+                //     (byte)smallMapCharacterState.TheMapUnitPosition.Floor);
+                MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState,
+                    smallMapCharacterState.TheMapUnitPosition,
                     GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
                     smallMapCharacterState);
 

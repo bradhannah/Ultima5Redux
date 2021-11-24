@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Runtime.Serialization;
-using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Newtonsoft.Json;
+using Ultima5Redux.References;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -13,13 +15,9 @@ namespace Ultima5Redux.MapUnits
         [DataMember] public bool Active { get; private set; }
         [DataMember] public int MapUnitAnimationStateIndex { get; private set; }
 
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         [DataMember] private int NPCIndex { get; set; }
 
         [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new MapUnitPosition();
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        // private TileReference TileRef { get; }
 
         /// <summary>
         ///     Build the character state based on existing conditions
@@ -41,7 +39,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Create a blank SmallMapCharacterState indicating no character
         /// </summary>
-        public SmallMapCharacterState()
+        [JsonConstructor] public SmallMapCharacterState()
         {
             Active = false;
         }
@@ -58,8 +56,6 @@ namespace Ultima5Redux.MapUnits
             TheMapUnitPosition.X = stateUInts[1];
             TheMapUnitPosition.Y = stateUInts[2];
             TheMapUnitPosition.Floor = stateUInts[3];
-            // TileRef = GameReferences.SpriteTileReferences.GetTileReference(stateUInts[4] + 0x100);
-            // MapUnitAnimationStateIndex = stateUInts[6];
             Active = stateUInts[7] > 0;
         }
     }
