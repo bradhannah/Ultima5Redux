@@ -6,7 +6,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class Provisions : InventoryItems<Provision.ProvisionTypeEnum, Provision>
     {
-        [DataMember] public sealed override Dictionary<Provision.ProvisionTypeEnum, Provision> Items { get; } =
+        [DataMember]
+        public sealed override Dictionary<Provision.ProvisionTypeEnum, Provision> Items { get; internal set; } =
             new Dictionary<Provision.ProvisionTypeEnum, Provision>();
 
         [IgnoreDataMember] public ushort Food

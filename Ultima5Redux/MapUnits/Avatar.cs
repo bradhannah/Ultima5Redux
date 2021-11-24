@@ -16,21 +16,39 @@ namespace Ultima5Redux.MapUnits
             Regular, Carpet, Horse, Frigate, Skiff, Hidden
         }
 
-        [DataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
+        [IgnoreDataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
         [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
 
-        [DataMember] private Frigate CurrentBoardedFrigate =>
-            CurrentBoardedMapUnit is Frigate frigate ? frigate : null;
+        // [DataMember] private Frigate CurrentBoardedFrigate
+        // {
+        //     get => CurrentBoardedMapUnit is Frigate frigate ? frigate : null;
+        //     set => CurrentBoardedMapUnit = value;
+        // }
+        //
+        // [DataMember] private Horse CurrentBoardedHorse
+        // {
+        //     get => CurrentBoardedMapUnit is Horse horse ? horse : null;
+        //     set => CurrentBoardedMapUnit = value;
+        // }
+        //
+        // [IgnoreDataMember] private MagicCarpet CurrentBoardedMagicCarpet
+        // {
+        //     get => CurrentBoardedMapUnit is MagicCarpet magicCarpet ? magicCarpet : null;
+        //     set
+        //     {
+        //         CurrentBoardedMapUnit = value;
+        //         _currentMagicCarpet = value;
+        //     }
+        // }
+        //
+        // [DataMember] private Skiff CurrentBoardedSkiff
+        // {
+        //     get => CurrentBoardedMapUnit is Skiff skiff ? skiff : null;
+        //     set => CurrentBoardedMapUnit = value;
+        // }
 
-        [DataMember] private Horse CurrentBoardedHorse =>
-            CurrentBoardedMapUnit is Horse horse ? horse : null;
-
-        [DataMember] private MagicCarpet CurrentBoardedMagicCarpet =>
-            CurrentBoardedMapUnit is MagicCarpet magicCarpet ? magicCarpet : null;
-
-        [DataMember] private Skiff CurrentBoardedSkiff =>
-            CurrentBoardedMapUnit is Skiff skiff ? skiff : null;
+        //[DataMember] private MagicCarpet _currentMagicCarpet;
 
         [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
 
@@ -102,6 +120,11 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         [IgnoreDataMember] public MapUnit CurrentBoardedMapUnit { get; private set; }
 
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            BoardMapUnitFromAvatarState(CurrentAvatarState);
+        }
+        
         [JsonConstructor] private Avatar()
         {
         }

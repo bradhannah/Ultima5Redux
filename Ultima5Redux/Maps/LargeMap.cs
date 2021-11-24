@@ -21,9 +21,9 @@ namespace Ultima5Redux.Maps
         [DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
         [DataMember(Name = "MapChoice")] private readonly Maps _mapChoice;
 
-        [DataMember] private Point2D _bottomRightExtent;
+        [DataMember(Name = "BottomRightExtent")] private Point2D _bottomRightExtent;
 
-        [DataMember] private Point2D _topLeftExtent;
+        [DataMember(Name = "TopLeftExtent")] private Point2D _topLeftExtent;
 
         // ReSharper disable once MemberCanBePrivate.Global
         [IgnoreDataMember] public static int XTiles =>
@@ -45,7 +45,7 @@ namespace Ultima5Redux.Maps
         [JsonConstructor] private LargeMap()
         {
             // for now combat maps don't have overrides
-            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Ultima5Redux.Maps
             _mapChoice = mapChoice;
 
             // for now combat maps don't have overrides
-            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
             
             BuildMap(dataDirectory, mapChoice);
             BuildAStar();

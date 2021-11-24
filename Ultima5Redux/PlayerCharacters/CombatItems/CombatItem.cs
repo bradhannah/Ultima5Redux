@@ -21,7 +21,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         [IgnoreDataMember] public override string LongName => TheCombatItemReference.EquipmentName;
 
-        [DataMember] public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
+        [IgnoreDataMember] public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
 
         [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
 

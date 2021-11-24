@@ -8,7 +8,7 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public class SmallMaps
     {
-        [DataMember]
+        [DataMember(Name = "MapLocationDictionary")]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>
             _mapLocationDictionary =
                 new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();

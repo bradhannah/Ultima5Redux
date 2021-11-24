@@ -142,7 +142,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Shards = new ShadowlordShards(_gameStateByteArray);
             SpellReagents = new Reagents(_gameStateByteArray, _state);
             MagicSpells = new Spells(_gameStateByteArray);
-            TheMoonstones = new Moonstones(_moongates);
+            TheMoonstones = new Moonstones();
             TheProvisions = new Provisions();
 
             RefreshRollupInventory();

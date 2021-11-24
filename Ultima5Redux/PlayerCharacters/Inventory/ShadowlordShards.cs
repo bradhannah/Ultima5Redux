@@ -8,7 +8,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
 
-        [DataMember] public override Dictionary<ShadowlordShard.ShardType, ShadowlordShard> Items { get; } =
+        [DataMember]
+        public override Dictionary<ShadowlordShard.ShardType, ShadowlordShard> Items { get; internal set; } =
             new Dictionary<ShadowlordShard.ShardType, ShadowlordShard>(3);
 
         [JsonConstructor] private ShadowlordShards()

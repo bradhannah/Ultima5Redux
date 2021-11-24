@@ -19,19 +19,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [IgnoreDataMember] private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
 
-        public abstract int ClosestAttackRange { get; }
+        [IgnoreDataMember] public abstract int ClosestAttackRange { get; }
 
-        public abstract int Defense { get; }
+        [IgnoreDataMember] public abstract int Defense { get; }
 
-        public abstract int Dexterity { get; }
+        [IgnoreDataMember] public abstract int Dexterity { get; }
 
-        public abstract int Experience { get; }
-        public abstract bool IsInvisible { get; }
+        [IgnoreDataMember] public abstract int Experience { get; }
+        [IgnoreDataMember] public abstract bool IsInvisible { get; }
 
         public abstract string Name { get; }
-        public abstract string PluralName { get; }
+        [IgnoreDataMember] public abstract string PluralName { get; }
 
-        public abstract string SingularName { get; }
+        [IgnoreDataMember] public abstract string SingularName { get; }
 
         public abstract CharacterStats Stats { get; }
 

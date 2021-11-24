@@ -15,7 +15,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [IgnoreDataMember] public abstract string FindDescription { get; }
 
-        [DataMember] public int SpriteNum { get; }
+        [DataMember] public int SpriteNum { get; private set; }
 
         [DataMember] public virtual int Quantity
         {

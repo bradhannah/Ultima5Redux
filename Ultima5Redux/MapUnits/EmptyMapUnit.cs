@@ -8,7 +8,7 @@ namespace Ultima5Redux.MapUnits
     {
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
 
-        [DataMember] public override string BoardXitName => "EMPTY";
+        [IgnoreDataMember] public override string BoardXitName => "EMPTY";
 
         [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName => null;
 

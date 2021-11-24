@@ -11,9 +11,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     [DataContract] public class Enemy : CombatMapUnit
     {
-        [DataMember] public sealed override CharacterStats Stats { get; } = new CharacterStats();
+        public sealed override CharacterStats Stats { get; } = new CharacterStats();
 
-        [DataMember] private int _enemyReferenceIndex = -1;
+        [DataMember(Name = "EnemyReferenceIndex")] private int _enemyReferenceIndex = -1;
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         [IgnoreDataMember] public override string BoardXitName => "Hostile creates don't not like to be boarded!";
 

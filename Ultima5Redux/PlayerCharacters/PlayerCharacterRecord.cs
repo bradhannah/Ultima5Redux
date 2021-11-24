@@ -43,39 +43,36 @@ namespace Ultima5Redux.PlayerCharacters
 
         internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
 
-        [DataMember] public CharacterEquipped Equipped { get; } = new CharacterEquipped();
+        [DataMember] public CharacterEquipped Equipped { get; private set; } = new CharacterEquipped();
 
-        [DataMember] public string Name { get; }
+        [DataMember] public string Name { get; set; }
 
-        [DataMember] public CharacterStats Stats { get; } = new CharacterStats();
+        [DataMember] public CharacterStats Stats { get; private set; } = new CharacterStats();
 
         //, KilledPermanently = 0x7F
-        [DataMember] private byte Unknown2 { get; }
+        [DataMember] private byte Unknown2 { get; set; }
 
         [DataMember] public CharacterClass Class { get; set; }
         [DataMember] public CharacterGender Gender { get; set; }
         [DataMember] private byte InnOrParty { get; set; }
         [DataMember] public bool IsInvisible { get; private set; }
-
         [DataMember] public bool IsRat { get; private set; }
 
         [DataMember] public byte MonthsSinceStayingAtInn
         {
             get => _monthsSinceStayingAtInn;
-            set => _monthsSinceStayingAtInn = (byte)(value % byte.MaxValue);
+            set => _monthsSinceStayingAtInn = (byte)(value % 256);
         }
 
-        [DataMember] public CharacterPartyStatus PartyStatus
+        [IgnoreDataMember] public CharacterPartyStatus PartyStatus
         {
-            get
-            {
-                return InnOrParty switch
+            get =>
+                InnOrParty switch
                 {
                     0x00 => CharacterPartyStatus.InTheParty,
                     0xFF => CharacterPartyStatus.HasntJoinedYet,
                     _ => CharacterPartyStatus.AtTheInn
                 };
-            }
             set => InnOrParty = (byte)value;
         }
 
@@ -92,7 +89,7 @@ namespace Ultima5Redux.PlayerCharacters
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-        private byte _monthsSinceStayingAtInn;
+        [IgnoreDataMember] private byte _monthsSinceStayingAtInn;
 
         [JsonConstructor] private PlayerCharacterRecord()
         {
@@ -174,7 +171,6 @@ namespace Ultima5Redux.PlayerCharacters
             // detect the equipable slot
             CharacterEquipped.EquippableSlot equippableSlot =
                 GetEquippableSlot(inventory.GetItemFromEquipment(newEquipment));
-            //if (equippableSlot == CharacterEquipped.EquippableSlot.None) return EquipResult.Error;
 
             // get the thing that is already equipped
             DataOvlReference.Equipment oldEquippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
@@ -226,24 +222,18 @@ namespace Ultima5Redux.PlayerCharacters
 
         private CharacterEquipped.EquippableSlot GetEquippableSlot(CombatItem combatItem)
         {
-            switch (combatItem)
+            return combatItem switch
             {
-                case Helm _:
-                    return CharacterEquipped.EquippableSlot.Helm;
-                case Amulet _:
-                    return CharacterEquipped.EquippableSlot.Amulet;
-                case Ring _:
-                    return CharacterEquipped.EquippableSlot.Ring;
-                case Armour _:
-                    return CharacterEquipped.EquippableSlot.Armour;
-                case Weapon weapon:
-                    return weapon.TheCombatItemReference.IsShield
-                        ? CharacterEquipped.EquippableSlot.RightHand
-                        : CharacterEquipped.EquippableSlot.LeftHand;
-                default:
-                    throw new Ultima5ReduxException("Tried to get equippable slot for unsupported item: " +
-                                                    combatItem.LongName);
-            }
+                Helm _ => CharacterEquipped.EquippableSlot.Helm,
+                Amulet _ => CharacterEquipped.EquippableSlot.Amulet,
+                Ring _ => CharacterEquipped.EquippableSlot.Ring,
+                Armour _ => CharacterEquipped.EquippableSlot.Armour,
+                Weapon weapon => weapon.TheCombatItemReference.IsShield
+                    ? CharacterEquipped.EquippableSlot.RightHand
+                    : CharacterEquipped.EquippableSlot.LeftHand,
+                _ => throw new Ultima5ReduxException("Tried to get equippable slot for unsupported item: " +
+                                                     combatItem.LongName)
+            };
         }
 
         public string GetPlayerSelectedMessage(DataOvlReference dataOvlReference, bool bPlayerEscaped,

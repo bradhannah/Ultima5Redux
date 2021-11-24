@@ -18,7 +18,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
 
-        [DataMember] private Map.Maps _initialMapType;
+        [DataMember(Name = "InitialMapType")] private Map.Maps _initialMapType;
 
         [DataMember] public MapUnitCollection CombatMapMapUnitCollection { get; private set; } =
             new MapUnitCollection();
@@ -47,7 +47,6 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
 
         [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; }
-        //=> GetMapUnitCollection(_initialMapType).TheAvatar;
 
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map

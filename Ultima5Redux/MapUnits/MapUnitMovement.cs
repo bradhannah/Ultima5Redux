@@ -31,7 +31,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     all movements
         /// </summary>
-        [DataMember]
+        [DataMember(Name = "MovementQueue")]
         private readonly Queue<MovementCommand> _movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
 
         /// <summary>

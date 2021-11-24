@@ -33,7 +33,6 @@ namespace Ultima5Redux.Maps
             {
                 if (_currentSingleMapReference == null)
                     return null;
-                //     throw new Ultima5ReduxException("Unexpected _currentSingleMapReference is null");
                 if (_currentSingleMapReference.MapLocation ==
                     SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine)
                     return SmallMapReferences.SingleMapReference.GetCombatMapSingleInstance();
@@ -67,13 +66,13 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
-        [DataMember]
+        [DataMember(Name = "LargeMaps")]
         private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
 
         /// <summary>
         ///     All the small maps
         /// </summary>
-        [DataMember]
+        [DataMember(Name = "SmallMaps")]
         private readonly SmallMaps _smallMaps;
 
         /// <summary>

@@ -13,8 +13,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public sealed class NonPlayerCharacter : MapUnit
     {
-        [DataMember] private int _playerCharacterRecordIndex;
-        [DataMember] private int _scheduleIndex = -1;
+        [DataMember(Name = "PlayerCharacterRecordIndex")] private int _playerCharacterRecordIndex;
+        [DataMember(Name = "ScheduleIndex")] private int _scheduleIndex = -1;
         [DataMember] public bool ArrivedAtLocation { get; private set; }
 
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;

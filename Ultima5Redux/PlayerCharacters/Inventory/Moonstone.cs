@@ -9,7 +9,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [DataContract] public sealed class Moonstone : InventoryItem
     {
         private const int MOONSTONE_SPRITE = 281;
-        private readonly Moongates _moongates;
 
         [IgnoreDataMember] public override bool HideQuantity => true;
 
@@ -17,7 +16,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override string LongName => Utils.AddSpacesBeforeCaps(Phase.ToString());
 
-        public override string FindDescription => GameReferences.DataOvlRef.StringReferences
+        [IgnoreDataMember] public override string FindDescription => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N).TrimEnd();
 
         /// <summary>
@@ -26,25 +25,24 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         [IgnoreDataMember] public override int Quantity
         {
-            get => _moongates.IsMoonstoneBuried((int)Phase) ? 0 : 1;
+            get => GameStateReference.State.TheMoongates.IsMoonstoneBuried((int)Phase) ? 0 : 1;
             // filthy hack - if the _moongates is null, then the base constructor has called it and it doesn't matter at that point
-            set => _moongates?.SetMoonstoneBuried((int)Phase, value <= 0);
+            set => GameStateReference.State?.TheMoongates?.SetMoonstoneBuried((int)Phase, value <= 0);
         }
 
         [IgnoreDataMember] public override string ShortName => Utils.AddSpacesBeforeCaps(Phase.ToString());
 
         [IgnoreDataMember] public int MoongateIndex => (int)Phase;
 
-        [DataMember] public MoonPhaseReferences.MoonPhases Phase { get; }
+        [DataMember] public MoonPhaseReferences.MoonPhases Phase { get; private set; }
 
         [JsonConstructor] private Moonstone()
         {
         }
 
-        public Moonstone(MoonPhaseReferences.MoonPhases phase, Moongates moongates) : base(0, MOONSTONE_SPRITE)
+        public Moonstone(MoonPhaseReferences.MoonPhases phase) : base(0, MOONSTONE_SPRITE)
         {
             Phase = phase;
-            _moongates = moongates;
         }
 
         // we will hold onto this enum for later when we assign custom sprites

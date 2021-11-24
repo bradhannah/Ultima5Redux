@@ -40,7 +40,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private PlayerCharacterRecords _playerCharacterRecords;
 
-        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; set; }
+        protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
 
         protected override bool IsRepeatingMap => false;
 

@@ -8,14 +8,8 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public sealed class SmallMap : RegularMap
     {
-        // [DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
-
-        //[DataMember] public SmallMapReferences.SingleMapReference SingleSmallMapReference { get; }
-
-        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference
-        {
-            get => GameReferences.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
-        }
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            GameReferences.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
 
         public const int X_TILES = 32;
         public const int Y_TILES = 32;
@@ -27,7 +21,7 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
 
-        [IgnoreDataMember] public sealed override byte[][] TheMap { get; protected set; }
+        [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
         [JsonConstructor] private SmallMap()
         {
@@ -40,16 +34,11 @@ namespace Ultima5Redux.Maps
         public SmallMap(SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
             singleSmallMapReference.MapLocation, singleSmallMapReference.Floor)
         {
-            // _dataDirectory = dataDirectory;
-            //CurrentSingleMapReference = singleSmallMapReference;
-
             // for now combat maps don't have overrides
-            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
             // load the map into memory
             TheMap = CurrentSingleMapReference.GetDefaultMap();
-            //LoadSmallMapFile(Path.Combine(dataDirectory, singleSmallMapReference.MapFilename),
-            //singleSmallMapReference.FileOffset);
 
             InitializeAStarMap(WalkableType.StandardWalking);
         }
@@ -100,7 +89,7 @@ namespace Ultima5Redux.Maps
             TheMap = CurrentSingleMapReference.GetDefaultMap();
 
             // for now combat maps don't have overrides
-            XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
+            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
             InitializeAStarMap(WalkableType.StandardWalking);
         }

@@ -19,7 +19,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         [IgnoreDataMember] public override bool CanSell => BasePrice > 0 || IsAmmo;
 
-        [DataMember] public WeaponTypeEnum WeaponType { get; }
+        [DataMember] public WeaponTypeEnum WeaponType { get; private set; }
 
         [JsonConstructor] private WeaponReference()
         {

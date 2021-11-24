@@ -96,11 +96,14 @@ namespace Ultima5Redux.Maps
             return _singleCombatMapReferences[territory][nIndex];
         }
 
-        public class CombatMapData
+        public sealed class CombatMapData
         {
-            [DataMember] public string Description;
-            [DataMember] public int Index;
-            [DataMember] public SingleCombatMapReference.Territory MapType;
+            // [DataMember] public string Description;
+            // [DataMember] public int Index;
+            // [DataMember] public SingleCombatMapReference.Territory MapType;
+            [DataMember] public string Description { get; set; }
+            [DataMember] public int Index { get; set; }
+            [DataMember] public SingleCombatMapReference.Territory MapType { get; set; }
         }
     }
 }

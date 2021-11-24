@@ -37,7 +37,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             { "Zu", "Sleep" },
         };
 
-        [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; } =
+        [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; internal set; } =
             new Dictionary<MagicReference.SpellWords, Spell>();
 
         [JsonConstructor] public Spells()

@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public class NonPlayerCharacterStates
     {
-        [DataMember]
+        [DataMember(Name = "NPCMap")]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>
             _npcMap = new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>();
 

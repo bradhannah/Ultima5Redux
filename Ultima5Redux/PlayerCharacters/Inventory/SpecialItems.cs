@@ -6,7 +6,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public sealed class SpecialItems : InventoryItems<SpecialItem.ItemTypeSpriteEnum, SpecialItem>
     {
-        [DataMember] public override Dictionary<SpecialItem.ItemTypeSpriteEnum, SpecialItem> Items { get; } =
+        [DataMember]
+        public override Dictionary<SpecialItem.ItemTypeSpriteEnum, SpecialItem> Items { get; internal set; } =
             new Dictionary<SpecialItem.ItemTypeSpriteEnum, SpecialItem>();
 
         [JsonConstructor] private SpecialItems()

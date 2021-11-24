@@ -22,22 +22,22 @@ namespace Ultima5Redux
         /// <summary>
         ///     All player character records
         /// </summary>
-        [DataMember] public PlayerCharacterRecords CharacterRecords { get; }
+        [DataMember] public PlayerCharacterRecords CharacterRecords { get; private set; }
 
         /// <summary>
         ///     Players current inventory
         /// </summary>
-        [DataMember] public Inventory PlayerInventory { get; }
+        [DataMember] public Inventory PlayerInventory { get; private set; }
 
         /// <summary>
         ///     Location and state of all moongates and moonstones
         /// </summary>
-        [DataMember] public Moongates TheMoongates { get; }
+        [DataMember] public Moongates TheMoongates { get; private set; }
 
         /// <summary>
         ///     The current time of day
         /// </summary>
-        [DataMember] public TimeOfDay TheTimeOfDay { get; }
+        [DataMember] public TimeOfDay TheTimeOfDay { get; private set; }
 
         /// <summary>
         ///     What is the index of the currently active player?
@@ -52,8 +52,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     NPC states such as if they are dead or have met the avatar
         /// </summary>
-        [DataMember]
-        public NonPlayerCharacterStates TheNonPlayerCharacterStates;
+        [field: DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; }
 
         /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs

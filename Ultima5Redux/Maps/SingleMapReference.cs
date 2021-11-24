@@ -186,14 +186,6 @@ namespace Ultima5Redux.Maps
                     map == Map.Maps.Overworld ? 0 : -1, 0);
             }
 
-            // public static SingleMapReference GetSmallMapSingleInstance(Location location)
-            // {
-            //     SmallMapReference.GenerateSingleMapReferences()
-            //     return new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, location,)
-            //     return new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, 
-            //         Location.Britannia_Underworld, map == Map.Maps.Overworld ? 0 : -1, 0);
-            // }
-
             /// <summary>
             ///     Gets the master file type based on the location
             /// </summary>

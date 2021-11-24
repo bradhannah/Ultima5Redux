@@ -106,6 +106,8 @@ namespace Ultima5Redux
         public World(string saveGameDirectory, bool bUseExtendedSprites = false, bool bLoadedInitGam = false,
             string dataDirectory = "")
         {
+            GameReferences.Initialize();
+            
             SaveGameDirectory = saveGameDirectory;
             DataDirectory = dataDirectory == "" ? SaveGameDirectory : dataDirectory;
 

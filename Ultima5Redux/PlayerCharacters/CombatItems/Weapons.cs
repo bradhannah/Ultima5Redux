@@ -8,7 +8,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public sealed class Weapons : CombatItems<WeaponReference.WeaponTypeEnum, Weapon>
     {
-        [DataMember] public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; } =
+        [DataMember] public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; internal set; } =
             new Dictionary<WeaponReference.WeaponTypeEnum, Weapon>();
 
         [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =

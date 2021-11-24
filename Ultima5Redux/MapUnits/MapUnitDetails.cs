@@ -5,14 +5,14 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public abstract class MapUnitDetails
     {
-        [DataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
+        [IgnoreDataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
         [IgnoreDataMember] public abstract string BoardXitName { get; }
         [IgnoreDataMember] public abstract string FriendlyName { get; }
 
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>
-        [DataMember] public abstract bool IsActive { get; }
+        [IgnoreDataMember] public abstract bool IsActive { get; }
 
         [IgnoreDataMember] public abstract bool IsAttackable { get; }
         [DataMember] public virtual MapUnitPosition MapUnitPosition { get; internal set; }

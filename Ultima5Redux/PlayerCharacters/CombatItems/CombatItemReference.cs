@@ -20,14 +20,14 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
 
-        [DataMember] public readonly DataOvlReference.Equipment SpecificEquipment;
+        [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
 
         [IgnoreDataMember] public virtual bool CanSell => BasePrice > 0;
 
-        [DataMember] public int AttackStat { get; }
+        [DataMember] public int AttackStat { get; private set; }
         [DataMember] public int BasePrice { get; private set; }
-        [DataMember] public int DefendStat { get; }
-        [DataMember] public string EquipmentName { get; }
+        [DataMember] public int DefendStat { get; private set; }
+        [DataMember] public string EquipmentName { get; private set; }
 
         [IgnoreDataMember] public bool IsAmmo => SpecificEquipment == DataOvlReference.Equipment.Quarrels ||
                                                  SpecificEquipment == DataOvlReference.Equipment.Arrows;
@@ -49,11 +49,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                                    SpecificEquipment == DataOvlReference.Equipment.Halberd ||
                                    SpecificEquipment == DataOvlReference.Equipment.FlamingOil;
 
-        [DataMember] public MissileType Missile { get; }
-        [DataMember] public int Range { get; }
+        [DataMember] public MissileType Missile { get; private set; }
+        [DataMember] public int Range { get; private set; }
 
-        [DataMember] public int RequiredStrength { get; }
-        [DataMember] public int Sprite { get; }
+        [DataMember] public int RequiredStrength { get; private set; }
+        [DataMember] public int Sprite { get; private set; }
 
         [JsonConstructor] protected CombatItemReference()
         {

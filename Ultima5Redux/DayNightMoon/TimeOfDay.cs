@@ -9,6 +9,19 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
+
+        /// <summary>
+        ///     Dictionary of all change trackers and if time has changed since last check
+        /// </summary>
+        [DataMember(Name = "TimeHasChangedDictionary")]
+        private readonly Dictionary<int, bool> _timeHasChangedDictionary = new Dictionary<int, bool>();
+
+        /// <summary>
+        ///     tracks the total number of registered change trackers
+        /// </summary>
+        [DataMember(Name = "TotalChangeTrackers")]
+        private int _nTotalChangeTrackers;
+
         [DataMember] public byte Day { get; set; }
 
         [DataMember] public byte Hour
@@ -63,20 +76,8 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        /// <summary>
-        ///     Dictionary of all change trackers and if time has changed since last check
-        /// </summary>
-        [DataMember(Name = "TimeHasChangedDictionary")]
-        private readonly Dictionary<int, bool> _timeHasChangedDictionary = new Dictionary<int, bool>();
-
         [IgnoreDataMember] private byte _nHour;
         [IgnoreDataMember] private byte _nMinute;
-
-        /// <summary>
-        ///     tracks the total number of registered change trackers
-        /// </summary>
-        [DataMember]
-        private int _nTotalChangeTrackers;
 
         [JsonConstructor] private TimeOfDay()
         {

@@ -30,13 +30,13 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
         }
 
-        [IgnoreDataMember] public override Dictionary<ArmourTypeEnum, List<Armour>> Items =>
+        [IgnoreDataMember] public override Dictionary<ArmourTypeEnum, List<Armour>> Items { get; internal set; } =
             new Dictionary<ArmourTypeEnum, List<Armour>>();
 
-        [DataMember] public readonly List<Amulet> Amulets = new List<Amulet>();
-        [DataMember] public readonly List<ChestArmour> ChestArmours = new List<ChestArmour>();
-        [DataMember] public readonly List<Helm> Helms = new List<Helm>();
-        [DataMember] public readonly List<Ring> Rings = new List<Ring>();
+        [field: DataMember] public List<Amulet> Amulets { get; set; } = new List<Amulet>();
+        [field: DataMember] public List<ChestArmour> ChestArmours { get; set; } = new List<ChestArmour>();
+        [field: DataMember] public List<Helm> Helms { get; set; } = new List<Helm>();
+        [field: DataMember] public List<Ring> Rings { get; set; } = new List<Ring>();
 
         [JsonConstructor] public Armours()
         {
