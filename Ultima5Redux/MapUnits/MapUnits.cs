@@ -193,10 +193,8 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
             if (nIndex == -1) return null;
 
-            Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null)
-            {
-                MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0)
-            };
+            Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
+                new MapUnitPosition(xy.X, xy.Y, 0));
 
             nIndex = AddCombatMapUnit(enemy);
 
@@ -326,7 +324,7 @@ namespace Ultima5Redux.MapUnits
             {
                 Debug.Assert(GameReferences.EnemyRefs != null);
                 newUnit = new Enemy(mapUnitMovement, GameReferences.EnemyRefs.GetEnemyReference(tileReference),
-                    location, npcState);
+                    location, npcState, mapUnitPosition);
             }
             // this is where we will create monsters too
             else

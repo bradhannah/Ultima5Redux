@@ -15,7 +15,8 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public abstract bool IsActive { get; }
 
         [IgnoreDataMember] public abstract bool IsAttackable { get; }
-        [DataMember] public virtual MapUnitPosition MapUnitPosition { get; internal set; }
+        [IgnoreDataMember] public abstract MapUnitPosition MapUnitPosition { get; internal set; }
+
         [DataMember] public Point2D.Direction Direction { get; set; }
 
         /// <summary>

@@ -1321,6 +1321,13 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorld(saveFiles, true, false);
             world.ReLoadFromJson();
+
+            string loadedJson = world.State.Serialize();
+            world.ReLoadFromJson();
+            string newLoadedJson = world.State.Serialize();
+
+            Assert.AreEqual(loadedJson, newLoadedJson);
+                
             _ = world.State.TheVirtualMap.CurrentPosition;
         }
     }

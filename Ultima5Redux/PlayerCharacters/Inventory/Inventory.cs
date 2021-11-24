@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Ultima5Redux.Data;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.CombatItems;
-using Ultima5Redux.References;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -25,7 +24,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public Provisions TheProvisions { get; set; }
         [DataMember] public Weapons TheWeapons { get; set; }
         [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
-
         [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
         [IgnoreDataMember] public int Food => TheProvisions.Items[Provision.ProvisionTypeEnum.Food].Quantity;
 
@@ -40,6 +38,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private readonly Moongates _moongates;
         private readonly GameState _state;
 
+        
         [JsonConstructor] private Inventory()
         {
         }
@@ -120,11 +119,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             RefreshRollupInventory();
             // when deserializing, we have not saved the inventory references because they are static, 
             // so we will add them after the fact
-            UpdateAllInventoryReferences();
-        }
-
-        [OnSerialized] internal void OnSerializedMethod(StreamingContext context)
-        {
+            //UpdateAllInventoryReferences();
         }
 
         private void RefreshInventoryFromLegacySave()
@@ -147,7 +142,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             RefreshRollupInventory();
 
-            UpdateAllInventoryReferences();
+            //UpdateAllInventoryReferences();
         }
 
         private void RefreshRollupInventory()
@@ -196,41 +191,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity -= nGold;
             return true;
         }
-
-        private void UpdateAllInventoryReferences()
-        {
-            foreach (InventoryItem item in AllItems)
-            {
-                switch (item)
-                {
-                    case LordBritishArtifact _:
-                    case ShadowlordShard _:
-                    case Potion _:
-                    case Scroll _:
-                    case SpecialItem _:
-                    case Moonstone _:
-                    case Provision _:
-                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
-                            InventoryReferences.InventoryReferenceType.Item, item.InventoryReferenceString);
-                        break;
-                    case Spell _:
-                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
-                            InventoryReferences.InventoryReferenceType.Spell, item.InventoryReferenceString);
-                        break;
-                    case Reagent _:
-                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
-                            InventoryReferences.InventoryReferenceType.Reagent, item.InventoryReferenceString);
-                        break;
-                    case CombatItem _:
-                        // we have to assign this manually because when we serialize from JSON it is unable to link it 
-                        // itself
-                        item.InvRef = GameReferences.InvRef.GetInventoryReference(
-                            InventoryReferences.InventoryReferenceType.Armament, item.InventoryReferenceString);
-                        break;
-                    default:
-                        throw new Ultima5ReduxException("Tried to update InventoryReference on " + item.GetType());
-                }
-            }
-        }
+     
     }
 }

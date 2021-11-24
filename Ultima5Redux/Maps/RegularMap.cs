@@ -7,15 +7,8 @@ namespace Ultima5Redux.Maps
 {
     public abstract class RegularMap : Map
     {
-        [IgnoreDataMember] protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides
-        {
-            get
-            {
-                if (_xyOverrides == null)
-                    GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
-                return _xyOverrides;
-            }
-        }
+        [IgnoreDataMember] protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
+            _xyOverrides ??= GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
         private Dictionary<Point2D, TileOverrideReference> _xyOverrides;
 

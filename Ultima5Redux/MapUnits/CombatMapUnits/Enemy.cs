@@ -59,11 +59,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         public Enemy(MapUnitMovement mapUnitMovement, EnemyReference enemyReference,
-            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState) : base(null,
+            SmallMapReferences.SingleMapReference.Location location, NonPlayerCharacterState npcState,
+            MapUnitPosition mapUnitPosition) : base(null,
             mapUnitMovement, location, npcState, enemyReference.KeyTileReference)
         {
             EnemyReference = enemyReference;
 
+            MapUnitPosition = mapUnitPosition;
+            
             Stats.Level = 1;
             Stats.Dexterity = EnemyReference.TheDefaultEnemyStats.Dexterity;
             Stats.Intelligence = EnemyReference.TheDefaultEnemyStats.Intelligence;

@@ -18,13 +18,13 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         [DataMember] public sealed override MapUnitPosition MapUnitPosition
         {
-            get => _mapMapUnitPosition;
+            get => _savedMapUnitPosition;
             internal set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
-                _mapMapUnitPosition.X = value.X;
-                _mapMapUnitPosition.Y = value.Y;
-                _mapMapUnitPosition.Floor = value.Floor;
+                _savedMapUnitPosition.X = value.X;
+                _savedMapUnitPosition.Y = value.Y;
+                _savedMapUnitPosition.Floor = value.Floor;
 
                 if (TheSmallMapCharacterState == null) return;
                 TheSmallMapCharacterState.TheMapUnitPosition.X = value.X;
@@ -48,12 +48,14 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
-        [IgnoreDataMember] private readonly MapUnitPosition _mapMapUnitPosition = new MapUnitPosition();
+        [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new MapUnitPosition();
 
         [IgnoreDataMember] public TileReference BoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
                 ? FourDirectionToTileNameBoarded[Direction]
                 : DirectionToTileNameBoarded[Direction]);
+
+        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
 
         [IgnoreDataMember] public virtual TileReference KeyTileReference
         {
@@ -62,8 +64,6 @@ namespace Ultima5Redux.MapUnits
                 : GameReferences.SpriteTileReferences.GetTileReference(NPCRef.NPCKeySprite);
             set => _keyTileIndex = value.Index;
         }
-
-        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
