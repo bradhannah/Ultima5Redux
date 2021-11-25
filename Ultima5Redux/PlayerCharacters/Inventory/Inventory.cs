@@ -109,9 +109,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="equipment">type of combat equipment</param>
         /// <returns>combat item object</returns>
-        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment) =>
-            ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ??
-            throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
+        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment)
+        {
+            if (equipment == DataOvlReference.Equipment.Nothing) return null;
+            return ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ??
+                   throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
+        }
 
         [OnDeserialized] internal void OnDeserializedMethod(StreamingContext context)
         {
