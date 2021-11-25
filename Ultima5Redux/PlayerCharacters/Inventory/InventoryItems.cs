@@ -12,7 +12,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public virtual IEnumerable<InventoryItem> GenericItemList
         {
             get => Items.Values.Cast<InventoryItem>().ToList();
-            //set => throw new System.NotImplementedException();
         }
 
         [IgnoreDataMember] protected readonly List<byte> GameStateByteArray;

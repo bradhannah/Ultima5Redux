@@ -191,6 +191,41 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity -= nGold;
             return true;
         }
-     
+
+        // private void UpdateAllInventoryReferences()
+        // {
+        //     foreach (InventoryItem item in AllItems)
+        //     {
+        //         switch (item)
+        //         {
+        //             case LordBritishArtifact _:
+        //             case ShadowlordShard _:
+        //             case Potion _:
+        //             case Scroll _:
+        //             case SpecialItem _:
+        //             case Moonstone _:
+        //             case Provision _:
+        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
+        //                     InventoryReferences.InventoryReferenceType.Item, item.InventoryReferenceString);
+        //                 break;
+        //             case Spell _:
+        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
+        //                     InventoryReferences.InventoryReferenceType.Spell, item.InventoryReferenceString);
+        //                 break;
+        //             case Reagent _:
+        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
+        //                     InventoryReferences.InventoryReferenceType.Reagent, item.InventoryReferenceString);
+        //                 break;
+        //             case CombatItem _:
+        //                 // we have to assign this manually because when we serialize from JSON it is unable to link it 
+        //                 // itself
+        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
+        //                     InventoryReferences.InventoryReferenceType.Armament, item.InventoryReferenceString);
+        //                 break;
+        //             default:
+        //                 throw new Ultima5ReduxException("Tried to update InventoryReference on " + item.GetType());
+        //         }
+        //     }
+        // }
     }
 }

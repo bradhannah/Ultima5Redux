@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
@@ -83,7 +84,10 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         {
             return _equipmentToCombatItemReference[equipment];
         }
-        
+
+        public ArmourReference GetArmourReferenceFromEquipment(DataOvlReference.Equipment equipment) =>
+            AllArmour.FirstOrDefault(e => e.SpecificEquipment == equipment);
+
         private static CombatItemType GetCombatItemTypeByEquipment(DataOvlReference.Equipment equipment)
         {
             if (EquipmentMatches(Enum.GetValues(typeof(WeaponReference.WeaponTypeEnum)), ref equipment))

@@ -14,6 +14,16 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Weapon>();
 
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            if (ItemsFromEquipment.Count > 0) return;
+            foreach (Weapon weapon in Items.Values)
+            {
+                ItemsFromEquipment.Add(weapon.SpecificEquipment, weapon);
+            }
+        }
+        
+
         [JsonConstructor] private Weapons()
         {
         }

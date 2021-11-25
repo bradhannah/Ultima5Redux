@@ -37,8 +37,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public Spell(MagicReference.SpellWords spellWord, int quantity) : base(quantity,
-            SPRITE_NUM)
+        public Spell(MagicReference.SpellWords spellWord, int quantity) : base(quantity, SPRITE_NUM,
+            InventoryReferences.InventoryReferenceType.Spell)
         {
             SpellIncantation = spellWord;
         }

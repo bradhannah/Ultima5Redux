@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -59,7 +60,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="reagentType">The type of reagent</param>
         /// <param name="quantity">how many the party has</param>
         /// <param name="state"></param>
-        public Reagent(ReagentTypeEnum reagentType, int quantity, GameState state) : base(quantity, REAGENT_SPRITE)
+        public Reagent(ReagentTypeEnum reagentType, int quantity, GameState state) : base(quantity, REAGENT_SPRITE,
+            InventoryReferences.InventoryReferenceType.Reagent)
         {
             // capture the game state so we know the users Karma for cost calculations
             _state = state;

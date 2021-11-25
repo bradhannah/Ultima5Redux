@@ -14,6 +14,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Dialogue;
@@ -1328,6 +1329,47 @@ namespace Ultima5ReduxTesting
             string newLoadedJson = world.State.Serialize();
 
             Assert.AreEqual(loadedJson, newLoadedJson);
+
+            _ = world.State.TheVirtualMap.CurrentPosition;
+        }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_TestInventoryAfterReload(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+            world.ReLoadFromJson();
+            string loadedJson = world.State.Serialize();
+            Assert.NotNull(world.State);
+            world.ReLoadFromJson();
+            string newLoadedJson = world.State.Serialize();
+            Assert.NotNull(world.State);
+
+            Assert.AreEqual(loadedJson, newLoadedJson);
+
+            Reagent reagent = world.State.PlayerInventory.SpellReagents.Items[Reagent.ReagentTypeEnum.Garlic];
+            Assert.NotNull(reagent);
+            string reagentName = reagent.LongName;
+
+            CombatItemReference weaponRef =
+                world.State.PlayerInventory.TheWeapons.AllCombatItems[0].TheCombatItemReference;
+            Assert.NotNull(weaponRef);
+            string weaponRefStr = weaponRef.EquipmentName;
+
+            Weapon weapon =
+                world.State.PlayerInventory.TheWeapons.GetWeaponFromEquipment(DataOvlReference.Equipment.GlassSword);
+            Assert.NotNull(weapon);
+            string weaponStr = weapon.LongName;
+
+            Armour armourHelm =
+                world.State.PlayerInventory.ProtectiveArmour.GetArmourFromEquipment(DataOvlReference.Equipment
+                    .IronHelm);
+            Assert.NotNull(armourHelm);
+            string helmStr = armourHelm.LongName;
+
+            // spells
+            // references
+            
                 
             _ = world.State.TheVirtualMap.CurrentPosition;
         }

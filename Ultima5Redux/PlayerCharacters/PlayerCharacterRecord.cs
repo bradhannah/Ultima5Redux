@@ -40,8 +40,6 @@ namespace Ultima5Redux.PlayerCharacters
 
         public enum EquipResult { Success, SuccessUnequipRight, SuccessUnequipLeft, TooHeavy, Error }
 
-        //private const int NAME_LENGTH = 8;
-
         internal const byte CHARACTER_RECORD_BYTE_ARRAY_SIZE = 0x20;
 
         [DataMember] public CharacterEquipped Equipped { get; private set; } = new CharacterEquipped();
@@ -50,7 +48,6 @@ namespace Ultima5Redux.PlayerCharacters
 
         [DataMember] public CharacterStats Stats { get; private set; } = new CharacterStats();
 
-        //, KilledPermanently = 0x7F
         [DataMember] private byte Unknown2 { get; set; }
 
         [DataMember] public CharacterClass Class { get; set; }

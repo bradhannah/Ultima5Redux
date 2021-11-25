@@ -36,7 +36,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         }
 
         protected CombatItem(CombatItemReference theCombatItemReference, int nQuantity) : base(nQuantity,
-            theCombatItemReference.Sprite)
+            theCombatItemReference.Sprite, InventoryReferences.InventoryReferenceType.Armament)
         {
             TheCombatItemReference = theCombatItemReference;
         }

@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -34,8 +35,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [JsonConstructor] private SpecialItem()
         {
         }
-        
-        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) : base(quantity, (int)itemType)
+
+        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) : base(quantity, (int)itemType,
+            InventoryReferences.InventoryReferenceType.Item)
         {
             ItemType = itemType;
         }

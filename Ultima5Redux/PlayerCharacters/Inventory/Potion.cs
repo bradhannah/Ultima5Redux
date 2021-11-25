@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -26,7 +27,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public Potion(PotionColor color, int quantity) : base(quantity, POTION_SPRITE)
+        public Potion(PotionColor color, int quantity) : base(quantity, POTION_SPRITE,
+            InventoryReferences.InventoryReferenceType.Item)
         {
             Color = color;
         }

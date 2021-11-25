@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.References;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -39,7 +40,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public ShadowlordShard(ShardType shardType, int quantity) : base(quantity, SHARD_SPRITE)
+        public ShadowlordShard(ShardType shardType, int quantity) : base(quantity, SHARD_SPRITE,
+            InventoryReferences.InventoryReferenceType.Item)
         {
             Debug.WriteLine("Shard: " + shardType);
             Shard = shardType;

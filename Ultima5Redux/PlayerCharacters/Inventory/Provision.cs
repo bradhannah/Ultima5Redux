@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -59,7 +60,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="provisionTypeEnum">what kind of provision</param>
         /// <param name="spriteNum"></param>
-        public Provision(ProvisionTypeEnum provisionTypeEnum, int spriteNum) : base(0, spriteNum)
+        public Provision(ProvisionTypeEnum provisionTypeEnum, int spriteNum) : base(0, spriteNum,
+            InventoryReferences.InventoryReferenceType.Item)
         {
             ProvisionType = provisionTypeEnum;
         }

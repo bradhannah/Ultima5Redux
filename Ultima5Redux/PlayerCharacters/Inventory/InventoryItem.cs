@@ -24,17 +24,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             set => _quantity = value;
         }
 
-        [DataMember] public string InvRefName { get; set; }
+        //[DataMember] public string InvRefName { get; set; }
         [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; set; }
 
         [IgnoreDataMember] public InventoryReference InvRef
         {
-            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InvRefName);
-            protected internal set
-            {
-                InvRefName = value.ItemName;
+            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InventoryReferenceString); //InvRefName);
+            protected internal set =>
                 InvRefType = value.InvRefType;
-            }
         }
 
         [IgnoreDataMember] public abstract bool HideQuantity { get; }
@@ -68,10 +65,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         // {
         // }
 
-        protected InventoryItem(int quantity, int spriteNum)
+        protected InventoryItem(int quantity, int spriteNum, InventoryReferences.InventoryReferenceType invRefType)
         {
             _quantity = quantity;
             SpriteNum = spriteNum;
+            InvRefType = invRefType;
+            // GameGameReferences.InvRef.GetInventoryReference()
             //FindDescription = findDescription;
         }
 

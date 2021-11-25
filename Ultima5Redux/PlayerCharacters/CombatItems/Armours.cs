@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract] public class Armours : CombatItems<Armours.ArmourTypeEnum, List<Armour>>
+    [DataContract] public class Armours : CombatItems<ArmourReference.ArmourType, List<Armour>>
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum ArmourTypeEnum { Shield, Chest, Helm, Ring, Amulet }
 
-        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
-            new Dictionary<DataOvlReference.Equipment, Armour>();
+        [DataMember] public List<Amulet> Amulets { get; private set; } = new List<Amulet>();
+        [DataMember] public List<ChestArmour> ChestArmours { get; private set; } = new List<ChestArmour>();
+        [DataMember] public List<Helm> Helms { get; private set; } = new List<Helm>();
+        [DataMember] public List<Ring> Rings { get; private set; } = new List<Ring>();
 
         // override to allow for inserting entire lists
         [IgnoreDataMember] public override IEnumerable<InventoryItem> GenericItemList
@@ -30,13 +30,14 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
         }
 
-        [IgnoreDataMember] public override Dictionary<ArmourTypeEnum, List<Armour>> Items { get; internal set; } =
-            new Dictionary<ArmourTypeEnum, List<Armour>>();
+        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
+            new Dictionary<DataOvlReference.Equipment, Armour>();
 
-        [DataMember] public List<Amulet> Amulets { get; private set; } = new List<Amulet>();
-        [DataMember] public List<ChestArmour> ChestArmours { get; private set; } = new List<ChestArmour>();
-        [DataMember] public List<Helm> Helms { get; private set; } = new List<Helm>();
-        [DataMember] public List<Ring> Rings { get; private set; } = new List<Ring>();
+        [IgnoreDataMember]
+        public override Dictionary<ArmourReference.ArmourType, List<Armour>> Items { get; internal set; } =
+            new Dictionary<ArmourReference.ArmourType, List<Armour>>();
+
+        private Dictionary<ArmourReference.ArmourType, List<Armour>> _savedItems;
 
         [JsonConstructor] public Armours()
         {
@@ -88,6 +89,28 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             if (equipment == DataOvlReference.Equipment.Nothing) return null;
             return ItemsFromEquipment.ContainsKey(equipment) ? ItemsFromEquipment[equipment] : null;
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            foreach (Armour armour in AllCombatItems.OfType<Armour>())
+            {
+                ArmourReference.ArmourType armourType = armour.ArmourRef.TheArmourType;
+                ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
+                if (!Items.ContainsKey(armourType)) Items.Add(armourType, new List<Armour>());
+                Items[armourType].Add(armour);
+            }
+        }
+
+        [OnSerialized] private void PostSerialize(StreamingContext context)
+        {
+            Items = _savedItems;
+        }
+
+        [OnSerializing] private void PreSerialize(StreamingContext context)
+        {
+            _savedItems = Items;
+            Items = new Dictionary<ArmourReference.ArmourType, List<Armour>>();
         }
     }
 }

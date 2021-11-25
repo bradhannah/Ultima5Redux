@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -38,7 +39,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public Moonstone(MoonPhaseReferences.MoonPhases phase) : base(0, MOONSTONE_SPRITE)
+        public Moonstone(MoonPhaseReferences.MoonPhases phase) : base(0, MOONSTONE_SPRITE,
+            InventoryReferences.InventoryReferenceType.Item)
         {
             Phase = phase;
         }

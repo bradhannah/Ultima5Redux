@@ -15,7 +15,6 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         public class SingleMapReference
         {
-            private readonly string _dataDirectory;
 
             [SuppressMessage("ReSharper", "IdentifierTypo")] [JsonConverter(typeof(StringEnumConverter))]
             public enum Location
@@ -31,6 +30,78 @@ namespace Ultima5Redux.References.Maps
                 Deceit = 33, Despise = 34, Destard = 35, Wrong = 36, Covetous = 37, Shame = 38, Hythloth = 39,
                 Doom = 40, // Dungeons
                 Combat_resting_shrine = 41
+            }
+
+            /// <summary>
+            ///     Map master files. These represent .DAT, .NPC and .TLK files
+            /// </summary>
+            [JsonConverter(typeof(StringEnumConverter))] public enum SmallMapMasterFiles
+            {
+                Castle, Towne, Dwelling, Keep, Dungeon, None
+            }
+
+            /// <summary>
+            ///     Total number of small map locations
+            /// </summary>
+            public const int TOTAL_SMALL_MAP_LOCATIONS = 32;
+
+            /// <summary>
+            ///     the floor that the single map represents
+            /// </summary>
+            [DataMember] public int Floor { get; }
+
+            /// <summary>
+            ///     the location (ie. single town like Moonglow)
+            /// </summary>
+            [DataMember] public Location MapLocation { get; }
+
+            /// <summary>
+            ///     the offset of the map data in the data file
+            /// </summary>
+            [IgnoreDataMember] public int FileOffset { get; }
+
+            /// <summary>
+            ///     ID of the map location (used in saved.gam references)
+            ///     Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
+            /// </summary>
+            // ReSharper disable once UnusedMember.Global
+            [IgnoreDataMember] public byte Id => (byte)(MapLocation - 1);
+
+            /// <summary>
+            ///     name of the map file
+            /// </summary>
+            [IgnoreDataMember] private string MapFilename => GetFilenameFromLocation(MapLocation);
+
+            [IgnoreDataMember] public Map.Maps MapType
+            {
+                get
+                {
+                    return MapLocation switch
+                    {
+                        Location.Combat_resting_shrine => Map.Maps.Combat,
+                        Location.Britannia_Underworld => Floor == 0 ? Map.Maps.Overworld : Map.Maps.Underworld,
+                        _ => Map.Maps.Small
+                    };
+                }
+            }
+
+            /// <summary>
+            ///     The master file
+            /// </summary>
+            // ReSharper disable once UnusedMember.Global
+            [IgnoreDataMember] public SmallMapMasterFiles MasterFile
+            {
+                get
+                {
+                    return MapFilename switch
+                    {
+                        FileConstants.CASTLE_DAT => SmallMapMasterFiles.Castle,
+                        FileConstants.TOWNE_DAT => SmallMapMasterFiles.Towne,
+                        FileConstants.DWELLING_DAT => SmallMapMasterFiles.Dwelling,
+                        FileConstants.KEEP_DAT => SmallMapMasterFiles.Keep,
+                        _ => throw new Ultima5ReduxException("Bad MasterFile")
+                    };
+                }
             }
 
             /// <summary>
@@ -55,85 +126,7 @@ namespace Ultima5Redux.References.Maps
                     _ => SmallMap.Y_TILES
                 };
 
-            /// <summary>
-            ///     Map master files. These represent .DAT, .NPC and .TLK files
-            /// </summary>
-            [JsonConverter(typeof(StringEnumConverter))] public enum SmallMapMasterFiles
-            {
-                Castle, Towne, Dwelling, Keep, Dungeon, None
-            }
-
-            /// <summary>
-            ///     Total number of small map locations
-            /// </summary>
-            public const int TOTAL_SMALL_MAP_LOCATIONS = 32;
-
-            /// <summary>
-            ///     the offset of the map data in the data file
-            /// </summary>
-            [DataMember] public int FileOffset { get; }
-
-            /// <summary>
-            ///     the floor that the single map represents
-            /// </summary>
-            [DataMember] public int Floor { get; }
-
-            /// <summary>
-            ///     the location (ie. single town like Moonglow)
-            /// </summary>
-            [DataMember] public Location MapLocation { get; }
-
-            /// <summary>
-            ///     ID of the map location (used in saved.gam references)
-            ///     Note: If things misbehave - there could be an off-by-one issue depending on how it's being referenced
-            /// </summary>
-            // ReSharper disable once UnusedMember.Global
-            [IgnoreDataMember] public byte Id => (byte)(MapLocation - 1);
-
-            /// <summary>
-            ///     name of the map file
-            /// </summary>
-            [IgnoreDataMember] public string MapFilename => GetFilenameFromLocation(MapLocation);
-
-            [IgnoreDataMember] public Map.Maps MapType
-            {
-                get
-                {
-                    switch (MapLocation)
-                    {
-                        case Location.Combat_resting_shrine:
-                            return Map.Maps.Combat;
-                        case Location.Britannia_Underworld:
-                            return Floor == 0 ? Map.Maps.Overworld : Map.Maps.Underworld;
-                        default:
-                            return Map.Maps.Small;
-                    }
-                }
-            }
-
-            /// <summary>
-            ///     The master file
-            /// </summary>
-            // ReSharper disable once UnusedMember.Global
-            [IgnoreDataMember] public SmallMapMasterFiles MasterFile
-            {
-                get
-                {
-                    switch (MapFilename)
-                    {
-                        case FileConstants.CASTLE_DAT:
-                            return SmallMapMasterFiles.Castle;
-                        case FileConstants.TOWNE_DAT:
-                            return SmallMapMasterFiles.Towne;
-                        case FileConstants.DWELLING_DAT:
-                            return SmallMapMasterFiles.Dwelling;
-                        case FileConstants.KEEP_DAT:
-                            return SmallMapMasterFiles.Keep;
-                    }
-
-                    throw new Ultima5ReduxException("Bad MasterFile");
-                }
-            }
+            private readonly string _dataDirectory;
 
             /// <summary>
             ///     Construct a single map reference
@@ -160,21 +153,15 @@ namespace Ultima5Redux.References.Maps
             /// <returns>the filename string</returns>
             public static string GetFilenameFromLocation(Location location)
             {
-                switch (GetMapMasterFromLocation(location))
+                return GetMapMasterFromLocation(location) switch
                 {
-                    case SmallMapMasterFiles.Castle:
-                        return FileConstants.CASTLE_DAT;
-                    case SmallMapMasterFiles.Towne:
-                        return FileConstants.TOWNE_DAT;
-                    case SmallMapMasterFiles.Dwelling:
-                        return FileConstants.DWELLING_DAT;
-                    case SmallMapMasterFiles.Keep:
-                        return FileConstants.KEEP_DAT;
-                    case SmallMapMasterFiles.Dungeon:
-                        return "NOFILE";
-                    default:
-                        throw new Ultima5ReduxException("Bad _location");
-                }
+                    SmallMapMasterFiles.Castle => FileConstants.CASTLE_DAT,
+                    SmallMapMasterFiles.Towne => FileConstants.TOWNE_DAT,
+                    SmallMapMasterFiles.Dwelling => FileConstants.DWELLING_DAT,
+                    SmallMapMasterFiles.Keep => FileConstants.KEEP_DAT,
+                    SmallMapMasterFiles.Dungeon => "NOFILE",
+                    _ => throw new Ultima5ReduxException("Bad _location")
+                };
             }
 
             public static SingleMapReference GetLargeMapSingleInstance(Map.Maps map)
@@ -306,6 +293,11 @@ namespace Ultima5Redux.References.Maps
                 return mapStr;
             }
 
+            public byte[][] GetDefaultMap()
+            {
+                return LoadSmallMapFile(Path.Combine(_dataDirectory, GetFilenameFromLocation(MapLocation)), FileOffset);
+            }
+
             /// <summary>
             ///     Loads a small map into a 2D array
             /// </summary>
@@ -321,12 +313,6 @@ namespace Ultima5Redux.References.Maps
                 // have to transpose the array because the ListTo2DArray function puts the map together backwards...
                 return Utils.TransposeArray(smallMap);
             }
-
-            public byte[][] GetDefaultMap()
-            {
-                return LoadSmallMapFile(Path.Combine(_dataDirectory, GetFilenameFromLocation(MapLocation)), FileOffset);
-            }
-
         }
     }
 }

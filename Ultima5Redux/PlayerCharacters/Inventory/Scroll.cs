@@ -37,7 +37,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
         
         public Scroll(MagicReference.SpellWords spell, int quantity, MagicReference scrollMagicReference) : base(
-            quantity, SCROLL_SPRITE)
+            quantity, SCROLL_SPRITE, InventoryReferences.InventoryReferenceType.Item)
         {
             ScrollSpell = spell;
             ScrollMagicReference = scrollMagicReference;
