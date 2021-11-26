@@ -16,7 +16,7 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux
 {
-    internal class ImportedGameState
+    public class ImportedGameState
     {
         /// <summary>
         ///     Data chunks for each of the save game sections

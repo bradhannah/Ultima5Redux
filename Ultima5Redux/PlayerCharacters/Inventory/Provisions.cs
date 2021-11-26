@@ -46,10 +46,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             set => Items[Provision.ProvisionTypeEnum.Torches].Quantity = value;
         }
 
-        // [JsonConstructor] private Provisions() { }
-
-        [JsonConstructor] public Provisions() : base(null)
+        [JsonConstructor] private Provisions()
         {
+        }
+
+        public Provisions(ImportedGameState importedGameState) : base(null)
+        {
+            if (Items.Count > 0) return;
+            
             Items.Add(Provision.ProvisionTypeEnum.Torches,
                 new Provision(Provision.ProvisionTypeEnum.Torches,
                     (int)Provision.ProvisionSpritesTypeEnum.Torches));
@@ -65,6 +69,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 new Provision(Provision.ProvisionTypeEnum.Food, (int)Provision.ProvisionSpritesTypeEnum.Food));
             Items.Add(Provision.ProvisionTypeEnum.Gold,
                 new Provision(Provision.ProvisionTypeEnum.Gold, (int)Provision.ProvisionSpritesTypeEnum.Gold));
+
+            Items[Provision.ProvisionTypeEnum.Food].Quantity = importedGameState.Food;
+            Items[Provision.ProvisionTypeEnum.Gems].Quantity = importedGameState.Gems;
+            Items[Provision.ProvisionTypeEnum.Gold].Quantity = importedGameState.Gold;
+            Items[Provision.ProvisionTypeEnum.Keys].Quantity = importedGameState.Keys;
+            Items[Provision.ProvisionTypeEnum.Torches].Quantity = importedGameState.Torches;
+            Items[Provision.ProvisionTypeEnum.SkullKeys].Quantity = importedGameState.SkullKeys;
         }
     }
 }

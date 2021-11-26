@@ -69,7 +69,7 @@ namespace Ultima5Redux
 
         /// Legacy save game state
         [IgnoreDataMember]
-        private readonly ImportedGameState _importedGameState;
+        internal readonly ImportedGameState ImportedGameState;
 
         /// <summary>
         ///     The name of the Avatar
@@ -102,26 +102,26 @@ namespace Ultima5Redux
 
             bool loadedFromInitial = saveDirectory == "";
             // imports the legacy save game file data 
-            _importedGameState = loadedFromInitial ? new ImportedGameState() : new ImportedGameState(saveDirectory);
+            ImportedGameState = loadedFromInitial ? new ImportedGameState() : new ImportedGameState(saveDirectory);
 
             // one time copy of all imported state information
-            CharacterRecords = _importedGameState.CharacterRecords;
-            _initialMap = _importedGameState.InitialMap;
+            CharacterRecords = ImportedGameState.CharacterRecords;
+            _initialMap = ImportedGameState.InitialMap;
 
-            Karma = _importedGameState.Karma;
-            TurnsToExtinguish = _importedGameState.TorchTurnsLeft;
-            ActivePlayerNumber = _importedGameState.ActivePlayerNumber;
+            Karma = ImportedGameState.Karma;
+            TurnsToExtinguish = ImportedGameState.TorchTurnsLeft;
+            ActivePlayerNumber = ImportedGameState.ActivePlayerNumber;
 
-            TheMoongates = _importedGameState.TheMoongates;
+            TheMoongates = ImportedGameState.TheMoongates;
 
-            TheTimeOfDay = _importedGameState.TheTimeOfDay;
+            TheTimeOfDay = ImportedGameState.TheTimeOfDay;
 
-            TheNonPlayerCharacterStates = _importedGameState.TheNonPlayerCharacterStates;
+            TheNonPlayerCharacterStates = ImportedGameState.TheNonPlayerCharacterStates;
 
             // import the players inventory
-            PlayerInventory = new Inventory(_importedGameState.GameStateByteArray, TheMoongates, this);
+            PlayerInventory = new Inventory(ImportedGameState.GameStateByteArray, TheMoongates, this);
             InitializeVirtualMap(smallMaps, overworldMap, underworldMap, bUseExtendedSprites,
-                _importedGameState.Location, _importedGameState.X, _importedGameState.Y, _importedGameState.Floor);
+                ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor);
         }
 
         public static GameState Deserialize(string stateJson)
@@ -159,7 +159,7 @@ namespace Ultima5Redux
                     : GameReferences.SmallMapRef.GetSingleMapByLocation(location, nInitialFloor);
 
             TheVirtualMap = new VirtualMap(smallMaps, overworldMap, underworldMap, _initialMap, mapRef,
-                bUseExtendedSprites, _importedGameState);
+                bUseExtendedSprites, ImportedGameState);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(nInitialX, nInitialY);

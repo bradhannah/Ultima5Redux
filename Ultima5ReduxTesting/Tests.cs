@@ -1373,5 +1373,41 @@ namespace Ultima5ReduxTesting
                 
             _ = world.State.TheVirtualMap.CurrentPosition;
         }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_ReloadAndQuantityCheck(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            int nTorches = world.State.PlayerInventory.TheProvisions.Torches;
+            int nFood = world.State.PlayerInventory.TheProvisions.Food;
+            int nGold = world.State.PlayerInventory.TheProvisions.Gold;
+            Assert.NotZero(nTorches);
+            Assert.NotZero(nFood);
+            Assert.NotZero(nGold);
+            world.ReLoadFromJson();
+            int nTorchesNew = world.State.PlayerInventory.TheProvisions.Torches;
+            int nFoodNew = world.State.PlayerInventory.TheProvisions.Food;
+            int nGoldNew = world.State.PlayerInventory.TheProvisions.Gold;
+            Assert.AreEqual(nTorches, nTorchesNew);
+            Assert.AreEqual(nFood, nFoodNew);
+            Assert.AreEqual(nGold, nGoldNew);
+
+            string loadedJson = world.State.Serialize();
+            Assert.NotNull(world.State);
+            world.ReLoadFromJson();
+            string newLoadedJson = world.State.Serialize();
+            Assert.NotNull(world.State);
+
+            nTorchesNew = world.State.PlayerInventory.TheProvisions.Torches;
+            nFoodNew = world.State.PlayerInventory.TheProvisions.Food;
+            nGoldNew = world.State.PlayerInventory.TheProvisions.Gold;
+
+            Assert.AreEqual(nTorches, nTorchesNew);
+            Assert.AreEqual(nFood, nFoodNew);
+            Assert.AreEqual(nGold, nGoldNew);
+        }
+
     }
 }
