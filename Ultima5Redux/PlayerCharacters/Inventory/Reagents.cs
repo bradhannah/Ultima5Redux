@@ -17,18 +17,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [JsonConstructor] private Reagents()
         {
         }
-        
-        public Reagents(List<byte> gameStateByteArray, GameState state) : base(gameStateByteArray)
+
+        public Reagents(ImportedGameState importedGameState)
         {
+            void addReagentLegacy(Reagent.ReagentTypeEnum reagentType) =>
+                AddReagent(reagentType, importedGameState.GetReagentQuantity(reagentType));
+            
             foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
             {
-                AddReagent(reagent, state);
+                addReagentLegacy(reagent);
             }
         }
 
-        private void AddReagent(Reagent.ReagentTypeEnum reagentType, GameState state)
+        private void AddReagent(Reagent.ReagentTypeEnum reagentType, int nQuantity)
         {
-            Reagent reagent = new Reagent(reagentType, GameStateByteArray[(int)reagentType], state);
+            Reagent reagent = new Reagent(reagentType, nQuantity);
             Items[reagentType] = reagent;
         }
 

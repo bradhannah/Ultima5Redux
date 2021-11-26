@@ -50,13 +50,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public Provisions(ImportedGameState importedGameState) : base(null)
+        public Provisions(ImportedGameState importedGameState) 
         {
             if (Items.Count > 0) return;
             
             Items.Add(Provision.ProvisionTypeEnum.Torches,
-                new Provision(Provision.ProvisionTypeEnum.Torches,
-                    (int)Provision.ProvisionSpritesTypeEnum.Torches));
+                new Provision(Provision.ProvisionTypeEnum.Torches, (int)Provision.ProvisionSpritesTypeEnum.Torches));
             Items.Add(Provision.ProvisionTypeEnum.Gems,
                 new Provision(Provision.ProvisionTypeEnum.Gems,
                     (int)Provision.ProvisionSpritesTypeEnum.Gems));

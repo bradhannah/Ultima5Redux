@@ -28,15 +28,21 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
         }
 
-        public Weapons(List<byte> gameStateByteArray) : base(gameStateByteArray)
+        public Weapons(ImportedGameState importedGameState) 
         {
+            void addWeaponLegacy(WeaponReference weaponReference)
+            {
+                AddWeapon(weaponReference, importedGameState.GetEquipmentQuantity(weaponReference.SpecificEquipment));
+            }
+                
+            
             foreach (WeaponReference weaponReference in GameReferences.CombatItemRefs.WeaponReferences)
             {
-                AddWeapon(weaponReference);
+                addWeaponLegacy(weaponReference);
             }
         }
 
-        private void AddWeapon(WeaponReference weaponReference)
+        private void AddWeapon(WeaponReference weaponReference, int nQuantity)
         {
             Weapon newWeapon;
 
@@ -46,7 +52,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
             else
             {
-                newWeapon = new Weapon(weaponReference, GameStateByteArray[(int)weaponReference.SpecificEquipment]);
+                newWeapon = new Weapon(weaponReference, nQuantity);
+                //GameStateByteArray[(int)weaponReference.SpecificEquipment]);
             }
 
             Items.Add(weaponReference.WeaponType, newWeapon);

@@ -13,9 +13,5 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         [JsonConstructor] protected CombatItems()
         {
         }
-
-        protected CombatItems(List<byte> gameStateByteArray) : base(gameStateByteArray)
-        {
-        }
     }
 }

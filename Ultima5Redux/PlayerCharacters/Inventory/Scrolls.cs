@@ -15,26 +15,30 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [JsonConstructor] private Scrolls()
         {
         }
-        
-        public Scrolls(List<byte> gameStateByteArray) : base(gameStateByteArray)
+
+        public Scrolls(ImportedGameState importedGameState) 
         {
-            AddScroll(MagicReference.SpellWords.Vas_Lor);
-            AddScroll(MagicReference.SpellWords.Rel_Hur);
-            AddScroll(MagicReference.SpellWords.In_Sanct);
-            AddScroll(MagicReference.SpellWords.In_An);
-            AddScroll(MagicReference.SpellWords.In_Quas_Wis);
-            AddScroll(MagicReference.SpellWords.Kal_Xen_Corp);
-            AddScroll(MagicReference.SpellWords.In_Mani_Corp);
-            AddScroll(MagicReference.SpellWords.An_Tym);
+            void addScrollLegacy(MagicReference.SpellWords spellWord) =>
+                AddScroll(spellWord, importedGameState.GetScrollQuantity(spellWord));
+
+            addScrollLegacy(MagicReference.SpellWords.Vas_Lor);
+            addScrollLegacy(MagicReference.SpellWords.Rel_Hur);
+            addScrollLegacy(MagicReference.SpellWords.In_Sanct);
+            addScrollLegacy(MagicReference.SpellWords.In_An);
+            addScrollLegacy(MagicReference.SpellWords.In_Quas_Wis);
+            addScrollLegacy(MagicReference.SpellWords.Kal_Xen_Corp);
+            addScrollLegacy(MagicReference.SpellWords.In_Mani_Corp);
+            addScrollLegacy(MagicReference.SpellWords.An_Tym);
         }
 
-        private void AddScroll(MagicReference.SpellWords spellWord)
+        private void AddScroll(MagicReference.SpellWords spellWord, int nQuantity)
         {
             Scroll.ScrollSpells scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
 
             int nIndex = 0x27A + (int)scrollSpell;
-            Items[spellWord] = new Scroll(spellWord, GameStateByteArray[nIndex],
+            Items[spellWord] = new Scroll(spellWord, nQuantity,
+                //GameStateByteArray[nIndex],
                 GameReferences.MagicRefs.GetMagicReference(spellWord));
         }
     }

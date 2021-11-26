@@ -39,42 +39,44 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private Dictionary<ArmourReference.ArmourType, List<Armour>> _savedItems;
 
-        [JsonConstructor] public Armours()
+        [JsonConstructor] private Armours()
         {
         }
 
-        public Armours(List<byte> gameStateByteArray) : base(gameStateByteArray)
+        public Armours(ImportedGameState importedGameState)
         {
             foreach (ArmourReference armourReference in GameReferences.CombatItemRefs.AllArmour)
             {
-                AddArmour(armourReference);
+                AddArmour(armourReference, importedGameState.GetEquipmentQuantity(armourReference.SpecificEquipment));
             }
         }
 
-        private void AddArmour(ArmourReference armourReference)
+        private void AddArmour(ArmourReference armourReference, int nQuantity)
         {
             Armour armour;
             switch (armourReference.TheArmourType)
             {
                 case ArmourReference.ArmourType.Amulet:
-                    Amulet amulet = new Amulet(armourReference,
-                        GameStateByteArray[(int)armourReference.SpecificEquipment]);
+                    Amulet amulet = new Amulet(armourReference, nQuantity);
+                    //GameStateByteArray[(int)armourReference.SpecificEquipment]
                     armour = amulet;
                     Amulets.Add(amulet);
                     break;
                 case ArmourReference.ArmourType.ChestArmour:
-                    ChestArmour chestArmour = new ChestArmour(armourReference,
-                        GameStateByteArray[(int)armourReference.SpecificEquipment]);
+                    ChestArmour chestArmour = new ChestArmour(armourReference, nQuantity);
+                    //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = chestArmour;
                     ChestArmours.Add(chestArmour);
                     break;
                 case ArmourReference.ArmourType.Helm:
-                    Helm helm = new Helm(armourReference, GameStateByteArray[(int)armourReference.SpecificEquipment]);
+                    Helm helm = new Helm(armourReference, nQuantity);
+                    //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = helm;
                     Helms.Add(helm);
                     break;
                 case ArmourReference.ArmourType.Ring:
-                    Ring ring = new Ring(armourReference, GameStateByteArray[(int)armourReference.SpecificEquipment]);
+                    Ring ring = new Ring(armourReference, nQuantity);
+                    //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = ring;
                     Rings.Add(ring);
                     break;

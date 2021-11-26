@@ -119,7 +119,7 @@ namespace Ultima5Redux
             TheNonPlayerCharacterStates = ImportedGameState.TheNonPlayerCharacterStates;
 
             // import the players inventory
-            PlayerInventory = new Inventory(ImportedGameState.GameStateByteArray, TheMoongates, this);
+            PlayerInventory = new Inventory(ImportedGameState);
             InitializeVirtualMap(smallMaps, overworldMap, underworldMap, bUseExtendedSprites,
                 ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor);
         }

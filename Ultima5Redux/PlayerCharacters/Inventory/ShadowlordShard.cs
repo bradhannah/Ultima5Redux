@@ -10,7 +10,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class ShadowlordShard : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum ShardType { Falsehood, Hatred, Cowardice }
+        [JsonConverter(typeof(StringEnumConverter))] public enum ShardType
+        {
+            Falsehood = 0x210, Hatred = 0x211, Cowardice = 0x212
+        }
+        // private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
 
         private const int SHARD_SPRITE = 436;
 

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
 
@@ -12,6 +11,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public sealed class Inventory
     {
+        private readonly ImportedGameState _importedGameState;
         [DataMember] public LordBritishArtifacts Artifacts { get; set; }
         [DataMember] public Potions MagicPotions { get; set; }
         [DataMember] public Scrolls MagicScrolls { get; set; }
@@ -34,20 +34,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ReadyItems.Cast<InventoryItem>().ToList();
 
         [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
-        private readonly List<byte> _gameStateByteArray;
-        private readonly Moongates _moongates;
-        private readonly GameState _state;
+        // private readonly List<byte> _gameStateByteArray;
+        // private readonly Moongates _moongates;
+        // private readonly GameState _state;
 
         
         [JsonConstructor] private Inventory()
         {
         }
 
-        internal Inventory(List<byte> gameStateByteArray, Moongates moongates, GameState state)
+        internal Inventory(ImportedGameState importedGameState)
         {
-            _gameStateByteArray = gameStateByteArray;
-            _moongates = moongates;
-            _state = state;
+            _importedGameState = importedGameState;
+            // _gameStateByteArray = gameStateByteArray;
+            // _moongates = moongates;
+            // _state = state;
 
             RefreshInventoryFromLegacySave();
         }
@@ -131,21 +132,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ReadyItems.Clear();
             UseItems.Clear();
 
-            ProtectiveArmour = new Armours(_gameStateByteArray);
-            TheWeapons = new Weapons(_gameStateByteArray);
-            MagicScrolls = new Scrolls(_gameStateByteArray);
-            MagicPotions = new Potions(_gameStateByteArray);
-            SpecializedItems = new SpecialItems(_gameStateByteArray);
-            Artifacts = new LordBritishArtifacts(_gameStateByteArray);
-            Shards = new ShadowlordShards(_gameStateByteArray);
-            SpellReagents = new Reagents(_gameStateByteArray, _state);
-            MagicSpells = new Spells(_gameStateByteArray);
+            ProtectiveArmour = new Armours(_importedGameState);
+            TheWeapons = new Weapons(_importedGameState);
+            MagicScrolls = new Scrolls(_importedGameState);
+            MagicPotions = new Potions(_importedGameState);
+            SpecializedItems = new SpecialItems(_importedGameState);
+            Artifacts = new LordBritishArtifacts(_importedGameState);
+            Shards = new ShadowlordShards(_importedGameState);
+            SpellReagents = new Reagents(_importedGameState);
+            MagicSpells = new Spells(_importedGameState);
+            TheProvisions = new Provisions(_importedGameState);
             TheMoonstones = new Moonstones();
-            TheProvisions = new Provisions(_state.ImportedGameState);
 
             RefreshRollupInventory();
-
-            //UpdateAllInventoryReferences();
         }
 
         private void RefreshRollupInventory()

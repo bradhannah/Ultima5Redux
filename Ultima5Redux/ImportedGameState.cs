@@ -9,10 +9,12 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.Properties;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux
 {
@@ -65,7 +67,8 @@ namespace Ultima5Redux
         /// </summary>
         internal ushort Food => DataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUint16();
 
-        internal List<byte> GameStateByteArray { get; }
+        private List<byte> GameStateByteArray { get; }
+        
         internal byte Gems => DataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
 
         /// <summary>
@@ -149,6 +152,48 @@ namespace Ultima5Redux
         /// </summary>
         internal int Y => DataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
 
+        internal int GetSpellQuantity(MagicReference.SpellWords spellWord) =>
+            GetByteAsIntFromGameStateByteArray((int)spellWord);
+
+        internal int GetScrollQuantity(MagicReference.SpellWords spellWord)
+        {
+            Scroll.ScrollSpells scrollSpell =
+                (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
+
+            int nIndex = 0x27A + (int)scrollSpell;
+            return GetByteAsIntFromGameStateByteArray(nIndex);
+        }
+
+        internal int GetPotionQuantity(Potion.PotionColor color) =>
+            GetByteAsIntFromGameStateByteArray((int)color);
+
+        internal int GetReagentQuantity(Reagent.ReagentTypeEnum reagentType) =>
+            GetByteAsIntFromGameStateByteArray((int)reagentType);
+
+        internal int GetSpecialItemQuantity(SpecialItem.ItemTypeEnum specialItem) =>
+            GetByteAsIntFromGameStateByteArray((int)specialItem);
+
+        internal int GetShadowlordShardQuantity(ShadowlordShard.ShardType shard) =>
+            GetByteAsIntFromGameStateByteArray((int)shard);
+
+        internal int GetLordBritishArtifactQuantity(LordBritishArtifact.ArtifactType artifact) =>
+            GetByteAsIntFromGameStateByteArray((int)artifact);
+
+        internal int GetEquipmentQuantity(DataOvlReference.Equipment equipment)
+        {
+            // can't remember why I return 262..?
+            if (equipment == DataOvlReference.Equipment.BareHands) return 262;
+            return GetByteAsIntFromGameStateByteArray((int)equipment);
+        }
+
+        private int GetByteAsIntFromGameStateByteArray(int nOffset)
+        {
+            if (GameStateByteArray.Count < nOffset)
+                throw new Ultima5ReduxException("Tried to access offset #" + nOffset +
+                                                " but game state array is only " + GameStateByteArray.Count + " long");
+            return GameStateByteArray[nOffset];
+        }
+
         /// <summary>
         ///     Load the default starting save game
         /// </summary>
@@ -214,15 +259,6 @@ namespace Ultima5Redux
 
         private void Initialize(bool bLoadFromDisk)
         {
-            //// MapUnitStates
-            // OverworldMapUnitStates = new MapUnitStates(OverworldOverlayDataChunks);
-            // UnderworldMapUnitStates = new MapUnitStates(UnderworldOverlayDataChunks);
-            // ActiveMapUnitStates = new MapUnitStates(ActiveOverlayDataChunks);
-            //
-            // OverworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.BRIT_OOL, bLoadFromDisk);
-            // UnderworldMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.UNDER_OOL, bLoadFromDisk);
-            // ActiveMapUnitStates.InitializeMapUnits(MapUnitStates.MapUnitStatesFiles.SAVED_GAM, bLoadFromDisk);
-
             // import all character records
             DataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "All Character Records (ie. name, stats)", 0x02,
                 0x20 * 16, 0x00, DataChunkName.CHARACTER_RECORDS);

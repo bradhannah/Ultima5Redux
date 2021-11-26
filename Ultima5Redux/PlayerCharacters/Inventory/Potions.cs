@@ -13,21 +13,24 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public Potions(List<byte> gameStateByteArray) : base(gameStateByteArray)
+        public Potions(ImportedGameState importedGameState)
         {
-            AddPotion(Potion.PotionColor.Blue);
-            AddPotion(Potion.PotionColor.Yellow);
-            AddPotion(Potion.PotionColor.Red);
-            AddPotion(Potion.PotionColor.Green);
-            AddPotion(Potion.PotionColor.Orange);
-            AddPotion(Potion.PotionColor.Purple);
-            AddPotion(Potion.PotionColor.Black);
-            AddPotion(Potion.PotionColor.White);
+            void addPotionLegacy(Potion.PotionColor color) =>
+                AddPotion(color, importedGameState.GetPotionQuantity(color));
+
+            addPotionLegacy(Potion.PotionColor.Blue);
+            addPotionLegacy(Potion.PotionColor.Yellow);
+            addPotionLegacy(Potion.PotionColor.Red);
+            addPotionLegacy(Potion.PotionColor.Green);
+            addPotionLegacy(Potion.PotionColor.Orange);
+            addPotionLegacy(Potion.PotionColor.Purple);
+            addPotionLegacy(Potion.PotionColor.Black);
+            addPotionLegacy(Potion.PotionColor.White);
         }
 
-        private void AddPotion(Potion.PotionColor color)
+        private void AddPotion(Potion.PotionColor color, int nQuantity)
         {
-            Items[color] = new Potion(color, GameStateByteArray[(int)color]);
+            Items[color] = new Potion(color, nQuantity);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; internal set; } =
             new Dictionary<MoonPhaseReferences.MoonPhases, Moonstone>();
 
-        [JsonConstructor] public Moonstones() : base(null)
+        [JsonConstructor] public Moonstones() 
         {
             // if Items is already loaded then we likely built from JSON Deserialize
             if (Items.Count > 0) return;

@@ -53,14 +53,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [JsonConstructor] private Reagent()
         {
         }
-        
+
         /// <summary>
         ///     Create a reagent
         /// </summary>
         /// <param name="reagentType">The type of reagent</param>
         /// <param name="quantity">how many the party has</param>
-        /// <param name="state"></param>
-        public Reagent(ReagentTypeEnum reagentType, int quantity, GameState state) : base(quantity, REAGENT_SPRITE,
+        public Reagent(ReagentTypeEnum reagentType, int quantity) : base(quantity, REAGENT_SPRITE,
             InventoryReferences.InventoryReferenceType.Reagent)
         {
             // capture the game state so we know the users Karma for cost calculations

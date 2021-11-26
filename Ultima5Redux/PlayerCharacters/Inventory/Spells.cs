@@ -41,15 +41,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; internal set; } =
             new Dictionary<MagicReference.SpellWords, Spell>();
 
-        [JsonConstructor] public Spells()
+        [JsonConstructor] private Spells()
         {
         }
 
-        public Spells(List<byte> gameStateByteArray) : base(gameStateByteArray)
+        public Spells(ImportedGameState importedGameState)
         {
             foreach (MagicReference.SpellWords spell in Enum.GetValues(typeof(MagicReference.SpellWords)))
             {
-                AddSpell(spell);
+                AddSpell(spell, importedGameState.GetSpellQuantity(spell));
             }
         }
 
@@ -64,7 +64,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return hey.FirstOrDefault().Key;
         }
 
-        private void AddSpell(MagicReference.SpellWords spellWord)
+        private void AddSpell(MagicReference.SpellWords spellWord, int nQuantity)
         {
             if (spellWord == MagicReference.SpellWords.Nox)
             {
@@ -72,7 +72,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 return;
             }
 
-            Items[spellWord] = new Spell(spellWord, GameStateByteArray[(int)spellWord]);
+            Items[spellWord] = new Spell(spellWord, nQuantity);
+            //GameStateByteArray[(int)spellWord]);
         }
     }
 }
