@@ -47,7 +47,7 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
 
-        [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; }
+        [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; set; }
 
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
@@ -121,6 +121,11 @@ namespace Ultima5Redux.MapUnits
         [JsonConstructor] private MapUnits()
         {
             _importedMovements = new MapUnitMovements();
+        }
+
+        [OnDeserialized] private void PostDeserialized(StreamingContext context)
+        {
+            MasterAvatarMapUnit = AvatarMapUnit;
         }
 
         private int AddCombatMapUnit(CombatMapUnit mapUnit)
@@ -423,7 +428,8 @@ namespace Ultima5Redux.MapUnits
                 // if this is not the initial load of the map then we can trust character states and
                 // movements that are already loaded into memory
                 MapUnitMovement mapUnitMovement =
-                    bInitialLoad ? _importedMovements.GetMovement(i) : new MapUnitMovement(i);
+                    (bInitialLoad ? _importedMovements.GetMovement(i) : new MapUnitMovement(i)) ??
+                    new MapUnitMovement(i);
 
                 // always clear movements because they are not stored in the data for a LargeMap because
                 // the monsters will recalculate every turn based on where the Avatar is 
@@ -542,7 +548,7 @@ namespace Ultima5Redux.MapUnits
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
             {
-                MapUnitMovement mapUnitMovement = _importedMovements.GetMovement(i);
+                MapUnitMovement mapUnitMovement = _importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
 
                 // if it is the first index, then it's the Avatar - but if it's the initial load
                 // then it will just load from disk, otherwise we need to create a stub

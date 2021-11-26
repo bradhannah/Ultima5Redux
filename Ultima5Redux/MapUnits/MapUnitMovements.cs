@@ -41,6 +41,7 @@ namespace Ultima5Redux.MapUnits
         /// <returns></returns>
         public MapUnitMovement GetMovement(int nIndex)
         {
+            if (_movementList.Count <= nIndex) return new MapUnitMovement(nIndex);
             return _movementList[nIndex];
         }
     }

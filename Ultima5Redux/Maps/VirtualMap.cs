@@ -160,7 +160,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     If we are on a large map - then are we on overworld or underworld
         /// </summary>
-        [IgnoreDataMember] public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
+        [DataMember] public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
 
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
@@ -1111,14 +1111,14 @@ namespace Ultima5Redux.Maps
 
             CurrentCombatMap = new CombatMap(singleCombatMapReference);
 
+            TheMapOverrides = new MapOverrides(CurrentCombatMap);
+
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
             if (TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
             {
                 PreTheMapOverrides = TheMapOverrides;
             }
-
-            TheMapOverrides = new MapOverrides(CurrentCombatMap);
 
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;

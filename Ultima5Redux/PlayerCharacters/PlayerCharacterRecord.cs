@@ -62,7 +62,7 @@ namespace Ultima5Redux.PlayerCharacters
             set => _monthsSinceStayingAtInn = (byte)(value % 256);
         }
 
-        [IgnoreDataMember] public CharacterPartyStatus PartyStatus
+        [DataMember] public CharacterPartyStatus PartyStatus
         {
             get =>
                 InnOrParty switch

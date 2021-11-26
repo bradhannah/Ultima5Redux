@@ -29,7 +29,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         private const int REAGENT_SPRITE = 259;
         [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
 
-        [IgnoreDataMember] private readonly GameState _state;
+        // [IgnoreDataMember] private readonly GameState _state;
         [IgnoreDataMember] public override int BasePrice => 0;
 
         [IgnoreDataMember] public override bool HideQuantity => false;
@@ -64,7 +64,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             InventoryReferences.InventoryReferenceType.Reagent)
         {
             // capture the game state so we know the users Karma for cost calculations
-            _state = state;
+            // _state = state;
             ReagentType = reagentType;
         }
 
@@ -85,7 +85,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // A big thank you to Markus Brenner (@minstrel_dragon) for digging in and figuring out the Karma calculation
             // price = Base Price * (1 + (100 - Karma) / 100)
             int nAdjustedPrice = GameReferences.ReagentReferences.GetPriceAndQuantity(location, ReagentType).Price *
-                                 (1 + (100 - _state.Karma) / 100);
+                                 (1 + (100 - GameStateReference.State.Karma) / 100);
             return nAdjustedPrice;
         }
 

@@ -715,11 +715,11 @@ namespace Ultima5ReduxTesting
                 SmallMapReferences.SingleMapReference.Location.Cove);
 
             string hello = magicSeller.GetHelloResponse(world.State.TheTimeOfDay);
-            string buything = magicSeller.GetReagentBuyingOutput(reagents[0]);
-            buything = magicSeller.GetReagentBuyingOutput(reagents[1]);
-            buything = magicSeller.GetReagentBuyingOutput(reagents[2]);
-            buything = magicSeller.GetReagentBuyingOutput(reagents[3]);
-            buything = magicSeller.GetReagentBuyingOutput(reagents[4]);
+            string buyThing = magicSeller.GetReagentBuyingOutput(reagents[0]);
+            buyThing = magicSeller.GetReagentBuyingOutput(reagents[1]);
+            buyThing = magicSeller.GetReagentBuyingOutput(reagents[2]);
+            buyThing = magicSeller.GetReagentBuyingOutput(reagents[3]);
+            buyThing = magicSeller.GetReagentBuyingOutput(reagents[4]);
         }
 
         [Test]
@@ -827,10 +827,10 @@ namespace Ultima5ReduxTesting
 
             string goodbye = innKeeper.GetPissedOffShoppeKeeperGoodbyeResponse();
             string pissed = innKeeper.GetPissedOffNotEnoughMoney();
-            string howmuch = innKeeper.GetThatWillBeGold(activeRecords[1]);
-            string shoppename = innKeeper.TheShoppeKeeperReference.ShoppeName;
+            string howMuch = innKeeper.GetThatWillBeGold(activeRecords[1]);
+            string shoppeName = innKeeper.TheShoppeKeeperReference.ShoppeName;
 
-            _ = world.State.CharacterRecords.GetCharacterFromParty(5);
+            _ = world.State.CharacterRecords.GetCharacterFromParty(4);
             Assert.True(true);
         }
 

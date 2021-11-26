@@ -53,7 +53,7 @@ namespace Ultima5Redux
         /// <summary>
         ///     NPC states such as if they are dead or have met the avatar
         /// </summary>
-        [field: DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; }
+        [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
 
         /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
