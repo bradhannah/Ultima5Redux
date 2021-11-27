@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -101,6 +102,18 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         {
             if (_reagentsDictionary.ContainsKey(reagentType)) _reagentsDictionary[reagentType] = bSpellRequirement;
             else _reagentsDictionary.Add(reagentType, bSpellRequirement);
+        }
+
+        public bool IsCorrectReagents(IEnumerable<Reagent.ReagentTypeEnum> reagents)
+        {
+            int nReagents = 0;
+            foreach (Reagent.ReagentTypeEnum reagent in reagents)
+            {
+                if (!IsReagentRequired(reagent)) return false;
+                nReagents++;
+            }
+
+            return (nReagents == _reagentsDictionary.Count(r => r.Value));
         }
     }
 }

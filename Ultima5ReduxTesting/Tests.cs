@@ -1409,5 +1409,18 @@ namespace Ultima5ReduxTesting
             Assert.AreEqual(nGold, nGoldNew);
         }
 
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_CheckSpellReagents(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, false);
+
+            List<Reagent.ReagentTypeEnum> reagents = new List<Reagent.ReagentTypeEnum>
+            {
+                Reagent.ReagentTypeEnum.SulfurAsh
+            };
+
+            Assert.True(GameReferences.MagicRefs.GetMagicReference(MagicReference.SpellWords.In_Lor)
+                .IsCorrectReagents(reagents));
+        }
+
     }
 }
