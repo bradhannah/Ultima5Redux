@@ -14,6 +14,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     [DataContract]
     public abstract class InventoryItem
     {
+        public const int MAX_INVENTORY_ITEM_QUANTITY = 99;
         [IgnoreDataMember] public abstract string FindDescription { get; }
 
         [DataMember] public int SpriteNum { get; private set; }

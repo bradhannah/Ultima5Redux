@@ -241,5 +241,51 @@ namespace Ultima5Redux.PlayerCharacters
             Debug.Assert(nPartyMembers > 0 && nPartyMembers <= 6);
             return nPartyMembers;
         }
+
+        public string ApplyRandomCharacterStatusForMixSpell()
+        {
+            string retStr = "";
+            const int MAX_INJURE_AMOUNT = 20;
+
+            void injurePlayer(PlayerCharacterRecord record) =>
+                record.Stats.CurrentHp -= Utils.Ran.Next() % (MAX_INJURE_AMOUNT + 1);
+
+            switch (Utils.Ran.Next() % 4)
+            {
+                case 0:
+                    // poison - the Avatar
+                    retStr = GameReferences.DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N).Trim();
+                    AvatarRecord.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+                    break;
+                case 1:
+                    // Gas - poison the whole party
+                    retStr = "GAS!";
+                    foreach (PlayerCharacterRecord record in Records)
+                    {
+                        record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+                    }
+
+                    break;
+                case 2:
+                    // Acid - hurt the Avatar
+                    retStr = "ACID!";
+                    injurePlayer(AvatarRecord);
+                    break;
+                case 3:
+                    // Bomb - hurt the party
+                    retStr = "BOMB!";
+                    foreach (PlayerCharacterRecord record in Records)
+                    {
+                        injurePlayer(record);
+                    }
+
+                    break;
+                default:
+                    throw new Ultima5ReduxException("EH?");
+            }
+
+            return retStr;
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public override int Quantity
         {
             get => base.Quantity;
-            set => base.Quantity = value > 99 ? 99 : value;
+            set => base.Quantity = value > MAX_INVENTORY_ITEM_QUANTITY ? MAX_INVENTORY_ITEM_QUANTITY : value;
         }
 
         /// <summary>
