@@ -67,10 +67,8 @@ namespace Ultima5Redux
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
-        [DataMember] public MemorizedSpells TheMemorizedSpells { get; private set; } = new MemorizedSpells(); 
-
         /// Legacy save game state
-        [IgnoreDataMember]
+        [IgnoreDataMember]  
         internal readonly ImportedGameState ImportedGameState;
 
         /// <summary>

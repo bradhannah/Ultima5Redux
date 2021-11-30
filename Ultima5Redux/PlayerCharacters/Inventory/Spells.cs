@@ -81,7 +81,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             Items[spellWord] = new Spell(spellWord, nQuantity);
-            //GameStateByteArray[(int)spellWord]);
         }
     }
 }

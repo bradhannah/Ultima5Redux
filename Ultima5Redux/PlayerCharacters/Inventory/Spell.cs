@@ -30,6 +30,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [DataMember] public MagicReference.SpellWords SpellIncantation { get; private set; }
 
+        [DataMember] private bool _memorizedSpell;
+
+        [IgnoreDataMember] public bool IsMemorized => Quantity > 0 || _memorizedSpell;
+        
         [IgnoreDataMember] public MagicReference SpellMagicReference =>
             GameReferences.MagicRefs.GetMagicReference(SpellIncantation);
 
@@ -43,6 +47,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             SpellIncantation = spellWord;
         }
 
+        public void LearnSpell() => _memorizedSpell = true;
+        
         public string GetLiteralTranslation()
         {
             string[] spellStrs = SpellIncantation.ToString().Split('_'); // .Replace('_', ' ');
