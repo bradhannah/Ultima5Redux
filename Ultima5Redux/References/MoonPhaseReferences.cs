@@ -60,18 +60,6 @@ namespace Ultima5Redux.References
         }
 
         /// <summary>
-        ///     With the sun at top (270degrees) this will return the number of degrees to rotate by based
-        ///     on the time of day
-        /// </summary>
-        /// <param name="timeOfDay">current time of day</param>
-        /// <returns></returns>
-        public static float GetMoonAngle(TimeOfDay timeOfDay)
-        {
-            float moonPercentageOfDay = (timeOfDay.Hour * 60f + timeOfDay.Minute) / (60f * 24f);
-            return moonPercentageOfDay * 360f;
-        }
-
-        /// <summary>
         ///     Gives an x,y coordinate of a moon or sun position on a cartesian plan
         /// </summary>
         /// <param name="dAngle">the angle of the entity</param>
@@ -85,6 +73,18 @@ namespace Ultima5Redux.References
             double x = radius * Math.Cos(dAngle * (Math.PI / 180));
             double y = radius * Math.Sin(dAngle * (Math.PI / 180));
             return new Point2DFloat((float)x, (float)y);
+        }
+
+        /// <summary>
+        ///     With the sun at top (270degrees) this will return the number of degrees to rotate by based
+        ///     on the time of day
+        /// </summary>
+        /// <param name="timeOfDay">current time of day</param>
+        /// <returns></returns>
+        public static float GetMoonAngle(TimeOfDay timeOfDay)
+        {
+            float moonPercentageOfDay = (timeOfDay.Hour * 60f + timeOfDay.Minute) / (60f * 24f);
+            return moonPercentageOfDay * 360f;
         }
 
         /// <summary>

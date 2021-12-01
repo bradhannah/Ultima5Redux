@@ -11,7 +11,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public sealed class Inventory
     {
-        private readonly ImportedGameState _importedGameState;
         [DataMember] public LordBritishArtifacts Artifacts { get; set; }
         [DataMember] public Potions MagicPotions { get; set; }
         [DataMember] public Scrolls MagicScrolls { get; set; }
@@ -34,14 +33,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             ReadyItems.Cast<InventoryItem>().ToList();
 
         [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
-        // private readonly List<byte> _gameStateByteArray;
-        // private readonly Moongates _moongates;
-        // private readonly GameState _state;
-
-        
-        [JsonConstructor] private Inventory()
-        {
-        }
+        private readonly ImportedGameState _importedGameState;
 
         internal Inventory(ImportedGameState importedGameState)
         {
@@ -51,6 +43,22 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // _state = state;
 
             RefreshInventoryFromLegacySave();
+        }
+        // private readonly List<byte> _gameStateByteArray;
+        // private readonly Moongates _moongates;
+        // private readonly GameState _state;
+
+        [JsonConstructor] private Inventory()
+        {
+        }
+
+        [OnDeserialized] internal void OnDeserializedMethod(StreamingContext context)
+        {
+            // update the statically cached lists 
+            RefreshRollupInventory();
+            // when deserializing, we have not saved the inventory references because they are static, 
+            // so we will add them after the fact
+            //UpdateAllInventoryReferences();
         }
 
         /// <summary>
@@ -68,30 +76,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         /// <summary>
-        ///     Gets the characters total attack if left and right hand both attacked successfully
-        /// </summary>
-        /// <param name="record">Character record</param>
-        /// <returns>amount of total damage</returns>
-        public int GetCharacterTotalAttack(PlayerCharacterRecord record)
-        {
-            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
-                   GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
-                   GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
-        }
-
-        /// <summary>
-        ///     Gets the players total defense of all items equipped
-        /// </summary>
-        /// <param name="record">character record</param>
-        /// <returns>the players total defense</returns>
-        public int GetCharacterTotalDefense(PlayerCharacterRecord record)
-        {
-            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
-                   GetDefense(record.Equipped.Helmet) + GetDefense(record.Equipped.LeftHand) +
-                   GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
-        }
-
-        /// <summary>
         ///     Gets the defense of a particular piece of equipment
         /// </summary>
         /// <param name="equipment"></param>
@@ -103,27 +87,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             Armour armour = ProtectiveArmour.GetArmourFromEquipment(equipment);
             return armour?.TheCombatItemReference.DefendStat ?? 0;
-        }
-
-        /// <summary>
-        ///     Gets the Combat Item (inventory item) based on the equipped item
-        /// </summary>
-        /// <param name="equipment">type of combat equipment</param>
-        /// <returns>combat item object</returns>
-        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment)
-        {
-            if (equipment == DataOvlReference.Equipment.Nothing) return null;
-            return ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ??
-                   throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
-        }
-
-        [OnDeserialized] internal void OnDeserializedMethod(StreamingContext context)
-        {
-            // update the statically cached lists 
-            RefreshRollupInventory();
-            // when deserializing, we have not saved the inventory references because they are static, 
-            // so we will add them after the fact
-            //UpdateAllInventoryReferences();
         }
 
         private void RefreshInventoryFromLegacySave()
@@ -185,6 +148,42 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             UseItems.AddRange(TheMoonstones.GenericItemList);
 
             AllItems.AddRange(TheProvisions.GenericItemList);
+        }
+
+        /// <summary>
+        ///     Gets the characters total attack if left and right hand both attacked successfully
+        /// </summary>
+        /// <param name="record">Character record</param>
+        /// <returns>amount of total damage</returns>
+        public int GetCharacterTotalAttack(PlayerCharacterRecord record)
+        {
+            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
+                   GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
+                   GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
+        }
+
+        /// <summary>
+        ///     Gets the players total defense of all items equipped
+        /// </summary>
+        /// <param name="record">character record</param>
+        /// <returns>the players total defense</returns>
+        public int GetCharacterTotalDefense(PlayerCharacterRecord record)
+        {
+            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
+                   GetDefense(record.Equipped.Helmet) + GetDefense(record.Equipped.LeftHand) +
+                   GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
+        }
+
+        /// <summary>
+        ///     Gets the Combat Item (inventory item) based on the equipped item
+        /// </summary>
+        /// <param name="equipment">type of combat equipment</param>
+        /// <returns>combat item object</returns>
+        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment)
+        {
+            if (equipment == DataOvlReference.Equipment.Nothing) return null;
+            return ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ??
+                   throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
         }
 
         public bool SpendGold(int nGold)

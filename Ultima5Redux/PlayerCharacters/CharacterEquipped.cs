@@ -30,30 +30,6 @@ namespace Ultima5Redux.PlayerCharacters
             Amulet = DataOvlReference.Equipment.Nothing;
         }
 
-        public DataOvlReference.Equipment GetEquippedEquipment(EquippableSlot equippableSlot)
-        {
-            return equippableSlot switch
-            {
-                EquippableSlot.None => DataOvlReference.Equipment.Nothing,
-                EquippableSlot.Helm => Helmet,
-                EquippableSlot.Amulet => Amulet,
-                EquippableSlot.LeftHand => LeftHand,
-                EquippableSlot.RightHand => RightHand,
-                EquippableSlot.Ring => Ring,
-                EquippableSlot.Armour => Armour,
-                _ => throw new ArgumentOutOfRangeException(nameof(equippableSlot), equippableSlot, null)
-            };
-        }
-
-        public bool IsEquipped(EquippableSlot equippableSlot) =>
-            GetEquippedEquipment(equippableSlot) != DataOvlReference.Equipment.Nothing;
-
-        public bool IsEquipped(DataOvlReference.Equipment equipment)
-        {
-            return Helmet == equipment || Armour == equipment || LeftHand == equipment || RightHand == equipment ||
-                   Ring == equipment || Amulet == equipment;
-        }
-
         internal void SetEquippableSlot(EquippableSlot equippableSlot, DataOvlReference.Equipment equipment)
         {
             switch (equippableSlot)
@@ -86,6 +62,30 @@ namespace Ultima5Redux.PlayerCharacters
         internal void UnequipEquippableSlot(EquippableSlot equippableSlot)
         {
             SetEquippableSlot(equippableSlot, DataOvlReference.Equipment.Nothing);
+        }
+
+        public DataOvlReference.Equipment GetEquippedEquipment(EquippableSlot equippableSlot)
+        {
+            return equippableSlot switch
+            {
+                EquippableSlot.None => DataOvlReference.Equipment.Nothing,
+                EquippableSlot.Helm => Helmet,
+                EquippableSlot.Amulet => Amulet,
+                EquippableSlot.LeftHand => LeftHand,
+                EquippableSlot.RightHand => RightHand,
+                EquippableSlot.Ring => Ring,
+                EquippableSlot.Armour => Armour,
+                _ => throw new ArgumentOutOfRangeException(nameof(equippableSlot), equippableSlot, null)
+            };
+        }
+
+        public bool IsEquipped(EquippableSlot equippableSlot) =>
+            GetEquippedEquipment(equippableSlot) != DataOvlReference.Equipment.Nothing;
+
+        public bool IsEquipped(DataOvlReference.Equipment equipment)
+        {
+            return Helmet == equipment || Armour == equipment || LeftHand == equipment || RightHand == equipment ||
+                   Ring == equipment || Amulet == equipment;
         }
     }
 }

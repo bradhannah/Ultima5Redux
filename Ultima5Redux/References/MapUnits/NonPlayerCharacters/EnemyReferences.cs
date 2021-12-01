@@ -26,23 +26,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             //PrintDebugCSV();
         }
 
-        public EnemyReference GetEnemyReference(TileReference tileReference)
-        {
-            int nIndex = (tileReference.Index - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
-            return AllEnemyReferences[nIndex];
-        }
-
-        public EnemyReference GetEnemyReference(int nSprite)
-        {
-            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
-            return AllEnemyReferences[nIndex];
-        }
-
-        public EnemyReference GetFriendReference(EnemyReference enemyReference)
-        {
-            return AllEnemyReferences[enemyReference.FriendIndex];
-        }
-
         // ReSharper disable once UnusedMember.Local
         private void PrintDebugCsv()
         {
@@ -69,6 +52,23 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
                 Console.WriteLine();
             }
+        }
+
+        public EnemyReference GetEnemyReference(TileReference tileReference)
+        {
+            int nIndex = (tileReference.Index - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+            return AllEnemyReferences[nIndex];
+        }
+
+        public EnemyReference GetEnemyReference(int nSprite)
+        {
+            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+            return AllEnemyReferences[nIndex];
+        }
+
+        public EnemyReference GetFriendReference(EnemyReference enemyReference)
+        {
+            return AllEnemyReferences[enemyReference.FriendIndex];
         }
 
         private class AdditionalEnemyFlagList

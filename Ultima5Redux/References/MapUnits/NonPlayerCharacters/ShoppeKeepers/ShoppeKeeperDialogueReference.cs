@@ -92,24 +92,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Decompresses the strings and fills in each compressed word
-        /// </summary>
-        /// <param name="dataOvlReference"></param>
-        private void BuildConversationTable(DataOvlReference dataOvlReference)
-        {
-            IEnumerable<string> rawShoppeStrings = _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData)
-                .GetChunkAsStringList().StringList;
-            CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
-            //int i = 0;
-            foreach (string rawShoppeString in rawShoppeStrings)
-            {
-                string convertedStr =
-                    compressedWordReference.ReplaceRawMerchantStringsWithCompressedWords(rawShoppeString);
-                _merchantStrings.Add(convertedStr);
-            }
-        }
-
         internal int CountReplacementVariables(int nDialogueIndex)
         {
             int freq = Regex.Matches(GetMerchantString(nDialogueIndex), @"[\%\&\$\#\@\*\^\*]").Count;
@@ -140,16 +122,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             string merchantStr = GetMerchantStringWithNoSubstitution(nDialogueIndex);
             return GetMerchantString(merchantStr, nGold, equipmentName, bUseRichText, shoppeKeeperName, shoppeName, tod,
                 nQuantity, genderedAddress, personOfInterest, locationToFindPersonOfInterest);
-        }
-
-        /// <summary>
-        ///     Gets the merchant string before substitutions
-        /// </summary>
-        /// <param name="nDialogueIndex"></param>
-        /// <returns></returns>
-        private string GetMerchantStringWithNoSubstitution(int nDialogueIndex)
-        {
-            return _merchantStrings[nDialogueIndex];
         }
 
         /// <summary>
@@ -195,6 +167,34 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
             _previousRandomSelectionByMin[nMin] = nResponseIndex;
             return nResponseIndex;
+        }
+
+        /// <summary>
+        ///     Decompresses the strings and fills in each compressed word
+        /// </summary>
+        /// <param name="dataOvlReference"></param>
+        private void BuildConversationTable(DataOvlReference dataOvlReference)
+        {
+            IEnumerable<string> rawShoppeStrings = _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData)
+                .GetChunkAsStringList().StringList;
+            CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
+            //int i = 0;
+            foreach (string rawShoppeString in rawShoppeStrings)
+            {
+                string convertedStr =
+                    compressedWordReference.ReplaceRawMerchantStringsWithCompressedWords(rawShoppeString);
+                _merchantStrings.Add(convertedStr);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the merchant string before substitutions
+        /// </summary>
+        /// <param name="nDialogueIndex"></param>
+        /// <returns></returns>
+        private string GetMerchantStringWithNoSubstitution(int nDialogueIndex)
+        {
+            return _merchantStrings[nDialogueIndex];
         }
 
         /// <summary>

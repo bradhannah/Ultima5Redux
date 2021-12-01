@@ -23,13 +23,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         [IgnoreDataMember] public override string BoardXitName => "Board them? You hardly know them!";
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>();
-
-        [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>();
-
         [IgnoreDataMember] public override string FriendlyName => NPCRef.FriendlyName;
 
         /// <summary>
@@ -58,6 +51,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         [IgnoreDataMember] public override bool IsAttackable => true;
 
         [IgnoreDataMember] public override TileReference NonBoardedTileReference => KeyTileReference;
+
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>();
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>();
 
         [JsonConstructor] public NonPlayerCharacter()
         {
@@ -104,6 +104,121 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     Move(MapUnitPosition);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Checks if an NPC is on a stair or ladder, and if it goes in the correct direction then it returns true indicating
+        ///     they can teleport
+        /// </summary>
+        /// <param name="virtualMap"></param>
+        /// <param name="currentTileRef">the tile they are currently on</param>
+        /// <param name="ladderOrStairDirection"></param>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        private bool CheckNpcAndKlimb(VirtualMap virtualMap, TileReference currentTileRef,
+            VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D xy)
+        {
+            // is player on a ladder or staircase going in the direction they intend to go?
+            bool bIsOnStairCaseOrLadder = GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index) ||
+                                          GameReferences.SpriteTileReferences.IsLadder(currentTileRef.Index);
+
+            if (!bIsOnStairCaseOrLadder) return false;
+
+            // are they destined to go up or down it?
+            if (GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index))
+            {
+                if (virtualMap.IsStairGoingUp(xy))
+                    return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
+                return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
+            }
+
+            if (GameReferences.SpriteTileReferences.IsLadderUp(currentTileRef.Index))
+                return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
+            return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
+        }
+
+        private void Move(Point2D xy, int nFloor, TimeOfDay tod)
+        {
+            base.Move(xy, nFloor);
+            UpdateScheduleTracking(tod);
+        }
+
+        private void Move(MapUnitPosition mapUnitPosition, TimeOfDay tod, bool bIsLargeMap)
+        {
+            base.Move(mapUnitPosition);
+            if (!bIsLargeMap) UpdateScheduleTracking(tod);
+        }
+
+        /// <summary>
+        ///     Moves the NPC to the appropriate floor and location based on the their expected location and position
+        /// </summary>
+        private void MoveNpcToDefaultScheduledPosition(TimeOfDay timeOfDay)
+        {
+            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+
+            // the NPC is a non-NPC, so we keep looking
+            if (npcXy.X == 0 && npcXy.Y == 0) return;
+
+            Move(npcXy, timeOfDay, false);
+        }
+
+        private void UpdateScheduleTracking(TimeOfDay tod)
+        {
+            if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod)) ArrivedAtLocation = true;
+
+            int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
+            // it's the first time, so we don't reset the ArrivedAtLocation flag 
+            if (_scheduleIndex == -1)
+            {
+                _scheduleIndex = nCurrentScheduleIndex;
+            }
+            else if (_scheduleIndex != nCurrentScheduleIndex)
+            {
+                _scheduleIndex = nCurrentScheduleIndex;
+                ArrivedAtLocation = false;
+            }
+        }
+
+        /// <summary>
+        ///     Points a character in a random position within a certain number of tiles to their scheduled position
+        /// </summary>
+        /// <param name="virtualMap"></param>
+        /// <param name="timeOfDay"></param>
+        /// <param name="nMaxDistance">max distance character should be from their scheduled position</param>
+        /// <param name="bForceWander">force a wander? if not forced then there is a chance they will not move anywhere</param>
+        /// <returns>the direction they should move</returns>
+        private void WanderWithinN(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMaxDistance,
+            bool bForceWander = false)
+        {
+            Random ran = new Random();
+
+            // 50% of the time we won't even try to move at all
+            int nRan = ran.Next(2);
+            if (nRan == 0 && !bForceWander) return;
+
+            MapUnitPosition mapUnitPosition = MapUnitPosition;
+            MapUnitPosition scheduledPosition = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+
+            // i could get the size dynamically, but that's a waste of CPU cycles
+            Point2D adjustedPosition = virtualMap.GetWanderCharacterPosition(mapUnitPosition.XY, scheduledPosition.XY,
+                nMaxDistance, out MapUnitMovement.MovementCommandDirection direction);
+
+            // check to see if the random direction is within the correct distance
+            if (direction != MapUnitMovement.MovementCommandDirection.None &&
+                !scheduledPosition.XY.IsWithinN(adjustedPosition, nMaxDistance))
+                throw new Ultima5ReduxException(
+                    "GetWanderCharacterPosition has told us to go outside of our expected maximum area");
+            // can we even travel onto the tile?
+            if (!virtualMap.IsTileFreeToTravel(adjustedPosition, true))
+            {
+                if (direction != MapUnitMovement.MovementCommandDirection.None)
+                    throw new Ultima5ReduxException("Was sent to a tile, but it isn't in free in WanderWithinN");
+                // something else is on the tile, so we don't move
+                return;
+            }
+
+            // add the single instruction to the queue
+            Movement.AddNewMovementInstruction(new MovementCommand(direction, 1));
         }
 
         public override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
@@ -352,121 +467,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                         throw new Ultima5ReduxException(
                             $"An unexpected movement AI was encountered: {aiType} for NPC: {NPCRef.Name}");
                 }
-        }
-
-        /// <summary>
-        ///     Checks if an NPC is on a stair or ladder, and if it goes in the correct direction then it returns true indicating
-        ///     they can teleport
-        /// </summary>
-        /// <param name="virtualMap"></param>
-        /// <param name="currentTileRef">the tile they are currently on</param>
-        /// <param name="ladderOrStairDirection"></param>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        private bool CheckNpcAndKlimb(VirtualMap virtualMap, TileReference currentTileRef,
-            VirtualMap.LadderOrStairDirection ladderOrStairDirection, Point2D xy)
-        {
-            // is player on a ladder or staircase going in the direction they intend to go?
-            bool bIsOnStairCaseOrLadder = GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index) ||
-                                          GameReferences.SpriteTileReferences.IsLadder(currentTileRef.Index);
-
-            if (!bIsOnStairCaseOrLadder) return false;
-
-            // are they destined to go up or down it?
-            if (GameReferences.SpriteTileReferences.IsStaircase(currentTileRef.Index))
-            {
-                if (virtualMap.IsStairGoingUp(xy))
-                    return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
-                return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
-            }
-
-            if (GameReferences.SpriteTileReferences.IsLadderUp(currentTileRef.Index))
-                return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
-            return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
-        }
-
-        private void Move(Point2D xy, int nFloor, TimeOfDay tod)
-        {
-            base.Move(xy, nFloor);
-            UpdateScheduleTracking(tod);
-        }
-
-        private void Move(MapUnitPosition mapUnitPosition, TimeOfDay tod, bool bIsLargeMap)
-        {
-            base.Move(mapUnitPosition);
-            if (!bIsLargeMap) UpdateScheduleTracking(tod);
-        }
-
-        /// <summary>
-        ///     Moves the NPC to the appropriate floor and location based on the their expected location and position
-        /// </summary>
-        private void MoveNpcToDefaultScheduledPosition(TimeOfDay timeOfDay)
-        {
-            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
-
-            // the NPC is a non-NPC, so we keep looking
-            if (npcXy.X == 0 && npcXy.Y == 0) return;
-
-            Move(npcXy, timeOfDay, false);
-        }
-
-        private void UpdateScheduleTracking(TimeOfDay tod)
-        {
-            if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod)) ArrivedAtLocation = true;
-
-            int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
-            // it's the first time, so we don't reset the ArrivedAtLocation flag 
-            if (_scheduleIndex == -1)
-            {
-                _scheduleIndex = nCurrentScheduleIndex;
-            }
-            else if (_scheduleIndex != nCurrentScheduleIndex)
-            {
-                _scheduleIndex = nCurrentScheduleIndex;
-                ArrivedAtLocation = false;
-            }
-        }
-
-        /// <summary>
-        ///     Points a character in a random position within a certain number of tiles to their scheduled position
-        /// </summary>
-        /// <param name="virtualMap"></param>
-        /// <param name="timeOfDay"></param>
-        /// <param name="nMaxDistance">max distance character should be from their scheduled position</param>
-        /// <param name="bForceWander">force a wander? if not forced then there is a chance they will not move anywhere</param>
-        /// <returns>the direction they should move</returns>
-        private void WanderWithinN(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMaxDistance,
-            bool bForceWander = false)
-        {
-            Random ran = new Random();
-
-            // 50% of the time we won't even try to move at all
-            int nRan = ran.Next(2);
-            if (nRan == 0 && !bForceWander) return;
-
-            MapUnitPosition mapUnitPosition = MapUnitPosition;
-            MapUnitPosition scheduledPosition = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
-
-            // i could get the size dynamically, but that's a waste of CPU cycles
-            Point2D adjustedPosition = virtualMap.GetWanderCharacterPosition(mapUnitPosition.XY, scheduledPosition.XY,
-                nMaxDistance, out MapUnitMovement.MovementCommandDirection direction);
-
-            // check to see if the random direction is within the correct distance
-            if (direction != MapUnitMovement.MovementCommandDirection.None &&
-                !scheduledPosition.XY.IsWithinN(adjustedPosition, nMaxDistance))
-                throw new Ultima5ReduxException(
-                    "GetWanderCharacterPosition has told us to go outside of our expected maximum area");
-            // can we even travel onto the tile?
-            if (!virtualMap.IsTileFreeToTravel(adjustedPosition, true))
-            {
-                if (direction != MapUnitMovement.MovementCommandDirection.None)
-                    throw new Ultima5ReduxException("Was sent to a tile, but it isn't in free in WanderWithinN");
-                // something else is on the tile, so we don't move
-                return;
-            }
-
-            // add the single instruction to the queue
-            Movement.AddNewMovementInstruction(new MovementCommand(direction, 1));
         }
     }
 }

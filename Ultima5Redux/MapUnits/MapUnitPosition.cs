@@ -19,6 +19,8 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public int Y { get; set; }
 
+        [IgnoreDataMember] private int _floor;
+
         [IgnoreDataMember] public Point2D XY
         {
             get => new Point2D(X, Y);
@@ -28,8 +30,6 @@ namespace Ultima5Redux.MapUnits
                 Y = value.Y;
             }
         }
-
-        [IgnoreDataMember] private int _floor;
 
         [JsonConstructor] public MapUnitPosition()
         {

@@ -48,6 +48,9 @@ namespace Ultima5Redux.DayNightMoon
 
         [DataMember] public ushort Year { get; set; }
 
+        [IgnoreDataMember] private byte _nHour;
+        [IgnoreDataMember] private byte _nMinute;
+
         // ReSharper disable once UnusedMember.Global
         [IgnoreDataMember] public string FormattedDate => Month + "-" + Day + "-" + Year;
 
@@ -75,9 +78,6 @@ namespace Ultima5Redux.DayNightMoon
                 return "evening";
             }
         }
-
-        [IgnoreDataMember] private byte _nHour;
-        [IgnoreDataMember] private byte _nMinute;
 
         [JsonConstructor] private TimeOfDay()
         {

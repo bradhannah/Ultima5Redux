@@ -9,14 +9,20 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         private const int MOONSTONE_SPRITE = 281;
 
+        [DataMember] public MoonPhaseReferences.MoonPhases Phase { get; private set; }
+
+        [IgnoreDataMember] public override string FindDescription => GameReferences.DataOvlRef.StringReferences
+            .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N).TrimEnd();
+
         [IgnoreDataMember] public override bool HideQuantity => true;
 
         [IgnoreDataMember] public override string InventoryReferenceString => Phase.ToString();
 
         [IgnoreDataMember] public override string LongName => Utils.AddSpacesBeforeCaps(Phase.ToString());
 
-        [IgnoreDataMember] public override string FindDescription => GameReferences.DataOvlRef.StringReferences
-            .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N).TrimEnd();
+        [IgnoreDataMember] public override string ShortName => Utils.AddSpacesBeforeCaps(Phase.ToString());
+
+        [IgnoreDataMember] public int MoongateIndex => (int)Phase;
 
         /// <summary>
         ///     If the moonstone is buried, then it's not in your inventory
@@ -28,12 +34,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // filthy hack - if the _moongates is null, then the base constructor has called it and it doesn't matter at that point
             set => GameStateReference.State?.TheMoongates?.SetMoonstoneBuried((int)Phase, value <= 0);
         }
-
-        [IgnoreDataMember] public override string ShortName => Utils.AddSpacesBeforeCaps(Phase.ToString());
-
-        [IgnoreDataMember] public int MoongateIndex => (int)Phase;
-
-        [DataMember] public MoonPhaseReferences.MoonPhases Phase { get; private set; }
 
         [JsonConstructor] private Moonstone()
         {

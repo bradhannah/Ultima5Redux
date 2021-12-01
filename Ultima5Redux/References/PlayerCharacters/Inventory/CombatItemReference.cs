@@ -16,16 +16,22 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public const int BARE_HANDS_INDEX = -2;
 
-        [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
-
-        [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
-
-        [IgnoreDataMember] public virtual bool CanSell => BasePrice > 0;
-
         [DataMember] public int AttackStat { get; private set; }
         [DataMember] public int BasePrice { get; private set; }
         [DataMember] public int DefendStat { get; private set; }
         [DataMember] public string EquipmentName { get; private set; }
+
+        [DataMember] public MissileType Missile { get; private set; }
+        [DataMember] public int Range { get; private set; }
+
+        [DataMember] public int RequiredStrength { get; private set; }
+
+        [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
+        [DataMember] public int Sprite { get; private set; }
+
+        [IgnoreDataMember] private readonly DataOvlReference _dataOvlReference;
+
+        [IgnoreDataMember] public virtual bool CanSell => BasePrice > 0;
 
         [IgnoreDataMember] public bool IsAmmo => SpecificEquipment == DataOvlReference.Equipment.Quarrels ||
                                                  SpecificEquipment == DataOvlReference.Equipment.Arrows;
@@ -47,16 +53,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                                    SpecificEquipment == DataOvlReference.Equipment.Halberd ||
                                    SpecificEquipment == DataOvlReference.Equipment.FlamingOil;
 
-        [DataMember] public MissileType Missile { get; private set; }
-        [DataMember] public int Range { get; private set; }
-
-        [DataMember] public int RequiredStrength { get; private set; }
-        [DataMember] public int Sprite { get; private set; }
-
-        [JsonConstructor] protected CombatItemReference()
-        {
-        }
-
         public CombatItemReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference)
         {
             _dataOvlReference = dataOvlReference;
@@ -73,6 +69,10 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             SpecificEquipment = specificEquipment;
             Sprite = 1;
             InitializePrices();
+        }
+
+        [JsonConstructor] protected CombatItemReference()
+        {
         }
 
         private static int GetAttack(DataOvlReference dataOvlRef, int nIndex)

@@ -1,6 +1,6 @@
-<Patterns xmlns:unity="urn:schemas-jetbrains-com:member-reordering-patterns-unity"
-          xmlns="urn:schemas-jetbrains-com:member-reordering-patterns">
-
+<Patterns
+        xmlns:unity="urn:schemas-jetbrains-com:member-reordering-patterns-unity"
+        xmlns="urn:schemas-jetbrains-com:member-reordering-patterns">
     <!-- Pattern to match classes used by Unity that contain serialised fields and event
          function methods. Based on the standard "Default Pattern", this will also order
          event functions before normal methods, and does not reorder serialised fields,
@@ -9,7 +9,6 @@
         <TypePattern.Match>
             <unity:SerializableClass/>
         </TypePattern.Match>
-
         <Entry DisplayName="Public Delegates" Priority="100">
             <Entry.Match>
                 <And>
@@ -17,7 +16,6 @@
                     <Kind Is="Delegate"/>
                 </And>
             </Entry.Match>
-
             <Entry.SortBy>
                 <Name/>
             </Entry.SortBy>
@@ -27,13 +25,13 @@
                 <Kind Is="Event"/>
             </Entry.Match>
             <Entry.SortBy>
+                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Static/>
                 <Override/>
                 <Abstract/>
                 <Virtual/>
                 <Sealed/>
                 <Name/>
-                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Type/>
                 <Name/>
             </Entry.SortBy>
@@ -49,7 +47,6 @@
                 <Name/>
             </Entry.SortBy>
         </Entry>
-
         <Entry DisplayName="Static Fields and Constants">
             <Entry.Match>
                 <Or>
@@ -60,7 +57,6 @@
                     </And>
                 </Or>
             </Entry.Match>
-
             <Entry.SortBy>
                 <Kind>
                     <Kind.Order>
@@ -70,15 +66,22 @@
                 </Kind>
             </Entry.SortBy>
         </Entry>
-
         <Entry DisplayName="Serialized Fields">
             <Entry.Match>
                 <unity:SerializedField/>
             </Entry.Match>
-
+            <Entry.SortBy>
+                <Access Order="Internal Private Public ProtectedInternal"/>
+                <Readonly/>
+                <Static/>
+                <Override/>
+                <Abstract/>
+                <Virtual/>
+                <Sealed/>
+                <Name/>
+            </Entry.SortBy>
             <!-- No sorting -->
         </Entry>
-
         <Entry DisplayName="Non-serialised Fields">
             <Entry.Match>
                 <And>
@@ -88,8 +91,8 @@
                     </Not>
                 </And>
             </Entry.Match>
-
             <Entry.SortBy>
+                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Readonly/>
                 <Static/>
                 <Override/>
@@ -97,13 +100,10 @@
                 <Virtual/>
                 <Sealed/>
                 <Name/>
-                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Type/>
                 <Name/>
             </Entry.SortBy>
         </Entry>
-
-
         <Entry DisplayName="Properties, Indexers">
             <Entry.Match>
                 <Or>
@@ -112,41 +112,36 @@
                 </Or>
             </Entry.Match>
             <Entry.SortBy>
+                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Static/>
                 <Override/>
                 <Abstract/>
                 <Virtual/>
                 <Sealed/>
                 <Name/>
-                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Type/>
                 <Name/>
-
             </Entry.SortBy>
         </Entry>
-
         <Entry DisplayName="Constructors">
             <Entry.Match>
                 <Kind Is="Constructor"/>
             </Entry.Match>
-
             <Entry.SortBy>
+                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Static/>
                 <Override/>
                 <Abstract/>
                 <Virtual/>
                 <Sealed/>
-                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Type/>
                 <Name/>
             </Entry.SortBy>
         </Entry>
-
         <Entry DisplayName="Event Functions">
             <Entry.Match>
                 <unity:EventFunction/>
             </Entry.Match>
-
             <Entry.SortBy>
                 <!-- Prioritises common event functions. For alphabetical, replace with <Name /> -->
                 <unity:EventFunctionName/>
@@ -157,19 +152,17 @@
                 <Kind Is="Method"/>
             </Entry.Match>
             <Entry.SortBy>
+                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Static/>
                 <Override/>
                 <Abstract/>
                 <Virtual/>
                 <Sealed/>
                 <Name/>
-                <Access Order="Internal Private Public ProtectedInternal"/>
                 <Type/>
                 <Name/>
             </Entry.SortBy>
         </Entry>
-
-
         <Entry DisplayName="Interface Implementations" Priority="100">
             <Entry.Match>
                 <And>
@@ -177,18 +170,18 @@
                     <ImplementsInterface/>
                 </And>
             </Entry.Match>
-
             <Entry.SortBy>
                 <ImplementsInterface Immediate="true"/>
             </Entry.SortBy>
         </Entry>
-
         <Entry DisplayName="All other members"/>
-
         <Entry DisplayName="Nested Types">
             <Entry.Match>
                 <Kind Is="Type"/>
             </Entry.Match>
+            <Entry.SortBy>
+                <Access Order="Internal Private Public ProtectedInternal"/>
+            </Entry.SortBy>
         </Entry>
     </TypePattern>
 </Patterns>

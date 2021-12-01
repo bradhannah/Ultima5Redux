@@ -10,6 +10,24 @@ namespace Ultima5Redux.References
 {
     public static class GameReferences
     {
+
+        private const string GOLD_DIR = @"C:\games\Ultima_5\Gold";
+        private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
+        private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
+
+        private static string U5Directory
+        {
+            get
+            {
+                if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
+                if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
+                if (Directory.Exists(GOLD_DIR)) return GOLD_DIR;
+                throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
+                                                Directory.GetCurrentDirectory() + "\nDirs: " +
+                                                Directory.GetDirectories(Directory.GetCurrentDirectory()));
+            }
+        }
+
         public static CombatItemReferences CombatItemRefs { get; private set; }
 
         public static CombatMapReferences CombatMapRefs { get; private set; }
@@ -47,6 +65,10 @@ namespace Ultima5Redux.References
         /// </summary>
         public static NonPlayerCharacterReferences NpcRefs { get; private set; }
 
+        public static ProvisionReferences ProvisionReferences { get; private set; }
+
+        public static ReagentReferences ReagentReferences { get; private set; }
+
         public static ShoppeKeeperDialogueReference ShoppeKeeperDialogueReference { get; private set; }
         public static ShoppeKeeperReferences ShoppeKeeperRefs { get; private set; }
 
@@ -72,26 +94,6 @@ namespace Ultima5Redux.References
         public static TalkScripts TalkScriptsRef { get; private set; }
 
         public static TileOverrideReferences TileOverrideRefs { get; private set; }
-
-        public static ReagentReferences ReagentReferences { get; private set; }
-        public static ProvisionReferences ProvisionReferences { get; private set; }
-
-        private static string U5Directory
-        {
-            get
-            {
-                if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
-                if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
-                if (Directory.Exists(GOLD_DIR)) return GOLD_DIR;
-                throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
-                                                Directory.GetCurrentDirectory() + "\nDirs: " +
-                                                Directory.GetDirectories(Directory.GetCurrentDirectory()));
-            }
-        }
-
-        private const string GOLD_DIR = @"C:\games\Ultima_5\Gold";
-        private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
-        private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
 
         //=> ;
 
@@ -120,6 +122,5 @@ namespace Ultima5Redux.References
             ReagentReferences = new ReagentReferences();
             ProvisionReferences = new ProvisionReferences();
         }
-
     }
 }

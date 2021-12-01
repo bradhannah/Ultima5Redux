@@ -17,6 +17,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         [DataMember] public List<Helm> Helms { get; private set; } = new List<Helm>();
         [DataMember] public List<Ring> Rings { get; private set; } = new List<Ring>();
 
+        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
+            new Dictionary<DataOvlReference.Equipment, Armour>();
+
         // override to allow for inserting entire lists
         [IgnoreDataMember] public override IEnumerable<InventoryItem> GenericItemList
         {
@@ -29,9 +32,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
                 return itemList;
             }
         }
-
-        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
-            new Dictionary<DataOvlReference.Equipment, Armour>();
 
         [IgnoreDataMember]
         public override Dictionary<ArmourReference.ArmourType, List<Armour>> Items { get; internal set; } =
@@ -49,6 +49,28 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             {
                 AddArmour(armourReference, importedGameState.GetEquipmentQuantity(armourReference.SpecificEquipment));
             }
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            foreach (Armour armour in AllCombatItems.OfType<Armour>())
+            {
+                ArmourReference.ArmourType armourType = armour.ArmourRef.TheArmourType;
+                ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
+                if (!Items.ContainsKey(armourType)) Items.Add(armourType, new List<Armour>());
+                Items[armourType].Add(armour);
+            }
+        }
+
+        [OnSerialized] private void PostSerialize(StreamingContext context)
+        {
+            Items = _savedItems;
+        }
+
+        [OnSerializing] private void PreSerialize(StreamingContext context)
+        {
+            _savedItems = Items;
+            Items = new Dictionary<ArmourReference.ArmourType, List<Armour>>();
         }
 
         private void AddArmour(ArmourReference armourReference, int nQuantity)
@@ -91,28 +113,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             if (equipment == DataOvlReference.Equipment.Nothing) return null;
             return ItemsFromEquipment.ContainsKey(equipment) ? ItemsFromEquipment[equipment] : null;
-        }
-
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            foreach (Armour armour in AllCombatItems.OfType<Armour>())
-            {
-                ArmourReference.ArmourType armourType = armour.ArmourRef.TheArmourType;
-                ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
-                if (!Items.ContainsKey(armourType)) Items.Add(armourType, new List<Armour>());
-                Items[armourType].Add(armour);
-            }
-        }
-
-        [OnSerialized] private void PostSerialize(StreamingContext context)
-        {
-            Items = _savedItems;
-        }
-
-        [OnSerializing] private void PreSerialize(StreamingContext context)
-        {
-            _savedItems = Items;
-            Items = new Dictionary<ArmourReference.ArmourType, List<Armour>>();
         }
     }
 }

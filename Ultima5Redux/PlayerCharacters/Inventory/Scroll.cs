@@ -15,9 +15,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         private const int SCROLL_SPRITE = 260;
-        [IgnoreDataMember] public override string FindDescription => ScrollMagicReference.Spell + " scroll";
-        
+
+        [DataMember] public MagicReference.SpellWords ScrollSpell { get; private set; }
+
         [IgnoreDataMember] public override int BasePrice => 0;
+        [IgnoreDataMember] public override string FindDescription => ScrollMagicReference.Spell + " scroll";
 
         [IgnoreDataMember] public override bool HideQuantity => false;
 
@@ -30,12 +32,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             set => ScrollSpell = value.SpellEnum;
         }
 
-        [DataMember] public MagicReference.SpellWords ScrollSpell { get; private set; }
-
         [JsonConstructor] private Scroll()
         {
         }
-        
+
         public Scroll(MagicReference.SpellWords spell, int quantity, MagicReference scrollMagicReference) : base(
             quantity, SCROLL_SPRITE, InventoryReferences.InventoryReferenceType.Item)
         {

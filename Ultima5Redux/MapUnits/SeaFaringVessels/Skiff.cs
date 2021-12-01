@@ -25,6 +25,10 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.SKIFF_N).Trim();
 
+        public override string FriendlyName => BoardXitName;
+
+        public override bool IsAttackable => false;
+
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>
             {
@@ -36,10 +40,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             };
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
-
-        public override string FriendlyName => BoardXitName;
-
-        public override bool IsAttackable => false;
 
         [JsonConstructor] private Skiff()
         {

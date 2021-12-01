@@ -9,13 +9,9 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public sealed class SmallMap : RegularMap
     {
-        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
-            GameReferences.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
 
         public const int X_TILES = 32;
         public const int Y_TILES = 32;
-        
-        [IgnoreDataMember] protected override bool IsRepeatingMap => false;
 
         [IgnoreDataMember] public override int NumOfXTiles => CurrentSingleMapReference.XTiles;
         [IgnoreDataMember] public override int NumOfYTiles => CurrentSingleMapReference.YTiles;
@@ -23,6 +19,11 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => true;
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
+
+        [IgnoreDataMember] protected override bool IsRepeatingMap => false;
+
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            GameReferences.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
 
         [JsonConstructor] private SmallMap()
         {
@@ -40,6 +41,16 @@ namespace Ultima5Redux.Maps
 
             // load the map into memory
             TheMap = CurrentSingleMapReference.GetDefaultMap();
+
+            InitializeAStarMap(WalkableType.StandardWalking);
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            TheMap = CurrentSingleMapReference.GetDefaultMap();
+
+            // for now combat maps don't have overrides
+            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
             InitializeAStarMap(WalkableType.StandardWalking);
         }
@@ -83,16 +94,6 @@ namespace Ultima5Redux.Maps
                 default:
                     return WalkableType.StandardWalking;
             }
-        }
-
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            TheMap = CurrentSingleMapReference.GetDefaultMap();
-
-            // for now combat maps don't have overrides
-            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
-
-            InitializeAStarMap(WalkableType.StandardWalking);
         }
     }
 }

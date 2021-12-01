@@ -29,14 +29,14 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         private byte CharacterType { get; }
 
         /// <summary>
-        ///     0-31 index of it's position in the NPC arrays (used for saved.gam references)
-        /// </summary>
-        public int DialogIndex { get; }
-
-        /// <summary>
         ///     The Dialog identifier
         /// </summary>
         private byte DialogNumber { get; }
+
+        /// <summary>
+        ///     0-31 index of it's position in the NPC arrays (used for saved.gam references)
+        /// </summary>
+        public int DialogIndex { get; }
 
         /// <summary>
         ///     friendlier version of name in case they are a profession and not named

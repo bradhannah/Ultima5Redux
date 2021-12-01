@@ -18,12 +18,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int SHARD_SPRITE = 436;
 
-        [IgnoreDataMember] public override string FindDescription => Shard.ToString();
-
-        [IgnoreDataMember] public override bool HideQuantity => true;
-
-        [IgnoreDataMember] public override string InventoryReferenceString => Shard.ToString();
-
         [DataMember] public string EquipMessage =>
             Shard switch
             {
@@ -33,12 +27,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-        private static string GetEquipStr(DataOvlReference.ShadowlordStrings shadowlordShard) =>
-            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
-                .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
-            GameReferences.DataOvlRef.StringReferences.GetString(shadowlordShard);
-
         [DataMember] public ShardType Shard { get; private set; }
+
+        [IgnoreDataMember] public override string FindDescription => Shard.ToString();
+
+        [IgnoreDataMember] public override bool HideQuantity => true;
+
+        [IgnoreDataMember] public override string InventoryReferenceString => Shard.ToString();
 
         [JsonConstructor] private ShadowlordShard()
         {
@@ -50,5 +45,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Debug.WriteLine("Shard: " + shardType);
             Shard = shardType;
         }
+
+        private static string GetEquipStr(DataOvlReference.ShadowlordStrings shadowlordShard) =>
+            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
+                .GEM_SHARD_THOU_HOLD_EVIL_SHARD) +
+            GameReferences.DataOvlRef.StringReferences.GetString(shadowlordShard);
     }
 }

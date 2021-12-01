@@ -8,6 +8,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     {
         private enum CombatItemType { Armour, Weapon, Other }
 
+        private readonly Dictionary<DataOvlReference.Equipment, CombatItemReference> _equipmentToCombatItemReference =
+            new Dictionary<DataOvlReference.Equipment, CombatItemReference>();
+
         public readonly List<ArmourReference> AllArmour = new List<ArmourReference>();
         public readonly List<ArmourReference> Amulets = new List<ArmourReference>();
         public readonly List<ArmourReference> ChestArmours = new List<ArmourReference>();
@@ -15,9 +18,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         public readonly List<ArmourReference> Rings = new List<ArmourReference>();
 
         public readonly List<WeaponReference> WeaponReferences = new List<WeaponReference>();
-
-        private readonly Dictionary<DataOvlReference.Equipment, CombatItemReference> _equipmentToCombatItemReference =
-            new Dictionary<DataOvlReference.Equipment, CombatItemReference>();
 
         public CombatItemReferences(InventoryReferences inventoryReferences)
         {
@@ -80,14 +80,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             return false;
         }
 
-        public CombatItemReference GetCombatItemReferenceFromEquipment(DataOvlReference.Equipment equipment)
-        {
-            return _equipmentToCombatItemReference[equipment];
-        }
-
-        public ArmourReference GetArmourReferenceFromEquipment(DataOvlReference.Equipment equipment) =>
-            AllArmour.FirstOrDefault(e => e.SpecificEquipment == equipment);
-
         private static CombatItemType GetCombatItemTypeByEquipment(DataOvlReference.Equipment equipment)
         {
             if (EquipmentMatches(Enum.GetValues(typeof(WeaponReference.WeaponTypeEnum)), ref equipment))
@@ -102,6 +94,14 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 return CombatItemType.Armour;
 
             throw new Ultima5ReduxException("Tried to create CombatItemReference from " + equipment);
+        }
+
+        public ArmourReference GetArmourReferenceFromEquipment(DataOvlReference.Equipment equipment) =>
+            AllArmour.FirstOrDefault(e => e.SpecificEquipment == equipment);
+
+        public CombatItemReference GetCombatItemReferenceFromEquipment(DataOvlReference.Equipment equipment)
+        {
+            return _equipmentToCombatItemReference[equipment];
         }
     }
 }

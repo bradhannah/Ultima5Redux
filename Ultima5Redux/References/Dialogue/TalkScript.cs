@@ -136,37 +136,6 @@ namespace Ultima5Redux.References.Dialogue
         }
 
         /// <summary>
-        ///     Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
-        ///     This is not compatible with Labels
-        /// </summary>
-        /// <param name="talkConst">name, job etc.</param>
-        /// <returns>The corresponding single ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
-        {
-            return _scriptLines[(int)talkConst];
-        }
-
-        /// <summary>
-        ///     Gets a script line based on its index in the overall Script
-        /// </summary>
-        /// <param name="index">index into Script</param>
-        /// <returns>The requested ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(int index)
-        {
-            return _scriptLines[index];
-        }
-
-        /// <summary>
-        ///     Gets a scriptline based on the label index
-        /// </summary>
-        /// <param name="nLabel">0 based index of label</param>
-        /// <returns>The corresponding script line</returns>
-        protected internal ScriptLine GetScriptLineLabel(int nLabel)
-        {
-            return _scriptLines[GetScriptLineLabelIndex(nLabel)];
-        }
-
-        /// <summary>
         ///     Gets the index of the line that contains the given label definition
         /// </summary>
         /// <param name="nLabel">0 based label nunber</param>
@@ -399,15 +368,6 @@ namespace Ultima5Redux.References.Dialogue
         }
 
         /// <summary>
-        ///     Move to the next line in the script (for adding new content)
-        /// </summary>
-        protected internal void NextLine()
-        {
-            _currentScriptLine = new ScriptLine();
-            _scriptLines.Add(_currentScriptLine);
-        }
-
-        /// <summary>
         ///     Prints the script out using all of the advanced ScriptLine, ScriptLabel and ScriptQuestionAnswer(s) objects,
         ///     instead of just text
         /// </summary>
@@ -468,6 +428,46 @@ namespace Ultima5Redux.References.Dialogue
                     }
                 }
             }
+        }
+
+        /// <summary>
+        ///     Get the script line based on the specified Talk Constant allowing to quickly access "name", "job" etc.
+        ///     This is not compatible with Labels
+        /// </summary>
+        /// <param name="talkConst">name, job etc.</param>
+        /// <returns>The corresponding single ScriptLine</returns>
+        protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
+        {
+            return _scriptLines[(int)talkConst];
+        }
+
+        /// <summary>
+        ///     Gets a script line based on its index in the overall Script
+        /// </summary>
+        /// <param name="index">index into Script</param>
+        /// <returns>The requested ScriptLine</returns>
+        protected internal ScriptLine GetScriptLine(int index)
+        {
+            return _scriptLines[index];
+        }
+
+        /// <summary>
+        ///     Gets a scriptline based on the label index
+        /// </summary>
+        /// <param name="nLabel">0 based index of label</param>
+        /// <returns>The corresponding script line</returns>
+        protected internal ScriptLine GetScriptLineLabel(int nLabel)
+        {
+            return _scriptLines[GetScriptLineLabelIndex(nLabel)];
+        }
+
+        /// <summary>
+        ///     Move to the next line in the script (for adding new content)
+        /// </summary>
+        protected internal void NextLine()
+        {
+            _currentScriptLine = new ScriptLine();
+            _scriptLines.Add(_currentScriptLine);
         }
 
         /// <summary>
@@ -598,6 +598,16 @@ namespace Ultima5Redux.References.Dialogue
                 QuestionAnswers = new Dictionary<string, ScriptQuestionAnswer>();
             }
 
+            private string GetQuestionKey(string userSuppliedQuestion)
+            {
+                foreach (string question in QuestionAnswers.Keys)
+                {
+                    if (userSuppliedQuestion.ToLower().StartsWith(question.ToLower())) return question;
+                }
+
+                return string.Empty;
+            }
+
             /// <summary>
             ///     Add a ScriptQuestionAnswer to the collection
             /// </summary>
@@ -630,16 +640,6 @@ namespace Ultima5Redux.References.Dialogue
                         "You have requested an answer for a question that doesn't exist. Use AnswerIsAvailable to check for existence first.");
 
                 return QuestionAnswers[GetQuestionKey(question)];
-            }
-
-            private string GetQuestionKey(string userSuppliedQuestion)
-            {
-                foreach (string question in QuestionAnswers.Keys)
-                {
-                    if (userSuppliedQuestion.ToLower().StartsWith(question.ToLower())) return question;
-                }
-
-                return string.Empty;
             }
 
             /// <summary>

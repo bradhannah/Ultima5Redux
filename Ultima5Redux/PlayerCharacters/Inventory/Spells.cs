@@ -47,8 +47,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             get { return Items.Values.OrderBy(s => s.MinCircle).ThenBy(s => s.LongName).ToList(); }
         }
-        
-        
+
         [JsonConstructor] private Spells()
         {
         }
@@ -61,17 +60,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
         }
 
-        public static string GetLiteralTranslation(string syllable)
-        {
-            return LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
-        }
-
-        public static string GetSpellWordByChar(string spellCharacter)
-        {
-            var hey = LiteralTranslationDictionary.Where(sp => sp.Key.StartsWith(spellCharacter.ToUpper()));
-            return hey.FirstOrDefault().Key;
-        }
-
         private void AddSpell(MagicReference.SpellWords spellWord, int nQuantity)
         {
             if (spellWord == MagicReference.SpellWords.Nox)
@@ -81,6 +69,17 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
 
             Items[spellWord] = new Spell(spellWord, nQuantity);
+        }
+
+        public static string GetLiteralTranslation(string syllable)
+        {
+            return LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
+        }
+
+        public static string GetSpellWordByChar(string spellCharacter)
+        {
+            var hey = LiteralTranslationDictionary.Where(sp => sp.Key.StartsWith(spellCharacter.ToUpper()));
+            return hey.FirstOrDefault().Key;
         }
     }
 }

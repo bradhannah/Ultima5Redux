@@ -38,9 +38,10 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         private const int MAP_BYTE_COUNT = 0x0160;
 
-        public const int NUM_ENEMIES = 16;
         private const int NUM_HARD_CODED_DIRECTIONS = 4;
         private const int NUM_PLAYERS = 6;
+
+        public const int NUM_ENEMIES = 16;
 
         public const int XTILES = 11;
         public const int YTILES = 11;
@@ -57,6 +58,8 @@ namespace Ultima5Redux.References.Maps
         private readonly TileReferences _tileReferences;
 
         public readonly byte[][] TheMap;
+
+        private int TotalDirections => Enum.GetNames(typeof(EntryDirection)).Length;
 
         /// <summary>
         ///     The number of the combat map (order in data file)
@@ -105,8 +108,6 @@ namespace Ultima5Redux.References.Maps
         public bool OtherStart => false;
 
         public bool SpecialEnemyComputation => false;
-
-        private int TotalDirections => Enum.GetNames(typeof(EntryDirection)).Length;
 
         /// <summary>
         ///     Create the reference based on territory and a map number
@@ -296,6 +297,12 @@ namespace Ultima5Redux.References.Maps
             }
         }
 
+        private int GetRawEnemySprite(int nIndex)
+        {
+            Debug.Assert(nIndex < NUM_ENEMIES && nIndex >= 0);
+            return _enemySprites[nIndex];
+        }
+
         public static string GetCsvHeader() =>
             "Index, Name, DungeonLocation, DirEastLeft, DirWestRight, DirNorthUp, DirSouthDown, LaddersUp, LaddersDown, HasTriggers, Notes";
 
@@ -378,12 +385,6 @@ namespace Ultima5Redux.References.Maps
         {
             Debug.Assert((int)entryDirection >= 0 && (int)entryDirection <= TotalDirections);
             return _playerPositionsByDirection[(int)entryDirection];
-        }
-
-        private int GetRawEnemySprite(int nIndex)
-        {
-            Debug.Assert(nIndex < NUM_ENEMIES && nIndex >= 0);
-            return _enemySprites[nIndex];
         }
 
         public bool IsEnterable(EntryDirection entryDirection)

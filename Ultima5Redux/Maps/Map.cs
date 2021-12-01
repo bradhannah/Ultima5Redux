@@ -121,6 +121,50 @@ namespace Ultima5Redux.Maps
             return 'L';
         }
 
+        public AStar GetAStarByMapUnit(MapUnit mapUnit)
+        {
+            WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
+
+            return GetAStarByWalkableType(walkableType);
+        }
+
+        public AStar GetAStarByWalkableType(WalkableType walkableType)
+        {
+            if (!_aStarDictionary.ContainsKey(walkableType))
+            {
+                throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
+                                                GetType());
+            }
+
+            return _aStarDictionary[walkableType];
+        }
+
+        public TileOverrideReference GetTileOverride(Point2D xy)
+        {
+            return XYOverrides[xy];
+        }
+
+        public TileReference GetTileReference(Point2D xy)
+        {
+            if (IsXYOverride(xy))
+                return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
+
+            return GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
+        }
+
+        public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
+
+        public bool IsXYOverride(Point2D xy)
+        {
+            return XYOverrides != null && XYOverrides.ContainsKey(xy);
+        }
+
+        public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
+        {
+            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
+            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
+        }
+
         /// <summary>
         ///     Prints the map in ASCII on the console
         /// </summary>
@@ -171,37 +215,6 @@ namespace Ultima5Redux.Maps
             return bIsWalkable;
         }
 
-        public AStar GetAStarByMapUnit(MapUnit mapUnit)
-        {
-            WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
-
-            return GetAStarByWalkableType(walkableType);
-        }
-
-        public AStar GetAStarByWalkableType(WalkableType walkableType)
-        {
-            if (!_aStarDictionary.ContainsKey(walkableType))
-            {
-                throw new Ultima5ReduxException("Tried to get AStar with walkableType=" + walkableType + " in class " +
-                                                GetType());
-            }
-
-            return _aStarDictionary[walkableType];
-        }
-
-        public TileOverrideReference GetTileOverride(Point2D xy)
-        {
-            return XYOverrides[xy];
-        }
-
-        public TileReference GetTileReference(Point2D xy)
-        {
-            if (IsXYOverride(xy))
-                return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
-
-            return GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
-        }
-
         /// <summary>
         ///     Builds the A* map to be used for NPC pathfinding
         /// </summary>
@@ -236,8 +249,6 @@ namespace Ultima5Redux.Maps
             _aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
         }
 
-        public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
-
         protected bool IsTileWalkable(Point2D xy, WalkableType walkableType)
         {
             if (IsOpenDoor(xy)) return true;
@@ -245,20 +256,9 @@ namespace Ultima5Redux.Maps
             return (IsTileWalkable(tileReference, walkableType));
         }
 
-        public bool IsXYOverride(Point2D xy)
-        {
-            return XYOverrides != null && XYOverrides.ContainsKey(xy);
-        }
-
         protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
         {
             SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
-        }
-
-        public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
-        {
-            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
-            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
         }
 
         #region FLOOD FILL

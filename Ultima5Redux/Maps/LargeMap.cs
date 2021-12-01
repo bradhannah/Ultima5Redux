@@ -34,14 +34,17 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public static int YTiles =>
             TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
-        [IgnoreDataMember] protected override bool IsRepeatingMap => true;
-
         [IgnoreDataMember] public override int NumOfXTiles => XTiles;
         [IgnoreDataMember] public override int NumOfYTiles => YTiles;
 
         [IgnoreDataMember] public override bool ShowOuterSmallMapTiles => false;
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
+
+        [IgnoreDataMember] protected override bool IsRepeatingMap => true;
+
+        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
+            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(_mapChoice);
 
         [JsonConstructor] private LargeMap()
         {
@@ -67,6 +70,12 @@ namespace Ultima5Redux.Maps
             //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
             
             BuildMap(dataDirectory, mapChoice);
+            BuildAStar();
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            BuildMap(_dataDirectory, _mapChoice);
             BuildAStar();
         }
 
@@ -136,6 +145,66 @@ namespace Ultima5Redux.Maps
             return theMap;
         }
 
+        private void BuildAStar()
+        {
+            InitializeAStarMap(WalkableType.StandardWalking);
+            InitializeAStarMap(WalkableType.CombatWater);
+        }
+
+        private void BuildMap(string dataDirectory, Maps mapChoice)
+        {
+            switch (mapChoice)
+            {
+                case Maps.Overworld:
+                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.BRIT_DAT),
+                        Path.Combine(dataDirectory, FileConstants.DATA_OVL), false);
+                    break;
+                case Maps.Underworld:
+                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.UNDER_DAT), "", true);
+                    break;
+                case Maps.Small:
+                    throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
+            }
+        }
+
+        public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
+        {
+            if (XRayMode)
+            {
+                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                return;
+            }
+
+            NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
+
+            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            TestForVisibility = new List<bool[][]>();
+            // reinitialize the array for all potential party members
+            for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
+            {
+                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+            }
+
+            TouchedOuterBorder = false;
+
+            AvatarXyPos = initialFloodFillPosition;
+
+            _topLeftExtent = new Point2D(AvatarXyPos.X - VisibleInEachDirectionOfAvatar,
+                AvatarXyPos.Y - VisibleInEachDirectionOfAvatar);
+            _bottomRightExtent = new Point2D(AvatarXyPos.X + VisibleInEachDirectionOfAvatar,
+                AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
+
+            FloodFillMap(AvatarXyPos, true);
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public void PrintMap()
+        {
+            PrintMapSection(TheMap, 0, 0, 160, 80);
+        }
+
         /// <summary>
         ///     Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
         ///     current extends
@@ -173,74 +242,5 @@ namespace Ultima5Redux.Maps
                     return WalkableType.StandardWalking;
             }
         }
-
-        public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
-        {
-            if (XRayMode)
-            {
-                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
-                return;
-            }
-
-            NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
-
-            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-            TestForVisibility = new List<bool[][]>();
-            // reinitialize the array for all potential party members
-            for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
-            {
-                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-            }
-
-            TouchedOuterBorder = false;
-
-            AvatarXyPos = initialFloodFillPosition;
-
-            _topLeftExtent = new Point2D(AvatarXyPos.X - VisibleInEachDirectionOfAvatar,
-                AvatarXyPos.Y - VisibleInEachDirectionOfAvatar);
-            _bottomRightExtent = new Point2D(AvatarXyPos.X + VisibleInEachDirectionOfAvatar,
-                AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
-
-            FloodFillMap(AvatarXyPos, true);
-        }
-
-        private void BuildAStar()
-        {
-            InitializeAStarMap(WalkableType.StandardWalking);
-            InitializeAStarMap(WalkableType.CombatWater);
-        }
-
-        private void BuildMap(string dataDirectory, Maps mapChoice)
-        {
-            switch (mapChoice)
-            {
-                case Maps.Overworld:
-                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.BRIT_DAT),
-                        Path.Combine(dataDirectory, FileConstants.DATA_OVL), false);
-                    break;
-                case Maps.Underworld:
-                    TheMap = BuildGenericMap(Path.Combine(dataDirectory, FileConstants.UNDER_DAT), "", true);
-                    break;
-                case Maps.Small:
-                    throw new Ultima5ReduxException("tried to create a LargeMap with the .Small map enum");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mapChoice), mapChoice, null);
-            }
-        }
-
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            BuildMap(_dataDirectory, _mapChoice);
-            BuildAStar();
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public void PrintMap()
-        {
-            PrintMapSection(TheMap, 0, 0, 160, 80);
-        }
-
-        public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
-            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(_mapChoice);
     }
 }

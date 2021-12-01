@@ -5,8 +5,6 @@ namespace Ultima5Redux.PlayerCharacters
 {
     [DataContract] public class CharacterStats
     {
-        [IgnoreDataMember] private int _currentHp;
-        [IgnoreDataMember] private PlayerCharacterRecord.CharacterStatus _status;
 
         [DataMember] public int CurrentHp
         {
@@ -15,10 +13,9 @@ namespace Ultima5Redux.PlayerCharacters
         }
 
         [DataMember] public int CurrentMp { get; set; }
-        [DataMember] public int Strength { get; set; }
-        [DataMember] public int Intelligence { get; set; }
         [DataMember] public int Dexterity { get; set; }
         [DataMember] public int ExperiencePoints { get; set; }
+        [DataMember] public int Intelligence { get; set; }
         [DataMember] public int Level { get; set; }
         [DataMember] public int MaximumHp { get; set; }
 
@@ -28,5 +25,8 @@ namespace Ultima5Redux.PlayerCharacters
             set => _status = value;
         }
 
+        [DataMember] public int Strength { get; set; }
+        [IgnoreDataMember] private int _currentHp;
+        [IgnoreDataMember] private PlayerCharacterRecord.CharacterStatus _status;
     }
 }

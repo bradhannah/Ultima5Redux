@@ -27,15 +27,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         private const int REAGENT_SPRITE = 259;
-        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
-
-        // [IgnoreDataMember] private readonly GameState _state;
-        [IgnoreDataMember] public override int BasePrice => 0;
-
-        [IgnoreDataMember] public override bool HideQuantity => false;
-
-        [IgnoreDataMember] public override string InventoryReferenceString => ReagentType.ToString();
-        [IgnoreDataMember] public override bool IsSellable => false;
 
         [DataMember] public override int Quantity
         {
@@ -43,12 +34,21 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             set => base.Quantity = value > MAX_INVENTORY_ITEM_QUANTITY ? MAX_INVENTORY_ITEM_QUANTITY : value;
         }
 
+        [DataMember] public ReagentTypeEnum ReagentType { get; private set; }
+
+        // [IgnoreDataMember] private readonly GameState _state;
+        [IgnoreDataMember] public override int BasePrice => 0;
+        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
+
+        [IgnoreDataMember] public override bool HideQuantity => false;
+
+        [IgnoreDataMember] public override string InventoryReferenceString => ReagentType.ToString();
+        [IgnoreDataMember] public override bool IsSellable => false;
+
         /// <summary>
         ///     Standard index/order of reagents in data files
         /// </summary>
         [IgnoreDataMember] public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
-
-        [DataMember] public ReagentTypeEnum ReagentType { get; private set; }
 
         [JsonConstructor] private Reagent()
         {
@@ -104,8 +104,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return GameReferences.ReagentReferences.GetPriceAndQuantity(location, ReagentType).Quantity;
         }
 
-
-
         /// <summary>
         ///     Does a particular location sell a particular reagent?
         /// </summary>
@@ -115,6 +113,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             return GameReferences.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType);
         }
-
     }
 }

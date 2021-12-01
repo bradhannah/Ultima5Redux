@@ -173,6 +173,28 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 .N_THY_INTEREST_Q_QUOTE);
         }
 
+        public string GetComeLaterResponse()
+        {
+            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP1) +
+                   DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP2);
+        }
+
+        /// <summary>
+        ///     Gets a common response asking if you want to buy the thing
+        /// </summary>
+        /// <returns></returns>
+        public string GetDoYouWantToBuy()
+        {
+            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
+        }
+
+        public bool IsOnDuty(TimeOfDay tod)
+        {
+            // shoppe keepers are open during their 1 and 3 index into their schedule (0 based)
+            int nScheduleIndex = TheShoppeKeeperReference.NpcRef.Schedule.GetScheduleIndex(tod);
+            return nScheduleIndex == 1 || nScheduleIndex == 3;
+        }
+
         /// <summary>
         ///     Quotes the string and adds "says shoppekeeper"
         /// </summary>
@@ -191,21 +213,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         protected string FlattenStr(string str)
         {
             return str.Trim().Replace("\n", " ");
-        }
-
-        public string GetComeLaterResponse()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP1) +
-                   DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP2);
-        }
-
-        /// <summary>
-        ///     Gets a common response asking if you want to buy the thing
-        /// </summary>
-        /// <returns></returns>
-        public string GetDoYouWantToBuy()
-        {
-            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
         }
 
         protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)
@@ -250,13 +257,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             _previousRandomSelectionByChunk[chunkName] = nResponseIndex;
 
             return responses[nResponseIndex];
-        }
-
-        public bool IsOnDuty(TimeOfDay tod)
-        {
-            // shoppe keepers are open during their 1 and 3 index into their schedule (0 based)
-            int nScheduleIndex = TheShoppeKeeperReference.NpcRef.Schedule.GetScheduleIndex(tod);
-            return nScheduleIndex == 1 || nScheduleIndex == 3;
         }
     }
 }

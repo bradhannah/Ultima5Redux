@@ -12,10 +12,10 @@ namespace Ultima5Redux.MapUnits
     /// </summary>
     [DataContract] public class SmallMapCharacterState
     {
-        [DataMember] public bool Active { get; private set; }
-        [DataMember] public int MapUnitAnimationStateIndex { get; private set; }
 
         [DataMember] private int NPCIndex { get; set; }
+        [DataMember] public bool Active { get; private set; }
+        [DataMember] public int MapUnitAnimationStateIndex { get; private set; }
 
         [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new MapUnitPosition();
 

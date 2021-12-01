@@ -15,9 +15,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     public abstract class InventoryItem
     {
         public const int MAX_INVENTORY_ITEM_QUANTITY = 99;
-        [IgnoreDataMember] public abstract string FindDescription { get; }
-
-        [DataMember] public int SpriteNum { get; private set; }
 
         [DataMember] public virtual int Quantity
         {
@@ -28,12 +25,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         //[DataMember] public string InvRefName { get; set; }
         [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; set; }
 
-        [IgnoreDataMember] public InventoryReference InvRef
-        {
-            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InventoryReferenceString); //InvRefName);
-            protected internal set =>
-                InvRefType = value.InvRefType;
-        }
+        [DataMember] public int SpriteNum { get; private set; }
+        [IgnoreDataMember] public abstract string FindDescription { get; }
 
         [IgnoreDataMember] public abstract bool HideQuantity { get; }
 
@@ -54,6 +47,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 if (HideQuantity) return string.Empty;
                 return Quantity == 0 ? "--" : Quantity.ToString();
             }
+        }
+
+        [IgnoreDataMember] public InventoryReference InvRef
+        {
+            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InventoryReferenceString); //InvRefName);
+            protected internal set =>
+                InvRefType = value.InvRefType;
         }
 
         private int _quantity;

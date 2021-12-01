@@ -12,11 +12,11 @@ namespace Ultima5Redux.PlayerCharacters
 {
     [DataContract] public class PlayerCharacterRecords
     {
-        public const int AVATAR_RECORD = 0x00;
         private const byte CHARACTER_OFFSET = 0x20;
-        public const int MAX_PARTY_MEMBERS = 6;
 
         private const int TOTAL_CHARACTER_RECORDS = 16;
+        public const int AVATAR_RECORD = 0x00;
+        public const int MAX_PARTY_MEMBERS = 6;
 
         [DataMember]
         public readonly List<PlayerCharacterRecord> Records = new List<PlayerCharacterRecord>(TOTAL_CHARACTER_RECORDS);
@@ -66,6 +66,52 @@ namespace Ultima5Redux.PlayerCharacters
             if (record == null)
                 throw new Ultima5ReduxException("Adding a member to party resulted in no retrieved record");
             record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
+        }
+
+        public string ApplyRandomCharacterStatusForMixSpell()
+        {
+            string retStr = "";
+            const int MAX_INJURE_AMOUNT = 20;
+
+            void injurePlayer(PlayerCharacterRecord record) =>
+                record.Stats.CurrentHp -= Utils.Ran.Next() % (MAX_INJURE_AMOUNT + 1);
+
+            switch (Utils.Ran.Next() % 4)
+            {
+                case 0:
+                    // poison - the Avatar
+                    retStr = GameReferences.DataOvlRef.StringReferences
+                        .GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N).Trim();
+                    AvatarRecord.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+                    break;
+                case 1:
+                    // Gas - poison the whole party
+                    retStr = "GAS!";
+                    foreach (PlayerCharacterRecord record in Records)
+                    {
+                        record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+                    }
+
+                    break;
+                case 2:
+                    // Acid - hurt the Avatar
+                    retStr = "ACID!";
+                    injurePlayer(AvatarRecord);
+                    break;
+                case 3:
+                    // Bomb - hurt the party
+                    retStr = "BOMB!";
+                    foreach (PlayerCharacterRecord record in Records)
+                    {
+                        injurePlayer(record);
+                    }
+
+                    break;
+                default:
+                    throw new Ultima5ReduxException("EH?");
+            }
+
+            return retStr;
         }
 
         /// <summary>
@@ -240,52 +286,6 @@ namespace Ultima5Redux.PlayerCharacters
 
             Debug.Assert(nPartyMembers > 0 && nPartyMembers <= 6);
             return nPartyMembers;
-        }
-
-        public string ApplyRandomCharacterStatusForMixSpell()
-        {
-            string retStr = "";
-            const int MAX_INJURE_AMOUNT = 20;
-
-            void injurePlayer(PlayerCharacterRecord record) =>
-                record.Stats.CurrentHp -= Utils.Ran.Next() % (MAX_INJURE_AMOUNT + 1);
-
-            switch (Utils.Ran.Next() % 4)
-            {
-                case 0:
-                    // poison - the Avatar
-                    retStr = GameReferences.DataOvlRef.StringReferences
-                        .GetString(DataOvlReference.ExclaimStrings.POISONED_BANG_N).Trim();
-                    AvatarRecord.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
-                    break;
-                case 1:
-                    // Gas - poison the whole party
-                    retStr = "GAS!";
-                    foreach (PlayerCharacterRecord record in Records)
-                    {
-                        record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
-                    }
-
-                    break;
-                case 2:
-                    // Acid - hurt the Avatar
-                    retStr = "ACID!";
-                    injurePlayer(AvatarRecord);
-                    break;
-                case 3:
-                    // Bomb - hurt the party
-                    retStr = "BOMB!";
-                    foreach (PlayerCharacterRecord record in Records)
-                    {
-                        injurePlayer(record);
-                    }
-
-                    break;
-                default:
-                    throw new Ultima5ReduxException("EH?");
-            }
-
-            return retStr;
         }
     }
 }

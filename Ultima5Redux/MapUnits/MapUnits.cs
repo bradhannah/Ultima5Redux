@@ -21,12 +21,12 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember(Name = "InitialMapType")] private Map.Maps _initialMapType;
 
+        [DataMember] private Map.Maps CurrentMapType { get; set; }
+
         [DataMember] public MapUnitCollection CombatMapMapUnitCollection { get; private set; } =
             new MapUnitCollection();
 
         [DataMember] public SmallMapReferences.SingleMapReference.Location CurrentLocation { get; private set; }
-
-        [DataMember] private Map.Maps CurrentMapType { get; set; }
 
         //[DataMember] private SmallMapCharacterStates MapCharacterStates { get; set; }
 
@@ -39,16 +39,6 @@ namespace Ultima5Redux.MapUnits
         [DataMember] public MapUnitCollection UnderworldMapUnitCollection { get; private set; } =
             new MapUnitCollection();
 
-        [IgnoreDataMember] private readonly ImportedGameState _importedGameState;
-
-        [IgnoreDataMember] private readonly MapUnitMovements _importedMovements;
-
-        [IgnoreDataMember] public Avatar AvatarMapUnit => CurrentMapUnits.TheAvatar;
-
-        [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
-
-        [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; set; }
-
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
         /// </summary>
@@ -57,6 +47,16 @@ namespace Ultima5Redux.MapUnits
             get => AvatarMapUnit.MapUnitPosition;
             set => AvatarMapUnit.MapUnitPosition = value;
         }
+
+        [IgnoreDataMember] private readonly ImportedGameState _importedGameState;
+
+        [IgnoreDataMember] private readonly MapUnitMovements _importedMovements;
+
+        [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; set; }
+
+        [IgnoreDataMember] public Avatar AvatarMapUnit => CurrentMapUnits.TheAvatar;
+
+        [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
 
         /// <summary>
         ///     Constructs the collection of all Map CurrentMapUnits in overworld, underworld and current towne
@@ -128,6 +128,39 @@ namespace Ultima5Redux.MapUnits
             MasterAvatarMapUnit = AvatarMapUnit;
         }
 
+        /// <summary>
+        ///     Creates a new Magic Carpet and places it on the map
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="direction"></param>
+        /// <param name="nIndex"></param>
+        /// <returns></returns>
+        // ReSharper disable once UnusedMember.Local
+        internal MagicCarpet CreateMagicCarpet(Point2D xy, Point2D.Direction direction, out int nIndex)
+        {
+            nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
+
+            if (nIndex == -1) return null;
+
+            MagicCarpet magicCarpet =
+                new MagicCarpet(CurrentLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
+
+            AddNewMapUnit(CurrentMapType, magicCarpet, nIndex);
+            return magicCarpet;
+        }
+
+        internal MapUnitCollection GetMapUnitCollection(Map.Maps map)
+        {
+            return map switch
+            {
+                Map.Maps.Small => SmallMapUnitCollection,
+                Map.Maps.Overworld => OverworldMapMapUnitCollection,
+                Map.Maps.Underworld => UnderworldMapUnitCollection,
+                Map.Maps.Combat => CombatMapMapUnitCollection,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
         private int AddCombatMapUnit(CombatMapUnit mapUnit)
         {
             int nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
@@ -170,44 +203,6 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        ///     Clear a current map unit, essentially removing it from the world
-        ///     Commonly used when something is boarded, and collapses into the Avatar himself
-        ///     note: the MapUnit is no longer referenced - but it will often exist within the Avatar
-        ///     object if they have in fact boarded it
-        /// </summary>
-        /// <param name="mapUnitToClear"></param>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        public void ClearAndSetEmptyMapUnits(MapUnit mapUnitToClear)
-        {
-            for (int index = 0; index < CurrentMapUnits.AllMapUnits.Count; index++)
-            {
-                MapUnit mapUnit = CurrentMapUnits.AllMapUnits[index];
-
-                if (mapUnit != mapUnitToClear) continue;
-
-                CurrentMapUnits.AllMapUnits[index] = new EmptyMapUnit();
-                return;
-            }
-
-            throw new Ultima5ReduxException(
-                "You provided a MapUnit to clear, but it is not in the active MapUnit list");
-        }
-
-        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex)
-        {
-            Debug.Assert(CurrentMapType == Map.Maps.Combat);
-            nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
-            if (nIndex == -1) return null;
-
-            Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
-                new MapUnitPosition(xy.X, xy.Y, 0));
-
-            nIndex = AddCombatMapUnit(enemy);
-
-            return enemy;
-        }
-
-        /// <summary>
         ///     Creates a Frigate and places it in on the map
         /// </summary>
         /// <param name="xy"></param>
@@ -231,53 +226,6 @@ namespace Ultima5Redux.MapUnits
 
             AddNewMapUnit(Map.Maps.Overworld, frigate, nIndex);
             return frigate;
-        }
-
-        /// <summary>
-        ///     Creates a new frigate at a dock of a given location
-        /// </summary>
-        /// <param name="location"></param>
-        // ReSharper disable once UnusedMethodReturnValue.Global
-        public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return CreateFrigate(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _, 1);
-        }
-
-        public Horse CreateHorse(MapUnitPosition mapUnitPosition, Map.Maps map, out int nIndex)
-        {
-            nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
-            if (nIndex == -1) return null;
-
-            Horse horse = new Horse(_importedMovements.GetMovement(nIndex), CurrentLocation, Point2D.Direction.Right,
-                null, mapUnitPosition)
-            {
-                MapUnitPosition = mapUnitPosition
-            };
-
-            // set position of frigate in the world
-            AddNewMapUnit(map, horse, nIndex);
-            return horse;
-        }
-
-        /// <summary>
-        ///     Creates a new Magic Carpet and places it on the map
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="direction"></param>
-        /// <param name="nIndex"></param>
-        /// <returns></returns>
-        // ReSharper disable once UnusedMember.Local
-        internal MagicCarpet CreateMagicCarpet(Point2D xy, Point2D.Direction direction, out int nIndex)
-        {
-            nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
-
-            if (nIndex == -1) return null;
-
-            MagicCarpet magicCarpet =
-                new MagicCarpet(CurrentLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
-
-            AddNewMapUnit(CurrentMapType, magicCarpet, nIndex);
-            return magicCarpet;
         }
 
         /// <summary>
@@ -363,17 +311,6 @@ namespace Ultima5Redux.MapUnits
 
             AddNewMapUnit(Map.Maps.Overworld, skiff, nIndex);
             return skiff;
-        }
-
-        /// <summary>
-        ///     Creates a new skiff and places it at a given location
-        /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        // ReSharper disable once UnusedMethodReturnValue.Global
-        public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return CreateSkiff(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _);
         }
 
         /// <summary>
@@ -466,74 +403,6 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        ///     Gets a particular map unit on a tile in a given location
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="xy"></param>
-        /// <param name="nFloor"></param>
-        /// <returns>MapUnit or null if non exist at location</returns>
-        public List<MapUnit> GetMapUnitByLocation(Map.Maps map, Point2D xy, int nFloor)
-        {
-            List<MapUnit> mapUnits = new List<MapUnit>();
-
-            foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllActiveMapUnits)
-            {
-                // sometimes characters are null because they don't exist - and that is OK
-                Debug.Assert(mapUnit.IsActive);
-
-                if (mapUnit.MapUnitPosition.XY == xy && mapUnit.MapUnitPosition.Floor == nFloor)
-                    mapUnits.Add(mapUnit);
-            }
-
-            return mapUnits;
-        }
-
-        internal MapUnitCollection GetMapUnitCollection(Map.Maps map)
-        {
-            return map switch
-            {
-                Map.Maps.Small => SmallMapUnitCollection,
-                Map.Maps.Overworld => OverworldMapMapUnitCollection,
-                Map.Maps.Underworld => UnderworldMapUnitCollection,
-                Map.Maps.Combat => CombatMapMapUnitCollection,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
-
-        public T GetSpecificMapUnitByLocation<T>(Map.Maps map, Point2D xy, int nFloor, bool bCheckBaseToo = false)
-            where T : MapUnit
-        {
-            foreach (T mapUnit in GetMapUnitCollection(map).GetMapUnitByType<T>())
-            {
-                if (mapUnit == null)
-                    throw new Ultima5ReduxException(
-                        "Getting a specific map unit by location, but the list has a null entry");
-                // sometimes characters are null because they don't exist - and that is OK
-                if (!mapUnit.IsActive) continue;
-
-                if (mapUnit.MapUnitPosition.XY == xy &&
-                    mapUnit.MapUnitPosition.Floor == nFloor) //&& mapUnit.MapLocation == location)
-                {
-                    if (bCheckBaseToo && mapUnit.GetType().BaseType == typeof(T)) return mapUnit;
-                    // the map unit is at the right position AND is the correct type
-                    Debug.Assert(mapUnit != null);
-                    if (mapUnit.GetType() == typeof(T)) return mapUnit;
-                }
-            }
-
-            return null;
-        }
-
-        public void InitializeCombatMapReferences()
-        {
-            CombatMapMapUnitCollection.Clear();
-            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
-            {
-                CombatMapMapUnitCollection.Add(new EmptyMapUnit());
-            }
-        }
-
-        /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
         private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
@@ -601,14 +470,6 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public Skiff MakeAndBoardSkiff()
-        {
-            Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int _);
-            AvatarMapUnit.BoardMapUnit(skiff);
-            ClearAndSetEmptyMapUnits(skiff);
-            return skiff;
-        }
-
         /// <summary>
         ///     Force all map units to use or not use extended sprites based on _bUseExtendedSprites field
         /// </summary>
@@ -630,6 +491,145 @@ namespace Ultima5Redux.MapUnits
             {
                 mapUnit.UseFourDirections = _bUseExtendedSprites;
             }
+        }
+
+        /// <summary>
+        ///     Clear a current map unit, essentially removing it from the world
+        ///     Commonly used when something is boarded, and collapses into the Avatar himself
+        ///     note: the MapUnit is no longer referenced - but it will often exist within the Avatar
+        ///     object if they have in fact boarded it
+        /// </summary>
+        /// <param name="mapUnitToClear"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        public void ClearAndSetEmptyMapUnits(MapUnit mapUnitToClear)
+        {
+            for (int index = 0; index < CurrentMapUnits.AllMapUnits.Count; index++)
+            {
+                MapUnit mapUnit = CurrentMapUnits.AllMapUnits[index];
+
+                if (mapUnit != mapUnitToClear) continue;
+
+                CurrentMapUnits.AllMapUnits[index] = new EmptyMapUnit();
+                return;
+            }
+
+            throw new Ultima5ReduxException(
+                "You provided a MapUnit to clear, but it is not in the active MapUnit list");
+        }
+
+        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex)
+        {
+            Debug.Assert(CurrentMapType == Map.Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
+            if (nIndex == -1) return null;
+
+            Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
+                new MapUnitPosition(xy.X, xy.Y, 0));
+
+            nIndex = AddCombatMapUnit(enemy);
+
+            return enemy;
+        }
+
+        /// <summary>
+        ///     Creates a new frigate at a dock of a given location
+        /// </summary>
+        /// <param name="location"></param>
+        // ReSharper disable once UnusedMethodReturnValue.Global
+        public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location)
+        {
+            return CreateFrigate(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _, 1);
+        }
+
+        public Horse CreateHorse(MapUnitPosition mapUnitPosition, Map.Maps map, out int nIndex)
+        {
+            nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
+            if (nIndex == -1) return null;
+
+            Horse horse = new Horse(_importedMovements.GetMovement(nIndex), CurrentLocation, Point2D.Direction.Right,
+                null, mapUnitPosition)
+            {
+                MapUnitPosition = mapUnitPosition
+            };
+
+            // set position of frigate in the world
+            AddNewMapUnit(map, horse, nIndex);
+            return horse;
+        }
+
+        /// <summary>
+        ///     Creates a new skiff and places it at a given location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        // ReSharper disable once UnusedMethodReturnValue.Global
+        public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location)
+        {
+            return CreateSkiff(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _);
+        }
+
+        /// <summary>
+        ///     Gets a particular map unit on a tile in a given location
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="xy"></param>
+        /// <param name="nFloor"></param>
+        /// <returns>MapUnit or null if non exist at location</returns>
+        public List<MapUnit> GetMapUnitByLocation(Map.Maps map, Point2D xy, int nFloor)
+        {
+            List<MapUnit> mapUnits = new List<MapUnit>();
+
+            foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllActiveMapUnits)
+            {
+                // sometimes characters are null because they don't exist - and that is OK
+                Debug.Assert(mapUnit.IsActive);
+
+                if (mapUnit.MapUnitPosition.XY == xy && mapUnit.MapUnitPosition.Floor == nFloor)
+                    mapUnits.Add(mapUnit);
+            }
+
+            return mapUnits;
+        }
+
+        public T GetSpecificMapUnitByLocation<T>(Map.Maps map, Point2D xy, int nFloor, bool bCheckBaseToo = false)
+            where T : MapUnit
+        {
+            foreach (T mapUnit in GetMapUnitCollection(map).GetMapUnitByType<T>())
+            {
+                if (mapUnit == null)
+                    throw new Ultima5ReduxException(
+                        "Getting a specific map unit by location, but the list has a null entry");
+                // sometimes characters are null because they don't exist - and that is OK
+                if (!mapUnit.IsActive) continue;
+
+                if (mapUnit.MapUnitPosition.XY == xy &&
+                    mapUnit.MapUnitPosition.Floor == nFloor) //&& mapUnit.MapLocation == location)
+                {
+                    if (bCheckBaseToo && mapUnit.GetType().BaseType == typeof(T)) return mapUnit;
+                    // the map unit is at the right position AND is the correct type
+                    Debug.Assert(mapUnit != null);
+                    if (mapUnit.GetType() == typeof(T)) return mapUnit;
+                }
+            }
+
+            return null;
+        }
+
+        public void InitializeCombatMapReferences()
+        {
+            CombatMapMapUnitCollection.Clear();
+            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
+            {
+                CombatMapMapUnitCollection.Add(new EmptyMapUnit());
+            }
+        }
+
+        public Skiff MakeAndBoardSkiff()
+        {
+            Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int _);
+            AvatarMapUnit.BoardMapUnit(skiff);
+            ClearAndSetEmptyMapUnits(skiff);
+            return skiff;
         }
 
         /// <summary>

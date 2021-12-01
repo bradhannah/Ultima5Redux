@@ -58,6 +58,20 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         }
 
         /// <summary>
+        ///     Gets merchant response to asking to buy a piece of equipment
+        /// </summary>
+        /// <param name="nEquipmentIndex">index into dialogue array</param>
+        /// <param name="nGold">how much gold will it cost?</param>
+        /// <returns>the complete response string</returns>
+        private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold)
+        {
+            int nDialogueIndex = _equipmentMapToMerchantStrings[nEquipmentIndex];
+            Debug.Assert(nEquipmentIndex >= 0 && nEquipmentIndex <= (int)DataOvlReference.Equipment.SpikedCollar);
+            Debug.Assert(ShoppeKeeperDialogueReference.CountReplacementVariables(nDialogueIndex) == 1);
+            return ShoppeKeeperDialogueReference.GetMerchantString(nDialogueIndex, nGold);
+        }
+
+        /// <summary>
         ///     Gets the listing of all equipment the blacksmith sells
         /// </summary>
         /// <returns></returns>
@@ -117,20 +131,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                     .YES_DONE_SAYS_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
             doneResponse = doneResponse.Replace("Yes", "").TrimStart();
             return doneResponse.Replace("!\"\n", "\"! ");
-        }
-
-        /// <summary>
-        ///     Gets merchant response to asking to buy a piece of equipment
-        /// </summary>
-        /// <param name="nEquipmentIndex">index into dialogue array</param>
-        /// <param name="nGold">how much gold will it cost?</param>
-        /// <returns>the complete response string</returns>
-        private string GetEquipmentBuyingOutput(int nEquipmentIndex, int nGold)
-        {
-            int nDialogueIndex = _equipmentMapToMerchantStrings[nEquipmentIndex];
-            Debug.Assert(nEquipmentIndex >= 0 && nEquipmentIndex <= (int)DataOvlReference.Equipment.SpikedCollar);
-            Debug.Assert(ShoppeKeeperDialogueReference.CountReplacementVariables(nDialogueIndex) == 1);
-            return ShoppeKeeperDialogueReference.GetMerchantString(nDialogueIndex, nGold);
         }
 
         /// <summary>

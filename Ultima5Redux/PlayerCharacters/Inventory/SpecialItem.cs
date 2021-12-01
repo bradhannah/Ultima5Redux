@@ -20,8 +20,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             WoodenBox = 270, Sextant = 256
         }
 
+        [DataMember] public ItemTypeSpriteEnum ItemType { get; private set; }
+
         [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
-        
+
         [IgnoreDataMember] public override bool HideQuantity => ItemType != ItemTypeSpriteEnum.Carpet;
 
         [IgnoreDataMember] public override string InventoryReferenceString => ItemType.ToString();
@@ -29,8 +31,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override bool IsSellable => false;
 
         [IgnoreDataMember] public bool HasOneOfMore => Quantity > 0;
-
-        [DataMember] public ItemTypeSpriteEnum ItemType { get; private set; }
 
         [JsonConstructor] private SpecialItem()
         {

@@ -24,6 +24,12 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.HORSE_N).Trim();
 
+        [IgnoreDataMember] public override string FriendlyName => BoardXitName;
+
+        [IgnoreDataMember] public override bool IsActive => true;
+
+        [IgnoreDataMember] public override bool IsAttackable => false;
+
         [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>
             {
@@ -54,12 +60,6 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Right, "RidingHorseRight" },
                 { Point2D.Direction.Up, "RidingHorseUp" }
             };
-
-        [IgnoreDataMember] public override string FriendlyName => BoardXitName;
-
-        [IgnoreDataMember] public override bool IsActive => true;
-
-        [IgnoreDataMember] public override bool IsAttackable => false;
 
         [JsonConstructor] private Horse()
         {

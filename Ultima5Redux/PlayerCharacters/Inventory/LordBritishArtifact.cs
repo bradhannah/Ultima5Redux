@@ -14,13 +14,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Amulet = 439, Crown = 437, Sceptre = 438
         }
 
-        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
-        [IgnoreDataMember] public override bool HideQuantity => true;
-
-        [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();
-
-        [DataMember] public ArtifactType Artifact { get; private set; }
-
         [DataMember] public string EquipMessage
         {
             get
@@ -34,6 +27,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 };
             }
         }
+
+        [DataMember] public ArtifactType Artifact { get; private set; }
+
+        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
+        [IgnoreDataMember] public override bool HideQuantity => true;
+
+        [IgnoreDataMember] public override string InventoryReferenceString => Artifact.ToString();
 
         [JsonConstructor] private LordBritishArtifact()
         {
@@ -49,6 +49,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             return Quantity != 0;
         }
-
     }
 }

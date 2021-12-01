@@ -12,9 +12,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public abstract class CombatItem : InventoryItem
     {
-        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
-        
+
+        [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
+
         [IgnoreDataMember] public override int BasePrice => TheCombatItemReference.BasePrice;
+        [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
 
         [IgnoreDataMember] public override string InventoryReferenceString =>
             TheCombatItemReference.SpecificEquipment.ToString();
@@ -22,8 +24,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         [IgnoreDataMember] public override string LongName => TheCombatItemReference.EquipmentName;
 
         [IgnoreDataMember] public abstract CharacterEquipped.EquippableSlot EquippableSlot { get; }
-
-        [DataMember] public DataOvlReference.Equipment SpecificEquipment { get; private set; }
 
         [IgnoreDataMember] public CombatItemReference TheCombatItemReference
         {

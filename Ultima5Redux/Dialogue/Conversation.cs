@@ -90,18 +90,6 @@ namespace Ultima5Redux.Dialogue
         }
 
         /// <summary>
-        ///     Add a user response to the queue
-        /// </summary>
-        /// <param name="response">the string response to add</param>
-        public void AddUserResponse(string response)
-        {
-            lock (((ICollection)_responseQueue).SyncRoot)
-            {
-                _responseQueue.Enqueue(response);
-            }
-        }
-
-        /// <summary>
         ///     Just chill out and wait for a response, but we introduce a small sleep so we don't stress out the CPU
         /// </summary>
         /// <returns></returns>
@@ -110,215 +98,6 @@ namespace Ultima5Redux.Dialogue
             while (_responseQueue.Count == 0)
             {
                 await Task.Delay(TimeSpan.FromSeconds(0.1));
-            }
-        }
-
-        /// <summary>
-        ///     Begins the conversation with the NPC.
-        ///     Method will block for input if required.
-        /// </summary>
-        public async Task BeginConversation()
-        {
-            if (EnqueuedScriptItemCallback == null)
-                throw new Ultima5ReduxException(
-                    "Called BeginConversation without declaring a EnqueuedScriptItemCallback.");
-
-            Console.WriteLine(@"---- PRE-CONVERSATION SCRIPT -----");
-            _script.PrintComprehensiveScript();
-
-            Console.WriteLine(@"---- STARTING CONVERSATION -----");
-
-            // when a new section comes up, we can add it and then proceed to the next line by adding it
-            // this is perpetual as long as there is more to see
-            _conversationOrder.Add((int)TalkScript.TalkConstants.Description);
-            _conversationOrder.Add((int)TalkScript.TalkConstants.Greeting);
-            _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Description));
-            _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Greeting));
-
-            // some of these operations can be expensive, so let's call them once and store instead
-            bool npcKnowsAvatar = TheNonPlayerCharacterState.HasMetAvatar;
-
-            // the index into conversationOrder
-            int nConversationIndex = 0;
-
-            // while there are more conversation lines to process
-            while (!ConversationEnded)
-            {
-                // if we do not have any conversation left, then we will prompt for questions
-                ///// NO DIALOG LEFT - USER RESPONDS
-                ///// This will result in processable conversation, so it will just fall through
-                while (nConversationIndex >= _conversationOrder.Count)
-                {
-                    EnqueueToOutputBuffer(
-                        new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_UserInterest));
-                    // we wait patiently for the user to respond
-
-                    await AwaitResponse();
-                    string userResponse = GetResponse();
-
-                    if (userResponse == string.Empty)
-                    {
-                        userResponse = TalkScript.TalkConstants.Bye.ToString().ToLower();
-                    }
-                    // if someone has asked their name then we need to add "My name is " to beginning 
-                    else if (userResponse.ToLower() == "name")
-                    {
-                        TalkScript.ScriptLine scriptLine = new TalkScript.ScriptLine();
-                        scriptLine.AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
-                            GetConversationStr(DataOvlReference.ChunkPhrasesConversation.MY_NAME_IS) + " "));
-                        await ProcessLine(scriptLine);
-                    }
-
-                    if (_script.QuestionAnswers.AnswerIsAvailable(userResponse))
-                    {
-                        // the user asked a question that we recognize, so let's process the answer
-                        await ProcessMultipleLines(
-                            _script.QuestionAnswers.GetQuestionAnswer(userResponse).Answer.SplitIntoSections(), -1);
-                    }
-                    else
-                    {
-                        // we didn't recognize the user input - we will tell them so
-                        TalkScript.ScriptLine unrecognizedLine = new TalkScript.ScriptLine();
-                        unrecognizedLine.AddScriptItem(
-                            new TalkScript.ScriptItem(TalkScript.TalkCommand.UserInputNotRecognized));
-                        await ProcessLine(unrecognizedLine);
-                    }
-
-                    // one of the ProcessLine method calls told us that we are done talking
-                    // this is okay to quit anytime because we have already populated the queues with the final commands
-                    if (ConversationEnded)
-                        return;
-                }
-
-                // the current talk line
-                int nTalkLineIndex = _conversationOrder[nConversationIndex];
-
-                // the current ScriptLine
-                TalkScript.ScriptLine currentLine = _script.GetScriptLine(_conversationOrder[nConversationIndex]);
-                // Split the line into sections. This greatly simplifies the proceeding loops.
-                List<TalkScript.SplitScriptLine> splitLines = currentLine.SplitIntoSections();
-
-                // currentLine = unsplit line with all content
-                // splitLines = a list of all the split up lines
-                // currentSplitLine = current section of the currentLine
-                Debug.Assert(splitLines.Count > 0);
-
-                // If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
-                // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
-                // OR if the Name line contains an IfElseKnowsName (#Eb)
-                if (!npcKnowsAvatar &&
-                    _conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting &&
-                    (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) || _script
-                        .GetScriptLine(TalkScript.TalkConstants.Name)
-                        .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
-                    // randomly add an introduction of the Avatar since they haven't met him
-                    if (Utils.OneInXOdds(2)) // || true)
-                        // okay, tell them who you are
-                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
-                            "\nI am called " + TheNonPlayerCharacterState.NPCRef.Name));
-
-                // if in label && next line include <AvatarName>, then skip label
-                const int StartingIndexForLabel = 0;
-
-                ///// IT'S A LABEL
-                // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
-                if (splitLines[StartingIndexForLabel].IsLabelDefinition())
-                {
-                    Debug.Assert(splitLines[StartingIndexForLabel].NumberOfScriptItems == 2,
-                        "If it is a label definition, then it must have only 2 items defined in it");
-                    int nLabel = splitLines[StartingIndexForLabel].GetScriptItem(1).LabelNum;
-                    Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS - 1,
-                        "Label number must be between 0 and 9");
-
-                    // get the label object
-                    TalkScript.ScriptTalkLabel scriptLabel = _script.TalkLabels.GetScriptLabel(nLabel);
-
-                    // Sept 23, 2019 - if we are in a label, but don't know the Avatar's name, then we just move on
-                    // if we don't then (#Eb) can expect an answer to a question that we never show the user because
-                    // they don't know the Avatar
-                    if (scriptLabel.InitialLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npcKnowsAvatar)
-                    {
-                        nConversationIndex++;
-                        continue;
-                    }
-
-                    // we ar going through each of the line sections, but are skipping the first one since we know it is just a label
-                    // definition
-                    await ProcessMultipleLines(scriptLabel.InitialLine.SplitIntoSections(), nTalkLineIndex);
-
-                    string userResponse;
-                    if (scriptLabel.ContainsQuestions())
-                    {
-                        int nTimes = 0;
-                        do
-                        {
-                            // need to figure out if we are going to ask a question...
-                            if (nTimes++ == 0)
-                            {
-                                EnqueueToOutputBuffer(
-                                    new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
-                            }
-                            else
-                            {
-                                EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
-                                    GetConversationStr(DataOvlReference.ChunkPhrasesConversation
-                                        .WHAT_YOU_SAY))); //"What didst thou say?"));
-                                EnqueueToOutputBuffer(
-                                    new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
-                            }
-                            // we wait patiently for the user to respond
-
-                            await AwaitResponse();
-                            userResponse = GetResponse();
-                        } while (userResponse == string.Empty);
-                    }
-                    else
-                    {
-                        // is there an actual answer to the question?
-                        // if not, then we have already processed our dialog line, let's move onto the next dialog item
-                        nConversationIndex++;
-                        continue;
-                    }
-
-                    // There is an answer available from the NPC
-                    if (scriptLabel.QuestionAnswers.AnswerIsAvailable(userResponse))
-                    {
-                        // let's get the answer details including the ScriptLine that will follow
-                        TalkScript.ScriptQuestionAnswer qa =
-                            scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
-                        // TalkScript.ScriptLine npcResponseLine = qa.Answer;
-
-                        await ProcessMultipleLines(qa.Answer.SplitIntoSections(), nTalkLineIndex);
-                    }
-                    else // you have entered an answer that isn't in their dialog - so default answer
-                    {
-                        // Process default response
-                        foreach (TalkScript.ScriptLine defaultLine in scriptLabel.DefaultAnswers)
-                        {
-                            await ProcessMultipleLines(defaultLine.SplitIntoSections(), nTalkLineIndex);
-                        }
-                    }
-                }
-                else // it's not a label NOR is a question and answer section
-                    // it's just a simple text section (probably from the description or greeting)
-                {
-                    await ProcessMultipleLines(splitLines, nTalkLineIndex);
-                }
-
-                // we have gone through all instructions, so lets move onto the next conversation line
-                nConversationIndex++;
-            }
-        }
-
-        /// <summary>
-        ///     Remove a ScriptItem from the output buffer (typically called by outside process ie. World)
-        /// </summary>
-        /// <returns>The next ScripItem</returns>
-        public TalkScript.ScriptItem DequeueFromOutputBuffer()
-        {
-            lock (((ICollection)_outputBufferQueue).SyncRoot)
-            {
-                return _outputBufferQueue.Dequeue();
             }
         }
 
@@ -333,20 +112,6 @@ namespace Ultima5Redux.Dialogue
                 _outputBufferQueue.Enqueue(output);
                 EnqueuedScriptItemCallback(this);
             }
-        }
-
-        /// <summary>
-        ///     Quick method to return a pre-defined conversation string from Data.ovl
-        /// </summary>
-        /// <param name="index">index into string array (use DataOvlReference.CHUNK__PHRASES_CONVERSATION)</param>
-        /// <returns>associated string</returns>
-        public string GetConversationStr(DataOvlReference.ChunkPhrasesConversation index)
-        {
-            char[] trimChars = { '"' };
-            string convStr = GameReferences.DataOvlRef
-                .GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index).Trim();
-            convStr = convStr.Trim(trimChars);
-            return convStr;
         }
 
         /// <summary>
@@ -630,6 +395,241 @@ namespace Ultima5Redux.Dialogue
                     throw new Ultima5ReduxException("Passed in an unsupported TalkCommand: " + item.Command +
                                                     " to the TextProcessItem method");
             }
+        }
+
+        /// <summary>
+        ///     Add a user response to the queue
+        /// </summary>
+        /// <param name="response">the string response to add</param>
+        public void AddUserResponse(string response)
+        {
+            lock (((ICollection)_responseQueue).SyncRoot)
+            {
+                _responseQueue.Enqueue(response);
+            }
+        }
+
+        /// <summary>
+        ///     Begins the conversation with the NPC.
+        ///     Method will block for input if required.
+        /// </summary>
+        public async Task BeginConversation()
+        {
+            if (EnqueuedScriptItemCallback == null)
+                throw new Ultima5ReduxException(
+                    "Called BeginConversation without declaring a EnqueuedScriptItemCallback.");
+
+            Console.WriteLine(@"---- PRE-CONVERSATION SCRIPT -----");
+            _script.PrintComprehensiveScript();
+
+            Console.WriteLine(@"---- STARTING CONVERSATION -----");
+
+            // when a new section comes up, we can add it and then proceed to the next line by adding it
+            // this is perpetual as long as there is more to see
+            _conversationOrder.Add((int)TalkScript.TalkConstants.Description);
+            _conversationOrder.Add((int)TalkScript.TalkConstants.Greeting);
+            _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Description));
+            _conversationOrderScriptLines.Add(_script.GetScriptLine(TalkScript.TalkConstants.Greeting));
+
+            // some of these operations can be expensive, so let's call them once and store instead
+            bool npcKnowsAvatar = TheNonPlayerCharacterState.HasMetAvatar;
+
+            // the index into conversationOrder
+            int nConversationIndex = 0;
+
+            // while there are more conversation lines to process
+            while (!ConversationEnded)
+            {
+                // if we do not have any conversation left, then we will prompt for questions
+                ///// NO DIALOG LEFT - USER RESPONDS
+                ///// This will result in processable conversation, so it will just fall through
+                while (nConversationIndex >= _conversationOrder.Count)
+                {
+                    EnqueueToOutputBuffer(
+                        new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_UserInterest));
+                    // we wait patiently for the user to respond
+
+                    await AwaitResponse();
+                    string userResponse = GetResponse();
+
+                    if (userResponse == string.Empty)
+                    {
+                        userResponse = TalkScript.TalkConstants.Bye.ToString().ToLower();
+                    }
+                    // if someone has asked their name then we need to add "My name is " to beginning 
+                    else if (userResponse.ToLower() == "name")
+                    {
+                        TalkScript.ScriptLine scriptLine = new TalkScript.ScriptLine();
+                        scriptLine.AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
+                            GetConversationStr(DataOvlReference.ChunkPhrasesConversation.MY_NAME_IS) + " "));
+                        await ProcessLine(scriptLine);
+                    }
+
+                    if (_script.QuestionAnswers.AnswerIsAvailable(userResponse))
+                    {
+                        // the user asked a question that we recognize, so let's process the answer
+                        await ProcessMultipleLines(
+                            _script.QuestionAnswers.GetQuestionAnswer(userResponse).Answer.SplitIntoSections(), -1);
+                    }
+                    else
+                    {
+                        // we didn't recognize the user input - we will tell them so
+                        TalkScript.ScriptLine unrecognizedLine = new TalkScript.ScriptLine();
+                        unrecognizedLine.AddScriptItem(
+                            new TalkScript.ScriptItem(TalkScript.TalkCommand.UserInputNotRecognized));
+                        await ProcessLine(unrecognizedLine);
+                    }
+
+                    // one of the ProcessLine method calls told us that we are done talking
+                    // this is okay to quit anytime because we have already populated the queues with the final commands
+                    if (ConversationEnded)
+                        return;
+                }
+
+                // the current talk line
+                int nTalkLineIndex = _conversationOrder[nConversationIndex];
+
+                // the current ScriptLine
+                TalkScript.ScriptLine currentLine = _script.GetScriptLine(_conversationOrder[nConversationIndex]);
+                // Split the line into sections. This greatly simplifies the proceeding loops.
+                List<TalkScript.SplitScriptLine> splitLines = currentLine.SplitIntoSections();
+
+                // currentLine = unsplit line with all content
+                // splitLines = a list of all the split up lines
+                // currentSplitLine = current section of the currentLine
+                Debug.Assert(splitLines.Count > 0);
+
+                // If an AvatarsName is used in conversation, then we may need to process additional logic or ignore the line altogether
+                // if it's a greeting AND her greeting includes my name AND they have NOT yet met the avatar  
+                // OR if the Name line contains an IfElseKnowsName (#Eb)
+                if (!npcKnowsAvatar &&
+                    _conversationOrder[nConversationIndex] == (int)TalkScript.TalkConstants.Greeting &&
+                    (currentLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) || _script
+                        .GetScriptLine(TalkScript.TalkConstants.Name)
+                        .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
+                    // randomly add an introduction of the Avatar since they haven't met him
+                    if (Utils.OneInXOdds(2)) // || true)
+                        // okay, tell them who you are
+                        EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
+                            "\nI am called " + TheNonPlayerCharacterState.NPCRef.Name));
+
+                // if in label && next line include <AvatarName>, then skip label
+                const int StartingIndexForLabel = 0;
+
+                ///// IT'S A LABEL
+                // if we have just begun a label section, then let's handle it slightly difference then the normal conversation
+                if (splitLines[StartingIndexForLabel].IsLabelDefinition())
+                {
+                    Debug.Assert(splitLines[StartingIndexForLabel].NumberOfScriptItems == 2,
+                        "If it is a label definition, then it must have only 2 items defined in it");
+                    int nLabel = splitLines[StartingIndexForLabel].GetScriptItem(1).LabelNum;
+                    Debug.Assert(nLabel >= 0 && nLabel <= TalkScript.TOTAL_LABELS - 1,
+                        "Label number must be between 0 and 9");
+
+                    // get the label object
+                    TalkScript.ScriptTalkLabel scriptLabel = _script.TalkLabels.GetScriptLabel(nLabel);
+
+                    // Sept 23, 2019 - if we are in a label, but don't know the Avatar's name, then we just move on
+                    // if we don't then (#Eb) can expect an answer to a question that we never show the user because
+                    // they don't know the Avatar
+                    if (scriptLabel.InitialLine.ContainsCommand(TalkScript.TalkCommand.AvatarsName) && !npcKnowsAvatar)
+                    {
+                        nConversationIndex++;
+                        continue;
+                    }
+
+                    // we ar going through each of the line sections, but are skipping the first one since we know it is just a label
+                    // definition
+                    await ProcessMultipleLines(scriptLabel.InitialLine.SplitIntoSections(), nTalkLineIndex);
+
+                    string userResponse;
+                    if (scriptLabel.ContainsQuestions())
+                    {
+                        int nTimes = 0;
+                        do
+                        {
+                            // need to figure out if we are going to ask a question...
+                            if (nTimes++ == 0)
+                            {
+                                EnqueueToOutputBuffer(
+                                    new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
+                            }
+                            else
+                            {
+                                EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
+                                    GetConversationStr(DataOvlReference.ChunkPhrasesConversation
+                                        .WHAT_YOU_SAY))); //"What didst thou say?"));
+                                EnqueueToOutputBuffer(
+                                    new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
+                            }
+                            // we wait patiently for the user to respond
+
+                            await AwaitResponse();
+                            userResponse = GetResponse();
+                        } while (userResponse == string.Empty);
+                    }
+                    else
+                    {
+                        // is there an actual answer to the question?
+                        // if not, then we have already processed our dialog line, let's move onto the next dialog item
+                        nConversationIndex++;
+                        continue;
+                    }
+
+                    // There is an answer available from the NPC
+                    if (scriptLabel.QuestionAnswers.AnswerIsAvailable(userResponse))
+                    {
+                        // let's get the answer details including the ScriptLine that will follow
+                        TalkScript.ScriptQuestionAnswer qa =
+                            scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
+                        // TalkScript.ScriptLine npcResponseLine = qa.Answer;
+
+                        await ProcessMultipleLines(qa.Answer.SplitIntoSections(), nTalkLineIndex);
+                    }
+                    else // you have entered an answer that isn't in their dialog - so default answer
+                    {
+                        // Process default response
+                        foreach (TalkScript.ScriptLine defaultLine in scriptLabel.DefaultAnswers)
+                        {
+                            await ProcessMultipleLines(defaultLine.SplitIntoSections(), nTalkLineIndex);
+                        }
+                    }
+                }
+                else // it's not a label NOR is a question and answer section
+                    // it's just a simple text section (probably from the description or greeting)
+                {
+                    await ProcessMultipleLines(splitLines, nTalkLineIndex);
+                }
+
+                // we have gone through all instructions, so lets move onto the next conversation line
+                nConversationIndex++;
+            }
+        }
+
+        /// <summary>
+        ///     Remove a ScriptItem from the output buffer (typically called by outside process ie. World)
+        /// </summary>
+        /// <returns>The next ScripItem</returns>
+        public TalkScript.ScriptItem DequeueFromOutputBuffer()
+        {
+            lock (((ICollection)_outputBufferQueue).SyncRoot)
+            {
+                return _outputBufferQueue.Dequeue();
+            }
+        }
+
+        /// <summary>
+        ///     Quick method to return a pre-defined conversation string from Data.ovl
+        /// </summary>
+        /// <param name="index">index into string array (use DataOvlReference.CHUNK__PHRASES_CONVERSATION)</param>
+        /// <returns>associated string</returns>
+        public string GetConversationStr(DataOvlReference.ChunkPhrasesConversation index)
+        {
+            char[] trimChars = { '"' };
+            string convStr = GameReferences.DataOvlRef
+                .GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index).Trim();
+            convStr = convStr.Trim(trimChars);
+            return convStr;
         }
     }
 }

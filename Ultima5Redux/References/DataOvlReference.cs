@@ -12,8 +12,6 @@ namespace Ultima5Redux.References
     /// </summary>
     public class DataOvlReference
     {
-
-        public string DataDirectory { get; }
         //     [0] = {string} "Failed!\n"
         // [1] = {string} " missed!\n"
         // [2] = {string} " possessed!\n"
@@ -990,6 +988,8 @@ namespace Ultima5Redux.References
         ///     All the data chunks
         /// </summary>
         private readonly DataChunks<DataChunkName> _dataChunks;
+
+        public string DataDirectory { get; }
 
         public U5StringRef StringReferences { get; }
 

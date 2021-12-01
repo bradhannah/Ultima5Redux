@@ -32,7 +32,7 @@ namespace Ultima5Redux.DayNightMoon
         [JsonConstructor] private Moongates()
         {
         }
-        
+
         /// <summary>
         ///     Constructor. Built with DataChunk references from save file
         /// </summary>

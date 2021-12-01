@@ -12,6 +12,8 @@ namespace Ultima5Redux.Maps
 
         private const int CHARS_PER_LINE = 16;
 
+        private string RawSignText { get; }
+
         /// <summary>
         ///     Floor of location
         /// </summary>
@@ -27,8 +29,6 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int Offset { get; }
-
-        private string RawSignText { get; }
 
         /// <summary>
         ///     Actual text of sign
@@ -72,22 +72,6 @@ namespace Ultima5Redux.Maps
             Y = y;
             RawSignText = signText;
             Offset = nOffset;
-        }
-
-        public static SignType GetSignTypeByIndex(int nIndex)
-        {
-            switch ((SignType)nIndex)
-            {
-                case SignType.SmallSign:
-                case SignType.BigSign:
-                case SignType.Tombstone:
-                case SignType.Cross:
-                case SignType.Warning:
-                    return (SignType)nIndex;
-                default:
-                    throw new Ultima5ReduxException("Asked for Sign with index=" + nIndex +
-                                                    " but that isn't a sign index");
-            }
         }
 
         private static string ScrubSignText(byte[] signBytes)
@@ -166,6 +150,22 @@ namespace Ultima5Redux.Maps
             }
 
             return trimmedStr.Trim();
+        }
+
+        public static SignType GetSignTypeByIndex(int nIndex)
+        {
+            switch ((SignType)nIndex)
+            {
+                case SignType.SmallSign:
+                case SignType.BigSign:
+                case SignType.Tombstone:
+                case SignType.Cross:
+                case SignType.Warning:
+                    return (SignType)nIndex;
+                default:
+                    throw new Ultima5ReduxException("Asked for Sign with index=" + nIndex +
+                                                    " but that isn't a sign index");
+            }
         }
 
         /// <summary>

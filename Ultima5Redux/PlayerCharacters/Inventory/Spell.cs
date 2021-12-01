@@ -19,6 +19,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int SPRITE_NUM = 260;
 
+        [DataMember] private bool _memorizedSpell;
+
+        [DataMember] public MagicReference.SpellWords SpellIncantation { get; private set; }
+
         [IgnoreDataMember] public override string FindDescription => SpellMagicReference.Spell;
 
         [IgnoreDataMember] public override bool HideQuantity => false;
@@ -26,14 +30,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override string InventoryReferenceString => SpellIncantation.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
 
+        [IgnoreDataMember] public bool IsMemorized => Quantity > 0 || _memorizedSpell;
+
         [IgnoreDataMember] public int MinCircle => SpellMagicReference.Circle;
 
-        [DataMember] public MagicReference.SpellWords SpellIncantation { get; private set; }
-
-        [DataMember] private bool _memorizedSpell;
-
-        [IgnoreDataMember] public bool IsMemorized => Quantity > 0 || _memorizedSpell;
-        
         [IgnoreDataMember] public MagicReference SpellMagicReference =>
             GameReferences.MagicRefs.GetMagicReference(SpellIncantation);
 
@@ -47,8 +47,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             SpellIncantation = spellWord;
         }
 
-        public void LearnSpell() => _memorizedSpell = true;
-        
         public string GetLiteralTranslation()
         {
             string[] spellStrs = SpellIncantation.ToString().Split('_'); // .Replace('_', ' ');
@@ -60,5 +58,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
             return sb.ToString().TrimEnd();
         }
+
+        public void LearnSpell() => _memorizedSpell = true;
     }
 }

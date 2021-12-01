@@ -101,13 +101,6 @@ namespace Ultima5Redux.MapUnits
         {
         }
 
-        public void Add(MapUnit mapUnit)
-        {
-            AllMapUnits.Add(mapUnit);
-        }
-
-        public void Clear() => AllMapUnits.Clear();
-
         internal List<T> GetMapUnitByType<T>() where T : MapUnit
         {
             return AllMapUnits.OfType<T>().ToList();
@@ -123,5 +116,12 @@ namespace Ultima5Redux.MapUnits
             AllMapUnits.RemoveAll(item => item is T);
             AllMapUnits.AddRange(newMapUnits);
         }
+
+        public void Add(MapUnit mapUnit)
+        {
+            AllMapUnits.Add(mapUnit);
+        }
+
+        public void Clear() => AllMapUnits.Clear();
     }
 }

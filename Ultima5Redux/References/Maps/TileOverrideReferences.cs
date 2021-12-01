@@ -35,17 +35,6 @@ namespace Ultima5Redux.References.Maps
                 : _tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
                     .Where(tile => nFloor == tile.Position.Floor).ToList();
 
-        public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>
-            GetTileOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum, 0);
-
-        /// <summary>
-        ///     Gets all tile overrides by a single map location (which includes a single floor)
-        /// </summary>
-        /// <param name="singleMapReference"></param>
-        /// <returns>a list of TileOverride object, can be empty, but never null</returns>
-        public List<TileOverrideReference> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference) =>
-            GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
-
         private Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
             int nFloor)
         {
@@ -66,6 +55,25 @@ namespace Ultima5Redux.References.Maps
             return tileOverrideList;
         }
 
+        private bool TileOverrideExists(AllTerritories territory, int nMapNumber, int nFloor)
+        {
+            if (!_tileOverrides.ContainsKey(territory)) return false;
+            if (!_tileOverrides[territory].Exists(s => s.MapNumber == nMapNumber)) return false;
+            return (_tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
+                .FirstOrDefault(tileOverride => nFloor == tileOverride.Position.Floor) != null);
+        }
+
+        public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>
+            GetTileOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum, 0);
+
+        /// <summary>
+        ///     Gets all tile overrides by a single map location (which includes a single floor)
+        /// </summary>
+        /// <param name="singleMapReference"></param>
+        /// <returns>a list of TileOverride object, can be empty, but never null</returns>
+        public List<TileOverrideReference> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference) =>
+            GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
+
         public Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(
             SmallMapReferences.SingleMapReference singleMapReference) => GetTileXYOverrides(
             GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
@@ -74,13 +82,5 @@ namespace Ultima5Redux.References.Maps
             SingleCombatMapReference singleCombatMapReference) =>
             GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum,
                 0);
-
-        private bool TileOverrideExists(AllTerritories territory, int nMapNumber, int nFloor)
-        {
-            if (!_tileOverrides.ContainsKey(territory)) return false;
-            if (!_tileOverrides[territory].Exists(s => s.MapNumber == nMapNumber)) return false;
-            return (_tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
-                .FirstOrDefault(tileOverride => nFloor == tileOverride.Position.Floor) != null);
-        }
     }
 }

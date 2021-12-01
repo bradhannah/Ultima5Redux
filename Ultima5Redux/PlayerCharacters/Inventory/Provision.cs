@@ -20,6 +20,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
         }
 
+        [DataMember] public ProvisionTypeEnum ProvisionType { get; private set; }
+        [IgnoreDataMember] public override bool HideQuantity => false;
+
+        [IgnoreDataMember] public override string InventoryReferenceString => ProvisionType.ToString();
+
+        [IgnoreDataMember] public int BundleQuantity =>
+            GameReferences.ProvisionReferences.GetBundleQuantity(ProvisionType);
+
         public override string FindDescription
         {
             get
@@ -42,14 +50,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 };
             }
         }
-        [IgnoreDataMember] public override bool HideQuantity => false;
-
-        [IgnoreDataMember] public override string InventoryReferenceString => ProvisionType.ToString();
-
-        [IgnoreDataMember] public int BundleQuantity =>
-            GameReferences.ProvisionReferences.GetBundleQuantity(ProvisionType);
-
-        [DataMember] public ProvisionTypeEnum ProvisionType { get; private set; }
 
         [JsonConstructor] private Provision()
         {
@@ -90,6 +90,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             //_state.CharacterRecords.AvatarRecord.Stats.Intelligence * (int)(nBasePrice * 0.015f);
             return nAdjustedPrice;
         }
-
     }
 }

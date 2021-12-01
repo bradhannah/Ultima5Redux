@@ -21,7 +21,7 @@ namespace Ultima5Redux.MapUnits
         {
             Debug.Assert(true, "If you are deserializing then a mistake was made");
         }
-        
+
         public SmallMapCharacterStates(DataChunk charStatesDataChunk)
         {
             DataChunk dataChunk = charStatesDataChunk;

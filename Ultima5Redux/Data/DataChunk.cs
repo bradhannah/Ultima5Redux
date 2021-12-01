@@ -199,11 +199,6 @@ namespace Ultima5Redux.Data
         private int DataLength { get; }
 
         /// <summary>
-        ///     A brief description of the data chunk
-        /// </summary>
-        public string Description { get; }
-
-        /// <summary>
         ///     The offset used when getting the RawData
         /// </summary>
         private int FileOffset { get; }
@@ -217,6 +212,11 @@ namespace Ultima5Redux.Data
         ///     The adjustment value for bytes and UINT16
         /// </summary>
         private byte ValueModifier { get; }
+
+        /// <summary>
+        ///     A brief description of the data chunk
+        /// </summary>
+        public string Description { get; }
 
         /// <summary>
         ///     Construct a data chunk
@@ -244,6 +244,22 @@ namespace Ultima5Redux.Data
                 _fullRawData = rawData;
         }
 
+        private static List<string> GetAsStringListFromIndexes(IReadOnlyCollection<ushort> indexList,
+            List<byte> rawByteList)
+        {
+            List<string> strList = new List<string>(indexList.Count);
+            const int MaxStrLength = 20;
+
+            foreach (ushort index in indexList)
+            {
+                // we grab the strings from the fullRawData because it is the entire file
+                strList.Add(CreateDataChunk(DataFormatType.SimpleString, string.Empty, rawByteList, index, MaxStrLength)
+                    .GetChunkAsString());
+            }
+
+            return strList;
+        }
+
         /// <summary>
         ///     Statically create a DataChunk
         ///     Handy for quick and dirty variable extraction
@@ -259,22 +275,6 @@ namespace Ultima5Redux.Data
         {
             DataChunk dataChunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
             return dataChunk;
-        }
-
-        private static List<string> GetAsStringListFromIndexes(IReadOnlyCollection<ushort> indexList,
-            List<byte> rawByteList)
-        {
-            List<string> strList = new List<string>(indexList.Count);
-            const int MaxStrLength = 20;
-
-            foreach (ushort index in indexList)
-            {
-                // we grab the strings from the fullRawData because it is the entire file
-                strList.Add(CreateDataChunk(DataFormatType.SimpleString, string.Empty, rawByteList, index, MaxStrLength)
-                    .GetChunkAsString());
-            }
-
-            return strList;
         }
 
         public List<bool> GetAsBitmapBoolList(int nStart, int nLength)

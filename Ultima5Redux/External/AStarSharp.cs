@@ -51,6 +51,21 @@ namespace Ultima5Redux.External
             _grid = grid;
         }
 
+        private IEnumerable<Node> GetAdjacentNodes(Node n)
+        {
+            List<Node> temp = new List<Node>();
+
+            int row = n.Position.Y;
+            int col = n.Position.X;
+
+            if (row + 1 < GridRows) temp.Add(_grid[col][row + 1]);
+            if (row - 1 >= 0) temp.Add(_grid[col][row - 1]);
+            if (col - 1 >= 0) temp.Add(_grid[col - 1][row]);
+            if (col + 1 < GridCols) temp.Add(_grid[col + 1][row]);
+
+            return temp;
+        }
+
         /// <summary>
         ///     Finds the best path based on surrounding tiles around a single end position
         ///     For example, below the 0 represents the end position, while the Xs represent the tiles that will be checked
@@ -139,21 +154,6 @@ namespace Ultima5Redux.External
             } while (temp != start && temp != null);
 
             return path;
-        }
-
-        private IEnumerable<Node> GetAdjacentNodes(Node n)
-        {
-            List<Node> temp = new List<Node>();
-
-            int row = n.Position.Y;
-            int col = n.Position.X;
-
-            if (row + 1 < GridRows) temp.Add(_grid[col][row + 1]);
-            if (row - 1 >= 0) temp.Add(_grid[col][row - 1]);
-            if (col - 1 >= 0) temp.Add(_grid[col - 1][row]);
-            if (col + 1 < GridCols) temp.Add(_grid[col + 1][row]);
-
-            return temp;
         }
 
         public Node GetNode(Point2D position)

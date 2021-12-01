@@ -8,7 +8,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     /// </summary>
     [DataContract] public class InventoryReference
     {
-        [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
         [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; internal set; }
         [DataMember] public string ItemDescription { get; set; }
 
@@ -16,11 +15,12 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [DataMember] public string ItemName { get; set; }
         [DataMember] public string ItemNameHighlight { private get; set; }
 
-        [IgnoreDataMember] public string[] ItemNameHighLights =>
-            ItemNameHighlight.Length == 0 ? Array.Empty<string>() : ItemNameHighlight.Split(',');
-
         [DataMember] public string ItemSprite { get; set; }
         [DataMember] public int ItemSpriteExposed { get; set; }
+        [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
+
+        [IgnoreDataMember] public string[] ItemNameHighLights =>
+            ItemNameHighlight.Length == 0 ? Array.Empty<string>() : ItemNameHighlight.Split(',');
 
         /// <summary>
         ///     Gets the Equipment equivalent if one exists

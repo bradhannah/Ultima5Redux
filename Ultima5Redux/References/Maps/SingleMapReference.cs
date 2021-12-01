@@ -56,6 +56,11 @@ namespace Ultima5Redux.References.Maps
             [DataMember] public Location MapLocation { get; }
 
             /// <summary>
+            ///     name of the map file
+            /// </summary>
+            [IgnoreDataMember] private string MapFilename => GetFilenameFromLocation(MapLocation);
+
+            /// <summary>
             ///     the offset of the map data in the data file
             /// </summary>
             [IgnoreDataMember] public int FileOffset { get; }
@@ -66,11 +71,6 @@ namespace Ultima5Redux.References.Maps
             /// </summary>
             // ReSharper disable once UnusedMember.Global
             [IgnoreDataMember] public byte Id => (byte)(MapLocation - 1);
-
-            /// <summary>
-            ///     name of the map file
-            /// </summary>
-            [IgnoreDataMember] private string MapFilename => GetFilenameFromLocation(MapLocation);
 
             [IgnoreDataMember] public Map.Maps MapType
             {
@@ -141,6 +141,22 @@ namespace Ultima5Redux.References.Maps
                 MapLocation = mapLocation;
                 Floor = floor;
                 FileOffset = fileOffset;
+            }
+
+            /// <summary>
+            ///     Loads a small map into a 2D array
+            /// </summary>
+            /// <param name="mapFilename">name of the file that contains the map</param>
+            /// <param name="fileOffset">the file offset to begin reading the file at</param>
+            /// <returns></returns>
+            private byte[][] LoadSmallMapFile(string mapFilename, int fileOffset)
+            {
+                List<byte> mapBytes = Utils.GetFileAsByteList(mapFilename);
+
+                byte[][] smallMap = Utils.ListTo2DArray(mapBytes, (short)XTiles, fileOffset, XTiles * YTiles);
+
+                // have to transpose the array because the ListTo2DArray function puts the map together backwards...
+                return Utils.TransposeArray(smallMap);
             }
 
             public static SingleMapReference GetCombatMapSingleInstance() =>
@@ -296,22 +312,6 @@ namespace Ultima5Redux.References.Maps
             public byte[][] GetDefaultMap()
             {
                 return LoadSmallMapFile(Path.Combine(_dataDirectory, GetFilenameFromLocation(MapLocation)), FileOffset);
-            }
-
-            /// <summary>
-            ///     Loads a small map into a 2D array
-            /// </summary>
-            /// <param name="mapFilename">name of the file that contains the map</param>
-            /// <param name="fileOffset">the file offset to begin reading the file at</param>
-            /// <returns></returns>
-            private byte[][] LoadSmallMapFile(string mapFilename, int fileOffset)
-            {
-                List<byte> mapBytes = Utils.GetFileAsByteList(mapFilename);
-
-                byte[][] smallMap = Utils.ListTo2DArray(mapBytes, (short)XTiles, fileOffset, XTiles * YTiles);
-
-                // have to transpose the array because the ListTo2DArray function puts the map together backwards...
-                return Utils.TransposeArray(smallMap);
             }
         }
     }

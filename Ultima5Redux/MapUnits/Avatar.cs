@@ -16,10 +16,6 @@ namespace Ultima5Redux.MapUnits
             Regular, Carpet, Horse, Frigate, Skiff, Hidden
         }
 
-        [IgnoreDataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
-
-        [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
-
         // [DataMember] private Frigate CurrentBoardedFrigate
         // {
         //     get => CurrentBoardedMapUnit is Frigate frigate ? frigate : null;
@@ -52,30 +48,11 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
 
-        [DataMember] public Point2D.Direction CurrentDirection { get; private set; }
+        [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
 
         [DataMember] private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
 
-        [IgnoreDataMember] public override string BoardXitName => "You can't board the Avatar you silly goose!";
-
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>
-            {
-                { Point2D.Direction.None, "BasicAvatar" },
-                { Point2D.Direction.Left, "BasicAvatar" },
-                { Point2D.Direction.Down, "BasicAvatar" },
-                { Point2D.Direction.Right, "BasicAvatar" },
-                { Point2D.Direction.Up, "BasicAvatar" }
-            };
-
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
-            DirectionToTileName;
-
-        [IgnoreDataMember] public override string FriendlyName => "Avatar";
-
-        [IgnoreDataMember] public override bool IsActive => true;
-
-        [IgnoreDataMember] public override bool IsAttackable => false;
+        [DataMember] public Point2D.Direction CurrentDirection { get; private set; }
 
         /// <summary>
         ///     Describes if there are only left right sprites
@@ -90,6 +67,16 @@ namespace Ultima5Redux.MapUnits
             { AvatarState.Skiff, false },
             { AvatarState.Regular, false }
         };
+
+        [IgnoreDataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
+
+        [IgnoreDataMember] public override string BoardXitName => "You can't board the Avatar you silly goose!";
+
+        [IgnoreDataMember] public override string FriendlyName => "Avatar";
+
+        [IgnoreDataMember] public override bool IsActive => true;
+
+        [IgnoreDataMember] public override bool IsAttackable => false;
 
         [IgnoreDataMember] public bool AreSailsHoisted =>
             IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate && frigate.SailsHoisted;
@@ -120,11 +107,19 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         [IgnoreDataMember] public MapUnit CurrentBoardedMapUnit { get; private set; }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            BoardMapUnitFromAvatarState(CurrentAvatarState);
-        }
-        
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>
+            {
+                { Point2D.Direction.None, "BasicAvatar" },
+                { Point2D.Direction.Left, "BasicAvatar" },
+                { Point2D.Direction.Down, "BasicAvatar" },
+                { Point2D.Direction.Right, "BasicAvatar" },
+                { Point2D.Direction.Up, "BasicAvatar" }
+            };
+
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+            DirectionToTileName;
+
         [JsonConstructor] private Avatar()
         {
         }
@@ -144,44 +139,22 @@ namespace Ultima5Redux.MapUnits
             Movement = movement;
         }
 
-        /// <summary>
-        ///     Creates an Avatar MapUnit at the default small map position
-        ///     Note: this should never need to be called from a LargeMap since the values persist on disk
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="movement"></param>
-        /// <param name="mapUnitPosition"></param>
-        /// <param name="tileReference"></param>
-        /// <param name="bUseExtendedSprites"></param>
-        /// <returns></returns>
-        public static MapUnit CreateAvatar(SmallMapReferences.SingleMapReference.Location location,
-            MapUnitMovement movement, MapUnitPosition mapUnitPosition, TileReference tileReference,
-            bool bUseExtendedSprites)
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            Avatar theAvatar = new Avatar(location, movement, mapUnitPosition, tileReference, bUseExtendedSprites);
-
-            return theAvatar;
+            BoardMapUnitFromAvatarState(CurrentAvatarState);
         }
 
-        public void BoardMapUnit(MapUnit mapUnit)
+        /// <summary>
+        ///     Show the Avatar that isn't boarded on top of anything
+        /// </summary>
+        internal MapUnit UnboardedAvatar()
         {
-            if (mapUnit == null)
-                throw new Ultima5ReduxException("Tried to Board a null mapunit");
-            // note: since the Avatar does not control all MapUnits, we only add it our internal tracker
-            // but do not release it from the world - that must be done outside this method
-            KeyTileReference = mapUnit.KeyTileReference;
-            CurrentAvatarState = mapUnit.BoardedAvatarState;
-            CurrentBoardedMapUnit = mapUnit;
-            CurrentBoardedMapUnit.IsOccupiedByAvatar = true;
-
-            mapUnit.UseFourDirections = _bUseExtendedSprites;
-
-            if (!(mapUnit is Frigate)) return;
-
-            // if we are going onto a frigate, then we want to make sure the Avatar can start rowing
-            // in the direction that it's already facing
-            PreviousDirection = mapUnit.Direction;
-            CurrentDirection = mapUnit.Direction;
+            KeyTileReference = NonBoardedTileReference;
+            CurrentAvatarState = AvatarState.Regular;
+            MapUnit previouslyBoardedMapUnit = CurrentBoardedMapUnit;
+            CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
+            CurrentBoardedMapUnit = null;
+            return previouslyBoardedMapUnit;
         }
 
         private void BoardMapUnitFromAvatarState(AvatarState avatarState)
@@ -245,6 +218,46 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
+        ///     Creates an Avatar MapUnit at the default small map position
+        ///     Note: this should never need to be called from a LargeMap since the values persist on disk
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="movement"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <param name="tileReference"></param>
+        /// <param name="bUseExtendedSprites"></param>
+        /// <returns></returns>
+        public static MapUnit CreateAvatar(SmallMapReferences.SingleMapReference.Location location,
+            MapUnitMovement movement, MapUnitPosition mapUnitPosition, TileReference tileReference,
+            bool bUseExtendedSprites)
+        {
+            Avatar theAvatar = new Avatar(location, movement, mapUnitPosition, tileReference, bUseExtendedSprites);
+
+            return theAvatar;
+        }
+
+        public void BoardMapUnit(MapUnit mapUnit)
+        {
+            if (mapUnit == null)
+                throw new Ultima5ReduxException("Tried to Board a null mapunit");
+            // note: since the Avatar does not control all MapUnits, we only add it our internal tracker
+            // but do not release it from the world - that must be done outside this method
+            KeyTileReference = mapUnit.KeyTileReference;
+            CurrentAvatarState = mapUnit.BoardedAvatarState;
+            CurrentBoardedMapUnit = mapUnit;
+            CurrentBoardedMapUnit.IsOccupiedByAvatar = true;
+
+            mapUnit.UseFourDirections = _bUseExtendedSprites;
+
+            if (!(mapUnit is Frigate)) return;
+
+            // if we are going onto a frigate, then we want to make sure the Avatar can start rowing
+            // in the direction that it's already facing
+            PreviousDirection = mapUnit.Direction;
+            CurrentDirection = mapUnit.Direction;
+        }
+
+        /// <summary>
         ///     Attempt to move the Avatar in a given direction
         ///     It takes into account if the Avatar has boarded a vehicle (horse, skiff etc)
         /// </summary>
@@ -282,19 +295,6 @@ namespace Ultima5Redux.MapUnits
             // return false if the direction changed AND your on a Frigate
             // because you will just change direction
             return !(bDirectionChanged && CurrentAvatarState == AvatarState.Frigate);
-        }
-
-        /// <summary>
-        ///     Show the Avatar that isn't boarded on top of anything
-        /// </summary>
-        internal MapUnit UnboardedAvatar()
-        {
-            KeyTileReference = NonBoardedTileReference;
-            CurrentAvatarState = AvatarState.Regular;
-            MapUnit previouslyBoardedMapUnit = CurrentBoardedMapUnit;
-            CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
-            CurrentBoardedMapUnit = null;
-            return previouslyBoardedMapUnit;
         }
     }
 }

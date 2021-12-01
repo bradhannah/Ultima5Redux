@@ -62,27 +62,6 @@ namespace Ultima5Redux.References.Dialogue
         }
 
         /// <summary>
-        ///     Get a compressed word with an index
-        ///     The index will be automatically adjusted
-        /// </summary>
-        /// <param name="index">the index as it appears in the .tlk file</param>
-        /// <returns></returns>
-        public string GetTalkingWord(int index)
-        {
-            try
-            {
-                return _compressedWords.StringList[_compressWordLookupMap[index]];
-            } catch (KeyNotFoundException)
-            {
-                throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " +
-                                                 index);
-            } catch (ArgumentOutOfRangeException)
-            {
-                throw new NoTalkingWordException("Couldn't find TalkWord at index " + index);
-            }
-        }
-
-        /// <summary>
         ///     Is this an expected letter or digit in the string
         /// </summary>
         /// <param name="character"></param>
@@ -115,6 +94,27 @@ namespace Ultima5Redux.References.Dialogue
             // ^ quantity of thing (ie. reagent)
             return character == '%' || character == '&' || character == '$' || character == '#' || character == '@' ||
                    character == '*' || character == '^';
+        }
+
+        /// <summary>
+        ///     Get a compressed word with an index
+        ///     The index will be automatically adjusted
+        /// </summary>
+        /// <param name="index">the index as it appears in the .tlk file</param>
+        /// <returns></returns>
+        public string GetTalkingWord(int index)
+        {
+            try
+            {
+                return _compressedWords.StringList[_compressWordLookupMap[index]];
+            } catch (KeyNotFoundException)
+            {
+                throw new NoTalkingWordException("Couldn't find TalkWord mapping in compressed word file at index " +
+                                                 index);
+            } catch (ArgumentOutOfRangeException)
+            {
+                throw new NoTalkingWordException("Couldn't find TalkWord at index " + index);
+            }
         }
 
         /// <summary>

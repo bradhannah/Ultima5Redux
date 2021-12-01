@@ -16,26 +16,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None
         }
 
-        [IgnoreDataMember] private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
-
-        [IgnoreDataMember] public abstract int ClosestAttackRange { get; }
-
-        [IgnoreDataMember] public abstract int Defense { get; }
-
-        [IgnoreDataMember] public abstract int Dexterity { get; }
-
-        [IgnoreDataMember] public abstract int Experience { get; }
-        [IgnoreDataMember] public abstract bool IsInvisible { get; }
-
-        public abstract string Name { get; }
-        [IgnoreDataMember] public abstract string PluralName { get; }
-
-        [IgnoreDataMember] public abstract string SingularName { get; }
-
-        public abstract CharacterStats Stats { get; }
-
-        [IgnoreDataMember] public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
-
         [IgnoreDataMember] internal HitState CurrentHitState
         {
             get
@@ -73,12 +53,32 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
-        [IgnoreDataMember] public bool HasEscaped { get; set; }
+        [IgnoreDataMember] private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
+
+        [IgnoreDataMember] public abstract int ClosestAttackRange { get; }
+
+        [IgnoreDataMember] public abstract int Defense { get; }
+
+        [IgnoreDataMember] public abstract int Dexterity { get; }
+
+        [IgnoreDataMember] public abstract int Experience { get; }
+        [IgnoreDataMember] public abstract bool IsInvisible { get; }
+        [IgnoreDataMember] public abstract string PluralName { get; }
+
+        [IgnoreDataMember] public abstract string SingularName { get; }
+
+        [IgnoreDataMember] public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
 
         [IgnoreDataMember] public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
         [IgnoreDataMember] public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
 
+        [IgnoreDataMember] public bool HasEscaped { get; set; }
+
         [IgnoreDataMember] public CombatMapUnit PreviousAttackTarget { get; private set; }
+
+        public abstract string Name { get; }
+
+        public abstract CharacterStats Stats { get; }
 
         [JsonConstructor] protected CombatMapUnit()
         {
@@ -89,6 +89,46 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             NonPlayerCharacterState npcState, TileReference tileReference) : base(smallMapTheSmallMapCharacterState,
             mapUnitMovement, location, Point2D.Direction.None, npcState, tileReference, new MapUnitPosition())
         {
+        }
+
+        // bool Creature::isHit(int hit_offset) {
+        //     return (hit_offset + 128) >= xu4_random(0x100) ? true : false;
+        // }
+
+        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, int nMaxDamage)
+        {
+            // start with the weapons attack value
+            //int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
+            // add the characters strength
+            nMaxDamage += Stats.Strength;
+            // subtract the defense of unit being attacked
+            nMaxDamage -= enemyCombatMapUnit.Defense;
+            // choose 0-max damage as attack value
+            int nDamage = nMaxDamage <= 0 ? 0 : _random.Next() % nMaxDamage;
+            // 99 is max damage no matter what
+            nDamage = Math.Min(nDamage, 99);
+
+            return nDamage;
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
+        {
+            const int BareHandAttack = 3;
+
+            int nMaxDamage = weapon?.TheCombatItemReference.AttackStat ?? BareHandAttack;
+
+            return GetAttackDamage(enemyCombatMapUnit, nMaxDamage);
+        }
+
+        private bool IsHit(CombatMapUnit enemyCombatMapUnit, out string debugStr)
+        {
+            const int nHitOffset = 128;
+            int randomNum = _random.Next(255); // % 256;
+            bool bWasHit = (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
+            debugStr =
+                $"Ran:{randomNum} Dex:{enemyCombatMapUnit.Stats.Dexterity} Dex+128:{enemyCombatMapUnit.Stats.Dexterity + 128} Hit:{bWasHit}";
+            return bWasHit;
         }
 
         public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
@@ -144,36 +184,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange &&
              Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
-
-        // bool Creature::isHit(int hit_offset) {
-        //     return (hit_offset + 128) >= xu4_random(0x100) ? true : false;
-        // }
-
-        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, int nMaxDamage)
-        {
-            // start with the weapons attack value
-            //int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
-            // add the characters strength
-            nMaxDamage += Stats.Strength;
-            // subtract the defense of unit being attacked
-            nMaxDamage -= enemyCombatMapUnit.Defense;
-            // choose 0-max damage as attack value
-            int nDamage = nMaxDamage <= 0 ? 0 : _random.Next() % nMaxDamage;
-            // 99 is max damage no matter what
-            nDamage = Math.Min(nDamage, 99);
-
-            return nDamage;
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
-        {
-            const int BareHandAttack = 3;
-
-            int nMaxDamage = weapon?.TheCombatItemReference.AttackStat ?? BareHandAttack;
-
-            return GetAttackDamage(enemyCombatMapUnit, nMaxDamage);
-        }
 
         public HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {
@@ -232,16 +242,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
 
             return enemyHitState;
-        }
-
-        private bool IsHit(CombatMapUnit enemyCombatMapUnit, out string debugStr)
-        {
-            const int nHitOffset = 128;
-            int randomNum = _random.Next(255); // % 256;
-            bool bWasHit = (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
-            debugStr =
-                $"Ran:{randomNum} Dex:{enemyCombatMapUnit.Stats.Dexterity} Dex+128:{enemyCombatMapUnit.Stats.Dexterity + 128} Hit:{bWasHit}";
-            return bWasHit;
         }
 
         //        /**

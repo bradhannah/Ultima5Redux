@@ -17,12 +17,6 @@ namespace Ultima5Redux.References.Maps
         private readonly U5StringRef _u5StringRef;
 
         /// <summary>
-        ///     Number of tile references
-        /// </summary>
-        // ReSharper disable once UnusedMember.Global
-        public int Count => TileReferenceByStringDictionary.Count;
-
-        /// <summary>
         ///     Tile reference dictionary referenced by tile string value
         /// </summary>
         private Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } =
@@ -32,6 +26,12 @@ namespace Ultima5Redux.References.Maps
         ///     Tile reference dictionary indexed by sprite number
         /// </summary>
         private Dictionary<int, TileReference> TileReferenceDictionary { get; }
+
+        /// <summary>
+        ///     Number of tile references
+        /// </summary>
+        // ReSharper disable once UnusedMember.Global
+        public int Count => TileReferenceByStringDictionary.Count;
 
         /// <summary>
         ///     Constructor

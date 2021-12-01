@@ -21,9 +21,19 @@ namespace Ultima5Redux
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
 
         /// <summary>
+        ///     What is the index of the currently active player?
+        /// </summary>
+        [DataMember] public int ActivePlayerNumber { get; set; }
+
+        /// <summary>
         ///     All player character records
         /// </summary>
         [DataMember] public PlayerCharacterRecords CharacterRecords { get; private set; }
+
+        /// <summary>
+        ///     Users Karma
+        /// </summary>
+        [DataMember] public ushort Karma { get; set; }
 
         /// <summary>
         ///     Players current inventory
@@ -36,24 +46,14 @@ namespace Ultima5Redux
         [DataMember] public Moongates TheMoongates { get; private set; }
 
         /// <summary>
-        ///     The current time of day
-        /// </summary>
-        [DataMember] public TimeOfDay TheTimeOfDay { get; private set; }
-
-        /// <summary>
-        ///     What is the index of the currently active player?
-        /// </summary>
-        [DataMember] public int ActivePlayerNumber { get; set; }
-
-        /// <summary>
-        ///     Users Karma
-        /// </summary>
-        [DataMember] public ushort Karma { get; set; }
-
-        /// <summary>
         ///     NPC states such as if they are dead or have met the avatar
         /// </summary>
         [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
+
+        /// <summary>
+        ///     The current time of day
+        /// </summary>
+        [DataMember] public TimeOfDay TheTimeOfDay { get; private set; }
 
         /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
@@ -124,19 +124,6 @@ namespace Ultima5Redux
                 ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor);
         }
 
-        public static GameState Deserialize(string stateJson)
-        {
-            return JsonConvert.DeserializeObject<GameState>(stateJson);
-        }
-
-        /// <summary>
-        ///     Take fall damage from klimbing mountains
-        /// </summary>
-        public void GrapplingFall()
-        {
-            // called when falling from a Klimb on a mountain
-        }
-
         /// <summary>
         ///     Initializes (one time) the virtual map component
         ///     Must be initialized pretty much after everything else has been loaded into memory
@@ -163,6 +150,19 @@ namespace Ultima5Redux
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(nInitialX, nInitialY);
+        }
+
+        public static GameState Deserialize(string stateJson)
+        {
+            return JsonConvert.DeserializeObject<GameState>(stateJson);
+        }
+
+        /// <summary>
+        ///     Take fall damage from klimbing mountains
+        /// </summary>
+        public void GrapplingFall()
+        {
+            // called when falling from a Klimb on a mountain
         }
 
         public string Serialize()

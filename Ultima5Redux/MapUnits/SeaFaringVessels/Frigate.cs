@@ -44,11 +44,6 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         public override string BoardXitName =>
             GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings.SHIP_N).Trim();
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
-            SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
-
         public override string FriendlyName => BoardXitName;
 
         public override bool IsAttackable => false;
@@ -61,6 +56,11 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         ///     How many skiffs does the frigate have aboard?
         /// </summary>
         public int SkiffsAboard { get; set; }
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+            SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
 
         [JsonConstructor] private Frigate()
         {

@@ -40,8 +40,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             set => SetReagentState(Reagent.ReagentTypeEnum.BloodMoss, value);
         }
 
-        [DataMember] public int Circle;
-
         [DataMember] private bool Garlic
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.Garlic);
@@ -53,8 +51,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.Ginseng);
             set => SetReagentState(Reagent.ReagentTypeEnum.Ginseng, value);
         }
-
-        [DataMember] public int Gold;
 
         [DataMember] private bool MandrakeRoot
         {
@@ -68,13 +64,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             set => SetReagentState(Reagent.ReagentTypeEnum.NightShade, value);
         }
 
-        [DataMember] public string RawGoldReagents;
-        [DataMember] public string SimilarFunction;
-        [DataMember] public string SimpleDescription;
-        [DataMember] public string Spell;
-
-        [DataMember] public SpellWords SpellEnum;
-
         [DataMember] private bool SpiderSilk
         {
             get => GetReagentState(Reagent.ReagentTypeEnum.SpiderSilk);
@@ -87,6 +76,17 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             set => SetReagentState(Reagent.ReagentTypeEnum.SulfurAsh, value);
         }
 
+        [DataMember] public int Circle;
+
+        [DataMember] public int Gold;
+
+        [DataMember] public string RawGoldReagents;
+        [DataMember] public string SimilarFunction;
+        [DataMember] public string SimpleDescription;
+        [DataMember] public string Spell;
+
+        [DataMember] public SpellWords SpellEnum;
+
         [DataMember] public TimePermittedEnum TimePermitted;
         [DataMember] public MagicTypeEnum Type;
 
@@ -95,8 +95,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         private bool GetReagentState(Reagent.ReagentTypeEnum reagentType) =>
             _reagentsDictionary.ContainsKey(reagentType) && _reagentsDictionary[reagentType];
-
-        public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
 
         private void SetReagentState(Reagent.ReagentTypeEnum reagentType, bool bSpellRequirement)
         {
@@ -115,5 +113,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
             return (nReagents == _reagentsDictionary.Count(r => r.Value));
         }
+
+        public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
     }
 }

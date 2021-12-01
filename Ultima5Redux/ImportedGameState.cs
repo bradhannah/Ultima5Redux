@@ -40,21 +40,12 @@ namespace Ultima5Redux
 
         private readonly DataChunks<OverlayChunkName> _overworldOverlayDataChunks;
         private readonly DataChunks<OverlayChunkName> _underworldOverlayDataChunks;
-        private MapUnitStates ActiveMapUnitStates { get; set; }
-
-        // map overlay data chunks
-        private DataChunk ActiveOverlayDataChunks =>
-            DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
 
         internal byte ActivePlayerNumber => DataChunks.GetDataChunk(DataChunkName.ACTIVE_CHARACTER).GetChunkAsByte();
 
         internal MapUnitMovements CharacterMovements { get; private set; }
 
         internal PlayerCharacterRecords CharacterRecords { get; private set; }
-
-        private DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
-
-        private DataChunks<DataChunkName> DataChunks { get; }
 
         /// <summary>
         ///     Current floor
@@ -67,8 +58,6 @@ namespace Ultima5Redux
         /// </summary>
         internal ushort Food => DataChunks.GetDataChunk(DataChunkName.FOOD_QUANTITY).GetChunkAsUint16();
 
-        private List<byte> GameStateByteArray { get; }
-        
         internal byte Gems => DataChunks.GetDataChunk(DataChunkName.GEMS_QUANTITY).GetChunkAsByte();
 
         /// <summary>
@@ -102,23 +91,11 @@ namespace Ultima5Redux
 
         internal DataChunk NonPlayerCharacterKeySprites => DataChunks.GetDataChunk(DataChunkName.NPC_SPRITE_INDEXES);
 
-        // DataChunk based properties (not ideal) 
-        private DataChunk NonPlayerCharacterMovementLists => DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS);
-
-        private DataChunk NonPlayerCharacterMovementOffsets =>
-            DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
-
         internal bool[][] NPCIsDeadArray { get; private set; }
         internal bool[][] NPCIsMetArray { get; private set; }
 
-        private MapUnitStates OverworldMapUnitStates { get; set; }
-
-        private DataChunk OverworldOverlayDataChunks =>
-            _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
-
         internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
         internal SmallMapCharacterStates SmallMapCharacterStates { get; private set; }
-        private MapUnitStates SmallMapUnitStates { get; set; }
 
         internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
             GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS), GetDataChunk(DataChunkName.MOONSTONE_BURIED),
@@ -137,11 +114,6 @@ namespace Ultima5Redux
         /// </summary>
         internal byte TorchTurnsLeft => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
 
-        private MapUnitStates UnderworldMapUnitStates { get; set; }
-
-        private DataChunk UnderworldOverlayDataChunks =>
-            _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
-
         /// <summary>
         ///     Saved X location of Avatar
         /// </summary>
@@ -152,47 +124,35 @@ namespace Ultima5Redux
         /// </summary>
         internal int Y => DataChunks.GetDataChunk(DataChunkName.Y_COORD).GetChunkAsByte();
 
-        internal int GetSpellQuantity(MagicReference.SpellWords spellWord) =>
-            GetByteAsIntFromGameStateByteArray((int)spellWord);
+        private MapUnitStates ActiveMapUnitStates { get; set; }
 
-        internal int GetScrollQuantity(MagicReference.SpellWords spellWord)
-        {
-            Scroll.ScrollSpells scrollSpell =
-                (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
+        // map overlay data chunks
+        private DataChunk ActiveOverlayDataChunks =>
+            DataChunks.GetDataChunk(DataChunkName.CHARACTER_ANIMATION_STATES);
 
-            int nIndex = 0x27A + (int)scrollSpell;
-            return GetByteAsIntFromGameStateByteArray(nIndex);
-        }
+        private DataChunk CharacterStatesDataChunk => DataChunks.GetDataChunk(DataChunkName.CHARACTER_STATES);
 
-        internal int GetPotionQuantity(Potion.PotionColor color) =>
-            GetByteAsIntFromGameStateByteArray((int)color);
+        private DataChunks<DataChunkName> DataChunks { get; }
 
-        internal int GetReagentQuantity(Reagent.ReagentTypeEnum reagentType) =>
-            GetByteAsIntFromGameStateByteArray((int)reagentType);
+        private List<byte> GameStateByteArray { get; }
 
-        internal int GetSpecialItemQuantity(SpecialItem.ItemTypeEnum specialItem) =>
-            GetByteAsIntFromGameStateByteArray((int)specialItem);
+        // DataChunk based properties (not ideal) 
+        private DataChunk NonPlayerCharacterMovementLists => DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_LISTS);
 
-        internal int GetShadowlordShardQuantity(ShadowlordShard.ShardType shard) =>
-            GetByteAsIntFromGameStateByteArray((int)shard);
+        private DataChunk NonPlayerCharacterMovementOffsets =>
+            DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
 
-        internal int GetLordBritishArtifactQuantity(LordBritishArtifact.ArtifactType artifact) =>
-            GetByteAsIntFromGameStateByteArray((int)artifact);
+        private MapUnitStates OverworldMapUnitStates { get; set; }
 
-        internal int GetEquipmentQuantity(DataOvlReference.Equipment equipment)
-        {
-            // can't remember why I return 262..?
-            if (equipment == DataOvlReference.Equipment.BareHands) return 262;
-            return GetByteAsIntFromGameStateByteArray((int)equipment);
-        }
+        private DataChunk OverworldOverlayDataChunks =>
+            _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
-        private int GetByteAsIntFromGameStateByteArray(int nOffset)
-        {
-            if (GameStateByteArray.Count < nOffset)
-                throw new Ultima5ReduxException("Tried to access offset #" + nOffset +
-                                                " but game state array is only " + GameStateByteArray.Count + " long");
-            return GameStateByteArray[nOffset];
-        }
+        private MapUnitStates SmallMapUnitStates { get; set; }
+
+        private MapUnitStates UnderworldMapUnitStates { get; set; }
+
+        private DataChunk UnderworldOverlayDataChunks =>
+            _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
         /// <summary>
         ///     Load the default starting save game
@@ -239,22 +199,51 @@ namespace Ultima5Redux
             Initialize(true);
         }
 
+        internal int GetEquipmentQuantity(DataOvlReference.Equipment equipment)
+        {
+            // can't remember why I return 262..?
+            if (equipment == DataOvlReference.Equipment.BareHands) return 262;
+            return GetByteAsIntFromGameStateByteArray((int)equipment);
+        }
+
+        internal int GetLordBritishArtifactQuantity(LordBritishArtifact.ArtifactType artifact) =>
+            GetByteAsIntFromGameStateByteArray((int)artifact);
+
+        internal int GetPotionQuantity(Potion.PotionColor color) =>
+            GetByteAsIntFromGameStateByteArray((int)color);
+
+        internal int GetReagentQuantity(Reagent.ReagentTypeEnum reagentType) =>
+            GetByteAsIntFromGameStateByteArray((int)reagentType);
+
+        internal int GetScrollQuantity(MagicReference.SpellWords spellWord)
+        {
+            Scroll.ScrollSpells scrollSpell =
+                (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
+
+            int nIndex = 0x27A + (int)scrollSpell;
+            return GetByteAsIntFromGameStateByteArray(nIndex);
+        }
+
+        internal int GetShadowlordShardQuantity(ShadowlordShard.ShardType shard) =>
+            GetByteAsIntFromGameStateByteArray((int)shard);
+
+        internal int GetSpecialItemQuantity(SpecialItem.ItemTypeEnum specialItem) =>
+            GetByteAsIntFromGameStateByteArray((int)specialItem);
+
+        internal int GetSpellQuantity(MagicReference.SpellWords spellWord) =>
+            GetByteAsIntFromGameStateByteArray((int)spellWord);
+
+        private int GetByteAsIntFromGameStateByteArray(int nOffset)
+        {
+            if (GameStateByteArray.Count < nOffset)
+                throw new Ultima5ReduxException("Tried to access offset #" + nOffset +
+                                                " but game state array is only " + GameStateByteArray.Count + " long");
+            return GameStateByteArray[nOffset];
+        }
+
         private DataChunk GetDataChunk(DataChunkName dataChunkName)
         {
             return DataChunks.GetDataChunk(dataChunkName);
-        }
-
-        public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)
-        {
-            return map switch
-            {
-                Map.Maps.Small => SmallMapUnitStates,
-                Map.Maps.Overworld => OverworldMapUnitStates,
-                Map.Maps.Underworld => UnderworldMapUnitStates,
-                Map.Maps.Combat => throw new Ultima5ReduxException(
-                    "Can't return a map state for a combat map from the imported game state"),
-                _ => throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" + map)
-            };
         }
 
         private void Initialize(bool bLoadFromDisk)
@@ -402,6 +391,19 @@ namespace Ultima5Redux
                 NonPlayerCharacterMovementOffsets);
 
             TheNonPlayerCharacterStates = new NonPlayerCharacterStates(this);
+        }
+
+        public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)
+        {
+            return map switch
+            {
+                Map.Maps.Small => SmallMapUnitStates,
+                Map.Maps.Overworld => OverworldMapUnitStates,
+                Map.Maps.Underworld => UnderworldMapUnitStates,
+                Map.Maps.Combat => throw new Ultima5ReduxException(
+                    "Can't return a map state for a combat map from the imported game state"),
+                _ => throw new Ultima5ReduxException("Asked for a CurrentMapUnitStates that doesn't exist:" + map)
+            };
         }
     }
 }

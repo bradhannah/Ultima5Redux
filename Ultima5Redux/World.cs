@@ -52,6 +52,16 @@ namespace Ultima5Redux
         private readonly Random _random = new Random();
 
         /// <summary>
+        ///     The overworld map object
+        /// </summary>
+        private LargeMap OverworldMap { get; }
+
+        /// <summary>
+        ///     the underworld map object
+        /// </summary>
+        private LargeMap UnderworldMap { get; }
+
+        /// <summary>
         ///     A collection of all the available small maps
         /// </summary>
         public SmallMaps AllSmallMaps { get; }
@@ -75,11 +85,6 @@ namespace Ultima5Redux
         public bool IsPendingFall { get; private set; }
 
         /// <summary>
-        ///     The overworld map object
-        /// </summary>
-        private LargeMap OverworldMap { get; }
-
-        /// <summary>
         ///     Ultima 5 data and save files directory
         /// </summary>
         public string SaveGameDirectory { get; }
@@ -88,11 +93,6 @@ namespace Ultima5Redux
         ///     The current game state
         /// </summary>
         public GameState State { get; private set; }
-
-        /// <summary>
-        ///     the underworld map object
-        /// </summary>
-        private LargeMap UnderworldMap { get; }
 
         // ReSharper disable once UnusedMember.Local
 
@@ -127,6 +127,141 @@ namespace Ultima5Redux
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             //State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap, bUseExtendedSprites);
+        }
+
+        /// <summary>
+        ///     Safe method to board a MapUnit and removing it from the world
+        /// </summary>
+        /// <param name="mapUnit"></param>
+        private void BoardAndCleanFromWorld(MapUnit mapUnit)
+        {
+            // board the unit
+            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.BoardMapUnit(mapUnit);
+            // clean it from the world so it no longer appears
+            State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(mapUnit);
+        }
+
+        private string CastSleep(PlayerCharacterRecord record, out bool bWasPutToSleep)
+        {
+            bWasPutToSleep = record.Sleep();
+            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N);
+        }
+
+        /// <summary>
+        ///     Gets a +/- 1 x/y adjustment based on the current position and given direction
+        /// </summary>
+        /// <param name="direction">direction to go</param>
+        /// <param name="xAdjust">output X adjustment</param>
+        /// <param name="yAdjust">output Y adjustment</param>
+        private void GetAdjustments(Point2D.Direction direction, out int xAdjust, out int yAdjust)
+        {
+            xAdjust = 0;
+            yAdjust = 0;
+
+            // if you are on a repeating map then you should assume that the adjust suc
+
+            switch (direction)
+            {
+                case Point2D.Direction.Down:
+                    yAdjust = 1;
+                    break;
+                case Point2D.Direction.Up:
+                    yAdjust = -1;
+                    break;
+                case Point2D.Direction.Right:
+                    xAdjust = 1;
+                    break;
+                case Point2D.Direction.Left:
+                    xAdjust = -1;
+                    break;
+                case Point2D.Direction.None:
+                    // do nothing, no adjustment
+                    break;
+                default:
+                    throw new Ultima5ReduxException(
+                        "Requested an adjustment but didn't provide a KeyCode that represents a direction.");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the tile reference for a chair when pushed in a given direction
+        /// </summary>
+        /// <param name="chairDirection"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        private TileReference GetChairNewDirection(Point2D.Direction chairDirection)
+        {
+            switch (chairDirection)
+            {
+                case Point2D.Direction.Up:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackForward");
+                case Point2D.Direction.Down:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackBack");
+                case Point2D.Direction.Left:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackRight");
+                case Point2D.Direction.Right:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackLeft");
+                case Point2D.Direction.None:
+                default:
+                    throw new Ultima5ReduxException("Asked for a chair direction that I don't recognize");
+            }
+        }
+
+        private bool IsAllowedToBuryMoongate()
+        {
+            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld &&
+                State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld)
+                return false;
+            if (State.TheVirtualMap.HasAnyExposedSearchItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
+            TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
+
+            return GameReferences.SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
+        }
+
+        private bool IsLeavingMap(Point2D xyProposedPosition)
+        {
+            return (xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
+                State.TheVirtualMap.NumberOfRowTiles - 1));
+        }
+
+        private string ThouDostFind(string thingYouFound)
+        {
+            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                .N_THOU_DOST_FIND_N) + thingYouFound;
+        }
+
+        /// <summary>
+        ///     Use a magic carpet from your inventory
+        /// </summary>
+        /// <param name="bWasUsed">was the magic carpet used?</param>
+        /// <returns>string to print and show user</returns>
+        private string UseMagicCarpet(out bool bWasUsed)
+        {
+            if (IsCombatMap)
+            {
+                bWasUsed = false;
+                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                    .NOT_HERE_BANG);
+            }
+
+            bWasUsed = true;
+            Debug.Assert((State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+                .HasOneOfMore));
+
+            if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
+            {
+                bWasUsed = false;
+                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                    .ONLY_ON_FOOT);
+            }
+
+            State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity--;
+            MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
+                State.TheVirtualMap.CurrentPosition.XY, State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection,
+                out int _);
+            BoardAndCleanFromWorld(carpet);
+            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
+                .CARPET_BANG);
         }
 
         /// <summary>
@@ -235,24 +370,6 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        ///     Safe method to board a MapUnit and removing it from the world
-        /// </summary>
-        /// <param name="mapUnit"></param>
-        private void BoardAndCleanFromWorld(MapUnit mapUnit)
-        {
-            // board the unit
-            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.BoardMapUnit(mapUnit);
-            // clean it from the world so it no longer appears
-            State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(mapUnit);
-        }
-
-        private string CastSleep(PlayerCharacterRecord record, out bool bWasPutToSleep)
-        {
-            bWasPutToSleep = record.Sleep();
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N);
-        }
-
-        /// <summary>
         ///     Begins the conversation with a particular NPC
         /// </summary>
         /// <param name="npcState">the NPC to have a conversation with</param>
@@ -307,66 +424,6 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        ///     Gets a +/- 1 x/y adjustment based on the current position and given direction
-        /// </summary>
-        /// <param name="direction">direction to go</param>
-        /// <param name="xAdjust">output X adjustment</param>
-        /// <param name="yAdjust">output Y adjustment</param>
-        private void GetAdjustments(Point2D.Direction direction, out int xAdjust, out int yAdjust)
-        {
-            xAdjust = 0;
-            yAdjust = 0;
-
-            // if you are on a repeating map then you should assume that the adjust suc
-
-            switch (direction)
-            {
-                case Point2D.Direction.Down:
-                    yAdjust = 1;
-                    break;
-                case Point2D.Direction.Up:
-                    yAdjust = -1;
-                    break;
-                case Point2D.Direction.Right:
-                    xAdjust = 1;
-                    break;
-                case Point2D.Direction.Left:
-                    xAdjust = -1;
-                    break;
-                case Point2D.Direction.None:
-                    // do nothing, no adjustment
-                    break;
-                default:
-                    throw new Ultima5ReduxException(
-                        "Requested an adjustment but didn't provide a KeyCode that represents a direction.");
-            }
-        }
-
-        /// <summary>
-        ///     Gets the tile reference for a chair when pushed in a given direction
-        /// </summary>
-        /// <param name="chairDirection"></param>
-        /// <returns></returns>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        private TileReference GetChairNewDirection(Point2D.Direction chairDirection)
-        {
-            switch (chairDirection)
-            {
-                case Point2D.Direction.Up:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackForward");
-                case Point2D.Direction.Down:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackBack");
-                case Point2D.Direction.Left:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackRight");
-                case Point2D.Direction.Right:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackLeft");
-                case Point2D.Direction.None:
-                default:
-                    throw new Ultima5ReduxException("Asked for a chair direction that I don't recognize");
-            }
-        }
-
-        /// <summary>
         ///     Gets the angle of the 360 rotation of all moons where Sun is 0degrees (straight up) at 12pm Noon
         /// </summary>
         /// <returns>0-359 degrees</returns>
@@ -411,17 +468,6 @@ namespace Ultima5Redux
                 .IGNITE_TORCH);
         }
 
-        private bool IsAllowedToBuryMoongate()
-        {
-            if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld &&
-                State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld)
-                return false;
-            if (State.TheVirtualMap.HasAnyExposedSearchItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
-            TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
-
-            return GameReferences.SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
-        }
-
         /// <summary>
         ///     Determines if the current tile the Avatar is on, is an ACTIVE moongate
         /// </summary>
@@ -432,12 +478,6 @@ namespace Ultima5Redux
             if (State.TheTimeOfDay.IsDayLight) return false;
 
             return State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.GetCurrent3DPosition());
-        }
-
-        private bool IsLeavingMap(Point2D xyProposedPosition)
-        {
-            return (xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
-                State.TheVirtualMap.NumberOfRowTiles - 1));
         }
 
         /// <summary>
@@ -563,12 +603,6 @@ namespace Ultima5Redux
         // ReSharper disable once UnusedParameter.Global
         public void SetAggressiveGuards(bool bAggressiveGuards)
         {
-        }
-
-        private string ThouDostFind(string thingYouFound)
-        {
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
-                .N_THOU_DOST_FIND_N) + thingYouFound;
         }
 
         public string TryToAttack(Point2D xy, out bool bCanAttack, out MapUnit mapUnit,
@@ -1358,40 +1392,6 @@ namespace Ultima5Redux
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        /// <summary>
-        ///     Use a magic carpet from your inventory
-        /// </summary>
-        /// <param name="bWasUsed">was the magic carpet used?</param>
-        /// <returns>string to print and show user</returns>
-        private string UseMagicCarpet(out bool bWasUsed)
-        {
-            if (IsCombatMap)
-            {
-                bWasUsed = false;
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                    .NOT_HERE_BANG);
-            }
-
-            bWasUsed = true;
-            Debug.Assert((State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
-                .HasOneOfMore));
-
-            if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
-            {
-                bWasUsed = false;
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
-                    .ONLY_ON_FOOT);
-            }
-
-            State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity--;
-            MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
-                State.TheVirtualMap.CurrentPosition.XY, State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection,
-                out int _);
-            BoardAndCleanFromWorld(carpet);
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
-                .CARPET_BANG);
         }
 
         public string UseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried)

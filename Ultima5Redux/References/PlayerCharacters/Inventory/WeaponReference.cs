@@ -15,14 +15,13 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             SwordofChaos, MagicBow, SilverSword, MagicAxe, GlassSword, JeweledSword, MysticSword
         }
 
-        [IgnoreDataMember] public override bool CanSell => BasePrice > 0 || IsAmmo;
-
         [DataMember] public WeaponTypeEnum WeaponType { get; private set; }
+
+        [IgnoreDataMember] public override bool CanSell => BasePrice > 0 || IsAmmo;
 
         [JsonConstructor] private WeaponReference()
         {
         }
-        
 
         public WeaponReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) : base(
             dataOvlReference, inventoryReference)

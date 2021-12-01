@@ -19,9 +19,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override int Defense => GameStateReference.State.PlayerInventory.GetCharacterTotalDefense(Record);
 
         public override int Dexterity => (byte)Record.Stats.Dexterity;
-
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => default;
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => default;
         public override int Experience => 0;
         public override string FriendlyName => Record.Name;
         public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
@@ -62,6 +59,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override CharacterStats Stats => Record.Stats;
 
         public PlayerCharacterRecord Record { get; }
+
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => default;
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => default;
 
         public CombatPlayer(PlayerCharacterRecord record, Point2D xy)
         {

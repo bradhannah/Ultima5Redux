@@ -85,13 +85,6 @@ namespace Ultima5Redux.References.Dialogue
             }
         }
 
-        public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
-        {
-            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC))
-                return null;
-            return _talkScriptRefs[smallMapRef][nNPC];
-        }
-
         /// <summary>
         ///     Initializes an individual TalkingScript using the raw data created from InitializeTalkScriptsRaw
         ///     <remark>May God have mercy on my soul if I ever need to debug or troubleshoot this again.</remark>
@@ -314,6 +307,13 @@ namespace Ultima5Redux.References.Dialogue
                             chunk); // have to make an assumption that the values increase 1 at a time, this should be true though
                 }
             }
+        }
+
+        public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
+        {
+            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC))
+                return null;
+            return _talkScriptRefs[smallMapRef][nNPC];
         }
 
         /// <summary>

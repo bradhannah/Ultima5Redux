@@ -48,29 +48,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             }
         }
 
-        public bool IsReagentSoldAtLocation(SmallMapReferences.SingleMapReference.Location location,
-            Reagent.ReagentTypeEnum reagentType)
-        {
-            if (!_reagentPriceAndQuantities.ContainsKey(location))
-                return false;
-            if (!_reagentPriceAndQuantities[location].ContainsKey(reagentType))
-                return false;
-
-            return true;
-        }
-
-        public ReagentPriceAndQuantity GetPriceAndQuantity(SmallMapReferences.SingleMapReference.Location location,
-            Reagent.ReagentTypeEnum reagentType)
-        {
-            if (!_reagentPriceAndQuantities.ContainsKey(location))
-                throw new Ultima5ReduxException("Tried to buy reagent at location that doesn't sell them: " + location);
-            if (!_reagentPriceAndQuantities[location].ContainsKey(reagentType))
-                throw new Ultima5ReduxException("Tried to buy " + reagentType + " in " + location +
-                                                " but they don't sell it");
-
-            return _reagentPriceAndQuantities[location][reagentType];
-        }
-
         /// <summary>
         ///     Get all locations that reagents are sold
         /// </summary>
@@ -90,6 +67,29 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             }
 
             return locations;
+        }
+
+        public ReagentPriceAndQuantity GetPriceAndQuantity(SmallMapReferences.SingleMapReference.Location location,
+            Reagent.ReagentTypeEnum reagentType)
+        {
+            if (!_reagentPriceAndQuantities.ContainsKey(location))
+                throw new Ultima5ReduxException("Tried to buy reagent at location that doesn't sell them: " + location);
+            if (!_reagentPriceAndQuantities[location].ContainsKey(reagentType))
+                throw new Ultima5ReduxException("Tried to buy " + reagentType + " in " + location +
+                                                " but they don't sell it");
+
+            return _reagentPriceAndQuantities[location][reagentType];
+        }
+
+        public bool IsReagentSoldAtLocation(SmallMapReferences.SingleMapReference.Location location,
+            Reagent.ReagentTypeEnum reagentType)
+        {
+            if (!_reagentPriceAndQuantities.ContainsKey(location))
+                return false;
+            if (!_reagentPriceAndQuantities[location].ContainsKey(reagentType))
+                return false;
+
+            return true;
         }
     }
 

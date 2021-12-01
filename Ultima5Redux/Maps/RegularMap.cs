@@ -8,16 +8,17 @@ namespace Ultima5Redux.Maps
 {
     public abstract class RegularMap : Map
     {
+
+        [DataMember] public int MapFloor { get; private set; }
+
+        [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; }
+
+        [IgnoreDataMember] public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
+
         [IgnoreDataMember] protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides =>
             _xyOverrides ??= GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
         private Dictionary<Point2D, TileOverrideReference> _xyOverrides;
-
-        [IgnoreDataMember] public abstract SmallMapReferences.SingleMapReference CurrentSingleMapReference { get; }
-
-        [DataMember] public int MapFloor { get; private set; }
-
-        [DataMember] public SmallMapReferences.SingleMapReference.Location MapLocation { get; private set; } 
 
         [JsonConstructor] protected RegularMap()
         {

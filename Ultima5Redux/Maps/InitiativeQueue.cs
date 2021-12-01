@@ -58,11 +58,6 @@ namespace Ultima5Redux.Maps
             InitializeInitiativeQueue();
         }
 
-        public void AddCombatMapUnitToQueue(CombatMapUnit combatMapUnit)
-        {
-            _combatInitiativeTally.Add(combatMapUnit, 0);
-        }
-
         /// <summary>
         ///     Gets the next combat map unit that will be playing
         /// </summary>
@@ -187,31 +182,6 @@ namespace Ultima5Redux.Maps
             return true;
         }
 
-        private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit)
-        {
-            // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
-            if (_combatMap.VisibleOnMap != null)
-                if (!_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
-                    return false;
-
-            return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0;
-        }
-
-        private bool CombatMapUnitIsPresentAndActive(CombatMapUnit combatMapUnit)
-        {
-            if (combatMapUnit is CombatPlayer player)
-            {
-                return CombatPlayerIsActive(player) && CombatMapUnitIsPresent(combatMapUnit);
-            }
-
-            return CombatMapUnitIsPresent(combatMapUnit);
-        }
-
-        private bool CombatPlayerIsActive(CombatPlayer player)
-        {
-            return ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
-        }
-
         /// <summary>
         ///     Gets the active combat unit - either CombatPlayer or Enemy.
         /// </summary>
@@ -248,17 +218,6 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException(
                     "Tried to get current combat unit from initiative queue, but they were null");
             return combatMapUnit;
-        }
-
-        private int GetNumberOfTurnsInQueue()
-        {
-            int nTally = 0;
-            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
-            {
-                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
-            }
-
-            return nTally;
         }
 
         internal List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
@@ -329,6 +288,42 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit)
+        {
+            // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
+            if (_combatMap.VisibleOnMap != null)
+                if (!_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
+                    return false;
+
+            return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0;
+        }
+
+        private bool CombatMapUnitIsPresentAndActive(CombatMapUnit combatMapUnit)
+        {
+            if (combatMapUnit is CombatPlayer player)
+            {
+                return CombatPlayerIsActive(player) && CombatMapUnitIsPresent(combatMapUnit);
+            }
+
+            return CombatMapUnitIsPresent(combatMapUnit);
+        }
+
+        private bool CombatPlayerIsActive(CombatPlayer player)
+        {
+            return ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
+        }
+
+        private int GetNumberOfTurnsInQueue()
+        {
+            int nTally = 0;
+            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
+            {
+                nTally += mapUnits.Count(CombatMapUnitIsPresentAndActive);
+            }
+
+            return nTally;
+        }
+
         private bool IsAtLeastNTurnsInQueue(int nMin)
         {
             int nTally = 0;
@@ -359,6 +354,11 @@ namespace Ultima5Redux.Maps
             }
 
             return false;
+        }
+
+        public void AddCombatMapUnitToQueue(CombatMapUnit combatMapUnit)
+        {
+            _combatInitiativeTally.Add(combatMapUnit, 0);
         }
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)

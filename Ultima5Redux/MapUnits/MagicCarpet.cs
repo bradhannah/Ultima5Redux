@@ -17,6 +17,12 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
 
+        [IgnoreDataMember] public override string FriendlyName => BoardXitName;
+
+        [IgnoreDataMember] public override bool IsActive => true;
+
+        [IgnoreDataMember] public override bool IsAttackable => false;
+
         [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new Dictionary<Point2D.Direction, string>
             {
@@ -47,12 +53,6 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Right, "RidingMagicCarpetRight" },
                 { Point2D.Direction.Up, "RidingMagicCarpetUp" }
             };
-
-        [IgnoreDataMember] public override string FriendlyName => BoardXitName;
-
-        [IgnoreDataMember] public override bool IsActive => true;
-
-        [IgnoreDataMember] public override bool IsAttackable => false;
 
         [JsonConstructor] private MagicCarpet()
         {

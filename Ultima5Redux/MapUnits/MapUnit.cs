@@ -15,6 +15,10 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public abstract class MapUnit : MapUnitDetails
     {
+
+        [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;
+        [DataMember(Name = "NpcRefIndex")] private int _npcRefIndex = -1;
+
         /// <summary>
         ///     The characters current position on the map
         /// </summary>
@@ -35,22 +39,13 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;
-        [DataMember(Name = "NpcRefIndex")] private int _npcRefIndex = -1;
-
         [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
 
-        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
-        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
-
-        [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
-            DirectionToTileNameBoarded;
+        [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new MapUnitPosition();
 
         // ReSharper disable once MemberCanBeProtected.Global
         [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
-
-        [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new MapUnitPosition();
 
         [IgnoreDataMember] public TileReference BoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
@@ -66,6 +61,12 @@ namespace Ultima5Redux.MapUnits
                 : GameReferences.SpriteTileReferences.GetTileReference(NPCRef.NPCKeySprite);
             set => _keyTileIndex = value.Index;
         }
+
+        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
+
+        [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+            DirectionToTileNameBoarded;
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
@@ -104,6 +105,34 @@ namespace Ultima5Redux.MapUnits
 
             // set the characters position 
             MapUnitPosition = mapUnitPosition;
+        }
+
+        private static MapUnitMovement.MovementCommandDirection GetCommandDirection(Point2D fromXy, Point2D toXy)
+        {
+            if (fromXy == toXy) return MapUnitMovement.MovementCommandDirection.None;
+            if (fromXy.X < toXy.X) return MapUnitMovement.MovementCommandDirection.East;
+            if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
+            if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
+            if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
+            throw new Ultima5ReduxException(
+                "For some reason we couldn't determine the path of the command direction in getCommandDirection");
+        }
+
+        public virtual bool CanBeExited(VirtualMap virtualMap)
+        {
+            return true;
+        }
+
+        public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        {
+            // by default the thing doesn't move on it's own
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public virtual string GetDebugDescription(TimeOfDay timeOfDay)
+        {
+            return "MapUnit " + KeyTileReference.Description + " " + MapUnitPosition + " Scheduled to be at: " +
+                   " <b>Movement Attempts</b>: " + MovementAttempts + " " + Movement;
         }
 
         /// <summary>
@@ -157,34 +186,6 @@ namespace Ultima5Redux.MapUnits
             if (nInARow > 0)
                 mapUnit.Movement.AddNewMovementInstruction(new MovementCommand(newDirection, nInARow));
             return true;
-        }
-
-        private static MapUnitMovement.MovementCommandDirection GetCommandDirection(Point2D fromXy, Point2D toXy)
-        {
-            if (fromXy == toXy) return MapUnitMovement.MovementCommandDirection.None;
-            if (fromXy.X < toXy.X) return MapUnitMovement.MovementCommandDirection.East;
-            if (fromXy.Y < toXy.Y) return MapUnitMovement.MovementCommandDirection.South;
-            if (fromXy.X > toXy.X) return MapUnitMovement.MovementCommandDirection.West;
-            if (fromXy.Y > toXy.Y) return MapUnitMovement.MovementCommandDirection.North;
-            throw new Ultima5ReduxException(
-                "For some reason we couldn't determine the path of the command direction in getCommandDirection");
-        }
-
-        public virtual bool CanBeExited(VirtualMap virtualMap)
-        {
-            return true;
-        }
-
-        public virtual void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
-        {
-            // by default the thing doesn't move on it's own
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public virtual string GetDebugDescription(TimeOfDay timeOfDay)
-        {
-            return "MapUnit " + KeyTileReference.Description + " " + MapUnitPosition + " Scheduled to be at: " +
-                   " <b>Movement Attempts</b>: " + MovementAttempts + " " + Movement;
         }
 
         /// <summary>

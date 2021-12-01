@@ -12,7 +12,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     [DataContract] public class Enemy : CombatMapUnit
     {
-        public sealed override CharacterStats Stats { get; } = new CharacterStats();
 
         [DataMember(Name = "EnemyReferenceIndex")] private int _enemyReferenceIndex = -1;
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
@@ -23,13 +22,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember] public override int Defense => EnemyReference.TheDefaultEnemyStats.Armour;
 
         [IgnoreDataMember] public override int Dexterity => EnemyReference.TheDefaultEnemyStats.Dexterity;
-
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>();
-
-        [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>();
 
         // temporary until I read them in dynamically (somehow!?)
         [IgnoreDataMember] public override int Experience => EnemyReference.Experience;
@@ -54,6 +46,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember] public Stack<Node> FleeingPath { get; set; }
 
         [IgnoreDataMember] public bool IsFleeing { get; set; }
+
+        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new Dictionary<Point2D.Direction, string>();
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+            new Dictionary<Point2D.Direction, string>();
+
+        public sealed override CharacterStats Stats { get; } = new CharacterStats();
 
         [JsonConstructor] private Enemy()
         {

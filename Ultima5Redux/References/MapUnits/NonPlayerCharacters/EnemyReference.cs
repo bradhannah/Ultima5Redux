@@ -134,16 +134,16 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             KeyTileReference = tileReferences.GetTileReferenceOfKeyIndex(nKeySpriteIndex);
         }
 
-        public override string ToString()
-        {
-            return AllCapsPluralName + "-" + MixedCaseSingularName;
-        }
-
         private int GetStat(DefaultStats stat, DataOvlReference dataOvlReference, int nMonsterIndex)
         {
             const int TotalBytesPerRecord = 8;
             return dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_STATS)
                 .GetByte(nMonsterIndex * TotalBytesPerRecord + (int)stat);
+        }
+
+        public override string ToString()
+        {
+            return AllCapsPluralName + "-" + MixedCaseSingularName;
         }
 
         public bool IsEnemyAbility(EnemyAbility ability)

@@ -108,22 +108,29 @@ namespace Ultima5Redux.References.Maps
         }
 
         /// <summary>
-        ///     Gets the starting location of a small map
+        ///     Cheater function to automatically create floors in a building
         /// </summary>
+        /// <param name="location"></param>
+        /// <param name="startFloor"></param>
+        /// <param name="nFloors"></param>
+        /// <param name="roomOffset"></param>
         /// <returns></returns>
-        public static Point2D GetStartingXYByLocation()
+        private static IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
+            int startFloor, short nFloors, short roomOffset)
         {
-            return new Point2D(32 / 2 - 1, 30);
-        }
+            List<SingleMapReference> mapRefs = new List<SingleMapReference>();
 
-        /// <summary>
-        ///     Gets the starting position of a small map
-        /// </summary>
-        /// <returns></returns>
-        public static MapUnitPosition GetStartingXYZByLocation()
-        {
-            Point2D startingXY = GetStartingXYByLocation();
-            return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
+            int fileOffset =
+                roomOffset * SmallMap.X_TILES *
+                SmallMap.Y_TILES; // the number of rooms offset, converted to number of bytes to skip
+
+            for (int i = 0; i < nFloors; i++)
+            {
+                mapRefs.Add(new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, location, startFloor + i,
+                    fileOffset + i * SmallMap.X_TILES * SmallMap.Y_TILES));
+            }
+
+            return mapRefs;
         }
 
         /// <summary>
@@ -163,30 +170,45 @@ namespace Ultima5Redux.References.Maps
             _nFloorsDictionary.Add(location, nFloors);
         }
 
-        /// <summary>
-        ///     Cheater function to automatically create floors in a building
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="startFloor"></param>
-        /// <param name="nFloors"></param>
-        /// <param name="roomOffset"></param>
-        /// <returns></returns>
-        private static IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
-            int startFloor, short nFloors, short roomOffset)
+        private void InitializeLocationNames()
         {
-            List<SingleMapReference> mapRefs = new List<SingleMapReference>();
+            // get the data chunks that have the offsets to the strings in the data.ovl file, representing each location (most)
+            DataChunk locationNameOffsetChunk =
+                _dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAME_INDEXES);
 
-            int fileOffset =
-                roomOffset * SmallMap.X_TILES *
-                SmallMap.Y_TILES; // the number of rooms offset, converted to number of bytes to skip
+            // get the offsets 
+            List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUint16List();
 
-            for (int i = 0; i < nFloors; i++)
+            // I happen to know that the underworld and overworld is [0], so let's add a placeholder
+            _locationNames = new List<string>(locationOffsets.Count + 1) { "Overworld/Underworld" };
+
+            // grab each location string
+            // it isn't the most efficient way, but it gets the job done
+            foreach (ushort offset in locationOffsets)
             {
-                mapRefs.Add(new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, location, startFloor + i,
-                    fileOffset + i * SmallMap.X_TILES * SmallMap.Y_TILES));
+                _locationNames.Add(_dataRef
+                    .GetDataChunk(DataChunk.DataFormatType.SimpleString, string.Empty, offset, 20).GetChunkAsString()
+                    .Replace("_", " "));
             }
+        }
 
-            return mapRefs;
+        /// <summary>
+        ///     Gets the starting location of a small map
+        /// </summary>
+        /// <returns></returns>
+        public static Point2D GetStartingXYByLocation()
+        {
+            return new Point2D(32 / 2 - 1, 30);
+        }
+
+        /// <summary>
+        ///     Gets the starting position of a small map
+        /// </summary>
+        /// <returns></returns>
+        public static MapUnitPosition GetStartingXYZByLocation()
+        {
+            Point2D startingXY = GetStartingXYByLocation();
+            return new MapUnitPosition(startingXY.X, startingXY.Y, 0);
         }
 
         /// <summary>
@@ -323,28 +345,6 @@ namespace Ultima5Redux.References.Maps
         public bool HasBasement(SingleMapReference.Location location)
         {
             return _smallMapBasementDictionary[location];
-        }
-
-        private void InitializeLocationNames()
-        {
-            // get the data chunks that have the offsets to the strings in the data.ovl file, representing each location (most)
-            DataChunk locationNameOffsetChunk =
-                _dataRef.GetDataChunk(DataOvlReference.DataChunkName.LOCATION_NAME_INDEXES);
-
-            // get the offsets 
-            List<ushort> locationOffsets = locationNameOffsetChunk.GetChunkAsUint16List();
-
-            // I happen to know that the underworld and overworld is [0], so let's add a placeholder
-            _locationNames = new List<string>(locationOffsets.Count + 1) { "Overworld/Underworld" };
-
-            // grab each location string
-            // it isn't the most efficient way, but it gets the job done
-            foreach (ushort offset in locationOffsets)
-            {
-                _locationNames.Add(_dataRef
-                    .GetDataChunk(DataChunk.DataFormatType.SimpleString, string.Empty, offset, 20).GetChunkAsString()
-                    .Replace("_", " "));
-            }
         }
     }
 }
