@@ -1,18 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <StartupObject>U5ConversationSimulator.Program</StartupObject>
         <LangVersion>8</LangVersion>
+        <StartupObject>U5ConversationSimulator.Program</StartupObject>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="System.Security.Permissions" Version="4.5.0" />
+        <ProjectReference Include="..\Ultima5Redux\Ultima5Redux.csproj"/>
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Ultima5Redux\Ultima5Redux.csproj" />
-    </ItemGroup>
-
 </Project>
