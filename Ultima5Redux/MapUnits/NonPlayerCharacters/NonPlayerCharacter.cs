@@ -43,8 +43,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // if there is a small map character state then we prefer to use it to determine if the 
                 // unit is active
                 Debug.Assert(TheSmallMapCharacterState != null);
-                if (TheSmallMapCharacterState.MapUnitAnimationStateIndex != 0) return TheSmallMapCharacterState.Active;
-                return false;
+                //if (TheSmallMapCharacterState.MapUnitAnimationStateIndex != 0) return TheSmallMapCharacterState.Active;
+
+                return true;
             }
         }
 

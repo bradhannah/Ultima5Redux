@@ -15,7 +15,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] private int NPCIndex { get; set; }
         [DataMember] public bool Active { get; private set; }
-        [DataMember] public int MapUnitAnimationStateIndex { get; private set; }
+        [IgnoreDataMember] private int MapUnitAnimationStateIndex { get; }
 
         [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new MapUnitPosition();
 
@@ -52,12 +52,13 @@ namespace Ultima5Redux.MapUnits
         public SmallMapCharacterState(ushort[] stateUInts, int nNPCIndex)
         {
             Debug.Assert(stateUInts.Length == 0x8);
-            MapUnitAnimationStateIndex = nNPCIndex;
+            MapUnitAnimationStateIndex = stateUInts[6];
             NPCIndex = nNPCIndex;
             TheMapUnitPosition.X = stateUInts[1];
             TheMapUnitPosition.Y = stateUInts[2];
             TheMapUnitPosition.Floor = stateUInts[3];
-            Active = stateUInts[7] > 0;
+            Active = !(TheMapUnitPosition.X == 0 && TheMapUnitPosition.Y == 0);
+            //stateUInts[7] > 0;
         }
     }
 }
