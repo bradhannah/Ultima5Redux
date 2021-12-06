@@ -123,7 +123,7 @@ namespace Ultima5Redux
                 bUseExtendedSprites);
 
             // Force a full reserialization for the sake of testing
-            State = GameState.Deserialize(State.Serialize());
+            //State = GameState.Deserialize(State.Serialize());
 
             // sadly I have to initialize this after the NPCs are created because there is a circular dependency
             //State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap, bUseExtendedSprites);

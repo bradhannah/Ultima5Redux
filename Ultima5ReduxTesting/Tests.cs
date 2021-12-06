@@ -1422,5 +1422,19 @@ namespace Ultima5ReduxTesting
                 .IsCorrectReagents(reagents));
         }
 
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_ReloadAndCheckNPCs(SaveFiles saveFiles)
+        {
+            World world = CreateWorld(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            world.ReLoadFromJson();
+
+            string loadedJson = world.State.Serialize();
+            Assert.NotNull(world.State);
+            world.ReLoadFromJson();
+            string newLoadedJson = world.State.Serialize();
+        }
+
     }
 }

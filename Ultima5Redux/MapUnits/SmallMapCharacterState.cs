@@ -52,6 +52,7 @@ namespace Ultima5Redux.MapUnits
         public SmallMapCharacterState(ushort[] stateUInts, int nNPCIndex)
         {
             Debug.Assert(stateUInts.Length == 0x8);
+            MapUnitAnimationStateIndex = nNPCIndex;
             NPCIndex = nNPCIndex;
             TheMapUnitPosition.X = stateUInts[1];
             TheMapUnitPosition.Y = stateUInts[2];
