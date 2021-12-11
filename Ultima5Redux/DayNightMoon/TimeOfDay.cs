@@ -175,6 +175,11 @@ namespace Ultima5Redux.DayNightMoon
             return bTimeChangeOccured;
         }
 
+        public bool IsTimeChangeTrackerIdValid(int nChangeTrackerId)
+        {
+            return _timeHasChangedDictionary.ContainsKey(nChangeTrackerId);
+        }
+
         /// <summary>
         ///     Registers a change tracker, returning the int handle to it that will need to be stored
         /// </summary>
@@ -185,6 +190,14 @@ namespace Ultima5Redux.DayNightMoon
             int nChangeTracker = _nTotalChangeTrackers++;
             _timeHasChangedDictionary[nChangeTracker] = true;
             return nChangeTracker;
+        }
+
+        public void DeRegisterChangeTracker(int nChangeTrackerId)
+        {
+            if (!IsTimeChangeTrackerIdValid(nChangeTrackerId)) return;
+
+            _timeHasChangedDictionary.Remove(nChangeTrackerId);
+            _nTotalChangeTrackers--;
         }
 
         /// <summary>
