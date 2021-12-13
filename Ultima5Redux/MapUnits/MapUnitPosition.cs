@@ -73,5 +73,17 @@ namespace Ultima5Redux.MapUnits
         {
             return "X=" + X + ",Y=" + Y + ", Floor=" + Floor;
         }
+
+        public string FriendlyString => $"{X},{Y} ({GetFriendlyFloorString(Floor)})";
+
+        public string GetFriendlyFloorString(int nFloor) => nFloor switch
+        {
+            -1 => "Basement",
+            0 => "Main Floor",
+            1 => "First Floor",
+            2 => "Second Floor",
+            3 => "Third Floor",
+            _ => "Unknown Floor"
+        };
     }
 }

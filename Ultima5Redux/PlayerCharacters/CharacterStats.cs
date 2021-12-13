@@ -19,6 +19,23 @@ namespace Ultima5Redux.PlayerCharacters
         [DataMember] public int Level { get; set; }
         [DataMember] public int MaximumHp { get; set; }
 
+        public int GetMaximumMp(PlayerCharacterRecord.CharacterClass characterClass)
+        {
+            // this differs from Ultima IV, and is far more conservative
+            switch (characterClass)
+            {
+                case PlayerCharacterRecord.CharacterClass.Avatar:
+                case PlayerCharacterRecord.CharacterClass.Mage:
+                    return Intelligence;
+                case PlayerCharacterRecord.CharacterClass.Bard:
+                    return Intelligence / 2;
+                case PlayerCharacterRecord.CharacterClass.Fighter:
+                    return 0;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(characterClass), characterClass, null);
+            }
+        }
+
         [DataMember] public PlayerCharacterRecord.CharacterStatus Status
         {
             get => _currentHp <= 0 ? PlayerCharacterRecord.CharacterStatus.Dead : _status;

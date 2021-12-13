@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.IO;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
@@ -67,15 +68,29 @@ namespace Ultima5Redux
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
-        /// Legacy save game state
-        [IgnoreDataMember]  
-        internal readonly ImportedGameState ImportedGameState;
-
         /// <summary>
         ///     The name of the Avatar
         /// </summary>
         [IgnoreDataMember] public string AvatarsName =>
             CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
+
+        [IgnoreDataMember] public string FriendlyLocationName
+        {
+            get
+            {
+                if (TheVirtualMap.IsLargeMap)
+                {
+                    return TheVirtualMap.CurrentSingleMapReference.Floor == -1 ? "Underworld" : "Overworld";
+                }
+
+                return GameReferences.SmallMapRef.GetLocationName(TheVirtualMap.CurrentSingleMapReference.MapLocation);
+            }
+
+        }
+
+        /// Legacy save game state
+        [IgnoreDataMember]
+        internal readonly ImportedGameState ImportedGameState;
 
         /// <summary>
         ///     Does the Avatar have a torch lit?
@@ -124,6 +139,22 @@ namespace Ultima5Redux
                 ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor);
         }
 
+        public static GameState Deserialize(string stateJson)
+        {
+            return JsonConvert.DeserializeObject<GameState>(stateJson);
+        }
+
+        public static GameState DeserializeFromFile(string filePathAndName)
+        {
+            FileStream fs = new FileStream(filePathAndName, FileMode.Open);
+            StreamReader sr = new StreamReader(fs);
+            JsonReader js = new JsonTextReader(sr);
+            JsonSerializer jser = new JsonSerializer();
+
+            GameState state = jser.Deserialize<GameState>(js);
+            return state;
+        }
+
         /// <summary>
         ///     Initializes (one time) the virtual map component
         ///     Must be initialized pretty much after everything else has been loaded into memory
@@ -150,11 +181,6 @@ namespace Ultima5Redux
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(nInitialX, nInitialY);
-        }
-
-        public static GameState Deserialize(string stateJson)
-        {
-            return JsonConvert.DeserializeObject<GameState>(stateJson);
         }
 
         /// <summary>

@@ -348,6 +348,7 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        
         //        offset length      purpose range
         //0           9           character name      zero-terminated string
         //                                            (length = 8+1)
