@@ -92,7 +92,8 @@ namespace Ultima5ReduxTesting
                     @"C:\games\ultima5tests");
 
         private World CreateWorld(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false) =>
-            new World(GetSaveDirectory(saveFiles), bUseExtendedSprites, bLoadInitGam, DataDirectory);
+            new World(true, GetSaveDirectory(saveFiles), dataDirectory: DataDirectory,
+                bUseExtendedSprites: bUseExtendedSprites, bLoadedInitGam: bLoadInitGam);
 
         [Test]
         [TestCase(SaveFiles.Britain)]

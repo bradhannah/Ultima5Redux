@@ -146,12 +146,13 @@ namespace Ultima5Redux
 
         public static GameState DeserializeFromFile(string filePathAndName)
         {
-            FileStream fs = new FileStream(filePathAndName, FileMode.Open);
+            FileStream fs = new FileStream(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.Read);
             StreamReader sr = new StreamReader(fs);
             JsonReader js = new JsonTextReader(sr);
             JsonSerializer jser = new JsonSerializer();
 
             GameState state = jser.Deserialize<GameState>(js);
+            fs.Close();
             return state;
         }
 

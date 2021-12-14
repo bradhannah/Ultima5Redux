@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
@@ -99,13 +100,17 @@ namespace Ultima5Redux
         /// <summary>
         ///     Constructor
         /// </summary>
+        /// <param name="bLegacySave"></param>
         /// <param name="saveGameDirectory">ultima 5 data and save game directory</param>
+        /// <param name="dataDirectory"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="bLoadedInitGam"></param>
-        /// <param name="dataDirectory"></param>
-        public World(string saveGameDirectory, bool bUseExtendedSprites = false, bool bLoadedInitGam = false,
-            string dataDirectory = "")
+        public World(bool bLegacySave, string saveGameDirectory, string dataDirectory = "",
+            bool bUseExtendedSprites = false, bool bLoadedInitGam = false)
         {
+            if (dataDirectory == "" && !bLegacySave)
+                throw new Ultima5ReduxException("You cannot give an empty data directory with a non legacy save!");
+            
             GameReferences.Initialize();
             
             SaveGameDirectory = saveGameDirectory;
@@ -119,8 +124,15 @@ namespace Ultima5Redux
 
             AllSmallMaps = new SmallMaps();
 
-            State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory, AllSmallMaps, OverworldMap, UnderworldMap,
-                bUseExtendedSprites);
+            if (bLegacySave)
+            {
+                State = new GameState(bLoadedInitGam ? "" : SaveGameDirectory, AllSmallMaps, OverworldMap,
+                    UnderworldMap, bUseExtendedSprites);
+            }
+            else
+            {
+                State = GameState.DeserializeFromFile(Path.Combine(SaveGameDirectory, FileConstants.NEW_SAVE_FILE));
+            }
 
             // Force a full reserialization for the sake of testing
             //State = GameState.Deserialize(State.Serialize());

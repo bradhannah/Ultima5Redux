@@ -15,7 +15,7 @@ namespace U5ConversationSimulator
 
         static void Main()
         {
-            World = new World("C:\\games\\ultima_5_late\\britain");
+            World = new World(true, "C:\\games\\ultima_5_late\\britain");
 
             World.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
