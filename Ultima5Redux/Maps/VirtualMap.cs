@@ -575,14 +575,14 @@ namespace Ultima5Redux.Maps
 
             CurrentCombatMap = new CombatMap(singleCombatMapReference);
 
-            TheMapOverrides = new MapOverrides(CurrentCombatMap);
-
             // we only want to push the exposed items and override map if we are on a small or large map 
             // not if we are going combat to combat map (think Debug)
             if (TheMapOverrides.NumOfRows > CurrentCombatMap.NumOfXTiles)
             {
                 PreTheMapOverrides = TheMapOverrides;
             }
+
+            TheMapOverrides = new MapOverrides(CurrentCombatMap);
 
             TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
             LargeMapOverUnder = Map.Maps.Combat;
@@ -1311,6 +1311,11 @@ namespace Ultima5Redux.Maps
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
             LoadSmallMap(GameReferences.SmallMapRef.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
                     CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            TheMapOverrides.TheMap = CurrentMap;
         }
     }
 }

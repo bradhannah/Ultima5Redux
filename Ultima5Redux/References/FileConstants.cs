@@ -41,5 +41,7 @@ namespace Ultima5Redux.References
         public static readonly string[] SmallMapFiles = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };
 
         public const string NEW_SAVE_FILE = "save.json";
+        public const string NEW_SAVE_SUMMARY_FILE = "summary.json";
+        
     }
 }

@@ -1531,5 +1531,6 @@ namespace Ultima5Redux
         public void YellWord(string word)
         {
         }
+        
     }
 }

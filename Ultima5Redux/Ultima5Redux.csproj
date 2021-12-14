@@ -88,6 +88,7 @@
         <Compile Include="Data\SomeStrings.cs"/>
         <Compile Include="DayNightMoon\TimeOfDay.cs"/>
         <Compile Include="External\AStarSharp.cs"/>
+        <Compile Include="GameStateBase.cs"/>
         <Compile Include="ImportedGameState.cs"/>
         <Compile Include="Maps\CombatMap.cs"/>
         <Compile Include="Maps\InitiativeQueue.cs"/>

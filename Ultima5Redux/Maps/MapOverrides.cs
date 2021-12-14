@@ -22,7 +22,7 @@ namespace Ultima5Redux.Maps
         [DataMember(Name = "OverrideMap")]
         private Dictionary<Point2D, int> _overrideMap = new Dictionary<Point2D, int>();
 
-        [IgnoreDataMember] internal Map TheMap { get; }
+        [IgnoreDataMember] internal Map TheMap { get; set; }
 
         [IgnoreDataMember] public int NumOfCols => TheMap.NumOfYTiles;
 

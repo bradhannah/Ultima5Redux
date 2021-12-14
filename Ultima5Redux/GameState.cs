@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
@@ -16,20 +17,14 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux
 {
-    [DataContract] public class GameState
+    [DataContract] public class GameState : GameStateBase
     {
-
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
 
         /// <summary>
         ///     What is the index of the currently active player?
         /// </summary>
         [DataMember] public int ActivePlayerNumber { get; set; }
-
-        /// <summary>
-        ///     All player character records
-        /// </summary>
-        [DataMember] public PlayerCharacterRecords CharacterRecords { get; private set; }
 
         /// <summary>
         ///     Users Karma
@@ -50,11 +45,6 @@ namespace Ultima5Redux
         ///     NPC states such as if they are dead or have met the avatar
         /// </summary>
         [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
-
-        /// <summary>
-        ///     The current time of day
-        /// </summary>
-        [DataMember] public TimeOfDay TheTimeOfDay { get; private set; }
 
         /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
@@ -192,10 +182,76 @@ namespace Ultima5Redux
             // called when falling from a Klimb on a mountain
         }
 
+        private void RecalculateGameDescription()
+        {
+            string description =
+                $"Last Saved: {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}\n\n";
+            description += $"{TheTimeOfDay.FormattedDate} {TheTimeOfDay.FormattedTime}\n\n";
+            description += $"{FriendlyLocationName}\n";
+            if (TheVirtualMap.CurrentSingleMapReference.MapLocation !=
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                description += $"{TheVirtualMap.CurrentPosition.FriendlyString}\n\n";
+
+            GameDescription = description;
+        }
+
         public string Serialize()
         {
             string stateJson = JsonConvert.SerializeObject(this, Formatting.Indented);
             return stateJson;
+        }
+
+        public string SerializeGameDescription()
+        {
+            RecalculateGameDescription();
+            JsonSerializerSettings jss = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+            string stateJson = JsonConvert.SerializeObject(this, typeof(GameStateBase), jss);
+            return stateJson;
+        }
+
+        private void MoveFileAsBackup(string currentSaveGamePathAndFile)
+        {
+            string currentSaveGamePathAndFileBackup = currentSaveGamePathAndFile + ".bak";
+
+            if (!File.Exists(currentSaveGamePathAndFile)) return;
+
+            if (File.Exists(currentSaveGamePathAndFileBackup))
+            {
+                File.Delete(currentSaveGamePathAndFileBackup);
+            }
+
+            File.Move(currentSaveGamePathAndFile, currentSaveGamePathAndFileBackup);
+        }
+
+        public bool SaveGame(out string errorStr, string currentSaveGamePath)
+        {
+            errorStr = "";
+
+            Directory.CreateDirectory(currentSaveGamePath);
+
+            try
+            {
+                string currentSaveGamePathAndFile = Path.Combine(currentSaveGamePath, FileConstants.NEW_SAVE_FILE);
+                // make sure there is a backup of the save game before saving
+                MoveFileAsBackup(currentSaveGamePathAndFile);
+                string saveFileJsonStr = Serialize();
+                File.WriteAllText(currentSaveGamePathAndFile, saveFileJsonStr);
+
+                string currentSaveGameSummaryPathAndFile =
+                    Path.Combine(currentSaveGamePath, FileConstants.NEW_SAVE_SUMMARY_FILE);
+                MoveFileAsBackup(currentSaveGameSummaryPathAndFile);
+                string gameSummaryJsonStr = SerializeGameDescription();
+                File.WriteAllText(currentSaveGameSummaryPathAndFile, gameSummaryJsonStr);
+            } catch (Exception e)
+            {
+                errorStr = e.Message;
+                return false;
+            }
+
+            return true;
         }
     }
 }
