@@ -8,7 +8,7 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.References
 {
-    public static class GameReferences
+    public class GameReferences
     {
 
         private const string GOLD_DIR = @"C:\games\Ultima_5\Gold";
@@ -96,31 +96,56 @@ namespace Ultima5Redux.References
         public static TileOverrideReferences TileOverrideRefs { get; private set; }
 
         //=> ;
+        public static GameReferences Instance { get; set; }
 
-        public static void Initialize()
+        public static bool IsInitialized { get; private set; }
+
+        private GameReferences(string dataDirectory)
         {
-            LookRef = new Look(U5Directory);
-            SignRef = new Signs(U5Directory);
+            LookRef = new Look(dataDirectory);
+            SignRef = new Signs(dataDirectory);
             InvRef = new InventoryReferences();
             MagicRefs = new MagicReferences();
             TileOverrideRefs = new TileOverrideReferences();
 
-            DataOvlRef = new DataOvlReference(U5Directory);
+            DataOvlRef = new DataOvlReference(dataDirectory);
 
             SmallMapRef = new SmallMapReferences(DataOvlRef);
             LargeMapRef = new LargeMapLocationReferences(DataOvlRef);
             MoonPhaseRefs = new MoonPhaseReferences(DataOvlRef);
             SpriteTileReferences = new TileReferences(DataOvlRef.StringReferences);
             CombatItemRefs = new CombatItemReferences(InvRef);
-            TalkScriptsRef = new TalkScripts(U5Directory, DataOvlRef);
-            NpcRefs = new NonPlayerCharacterReferences(U5Directory, SmallMapRef, TalkScriptsRef);
+            TalkScriptsRef = new TalkScripts(dataDirectory, DataOvlRef);
+            NpcRefs = new NonPlayerCharacterReferences(dataDirectory, SmallMapRef, TalkScriptsRef);
             EnemyRefs = new EnemyReferences(DataOvlRef, SpriteTileReferences);
-            CombatMapRefs = new CombatMapReferences(U5Directory, SpriteTileReferences);
+            CombatMapRefs = new CombatMapReferences(dataDirectory, SpriteTileReferences);
 
-            ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(U5Directory, DataOvlRef);
+            ShoppeKeeperDialogueReference = new ShoppeKeeperDialogueReference(dataDirectory, DataOvlRef);
             ShoppeKeeperRefs = new ShoppeKeeperReferences(DataOvlRef, NpcRefs);
             ReagentReferences = new ReagentReferences();
             ProvisionReferences = new ProvisionReferences();
+        }
+
+        public static void Initialize(string dataDirectory = "")
+        {
+            if (dataDirectory == "")
+            {
+                dataDirectory = U5Directory;
+            }
+
+            if (!Directory.Exists(dataDirectory))
+            {
+                throw new Ultima5ReduxException("Missing the data directory: " + dataDirectory);
+            }
+
+            if (!File.Exists(Path.Combine(dataDirectory, FileConstants.DATA_OVL)))
+            {
+                throw new Ultima5ReduxException("Missing the Data.OVL file: " +
+                                                Path.Combine(dataDirectory, FileConstants.DATA_OVL));
+            }
+
+            Instance = new GameReferences(dataDirectory);
+            IsInitialized = true;
         }
     }
 }

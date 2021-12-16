@@ -94,8 +94,9 @@ namespace Ultima5ReduxTesting
         
         private string NewSaveRootDirectory => TestContext.Parameters.Get("NewSaveRootDirectory", 
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "UltimaVRedux"));
- 
-            
+
+        private string GetNewSaveDirectory(SaveFiles saveFiles) =>
+            Path.Combine(NewSaveRootDirectory, saveFiles.ToString());
 
         private World CreateWorldFromLegacy(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false) =>
             new World(true, GetSaveDirectory(saveFiles), dataDirectory: DataDirectory,
@@ -1477,6 +1478,20 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
 
             TileReference tileRef = world.State.TheVirtualMap.GetTileReference(0, 0);
+        }
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_SerializeDeserializeGameSummary(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            string saveDirectory = GetNewSaveDirectory(saveFiles);
+            string summaryFileAndPath = Path.Combine(saveDirectory, FileConstants.NEW_SAVE_SUMMARY_FILE);
+
+            GameSummary gameSummary = world.State.CreateGameSummary(saveDirectory);
+            string serializedGameSummary = gameSummary.SerializeGameSummary();
+            GameSummary reserializedGameSummary = GameSummary.DeserializeGameSummary(serializedGameSummary);
         }
     }
 }

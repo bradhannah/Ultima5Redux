@@ -28,7 +28,7 @@
         <UseApplicationTrust>false</UseApplicationTrust>
         <BootstrapperEnabled>true</BootstrapperEnabled>
         <TargetFrameworkProfile/>
-        <LangVersion>8</LangVersion>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -88,7 +88,7 @@
         <Compile Include="Data\SomeStrings.cs"/>
         <Compile Include="DayNightMoon\TimeOfDay.cs"/>
         <Compile Include="External\AStarSharp.cs"/>
-        <Compile Include="GameStateBase.cs"/>
+        <Compile Include="GameSummary.cs"/>
         <Compile Include="ImportedGameState.cs"/>
         <Compile Include="Maps\CombatMap.cs"/>
         <Compile Include="Maps\InitiativeQueue.cs"/>
@@ -223,6 +223,7 @@
         <Compile Include="References\PlayerCharacters\Inventory\ReagentReferences.cs"/>
         <Compile Include="References\PlayerCharacters\Inventory\WeaponReference.cs"/>
         <Compile Include="References\U5StringRef.cs"/>
+        <Compile Include="SaveGameSummaries.cs"/>
         <Compile Include="Ultima5ReduxException.cs"/>
         <Compile Include="Utils.cs"/>
         <Compile Include="Maps\SmallMap.cs"/>

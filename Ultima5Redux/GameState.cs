@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -17,9 +18,36 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux
 {
-    [DataContract] public class GameState : GameStateBase
+    [DataContract] public class GameState 
     {
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
+
+        public GameSummary CreateGameSummary(string saveGamePath)
+        {
+            GameSummary gameSummary = new()
+            {
+                CharacterRecords = CharacterRecords,
+                TheTimeOfDay = TheTimeOfDay,
+                TheExtraSaveData = new GameSummary.ExtraSaveData
+                {
+                    CurrentMapPosition = TheVirtualMap.CurrentPosition,
+                    FriendlyLocationName = FriendlyLocationName,
+                    SavedDirectory = saveGamePath,
+                    LastWrite = Directory.GetLastWriteTime(saveGamePath)
+                }
+            };
+            return gameSummary;
+        }
+
+        /// <summary>
+        ///     All player character records
+        /// </summary>
+        [DataMember] public PlayerCharacterRecords CharacterRecords { get; protected set; }
+
+        /// <summary>
+        ///     The current time of day
+        /// </summary>
+        [DataMember] public TimeOfDay TheTimeOfDay { get; protected set; }
 
         /// <summary>
         ///     What is the index of the currently active player?
@@ -142,6 +170,10 @@ namespace Ultima5Redux
             JsonSerializer jser = new JsonSerializer();
 
             GameState state = jser.Deserialize<GameState>(js);
+
+            Debug.Assert(state != null, nameof(state) + " != null");
+
+            //state.TheExtraSaveData.SavedDirectory = Path.GetDirectoryName(filePathAndName);
             fs.Close();
             return state;
         }
@@ -182,35 +214,13 @@ namespace Ultima5Redux
             // called when falling from a Klimb on a mountain
         }
 
-        private void RecalculateGameDescription()
-        {
-            string description =
-                $"Last Saved: {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}\n\n";
-            description += $"{TheTimeOfDay.FormattedDate} {TheTimeOfDay.FormattedTime}\n\n";
-            description += $"{FriendlyLocationName}\n";
-            if (TheVirtualMap.CurrentSingleMapReference.MapLocation !=
-                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                description += $"{TheVirtualMap.CurrentPosition.FriendlyString}\n\n";
-
-            GameDescription = description;
-        }
-
         public string Serialize()
         {
             string stateJson = JsonConvert.SerializeObject(this, Formatting.Indented);
             return stateJson;
         }
 
-        public string SerializeGameDescription()
-        {
-            RecalculateGameDescription();
-            JsonSerializerSettings jss = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            };
-            string stateJson = JsonConvert.SerializeObject(this, typeof(GameStateBase), jss);
-            return stateJson;
-        }
+     
 
         private void MoveFileAsBackup(string currentSaveGamePathAndFile)
         {
@@ -226,6 +236,14 @@ namespace Ultima5Redux
             File.Move(currentSaveGamePathAndFile, currentSaveGamePathAndFileBackup);
         }
 
+        // private void FreshenExtraSaveData(string saveGamePath)
+        // {
+        //     TheExtraSaveData.SavedDirectory = saveGamePath;
+        //     TheExtraSaveData.LastWrite = Directory.GetLastWriteTime(saveGamePath);
+        //     TheExtraSaveData.CurrentMapPosition = TheVirtualMap.CurrentPosition;
+        //     TheExtraSaveData.FriendlyLocationName = FriendlyLocationName;
+        // }
+        
         public bool SaveGame(out string errorStr, string currentSaveGamePath)
         {
             errorStr = "";
@@ -243,8 +261,12 @@ namespace Ultima5Redux
                 string currentSaveGameSummaryPathAndFile =
                     Path.Combine(currentSaveGamePath, FileConstants.NEW_SAVE_SUMMARY_FILE);
                 MoveFileAsBackup(currentSaveGameSummaryPathAndFile);
-                string gameSummaryJsonStr = SerializeGameDescription();
+
+                GameSummary gameSummary = CreateGameSummary(currentSaveGamePath);
+                string gameSummaryJsonStr = gameSummary.SerializeGameSummary();
+                //string gameSummaryJsonStr = SerializeGameDescription(currentSaveGamePath);
                 File.WriteAllText(currentSaveGameSummaryPathAndFile, gameSummaryJsonStr);
+                
             } catch (Exception e)
             {
                 errorStr = e.Message;

@@ -111,10 +111,10 @@ namespace Ultima5Redux
             if (dataDirectory == "" && !bLegacySave)
                 throw new Ultima5ReduxException("You cannot give an empty data directory with a non legacy save!");
             
-            GameReferences.Initialize();
-            
             SaveGameDirectory = saveGameDirectory;
             DataDirectory = dataDirectory == "" ? SaveGameDirectory : dataDirectory;
+
+            GameReferences.Initialize(DataDirectory);
 
             // build the overworld map
             OverworldMap = new LargeMap(DataDirectory, Map.Maps.Overworld);
