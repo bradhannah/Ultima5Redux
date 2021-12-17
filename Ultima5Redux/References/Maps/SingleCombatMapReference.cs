@@ -46,11 +46,10 @@ namespace Ultima5Redux.References.Maps
         public const int XTILES = 11;
         public const int YTILES = 11;
         private readonly CombatMapReferences.CombatMapData _combatMapData;
-        private readonly List<Point2D> _enemyPositions = new List<Point2D>(NUM_ENEMIES);
-        private readonly List<byte> _enemySprites = new List<byte>(NUM_ENEMIES);
+        private readonly List<Point2D> _enemyPositions = new(NUM_ENEMIES);
+        private readonly List<byte> _enemySprites = new(NUM_ENEMIES);
 
-        private readonly Dictionary<EntryDirection, bool> _enterDirectionDictionary =
-            new Dictionary<EntryDirection, bool>();
+        private readonly Dictionary<EntryDirection, bool> _enterDirectionDictionary = new();
 
         private readonly List<List<Point2D>> _playerPositionsByDirection =
             Utils.Init2DList<Point2D>(Enum.GetNames(typeof(EntryDirection)).Length, NUM_PLAYERS);
@@ -132,7 +131,7 @@ namespace Ultima5Redux.References.Maps
             // copying the array to a simpler format
             TheMap = Utils.Init2DByteArray(XTILES, YTILES);
 
-            Dictionary<EntryDirection, Point2D> ladders = new Dictionary<EntryDirection, Point2D>();
+            Dictionary<EntryDirection, Point2D> ladders = new();
 
             // get and build the map sprites 
             for (int nRow = 0; nRow < XTILES; nRow++)
@@ -209,11 +208,11 @@ namespace Ultima5Redux.References.Maps
             Debug.Assert(yEnemyPosList.Count == NUM_ENEMIES);
             Debug.Assert(spriteEnemyList.Count == NUM_ENEMIES);
 
-            Dictionary<Point2D, bool> duplicatePositionDictionary = new Dictionary<Point2D, bool>();
+            Dictionary<Point2D, bool> duplicatePositionDictionary = new();
 
             for (int nEnemyIndex = 0; nEnemyIndex < NUM_ENEMIES; nEnemyIndex++)
             {
-                Point2D enemyPosition = new Point2D(xEnemyPosList[nEnemyIndex], yEnemyPosList[nEnemyIndex]);
+                Point2D enemyPosition = new(xEnemyPosList[nEnemyIndex], yEnemyPosList[nEnemyIndex]);
 
                 if (duplicatePositionDictionary.ContainsKey(enemyPosition))
                 {
@@ -229,10 +228,9 @@ namespace Ultima5Redux.References.Maps
                 }
             }
 
-            List<Point2D> triggerPositions = new List<Point2D>(XTILES);
-            List<TileReference> triggerTileReferences = new List<TileReference>(XTILES);
-            Dictionary<Point2D, List<PointAndTileReference>> triggerPointToTileReferences =
-                new Dictionary<Point2D, List<PointAndTileReference>>();
+            List<Point2D> triggerPositions = new(XTILES);
+            List<TileReference> triggerTileReferences = new(XTILES);
+            Dictionary<Point2D, List<PointAndTileReference>> triggerPointToTileReferences = new();
 
             // load the trigger positions
             // these are the Points that a player character hits and causes a triggering event
@@ -257,8 +255,8 @@ namespace Ultima5Redux.References.Maps
 
             // Gather all positions that change as a result of a trigger
             // the results are split into two different sections
-            List<byte> triggerResultXPositions = new List<byte>();
-            List<byte> triggerResultYPositions = new List<byte>();
+            List<byte> triggerResultXPositions = new();
+            List<byte> triggerResultYPositions = new();
             triggerResultXPositions.AddRange(dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                     "Trigger Result X position #1", nMapOffset + nBytesPerRow * 9 + XTILES, nTriggerPositions)
                 .GetAsByteList());
@@ -278,8 +276,8 @@ namespace Ultima5Redux.References.Maps
                 if (newTriggeredTileReference.Index == 0x0) continue;
 
                 // grab the two Points that will change as a result of landing on the trigger tile
-                Point2D pos1 = new Point2D(triggerResultXPositions[i], triggerResultYPositions[i]);
-                Point2D pos2 = new Point2D(triggerResultXPositions[i + nTriggerPositions],
+                Point2D pos1 = new(triggerResultXPositions[i], triggerResultYPositions[i]);
+                Point2D pos2 = new(triggerResultXPositions[i + nTriggerPositions],
                     triggerResultYPositions[i + nTriggerPositions]);
                 Point2D triggeredPosition = triggerPositions[i];
 
@@ -358,7 +356,7 @@ namespace Ultima5Redux.References.Maps
 
         public List<EntryDirection> GetEntryDirections()
         {
-            List<EntryDirection> validEntryDirections = new List<EntryDirection>();
+            List<EntryDirection> validEntryDirections = new();
             foreach (EntryDirection entryDirection in Enum.GetValues(typeof(EntryDirection)))
             {
                 if (IsValidDirection(entryDirection)) validEntryDirections.Add(entryDirection);
@@ -397,7 +395,7 @@ namespace Ultima5Redux.References.Maps
             List<Point2D> points = GetPlayerStartPositions(entryDirection);
             if (points.Count == 0 || points[0].X <= 0) return false;
 
-            List<Point2D> characterPositions = new List<Point2D>();
+            List<Point2D> characterPositions = new();
             // we walk through each of the character positions and if one is repeated then we know it's not valid
             foreach (Point2D point in points)
             {

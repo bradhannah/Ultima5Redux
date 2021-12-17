@@ -18,7 +18,8 @@ namespace U5ConversationSimulator
             World = new World(true, "C:\\games\\ultima_5_late\\britain");
 
             World.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    0));
 
             //Dictionary<int, TileReference> tileReference = TileReference.Load();
             //world.OverworldMap.PrintMap();
@@ -28,8 +29,9 @@ namespace U5ConversationSimulator
             //Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
             // List<NonPlayerCharacterReference> minocNpcRef =
             //     _world.NpcRefs.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
-            
-            SmallMapReferences.SingleMapReference.Location location = SmallMapReferences.SingleMapReference.Location.Minoc;
+
+            SmallMapReferences.SingleMapReference.Location location =
+                SmallMapReferences.SingleMapReference.Location.Minoc;
             NonPlayerCharacterState npcState =
                 World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
             Conversation convo = new Conversation(World.State, npcState); // delwyn

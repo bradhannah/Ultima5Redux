@@ -38,14 +38,13 @@ namespace Ultima5Redux.References.Maps
         private Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
             int nFloor)
         {
-            Dictionary<Point2D, TileOverrideReference> tileOverrideList =
-                new Dictionary<Point2D, TileOverrideReference>();
+            Dictionary<Point2D, TileOverrideReference> tileOverrideList = new();
 
             if (!TileOverrideExists(territory, nMapNumber, nFloor)) return null;
 
             foreach (TileOverrideReference tileOverride in GetTileOverrides(territory, nMapNumber, nFloor))
             {
-                Point2D xy = new Point2D(tileOverride.X, tileOverride.Y);
+                Point2D xy = new(tileOverride.X, tileOverride.Y);
                 if (tileOverrideList.ContainsKey(xy))
                     throw new Ultima5ReduxException("You have a duplicate record in TileOverrides: " + nMapNumber +
                                                     " " + xy);

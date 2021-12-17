@@ -30,7 +30,6 @@ namespace Raw16ToBMP
             return palette;
         }
 
-
         public static int Write16BitmapFile(string filename, int width, int height, byte[] imageData)
         {
             using (new MemoryStream(imageData))
@@ -115,7 +114,6 @@ namespace Raw16ToBMP
         //        return 1;
         //    }
     }
-
 
     class Program
     {
@@ -234,7 +232,6 @@ namespace Raw16ToBMP
                 "C:\\games\\ultima_5\\temp\\dec_res\\ultima_fire4.16.bmp",
                 nPixelWidth, nPixelHeight, nStartIndex + (nOffsetPerFire * 3) + nDefaultOffset);
         }
-
 
         public static void Export(string uncompFilename, string bmpFilename, int nGraphicWidth, int nGraphicHeight,
             int nOffset)

@@ -160,7 +160,7 @@ namespace Ultima5Redux.References.Maps
             }
 
             public static SingleMapReference GetCombatMapSingleInstance() =>
-                new SingleMapReference(GameReferences.DataOvlRef.DataDirectory, Location.Combat_resting_shrine, 0, 0);
+                new(GameReferences.DataOvlRef.DataDirectory, Location.Combat_resting_shrine, 0, 0);
 
             /// <summary>
             ///     Get the filename of the map data based on the location

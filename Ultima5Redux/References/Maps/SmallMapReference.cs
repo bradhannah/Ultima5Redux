@@ -20,17 +20,14 @@ namespace Ultima5Redux.References.Maps
 
         // a mapping of the master file -> a list of locations, which also provides an index value for the town (implied within list)
         private readonly Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>
-            _masterFileLocationDictionary =
-                new Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>(MASTER_FILES);
+            _masterFileLocationDictionary = new(MASTER_FILES);
 
-        private readonly Dictionary<SingleMapReference.Location, int> _nFloorsDictionary =
-            new Dictionary<SingleMapReference.Location, int>();
+        private readonly Dictionary<SingleMapReference.Location, int> _nFloorsDictionary = new();
 
         // a tally of current file offsets used for auto-incrementing
-        private readonly Dictionary<string, short> _roomOffsetCountDictionary = new Dictionary<string, short>();
+        private readonly Dictionary<string, short> _roomOffsetCountDictionary = new();
 
-        private readonly Dictionary<SingleMapReference.Location, bool> _smallMapBasementDictionary =
-            new Dictionary<SingleMapReference.Location, bool>();
+        private readonly Dictionary<SingleMapReference.Location, bool> _smallMapBasementDictionary = new();
 
         /// <summary>
         ///     a list of all the location names
@@ -41,7 +38,7 @@ namespace Ultima5Redux.References.Maps
         /// <summary>
         ///     A list of all map references
         /// </summary>
-        public List<SingleMapReference> MapReferenceList { get; } = new List<SingleMapReference>();
+        public List<SingleMapReference> MapReferenceList { get; } = new();
 
         /// <summary>
         ///     Construct all small map references
@@ -118,7 +115,7 @@ namespace Ultima5Redux.References.Maps
         private static IEnumerable<SingleMapReference> GenerateSingleMapReferences(SingleMapReference.Location location,
             int startFloor, short nFloors, short roomOffset)
         {
-            List<SingleMapReference> mapRefs = new List<SingleMapReference>();
+            List<SingleMapReference> mapRefs = new();
 
             int fileOffset =
                 roomOffset * SmallMap.X_TILES *

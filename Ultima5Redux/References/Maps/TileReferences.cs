@@ -20,7 +20,7 @@ namespace Ultima5Redux.References.Maps
         ///     Tile reference dictionary referenced by tile string value
         /// </summary>
         private Dictionary<string, TileReference> TileReferenceByStringDictionary { get; } =
-            new Dictionary<string, TileReference>(1024);
+            new(1024);
 
         /// <summary>
         ///     Tile reference dictionary indexed by sprite number

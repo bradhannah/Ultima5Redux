@@ -17,7 +17,7 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsUnderworld => MapNumber == 0 && Z == -1;
 
-        public MapUnitPosition Position => new MapUnitPosition(X, Y, Z);
+        public MapUnitPosition Position => new(X, Y, Z);
 
         [JsonProperty] public string SpriteName { get; set; }
 
