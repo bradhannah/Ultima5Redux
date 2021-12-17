@@ -297,13 +297,19 @@
         <EmbeddedResource Include="DataFiles\TileOverrides.json" />
     </ItemGroup>
     <ItemGroup>
-        <Resource Include="CodeStuff\RiderFileLayout.xml" />
+        <Resource Include="CodeStuff\RiderFileLayout.xml"/>
     </ItemGroup>
 
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <PropertyGroup>
         <PostBuildEvent>copy $(TargetPath) "F:\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
             copy $(TargetDir)\*.pdb "F:\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+            set errorlevel=0
+        </PostBuildEvent>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PostBuildEvent>copy $(TargetPath) "C:\Users\hannahb\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+            copy $(TargetDir)\*.pdb "C:\Users\hannahb\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
             set errorlevel=0
         </PostBuildEvent>
     </PropertyGroup>

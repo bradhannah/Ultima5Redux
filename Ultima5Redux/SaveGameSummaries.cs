@@ -25,6 +25,12 @@ namespace Ultima5Redux
 
             _gameStates.Clear();
 
+            if (!Directory.Exists(parentSavePath))
+            {
+                Directory.CreateDirectory(parentSavePath);
+                return;
+            }
+
             foreach (string directory in Directory.EnumerateDirectories(parentSavePath))
             {
                 string summaryFileAndPath = Path.Combine(directory, FileConstants.NEW_SAVE_SUMMARY_FILE);
@@ -43,6 +49,5 @@ namespace Ultima5Redux
                 }
             }
         }
-
     }
 }

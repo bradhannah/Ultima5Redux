@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
@@ -16,10 +15,10 @@ namespace Ultima5Redux.Maps
         //[DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
         [DataMember(Name = "MapChoice")] private readonly Maps _mapChoice;
 
-        [DataMember(Name = "BottomRightExtent")] private Point2D _bottomRightExtent;
+        [DataMember(Name = "BottomRightExtent")]
+        private Point2D _bottomRightExtent;
 
         [DataMember(Name = "TopLeftExtent")] private Point2D _topLeftExtent;
-
 
         [IgnoreDataMember] public override int NumOfXTiles => LargeMapLocationReferences.XTiles;
         [IgnoreDataMember] public override int NumOfYTiles => LargeMapLocationReferences.YTiles;
@@ -49,12 +48,12 @@ namespace Ultima5Redux.Maps
         {
             if (mapChoice != Maps.Overworld && mapChoice != Maps.Underworld)
                 throw new Ultima5ReduxException("Tried to create a large map with " + mapChoice);
-            
+
             _mapChoice = mapChoice;
 
             // for now combat maps don't have overrides
             //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
-            
+
             BuildMap(mapChoice);
             BuildAStar();
         }
@@ -64,8 +63,6 @@ namespace Ultima5Redux.Maps
             BuildMap(_mapChoice);
             BuildAStar();
         }
-
-
 
         private void BuildAStar()
         {
