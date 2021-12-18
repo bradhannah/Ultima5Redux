@@ -45,7 +45,8 @@ namespace Ultima5Redux
                 } catch (Exception e)
                 {
                     // we don't load it, and simply skip it
-                    Debug.WriteLine("Error: Couldn't load " + summaryFileAndPath);
+                    Debug.WriteLine($"Error: Couldn't load {summaryFileAndPath}");
+                    Debug.WriteLine(e.Message);
                 }
             }
         }

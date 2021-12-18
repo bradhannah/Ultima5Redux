@@ -266,6 +266,7 @@
     </ItemGroup>
     <ItemGroup>
         <Resource Include="CodeStuff\RiderUnityFileLayout.xml" />
+        <Content Include="CodeStuff\RegExes.txt"/>
         <Content Include="DataFiles\AdditionalEnemyFlags.csv" />
         <EmbeddedResource Include="DataFiles\AdditionalEnemyFlags.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

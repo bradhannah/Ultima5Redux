@@ -9,12 +9,11 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
-
         /// <summary>
         ///     Dictionary of all change trackers and if time has changed since last check
         /// </summary>
         [DataMember(Name = "TimeHasChangedDictionary")]
-        private readonly Dictionary<int, bool> _timeHasChangedDictionary = new Dictionary<int, bool>();
+        private readonly Dictionary<Guid, bool> _timeHasChangedDictionary = new();
 
         /// <summary>
         ///     tracks the total number of registered change trackers
@@ -24,7 +23,8 @@ namespace Ultima5Redux.DayNightMoon
 
         [DataMember] public byte Day { get; set; }
 
-        [DataMember] public byte Hour
+        [DataMember]
+        public byte Hour
         {
             get => _nHour;
             set
@@ -34,7 +34,8 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
-        [DataMember] public byte Minute
+        [DataMember]
+        public byte Minute
         {
             get => _nMinute;
             set
@@ -54,7 +55,8 @@ namespace Ultima5Redux.DayNightMoon
         // ReSharper disable once UnusedMember.Global
         [IgnoreDataMember] public string FormattedDate => Month + "-" + Day + "-" + Year;
 
-        [IgnoreDataMember] public string FormattedTime
+        [IgnoreDataMember]
+        public string FormattedTime
         {
             get
             {
@@ -69,7 +71,8 @@ namespace Ultima5Redux.DayNightMoon
         ///     Gets a string describing the current time of day
         /// </summary>
         /// <returns></returns>
-        [IgnoreDataMember] public string TimeOfDayName
+        [IgnoreDataMember]
+        public string TimeOfDayName
         {
             get
             {
@@ -164,20 +167,23 @@ namespace Ultima5Redux.DayNightMoon
         /// <summary>
         ///     Has the time changed since the last time we checked with the given change tracker id
         /// </summary>
-        /// <param name="nChangeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
+        /// <param name="changeTrackerId">the change tracker id (registered with RegisterChangeTracker)</param>
         /// <returns>true if change has occured, otherwise false</returns>
         // ReSharper disable once UnusedMember.Global
-        public bool HasTimeChanged(int nChangeTrackerId)
+        public bool HasTimeChanged(Guid changeTrackerId)
         {
-            bool bTimeChangeOccured = _timeHasChangedDictionary[nChangeTrackerId];
+            if (!IsTimeChangeTrackerIdValid(changeTrackerId))
+                throw new Ultima5ReduxException(
+                    "Looked up time change tracking but it didn't exist! " + changeTrackerId);
+            bool bTimeChangeOccured = _timeHasChangedDictionary[changeTrackerId];
             // we reset it to false to say we saw it until the next change
-            _timeHasChangedDictionary[nChangeTrackerId] = false;
+            _timeHasChangedDictionary[changeTrackerId] = false;
             return bTimeChangeOccured;
         }
 
-        public bool IsTimeChangeTrackerIdValid(int nChangeTrackerId)
+        public bool IsTimeChangeTrackerIdValid(Guid changeTrackerId)
         {
-            return _timeHasChangedDictionary.ContainsKey(nChangeTrackerId);
+            return _timeHasChangedDictionary.ContainsKey(changeTrackerId);
         }
 
         /// <summary>
@@ -185,18 +191,19 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <returns>the int handler of the change tracker</returns>
         // ReSharper disable once UnusedMember.Global
-        public int RegisterChangeTracker()
+        public Guid RegisterChangeTracker()
         {
-            int nChangeTracker = _nTotalChangeTrackers++;
-            _timeHasChangedDictionary[nChangeTracker] = true;
-            return nChangeTracker;
+            Guid changeTrackerId = Guid.NewGuid();
+            //_nTotalChangeTrackers++;
+            _timeHasChangedDictionary[changeTrackerId] = true;
+            return changeTrackerId;
         }
 
-        public void DeRegisterChangeTracker(int nChangeTrackerId)
+        public void DeRegisterChangeTracker(Guid changeTrackerId)
         {
-            if (!IsTimeChangeTrackerIdValid(nChangeTrackerId)) return;
+            if (!IsTimeChangeTrackerIdValid(changeTrackerId)) return;
 
-            _timeHasChangedDictionary.Remove(nChangeTrackerId);
+            _timeHasChangedDictionary.Remove(changeTrackerId);
             _nTotalChangeTrackers--;
         }
 
@@ -207,9 +214,12 @@ namespace Ultima5Redux.DayNightMoon
         /// <param name="bTimeChangeHappened">has the time changed? (almost always true)</param>
         public void SetAllChangeTrackers(bool bTimeChangeHappened = true)
         {
-            for (int i = 0; i < _nTotalChangeTrackers; i++)
+            Guid[] guids = new Guid[_timeHasChangedDictionary.Keys.Count];
+
+            _timeHasChangedDictionary.Keys.CopyTo(guids, 0);
+            foreach (Guid changeTrackerId in guids)
             {
-                _timeHasChangedDictionary[i] = bTimeChangeHappened;
+                _timeHasChangedDictionary[changeTrackerId] = bTimeChangeHappened;
             }
         }
     }

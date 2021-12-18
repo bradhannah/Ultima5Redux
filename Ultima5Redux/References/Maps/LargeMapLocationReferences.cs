@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -93,7 +92,6 @@ namespace Ultima5Redux.References.Maps
                 case Map.Maps.Underworld:
                     return BuildGenericMap(
                         Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "", true);
-                    break;
                 case Map.Maps.Small:
                 case Map.Maps.Combat:
                 default:
