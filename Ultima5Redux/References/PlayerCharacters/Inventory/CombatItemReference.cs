@@ -9,10 +9,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] [DataContract]
     public class CombatItemReference
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum MissileType
-        {
-            None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum MissileType { None = -1, Arrow = 0, CannonBall, Axe, Red, Blue, Green, Violet, Rock }
 
         [IgnoreDataMember] public const int BARE_HANDS_INDEX = -2;
 
@@ -33,25 +31,22 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public virtual bool CanSell => BasePrice > 0;
 
-        [IgnoreDataMember] public bool IsAmmo => SpecificEquipment == DataOvlReference.Equipment.Quarrels ||
-                                                 SpecificEquipment == DataOvlReference.Equipment.Arrows;
+        [IgnoreDataMember]
+        public bool IsAmmo =>
+            SpecificEquipment is DataOvlReference.Equipment.Quarrels or DataOvlReference.Equipment.Arrows;
 
-        [IgnoreDataMember] public bool IsShield =>
-            SpecificEquipment == DataOvlReference.Equipment.SmallShield ||
-            SpecificEquipment == DataOvlReference.Equipment.LargeShield ||
-            SpecificEquipment == DataOvlReference.Equipment.SpikedShield ||
-            SpecificEquipment == DataOvlReference.Equipment.MagicShield ||
-            SpecificEquipment == DataOvlReference.Equipment.JewelShield;
+        [IgnoreDataMember]
+        public bool IsShield =>
+            SpecificEquipment is DataOvlReference.Equipment.SmallShield or DataOvlReference.Equipment.LargeShield
+                or DataOvlReference.Equipment.SpikedShield
+                or DataOvlReference.Equipment.MagicShield or DataOvlReference.Equipment.JewelShield;
 
-        [IgnoreDataMember] 
-        public bool IsTwoHanded => SpecificEquipment == DataOvlReference.Equipment.TwoHAxe ||
-                                   SpecificEquipment == DataOvlReference.Equipment.TwoHSword ||
-                                   SpecificEquipment == DataOvlReference.Equipment.TwoHHammer ||
-                                   SpecificEquipment == DataOvlReference.Equipment.Bow ||
-                                   SpecificEquipment == DataOvlReference.Equipment.MagicBow ||
-                                   SpecificEquipment == DataOvlReference.Equipment.Crossbow ||
-                                   SpecificEquipment == DataOvlReference.Equipment.Halberd ||
-                                   SpecificEquipment == DataOvlReference.Equipment.FlamingOil;
+        [IgnoreDataMember]
+        public bool IsTwoHanded => SpecificEquipment is DataOvlReference.Equipment.TwoHAxe
+            or DataOvlReference.Equipment.TwoHSword or DataOvlReference.Equipment.TwoHHammer
+            or DataOvlReference.Equipment.Bow or DataOvlReference.Equipment.MagicBow
+            or DataOvlReference.Equipment.Crossbow
+            or DataOvlReference.Equipment.Halberd or DataOvlReference.Equipment.FlamingOil;
 
         public CombatItemReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference)
         {
@@ -67,7 +62,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             EquipmentName = GetEquipmentString(dataOvlReference, (int)specificEquipment);
             RequiredStrength = GetRequiredStrength(dataOvlReference, (int)specificEquipment);
             SpecificEquipment = specificEquipment;
-            Sprite = 1;
+            //Sprite = inventoryReference.ItemSpriteExposed;
+            Sprite = inventoryReference.ItemSpriteExposed;
+            //GameReferences.SpriteTileReferences.GetTileNumberByName(inventoryReference.ItemName);
             InitializePrices();
         }
 

@@ -42,6 +42,7 @@ namespace Ultima5Redux.References.Maps
             _u5StringRef = u5StringRef;
             TileReferenceDictionary = Load();
 
+            TileReferenceByStringDictionary.Add("BareHands", TileReferenceDictionary[261]);
             for (int i = 0; i < TileReferenceDictionary.Count; i++)
             {
                 TileReference tileRef = TileReferenceDictionary[i];

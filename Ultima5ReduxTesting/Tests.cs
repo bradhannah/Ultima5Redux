@@ -44,15 +44,12 @@ namespace Ultima5ReduxTesting
     //         Trace.Flush();
     //     }
     // }
-    
+
     [TestFixture] public class Tests
     {
         public enum SaveFiles
         {
-            Britain, Britain2, Britain3,
-            BucDen1, BucDen3,
-            b_carpet, b_frigat, b_horse, b_skiff,
-            quicksave
+            Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave
         }
 
         [SetUp] public void Setup()
@@ -74,7 +71,6 @@ namespace Ultima5ReduxTesting
         [TearDown] public void TearDown()
         {
         }
-        
 
         private string GetSaveDirectory(SaveFiles saveFiles)
         {
@@ -84,31 +80,33 @@ namespace Ultima5ReduxTesting
         }
 
         private string DataDirectory => TestContext.Parameters.Get("DataDirectory",
-                        RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? @"/Users/bradhannah/games/u5tests/Britain2" : 
-                        @"C:\games\ultima5tests\Britain2");
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? @"/Users/bradhannah/games/u5tests/Britain2"
+                : @"C:\games\ultima5tests\Britain2");
 
         private string SaveRootDirectory =>
-            TestContext.Parameters.Get("SaveRootDirectory", 
-                RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? @"/Users/bradhannah/games/u5tests" : 
-                    @"C:\games\ultima5tests");
-        
-        private string NewSaveRootDirectory => TestContext.Parameters.Get("NewSaveRootDirectory", 
+            TestContext.Parameters.Get("SaveRootDirectory",
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                    ? @"/Users/bradhannah/games/u5tests"
+                    : @"C:\games\ultima5tests");
+
+        private string NewSaveRootDirectory => TestContext.Parameters.Get("NewSaveRootDirectory",
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "UltimaVRedux"));
 
         private string GetNewSaveDirectory(SaveFiles saveFiles) =>
             Path.Combine(NewSaveRootDirectory, saveFiles.ToString());
 
-        private World CreateWorldFromLegacy(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false) =>
+        private World CreateWorldFromLegacy(SaveFiles saveFiles, bool bUseExtendedSprites = true,
+            bool bLoadInitGam = false) =>
             new World(true, GetSaveDirectory(saveFiles), dataDirectory: DataDirectory,
                 bUseExtendedSprites: bUseExtendedSprites, bLoadedInitGam: bLoadInitGam);
 
-        private World CreateWorldFromNewSave(SaveFiles saveFiles, bool bUseExtendedSprites = true, bool bLoadInitGam = false) =>
+        private World CreateWorldFromNewSave(SaveFiles saveFiles, bool bUseExtendedSprites = true,
+            bool bLoadInitGam = false) =>
             new World(false, Path.Combine(NewSaveRootDirectory, saveFiles.ToString()), dataDirectory: DataDirectory,
                 bUseExtendedSprites: bUseExtendedSprites, bLoadedInitGam: bLoadInitGam);
 
-        [Test]
-        [TestCase(SaveFiles.Britain)]
-        public void AllSmallMapsLoadTest(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void AllSmallMapsLoadTest(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
@@ -121,28 +119,26 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain)]
-        public void test_LoadTrinsicSmallMapsLoadTest(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void test_LoadTrinsicSmallMapsLoadTest(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
 
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain)]
-        public void test_LoadMinocBuyFrigateAndCheck(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void test_LoadMinocBuyFrigateAndCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    0));
             world.State.TheVirtualMap.TheMapUnits.CreateFrigateAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
@@ -170,19 +166,18 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test]
-        [TestCase(SaveFiles.BucDen3)]
-        public void test_LoadMinocBuySkiffAndCheck(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.BucDen3)] public void test_LoadMinocBuySkiffAndCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    0));
             world.State.TheVirtualMap.TheMapUnits.CreateSkiffAtDock(
                 SmallMapReferences.SingleMapReference.Location.Minoc);
             Point2D dockLocation =
-                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc );
+                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
             List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitByLocation(
                 Map.Maps.Overworld,
                 dockLocation, 0);
@@ -195,7 +190,8 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
 
-            world.State.TheVirtualMap.MoveAvatar(new Point2D(skiff.MapUnitPosition.X, skiff.MapUnitPosition.Y)); //-V3095
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(skiff.MapUnitPosition.X,
+                skiff.MapUnitPosition.Y)); //-V3095
             string retStr = world.Board(out bool bWasSuccessful);
             Assert.True(bWasSuccessful);
 
@@ -204,22 +200,19 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain)]
-        public void test_LoadSkaraBraeSmallMapsLoadTest(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void test_LoadSkaraBraeSmallMapsLoadTest(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
             world.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Skara_Brae, 0));
 
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void LoadBritishBasement(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void LoadBritishBasement(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -239,10 +232,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-
-        [Test]
-        [TestCase(SaveFiles.Britain2)]
-        public void AllSmallMapsLoadWithOneDayTest(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void AllSmallMapsLoadWithOneDayTest(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -265,9 +255,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_TileOverrides(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_TileOverrides(SaveFiles saveFiles)
         {
             TileOverrideReferences to = new TileOverrideReferences();
 
@@ -276,15 +264,13 @@ namespace Ultima5ReduxTesting
             Trace.Write("Starting ");
 
             world.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Lycaeum, 1));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lycaeum, 1));
 
             world.State.TheVirtualMap.GuessTile(new Point2D(14, 7));
         }
 
-
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_LoadOverworld(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_LoadOverworld(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -293,9 +279,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_LoadOverworldOverrideTile(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_LoadOverworldOverrideTile(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -318,14 +302,13 @@ namespace Ultima5ReduxTesting
             }
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_PushPull_WontBudge(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_PushPull_WontBudge(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Britain, 0));
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Britain, 0));
 
             string pushAThing = world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed);
             Assert.False(bWasPushed);
@@ -341,9 +324,7 @@ namespace Ultima5ReduxTesting
             Debug.WriteLine(pushAThing);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_FreeMoveAcrossWorld(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_FreeMoveAcrossWorld(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -361,9 +342,7 @@ namespace Ultima5ReduxTesting
             Assert.True(finalLocation == startLocation);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_CheckAlLTilesForMoongates(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_CheckAlLTilesForMoongates(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -383,9 +362,7 @@ namespace Ultima5ReduxTesting
             Assert.True(finalLocation == startLocation);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_LookupMoonstoneInInventory(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_LookupMoonstoneInInventory(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -394,14 +371,13 @@ namespace Ultima5ReduxTesting
                 if (phase == MoonPhaseReferences.MoonPhases.NoMoon) continue;
                 bool bBuried = world.State.TheMoongates.IsMoonstoneBuried((int)phase);
                 int nMoonstonesInInv = world.State.PlayerInventory.TheMoonstones.Items[phase].Quantity;
-                string desc = GameReferences.InvRef.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item,
+                string desc = GameReferences.InvRef.GetInventoryReference(
+                    InventoryReferences.InventoryReferenceType.Item,
                     phase.ToString()).ItemDescription;
             }
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_GetAndUseMoonstone(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_GetAndUseMoonstone(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
@@ -422,10 +398,7 @@ namespace Ultima5ReduxTesting
             Assert.True(bWasSuccessful);
         }
 
-
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_SearchForMoonstoneAndGet(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_SearchForMoonstoneAndGet(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
@@ -458,9 +431,7 @@ namespace Ultima5ReduxTesting
             Assert.True(!bWasSuccessful);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_MoongateHunting(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_MoongateHunting(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -480,9 +451,7 @@ namespace Ultima5ReduxTesting
             }
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_TestCorrectMoons(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_TestCorrectMoons(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -501,9 +470,7 @@ namespace Ultima5ReduxTesting
             Assert.True(feluccaPhase == MoonPhaseReferences.MoonPhases.LastQuarter);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_MoonPhaseReference(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_MoonPhaseReference(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -525,14 +492,13 @@ namespace Ultima5ReduxTesting
             }
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_TalkToSmith(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_TalkToSmith(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             SmallMapReferences.SingleMapReference.Location location =
                 SmallMapReferences.SingleMapReference.Location.Iolos_Hut;
-            NonPlayerCharacterState npcState = world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 4);
+            NonPlayerCharacterState npcState =
+                world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 4);
 
             world.CreateConversationAndBegin(npcState, OnUpdateOfEnqueuedScriptItem);
         }
@@ -541,9 +507,7 @@ namespace Ultima5ReduxTesting
         {
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_KlimbMountain(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_KlimbMountain(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -553,9 +517,7 @@ namespace Ultima5ReduxTesting
             Assert.True(klimbResult == World.KlimbResult.RequiresDirection);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_MoveALittle(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_MoveALittle(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -565,16 +527,15 @@ namespace Ultima5ReduxTesting
             world.TryToMove(Point2D.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_TalkToDelwyn(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_TalkToDelwyn(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             SmallMapReferences.SingleMapReference.Location location =
                 SmallMapReferences.SingleMapReference.Location.Minoc;
-            
-            NonPlayerCharacterState npcState = world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
+
+            NonPlayerCharacterState npcState =
+                world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
 
             Conversation convo = world.CreateConversationAndBegin(npcState,
                 OnUpdateOfEnqueuedScriptItemHandleDelwyn);
@@ -656,9 +617,7 @@ namespace Ultima5ReduxTesting
             }
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_BasicBlackSmithDialogue(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_BasicBlackSmithDialogue(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             BlackSmith blacksmith = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
@@ -684,9 +643,7 @@ namespace Ultima5ReduxTesting
             _ = blacksmith.GetDoneResponse();
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_BasicHealerDialogue(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_BasicHealerDialogue(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             Healer healer = (Healer)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
@@ -699,26 +656,22 @@ namespace Ultima5ReduxTesting
             int price = healer.GetPrice(Healer.RemedyTypes.Heal);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_BasicTavernDialogue(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_BasicTavernDialogue(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             BarKeeper barKeeper = (BarKeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Paws,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null,world.State.PlayerInventory);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null, world.State.PlayerInventory);
 
             string myOppressionTest = barKeeper.GetGossipResponse("oppr", true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_BasicMagicSellerDialogue(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_BasicMagicSellerDialogue(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             MagicSeller magicSeller = (MagicSeller)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Cove,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null,world.State.PlayerInventory);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null, world.State.PlayerInventory);
             List<Reagent> reagents = magicSeller.GetReagentsForSale();
 
             int price1 = reagents[0].GetAdjustedBuyPrice(world.State.CharacterRecords,
@@ -734,9 +687,7 @@ namespace Ultima5ReduxTesting
             buyThing = magicSeller.GetReagentBuyingOutput(reagents[4]);
         }
 
-        [Test]
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_AdjustedMerchantPrices(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_AdjustedMerchantPrices(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -754,34 +705,28 @@ namespace Ultima5ReduxTesting
                     SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
             GuildMaster guildMaster = (GuildMaster)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null,world.State.PlayerInventory);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null, world.State.PlayerInventory);
             string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
         }
 
-
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_SimpleStringTest(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_SimpleStringTest(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-            string str = GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Battle2Strings.N_VICTORY_BANG_N);
+            string str =
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Battle2Strings.N_VICTORY_BANG_N);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain2)]
-        public void Test_ShipwrightDialogue(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_ShipwrightDialogue(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             Shipwright shipwright = (Shipwright)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null,world.State.PlayerInventory);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null, world.State.PlayerInventory);
 
             string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain)]
-        public void Test_EnterBuilding(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void Test_EnterBuilding(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
@@ -791,9 +736,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain)]
-        public void Test_EnterYewAndLookAtMonster(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void Test_EnterYewAndLookAtMonster(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
@@ -809,9 +752,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.BucDen1)]
-        public void Test_GetInnStuffAtBucDen(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.BucDen1)] public void Test_GetInnStuffAtBucDen(SaveFiles saveFiles)
         {
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
@@ -821,7 +762,7 @@ namespace Ultima5ReduxTesting
 
             Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null,world.State.PlayerInventory);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null, world.State.PlayerInventory);
 
             Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
 
@@ -846,9 +787,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain3)]
-        public void Test_GetInnStuffAtBritain(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain3)] public void Test_GetInnStuffAtBritain(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
@@ -857,7 +796,7 @@ namespace Ultima5ReduxTesting
 
             Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Britain,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null,world.State.PlayerInventory);
+                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null, world.State.PlayerInventory);
 
             Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
 
@@ -879,9 +818,7 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.Britain)]
-        public void Test_MakeAHorse(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain)] public void Test_MakeAHorse(SaveFiles saveFiles)
         {
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
@@ -893,9 +830,7 @@ namespace Ultima5ReduxTesting
             Assert.True(horse != null);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_MoveWithExtendedSprites(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_MoveWithExtendedSprites(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -908,9 +843,7 @@ namespace Ultima5ReduxTesting
                 .Index == 515);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_CheckedBoardedTileCarpet(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_CheckedBoardedTileCarpet(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -918,21 +851,25 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity;
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+                .Quantity;
             world.Xit(out bool bWasSuccessful);
-            Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
+            Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems
+                .Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
             Assert.True(bWasSuccessful);
             world.Board(out bool bWasSuccessfulBoard);
             Assert.True(bWasSuccessfulBoard);
             world.Xit(out bWasSuccessful);
 
-            nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity;
+            nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+                .Quantity;
             Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
             world.TryToMove(Point2D.Direction.Left, false, false, out World.TryToMoveResult result);
             world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet);
             Assert.True(bGotACarpet);
             //Assert.True(carpet!=null);
-            Assert.True(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
+            Assert.True(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems
+                .Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
             world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
             Assert.True(!bGotACarpet);
 
@@ -950,24 +887,21 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-
-        [Test] 
-        [TestCase(SaveFiles.BucDen3)]
-        public void Test_CheckUseCarpet(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.BucDen3)] public void Test_CheckUseCarpet(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity;
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+                .Quantity;
             world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
                 out bool bAbleToUseItem);
             Assert.True(bAbleToUseItem);
-            Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity == nCarpets - 1);
+            Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+                .Quantity == nCarpets - 1);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_horse)]
-        public void Test_CheckedBoardedTileHorse(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_horse)] public void Test_CheckedBoardedTileHorse(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -980,9 +914,7 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test]
-        [TestCase(SaveFiles.b_skiff)]
-        public void Test_CheckedBoardedTileSkiff(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_skiff)] public void Test_CheckedBoardedTileSkiff(SaveFiles saveFiles)
         {
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
@@ -996,9 +928,7 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_skiff)]
-        public void Test_CheckedBoardedTileSkiffMoveOntoSkiff(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_skiff)] public void Test_CheckedBoardedTileSkiffMoveOntoSkiff(SaveFiles saveFiles)
         {
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
@@ -1012,9 +942,7 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_frigat)]
-        public void Test_CheckedBoardedTileFrigate(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_frigat)] public void Test_CheckedBoardedTileFrigate(SaveFiles saveFiles)
         {
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
@@ -1028,9 +956,7 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.BucDen1)]
-        public void Test_ForceVisibleRecalculationInBucDen(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.BucDen1)] public void Test_ForceVisibleRecalculationInBucDen(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             Point2D startSpot = new Point2D(159, 20);
@@ -1040,9 +966,7 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_ForceVisibleRecalculationInLargeMap(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_ForceVisibleRecalculationInLargeMap(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -1050,9 +974,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
         }
 
-
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
+        [Test] [TestCase(SaveFiles.b_carpet)]
         public void Test_LookupPrimaryAndSecondaryEnemyReferences(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
@@ -1061,31 +983,33 @@ namespace Ultima5ReduxTesting
                 GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448));
 
             world.State.TheVirtualMap.LoadCombatMap(
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                    0),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, enemyReference);
 
             EnemyReference secondEnemyReference = GameReferences.EnemyRefs.GetFriendReference(enemyReference);
             //GetEnemyReference(enemyReference.FriendIndex);
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_LoadCampFireCombatMap(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadCampFireCombatMap(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadCombatMap(
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                    0),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 1,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
+                1,
                 // troll
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
-            
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)),
+                1);
+
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
             CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
-            
+
             Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
             world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
@@ -1096,31 +1020,27 @@ namespace Ultima5ReduxTesting
 
             _ = "";
         }
-        
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_Dungeon0WithDivide(SaveFiles saveFiles)
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon0WithDivide(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 0),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
-            
+
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
             CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
-            
+
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
             combatMap.DivideEnemy(combatMap.AllEnemies[2]);
-            
+
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_HammerCombatMapInitiativeTest(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_HammerCombatMapInitiativeTest(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
@@ -1137,14 +1057,13 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_EscapeCombatMap(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_EscapeCombatMap(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadCombatMap(
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 4),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                    4),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
 
             world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult);
@@ -1164,22 +1083,23 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_LoadFirstCombatMap(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadFirstCombatMap(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadCombatMap(
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 11),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                    11),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 5,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
+                5,
                 // troll
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)),
+                1);
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
-            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer; 
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
             {
                 Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
                 world.TryToMoveCombatMap(player, Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult);
@@ -1188,23 +1108,25 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_LoadCombatMapThenBack(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadCombatMapThenBack(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
 
             world.State.TheVirtualMap.LoadCombatMap(
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                    2),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 5,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
+                5,
                 // troll
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)),
+                1);
 
-            var thing = GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2)
+            var thing = GameReferences.CombatMapRefs
+                .GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 2)
                 .GetEntryDirections();
 
             world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
@@ -1212,33 +1134,35 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_LoadAllCombatMapsWithMonsters(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAllCombatMapsWithMonsters(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             //List<CombatMap> worldMaps = new List<CombatMap>();
             for (int i = 0; i < 16; i++)
             {
                 SingleCombatMapReference singleCombatMapReference =
-                    GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, i);
+                    GameReferences.CombatMapRefs.GetSingleCombatMapReference(
+                        SingleCombatMapReference.Territory.Britannia, i);
                 foreach (SingleCombatMapReference.EntryDirection worldEntryDirection in singleCombatMapReference
-                    .GetEntryDirections())
+                             .GetEntryDirections())
                 {
                     world.State.TheVirtualMap.LoadCombatMap(
-                        GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                        GameReferences.CombatMapRefs.GetSingleCombatMapReference(
+                            SingleCombatMapReference.Territory.Britannia,
                             i),
                         worldEntryDirection, world.State.CharacterRecords);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
                 }
             }
 
-            EnemyReference enemy1 = GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(320));
+            EnemyReference enemy1 =
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(320));
 
             for (int i = 0; i < 112; i++)
             {
                 SingleCombatMapReference singleCombatMapReference =
-                    GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, i);
+                    GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                        i);
 
                 if (singleCombatMapReference.GetEntryDirections().Count == 0)
                 {
@@ -1246,10 +1170,11 @@ namespace Ultima5ReduxTesting
                 }
 
                 foreach (SingleCombatMapReference.EntryDirection dungeonEntryDirection in singleCombatMapReference
-                    .GetEntryDirections())
+                             .GetEntryDirections())
                 {
                     world.State.TheVirtualMap.LoadCombatMap(
-                        GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                        GameReferences.CombatMapRefs.GetSingleCombatMapReference(
+                            SingleCombatMapReference.Territory.Dungeon,
                             i),
                         dungeonEntryDirection, world.State.CharacterRecords, enemy1, 4);
                     TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
@@ -1259,8 +1184,7 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        public void Test_GetSurroundingPoints()
+        [Test] public void Test_GetSurroundingPoints()
         {
             Point2D p1 = new Point2D(5, 5);
             List<Point2D> points = p1.GetConstrainedSurroundingPoints(1, 10, 10);
@@ -1268,19 +1192,20 @@ namespace Ultima5ReduxTesting
             Debug.WriteLine("DERP");
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_GetEscapablePoints(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_GetEscapablePoints(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
             world.State.TheVirtualMap.LoadCombatMap(
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 15),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                    15),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
                 // orcs
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)), 5,
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
+                5,
                 // troll
-                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)), 1);
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(484)),
+                1);
 
             List<Point2D> points =
                 world.State.TheVirtualMap.CurrentCombatMap.GetEscapablePoints(new Point2D(12, 12),
@@ -1296,22 +1221,20 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_TalkToNoOne(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_TalkToNoOne(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            NonPlayerCharacter npc = world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
+            NonPlayerCharacter npc =
+                world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
         }
-        
-        [Test] 
-        [TestCase(SaveFiles.b_carpet)]
-        public void Test_LoadInitialSaveGame(SaveFiles saveFiles)
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadInitialSaveGame(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, true);
 
-            NonPlayerCharacter npc = world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
+            NonPlayerCharacter npc =
+                world.State.TheVirtualMap.GetNpcToTalkTo(MapUnitMovement.MovementCommandDirection.North);
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAndReloadInitialSave(SaveFiles saveFiles)
@@ -1381,8 +1304,7 @@ namespace Ultima5ReduxTesting
 
             // spells
             // references
-            
-                
+
             _ = world.State.TheVirtualMap.CurrentPosition;
         }
 
@@ -1447,32 +1369,30 @@ namespace Ultima5ReduxTesting
             world.ReLoadFromJson();
             string newLoadedJson = world.State.Serialize();
         }
-        
-        [Test] [TestCase(SaveFiles.quicksave)] 
-        public void test_ReloadNewSave(SaveFiles saveFiles)
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_ReloadNewSave(SaveFiles saveFiles)
         {
             World world = CreateWorldFromNewSave(saveFiles, true, false);
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
-            
         }
-        
-        [Test] [TestCase(SaveFiles.quicksave)] 
-        public void test_ReloadNewSaveToCombatAndBack(SaveFiles saveFiles)
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_ReloadNewSaveToCombatAndBack(SaveFiles saveFiles)
         {
             World world = CreateWorldFromNewSave(saveFiles, true, false);
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
             //world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
-            
+
             EnemyReference enemyReference =
                 GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448));
 
             world.State.TheVirtualMap.LoadCombatMap(
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia, 0),
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
+                    0),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, enemyReference);
 
             world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
@@ -1492,6 +1412,18 @@ namespace Ultima5ReduxTesting
             GameSummary gameSummary = world.State.CreateGameSummary(saveDirectory);
             string serializedGameSummary = gameSummary.SerializeGameSummary();
             GameSummary reserializedGameSummary = GameSummary.DeserializeGameSummary(serializedGameSummary);
+        }
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_CheckSpriteReferences(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+            CombatItemReference itemRef =
+                GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(DataOvlReference.Equipment.LongSword);
+            Assert.True(itemRef.Sprite == 261);
         }
     }
 }
