@@ -7,9 +7,10 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public class Spell : InventoryItem
+    [DataContract] public sealed class Spell : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum UnpublishedSpells
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum UnpublishedSpells
         {
             An_Ylem, // negate matter 
             In_Xen_Mani, //create create life
@@ -19,7 +20,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int SPRITE_NUM = 260;
 
-        [DataMember] private bool _memorizedSpell;
+        [DataMember(Name = "IsSpellMemorized")]
+        private bool _memorizedSpell;
 
         [DataMember] public MagicReference.SpellWords SpellIncantation { get; private set; }
 
@@ -34,22 +36,29 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public int MinCircle => SpellMagicReference.Circle;
 
-        [IgnoreDataMember] public MagicReference SpellMagicReference =>
+        [IgnoreDataMember]
+        public MagicReference SpellMagicReference =>
             GameReferences.MagicRefs.GetMagicReference(SpellIncantation);
 
         [JsonConstructor] public Spell()
         {
         }
 
+        [OnDeserialized] private void PostDeserialized(StreamingContext context)
+        {
+            if (Quantity > 0) LearnSpell();
+        }
+
         public Spell(MagicReference.SpellWords spellWord, int quantity) : base(quantity, SPRITE_NUM,
             InventoryReferences.InventoryReferenceType.Spell)
         {
             SpellIncantation = spellWord;
+            if (Quantity > 0) LearnSpell();
         }
 
         public string GetLiteralTranslation()
         {
-            string[] spellStrs = SpellIncantation.ToString().Split('_'); // .Replace('_', ' ');
+            string[] spellStrs = SpellIncantation.ToString().Split('_');
             StringBuilder sb = new StringBuilder();
             foreach (string str in spellStrs)
             {

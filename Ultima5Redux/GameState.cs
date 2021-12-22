@@ -18,7 +18,7 @@ using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux
 {
-    [DataContract] public class GameState 
+    [DataContract] public class GameState
     {
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
 
@@ -42,57 +42,68 @@ namespace Ultima5Redux
         /// <summary>
         ///     All player character records
         /// </summary>
-        [DataMember] public PlayerCharacterRecords CharacterRecords { get; protected set; }
+        [DataMember]
+        public PlayerCharacterRecords CharacterRecords { get; protected set; }
 
         /// <summary>
         ///     The current time of day
         /// </summary>
-        [DataMember] public TimeOfDay TheTimeOfDay { get; protected set; }
+        [DataMember]
+        public TimeOfDay TheTimeOfDay { get; protected set; }
 
         /// <summary>
         ///     What is the index of the currently active player?
         /// </summary>
-        [DataMember] public int ActivePlayerNumber { get; set; }
+        [DataMember]
+        public int ActivePlayerNumber { get; set; }
 
         /// <summary>
         ///     Users Karma
         /// </summary>
-        [DataMember] public ushort Karma { get; set; }
+        [DataMember]
+        public ushort Karma { get; set; }
 
         /// <summary>
         ///     Players current inventory
         /// </summary>
-        [DataMember] public Inventory PlayerInventory { get; private set; }
+        [DataMember]
+        public Inventory PlayerInventory { get; private set; }
 
         /// <summary>
         ///     Location and state of all moongates and moonstones
         /// </summary>
-        [DataMember] public Moongates TheMoongates { get; private set; }
+        [DataMember]
+        public Moongates TheMoongates { get; private set; }
 
         /// <summary>
         ///     NPC states such as if they are dead or have met the avatar
         /// </summary>
-        [DataMember] public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
+        [DataMember]
+        public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
 
         /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
         /// </summary>
-        [DataMember] public VirtualMap TheVirtualMap { get; private set; }
+        [DataMember]
+        public VirtualMap TheVirtualMap { get; private set; }
 
         /// <summary>
         ///     How many turns until the Avatar's torch is extinguished
         /// </summary>
-        [DataMember] public int TurnsToExtinguish { get; set; }
+        [DataMember]
+        public int TurnsToExtinguish { get; set; }
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
         /// <summary>
         ///     The name of the Avatar
         /// </summary>
-        [IgnoreDataMember] public string AvatarsName =>
+        [IgnoreDataMember]
+        public string AvatarsName =>
             CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
-        [IgnoreDataMember] public string FriendlyLocationName
+        [IgnoreDataMember]
+        public string FriendlyLocationName
         {
             get
             {
@@ -103,17 +114,16 @@ namespace Ultima5Redux
 
                 return GameReferences.SmallMapRef.GetLocationName(TheVirtualMap.CurrentSingleMapReference.MapLocation);
             }
-
         }
 
         /// Legacy save game state
-        [IgnoreDataMember]
-        internal readonly ImportedGameState ImportedGameState;
+        [IgnoreDataMember] internal readonly ImportedGameState ImportedGameState;
 
         /// <summary>
         ///     Does the Avatar have a torch lit?
         /// </summary>
-        [IgnoreDataMember] public bool IsTorchLit => TurnsToExtinguish > 0;
+        [IgnoreDataMember]
+        public bool IsTorchLit => TurnsToExtinguish > 0;
 
         [JsonConstructor] private GameState()
         {
@@ -173,7 +183,6 @@ namespace Ultima5Redux
 
             Debug.Assert(state != null, nameof(state) + " != null");
 
-            //state.TheExtraSaveData.SavedDirectory = Path.GetDirectoryName(filePathAndName);
             fs.Close();
             return state;
         }
@@ -220,8 +229,6 @@ namespace Ultima5Redux
             return stateJson;
         }
 
-     
-
         private void MoveFileAsBackup(string currentSaveGamePathAndFile)
         {
             string currentSaveGamePathAndFileBackup = currentSaveGamePathAndFile + ".bak";
@@ -236,14 +243,6 @@ namespace Ultima5Redux
             File.Move(currentSaveGamePathAndFile, currentSaveGamePathAndFileBackup);
         }
 
-        // private void FreshenExtraSaveData(string saveGamePath)
-        // {
-        //     TheExtraSaveData.SavedDirectory = saveGamePath;
-        //     TheExtraSaveData.LastWrite = Directory.GetLastWriteTime(saveGamePath);
-        //     TheExtraSaveData.CurrentMapPosition = TheVirtualMap.CurrentPosition;
-        //     TheExtraSaveData.FriendlyLocationName = FriendlyLocationName;
-        // }
-        
         public bool SaveGame(out string errorStr, string currentSaveGamePath)
         {
             errorStr = "";
@@ -266,7 +265,6 @@ namespace Ultima5Redux
                 string gameSummaryJsonStr = gameSummary.SerializeGameSummary();
                 //string gameSummaryJsonStr = SerializeGameDescription(currentSaveGamePath);
                 File.WriteAllText(currentSaveGameSummaryPathAndFile, gameSummaryJsonStr);
-                
             } catch (Exception e)
             {
                 errorStr = e.Message;
