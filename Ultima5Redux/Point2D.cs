@@ -82,10 +82,15 @@ namespace Ultima5Redux
         /// <summary>
         ///     4 way direction
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))] public enum Direction { Up, Down, Left, Right, None }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum Direction { Up, Down, Left, Right, None }
 
         [DataMember] public int X { get; set; }
         [DataMember] public int Y { get; set; }
+
+        public Point2D()
+        {
+        }
 
         public Point2D(int x, int y)
         {
@@ -150,7 +155,8 @@ namespace Ultima5Redux
             return obj is Point2D point2D && Equals(point2D);
         }
 
-        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")] public override int GetHashCode()
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+        public override int GetHashCode()
         {
             int hashCode = 1861411795;
             hashCode = hashCode * -1521134295 + X.GetHashCode();

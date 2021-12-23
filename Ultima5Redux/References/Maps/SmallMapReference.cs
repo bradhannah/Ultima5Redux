@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
@@ -39,6 +38,9 @@ namespace Ultima5Redux.References.Maps
         ///     A list of all map references
         /// </summary>
         public List<SingleMapReference> MapReferenceList { get; } = new();
+
+        public Dictionary<SingleMapReference.Location, Dictionary<int, SingleMapReference>> MapReferenceDictionary =
+            new();
 
         /// <summary>
         ///     Construct all small map references
@@ -158,7 +160,14 @@ namespace Ultima5Redux.References.Maps
             short roomOffset = _roomOffsetCountDictionary[dataFilename];
 
             // add one or more map references 
-            MapReferenceList.AddRange(GenerateSingleMapReferences(location, hasBasement ? -1 : 0, nFloors, roomOffset));
+            IEnumerable<SingleMapReference> singleMaps =
+                GenerateSingleMapReferences(location, hasBasement ? -1 : 0, nFloors, roomOffset);
+            MapReferenceList.AddRange(singleMaps);
+            MapReferenceDictionary.Add(location, new Dictionary<int, SingleMapReference>());
+            foreach (SingleMapReference singleMapReference in singleMaps)
+            {
+                MapReferenceDictionary[location].Add(singleMapReference.Floor, singleMapReference);
+            }
 
             // add the number of floors you have just added so that it can increment the file offset for subsequent calls
             _roomOffsetCountDictionary[dataFilename] += nFloors;
@@ -330,13 +339,17 @@ namespace Ultima5Redux.References.Maps
         /// <returns>a single map reference providing details on the map itself</returns>
         public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor)
         {
-            foreach (SingleMapReference mapRef in MapReferenceList.Where(mapRef =>
-                mapRef.MapLocation == location && mapRef.Floor == floor))
-            {
-                return mapRef;
-            }
+            if (!MapReferenceDictionary[location].ContainsKey(floor))
+                throw new Ultima5ReduxException(location + ": " + floor + " was not found!");
 
-            throw new Ultima5ReduxException("_location was not found!");
+            return MapReferenceDictionary[location][floor];
+            // foreach (SingleMapReference mapRef in MapReferenceList.Where(mapRef =>
+            //     mapRef.MapLocation == location && mapRef.Floor == floor))
+            // {
+            //     return mapRef;
+            // }
+            //
+            // throw new Ultima5ReduxException("_location was not found!");
         }
 
         public bool HasBasement(SingleMapReference.Location location)
