@@ -8,39 +8,45 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [DataMember]
         public sealed override Dictionary<Provision.ProvisionTypeEnum, Provision> Items { get; internal set; } =
-            new Dictionary<Provision.ProvisionTypeEnum, Provision>();
+            new();
 
-        [IgnoreDataMember] public ushort Food
+        [IgnoreDataMember]
+        public ushort Food
         {
             get => (ushort)Items[Provision.ProvisionTypeEnum.Food].Quantity;
             set => Items[Provision.ProvisionTypeEnum.Food].Quantity = value;
         }
 
-        [IgnoreDataMember] public ushort Gems
+        [IgnoreDataMember]
+        public ushort Gems
         {
             get => (ushort)Items[Provision.ProvisionTypeEnum.Gems].Quantity;
             set => Items[Provision.ProvisionTypeEnum.Gems].Quantity = value;
         }
 
-        [IgnoreDataMember] public ushort Gold
+        [IgnoreDataMember]
+        public ushort Gold
         {
             get => (ushort)Items[Provision.ProvisionTypeEnum.Gold].Quantity;
             set => Items[Provision.ProvisionTypeEnum.Gold].Quantity = value;
         }
 
-        [IgnoreDataMember] public ushort Keys
+        [IgnoreDataMember]
+        public ushort Keys
         {
             get => (ushort)Items[Provision.ProvisionTypeEnum.Keys].Quantity;
             set => Items[Provision.ProvisionTypeEnum.Keys].Quantity = value;
         }
 
-        [IgnoreDataMember] public ushort SkullKeys
+        [IgnoreDataMember]
+        public ushort SkullKeys
         {
             get => (ushort)Items[Provision.ProvisionTypeEnum.SkullKeys].Quantity;
             set => Items[Provision.ProvisionTypeEnum.SkullKeys].Quantity = value;
         }
 
-        [IgnoreDataMember] public ushort Torches
+        [IgnoreDataMember]
+        public ushort Torches
         {
             get => (ushort)Items[Provision.ProvisionTypeEnum.Torches].Quantity;
             set => Items[Provision.ProvisionTypeEnum.Torches].Quantity = value;
@@ -50,10 +56,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public Provisions(ImportedGameState importedGameState) 
+        public Provisions(ImportedGameState importedGameState)
         {
             if (Items.Count > 0) return;
-            
+
             Items.Add(Provision.ProvisionTypeEnum.Torches,
                 new Provision(Provision.ProvisionTypeEnum.Torches, (int)Provision.ProvisionSpritesTypeEnum.Torches));
             Items.Add(Provision.ProvisionTypeEnum.Gems,

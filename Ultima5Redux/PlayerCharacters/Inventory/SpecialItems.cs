@@ -8,13 +8,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [DataMember]
         public override Dictionary<SpecialItem.ItemTypeSpriteEnum, SpecialItem> Items { get; internal set; } =
-            new Dictionary<SpecialItem.ItemTypeSpriteEnum, SpecialItem>();
+            new();
 
         [JsonConstructor] private SpecialItems()
         {
         }
 
-        public SpecialItems(ImportedGameState importedGameState) 
+        public SpecialItems(ImportedGameState importedGameState)
         {
             // Carpet = 170, Grapple = 12, Spyglass = 89, HMSCape = 260, PocketWatch = 232, BlackBadge = 281,
             // WoodenBox = 270, Sextant = 256
@@ -30,7 +30,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             addLegacyItem(SpecialItem.ItemTypeEnum.Sextant, SpecialItem.ItemTypeSpriteEnum.Sextant);
             addLegacyItem(SpecialItem.ItemTypeEnum.BlackBadge, SpecialItem.ItemTypeSpriteEnum.BlackBadge);
             addLegacyItem(SpecialItem.ItemTypeEnum.WoodenBox, SpecialItem.ItemTypeSpriteEnum.WoodenBox);
-            Items[SpecialItem.ItemTypeSpriteEnum.PocketWatch] =  
+            Items[SpecialItem.ItemTypeSpriteEnum.PocketWatch] =
                 new SpecialItem(SpecialItem.ItemTypeSpriteEnum.PocketWatch, 1);
         }
     }

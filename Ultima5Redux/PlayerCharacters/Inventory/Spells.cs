@@ -9,8 +9,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class Spells : InventoryItems<MagicReference.SpellWords, Spell>
     {
-        [IgnoreDataMember]
-        private static readonly Dictionary<string, string> LiteralTranslationDictionary = new Dictionary<string, string>
+        [IgnoreDataMember] private static readonly Dictionary<string, string> LiteralTranslationDictionary = new()
         {
             { "An", "Negate" },
             { "Bet", "Small" },
@@ -38,12 +37,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             { "Zu", "Sleep" },
         };
 
-        [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; internal set; } =
-            new Dictionary<MagicReference.SpellWords, Spell>();
+        [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; internal set; } = new();
 
         [IgnoreDataMember] public List<Spell> ItemsList => Items.Values.ToList();
 
-        [IgnoreDataMember] public List<Spell> SortedSpellsByCircleAndAlpha
+        [IgnoreDataMember]
+        public List<Spell> SortedSpellsByCircleAndAlpha
         {
             get { return Items.Values.OrderBy(s => s.MinCircle).ThenBy(s => s.LongName).ToList(); }
         }

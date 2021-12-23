@@ -37,8 +37,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public int MinCircle => SpellMagicReference.Circle;
 
         [IgnoreDataMember]
-        public MagicReference SpellMagicReference =>
-            GameReferences.MagicRefs.GetMagicReference(SpellIncantation);
+        public MagicReference SpellMagicReference => GameReferences.MagicRefs.GetMagicReference(SpellIncantation);
 
         [JsonConstructor] public Spell()
         {
@@ -59,7 +58,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public string GetLiteralTranslation()
         {
             string[] spellStrs = SpellIncantation.ToString().Split('_');
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (string str in spellStrs)
             {
                 sb.Append(Spells.GetLiteralTranslation(str) + " ");

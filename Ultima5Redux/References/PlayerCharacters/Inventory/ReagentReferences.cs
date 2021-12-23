@@ -9,9 +9,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     {
         private readonly
             Dictionary<SmallMapReferences.SingleMapReference.Location,
-                Dictionary<Reagent.ReagentTypeEnum, ReagentPriceAndQuantity>> _reagentPriceAndQuantities =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location,
-                    Dictionary<Reagent.ReagentTypeEnum, ReagentPriceAndQuantity>>();
+                Dictionary<Reagent.ReagentTypeEnum, ReagentPriceAndQuantity>> _reagentPriceAndQuantities = new();
 
         public ReagentReferences()
         {
@@ -54,8 +52,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <returns></returns>
         private static List<SmallMapReferences.SingleMapReference.Location> GetLocations()
         {
-            List<SmallMapReferences.SingleMapReference.Location> locations =
-                new List<SmallMapReferences.SingleMapReference.Location>();
+            List<SmallMapReferences.SingleMapReference.Location> locations = new();
 
             List<byte> reagentSkByteList = GameReferences.DataOvlRef
                 .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS).GetAsByteList();
@@ -104,5 +101,4 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             Quantity = quantity;
         }
     }
-
 }

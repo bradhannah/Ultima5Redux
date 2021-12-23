@@ -22,17 +22,18 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public Moonstones TheMoonstones { get; set; }
         [DataMember] public Provisions TheProvisions { get; set; }
         [DataMember] public Weapons TheWeapons { get; set; }
-        [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new List<InventoryItem>();
-        [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new List<CombatItem>();
+        [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new();
+        [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new();
         [IgnoreDataMember] public int Food => TheProvisions.Items[Provision.ProvisionTypeEnum.Food].Quantity;
 
         [IgnoreDataMember] public int Gold => TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity;
-        [IgnoreDataMember] public List<CombatItem> ReadyItems { get; } = new List<CombatItem>();
+        [IgnoreDataMember] public List<CombatItem> ReadyItems { get; } = new();
 
-        [IgnoreDataMember] public List<InventoryItem> ReadyItemsAsInventoryItem =>
+        [IgnoreDataMember]
+        public List<InventoryItem> ReadyItemsAsInventoryItem =>
             ReadyItems.Cast<InventoryItem>().ToList();
 
-        [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new List<InventoryItem>();
+        [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new();
         private readonly ImportedGameState _importedGameState;
 
         internal Inventory(ImportedGameState importedGameState)

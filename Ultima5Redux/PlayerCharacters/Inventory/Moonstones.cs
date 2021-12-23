@@ -10,13 +10,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [DataMember]
         public override Dictionary<MoonPhaseReferences.MoonPhases, Moonstone> Items { get; internal set; } =
-            new Dictionary<MoonPhaseReferences.MoonPhases, Moonstone>();
+            new();
 
-        [JsonConstructor] public Moonstones() 
+        [JsonConstructor] public Moonstones()
         {
             // if Items is already loaded then we likely built from JSON Deserialize
             if (Items.Count > 0) return;
-            
+
             // go through each of the moon phases one by one and create a moonstone
             foreach (MoonPhaseReferences.MoonPhases phase in Enum.GetValues(typeof(MoonPhaseReferences.MoonPhases)))
             {

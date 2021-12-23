@@ -7,7 +7,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     public class ProvisionReferences
     {
         private static readonly Dictionary<Provision.ProvisionTypeEnum, int> BundleQuantity =
-            new Dictionary<Provision.ProvisionTypeEnum, int>
+            new()
             {
                 { Provision.ProvisionTypeEnum.Torches, 5 }, { Provision.ProvisionTypeEnum.Keys, 3 },
                 { Provision.ProvisionTypeEnum.Gems, 4 }
@@ -31,7 +31,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         // the order of the provisions in the _prices array
         private static readonly Dictionary<Provision.ProvisionTypeEnum, int> ProvisionOrder =
-            new Dictionary<Provision.ProvisionTypeEnum, int>
+            new()
             {
                 { Provision.ProvisionTypeEnum.Keys, 0 }, { Provision.ProvisionTypeEnum.Gems, 1 },
                 { Provision.ProvisionTypeEnum.Torches, 2 }
@@ -48,7 +48,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         {
             int nIndex = 0;
             foreach (byte b in GameReferences.DataOvlRef
-                .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
+                         .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
             {
                 SmallMapReferences.SingleMapReference.Location potentialLocation =
                     (SmallMapReferences.SingleMapReference.Location)b;

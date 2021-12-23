@@ -9,15 +9,15 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         private enum CombatItemType { Armour, Weapon, Other }
 
         private readonly Dictionary<DataOvlReference.Equipment, CombatItemReference> _equipmentToCombatItemReference =
-            new Dictionary<DataOvlReference.Equipment, CombatItemReference>();
+            new();
 
-        public readonly List<ArmourReference> AllArmour = new List<ArmourReference>();
-        public readonly List<ArmourReference> Amulets = new List<ArmourReference>();
-        public readonly List<ArmourReference> ChestArmours = new List<ArmourReference>();
-        public readonly List<ArmourReference> Helms = new List<ArmourReference>();
-        public readonly List<ArmourReference> Rings = new List<ArmourReference>();
+        public readonly List<ArmourReference> AllArmour = new();
+        public readonly List<ArmourReference> Amulets = new();
+        public readonly List<ArmourReference> ChestArmours = new();
+        public readonly List<ArmourReference> Helms = new();
+        public readonly List<ArmourReference> Rings = new();
 
-        public readonly List<WeaponReference> WeaponReferences = new List<WeaponReference>();
+        public readonly List<WeaponReference> WeaponReferences = new();
 
         public CombatItemReferences(InventoryReferences inventoryReferences)
         {
@@ -31,8 +31,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 switch (GetCombatItemTypeByEquipment(equipment))
                 {
                     case CombatItemType.Armour:
-                        ArmourReference armourReference =
-                            new ArmourReference(GameReferences.DataOvlRef, inventoryReference);
+                        ArmourReference armourReference = new(GameReferences.DataOvlRef, inventoryReference);
                         _equipmentToCombatItemReference.Add(equipment, armourReference);
 
                         AllArmour.Add(armourReference);
@@ -56,8 +55,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
                         break;
                     case CombatItemType.Weapon:
-                        WeaponReference weaponReference =
-                            new WeaponReference(GameReferences.DataOvlRef, inventoryReference);
+                        WeaponReference weaponReference = new(GameReferences.DataOvlRef, inventoryReference);
                         WeaponReferences.Add(weaponReference);
                         _equipmentToCombatItemReference.Add(equipment, weaponReference);
                         break;
@@ -74,7 +72,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             foreach (object theEnum in theArray)
             {
                 if (string.Equals(equipment.ToString(), theEnum.ToString(),
-                    StringComparison.CurrentCultureIgnoreCase)) return true;
+                        StringComparison.CurrentCultureIgnoreCase)) return true;
             }
 
             return false;

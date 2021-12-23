@@ -16,10 +16,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <summary>
         ///     Inventory reference types
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))] public enum InventoryReferenceType
-        {
-            Reagent, Armament, Spell, Item
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum InventoryReferenceType { Reagent, Armament, Spell, Item }
 
         /// <summary>
         ///     reagents are highlighted green
@@ -63,7 +61,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             _reagentKeywordHighlightList = new List<string>();
             _spellKeywordHighlightList = new List<string>();
 
-            List<InventoryReference> invRefs = new List<InventoryReference>();
+            List<InventoryReference> invRefs = new();
 
             foreach (InventoryReference invRef in GetInventoryReferenceList(InventoryReferenceType.Armament))
             {

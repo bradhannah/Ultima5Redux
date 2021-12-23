@@ -110,7 +110,7 @@ namespace Ultima5Redux
         {
             if (dataDirectory == "" && !bLegacySave)
                 throw new Ultima5ReduxException("You cannot give an empty data directory with a non legacy save!");
-            
+
             SaveGameDirectory = saveGameDirectory;
             DataDirectory = dataDirectory == "" ? SaveGameDirectory : dataDirectory;
 
@@ -920,7 +920,7 @@ namespace Ultima5Redux
 
             // would we be leaving a small map if we went forward?
             if (!State.TheVirtualMap.IsLargeMap && IsLeavingMap(new Point2D(
-                State.TheVirtualMap.CurrentPosition.X + xAdjust, State.TheVirtualMap.CurrentPosition.Y + yAdjust)))
+                    State.TheVirtualMap.CurrentPosition.X + xAdjust, State.TheVirtualMap.CurrentPosition.Y + yAdjust)))
             {
                 tryToMoveResult = TryToMoveResult.OfferToExitScreen;
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space
@@ -1191,7 +1191,7 @@ namespace Ultima5Redux
             }
 
             if (!State.TheVirtualMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition, false,
-                Avatar.AvatarState.Regular))
+                    Avatar.AvatarState.Regular))
             {
                 retStr = retStr.TrimEnd() + " - " +
                          GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BLOCKED);
@@ -1286,7 +1286,7 @@ namespace Ultima5Redux
         public string TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded,
             out MagicReference.SpellWords spell)
         {
-            string retStr = potion.Color + " Potion\n";
+            string retStr = $"{potion.Color} Potion\n";
 
             PassTime();
 
@@ -1531,6 +1531,5 @@ namespace Ultima5Redux
         public void YellWord(string word)
         {
         }
-        
     }
 }

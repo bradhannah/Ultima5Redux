@@ -11,7 +11,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [DataMember]
         public override Dictionary<LordBritishArtifact.ArtifactType, LordBritishArtifact> Items { get; internal set; } =
-            new Dictionary<LordBritishArtifact.ArtifactType, LordBritishArtifact>(3);
+            new(3);
 
         [JsonConstructor] private LordBritishArtifacts()
         {

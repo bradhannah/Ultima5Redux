@@ -33,13 +33,10 @@ namespace Ultima5Redux.MapUnits
         }
 
         [IgnoreDataMember] private int _floor;
-        //private Point2D _xy = new();
 
         [IgnoreDataMember]
         public Point2D XY
         {
-            // get => _xy.Copy();
-            // set => _xy = value.Copy();
             get => new(X, Y);
             set
             {

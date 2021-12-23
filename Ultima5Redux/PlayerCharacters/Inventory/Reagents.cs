@@ -11,8 +11,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// </summary>
     [DataContract] public class Reagents : InventoryItems<Reagent.ReagentTypeEnum, Reagent>
     {
-        [DataMember] public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; internal set; } =
-            new Dictionary<Reagent.ReagentTypeEnum, Reagent>();
+        [DataMember] public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; internal set; } = new();
 
         [JsonConstructor] private Reagents()
         {
@@ -22,7 +21,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             void addReagentLegacy(Reagent.ReagentTypeEnum reagentType) =>
                 AddReagent(reagentType, importedGameState.GetReagentQuantity(reagentType));
-            
+
             foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
             {
                 addReagentLegacy(reagent);
@@ -31,13 +30,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private void AddReagent(Reagent.ReagentTypeEnum reagentType, int nQuantity)
         {
-            Reagent reagent = new Reagent(reagentType, nQuantity);
+            Reagent reagent = new(reagentType, nQuantity);
             Items[reagentType] = reagent;
         }
 
         public List<Reagent> GetReagentsForSale(SmallMapReferences.SingleMapReference.Location location)
         {
-            List<Reagent> items = new List<Reagent>();
+            List<Reagent> items = new();
             foreach (Reagent reagent in Items.Values)
             {
                 if (!reagent.IsReagentForSale(location)) continue;

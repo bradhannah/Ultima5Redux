@@ -6,8 +6,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class Potions : InventoryItems<Potion.PotionColor, Potion>
     {
-        [DataMember] public override Dictionary<Potion.PotionColor, Potion> Items { get; internal set; } =
-            new Dictionary<Potion.PotionColor, Potion>(8);
+        [DataMember] public override Dictionary<Potion.PotionColor, Potion> Items { get; internal set; } = new(8);
 
         [JsonConstructor] private Potions()
         {
