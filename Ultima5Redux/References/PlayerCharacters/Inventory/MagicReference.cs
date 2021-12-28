@@ -189,11 +189,16 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
 
-        public SpellResult CastSpell(GameState state, SpellCastingDetails details)
+        internal SpellResult CastSpell(GameState state, SpellCastingDetails details)
         {
             SpellSubType spellSubType = CreateSpellCasting();
 
             return spellSubType.CastSpell(state, details);
+        }
+
+        public bool IsCastablePresently(GameState state)
+        {
+            return CreateSpellCasting().IsCastablePresently(state);
         }
 
         private SpellSubType CreateSpellCasting()

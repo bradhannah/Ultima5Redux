@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
+using Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
@@ -68,5 +69,14 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         public void LearnSpell() => _memorizedSpell = true;
+
+        public SpellResult CastSpell(GameState state, SpellCastingDetails details)
+        {
+            if (Quantity <= 0)
+                throw new Ultima5ReduxException($"Tried to cast {LongName} but had quantity: {Quantity}");
+
+            Quantity--;
+            return SpellMagicReference.CastSpell(state, details);
+        }
     }
 }

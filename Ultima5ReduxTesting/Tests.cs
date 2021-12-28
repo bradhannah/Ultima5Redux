@@ -1436,8 +1436,9 @@ namespace Ultima5ReduxTesting
             GameReferences.Initialize();
 
             SpellCastingDetails details = new SpellCastingDetails();
-            SpellResult result = GameReferences.MagicRefs.GetMagicReference(MagicReference.SpellWords.In_Lor)
-                .CastSpell(world.State, details);
+            Spell spell = world.State.PlayerInventory.MagicSpells.Items[MagicReference.SpellWords.In_Lor];
+            SpellResult result = spell.CastSpell(world.State, details);
+
             Assert.True(result.Status == SpellResult.SpellResultStatus.Success);
         }
     }
