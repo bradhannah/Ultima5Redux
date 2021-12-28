@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.PlayerCharacters.Inventory;
+using Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
@@ -186,5 +188,43 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         }
 
         public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
+
+        public SpellResult CastSpell(GameState state, SpellCastingDetails details)
+        {
+            SpellSubType spellSubType = CreateSpellCasting();
+
+            return spellSubType.CastSpell(state, details);
+        }
+
+        private SpellSubType CreateSpellCasting()
+        {
+            switch (SpellSubType)
+            {
+                case SpellSubTypeEnum.SummonCreature:
+                    break;
+                case SpellSubTypeEnum.Healing:
+                    break;
+                case SpellSubTypeEnum.SprayBlast:
+                    break;
+                case SpellSubTypeEnum.Buff:
+                    break;
+                case SpellSubTypeEnum.Utility:
+                    return new UtilitySpellSubType(this);
+                case SpellSubTypeEnum.Dispel:
+                    break;
+                case SpellSubTypeEnum.MagicAttack:
+                    break;
+                case SpellSubTypeEnum.AscendDescend:
+                    break;
+                case SpellSubTypeEnum.ChangeEnemyState:
+                    break;
+                case SpellSubTypeEnum.Other:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return null;
+        }
     }
 }

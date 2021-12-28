@@ -21,6 +21,7 @@ using Ultima5Redux.References.Dialogue;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
+using Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable RedundantAssignment
@@ -1424,6 +1425,20 @@ namespace Ultima5ReduxTesting
             CombatItemReference itemRef =
                 GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(DataOvlReference.Equipment.LongSword);
             Assert.True(itemRef.Sprite == 261);
+        }
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_CastInLor(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            SpellCastingDetails details = new SpellCastingDetails();
+            SpellResult result = GameReferences.MagicRefs.GetMagicReference(MagicReference.SpellWords.In_Lor)
+                .CastSpell(world.State, details);
+            Assert.True(result.Status == SpellResult.SpellResultStatus.Success);
         }
     }
 }

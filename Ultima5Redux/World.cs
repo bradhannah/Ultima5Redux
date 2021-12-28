@@ -36,6 +36,7 @@ namespace Ultima5Redux
         }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
+        public const byte N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH = 100;
 
         private readonly Dictionary<Potion.PotionColor, MagicReference.SpellWords> _potionColorToSpellMap =
             new Dictionary<Potion.PotionColor, MagicReference.SpellWords>
@@ -466,14 +467,13 @@ namespace Ultima5Redux
         public string IgniteTorch()
         {
             PassTime();
-            const byte nDefaultNumberOfTurnsForTorch = 100;
             // if there are no torches then report back and make no change
             if (State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity <= 0)
                 return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings
                     .NONE_OWNED_BANG_N);
 
             State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity--;
-            State.TurnsToExtinguish = nDefaultNumberOfTurnsForTorch;
+            State.TurnsToExtinguish = N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH;
             // this will trigger a re-read of time of day changes
             State.TheTimeOfDay.SetAllChangeTrackers();
             return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
