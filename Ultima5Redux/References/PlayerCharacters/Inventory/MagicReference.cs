@@ -203,33 +203,20 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         private SpellSubType CreateSpellCasting()
         {
-            switch (SpellSubType)
+            return SpellSubType switch
             {
-                case SpellSubTypeEnum.SummonCreature:
-                    break;
-                case SpellSubTypeEnum.Healing:
-                    break;
-                case SpellSubTypeEnum.SprayBlast:
-                    break;
-                case SpellSubTypeEnum.Buff:
-                    break;
-                case SpellSubTypeEnum.Utility:
-                    return new UtilitySpellSubType(this);
-                case SpellSubTypeEnum.Dispel:
-                    break;
-                case SpellSubTypeEnum.MagicAttack:
-                    break;
-                case SpellSubTypeEnum.AscendDescend:
-                    break;
-                case SpellSubTypeEnum.ChangeEnemyState:
-                    break;
-                case SpellSubTypeEnum.Other:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            return null;
+                SpellSubTypeEnum.SummonCreature => new SummonCreatureSubType(this),
+                SpellSubTypeEnum.Healing => new HealingSpellSubType(this),
+                SpellSubTypeEnum.SprayBlast => new SprayBlastSpellSubType(this),
+                SpellSubTypeEnum.Buff => new BuffSpellSubType(this),
+                SpellSubTypeEnum.Utility => new UtilitySpellSubType(this),
+                SpellSubTypeEnum.Dispel => new DispelSpellSubType(this),
+                SpellSubTypeEnum.MagicAttack => new MagicAttackSpellSubType(this),
+                SpellSubTypeEnum.AscendDescend => new AscendDescendSpellSubType(this),
+                SpellSubTypeEnum.ChangeEnemyState => new ChangeEnemyStateSpellSubType(this),
+                SpellSubTypeEnum.Other => new OtherSpellSubType(this),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }
