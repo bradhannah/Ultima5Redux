@@ -56,6 +56,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             if (Quantity > 0) LearnSpell();
         }
 
+        public bool IsCastableByPlayer(PlayerCharacterRecord record)
+        {
+            return Quantity > 0 && record.Stats.CurrentMp >= MinCircle;
+        }
+
         public string GetLiteralTranslation()
         {
             string[] spellStrs = SpellIncantation.ToString().Split('_');
