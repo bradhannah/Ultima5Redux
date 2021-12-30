@@ -17,11 +17,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <summary>
         ///     maps the equipment (index) to the merchant string they use when buying it from them
         /// </summary>
-        private readonly Dictionary<int, int> _equipmentMapToMerchantStrings = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> _equipmentMapToMerchantStrings = new();
 
         private readonly Inventory _inventory;
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBlacksmith),
             new ShoppeKeeperOption("Sell", ShoppeKeeperOption.DialogueType.SellBlacksmith)
@@ -77,7 +77,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <returns></returns>
         public override string GetForSaleList()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             char itemChar = 'a';
             foreach (DataOvlReference.Equipment equipment in TheShoppeKeeperReference.EquipmentForSaleList)
             {

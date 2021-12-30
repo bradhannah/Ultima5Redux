@@ -15,7 +15,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         public enum RemedyTypes { Cure, Heal, Resurrect }
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyHealer)
         };
@@ -148,8 +148,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                                .DQ_THOU_HAST_NO_NEED_OF_THIS_ART_BANG_DQ_SAYS_NAME).Trim().Replace("\n", " "),
                        shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName) + "\n\n" +
                    DataOvlReference.StringReferences.GetString(
-                       DataOvlReference.ShoppeKeeperHealerStrings.N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N)
-                   .Trim() +
+                           DataOvlReference.ShoppeKeeperHealerStrings.N_N_DQ_IS_THERE_ANY_OTHER_WAY_IN_WHICH_I_MAY_N)
+                       .Trim() +
                    "\n" + DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperHealerStrings
                        .AID_THEE_Q);
         }

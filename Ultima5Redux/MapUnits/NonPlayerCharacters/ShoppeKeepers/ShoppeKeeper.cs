@@ -51,8 +51,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <summary>
         ///     Dictionary that tracks previous random choice and helps to make sure they don't repeat
         /// </summary>
-        private readonly Dictionary<DataOvlReference.DataChunkName, int> _previousRandomSelectionByChunk =
-            new Dictionary<DataOvlReference.DataChunkName, int>();
+        private readonly Dictionary<DataOvlReference.DataChunkName, int> _previousRandomSelectionByChunk = new();
 
         protected readonly DataOvlReference DataOvlReference;
 
@@ -88,8 +87,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public static IEnumerable<SmallMapReferences.SingleMapReference.Location> GetLocations(
             DataOvlReference dataOvlReference, DataOvlReference.DataChunkName chunkName)
         {
-            List<SmallMapReferences.SingleMapReference.Location> locations =
-                new List<SmallMapReferences.SingleMapReference.Location>();
+            List<SmallMapReferences.SingleMapReference.Location> locations = new();
 
             foreach (byte b in dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
             {

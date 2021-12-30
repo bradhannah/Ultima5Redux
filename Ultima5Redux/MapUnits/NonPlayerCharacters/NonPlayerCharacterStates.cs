@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
     {
         [DataMember(Name = "NPCMap")]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>
-            _npcMap = new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterState>>();
+            _npcMap = new();
 
         internal NonPlayerCharacterStates(ImportedGameState importedGameState)
         {
@@ -31,7 +31,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 for (int npcIndex = 0; npcIndex < nNpcsPerLocation; npcIndex++)
                 {
                     NonPlayerCharacterState npcState =
-                        new NonPlayerCharacterState(
+                        new(
                             GameReferences.NpcRefs.GetNonPlayerCharactersByLocation(location)[npcIndex])
                         {
                             IsDead = importedGameState.NPCIsDeadArray[locationIndex - 1][npcIndex],

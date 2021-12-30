@@ -12,8 +12,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private readonly DataOvlReference _dataOvlReference;
 
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<Healer.RemedyTypes, int>>
-            _priceDictionary =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<Healer.RemedyTypes, int>>();
+            _priceDictionary = new();
 
         public HealerServices(DataOvlReference dataOvlReference)
         {
@@ -35,7 +34,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             int nIndex = 0;
             foreach (SmallMapReferences.SingleMapReference.Location location in locations)
             {
-                Dictionary<Healer.RemedyTypes, int> pricesAtLocation = new Dictionary<Healer.RemedyTypes, int>
+                Dictionary<Healer.RemedyTypes, int> pricesAtLocation = new()
                 {
                     { Healer.RemedyTypes.Heal, healPrices[nIndex] },
                     { Healer.RemedyTypes.Cure, curePrices[nIndex] },

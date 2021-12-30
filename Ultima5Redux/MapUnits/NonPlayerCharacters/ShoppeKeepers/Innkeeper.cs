@@ -93,7 +93,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public string GetHopeStayEnjoyable()
         {
-            return AddSaysShoppeKeeper(DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings.I_HOPE_THOU_HAST_THY_STAY_ENJOYABLE_COMMA_N)) + "\n\n" + FlattenStr(
+            return AddSaysShoppeKeeper(DataOvlReference.StringReferences.GetString(DataOvlReference
+                .ShoppeKeeperInnkeeper2Strings.I_HOPE_THOU_HAST_THY_STAY_ENJOYABLE_COMMA_N)) + "\n\n" + FlattenStr(
                 DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings
                     .IS_THERE_N_ANYTHING_MORE_N_I_CAN_DO_FOR_N_THEE_Q_DQ));
         }
@@ -154,7 +155,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public string GetThyFriendHasDied()
         {
-            return AddSaysShoppeKeeper(DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperInnkeeper2Strings.THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N));
+            return AddSaysShoppeKeeper(DataOvlReference.StringReferences.GetString(DataOvlReference
+                .ShoppeKeeperInnkeeper2Strings.THY_FRIEND_HAS_DIED_BY_THE_WAY_DOT_N));
         }
 
         public string GetWhoWillStay()

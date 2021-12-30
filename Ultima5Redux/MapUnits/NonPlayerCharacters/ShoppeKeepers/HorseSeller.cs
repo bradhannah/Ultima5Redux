@@ -15,7 +15,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         private readonly PlayerCharacterRecords _playerCharacterRecords;
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyHorses)
         };

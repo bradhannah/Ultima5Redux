@@ -13,19 +13,19 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
     public class BarKeeper : ShoppeKeeper
     {
-        private readonly BarKeeperStockReference _barKeeperStockReference = new BarKeeperStockReference();
+        private readonly BarKeeperStockReference _barKeeperStockReference = new();
 
-        private readonly List<int> _gossipCostByPosition = new List<int>
+        private readonly List<int> _gossipCostByPosition = new()
         {
             50, 75, 50, 50, 75, 50, 25, 50, 100, 150, 75, 150, 75, 100, 100, 200, 200, 200, 250, 250, 250, 100, 50, 50,
             200, 100
         };
 
-        private readonly Dictionary<string, string> _gossipWordToPersonMap = new Dictionary<string, string>();
-        private readonly Dictionary<string, string> _gossipWordToPlaceMap = new Dictionary<string, string>();
-        private readonly Dictionary<string, int> _gossipWordToPosition = new Dictionary<string, int>();
+        private readonly Dictionary<string, string> _gossipWordToPersonMap = new();
+        private readonly Dictionary<string, string> _gossipWordToPlaceMap = new();
+        private readonly Dictionary<string, int> _gossipWordToPosition = new();
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyBarkeeper)
         };

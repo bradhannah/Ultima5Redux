@@ -15,7 +15,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public sealed class NonPlayerCharacter : MapUnit
     {
-        [DataMember(Name = "PlayerCharacterRecordIndex")] private int _playerCharacterRecordIndex;
+        [DataMember(Name = "PlayerCharacterRecordIndex")]
+        private int _playerCharacterRecordIndex;
+
         [DataMember(Name = "ScheduleIndex")] private int _scheduleIndex = -1;
         [DataMember] public bool ArrivedAtLocation { get; private set; }
 
@@ -28,7 +30,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>
-        [IgnoreDataMember] public override bool IsActive
+        [IgnoreDataMember]
+        public override bool IsActive
         {
             get
             {
@@ -53,12 +56,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         [IgnoreDataMember] public override TileReference NonBoardedTileReference => KeyTileReference;
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>();
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
         [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>();
+            new();
 
         [JsonConstructor] public NonPlayerCharacter()
         {
@@ -191,7 +194,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         private void WanderWithinN(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMaxDistance,
             bool bForceWander = false)
         {
-            Random ran = new Random();
+            Random ran = new();
 
             // 50% of the time we won't even try to move at all
             int nRan = ran.Next(2);
@@ -272,7 +275,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
             // we are sick of waiting and will force a wander for a random number of turns to try to let the little
             // dummies figure it out on their own
-            Random ran = new Random();
+            Random ran = new();
             int nTimes = ran.Next(0, 2) + 1;
             WanderWithinN(virtualMap, timeOfDay, 32, true);
 
@@ -358,7 +361,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                     }
 
                     // sloppy, but fine for now
-                    MapUnitPosition mapUnitPosition = new MapUnitPosition
+                    MapUnitPosition mapUnitPosition = new()
                     {
                         XY = stairsAndLadderLocations[0], Floor = nMapCurrentFloor
                     };

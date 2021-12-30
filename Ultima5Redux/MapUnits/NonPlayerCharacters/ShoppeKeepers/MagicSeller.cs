@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
     {
         private readonly Inventory _inventory;
 
-        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new List<ShoppeKeeperOption>
+        public override List<ShoppeKeeperOption> ShoppeKeeperOptions => new()
         {
             new ShoppeKeeperOption("Buy", ShoppeKeeperOption.DialogueType.BuyMagicSeller)
         };
@@ -28,7 +28,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             List<Reagent> reagents = GetReagentsForSale();
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             char itemChar = 'a';
             foreach (Reagent reagent in reagents)
             {
