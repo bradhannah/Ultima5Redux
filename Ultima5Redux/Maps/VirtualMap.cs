@@ -95,6 +95,9 @@ namespace Ultima5Redux.Maps
         {
             get
             {
+                if (CurrentSingleMapReference == null)
+                    throw new Ultima5ReduxException("No single map is set in virtual map");
+
                 switch (CurrentSingleMapReference.MapLocation)
                 {
                     case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
@@ -116,7 +119,19 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
         [IgnoreDataMember] public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
-        [IgnoreDataMember] public bool IsBasement => !IsLargeMap && CurrentSingleMapReference.Floor == -1;
+
+        [IgnoreDataMember]
+        public bool IsBasement
+        {
+            get
+            {
+                if (CurrentSingleMapReference == null)
+                    throw new Ultima5ReduxException("No single map is set in virtual map");
+
+                return !IsLargeMap && CurrentSingleMapReference.Floor == -1;
+            }
+        }
+
         [IgnoreDataMember] public bool IsCombatMap => CurrentMap is CombatMap;
 
         /// <summary>
@@ -767,6 +782,9 @@ namespace Ultima5Redux.Maps
         /// <returns>the NPC or null if one does not exist</returns>
         public List<MapUnit> GetMapUnitOnTile(Point2D xy)
         {
+            if (CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
+
             List<MapUnit> mapUnits =
                 TheMapUnits.GetMapUnitByLocation(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
 
@@ -783,6 +801,9 @@ namespace Ultima5Redux.Maps
         {
             Point2D adjustedPosition = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction);
 
+            if (CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
+
             NonPlayerCharacter npc = TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>(LargeMapOverUnder,
                 adjustedPosition, CurrentSingleMapReference.Floor);
 
@@ -792,6 +813,10 @@ namespace Ultima5Redux.Maps
                 return null;
 
             Point2D adjustedPosition2Away = MapUnitMovement.GetAdjustedPos(CurrentPosition.XY, direction, 2);
+
+            if (CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
+
             return TheMapUnits.GetSpecificMapUnitByLocation<NonPlayerCharacter>(LargeMapOverUnder,
                 adjustedPosition2Away, CurrentSingleMapReference.Floor);
         }
@@ -1323,6 +1348,10 @@ namespace Ultima5Redux.Maps
         public void UseStairs(Point2D xy, bool bForceDown = false)
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
+
+            if (CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
+
             LoadSmallMap(GameReferences.SmallMapRef.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
                 CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
         }

@@ -17,32 +17,37 @@ namespace Ultima5Redux.MapUnits
     {
         internal const int MAX_MAP_CHARACTERS = 0x20;
 
-        [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
+        [DataMember(Name = "UseExtendedSprites")]
+        private readonly bool _bUseExtendedSprites;
 
         [DataMember(Name = "InitialMapType")] private Map.Maps _initialMapType;
 
         [DataMember] private Map.Maps CurrentMapType { get; set; }
 
-        [DataMember] public MapUnitCollection CombatMapMapUnitCollection { get; private set; } =
+        [DataMember]
+        public MapUnitCollection CombatMapMapUnitCollection { get; private set; } =
             new MapUnitCollection();
 
         [DataMember] public SmallMapReferences.SingleMapReference.Location CurrentLocation { get; private set; }
 
         //[DataMember] private SmallMapCharacterStates MapCharacterStates { get; set; }
 
-        [DataMember] public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } =
+        [DataMember]
+        public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } =
             new MapUnitCollection();
 
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
         [DataMember] public MapUnitCollection SmallMapUnitCollection { get; private set; } = new MapUnitCollection();
 
-        [DataMember] public MapUnitCollection UnderworldMapUnitCollection { get; private set; } =
+        [DataMember]
+        public MapUnitCollection UnderworldMapUnitCollection { get; private set; } =
             new MapUnitCollection();
 
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
         /// </summary>
-        [IgnoreDataMember] internal MapUnitPosition CurrentAvatarPosition
+        [IgnoreDataMember]
+        internal MapUnitPosition CurrentAvatarPosition
         {
             get => AvatarMapUnit.MapUnitPosition;
             set => AvatarMapUnit.MapUnitPosition = value;
@@ -644,6 +649,10 @@ namespace Ultima5Redux.MapUnits
             bool bLoadFromDisk)
         {
             CurrentMapType = mapType;
+
+            if (mapRef == null)
+                throw new Ultima5ReduxException("Passed a null map ref to SetCurrentMapType");
+
             CurrentLocation = mapRef.MapLocation;
             // if the current location hasn't changed then we don't reload the map info
             //bSkipLoadSmallMap |= _currentLocation == mapRef.MapLocation; 

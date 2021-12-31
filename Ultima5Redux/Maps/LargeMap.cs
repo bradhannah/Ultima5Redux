@@ -41,9 +41,8 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Build a large map. There are essentially two choices - Overworld and Underworld
         /// </summary>
-        /// <param name="dataDirectory"></param>
         /// <param name="mapChoice"></param>
-        public LargeMap(string dataDirectory, Maps mapChoice) : base(
+        public LargeMap(Maps mapChoice) : base(
             SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapChoice == Maps.Overworld ? 0 : -1)
         {
             if (mapChoice != Maps.Overworld && mapChoice != Maps.Underworld)

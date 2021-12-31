@@ -81,7 +81,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             char itemChar = 'a';
             foreach (DataOvlReference.Equipment equipment in TheShoppeKeeperReference.EquipmentForSaleList)
             {
-                sb.Append(itemChar++ + "..." + _inventory.GetItemFromEquipment(equipment).LongName + "\n");
+                CombatItem item = _inventory?.GetItemFromEquipment(equipment);
+                if (item == null)
+                    throw new Ultima5ReduxException("Couldn't get item from " + equipment);
+                sb.Append(itemChar++ + "..." + item.LongName + "\n");
             }
 
             return sb.ToString().Trim();

@@ -118,10 +118,10 @@ namespace Ultima5Redux
             GameReferences.Initialize(DataDirectory);
 
             // build the overworld map
-            OverworldMap = new LargeMap(DataDirectory, Map.Maps.Overworld);
+            OverworldMap = new LargeMap(Map.Maps.Overworld);
 
             // build the underworld map
-            UnderworldMap = new LargeMap(DataDirectory, Map.Maps.Underworld);
+            UnderworldMap = new LargeMap(Map.Maps.Underworld);
 
             AllSmallMaps = new SmallMaps();
 
@@ -649,6 +649,9 @@ namespace Ultima5Redux
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
+            if (State.TheVirtualMap.CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
+
             MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
                 State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
 
@@ -799,6 +802,9 @@ namespace Ultima5Redux
                 klimbResult = KlimbResult.RequiresDirection;
                 return getKlimbOutput();
             }
+
+            if (State.TheVirtualMap.CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
 
             SmallMapReferences.SingleMapReference.Location location =
                 State.TheVirtualMap.CurrentSingleMapReference.MapLocation;

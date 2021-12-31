@@ -54,7 +54,7 @@ namespace Ultima5Redux.PlayerCharacters
         public byte MonthsSinceStayingAtInn
         {
             get => _monthsSinceStayingAtInn;
-            set => _monthsSinceStayingAtInn = (byte)(value % 256);
+            set => _monthsSinceStayingAtInn = Math.Min(value, byte.MaxValue);
         }
 
         [DataMember] public string Name { get; set; }
@@ -201,6 +201,8 @@ namespace Ultima5Redux.PlayerCharacters
             // there should be at least one in your inventory to do this
             CombatItem newEquippedCombatItem = inventory.GetItemFromEquipment(newEquipment);
 
+            if (newEquippedCombatItem == null)
+                throw new Ultima5ReduxException($"Tried to get {newEquipment} but couldn't find it in inventory");
             Debug.Assert(newEquippedCombatItem.Quantity > 0);
 
             // let's make sure they have enough strength to wield/wear the Equipment
@@ -337,8 +339,12 @@ namespace Ultima5Redux.PlayerCharacters
             if (!Equipped.IsEquipped(equippableSlot)) return false;
 
             DataOvlReference.Equipment equippedEquipment = Equipped.GetEquippedEquipment(equippableSlot);
+            CombatItem combatItem = inventory.GetItemFromEquipment(equippedEquipment);
+            if (combatItem == null)
+                throw new Ultima5ReduxException(
+                    $"Tried to get {equippedEquipment} but couldn't find it in inventory (unequip)");
 
-            inventory.GetItemFromEquipment(equippedEquipment).Quantity++;
+            combatItem.Quantity++;
             Equipped.UnequipEquippableSlot(equippableSlot);
             return true;
         }

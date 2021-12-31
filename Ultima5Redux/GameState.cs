@@ -107,12 +107,19 @@ namespace Ultima5Redux
         {
             get
             {
-                if (TheVirtualMap.IsLargeMap)
+                if (!TheVirtualMap.IsLargeMap)
                 {
-                    return TheVirtualMap.CurrentSingleMapReference.Floor == -1 ? "Underworld" : "Overworld";
+                    if (TheVirtualMap.CurrentSingleMapReference == null)
+                        throw new Ultima5ReduxException("No single map is set in virtual map");
+
+                    return GameReferences.SmallMapRef.GetLocationName(TheVirtualMap.CurrentSingleMapReference
+                        .MapLocation);
                 }
 
-                return GameReferences.SmallMapRef.GetLocationName(TheVirtualMap.CurrentSingleMapReference.MapLocation);
+                if (TheVirtualMap.CurrentSingleMapReference == null)
+                    throw new Ultima5ReduxException("No single map is set in virtual map");
+
+                return TheVirtualMap.CurrentSingleMapReference.Floor == -1 ? "Underworld" : "Overworld";
             }
         }
 

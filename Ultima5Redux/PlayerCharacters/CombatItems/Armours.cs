@@ -11,17 +11,18 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public class Armours : CombatItems<ArmourReference.ArmourType, List<Armour>>
     {
-
         [DataMember] public List<Amulet> Amulets { get; private set; } = new List<Amulet>();
         [DataMember] public List<ChestArmour> ChestArmours { get; private set; } = new List<ChestArmour>();
         [DataMember] public List<Helm> Helms { get; private set; } = new List<Helm>();
         [DataMember] public List<Ring> Rings { get; private set; } = new List<Ring>();
 
-        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
+        [IgnoreDataMember]
+        private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
             new Dictionary<DataOvlReference.Equipment, Armour>();
 
         // override to allow for inserting entire lists
-        [IgnoreDataMember] public override IEnumerable<InventoryItem> GenericItemList
+        [IgnoreDataMember]
+        public override IEnumerable<InventoryItem> GenericItemList
         {
             get
             {
@@ -55,6 +56,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             foreach (Armour armour in AllCombatItems.OfType<Armour>())
             {
+                if (armour.ArmourRef == null)
+                    throw new Ultima5ReduxException("Tried to read in armour ref, but failed.");
+
                 ArmourReference.ArmourType armourType = armour.ArmourRef.TheArmourType;
                 ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
                 if (!Items.ContainsKey(armourType)) Items.Add(armourType, new List<Armour>());
