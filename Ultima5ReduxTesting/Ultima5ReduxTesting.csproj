@@ -6,12 +6,9 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="SaveGames"/>
+        <PackageReference Include="NUnit" Version="3.13.2" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="NUnit" Version="3.13.2"/>
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Ultima5Redux\Ultima5Redux.csproj"/>
+        <ProjectReference Include="..\Ultima5Redux\Ultima5Redux.csproj" />
     </ItemGroup>
 </Project>
