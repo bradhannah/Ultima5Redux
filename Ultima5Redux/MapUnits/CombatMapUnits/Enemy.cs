@@ -12,8 +12,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     [DataContract] public class Enemy : CombatMapUnit
     {
+        [DataMember(Name = "EnemyReferenceIndex")]
+        private int _enemyReferenceIndex = -1;
 
-        [DataMember(Name = "EnemyReferenceIndex")] private int _enemyReferenceIndex = -1;
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         [IgnoreDataMember] public override string BoardXitName => "Hostile creates don't not like to be boarded!";
 
@@ -37,7 +38,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember] public override string SingularName => EnemyReference.MixedCaseSingularName;
         [IgnoreDataMember] public override TileReference KeyTileReference => EnemyReference.KeyTileReference;
 
-        [IgnoreDataMember] public EnemyReference EnemyReference
+        [IgnoreDataMember]
+        public EnemyReference EnemyReference
         {
             get => GameReferences.EnemyRefs.GetEnemyReference(_enemyReferenceIndex);
             private set => _enemyReferenceIndex = value.KeyTileReference.Index;
@@ -47,14 +49,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [IgnoreDataMember] public bool IsFleeing { get; set; }
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>();
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
         [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>();
+            new();
 
-        public sealed override CharacterStats Stats { get; } = new CharacterStats();
+        [DataMember] public override CharacterStats Stats { get; protected set; } = new();
 
         [JsonConstructor] private Enemy()
         {
@@ -68,7 +70,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             EnemyReference = enemyReference;
 
             MapUnitPosition = mapUnitPosition;
-            
+
             Stats.Level = 1;
             Stats.Dexterity = EnemyReference.TheDefaultEnemyStats.Dexterity;
             Stats.Intelligence = EnemyReference.TheDefaultEnemyStats.Intelligence;

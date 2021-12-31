@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
 using Ultima5Redux;
@@ -1440,6 +1441,20 @@ namespace Ultima5ReduxTesting
             SpellResult result = spell.CastSpell(world.State, details);
 
             Assert.True(result.Status == SpellResult.SpellResultStatus.Success);
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void test_CarpetEnemiesExist(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            world.ReLoadFromJson();
+
+            Assert.True(
+                world.State.TheVirtualMap.TheMapUnits.OverworldMapMapUnitCollection.Enemies.Count(m => m.IsActive) > 0);
         }
     }
 }

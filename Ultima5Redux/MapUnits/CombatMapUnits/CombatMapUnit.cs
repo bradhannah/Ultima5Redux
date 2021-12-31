@@ -16,7 +16,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Grazed, Missed, BarelyWounded, LightlyWounded, HeavilyWounded, CriticallyWounded, Fleeing, Dead, None
         }
 
-        [IgnoreDataMember] internal HitState CurrentHitState
+        [IgnoreDataMember]
+        internal HitState CurrentHitState
         {
             get
             {
@@ -53,7 +54,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
-        [IgnoreDataMember] private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
+        [IgnoreDataMember] private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
         [IgnoreDataMember] public abstract int ClosestAttackRange { get; }
 
@@ -67,7 +68,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [IgnoreDataMember] public abstract string SingularName { get; }
 
-        [IgnoreDataMember] public PlayerCombatStats CombatStats { get; } = new PlayerCombatStats();
+        [IgnoreDataMember] public PlayerCombatStats CombatStats { get; } = new();
 
         [IgnoreDataMember] public bool IsCharmed => Stats.Status == PlayerCharacterRecord.CharacterStatus.Charmed;
         [IgnoreDataMember] public bool IsSleeping => Stats.Status == PlayerCharacterRecord.CharacterStatus.Asleep;
@@ -78,7 +79,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public abstract string Name { get; }
 
-        public abstract CharacterStats Stats { get; }
+        public abstract CharacterStats Stats { get; protected set; }
 
         [JsonConstructor] protected CombatMapUnit()
         {

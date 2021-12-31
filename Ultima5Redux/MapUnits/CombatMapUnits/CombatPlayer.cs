@@ -56,7 +56,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
 
-        public override CharacterStats Stats => Record.Stats;
+        public override CharacterStats Stats
+        {
+            get => Record.Stats;
+            protected set => Record.Stats = value;
+        }
 
         public PlayerCharacterRecord Record { get; }
 
@@ -88,7 +92,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         /// <returns>List of attack weapons</returns>
         public List<CombatItem> GetAttackWeapons()
         {
-            List<CombatItem> weapons = new List<CombatItem>();
+            List<CombatItem> weapons = new();
 
             bool bBareHands = false;
 

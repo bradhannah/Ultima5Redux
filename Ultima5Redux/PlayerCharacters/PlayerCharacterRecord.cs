@@ -21,22 +21,20 @@ namespace Ultima5Redux.PlayerCharacters
             Shield = 0x1C, Ring = 0x1D, Amulet = 0x1E, InnParty = 0x1F
         }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterClass
-        {
-            Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M'
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum CharacterClass { Avatar = 'A', Bard = 'B', Fighter = 'F', Mage = 'M' }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterGender { Male = 0x0B, Female = 0x0C }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum CharacterGender { Male = 0x0B, Female = 0x0C }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterPartyStatus
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum CharacterPartyStatus
         {
             InTheParty = 0x00, HasntJoinedYet = 0xFF, AtTheInn = 0x01
         } // otherwise it is at an inn at Settlement # in byte value
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum CharacterStatus
-        {
-            Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D'
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum CharacterStatus { Good = 'G', Poisoned = 'P', Charmed = 'C', Asleep = 'S', Dead = 'D' }
 
         public enum EquipResult { Success, SuccessUnequipRight, SuccessUnequipLeft, TooHeavy, Error }
 
@@ -52,7 +50,8 @@ namespace Ultima5Redux.PlayerCharacters
         [DataMember] public bool IsInvisible { get; private set; }
         [DataMember] public bool IsRat { get; private set; }
 
-        [DataMember] public byte MonthsSinceStayingAtInn
+        [DataMember]
+        public byte MonthsSinceStayingAtInn
         {
             get => _monthsSinceStayingAtInn;
             set => _monthsSinceStayingAtInn = (byte)(value % 256);
@@ -60,7 +59,8 @@ namespace Ultima5Redux.PlayerCharacters
 
         [DataMember] public string Name { get; set; }
 
-        [DataMember] public CharacterPartyStatus PartyStatus
+        [DataMember]
+        public CharacterPartyStatus PartyStatus
         {
             get =>
                 InnOrParty switch
@@ -72,14 +72,16 @@ namespace Ultima5Redux.PlayerCharacters
             set => InnOrParty = (byte)value;
         }
 
-        [DataMember] public CharacterStats Stats { get; private set; } = new CharacterStats();
+        [DataMember] public CharacterStats Stats { get; internal set; } = new();
 
         [IgnoreDataMember] private byte _monthsSinceStayingAtInn;
 
-        [IgnoreDataMember] public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
+        [IgnoreDataMember]
+        public SmallMapReferences.SingleMapReference.Location CurrentInnLocation =>
             (SmallMapReferences.SingleMapReference.Location)InnOrParty;
 
-        [IgnoreDataMember] public int PrimarySpriteIndex =>
+        [IgnoreDataMember]
+        public int PrimarySpriteIndex =>
             Class switch
             {
                 CharacterClass.Avatar => 284,
@@ -348,7 +350,6 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
-        
         //        offset length      purpose range
         //0           9           character name      zero-terminated string
         //                                            (length = 8+1)
