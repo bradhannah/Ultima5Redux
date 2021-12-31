@@ -33,18 +33,19 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     All the small maps
         /// </summary>
-        [DataMember(Name = "SmallMaps")]
-        private readonly SmallMaps _smallMaps;
+        [DataMember(Name = "SmallMaps")] private readonly SmallMaps _smallMaps;
 
         /// <summary>
         ///     Which map was the avatar on before this one?
         /// </summary>
-        [DataMember] private RegularMap PreCombatMap { get; set; }
+        [DataMember]
+        private RegularMap PreCombatMap { get; set; }
 
         /// <summary>
         ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
         /// </summary>
-        [DataMember] private MapUnitPosition PreMapUnitPosition { get; set; } = new MapUnitPosition();
+        [DataMember]
+        private MapUnitPosition PreMapUnitPosition { get; set; } = new MapUnitPosition();
 
         [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
 
@@ -53,7 +54,8 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Detailed reference of current small map
         /// </summary>
-        [DataMember] public SmallMapReferences.SingleMapReference CurrentSingleMapReference
+        [DataMember]
+        public SmallMapReferences.SingleMapReference CurrentSingleMapReference
         {
             get
             {
@@ -71,12 +73,14 @@ namespace Ultima5Redux.Maps
         ///     The current small map (null if on large map)
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        [DataMember] public SmallMap CurrentSmallMap { get; private set; }
+        [DataMember]
+        public SmallMap CurrentSmallMap { get; private set; }
 
         /// <summary>
         ///     If we are on a large map - then are we on overworld or underworld
         /// </summary>
-        [DataMember] public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
+        [DataMember]
+        public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
 
         [DataMember] public MapUnits.MapUnits TheMapUnits { get; private set; }
 
@@ -86,7 +90,8 @@ namespace Ultima5Redux.Maps
         ///     The abstracted Map object for the current map
         ///     Returns large or small depending on what is active
         /// </summary>
-        [IgnoreDataMember] public Map CurrentMap
+        [IgnoreDataMember]
+        public Map CurrentMap
         {
             get
             {
@@ -105,7 +110,8 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
         [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
 
-        [IgnoreDataMember] public bool IsAvatarRidingCarpet =>
+        [IgnoreDataMember]
+        public bool IsAvatarRidingCarpet =>
             TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
 
         [IgnoreDataMember] public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
@@ -116,28 +122,33 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Are we currently on a large map?
         /// </summary>
-        [IgnoreDataMember] public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
+        [IgnoreDataMember]
+        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
 
         //set => TheMapUnits.CurrentAvatarPosition = value;
         /// <summary>
         ///     Number of total columns for current map
         /// </summary>
-        [IgnoreDataMember] public int NumberOfColumnTiles => CurrentMap.NumOfXTiles;
+        [IgnoreDataMember]
+        public int NumberOfColumnTiles => CurrentMap.NumOfXTiles;
 
         /// <summary>
         ///     Number of total rows for current map
         /// </summary>
-        [IgnoreDataMember] public int NumberOfRowTiles => CurrentMap.NumOfYTiles;
+        [IgnoreDataMember]
+        public int NumberOfRowTiles => CurrentMap.NumOfYTiles;
 
         /// <summary>
         ///     The persistant overworld map
         /// </summary>
-        [IgnoreDataMember] public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
+        [IgnoreDataMember]
+        public LargeMap OverworldMap => _largeMaps[Map.Maps.Overworld];
 
         /// <summary>
         ///     The persistant underworld map
         /// </summary>
-        [IgnoreDataMember] public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
+        [IgnoreDataMember]
+        public LargeMap UnderworldMap => _largeMaps[Map.Maps.Underworld];
 
         [IgnoreDataMember] public CombatMap CurrentCombatMap { get; private set; }
 
@@ -145,9 +156,11 @@ namespace Ultima5Redux.Maps
         ///     Current large map (null if on small map)
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        [IgnoreDataMember] public LargeMap CurrentLargeMap { get; private set; }
+        [IgnoreDataMember]
+        public LargeMap CurrentLargeMap { get; private set; }
 
-        [IgnoreDataMember] public MapUnitPosition CurrentPosition
+        [IgnoreDataMember]
+        public MapUnitPosition CurrentPosition
         {
             get
             {
@@ -493,7 +506,7 @@ namespace Ultima5Redux.Maps
             // gets an adjusted position OR returns null if the position is not valid
 
             foreach (MapUnitMovement.MovementCommandDirection direction in Enum.GetValues(
-                typeof(MapUnitMovement.MovementCommandDirection)))
+                         typeof(MapUnitMovement.MovementCommandDirection)))
             {
                 // we may be asked to avoid including .None in the list
                 if (direction == MapUnitMovement.MovementCommandDirection.None) continue;
@@ -1264,12 +1277,13 @@ namespace Ultima5Redux.Maps
             {
                 case LargeMap _:
                 case SmallMap _:
+                    // restore our old map overrides
                     TheMapOverrides = PreTheMapOverrides;
 
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
                     TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false);
-                    //true);
+                    TheMapUnits.AvatarMapUnit.MapUnitPosition = PreMapUnitPosition;
                     PreCombatMap = null;
                     break;
                 default:
@@ -1310,7 +1324,7 @@ namespace Ultima5Redux.Maps
         {
             bool bStairGoUp = IsStairGoingUp() && !bForceDown;
             LoadSmallMap(GameReferences.SmallMapRef.GetSingleMapByLocation(CurrentSingleMapReference.MapLocation,
-                    CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
+                CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
         }
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)

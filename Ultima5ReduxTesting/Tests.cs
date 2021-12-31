@@ -1082,6 +1082,7 @@ namespace Ultima5ReduxTesting
                 if (combatPlayer == null) break;
             } while (true);
 
+            world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
             _ = "";
         }
 
