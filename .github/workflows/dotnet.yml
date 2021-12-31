@@ -24,6 +24,8 @@ jobs:
           repository: bradhannah/Ultima5ReduxTestDependancies
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: Ultima5ReduxTestDependancies
+      - name: Show me the name of my save file
+        run: echo %USERPROFILE%\Documents\UltimaVRedux
       
       - name: Make save directory
         run: mkdir %USERPROFILE%\Documents\UltimaVRedux
