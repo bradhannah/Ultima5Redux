@@ -25,9 +25,11 @@ jobs:
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: Ultima5ReduxTestDependancies
       
+      - name: Make save directory
+        run: mkdir %USERPROFILE%\Documents\UltimaVRedux
+      
       - name: Copy New Save format to home directory
-        run: mkdir %USERPROFILE%\Documents\UltimaVRedux \
-          xcopy /E /Y Ultima5ReduxTestDependancies/DataFiles/NewSaves/* %USERPROFILE%\Documents\UltimaVRedux
+        run: xcopy /E /Y Ultima5ReduxTestDependancies/DataFiles/NewSaves/* %USERPROFILE%\Documents\UltimaVRedux
       
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
