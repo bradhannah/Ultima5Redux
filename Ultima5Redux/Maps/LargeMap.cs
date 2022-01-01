@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
-using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -104,10 +103,10 @@ namespace Ultima5Redux.Maps
 
             // only initialize the first time, it will fix itself
             if (TestForVisibility.Count <= 0)
-                for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
-                {
-                    TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-                }
+                //for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
+            {
+                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+            }
 
             TouchedOuterBorder = false;
 

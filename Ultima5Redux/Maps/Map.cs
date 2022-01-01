@@ -285,6 +285,8 @@ namespace Ultima5Redux.Maps
             if (visibleTilePos == null) return true;
             if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
                 VisibleOnMap[visibleTilePos.X][visibleTilePos.Y] = true;
+            //else
+            //  VisibleOnMap[visibleTilePos.X][visibleTilePos.Y] = false;
             return false;
         }
 
@@ -322,6 +324,12 @@ namespace Ultima5Redux.Maps
             {
                 TouchedOuterBorder = true;
                 return; // out of bounds
+            }
+
+            if (bFirst)
+            {
+                Utils.Set2DArrayAllToValue(VisibleOnMap, true);
+                Utils.Set2DArrayAllToValue(TestForVisibility[nCharacterIndex], false);
             }
 
             Point2D characterPosition = overrideAvatarPos == null ? AvatarXyPos : overrideAvatarPos;
