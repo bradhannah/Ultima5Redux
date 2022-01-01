@@ -11,7 +11,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
     [DataContract] public class Frigate : SeaFaringVessel
     {
         private readonly Dictionary<Point2D.Direction, string> _sailsFurledTiles =
-            new Dictionary<Point2D.Direction, string>
+            new()
             {
                 { Point2D.Direction.None, "ShipNoSailsUp" },
                 { Point2D.Direction.Left, "ShipNoSailsLeft" },
@@ -21,7 +21,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             };
 
         private readonly Dictionary<Point2D.Direction, string> _sailsHoistedTiles =
-            new Dictionary<Point2D.Direction, string>
+            new()
             {
                 { Point2D.Direction.None, "ShipSailsUp" },
                 { Point2D.Direction.Left, "ShipSailsLeft" },
@@ -31,7 +31,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             };
 
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
-            new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
+            new()
             {
                 { SmallMapReferences.SingleMapReference.Location.East_Britanny, 1300 },
                 { SmallMapReferences.SingleMapReference.Location.Minoc, 1500 },

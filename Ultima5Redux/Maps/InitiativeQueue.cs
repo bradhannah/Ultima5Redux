@@ -15,7 +15,7 @@ namespace Ultima5Redux.Maps
         ///     A running tally of combat initiatives. This provides a running tally of initiative to provide
         ///     ongoing boosts to high dexterity map units
         /// </summary>
-        private readonly Dictionary<CombatMapUnit, int> _combatInitiativeTally = new Dictionary<CombatMapUnit, int>();
+        private readonly Dictionary<CombatMapUnit, int> _combatInitiativeTally = new();
 
         private readonly CombatMap _combatMap;
 
@@ -24,7 +24,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Queue that provides order attack for all players and enemies
         /// </summary>
-        private readonly Queue<Queue<CombatMapUnit>> _initiativeQueue = new Queue<Queue<CombatMapUnit>>();
+        private readonly Queue<Queue<CombatMapUnit>> _initiativeQueue = new();
 
         private readonly PlayerCharacterRecords _playerCharacterRecords;
 
@@ -98,16 +98,15 @@ namespace Ultima5Redux.Maps
                 Debug.Assert(_playerCharacterRecords != null);
                 int nStartingItems = GetNumberOfTurnsInQueue();
 
-                Queue<CombatMapUnit> newInitiativeQueue = new Queue<CombatMapUnit>();
+                Queue<CombatMapUnit> newInitiativeQueue = new();
                 _initiativeQueue.Enqueue(newInitiativeQueue);
 
                 // a mapping of dexterity values to an ordered list of combat map units 
-                Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits =
-                    new Dictionary<int, List<CombatMapUnit>>();
+                Dictionary<int, List<CombatMapUnit>> dexterityToCombatUnits = new();
 
                 // go through each combat map unit and place them in priority order based on their dexterity values 
                 foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(
-                    IsCombatMapUnit))
+                             IsCombatMapUnit))
                 {
                     Debug.Assert(IsCombatMapUnit(combatMapUnit));
 
@@ -223,7 +222,7 @@ namespace Ultima5Redux.Maps
         internal List<CombatMapUnit> GetTopNCombatMapUnits(int nUnits)
         {
             int nTally = 0;
-            List<CombatMapUnit> combatMapUnits = new List<CombatMapUnit>(nUnits);
+            List<CombatMapUnit> combatMapUnits = new(nUnits);
 
             while (!IsAtLeastNTurnsInQueue(nUnits))
             {

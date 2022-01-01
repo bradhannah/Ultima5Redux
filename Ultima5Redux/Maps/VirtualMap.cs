@@ -27,8 +27,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Both underworld and overworld maps
         /// </summary>
-        [DataMember(Name = "LargeMaps")]
-        private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new Dictionary<Map.Maps, LargeMap>(2);
+        [DataMember(Name = "LargeMaps")] private readonly Dictionary<Map.Maps, LargeMap> _largeMaps = new(2);
 
         /// <summary>
         ///     All the small maps
@@ -45,7 +44,7 @@ namespace Ultima5Redux.Maps
         ///     The position of the Avatar from the last place he came from (ie. on a small map, from a big map)
         /// </summary>
         [DataMember]
-        private MapUnitPosition PreMapUnitPosition { get; set; } = new MapUnitPosition();
+        private MapUnitPosition PreMapUnitPosition { get; set; } = new();
 
         [DataMember] private MapOverrides PreTheMapOverrides { get; set; }
 
@@ -254,7 +253,7 @@ namespace Ultima5Redux.Maps
             SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
 
             // ordered list of the best choice paths (only valid paths) 
-            List<Point2D> bestChoiceList = new List<Point2D>(sortedPoints.Count);
+            List<Point2D> bestChoiceList = new(sortedPoints.Count);
 
             // to make it more familiar, we will transfer to an ordered list
             foreach (Point2D xy in sortedPoints.Values)
@@ -285,7 +284,7 @@ namespace Ultima5Redux.Maps
             SortedDictionary<double, Point2D> sortedPoints = GetShortestPaths(allLaddersAndStairList, destinedPosition);
 
             // ordered list of the best choice paths (only valid paths) 
-            List<Point2D> bestChoiceList = new List<Point2D>(sortedPoints.Count);
+            List<Point2D> bestChoiceList = new(sortedPoints.Count);
 
             // to make it more familiar, we will transfer to an ordered list
             foreach (Point2D xy in sortedPoints.Values)
@@ -324,7 +323,7 @@ namespace Ultima5Redux.Maps
         internal Point2D GetWanderCharacterPosition(Point2D characterPosition, Point2D scheduledPosition,
             int nMaxDistance, out MapUnitMovement.MovementCommandDirection direction)
         {
-            Random ran = new Random();
+            Random ran = new();
             List<MapUnitMovement.MovementCommandDirection> possibleDirections =
                 GetPossibleDirectionsList(characterPosition, scheduledPosition, nMaxDistance, true);
 
@@ -343,11 +342,15 @@ namespace Ultima5Redux.Maps
             return adjustedPosition;
         }
 
-        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases = false) =>
-            IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
+        internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases = false)
+        {
+            return IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
+        }
 
-        internal bool IsTileFreeToTravel(Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState) =>
-            IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
+        internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
+        {
+            return IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
+        }
 
         /// <summary>
         ///     Is the particular tile eligible to be moved onto
@@ -357,7 +360,7 @@ namespace Ultima5Redux.Maps
         /// <param name="bNoStaircases"></param>
         /// <param name="forcedAvatarState"></param>
         /// <returns>true if you can move onto the tile</returns>
-        internal bool IsTileFreeToTravel(Point2D currentPosition, Point2D newPosition, bool bNoStaircases,
+        internal bool IsTileFreeToTravel(in Point2D currentPosition, in Point2D newPosition, bool bNoStaircases,
             Avatar.AvatarState forcedAvatarState)
         {
             if (newPosition.X < 0 || newPosition.Y < 0) return false;
@@ -408,7 +411,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        internal int SearchAndExposeItems(Point2D xy)
+        internal int SearchAndExposeItems(in Point2D xy)
         {
             // check for moonstones
             // moonstone check
@@ -435,13 +438,13 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         private List<Point2D> GetFreeSpacesSurroundingAvatar()
         {
-            List<Point2D> freeSpacesAroundAvatar = new List<Point2D>();
+            List<Point2D> freeSpacesAroundAvatar = new();
 
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    Point2D pointToCheck = new Point2D(Math.Max(CurrentPosition.X + x, 0),
+                    Point2D pointToCheck = new(Math.Max(CurrentPosition.X + x, 0),
                         Math.Max(CurrentPosition.Y + y, 0));
                     if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
                         freeSpacesAroundAvatar.Add(pointToCheck);
@@ -458,7 +461,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         private List<Point2D> GetListOfAllLaddersAndStairs(LadderOrStairDirection ladderOrStairDirection)
         {
-            List<Point2D> laddersAndStairs = new List<Point2D>();
+            List<Point2D> laddersAndStairs = new();
 
             // go through every single tile on the map looking for ladders and stairs
             for (int x = 0; x < SmallMap.X_TILES; x++)
@@ -512,11 +515,10 @@ namespace Ultima5Redux.Maps
         /// <param name="nMaxDistance">max distance they can travel from that position</param>
         /// <param name="bNoStaircases"></param>
         /// <returns></returns>
-        private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(Point2D characterPosition,
-            Point2D scheduledPosition, int nMaxDistance, bool bNoStaircases)
+        private List<MapUnitMovement.MovementCommandDirection> GetPossibleDirectionsList(in Point2D characterPosition,
+            in Point2D scheduledPosition, int nMaxDistance, bool bNoStaircases)
         {
-            List<MapUnitMovement.MovementCommandDirection> directionList =
-                new List<MapUnitMovement.MovementCommandDirection>();
+            List<MapUnitMovement.MovementCommandDirection> directionList = new();
 
             // gets an adjusted position OR returns null if the position is not valid
 
@@ -541,9 +543,10 @@ namespace Ultima5Redux.Maps
         /// <param name="positionList">list of positions</param>
         /// <param name="destinedPosition">the destination position</param>
         /// <returns>an ordered directory list of paths based on the shortest path (straight line path)</returns>
-        private SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList, Point2D destinedPosition)
+        private SortedDictionary<double, Point2D> GetShortestPaths(List<Point2D> positionList,
+            in Point2D destinedPosition)
         {
-            SortedDictionary<double, Point2D> sortedPoints = new SortedDictionary<double, Point2D>();
+            SortedDictionary<double, Point2D> sortedPoints = new();
 
             // get the distances and add to the sorted dictionary
             foreach (Point2D xy in positionList)
@@ -563,8 +566,10 @@ namespace Ultima5Redux.Maps
             return sortedPoints;
         }
 
-        private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
+        private bool IsTileFreeToTravelLocal(in Point2D.Direction direction, Avatar.AvatarState avatarState)
+        {
+            return IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
+        }
 
         /// <summary>
         ///     Loads a combat map as the current map
@@ -630,7 +635,7 @@ namespace Ultima5Redux.Maps
             List<byte> yDockCoords = GameReferences.DataOvlRef.GetDataChunk(DataOvlReference.DataChunkName.Y_DOCKS)
                 .GetAsByteList();
             Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D> docks =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location, Point2D>
+                new()
                 {
                     {
                         SmallMapReferences.SingleMapReference.Location.Jhelom,
@@ -656,7 +661,7 @@ namespace Ultima5Redux.Maps
             return docks[location];
         }
 
-        public bool ContainsSearchableThings(Point2D xy)
+        public bool ContainsSearchableThings(in Point2D xy)
         {
             // moonstone check
             return IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
@@ -671,7 +676,7 @@ namespace Ultima5Redux.Maps
             List<Point2D> freeSpacesAroundAvatar = GetFreeSpacesSurroundingAvatar();
             if (freeSpacesAroundAvatar.Count <= 0) return null;
 
-            Random ran = new Random();
+            Random ran = new();
             Point2D chosenLocation = freeSpacesAroundAvatar[ran.Next() % freeSpacesAroundAvatar.Count];
             Horse horse = TheMapUnits.CreateHorse(
                 new MapUnitPosition(chosenLocation.X, chosenLocation.Y, CurrentPosition.Floor), LargeMapOverUnder,
@@ -682,9 +687,13 @@ namespace Ultima5Redux.Maps
             return horse;
         }
 
-        public InventoryItem DequeuExposedSearchItems(Point2D xy) => TheMapOverrides.DequeueSearchItem(xy);
+        public InventoryItem DequeuExposedSearchItems(in Point2D xy)
+        {
+            return TheMapOverrides.DequeueSearchItem(xy);
+        }
 
-        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, Point2D tilePosInMap, bool bIsAvatarTile,
+        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
+            bool bIsAvatarTile,
             bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
@@ -694,7 +703,7 @@ namespace Ultima5Redux.Maps
             if (bIsMirror)
             {
                 // if the avatar is south of the mirror then show his image
-                Point2D expectedAvatarPos = new Point2D(tilePosInMap.X, tilePosInMap.Y + 1);
+                Point2D expectedAvatarPos = new(tilePosInMap.X, tilePosInMap.Y + 1);
                 if (expectedAvatarPos == CurrentPosition.XY)
                 {
                     return GameReferences.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
@@ -741,7 +750,7 @@ namespace Ultima5Redux.Maps
             return nNewSpriteIndex;
         }
 
-        public SingleCombatMapReference GetCombatMapReferenceByPosition(Point2D xy,
+        public SingleCombatMapReference GetCombatMapReferenceByPosition(in Point2D xy,
             SingleCombatMapReference.Territory territory)
         {
             TileReference tileReference = GetTileReference(xy);
@@ -762,8 +771,10 @@ namespace Ultima5Redux.Maps
                 LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF);
         }
 
-        public IEnumerable<InventoryItem> GetExposedSearchItems(Point2D xy) =>
-            TheMapOverrides.GetExposedSearchItems(xy);
+        public IEnumerable<InventoryItem> GetExposedSearchItems(in Point2D xy)
+        {
+            return TheMapOverrides.GetExposedSearchItems(xy);
+        }
 
         /// <summary>
         ///     Gets a map unit on the current tile (that ISN'T the Avatar)
@@ -780,7 +791,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns>the NPC or null if one does not exist</returns>
-        public List<MapUnit> GetMapUnitOnTile(Point2D xy)
+        public List<MapUnit> GetMapUnitOnTile(in Point2D xy)
         {
             if (CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
@@ -840,7 +851,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public Point2D.Direction GetStairsDirection(Point2D xy)
+        public Point2D.Direction GetStairsDirection(in Point2D xy)
         {
             // we are making a BIG assumption at this time that a stair case ONLY ever has a single
             // entrance point, and solid walls on all other sides... hopefully this is true
@@ -856,7 +867,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy">position of stairs</param>
         /// <returns>stair sprite</returns>
-        public int GetStairsSprite(Point2D xy)
+        public int GetStairsSprite(in Point2D xy)
         {
             bool bGoingUp = IsStairGoingUp(xy);
             Point2D.Direction direction = GetStairsDirection(xy);
@@ -938,7 +949,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(Point2D xy)
+        public TileReference GetTileReference(in Point2D xy)
         {
             return GetTileReference(xy.X, xy.Y);
         }
@@ -959,9 +970,9 @@ namespace Ultima5Redux.Maps
         /// <param name="bExcludeAvatar"></param>
         /// <returns>MapUnit or null</returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
+        public MapUnit GetTopVisibleMapUnit(in Point2D xy, bool bExcludeAvatar)
         {
-            List<Type> visibilePriorityOrder = new List<Type>
+            List<Type> visibilePriorityOrder = new()
             {
                 typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
                 typeof(Enemy), typeof(CombatPlayer), typeof(Avatar)
@@ -995,9 +1006,9 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy">position of the thing</param>
         /// <returns>tile (sprite) number</returns>
-        public int GuessTile(Point2D xy)
+        public int GuessTile(in Point2D xy)
         {
-            Dictionary<int, int> tileCountDictionary = new Dictionary<int, int>();
+            Dictionary<int, int> tileCountDictionary = new();
 
             // we check our high level tile override
             // this method is much quicker because we only load the data once in the maps 
@@ -1063,7 +1074,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="characterPos"></param>
         /// <returns>true if food is within a tile</returns>
-        public bool IsFoodNearby(Point2D characterPos)
+        public bool IsFoodNearby(in Point2D characterPos)
         {
             bool isFoodTable(int nSprite)
             {
@@ -1083,7 +1094,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public bool IsHorizDoor(Point2D xy)
+        public bool IsHorizDoor(in Point2D xy)
         {
             if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
             if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
@@ -1095,17 +1106,21 @@ namespace Ultima5Redux.Maps
         public bool IsLandNearby() =>
             IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
 
-        public bool IsLandNearby(Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState) ||
-            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState) ||
-            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState) ||
-            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
+        public bool IsLandNearby(in Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState)
+        {
+            return IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState) ||
+                   IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState) ||
+                   IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState) ||
+                   IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
+        }
 
-        public bool IsLandNearby(Avatar.AvatarState avatarState) =>
-            IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState) ||
-            IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState) ||
-            IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState) ||
-            IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
+        public bool IsLandNearby(in Avatar.AvatarState avatarState)
+        {
+            return IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState) ||
+                   IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState) ||
+                   IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState) ||
+                   IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
+        }
 
         /// <summary>
         ///     Gets a map unit if it's on the current tile
@@ -1121,17 +1136,18 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public bool IsMapUnitOccupiedTile(Point2D xy)
+        public bool IsMapUnitOccupiedTile(in Point2D xy)
         {
-            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            for (int index = 0; index < mapUnits.Count; index++)
+            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            //for (int index = 0; index < mapUnits.Count; index++)
+            foreach (MapUnit mapUnit in mapUnits)
             {
                 // sometimes characters are null because they don't exist - and that is OK
-                Debug.Assert(mapUnits[index].IsActive);
-
-                MapUnitPosition mapUnitPosition = mapUnits[index].MapUnitPosition;
-                if (mapUnitPosition.X == xy.X && mapUnitPosition.Y == xy.Y &&
-                    mapUnitPosition.Floor == CurrentPosition.Floor)
+                //Debug.Assert(mapUnits[index].IsActive);
+                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, CurrentPosition.Floor))
+                    // MapUnitPosition mapUnitPosition = mapUnits[index].MapUnitPosition;
+                    // if (mapUnitPosition.X == xy.X && mapUnitPosition.Y == xy.Y &&
+                    //     mapUnitPosition.Floor == CurrentPosition.Floor)
                     return true;
             }
 
@@ -1160,7 +1176,7 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStairGoingDown(Point2D xy)
+        public bool IsStairGoingDown(in Point2D xy)
         {
             if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
             bool bStairGoUp = _smallMaps.DoStairsGoUp(CurrentSmallMap.MapLocation, CurrentSmallMap.MapFloor, xy);
@@ -1173,7 +1189,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public bool IsStairGoingUp(Point2D xy)
+        public bool IsStairGoingUp(in Point2D xy)
         {
             if (!GameReferences.SpriteTileReferences.IsStaircase(GetTileReference(xy).Index)) return false;
 

@@ -26,7 +26,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember]
         public MapUnitCollection CombatMapMapUnitCollection { get; private set; } =
-            new MapUnitCollection();
+            new();
 
         [DataMember] public SmallMapReferences.SingleMapReference.Location CurrentLocation { get; private set; }
 
@@ -34,14 +34,14 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember]
         public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } =
-            new MapUnitCollection();
+            new();
 
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
-        [DataMember] public MapUnitCollection SmallMapUnitCollection { get; private set; } = new MapUnitCollection();
+        [DataMember] public MapUnitCollection SmallMapUnitCollection { get; private set; } = new();
 
         [DataMember]
         public MapUnitCollection UnderworldMapUnitCollection { get; private set; } =
-            new MapUnitCollection();
+            new();
 
         /// <summary>
         ///     The single source of truth for the Avatar's current position within the current map
@@ -147,8 +147,7 @@ namespace Ultima5Redux.MapUnits
 
             if (nIndex == -1) return null;
 
-            MagicCarpet magicCarpet =
-                new MagicCarpet(CurrentLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
+            MagicCarpet magicCarpet = new(CurrentLocation, direction, null, new MapUnitPosition(xy.X, xy.Y, 0));
 
             AddNewMapUnit(CurrentMapType, magicCarpet, nIndex);
             return magicCarpet;
@@ -221,7 +220,7 @@ namespace Ultima5Redux.MapUnits
 
             if (nIndex == -1) return null;
 
-            Frigate frigate = new Frigate(_importedMovements.GetMovement(nIndex),
+            Frigate frigate = new(_importedMovements.GetMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
@@ -310,7 +309,7 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
             if (nIndex == -1) return null;
 
-            Skiff skiff = new Skiff(_importedMovements.GetMovement(nIndex),
+            Skiff skiff = new(_importedMovements.GetMovement(nIndex),
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, direction, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
@@ -386,7 +385,7 @@ namespace Ultima5Redux.MapUnits
                 // now just get the existing animation state which persists on disk for under, over and small maps
                 MapUnitState mapUnitState = currentMapUnitStates.GetCharacterState(i);
 
-                MapUnitPosition mapUnitPosition = new MapUnitPosition(mapUnitState.X, mapUnitState.Y, 0);
+                MapUnitPosition mapUnitPosition = new(mapUnitState.X, mapUnitState.Y, 0);
                 TileReference tileReference = mapUnitState.Tile1Ref;
 
                 // the party is always at zero
@@ -528,7 +527,7 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
             if (nIndex == -1) return null;
 
-            Enemy enemy = new Enemy(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
+            Enemy enemy = new(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
                 new MapUnitPosition(xy.X, xy.Y, 0));
 
             nIndex = AddCombatMapUnit(enemy);
@@ -551,7 +550,7 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
             if (nIndex == -1) return null;
 
-            Horse horse = new Horse(_importedMovements.GetMovement(nIndex), CurrentLocation, Point2D.Direction.Right,
+            Horse horse = new(_importedMovements.GetMovement(nIndex), CurrentLocation, Point2D.Direction.Right,
                 null, mapUnitPosition)
             {
                 MapUnitPosition = mapUnitPosition
@@ -582,7 +581,7 @@ namespace Ultima5Redux.MapUnits
         /// <returns>MapUnit or null if non exist at location</returns>
         public List<MapUnit> GetMapUnitByLocation(Map.Maps map, Point2D xy, int nFloor)
         {
-            List<MapUnit> mapUnits = new List<MapUnit>();
+            List<MapUnit> mapUnits = new();
 
             foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllActiveMapUnits)
             {

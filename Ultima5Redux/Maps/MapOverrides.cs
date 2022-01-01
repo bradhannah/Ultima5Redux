@@ -13,14 +13,14 @@ namespace Ultima5Redux.Maps
         ///     Exposed searched or loot items
         /// </summary>
         [DataMember(Name = "ExposedSearchItems")]
-        private Dictionary<Point2D, Queue<InventoryItem>> _exposedSearchItems =
-            new Dictionary<Point2D, Queue<InventoryItem>>();
+        private Dictionary<Point2D, Queue<InventoryItem>> _exposedSearchItems = new();
 
         /// <summary>
         ///     override map is responsible for overriding tiles that would otherwise be static
         /// </summary>
-        [DataMember(Name = "OverrideMap")]
-        private Dictionary<Point2D, int> _overrideMap = new Dictionary<Point2D, int>();
+        [DataMember(Name = "OverrideMap")] private Dictionary<Point2D, int> _overrideMap = new();
+
+        private readonly Queue<InventoryItem> _emptyQueue = new();
 
         [IgnoreDataMember] internal Map TheMap { get; set; }
 
@@ -56,10 +56,12 @@ namespace Ultima5Redux.Maps
             return GetExposedSearchItems(xy).Dequeue();
         }
 
-        public void EnqueueSearchItem(int x, int y, InventoryItem inventoryItem) =>
+        public void EnqueueSearchItem(in int x, int y, InventoryItem inventoryItem)
+        {
             EnqueueSearchItem(new Point2D(x, y), inventoryItem);
+        }
 
-        public void EnqueueSearchItem(Point2D xy, InventoryItem inventoryItem)
+        public void EnqueueSearchItem(in Point2D xy, InventoryItem inventoryItem)
         {
             if (!_exposedSearchItems.ContainsKey(xy))
                 _exposedSearchItems.Add(xy, new Queue<InventoryItem>());
@@ -69,13 +71,12 @@ namespace Ultima5Redux.Maps
 
         public Queue<InventoryItem> GetExposedSearchItems(int x, int y) => GetExposedSearchItems(new Point2D(x, y));
 
-        public Queue<InventoryItem> GetExposedSearchItems(Point2D xy)
+        public Queue<InventoryItem> GetExposedSearchItems(in Point2D xy)
         {
-            if (!_exposedSearchItems.ContainsKey(xy)) return new Queue<InventoryItem>();
-            return _exposedSearchItems[xy];
+            return !_exposedSearchItems.ContainsKey(xy) ? _emptyQueue : _exposedSearchItems[xy];
         }
 
-        public int GetOverrideTileIndex(Point2D xy)
+        public int GetOverrideTileIndex(in Point2D xy)
         {
             if (!_overrideMap.ContainsKey(xy)) return -1;
             return _overrideMap[xy];
@@ -83,7 +84,7 @@ namespace Ultima5Redux.Maps
 
         public TileReference GetOverrideTileReference(int x, int y) => GetOverrideTileReference(new Point2D(x, y));
 
-        public TileReference GetOverrideTileReference(Point2D xy)
+        public TileReference GetOverrideTileReference(in Point2D xy)
         {
             int nIndex = GetOverrideTileIndex(xy);
             if (nIndex == -1) return null;
@@ -93,12 +94,20 @@ namespace Ultima5Redux.Maps
         // SEARCH ITEMS
 
         public bool HasExposedSearchItems(int x, int y) => GetExposedSearchItems(x, y).Count > 0;
-        public bool HasExposedSearchItems(Point2D xy) => HasExposedSearchItems(xy.X, xy.Y);
+
+        public bool HasExposedSearchItems(in Point2D xy)
+        {
+            return HasExposedSearchItems(xy.X, xy.Y);
+        }
 
         public bool HasOverrideTile(int x, int y) => GetOverrideTileReference(x, y) != null;
-        public bool HasOverrideTile(Point2D xy) => HasOverrideTile(xy.X, xy.Y);
 
-        public void SetOverrideTile(Point2D xy, int nIndex)
+        public bool HasOverrideTile(in Point2D xy)
+        {
+            return HasOverrideTile(xy.X, xy.Y);
+        }
+
+        public void SetOverrideTile(in Point2D xy, int nIndex)
         {
             if (!_overrideMap.ContainsKey(xy))
                 _overrideMap.Add(xy, nIndex);
@@ -113,7 +122,9 @@ namespace Ultima5Redux.Maps
         public void SetOverrideTile(int x, int y, TileReference tileReference) =>
             SetOverrideTile(new Point2D(x, y), tileReference.Index);
 
-        public void SetOverrideTile(Point2D xy, TileReference tileReference) =>
+        public void SetOverrideTile(in Point2D xy, TileReference tileReference)
+        {
             SetOverrideTile(xy, tileReference.Index);
+        }
     }
 }

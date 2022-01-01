@@ -76,7 +76,7 @@ namespace Ultima5Redux.Maps
 
         private static string ScrubSignText(byte[] signBytes)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (byte curByte in signBytes)
             {
                 if (curByte != '\0')
@@ -108,7 +108,7 @@ namespace Ultima5Redux.Maps
             // e = scrawly bottom horizontal (double line)
             // f = scrawly bottom right
 
-            Dictionary<char, string> replacementChars = new Dictionary<char, string>
+            Dictionary<char, string> replacementChars = new()
             {
                 { '@', " " },
                 { '[', "TH" },

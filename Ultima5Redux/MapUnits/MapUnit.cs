@@ -15,14 +15,14 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public abstract class MapUnit : MapUnitDetails
     {
-
         [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;
         [DataMember(Name = "NpcRefIndex")] private int _npcRefIndex = -1;
 
         /// <summary>
         ///     The characters current position on the map
         /// </summary>
-        [DataMember] public sealed override MapUnitPosition MapUnitPosition
+        [DataMember]
+        public sealed override MapUnitPosition MapUnitPosition
         {
             get => _savedMapUnitPosition;
             internal set
@@ -41,20 +41,23 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
 
-        [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new MapUnitPosition();
+        [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new();
 
         // ReSharper disable once MemberCanBeProtected.Global
-        [IgnoreDataMember] public virtual TileReference NonBoardedTileReference =>
+        [IgnoreDataMember]
+        public virtual TileReference NonBoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
 
-        [IgnoreDataMember] public TileReference BoardedTileReference =>
+        [IgnoreDataMember]
+        public TileReference BoardedTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
                 ? FourDirectionToTileNameBoarded[Direction]
                 : DirectionToTileNameBoarded[Direction]);
 
         [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
 
-        [IgnoreDataMember] public virtual TileReference KeyTileReference
+        [IgnoreDataMember]
+        public virtual TileReference KeyTileReference
         {
             get => NPCRef == null
                 ? GameReferences.SpriteTileReferences.GetTileReference(_keyTileIndex)
@@ -65,7 +68,8 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
 
-        [IgnoreDataMember] protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+        [IgnoreDataMember]
+        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
         /// <summary>

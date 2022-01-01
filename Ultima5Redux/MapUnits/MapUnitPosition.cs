@@ -56,6 +56,11 @@ namespace Ultima5Redux.MapUnits
             Floor = floor;
         }
 
+        public bool IsSameAs(int x, int y, int nFloor)
+        {
+            return x == X && y == Y && _floor == nFloor;
+        }
+
         public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2)
         {
             return pos1?.Equals(pos2) ?? ReferenceEquals(pos2, null);

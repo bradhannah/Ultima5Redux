@@ -11,7 +11,7 @@ namespace Ultima5Redux.External
 
         public float DistanceToTarget;
         public Node Parent;
-        public Point2D Position;
+        public readonly Point2D Position;
 
         public float F
         {
@@ -27,7 +27,7 @@ namespace Ultima5Redux.External
 
         public bool Walkable { get; set; }
 
-        public Node(Point2D pos, bool walkable, float weight = 1)
+        public Node(in Point2D pos, bool walkable, float weight = 1)
         {
             Parent = null;
             Position = pos;
@@ -53,7 +53,7 @@ namespace Ultima5Redux.External
 
         private IEnumerable<Node> GetAdjacentNodes(Node n)
         {
-            List<Node> temp = new List<Node>();
+            List<Node> temp = new();
 
             int row = n.Position.Y;
             int col = n.Position.X;
@@ -78,7 +78,8 @@ namespace Ultima5Redux.External
         /// <param name="endPosition"></param>
         /// <param name="nUnitsOut"></param>
         /// <returns>a stack of nodes if a path is found, otherwise null if no path is found</returns>
-        public Stack<Node> FindBestPathForSurroundingTiles(Point2D startPosition, Point2D endPosition, int nUnitsOut)
+        public Stack<Node> FindBestPathForSurroundingTiles(in Point2D startPosition, in Point2D endPosition,
+            int nUnitsOut)
         {
             int nXExtent = _grid.Count - 1;
             int nYExtent = _grid[0].Count - 1;
@@ -100,7 +101,7 @@ namespace Ultima5Redux.External
             return nBestPathNodes == 0xFFFF ? null : bestPath;
         }
 
-        public Stack<Node> FindPath(Point2D startPosition, Point2D endPosition)
+        public Stack<Node> FindPath(in Point2D startPosition, in Point2D endPosition)
         {
             if (!_grid[endPosition.X][endPosition.Y].Walkable)
             {
@@ -108,36 +109,58 @@ namespace Ultima5Redux.External
                 return null;
             }
 
-            Node start = new Node(startPosition, true);
-            Node end = new Node(endPosition, true);
+            Node start = new(startPosition, true);
+            Node end = new(endPosition, true);
 
-            Stack<Node> path = new Stack<Node>();
-            List<Node> openList = new List<Node>();
-            List<Node> closedList = new List<Node>();
+            Stack<Node> path = new();
+            //List<Node> openList = new();
+            SortedDictionary<float, Node> openList = new();
+            List<Node> closedList = new();
             Node current = start;
 
             // add start node to Open List
-            openList.Add(start);
+            openList.Add(start.F, start);
 
+            // while there are nodes left in the openList 
+            // AND the closedList does NOT contain an ending position
             while (openList.Count != 0 && !closedList.Exists(x => x.Position == end.Position))
             {
-                current = openList[0];
-                openList.Remove(current);
+                // get the "BEST" open list position to test
+                current = openList.First().Value;
+                //0];
+                // remove the "BEST" open list position
+                openList.Remove(current.F);
+                //RemoveAt(0);
+
                 closedList.Add(current);
                 IEnumerable<Node> adjacencies = GetAdjacentNodes(current);
 
+                // go through each of the adjacent tiles and see if they are better
                 foreach (Node n in adjacencies)
                 {
+                    // if the tile is NOT walkable or already in the closedList which means it cannot be used
+                    // to reach your final destination
                     if (closedList.Contains(n) || !n.Walkable) continue;
 
-                    if (openList.Contains(n)) continue;
+                    // if the openList contains the value then it's already been checked and doesn't need to
+                    // be checked again
+                    if (openList.ContainsValue(n)) continue;
 
+                    // let this node know that I am it's parent (previous space)
                     n.Parent = current;
                     n.DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) +
                                          Math.Abs(n.Position.Y - end.Position.Y);
                     n.Cost = n.Weight + n.Parent.Cost;
-                    openList.Add(n);
-                    openList = openList.OrderBy(node => node.F).ToList();
+
+                    // we like it and add it to our list, since it is a SortedList, it will automatically organize
+                    // it for us
+                    while (openList.ContainsKey(n.F))
+                    {
+                        n.DistanceToTarget += 0.00001f;
+                    }
+
+                    openList.Add(n.F, n);
+                    //openList = openList.OrderBy(node => node.F).ToList();
                 }
             }
 

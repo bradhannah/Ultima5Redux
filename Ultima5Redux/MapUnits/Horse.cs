@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits
     {
         [IgnoreDataMember]
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
-            new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
+            new()
             {
                 { SmallMapReferences.SingleMapReference.Location.Trinsic, 200 },
                 { SmallMapReferences.SingleMapReference.Location.Paws, 320 },
@@ -21,7 +21,8 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Horse;
 
-        [IgnoreDataMember] public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
+        [IgnoreDataMember]
+        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.HORSE_N).Trim();
 
         [IgnoreDataMember] public override string FriendlyName => BoardXitName;
@@ -30,8 +31,9 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public override bool IsAttackable => false;
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new()
             {
                 { Point2D.Direction.None, "HorseLeft" },
                 { Point2D.Direction.Left, "HorseLeft" },
@@ -42,7 +44,7 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>
+            new()
             {
                 { Point2D.Direction.None, "RidingHorseLeft" },
                 { Point2D.Direction.Left, "RidingHorseLeft" },
@@ -51,8 +53,9 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, "RidingHorseRight" }
             };
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
-            new Dictionary<Point2D.Direction, string>
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+            new()
             {
                 { Point2D.Direction.None, "RidingHorseLeft" },
                 { Point2D.Direction.Left, "RidingHorseLeft" },

@@ -11,10 +11,8 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public sealed class Avatar : MapUnit
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum AvatarState
-        {
-            Regular, Carpet, Horse, Frigate, Skiff, Hidden
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
 
         // [DataMember] private Frigate CurrentBoardedFrigate
         // {
@@ -48,7 +46,8 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
 
-        [DataMember(Name = "UseExtendedSprites")] private readonly bool _bUseExtendedSprites;
+        [DataMember(Name = "UseExtendedSprites")]
+        private readonly bool _bUseExtendedSprites;
 
         [DataMember] private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
 
@@ -57,8 +56,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Describes if there are only left right sprites
         /// </summary>
-        [IgnoreDataMember]
-        private readonly Dictionary<AvatarState, bool> _onlyLeftRight = new Dictionary<AvatarState, bool>
+        [IgnoreDataMember] private readonly Dictionary<AvatarState, bool> _onlyLeftRight = new()
         {
             { AvatarState.Carpet, true },
             { AvatarState.Frigate, false },
@@ -78,16 +76,19 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public override bool IsAttackable => false;
 
-        [IgnoreDataMember] public bool AreSailsHoisted =>
+        [IgnoreDataMember]
+        public bool AreSailsHoisted =>
             IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate && frigate.SailsHoisted;
 
         /// <summary>
         ///     Is the Avatar currently boarded onto a thing
         /// </summary>
-        [IgnoreDataMember] public bool IsAvatarOnBoardedThing =>
+        [IgnoreDataMember]
+        public bool IsAvatarOnBoardedThing =>
             CurrentAvatarState != AvatarState.Regular && CurrentAvatarState != AvatarState.Hidden;
 
-        [IgnoreDataMember] public override TileReference KeyTileReference
+        [IgnoreDataMember]
+        public override TileReference KeyTileReference
         {
             get =>
                 IsAvatarOnBoardedThing
@@ -105,10 +106,12 @@ namespace Ultima5Redux.MapUnits
         ///     The current MapUnit (if any) that the Avatar is occupying. It is expected that it is NOT in the active
         ///     the current MapUnits object
         /// </summary>
-        [IgnoreDataMember] public MapUnit CurrentBoardedMapUnit { get; private set; }
+        [IgnoreDataMember]
+        public MapUnit CurrentBoardedMapUnit { get; private set; }
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new()
             {
                 { Point2D.Direction.None, "BasicAvatar" },
                 { Point2D.Direction.Left, "BasicAvatar" },
@@ -117,7 +120,8 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, "BasicAvatar" }
             };
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
             DirectionToTileName;
 
         [JsonConstructor] private Avatar()
@@ -161,23 +165,23 @@ namespace Ultima5Redux.MapUnits
         {
             //MapUnitState vehicleState = new MapUnitState();
             // we copy the Avatar map unit state as a starting point
-            MapUnitMovement emptyMapUnitMovement = new MapUnitMovement(0, null, null);
+            MapUnitMovement emptyMapUnitMovement = new(0, null, null);
 
             switch (avatarState)
             {
                 case AvatarState.Regular:
                     break;
                 case AvatarState.Carpet:
-                    MagicCarpet carpet = new MagicCarpet(MapLocation, CurrentDirection, null, MapUnitPosition);
+                    MagicCarpet carpet = new(MapLocation, CurrentDirection, null, MapUnitPosition);
                     BoardMapUnit(carpet);
                     break;
                 case AvatarState.Horse:
-                    Horse horse = new Horse(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
+                    Horse horse = new(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
                     BoardMapUnit(horse);
                     break;
                 case AvatarState.Frigate:
                     // todo: this is incorrect - we need to figure out the correct number of skiffs when we board it and create it
-                    Frigate frigate = new Frigate(emptyMapUnitMovement, MapLocation, CurrentDirection, null,
+                    Frigate frigate = new(emptyMapUnitMovement, MapLocation, CurrentDirection, null,
                         MapUnitPosition);
                     //frigate
                     // must decide how many skiffs are there and assign them
@@ -186,7 +190,7 @@ namespace Ultima5Redux.MapUnits
                     BoardMapUnit(frigate);
                     break;
                 case AvatarState.Skiff:
-                    Skiff skiff = new Skiff(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
+                    Skiff skiff = new(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
                     BoardMapUnit(skiff);
                     break;
                 case AvatarState.Hidden:
@@ -231,7 +235,7 @@ namespace Ultima5Redux.MapUnits
             MapUnitMovement movement, MapUnitPosition mapUnitPosition, TileReference tileReference,
             bool bUseExtendedSprites)
         {
-            Avatar theAvatar = new Avatar(location, movement, mapUnitPosition, tileReference, bUseExtendedSprites);
+            Avatar theAvatar = new(location, movement, mapUnitPosition, tileReference, bUseExtendedSprites);
 
             return theAvatar;
         }

@@ -14,24 +14,21 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public abstract class Map
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum Maps { Small = -1, Overworld, Underworld, Combat }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum Maps { Small = -1, Overworld, Underworld, Combat }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum WalkableType
-        {
-            StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
 
-        [DataMember(Name = "OpenDoors")]
-        private readonly Dictionary<Point2D, int> _openDoors = new Dictionary<Point2D, int>();
+        [DataMember(Name = "OpenDoors")] private readonly Dictionary<Point2D, int> _openDoors = new();
 
         [DataMember] public bool XRayMode { get; set; }
 
         [IgnoreDataMember] //(Name = "AStarDictionary")]
-        private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new Dictionary<WalkableType, AStar>();
+        private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new();
 
         [IgnoreDataMember] //[DataMember(Name = "AStarNodes")]
-        private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes =
-            new Dictionary<WalkableType, List<List<Node>>>();
+        private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new();
 
         public abstract int NumOfXTiles { get; }
 
@@ -139,12 +136,12 @@ namespace Ultima5Redux.Maps
             return _aStarDictionary[walkableType];
         }
 
-        public TileOverrideReference GetTileOverride(Point2D xy)
+        public TileOverrideReference GetTileOverride(in Point2D xy)
         {
             return XYOverrides[xy];
         }
 
-        public TileReference GetTileReference(Point2D xy)
+        public TileReference GetTileReference(in Point2D xy)
         {
             if (IsXYOverride(xy))
                 return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
@@ -154,12 +151,12 @@ namespace Ultima5Redux.Maps
 
         public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
 
-        public bool IsXYOverride(Point2D xy)
+        public bool IsXYOverride(in Point2D xy)
         {
             return XYOverrides != null && XYOverrides.ContainsKey(xy);
         }
 
-        public void SetWalkableTile(Point2D xy, bool bWalkable, WalkableType walkableType)
+        public void SetWalkableTile(in Point2D xy, bool bWalkable, WalkableType walkableType)
         {
             Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
             _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
@@ -192,7 +189,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        protected abstract float GetAStarWeight(Point2D xy);
+        protected abstract float GetAStarWeight(in Point2D xy);
 
         protected abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
@@ -239,7 +236,7 @@ namespace Ultima5Redux.Maps
 
                     float fWeight = GetAStarWeight(new Point2D(x, y));
 
-                    Node node = new Node(new Point2D(x, y),
+                    Node node = new(new Point2D(x, y),
                         //new Vector2(x, y),
                         bIsWalkable, fWeight);
                     aStarNodesLists[x].Add(node);
@@ -249,14 +246,14 @@ namespace Ultima5Redux.Maps
             _aStarDictionary.Add(walkableType, new AStar(aStarNodesLists));
         }
 
-        protected bool IsTileWalkable(Point2D xy, WalkableType walkableType)
+        protected bool IsTileWalkable(in Point2D xy, WalkableType walkableType)
         {
             if (IsOpenDoor(xy)) return true;
             TileReference tileReference = GetTileReference(xy);
             return (IsTileWalkable(tileReference, walkableType));
         }
 
-        protected void RecalculateWalkableTile(Point2D xy, WalkableType walkableType)
+        protected void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType)
         {
             SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
         }
@@ -264,8 +261,8 @@ namespace Ultima5Redux.Maps
         #region FLOOD FILL
 
         // FLOOD FILL STUFF
-        public bool[][] VisibleOnMap { get; protected set; }
-        protected List<bool[][]> TestForVisibility;
+        public bool[][] VisibleOnMap { get; protected set; } //=Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+        protected readonly List<bool[][]> TestForVisibility = new();
         protected readonly int VisibleInEachDirectionOfAvatar = 10;
         protected int NVisibleLargeMapTiles;
         protected Point2D AvatarXyPos;
@@ -283,7 +280,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="visibleTilePos"></param>
         /// <returns>true if the coordinate is out of bounds</returns>
-        private bool SetVisibleTile(Point2D visibleTilePos)
+        private bool SetVisibleTile(in Point2D visibleTilePos)
         {
             if (visibleTilePos == null) return true;
             if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
@@ -291,7 +288,7 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
-        private void SetSurroundingTilesVisible(Point2D xy, bool bIncludeDiagonal)
+        private void SetSurroundingTilesVisible(in Point2D xy, bool bIncludeDiagonal)
         {
             SetVisibleTile(new Point2D(xy.X - 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
             SetVisibleTile(new Point2D(xy.X + 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
@@ -317,7 +314,8 @@ namespace Ultima5Redux.Maps
         /// <param name="nCharacterIndex"></param>
         /// <param name="overrideAvatarPos"></param>
         /// <param name="bAlwaysLookThroughWindows"></param>
-        protected void FloodFillMap(Point2D xy, bool bFirst, int nCharacterIndex = 0, Point2D overrideAvatarPos = null,
+        protected void FloodFillMap(in Point2D xy, bool bFirst, int nCharacterIndex = 0,
+            Point2D overrideAvatarPos = null,
             bool bAlwaysLookThroughWindows = false)
         {
             if (xy == null)
@@ -386,22 +384,26 @@ namespace Ultima5Redux.Maps
             return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
         }
 
-        public virtual void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
+        public virtual void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
+            VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+
             // XRay Mode makes sure you can see every tile
             if (XRayMode)
             {
-                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                Utils.Set2DArrayAllToValue(VisibleOnMap, true);
+                //VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
                 return;
             }
 
-            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-            TestForVisibility = new List<bool[][]>();
+            //VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            //TestForVisibility = new List<bool[][]>();
             // reinitialize the array for all potential party members
-            for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
-            {
-                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-            }
+            if (TestForVisibility.Count <= 0)
+                for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
+                {
+                    TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+                }
 
             TouchedOuterBorder = false;
             AvatarXyPos = initialFloodFillPosition;
@@ -409,7 +411,7 @@ namespace Ultima5Redux.Maps
             FloodFillMap(initialFloodFillPosition, true);
         }
 
-        public void SetOpenDoor(Point2D xy)
+        public void SetOpenDoor(in Point2D xy)
         {
             TileReference tileReference = GetTileReference(xy);
             Debug.Assert(GameReferences.SpriteTileReferences.IsDoor(tileReference.Index),
@@ -421,9 +423,12 @@ namespace Ultima5Redux.Maps
             if (IsAStarMap(WalkableType.StandardWalking)) SetWalkableTile(xy, true, WalkableType.StandardWalking);
         }
 
-        public bool IsOpenDoor(Point2D xy) => _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
+        public bool IsOpenDoor(in Point2D xy)
+        {
+            return _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
+        }
 
-        public void CloseDoor(Point2D xy)
+        public void CloseDoor(in Point2D xy)
         {
             TileReference tileReference = GetTileReference(xy);
             Debug.Assert(GameReferences.SpriteTileReferences.IsDoor(tileReference.Index),
@@ -434,6 +439,5 @@ namespace Ultima5Redux.Maps
         }
 
         #endregion
-
     }
 }

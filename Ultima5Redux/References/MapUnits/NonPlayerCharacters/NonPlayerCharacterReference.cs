@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Ultima5Redux.References.Dialogue;
 using Ultima5Redux.References.Maps;
@@ -128,8 +127,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             DialogIndex = dialogIndex;
 
             // no schedule? I guess you're not real
-            if (!IsEmptySchedule(schedule))
-                Debug.WriteLine(location + "     NPC Number: " + DialogNumber + " in " + location);
+            //if (!IsEmptySchedule(schedule))
+            //Debug.WriteLine(location + "     NPC Number: " + DialogNumber + " in " + location);
         }
 
         /// <summary>
@@ -170,7 +169,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     Original structure
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 1)] public unsafe struct NPCSchedule
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public unsafe struct NPCSchedule
         {
             public fixed byte AI_types[3];
             public fixed byte x_coordinates[3];

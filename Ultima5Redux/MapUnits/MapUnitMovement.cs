@@ -13,10 +13,8 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     The direction of the movement as defined in saved.gam
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))] public enum MovementCommandDirection
-        {
-            None = 0, East = 1, North = 2, West = 3, South = 4
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum MovementCommandDirection { None = 0, East = 1, North = 2, West = 3, South = 4 }
 
         /// <summary>
         ///     Maximum number of movement commands per map character
@@ -32,14 +30,13 @@ namespace Ultima5Redux.MapUnits
         ///     all movements
         /// </summary>
         [DataMember(Name = "MovementQueue")]
-        private readonly Queue<MovementCommand> _movementQueue = new Queue<MovementCommand>(MAX_COMMAND_LIST_ENTRIES);
+        private readonly Queue<MovementCommand> _movementQueue = new(MAX_COMMAND_LIST_ENTRIES);
 
         /// <summary>
         ///     Dialog index of the map character
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
-        [DataMember(Name = "DialogIndex")]
-        private int _nDialogIndex;
+        [DataMember(Name = "DialogIndex")] private int _nDialogIndex;
 
         [JsonConstructor] private MapUnitMovement()
         {
@@ -95,7 +92,7 @@ namespace Ultima5Redux.MapUnits
                     throw new Ultima5ReduxException("a bad direction was set: " + direction);
 
                 // we have a proper movement instruction so let's add it to the queue
-                MovementCommand movementCommand = new MovementCommand(direction, nIterations);
+                MovementCommand movementCommand = new(direction, nIterations);
                 //this.movementQueue.Enqueue(movementCommand);
                 AddNewMovementInstruction(movementCommand);
 
@@ -113,7 +110,7 @@ namespace Ultima5Redux.MapUnits
         /// <returns></returns>
         internal static Point2D GetAdjustedPos(Point2D xy, MovementCommandDirection direction, int nSpaces = 1)
         {
-            Point2D adjustedPos = new Point2D(xy.X, xy.Y);
+            Point2D adjustedPos = new(xy.X, xy.Y);
 
             switch (direction)
             {

@@ -9,7 +9,6 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public sealed class SmallMap : RegularMap
     {
-
         public const int X_TILES = 32;
         public const int Y_TILES = 32;
 
@@ -60,7 +59,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        protected override float GetAStarWeight(Point2D xy)
+        protected override float GetAStarWeight(in Point2D xy)
         {
             bool isPreferredIndex(int nSprite) =>
                 nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor").Index ||

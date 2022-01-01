@@ -253,6 +253,29 @@ namespace Ultima5ReduxTesting
 
                 Debug.WriteLine("***** Ending " + smr.MapLocation + " on floor " + smr.Floor);
             }
+        }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void SingleSmallMapWithDayWandering(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
+            int i = 24 * (60 / 2) / 4;
+            while (i > 0)
+            {
+                world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult tryToMoveResult,
+                    true);
+                world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult,
+                    true);
+                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                    true);
+                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                    true);
+                //world.AdvanceTime(2);
+                i--;
+            }
 
             Assert.True(true);
         }
@@ -1037,7 +1060,7 @@ namespace Ultima5ReduxTesting
 
             CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
             Assert.NotNull(combatMap);
-            combatMap.DivideEnemy(combatMap.AllEnemies[2]);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
 
             _ = "";
         }

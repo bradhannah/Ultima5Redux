@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
     [DataContract] public sealed class Skiff : SeaFaringVessel
     {
         private static Dictionary<SmallMapReferences.SingleMapReference.Location, int> Prices { get; } =
-            new Dictionary<SmallMapReferences.SingleMapReference.Location, int>
+            new()
             {
                 { SmallMapReferences.SingleMapReference.Location.East_Britanny, 250 },
                 { SmallMapReferences.SingleMapReference.Location.Minoc, 350 },
@@ -30,7 +30,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         public override bool IsAttackable => false;
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>
+            new()
             {
                 { Point2D.Direction.None, "SkiffLeft" },
                 { Point2D.Direction.Left, "SkiffLeft" },

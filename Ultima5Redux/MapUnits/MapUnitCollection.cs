@@ -10,90 +10,113 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public class MapUnitCollection
     {
-        [DataMember(Name = "Avatars")] private Avatar[] SaveAvatars
+        private Avatar _theAvatar;
+
+        [DataMember(Name = "Avatars")]
+        private Avatar[] SaveAvatars
         {
             get => GetMapUnitByTypeToArray<Avatar>();
-            set => ReplaceAll(value);
+            set
+            {
+                ReplaceAll(value);
+                if (value.Length > 0)
+                    _theAvatar = value[0];
+            }
         }
 
-        [DataMember(Name = "CombatPlayers")] private CombatPlayer[] SaveCombatPlayers
+        [DataMember(Name = "CombatPlayers")]
+        private CombatPlayer[] SaveCombatPlayers
         {
             get => GetMapUnitByTypeToArray<CombatPlayer>();
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "EmptyMapUnits")] private EmptyMapUnit[] SaveEmptyMapUnits
+        [DataMember(Name = "EmptyMapUnits")]
+        private EmptyMapUnit[] SaveEmptyMapUnits
         {
             get => GetMapUnitByTypeToArray<EmptyMapUnit>();
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "Enemies")] private Enemy[] SaveEnemies
+        [DataMember(Name = "Enemies")]
+        private Enemy[] SaveEnemies
         {
             get => GetMapUnitByTypeToArray<Enemy>();
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "Frigates")] private Frigate[] SaveFrigates
+        [DataMember(Name = "Frigates")]
+        private Frigate[] SaveFrigates
         {
             get => GetMapUnitByTypeToArray<Frigate>();
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "Horses")] private Horse[] SaveHorses
+        [DataMember(Name = "Horses")]
+        private Horse[] SaveHorses
         {
             get => GetMapUnitByTypeToArray<Horse>();
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "MagicCarpets")] private MagicCarpet[] SaveMagicCarpets
+        [DataMember(Name = "MagicCarpets")]
+        private MagicCarpet[] SaveMagicCarpets
         {
             get => GetMapUnitByTypeToArray<MagicCarpet>();
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "NonPlayerCharacters")] private NonPlayerCharacter[] SaveNonPlayerCharacters
+        [DataMember(Name = "NonPlayerCharacters")]
+        private NonPlayerCharacter[] SaveNonPlayerCharacters
         {
             get => GetMapUnitByTypeToArray<NonPlayerCharacter>();
             set => ReplaceAll(value);
         }
 
-        [DataMember(Name = "Skiffs")] private Skiff[] SaveSkiffs
+        [DataMember(Name = "Skiffs")]
+        private Skiff[] SaveSkiffs
         {
             get => GetMapUnitByTypeToArray<Skiff>();
             set => ReplaceAll(value);
         }
 
-        [IgnoreDataMember] public List<MapUnit> AllActiveMapUnits => AllMapUnits.Where(s => s.IsActive).ToList();
-        [IgnoreDataMember] public List<CombatMapUnit> AllCombatMapUnits => GetMapUnitByType<CombatMapUnit>();
-        [IgnoreDataMember] public List<MapUnit> AllMapUnits { get; } = new List<MapUnit>(MapUnits.MAX_MAP_CHARACTERS);
+        [IgnoreDataMember]
+        public IEnumerable<MapUnit> AllActiveMapUnits => AllMapUnits.Where(s => s.IsActive); //.ToList();
 
-        [IgnoreDataMember] public List<Avatar> Avatars => GetMapUnitByType<Avatar>();
+        [IgnoreDataMember] public IEnumerable<CombatMapUnit> AllCombatMapUnits => GetMapUnitByType<CombatMapUnit>();
+        [IgnoreDataMember] public List<MapUnit> AllMapUnits { get; } = new(MapUnits.MAX_MAP_CHARACTERS);
 
-        [IgnoreDataMember] public List<CombatPlayer> CombatPlayers => GetMapUnitByType<CombatPlayer>();
+        [IgnoreDataMember] public IEnumerable<Avatar> Avatars => GetMapUnitByType<Avatar>();
 
-        [IgnoreDataMember] public List<EmptyMapUnit> EmptyMapUnits => GetMapUnitByType<EmptyMapUnit>();
+        [IgnoreDataMember] public IEnumerable<CombatPlayer> CombatPlayers => GetMapUnitByType<CombatPlayer>();
 
-        [IgnoreDataMember] public List<Enemy> Enemies => GetMapUnitByType<Enemy>();
+        [IgnoreDataMember] public IEnumerable<EmptyMapUnit> EmptyMapUnits => GetMapUnitByType<EmptyMapUnit>();
 
-        [IgnoreDataMember] public List<Frigate> Frigates => GetMapUnitByType<Frigate>();
+        [IgnoreDataMember] public IEnumerable<Enemy> Enemies => GetMapUnitByType<Enemy>();
 
-        [IgnoreDataMember] public List<Horse> Horses => GetMapUnitByType<Horse>();
+        [IgnoreDataMember] public IEnumerable<Frigate> Frigates => GetMapUnitByType<Frigate>();
 
-        [IgnoreDataMember] public List<MagicCarpet> MagicCarpets => GetMapUnitByType<MagicCarpet>();
+        [IgnoreDataMember] public IEnumerable<Horse> Horses => GetMapUnitByType<Horse>();
 
-        [IgnoreDataMember] public List<NonPlayerCharacter> NonPlayerCharacters =>
+        [IgnoreDataMember] public IEnumerable<MagicCarpet> MagicCarpets => GetMapUnitByType<MagicCarpet>();
+
+        [IgnoreDataMember]
+        public IEnumerable<NonPlayerCharacter> NonPlayerCharacters =>
             GetMapUnitByType<NonPlayerCharacter>();
 
-        [IgnoreDataMember] public List<Skiff> Skiffs => GetMapUnitByType<Skiff>();
+        [IgnoreDataMember] public IEnumerable<Skiff> Skiffs => GetMapUnitByType<Skiff>();
 
-        [IgnoreDataMember] public Avatar TheAvatar
+        [IgnoreDataMember]
+        public Avatar TheAvatar
         {
             get
             {
-                if (Avatars.Count < 1 || Avatars.Count > 1)
-                    throw new Ultima5ReduxException("Tried to get a single Avatar and had " + Avatars.Count);
-                return Avatars[0];
+                if (_theAvatar == null)
+                    return _theAvatar = Avatars.ToList()[0];
+                return _theAvatar;
+                // if (Avatars.Count is < 1 or > 1)
+                //     throw new Ultima5ReduxException("Tried to get a single Avatar and had " + Avatars.Count);
+                // return Avatars[0];
             }
         }
 
@@ -101,9 +124,9 @@ namespace Ultima5Redux.MapUnits
         {
         }
 
-        internal List<T> GetMapUnitByType<T>() where T : MapUnit
+        internal IEnumerable<T> GetMapUnitByType<T>() where T : MapUnit
         {
-            return AllMapUnits.OfType<T>().ToList();
+            return AllMapUnits.OfType<T>();
         }
 
         private T[] GetMapUnitByTypeToArray<T>() where T : MapUnit

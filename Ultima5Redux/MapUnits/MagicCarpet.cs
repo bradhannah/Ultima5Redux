@@ -14,7 +14,8 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Carpet;
 
-        [IgnoreDataMember] public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
+        [IgnoreDataMember]
+        public override string BoardXitName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.SleepTransportStrings.CARPET_N).Trim();
 
         [IgnoreDataMember] public override string FriendlyName => BoardXitName;
@@ -23,8 +24,9 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public override bool IsAttackable => false;
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
-            new Dictionary<Point2D.Direction, string>
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+            new()
             {
                 { Point2D.Direction.None, REGULAR_CARPET_STR },
                 { Point2D.Direction.Left, REGULAR_CARPET_STR },
@@ -35,7 +37,7 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
-            new Dictionary<Point2D.Direction, string>
+            new()
             {
                 { Point2D.Direction.None, "RidingMagicCarpetLeft" },
                 { Point2D.Direction.Left, "RidingMagicCarpetLeft" },
@@ -44,8 +46,9 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, "RidingMagicCarpetRight" }
             };
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
-            new Dictionary<Point2D.Direction, string>
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+            new()
             {
                 { Point2D.Direction.None, "RidingMagicCarpetLeft" },
                 { Point2D.Direction.Left, "RidingMagicCarpetLeft" },

@@ -62,8 +62,8 @@ namespace Ultima5Redux.Maps
 
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
 
-        public List<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
-        public List<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
+        public IEnumerable<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
+        public IEnumerable<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
 
         public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
             CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
@@ -191,7 +191,7 @@ namespace Ultima5Redux.Maps
             {
                 PlayerCharacterRecord record = activeRecords.Records[nPlayer];
 
-                CombatPlayer combatPlayer = new CombatPlayer(record, playerStartPositions[nPlayer]);
+                CombatPlayer combatPlayer = new(record, playerStartPositions[nPlayer]);
 
                 // make sure the tile that the player occupies is not walkable
                 GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
@@ -338,7 +338,7 @@ namespace Ultima5Redux.Maps
         {
             List<Point2D> surroundingPoints =
                 enemy.MapUnitPosition.XY.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
-            List<Point2D> emptySpacePoints = new List<Point2D>();
+            List<Point2D> emptySpacePoints = new();
             foreach (Point2D point in surroundingPoints)
             {
                 // the check for IsTileWalkable may be redundant, but just in case
@@ -370,7 +370,7 @@ namespace Ultima5Redux.Maps
             List<Point2D> surroundingCombatPlayerPoints =
                 surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
             Point2D randomSurroundingPoint;
-            Random random = new Random();
+            Random random = new();
             for (;;)
             {
                 int nIndex = random.Next() % surroundingCombatPlayerPoints.Count;
@@ -504,7 +504,7 @@ namespace Ultima5Redux.Maps
             if (nRange > 1)
             {
                 if (IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY,
-                    out _)) return false;
+                        out _)) return false;
             }
 
             return true;
@@ -567,7 +567,7 @@ namespace Ultima5Redux.Maps
 
             AStar aStar = GetAStarByMapUnit(activeCombatUnit);
 
-            List<Point2D> potentialTargetsPoints = new List<Point2D>();
+            List<Point2D> potentialTargetsPoints = new();
 
             foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
             {
@@ -619,7 +619,7 @@ namespace Ultima5Redux.Maps
                 fShortestPath = activeCombatUnitXY.DistanceBetween(bestOpponentPoint);
 
                 Point2D nextBestMovePoint = null;
-                List<Point2D> wanderablePoints = new List<Point2D>();
+                List<Point2D> wanderablePoints = new();
                 // go through of each surrounding points and find the shortest path based to an opponent
                 // on the free tiles
                 foreach (Point2D point in surroundingPoints)
@@ -639,7 +639,7 @@ namespace Ultima5Redux.Maps
                 if (nextBestMovePoint == null)
                 {
                     if (wanderablePoints.Count == 0) return null;
-                    Random ran = new Random();
+                    Random ran = new();
 
                     // only a 50% chance they will wander
                     if (ran.Next() % 2 == 0) return null;
@@ -716,7 +716,7 @@ namespace Ultima5Redux.Maps
         ///     Recalculates which tiles are visible based on position of players in map and the current map
         /// </summary>
         /// <param name="_"></param>
-        public override void RecalculateVisibleTiles(Point2D _)
+        public override void RecalculateVisibleTiles(in Point2D _)
         {
             // if we are in an overworld combat map then everything is always visible (I think!?)
             if (TheCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Britannia || XRayMode)
@@ -727,14 +727,21 @@ namespace Ultima5Redux.Maps
 
             VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
 
-            TestForVisibility = new List<bool[][]>();
+            //TestForVisibility = new List<bool[][]>();
             // reinitialize the array for all potential party members
-            List<CombatPlayer> combatPlayers = AllCombatPlayers;
-            for (int i = 0; i < combatPlayers.Count; i++)
+            IEnumerable<CombatPlayer> combatPlayers = AllCombatPlayers;
+            if (TestForVisibility.Count <= 0)
             {
-                // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
-                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-                FloodFillMap(combatPlayers[i].MapUnitPosition.XY, true, i, combatPlayers[i].MapUnitPosition.XY, true);
+                //for (int i = 0; i < combatPlayers.Count; i++)
+                int nIndex = 0;
+                foreach (CombatPlayer combatPlayer in combatPlayers)
+                {
+                    // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
+                    TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+                    FloodFillMap(combatPlayer.MapUnitPosition.XY, true, nIndex, combatPlayer.MapUnitPosition.XY,
+                        true);
+                    nIndex++;
+                }
             }
 
             TouchedOuterBorder = false;
@@ -831,14 +838,14 @@ namespace Ultima5Redux.Maps
         public List<Point2D> GetEscapablePoints(Point2D fromPosition, WalkableType walkableType)
         {
             _ = fromPosition;
-            List<Point2D> points = new List<Point2D>();
+            List<Point2D> points = new();
 
             for (int nIndex = 0; nIndex < NumOfXTiles; nIndex++)
             {
-                Point2D top = new Point2D(nIndex, 0);
-                Point2D bottom = new Point2D(nIndex, NumOfYTiles - 1);
-                Point2D left = new Point2D(0, nIndex);
-                Point2D right = new Point2D(NumOfXTiles - 1, nIndex);
+                Point2D top = new(nIndex, 0);
+                Point2D bottom = new(nIndex, NumOfYTiles - 1);
+                Point2D left = new(0, nIndex);
+                Point2D right = new(NumOfXTiles - 1, nIndex);
 
                 if (IsTileWalkable(top, walkableType)) points.Add(top);
                 if (IsTileWalkable(bottom, walkableType)) points.Add(bottom);
@@ -1319,7 +1326,10 @@ namespace Ultima5Redux.Maps
             RefreshCurrentCombatPlayer();
         }
 
-        protected override float GetAStarWeight(Point2D xy) => 1.0f;
+        protected override float GetAStarWeight(in Point2D xy)
+        {
+            return 1.0f;
+        }
 
         protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {

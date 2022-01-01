@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
@@ -30,7 +29,9 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] protected override bool IsRepeatingMap => true;
 
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
-            SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(_mapChoice);
+            _currentSingleMapReference ??= SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(_mapChoice);
+
+        private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         [JsonConstructor] private LargeMap()
         {
@@ -84,23 +85,29 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public override void RecalculateVisibleTiles(Point2D initialFloodFillPosition)
+        public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
+            VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+
             if (XRayMode)
             {
-                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                //VisibleOnMap = //Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                Utils.Set2DArrayAllToValue(VisibleOnMap, true);
                 return;
             }
 
             NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
 
-            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-            TestForVisibility = new List<bool[][]>();
+            //  
+            // TestForVisibility = new List<bool[][]>();
             // reinitialize the array for all potential party members
-            for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
-            {
-                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-            }
+
+            // only initialize the first time, it will fix itself
+            if (TestForVisibility.Count <= 0)
+                for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
+                {
+                    TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+                }
 
             TouchedOuterBorder = false;
 
@@ -140,7 +147,7 @@ namespace Ultima5Redux.Maps
             return xy.GetAdjustedPosition(direction);
         }
 
-        protected override float GetAStarWeight(Point2D xy)
+        protected override float GetAStarWeight(in Point2D xy)
         {
             return 1;
         }

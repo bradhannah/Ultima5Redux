@@ -196,6 +196,17 @@ namespace Ultima5Redux
             return theArray;
         }
 
+        public static void Set2DArrayAllToValue<T>(IEnumerable<T[]> twoDArray, T value)
+        {
+            foreach (T[] t in twoDArray)
+            {
+                for (int j = 0; j < t.Length; j++)
+                {
+                    t[j] = value;
+                }
+            }
+        }
+
         public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
         {
             T[][] theArray = new T[numberOfRows][];

@@ -11,18 +11,17 @@ namespace Ultima5Redux.Maps
     {
         [DataMember(Name = "MapLocationDictionary")]
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>
-            _mapLocationDictionary =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location, Dictionary<int, SmallMap>>();
+            _mapLocationDictionary = new();
 
         [JsonConstructor] public SmallMaps()
         {
             // if the _mapLocationDictionary already has elements, then we assume it was deserialized and skip this step
             if (_mapLocationDictionary.Count > 0) return;
-            
+
             foreach (SmallMapReferences.SingleMapReference mapRef in GameReferences.SmallMapRef.MapReferenceList)
             {
                 // now I can go through each and every reference
-                SmallMap smallMap = new SmallMap(mapRef);
+                SmallMap smallMap = new(mapRef);
 
                 // we make a map that allows us to map the _location and Floor number to the small map with 
                 // details such as the grid
@@ -52,10 +51,10 @@ namespace Ultima5Redux.Maps
 
             // is there a stair case on the lower floor?
             if (GameReferences.SpriteTileReferences.IsStaircase(
-                _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y])) return false;
+                    _mapLocationDictionary[location][nFloor - 1].TheMap[tilePos.X][tilePos.Y])) return false;
             // is there a stair case on the upper floor?
             if (GameReferences.SpriteTileReferences.IsStaircase(
-                _mapLocationDictionary[location][nFloor + 1].TheMap[tilePos.X][tilePos.Y])) return true;
+                    _mapLocationDictionary[location][nFloor + 1].TheMap[tilePos.X][tilePos.Y])) return true;
             // if not - then WTF?
             throw new Ultima5ReduxException("There is staircase with apparently no matching stair case");
         }

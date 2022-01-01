@@ -15,8 +15,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     All available movement lists
         /// </summary>
-        [DataMember(Name = "MovementList")]
-        private readonly List<MapUnitMovement> _movementList = new List<MapUnitMovement>(MAX_PLAYERS);
+        [DataMember(Name = "MovementList")] private readonly List<MapUnitMovement> _movementList = new(MAX_PLAYERS);
 
         [JsonConstructor] public MapUnitMovements()
         {

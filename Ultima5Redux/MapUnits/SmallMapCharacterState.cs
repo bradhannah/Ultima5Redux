@@ -12,12 +12,11 @@ namespace Ultima5Redux.MapUnits
     /// </summary>
     [DataContract] public class SmallMapCharacterState
     {
-
         [DataMember] private int NPCIndex { get; set; }
         [DataMember] public bool Active { get; private set; }
         [IgnoreDataMember] private int MapUnitAnimationStateIndex { get; }
 
-        [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new MapUnitPosition();
+        [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new();
 
         /// <summary>
         ///     Build the character state based on existing conditions

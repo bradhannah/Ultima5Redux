@@ -14,7 +14,7 @@ namespace Ultima5Redux.MapUnits
 
         private const int MAX_CHARACTER_STATES = 0x20;
 
-        private readonly List<MapUnitState> _mapUnitStates = new List<MapUnitState>(MAX_CHARACTER_STATES);
+        private readonly List<MapUnitState> _mapUnitStates = new(MAX_CHARACTER_STATES);
 
         private readonly DataChunk _mapUnitStatesDataChunk;
 
@@ -32,7 +32,7 @@ namespace Ultima5Redux.MapUnits
             // initialize an empty set of character states (for combat map likely)
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
-                MapUnitState mapUnitState = new MapUnitState();
+                MapUnitState mapUnitState = new();
                 _mapUnitStates.Add(mapUnitState);
             }
         }
@@ -75,7 +75,7 @@ namespace Ultima5Redux.MapUnits
 
             for (int i = 0; i < MAX_CHARACTER_STATES; i++)
             {
-                MapUnitState mapUnitState = new MapUnitState(characterStateBytes
+                MapUnitState mapUnitState = new(characterStateBytes
                     .GetRange(i * MapUnitState.NBYTES + nOffset, MapUnitState.NBYTES).ToArray());
 
                 // cute little hack that makes sure the first unit is ALWAYS the Avatar. The init.gam does not properly

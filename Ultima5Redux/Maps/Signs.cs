@@ -17,7 +17,7 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     List of all assembled signs
         /// </summary>
-        private readonly List<Sign> _signList = new List<Sign>(TOTAL_SIGNS);
+        private readonly List<Sign> _signList = new(TOTAL_SIGNS);
 
         /// <summary>
         ///     Loads the "Look" descriptions

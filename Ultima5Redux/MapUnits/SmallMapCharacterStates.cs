@@ -14,8 +14,7 @@ namespace Ultima5Redux.MapUnits
     {
         private const int MAX_CHARACTER_STATES = 0x20;
 
-        private List<SmallMapCharacterState> CharacterStates { get; } =
-            new List<SmallMapCharacterState>(MAX_CHARACTER_STATES);
+        private List<SmallMapCharacterState> CharacterStates { get; } = new(MAX_CHARACTER_STATES);
 
         [JsonConstructor] private SmallMapCharacterStates()
         {

@@ -100,7 +100,7 @@ namespace Ultima5Redux.MapUnits
         public static MapUnitState CreateCombatPlayer(TileReferences tileReferences, PlayerCharacterRecord record,
             MapUnitPosition combatPlayerPosition)
         {
-            MapUnitState combatPlayer = new MapUnitState();
+            MapUnitState combatPlayer = new();
 
             TileReference combatPlayerTileReference = tileReferences.GetTileReference(record.PrimarySpriteIndex);
             Debug.Assert(combatPlayerTileReference != null);
@@ -119,7 +119,7 @@ namespace Ultima5Redux.MapUnits
         public static MapUnitState CreateMapUnitState(TileReferences tileReferences,
             MapUnitPosition mapUnitStatePosition, int nSprite)
         {
-            MapUnitState mapUnitState = new MapUnitState();
+            MapUnitState mapUnitState = new();
 
             TileReference mapUnitStateTileReference = tileReferences.GetTileReference(nSprite);
             Debug.Assert(mapUnitStateTileReference != null);
