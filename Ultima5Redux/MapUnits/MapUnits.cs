@@ -343,7 +343,7 @@ namespace Ultima5Redux.MapUnits
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void GenerateMapUnitsForLargeMap(Map.Maps map, bool bInitialLoad)
         {
-            List<MapUnit> mapUnits;
+            //List<MapUnit> mapUnits;
 
             MapUnitCollection mapUnitCollection;
             // the over and underworld animation states are already loaded and can stick around
