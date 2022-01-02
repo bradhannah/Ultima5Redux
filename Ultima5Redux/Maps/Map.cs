@@ -328,7 +328,7 @@ namespace Ultima5Redux.Maps
 
             if (bFirst)
             {
-                Utils.Set2DArrayAllToValue(VisibleOnMap, true);
+                Utils.Set2DArrayAllToValue(VisibleOnMap, false);
                 Utils.Set2DArrayAllToValue(TestForVisibility[nCharacterIndex], false);
             }
 
