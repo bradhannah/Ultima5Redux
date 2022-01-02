@@ -84,15 +84,14 @@ namespace Ultima5Redux.Maps
 
         protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
-            switch (mapUnit)
+            return mapUnit switch
             {
-                case Enemy enemy:
-                    return enemy.EnemyReference.IsWaterEnemy ? WalkableType.CombatWater : WalkableType.StandardWalking;
-                case CombatPlayer _:
-                    return WalkableType.StandardWalking;
-                default:
-                    return WalkableType.StandardWalking;
-            }
+                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
+                    ? WalkableType.CombatWater
+                    : WalkableType.StandardWalking,
+                CombatPlayer _ => WalkableType.StandardWalking,
+                _ => WalkableType.StandardWalking
+            };
         }
     }
 }

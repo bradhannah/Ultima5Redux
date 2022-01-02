@@ -32,9 +32,7 @@ namespace Ultima5Redux.MapUnits
 
         //[DataMember] private SmallMapCharacterStates MapCharacterStates { get; set; }
 
-        [DataMember]
-        public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } =
-            new();
+        [DataMember] public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } = new();
 
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
         [DataMember] public MapUnitCollection SmallMapUnitCollection { get; private set; } = new();
@@ -347,14 +345,15 @@ namespace Ultima5Redux.MapUnits
         {
             List<MapUnit> mapUnits;
 
+            MapUnitCollection mapUnitCollection;
             // the over and underworld animation states are already loaded and can stick around
             switch (map)
             {
                 case Map.Maps.Overworld:
-                    mapUnits = OverworldMapMapUnitCollection.AllMapUnits;
+                    mapUnitCollection = OverworldMapMapUnitCollection;
                     break;
                 case Map.Maps.Underworld:
-                    mapUnits = UnderworldMapUnitCollection.AllMapUnits;
+                    mapUnitCollection = UnderworldMapUnitCollection;
                     break;
                 case Map.Maps.Combat:
                 case Map.Maps.Small:
@@ -362,6 +361,7 @@ namespace Ultima5Redux.MapUnits
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
             }
+            //mapUnits = mapUnitCollection.AllMapUnits;
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
@@ -394,7 +394,9 @@ namespace Ultima5Redux.MapUnits
                     MapUnit theAvatar = Avatar.CreateAvatar(
                         SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, mapUnitMovement,
                         mapUnitPosition, tileReference, _bUseExtendedSprites);
-                    mapUnits.Add(theAvatar);
+
+                    mapUnitCollection.AddMapUnit(theAvatar);
+                    //mapUnits.Add(theAvatar);
                     continue;
                 }
 
@@ -402,7 +404,8 @@ namespace Ultima5Redux.MapUnits
                     SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, null, mapUnitPosition,
                     tileReference);
                 // add the new character to our list of characters currently on the map
-                mapUnits.Add(newUnit);
+                mapUnitCollection.AddMapUnit(newUnit);
+                //mapUnits.Add(newUnit);
             }
         }
 
@@ -411,8 +414,8 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
         {
-            if (location == SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine ||
-                location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+            if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
+                or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
                 throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
 
             // wipe all existing characters since they cannot exist beyond the load

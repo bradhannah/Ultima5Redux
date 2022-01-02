@@ -178,11 +178,11 @@ namespace Ultima5Redux.Maps
         {
             get
             {
-                if (CurrentMap is CombatMap combatMap)
-                {
-                    return combatMap.CurrentCombatMapUnit?.MapUnitPosition ??
-                           throw new Ultima5ReduxException("Combat map was unexpectedly null");
-                }
+                // if (CurrentMap is CombatMap combatMap)
+                // {
+                //     return combatMap.CurrentCombatMapUnit?.MapUnitPosition ??
+                //            throw new Ultima5ReduxException("Combat map was unexpectedly null");
+                // }
 
                 return TheMapUnits.CurrentAvatarPosition;
             }
@@ -1138,6 +1138,8 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsMapUnitOccupiedTile(in Point2D xy)
         {
+            //return TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).IsMapUnitOccupiedTile(xy, CurrentPosition.Floor);
+
             IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
             //for (int index = 0; index < mapUnits.Count; index++)
             foreach (MapUnit mapUnit in mapUnits)

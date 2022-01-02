@@ -10,7 +10,8 @@ namespace Ultima5Redux.Data
     /// <summary>
     ///     A collection of Datachunks
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")] public class DataChunks<T>
+    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
+    public class DataChunks<T>
     {
         /// <summary>
         ///     A Dictionary that maps the DataChunkName to the specific location

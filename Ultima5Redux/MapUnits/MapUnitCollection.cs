@@ -10,18 +10,11 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public class MapUnitCollection
     {
-        private Avatar _theAvatar;
-
         [DataMember(Name = "Avatars")]
         private Avatar[] SaveAvatars
         {
             get => GetMapUnitByTypeToArray<Avatar>();
-            set
-            {
-                ReplaceAll(value);
-                if (value.Length > 0)
-                    _theAvatar = value[0];
-            }
+            set => ReplaceAll(value);
         }
 
         [DataMember(Name = "CombatPlayers")]
@@ -106,18 +99,11 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public IEnumerable<Skiff> Skiffs => GetMapUnitByType<Skiff>();
 
-        [IgnoreDataMember]
-        public Avatar TheAvatar
+        [IgnoreDataMember] public Avatar TheAvatar => Avatars.First();
+
+        public void AddMapUnit(MapUnit mapUnit)
         {
-            get
-            {
-                if (_theAvatar == null)
-                    return _theAvatar = Avatars.ToList()[0];
-                return _theAvatar;
-                // if (Avatars.Count is < 1 or > 1)
-                //     throw new Ultima5ReduxException("Tried to get a single Avatar and had " + Avatars.Count);
-                // return Avatars[0];
-            }
+            AllMapUnits.Add(mapUnit);
         }
 
         [JsonConstructor] public MapUnitCollection()

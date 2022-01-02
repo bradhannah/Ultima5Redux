@@ -193,18 +193,48 @@ namespace Raw16ToBMP
             //positionArray[2], positionArray[3], fileArray);
         }
 
-        public static void StartScreen()
+        //public PbvCompressor()
+        //{
+        //    // setting this by default but we could create a facotry class to let us set the algorithm based on arguments passed to the main method
+        //    // IE. "Compress.exe zip -c blah.txt" would use the zip algorithm as opposed to the default one.
+        //    CompressorAlgorithm = new PbvCompressorLZW();
+        //}
+
+        private static void Main()
         {
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\startsc.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\startsc.16.bmp",
-                168, 30, 0);
+            CreateMon0();
+            StartScreen();
+            UltimaScreen();
+            FireScreen();
+
+            PbvCompressorLzw lzw = new PbvCompressorLzw();
+            lzw.Decompress("C:\\games\\ultima_5\\temp\\ultima.16",
+                "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp2");
         }
 
-        public static void UltimaScreen()
+        public static void Export(string uncompFilename, string bmpFilename, int nGraphicWidth, int nGraphicHeight,
+            int nOffset)
         {
-            Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.bmp",
-                320, 61, 0x1A);
+            //const int INDEX_SIZE = 0x32;
+            byte[] fileArray = File.ReadAllBytes(uncompFilename);
+
+            byte[] positionArray = new byte[nOffset];
+            for (int i = 0; i < positionArray.Length; i++)
+            {
+                positionArray[i] = fileArray[i];
+            }
+
+            int nForcedWidth = nGraphicWidth;
+            int nForcedHeigh = nGraphicHeight;
+            byte[] flameGraphic = new byte[nForcedWidth * nForcedHeigh];
+
+            int byteIndex = 0;
+            for (int bmpIndex = 0; bmpIndex < nForcedWidth * nForcedHeigh; bmpIndex += 2, byteIndex += 1)
+            {
+                flameGraphic[byteIndex] = fileArray[byteIndex + nOffset];
+            }
+
+            BitmapWriter.Write16BitmapFile(bmpFilename, nForcedWidth, nForcedHeigh, flameGraphic);
         }
 
         public static void FireScreen()
@@ -233,48 +263,18 @@ namespace Raw16ToBMP
                 nPixelWidth, nPixelHeight, nStartIndex + (nOffsetPerFire * 3) + nDefaultOffset);
         }
 
-        public static void Export(string uncompFilename, string bmpFilename, int nGraphicWidth, int nGraphicHeight,
-            int nOffset)
+        public static void StartScreen()
         {
-            //const int INDEX_SIZE = 0x32;
-            byte[] fileArray = File.ReadAllBytes(uncompFilename);
-
-            byte[] positionArray = new byte[nOffset];
-            for (int i = 0; i < positionArray.Length; i++)
-            {
-                positionArray[i] = fileArray[i];
-            }
-
-            int nForcedWidth = nGraphicWidth;
-            int nForcedHeigh = nGraphicHeight;
-            byte[] flameGraphic = new byte[nForcedWidth * nForcedHeigh];
-
-            int byteIndex = 0;
-            for (int bmpIndex = 0; bmpIndex < nForcedWidth * nForcedHeigh; bmpIndex += 2, byteIndex += 1)
-            {
-                flameGraphic[byteIndex] = fileArray[byteIndex + nOffset];
-            }
-
-            BitmapWriter.Write16BitmapFile(bmpFilename, nForcedWidth, nForcedHeigh, flameGraphic);
+            Export("C:\\games\\ultima_5\\temp\\dec_res\\startsc.16.uncomp",
+                "C:\\games\\ultima_5\\temp\\dec_res\\startsc.16.bmp",
+                168, 30, 0);
         }
 
-        //public PbvCompressor()
-        //{
-        //    // setting this by default but we could create a facotry class to let us set the algorithm based on arguments passed to the main method
-        //    // IE. "Compress.exe zip -c blah.txt" would use the zip algorithm as opposed to the default one.
-        //    CompressorAlgorithm = new PbvCompressorLZW();
-        //}
-
-        static void Main()
+        public static void UltimaScreen()
         {
-            CreateMon0();
-            StartScreen();
-            UltimaScreen();
-            FireScreen();
-
-            PbvCompressorLzw lzw = new PbvCompressorLzw();
-            lzw.Decompress("C:\\games\\ultima_5\\temp\\ultima.16",
-                "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp2");
+            Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
+                "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.bmp",
+                320, 61, 0x1A);
         }
     }
 }

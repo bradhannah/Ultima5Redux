@@ -13,43 +13,6 @@ namespace U5ConversationSimulator
     {
         private static World World;
 
-        static void Main()
-        {
-            World = new World(true, "C:\\games\\ultima_5_late\\britain");
-
-            World.State.TheVirtualMap.LoadSmallMap(
-                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
-                    0));
-
-            //Dictionary<int, TileReference> tileReference = TileReference.Load();
-            //world.OverworldMap.PrintMap();
-            //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference._location.Lord_Britishs_Castle);
-            //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference._location.Britain);
-
-            //Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
-            // List<NonPlayerCharacterReference> minocNpcRef =
-            //     _world.NpcRefs.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
-
-            SmallMapReferences.SingleMapReference.Location location =
-                SmallMapReferences.SingleMapReference.Location.Minoc;
-            NonPlayerCharacterState npcState =
-                World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
-            Conversation convo = new Conversation(World.State, npcState); // delwyn
-
-            //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
-            //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
-            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = EnqueuedScriptItem;
-            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
-
-            convo.BeginConversation();
-            //int i = 1000;
-            // while (i > 0)
-            // {
-            //     _world.AdvanceTime(2);
-            //     i--;
-            // }
-        }
-
         private static void EnqueuedScriptItem(Conversation conversation)
         {
             TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
@@ -121,6 +84,43 @@ namespace U5ConversationSimulator
                     throw new Exception("We received a TalkCommand: " + item.Command +
                                         " that we didn't expect in the World processing");
             }
+        }
+
+        private static void Main()
+        {
+            World = new World(true, "C:\\games\\ultima_5_late\\britain");
+
+            World.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    0));
+
+            //Dictionary<int, TileReference> tileReference = TileReference.Load();
+            //world.OverworldMap.PrintMap();
+            //world.SmallMapRef.GetLocationName(SmallMapReferences.SingleMapReference._location.Lord_Britishs_Castle);
+            //world.NpcRef.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference._location.Britain);
+
+            //Conversation convo = new Conversation(_world.NpcRef.NPCs[292], _world.State, _world.DataOvlRef); // justin
+            // List<NonPlayerCharacterReference> minocNpcRef =
+            //     _world.NpcRefs.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
+
+            SmallMapReferences.SingleMapReference.Location location =
+                SmallMapReferences.SingleMapReference.Location.Minoc;
+            NonPlayerCharacterState npcState =
+                World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
+            Conversation convo = new Conversation(World.State, npcState); // delwyn
+
+            //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
+            //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno
+            Conversation.EnqueuedScriptItem enqueuedScriptItemDelegate = EnqueuedScriptItem;
+            convo.EnqueuedScriptItemCallback += enqueuedScriptItemDelegate;
+
+            convo.BeginConversation();
+            //int i = 1000;
+            // while (i > 0)
+            // {
+            //     _world.AdvanceTime(2);
+            //     i--;
+            // }
         }
     }
 }

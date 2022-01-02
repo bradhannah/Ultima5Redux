@@ -12,10 +12,10 @@ namespace Raw16ToBMP
     //LZW Based Decompressor - basic algorithm used as described on Mark Nelson's website  http://marknelson.us
     public class PbvCompressorLzw : ICompressorAlgorithm
     {
-        private const int MAX_BITS = 14; //maimxum bits allowed to read
         private const int HASH_BIT = MAX_BITS - 8; //hash bit to use with the hasing algorithm to find correct index
-        private const int MAX_VALUE = (1 << MAX_BITS) - 1; //max value allowed based on max bits
+        private const int MAX_BITS = 14; //maimxum bits allowed to read
         private const int MAX_CODE = MAX_VALUE - 1; //max code possible
+        private const int MAX_VALUE = (1 << MAX_BITS) - 1; //max value allowed based on max bits
         private const int TABLE_SIZE = 18041; //must be bigger than the maximum allowed by maxbits and prime
         private readonly int[] _iaCharTable = new int[TABLE_SIZE]; //character table
 
@@ -24,6 +24,66 @@ namespace Raw16ToBMP
 
         private ulong _iBitBuffer; //bit buffer to temporarily store bytes read from the files
         private int _iBitCounter; //counter for knowing how many bits are in the bit buffer
+
+        //hashing function, tries to find index of prefix+char, if not found returns -1 to signify space available
+        private int FindMatch(int pPrefix, int pChar)
+        {
+            int index = (pChar << HASH_BIT) ^ pPrefix;
+
+            int offset = index == 0 ? 1 : TABLE_SIZE - index;
+
+            while (true)
+            {
+                if (_iaCodeTable[index] == -1)
+                    return index;
+
+                if (_iaPrefixTable[index] == pPrefix && _iaCharTable[index] == pChar)
+                    return index;
+
+                index -= offset;
+                if (index < 0)
+                    index += TABLE_SIZE;
+            }
+        }
+
+        private void
+            Initialize() //used to blank  out bit buffer incase this class is called to comprss and decompress from the same instance
+        {
+            _iBitBuffer = 0;
+            _iBitCounter = 0;
+        }
+
+        private int ReadCode(Stream pReader)
+        {
+            uint iReturnVal;
+
+            while (_iBitCounter <= 24) //fill up buffer
+            {
+                _iBitBuffer |= (ulong)pReader.ReadByte() << (24 - _iBitCounter); //insert byte into buffer
+                _iBitCounter += 8; //increment counter
+            }
+
+            iReturnVal = (uint)_iBitBuffer >> (32 - MAX_BITS); //get last byte from buffer so we can return it
+            _iBitBuffer <<= MAX_BITS; //remove it from buffer
+            _iBitCounter -= MAX_BITS; //decrement bit counter
+
+            int temp = (int)iReturnVal;
+            return temp;
+        }
+
+        private void WriteCode(Stream pWriter, int pCode)
+        {
+            _iBitBuffer |= (ulong)pCode << (32 - MAX_BITS - _iBitCounter); //make space and insert new code in buffer
+            _iBitCounter += MAX_BITS; //increment bit counter
+
+            while (_iBitCounter >= 8) //write all the bytes we can
+            {
+                // int temp = (byte)((_iBitBuffer >> 24) & 255);
+                pWriter.WriteByte((byte)((_iBitBuffer >> 24) & 255)); //write byte from bit buffer
+                _iBitBuffer <<= 8; //remove written byte from buffer
+                _iBitCounter -= 8; //decrement counter
+            }
+        }
 
         public bool Compress(string pInputFileName, string pOutputFileName)
         {
@@ -173,66 +233,6 @@ namespace Raw16ToBMP
             }
 
             return true;
-        }
-
-        private void
-            Initialize() //used to blank  out bit buffer incase this class is called to comprss and decompress from the same instance
-        {
-            _iBitBuffer = 0;
-            _iBitCounter = 0;
-        }
-
-        //hashing function, tries to find index of prefix+char, if not found returns -1 to signify space available
-        private int FindMatch(int pPrefix, int pChar)
-        {
-            int index = (pChar << HASH_BIT) ^ pPrefix;
-
-            int offset = (index == 0) ? 1 : TABLE_SIZE - index;
-
-            while (true)
-            {
-                if (_iaCodeTable[index] == -1)
-                    return index;
-
-                if (_iaPrefixTable[index] == pPrefix && _iaCharTable[index] == pChar)
-                    return index;
-
-                index -= offset;
-                if (index < 0)
-                    index += TABLE_SIZE;
-            }
-        }
-
-        private void WriteCode(Stream pWriter, int pCode)
-        {
-            _iBitBuffer |= (ulong)pCode << (32 - MAX_BITS - _iBitCounter); //make space and insert new code in buffer
-            _iBitCounter += MAX_BITS; //increment bit counter
-
-            while (_iBitCounter >= 8) //write all the bytes we can
-            {
-                // int temp = (byte)((_iBitBuffer >> 24) & 255);
-                pWriter.WriteByte((byte)((_iBitBuffer >> 24) & 255)); //write byte from bit buffer
-                _iBitBuffer <<= 8; //remove written byte from buffer
-                _iBitCounter -= 8; //decrement counter
-            }
-        }
-
-        private int ReadCode(Stream pReader)
-        {
-            uint iReturnVal;
-
-            while (_iBitCounter <= 24) //fill up buffer
-            {
-                _iBitBuffer |= (ulong)pReader.ReadByte() << (24 - _iBitCounter); //insert byte into buffer
-                _iBitCounter += 8; //increment counter
-            }
-
-            iReturnVal = (uint)_iBitBuffer >> (32 - MAX_BITS); //get last byte from buffer so we can return it
-            _iBitBuffer <<= MAX_BITS; //remove it from buffer
-            _iBitCounter -= MAX_BITS; //decrement bit counter
-
-            int temp = (int)iReturnVal;
-            return temp;
         }
     }
 }
