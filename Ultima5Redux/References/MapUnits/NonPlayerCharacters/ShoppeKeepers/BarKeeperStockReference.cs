@@ -14,7 +14,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public enum FoodType { Mutton, Boar, Fruit, Cheese, Rations }
 
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, BarKeeperStock>
-            _barKeeperStockByLocation = new Dictionary<SmallMapReferences.SingleMapReference.Location, BarKeeperStock>
+            _barKeeperStockByLocation = new()
             {
                 {
                     SmallMapReferences.SingleMapReference.Location.Moonglow,

@@ -9,7 +9,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 {
     public class NonPlayerCharacterReferences
     {
-
         /// <summary>
         ///     Sizeof(bytes) a single NPC dialog number in file
         /// </summary>
@@ -55,16 +54,14 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public const int NPCS_PER_TOWN = 32;
 
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterReference>>
-            _locationToNPCsDictionary =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location, List<NonPlayerCharacterReference>>();
+            _locationToNPCsDictionary = new();
 
-        private readonly Dictionary<string, NonPlayerCharacterReference> _npcByNameDictionary =
-            new Dictionary<string, NonPlayerCharacterReference>();
+        private readonly Dictionary<string, NonPlayerCharacterReference> _npcByNameDictionary = new();
 
         /// <summary>
         ///     All of the NPCs
         /// </summary>
-        public List<NonPlayerCharacterReference> NPCs { get; } = new List<NonPlayerCharacterReference>();
+        public List<NonPlayerCharacterReference> NPCs { get; } = new();
 
         /// <summary>
         ///     Construct all of the non player characters across all of the SmallMaps
@@ -115,10 +112,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             for (int nTown = 0; nTown < TOWNS_PER_NPCFILE; nTown++)
             {
                 // fresh collections for each major loop to guarantee they are clean
-                List<NonPlayerCharacterReference.NPCSchedule> schedules =
-                    new List<NonPlayerCharacterReference.NPCSchedule>(NPCS_PER_TOWN);
-                List<byte> npcTypes = new List<byte>(NPCS_PER_TOWN);
-                List<byte> npcDialogNumber = new List<byte>(NPCS_PER_TOWN);
+                List<NonPlayerCharacterReference.NPCSchedule> schedules = new(NPCS_PER_TOWN);
+                List<byte> npcTypes = new(NPCS_PER_TOWN);
+                List<byte> npcDialogNumber = new(NPCS_PER_TOWN);
 
                 SmallMapReferences.SingleMapReference.Location location =
                     smallMapRef.GetLocationByIndex(mapMaster, nTown);
@@ -155,7 +151,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
                 {
-                    NonPlayerCharacterReference npc = new NonPlayerCharacterReference(location, schedules[nNpc],
+                    NonPlayerCharacterReference npc = new(location, schedules[nNpc],
                         npcTypes[nNpc], npcDialogNumber[nNpc], nNpc,
                         talkScriptsRef.GetTalkScript(mapMaster, npcDialogNumber[nNpc]));
                     NPCs.Add(npc);

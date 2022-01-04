@@ -8,24 +8,23 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public sealed class Weapons : CombatItems<WeaponReference.WeaponTypeEnum, Weapon>
     {
-        [DataMember] public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; internal set; } =
-            new Dictionary<WeaponReference.WeaponTypeEnum, Weapon>();
+        [DataMember]
+        public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; internal set; } =
+            new();
 
-        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } =
-            new Dictionary<DataOvlReference.Equipment, Weapon>();
+        [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } = new();
 
         [JsonConstructor] private Weapons()
         {
         }
 
-        public Weapons(ImportedGameState importedGameState) 
+        public Weapons(ImportedGameState importedGameState)
         {
             void addWeaponLegacy(WeaponReference weaponReference)
             {
                 AddWeapon(weaponReference, importedGameState.GetEquipmentQuantity(weaponReference.SpecificEquipment));
             }
-                
-            
+
             foreach (WeaponReference weaponReference in GameReferences.CombatItemRefs.WeaponReferences)
             {
                 addWeaponLegacy(weaponReference);

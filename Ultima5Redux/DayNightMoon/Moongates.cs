@@ -21,13 +21,12 @@ namespace Ultima5Redux.DayNightMoon
         ///     All buried positions
         /// </summary>
         [DataMember(Name = "MoongatePositions")]
-        private readonly List<Point3D> _moongatePositions = new List<Point3D>(TOTAL_MOONSTONES);
+        private readonly List<Point3D> _moongatePositions = new(TOTAL_MOONSTONES);
 
         /// <summary>
         ///     Are moonstones buried?
         /// </summary>
-        [DataMember(Name = "MoonstoneBuried")]
-        private readonly List<bool> _moonstonesBuried = new List<bool>(TOTAL_MOONSTONES);
+        [DataMember(Name = "MoonstoneBuried")] private readonly List<bool> _moonstonesBuried = new(TOTAL_MOONSTONES);
 
         [JsonConstructor] private Moongates()
         {
@@ -51,7 +50,7 @@ namespace Ultima5Redux.DayNightMoon
 
             for (int i = 0; i < TOTAL_MOONSTONES; i++)
             {
-                Point3D moongatePos = new Point3D(xPositions[i], yPositions[i], zPositions[i]);
+                Point3D moongatePos = new(xPositions[i], yPositions[i], zPositions[i]);
                 _moongatePositions.Add(moongatePos);
                 _moonstonesBuried.Add(buried[i] == 0);
             }
@@ -72,7 +71,7 @@ namespace Ultima5Redux.DayNightMoon
             if (!IsMoonstoneBuried(position, map))
                 throw new Ultima5ReduxException("Can't get a moonphase for a stone that ain't there at " + position);
             int nPos = -1;
-            Point3D xyzPos = new Point3D(position.X, position.Y, (int)map);
+            Point3D xyzPos = new(position.X, position.Y, (int)map);
             for (int nMoonstone = 0; nMoonstone < 8; nMoonstone++)
             {
                 Point3D xyz = _moongatePositions[nMoonstone];

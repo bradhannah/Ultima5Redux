@@ -11,7 +11,7 @@ namespace Ultima5Redux
     public static class Utils
     {
         public static readonly TextInfo EnTextInfo = new CultureInfo("en-US", false).TextInfo;
-        public static Random Ran { get; } = new Random();
+        public static Random Ran { get; } = new();
 
         public static string AddSpacesBeforeCaps(string str)
         {
@@ -98,7 +98,7 @@ namespace Ultima5Redux
         {
             List<byte> byteArray = GetFileAsByteList(filename);
 
-            List<int> offsetArray = new List<int>();
+            List<int> offsetArray = new();
 
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < length; i += 2)
@@ -111,7 +111,7 @@ namespace Ultima5Redux
 
         public static List<ushort> CreateOffsetList(byte[] byteArray, int offset, int length)
         {
-            List<ushort> offsetArray = new List<ushort>();
+            List<ushort> offsetArray = new();
 
             // double TOTAL_LOOKS because we are using 16 bit integers, using two bytes at a time
             for (int i = 0; i < length; i += 2)
@@ -124,14 +124,14 @@ namespace Ultima5Redux
 
         public static Queue<int> CreateRandomizedIntegerQueue(int nElements)
         {
-            List<int> intList = new List<int>(nElements);
+            List<int> intList = new(nElements);
             for (int i = 0; i < nElements; i++)
             {
                 intList.Add(i);
             }
 
-            Random rng = new Random();
-            Queue<int> randomizedQueue = new Queue<int>(intList.OrderBy(o => rng.Next()));
+            Random rng = new();
+            Queue<int> randomizedQueue = new(intList.OrderBy(o => rng.Next()));
             return randomizedQueue;
         }
 
@@ -150,7 +150,7 @@ namespace Ultima5Redux
             byte[] fileContents = File.ReadAllBytes(filename);
             if (length == -1) return fileContents.ToList();
 
-            List<byte> specificContents = new List<byte>(length);
+            List<byte> specificContents = new(length);
 
             for (int i = offset; i < offset + length; i++)
             {
@@ -181,7 +181,7 @@ namespace Ultima5Redux
         {
             Debug.Assert(nMin < nMax);
             int nDiff = nMax - nMin;
-            Random ran = new Random();
+            Random ran = new();
             return (ran.Next() % nDiff) + nMin;
         }
 
@@ -234,7 +234,7 @@ namespace Ultima5Redux
 
         public static List<List<T>> Init2DList<T>(int numberOfRows, int numberOfCols)
         {
-            List<List<T>> rowList = new List<List<T>>(numberOfRows);
+            List<List<T>> rowList = new(numberOfRows);
 
             for (int i = 0; i < numberOfRows; i++)
             {

@@ -11,14 +11,14 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public class Armours : CombatItems<ArmourReference.ArmourType, List<Armour>>
     {
-        [DataMember] public List<Amulet> Amulets { get; private set; } = new List<Amulet>();
-        [DataMember] public List<ChestArmour> ChestArmours { get; private set; } = new List<ChestArmour>();
-        [DataMember] public List<Helm> Helms { get; private set; } = new List<Helm>();
-        [DataMember] public List<Ring> Rings { get; private set; } = new List<Ring>();
+        [DataMember] public List<Amulet> Amulets { get; private set; } = new();
+        [DataMember] public List<ChestArmour> ChestArmours { get; private set; } = new();
+        [DataMember] public List<Helm> Helms { get; private set; } = new();
+        [DataMember] public List<Ring> Rings { get; private set; } = new();
 
         [IgnoreDataMember]
         private Dictionary<DataOvlReference.Equipment, Armour> ItemsFromEquipment { get; } =
-            new Dictionary<DataOvlReference.Equipment, Armour>();
+            new();
 
         // override to allow for inserting entire lists
         [IgnoreDataMember]
@@ -36,7 +36,7 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         [IgnoreDataMember]
         public override Dictionary<ArmourReference.ArmourType, List<Armour>> Items { get; internal set; } =
-            new Dictionary<ArmourReference.ArmourType, List<Armour>>();
+            new();
 
         private Dictionary<ArmourReference.ArmourType, List<Armour>> _savedItems;
 
@@ -83,25 +83,25 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             switch (armourReference.TheArmourType)
             {
                 case ArmourReference.ArmourType.Amulet:
-                    Amulet amulet = new Amulet(armourReference, nQuantity);
+                    Amulet amulet = new(armourReference, nQuantity);
                     //GameStateByteArray[(int)armourReference.SpecificEquipment]
                     armour = amulet;
                     Amulets.Add(amulet);
                     break;
                 case ArmourReference.ArmourType.ChestArmour:
-                    ChestArmour chestArmour = new ChestArmour(armourReference, nQuantity);
+                    ChestArmour chestArmour = new(armourReference, nQuantity);
                     //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = chestArmour;
                     ChestArmours.Add(chestArmour);
                     break;
                 case ArmourReference.ArmourType.Helm:
-                    Helm helm = new Helm(armourReference, nQuantity);
+                    Helm helm = new(armourReference, nQuantity);
                     //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = helm;
                     Helms.Add(helm);
                     break;
                 case ArmourReference.ArmourType.Ring:
-                    Ring ring = new Ring(armourReference, nQuantity);
+                    Ring ring = new(armourReference, nQuantity);
                     //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = ring;
                     Rings.Add(ring);

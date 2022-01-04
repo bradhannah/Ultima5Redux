@@ -39,7 +39,7 @@ namespace Ultima5Redux
         public const byte N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH = 100;
 
         private readonly Dictionary<Potion.PotionColor, MagicReference.SpellWords> _potionColorToSpellMap =
-            new Dictionary<Potion.PotionColor, MagicReference.SpellWords>
+            new()
             {
                 { Potion.PotionColor.Blue, MagicReference.SpellWords.An_Zu },
                 { Potion.PotionColor.Yellow, MagicReference.SpellWords.Mani },
@@ -51,7 +51,7 @@ namespace Ultima5Redux
                 { Potion.PotionColor.Purple, MagicReference.SpellWords.Rel_Xen_Bet }
             };
 
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
 
         /// <summary>
         ///     The overworld map object
@@ -935,7 +935,7 @@ namespace Ultima5Redux
             }
 
             // calculate our new x and y values based on the adjustments
-            Point2D newPosition = new Point2D((State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol,
+            Point2D newPosition = new((State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol,
                 (State.TheVirtualMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow);
 
             // we change the direction of the Avatar map unit
@@ -1183,7 +1183,7 @@ namespace Ultima5Redux
 
             // if we were to move, which direction would we move
             GetAdjustments(direction, out int xAdjust, out int yAdjust);
-            Point2D newPosition = new Point2D(combatPlayer.MapUnitPosition.X + xAdjust,
+            Point2D newPosition = new(combatPlayer.MapUnitPosition.X + xAdjust,
                 combatPlayer.MapUnitPosition.Y + yAdjust);
 
             if (IsLeavingMap(newPosition))

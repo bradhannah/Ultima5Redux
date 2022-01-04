@@ -29,13 +29,13 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     a list of conversation indexes that refer to the particular conversationOrderScriptLines[] we are on
         /// </summary>
-        private readonly List<int> _conversationOrder = new List<int>();
+        private readonly List<int> _conversationOrder = new();
 
         /// <summary>
         ///     All of the ScriptLines that we are capable of processing for the NPC
         /// </summary>
         // ReSharper disable once CollectionNeverQueried.Local
-        private readonly List<TalkScript.ScriptLine> _conversationOrderScriptLines = new List<TalkScript.ScriptLine>();
+        private readonly List<TalkScript.ScriptLine> _conversationOrderScriptLines = new();
 
         /// <summary>
         ///     Game State used for determining if Avatar has met the NPC
@@ -45,12 +45,12 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     The output buffer storing all outputs that will be read by outer program
         /// </summary>
-        private readonly Queue<TalkScript.ScriptItem> _outputBufferQueue = new Queue<TalkScript.ScriptItem>();
+        private readonly Queue<TalkScript.ScriptItem> _outputBufferQueue = new();
 
         /// <summary>
         ///     The users responses to promptings from the outputBufferQueue
         /// </summary>
-        private readonly Queue<string> _responseQueue = new Queue<string>();
+        private readonly Queue<string> _responseQueue = new();
 
         /// <summary>
         ///     The script of the conversation
@@ -198,7 +198,7 @@ namespace Ultima5Redux.Dialogue
                         string avatarNameResponse = GetResponse();
                         // did they actually provide the Avatars name?
                         if (string.Equals(avatarNameResponse, _gameState.AvatarsName,
-                            StringComparison.CurrentCultureIgnoreCase))
+                                StringComparison.CurrentCultureIgnoreCase))
                         {
                             // i met them
                             TheNonPlayerCharacterState.HasMetAvatar = true;
@@ -459,7 +459,7 @@ namespace Ultima5Redux.Dialogue
                     // if someone has asked their name then we need to add "My name is " to beginning 
                     else if (userResponse.ToLower() == "name")
                     {
-                        TalkScript.ScriptLine scriptLine = new TalkScript.ScriptLine();
+                        TalkScript.ScriptLine scriptLine = new();
                         scriptLine.AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                             GetConversationStr(DataOvlReference.ChunkPhrasesConversation.MY_NAME_IS) + " "));
                         await ProcessLine(scriptLine);
@@ -474,7 +474,7 @@ namespace Ultima5Redux.Dialogue
                     else
                     {
                         // we didn't recognize the user input - we will tell them so
-                        TalkScript.ScriptLine unrecognizedLine = new TalkScript.ScriptLine();
+                        TalkScript.ScriptLine unrecognizedLine = new();
                         unrecognizedLine.AddScriptItem(
                             new TalkScript.ScriptItem(TalkScript.TalkCommand.UserInputNotRecognized));
                         await ProcessLine(unrecognizedLine);

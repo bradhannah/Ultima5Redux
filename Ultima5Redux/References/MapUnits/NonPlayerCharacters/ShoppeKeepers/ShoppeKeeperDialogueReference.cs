@@ -19,11 +19,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         private readonly DataChunks<ShoppeKeeperChunkNames> _dataChunks;
         private readonly DataOvlReference _dataOvlReference;
-        private readonly List<string> _merchantStrings = new List<string>();
+        private readonly List<string> _merchantStrings = new();
 
-        private readonly Dictionary<int, int> _previousRandomSelectionByMin = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> _previousRandomSelectionByMin = new();
 
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
 
         /// <summary>
         ///     Construct using the on disk references
@@ -76,7 +76,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             string quantityColor = bUseRichText ? "<color=#00ffffff>" : "";
             string closeColor = bUseRichText ? "</color>" : "";
 
-            StringBuilder sb = new StringBuilder(dialogue);
+            StringBuilder sb = new(dialogue);
             if (nGold >= 0) sb.Replace("%", highlightColor + nGold + closeColor);
             if (equipmentName != "") sb.Replace("&", highlightColor + equipmentName + closeColor);
             if (shoppeKeeperName != "") sb.Replace("$", shoppeKeeperName);
@@ -177,7 +177,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             IEnumerable<string> rawShoppeStrings = _dataChunks.GetDataChunk(ShoppeKeeperChunkNames.AllData)
                 .GetChunkAsStringList().StringList;
-            CompressedWordReference compressedWordReference = new CompressedWordReference(dataOvlReference);
+            CompressedWordReference compressedWordReference = new(dataOvlReference);
             //int i = 0;
             foreach (string rawShoppeString in rawShoppeStrings)
             {

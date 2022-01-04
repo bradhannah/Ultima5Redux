@@ -42,7 +42,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         private const int N_RAW_BYTES = 2;
         private readonly EnemyReferences.AdditionalEnemyFlags _additionalEnemyFlags;
 
-        private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new Dictionary<EnemyAbility, bool>();
+        private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new();
 
         public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
 
@@ -151,7 +151,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             return (_enemyAbilities.ContainsKey(ability) && _enemyAbilities[ability]);
         }
 
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")] public class DefaultEnemyStats
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public class DefaultEnemyStats
         {
             public int Armour { get; internal set; }
             public int Damage { get; internal set; }

@@ -16,7 +16,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     TODO: Need to figure out what these AI types actually mean
         /// </summary>
-        private readonly List<byte> _aiTypeList = new List<byte>();
+        private readonly List<byte> _aiTypeList = new();
 
         /// <summary>
         ///     3D Coordinates including floor number
@@ -194,7 +194,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <returns></returns>
         public MapUnitPosition GetCharacterDefaultPositionByTime(TimeOfDay timeOfDay)
         {
-            MapUnitPosition mapUnitPosition = new MapUnitPosition();
+            MapUnitPosition mapUnitPosition = new();
             int nIndex = GetScheduleIndex(timeOfDay);
 
             mapUnitPosition.Floor = GetFloor(nIndex);
@@ -211,7 +211,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <returns></returns>
         public MapUnitPosition GetCharacterPreviousPositionByTime(TimeOfDay timeOfDay)
         {
-            MapUnitPosition mapUnitPosition = new MapUnitPosition();
+            MapUnitPosition mapUnitPosition = new();
             int nIndex = GetRawScheduleIndex(timeOfDay);
 
             if (nIndex == 0) nIndex = 1;

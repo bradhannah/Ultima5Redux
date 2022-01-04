@@ -49,20 +49,20 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     All of the ScriptLines
         /// </summary>
-        private readonly List<ScriptLine> _scriptLines = new List<ScriptLine>();
+        private readonly List<ScriptLine> _scriptLines = new();
 
         /// <summary>
         ///     Non label specific Q & A
         /// </summary>
-        private readonly ScriptQuestionAnswers _scriptQuestionAnswers = new ScriptQuestionAnswers();
+        private readonly ScriptQuestionAnswers _scriptQuestionAnswers = new();
 
         /// <summary>
         ///     Script talk labels contain all the labels, their Q & A and default responses
         /// </summary>
-        private readonly ScriptTalkLabels _scriptTalkLabels = new ScriptTalkLabels();
+        private readonly ScriptTalkLabels _scriptTalkLabels = new();
 
         // tracking the current script line
-        private ScriptLine _currentScriptLine = new ScriptLine();
+        private ScriptLine _currentScriptLine = new();
 
         /// <summary>
         ///     The number of ScriptLines in the Script
@@ -175,17 +175,17 @@ namespace Ultima5Redux.References.Dialogue
             string question;
 
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
-            List<string> nameQuestion = new List<string>(1) { "name" };
+            List<string> nameQuestion = new(1) { "name" };
             _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(nameQuestion, _scriptLines[(int)TalkConstants.Name]));
-            List<string> jobQuestion = new List<string>(2) { "job", "work" };
+            List<string> jobQuestion = new(2) { "job", "work" };
             _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(jobQuestion, _scriptLines[(int)TalkConstants.Job]));
-            List<string> byeQuestion = new List<string>(1) { "bye" };
+            List<string> byeQuestion = new(1) { "bye" };
             _scriptQuestionAnswers.Add(new ScriptQuestionAnswer(byeQuestion, _scriptLines[(int)TalkConstants.Bye]));
 
             // repeat through the question/answer components until we hit a label - then we know to move onto the label section
             do
             {
-                List<string> currQuestions = new List<string>();
+                List<string> currQuestions = new();
                 ScriptLine line = _scriptLines[nIndex];
 
                 // if we just hit a label, then it's time to jump out of this loop and move onto the label reading loop
@@ -259,7 +259,7 @@ namespace Ultima5Redux.References.Dialogue
                     }
 
                     // create the shell for the label
-                    ScriptTalkLabel scriptTalkLabel = new ScriptTalkLabel(line.GetScriptItem(1).LabelNum, line);
+                    ScriptTalkLabel scriptTalkLabel = new(line.GetScriptItem(1).LabelNum, line);
 
                     // save the new label to the label collection
                     _scriptTalkLabels.AddLabel(scriptTalkLabel);
@@ -289,7 +289,7 @@ namespace Ultima5Redux.References.Dialogue
                         // Debug code to stop at given index
                         //if (nIndex == 22) { Console.WriteLine(""); }
 
-                        List<string> currQuestions = new List<string>();
+                        List<string> currQuestions = new();
                         // if the next line is an <or> then process the <or> 
                         if (_scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
                         {
@@ -656,7 +656,7 @@ namespace Ultima5Redux.References.Dialogue
             /// </summary>
             public void Print()
             {
-                Dictionary<ScriptQuestionAnswer, bool> seenAnswers = new Dictionary<ScriptQuestionAnswer, bool>();
+                Dictionary<ScriptQuestionAnswer, bool> seenAnswers = new();
 
                 foreach (ScriptQuestionAnswer sqa in QuestionAnswers.Values)
                 {
@@ -799,7 +799,7 @@ namespace Ultima5Redux.References.Dialogue
             /// <summary>
             ///     a list of all associated ScriptItems, in a particular order
             /// </summary>
-            protected List<ScriptItem> ScriptItems = new List<ScriptItem>();
+            protected List<ScriptItem> ScriptItems = new();
 
             /// <summary>
             ///     Does this line represent the end of all Labels in the NPC talk script (end of script)
@@ -918,7 +918,7 @@ namespace Ultima5Redux.References.Dialogue
             /// <returns>A list of SplitScriptLines</returns>
             public List<SplitScriptLine> SplitIntoSections()
             {
-                List<SplitScriptLine> lines = new List<SplitScriptLine>();
+                List<SplitScriptLine> lines = new();
                 lines.Add(new SplitScriptLine());
 
                 int nSection = -1;

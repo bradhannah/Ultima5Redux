@@ -128,7 +128,7 @@ namespace Ultima5Redux
             dx *= 2;
             dy *= 2;
 
-            List<Point2D> intersectingPoints = new List<Point2D>();
+            List<Point2D> intersectingPoints = new();
 
             for (; n > 0; --n)
             {
@@ -205,7 +205,7 @@ namespace Ultima5Redux
             return adjustedPos.IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : adjustedPos;
         }
 
-        public Point2D GetAdjustedPosition(int nXDiff, int nYDiff) => new Point2D(X + nXDiff, Y + nYDiff);
+        public Point2D GetAdjustedPosition(int nXDiff, int nYDiff) => new(X + nXDiff, Y + nYDiff);
 
         public Point2D GetAdjustedPosition(Direction direction, int nSpaces = 1)
         {
@@ -243,7 +243,7 @@ namespace Ultima5Redux
         /// <returns>a list of valid points</returns>
         public List<Point2D> GetConstrainedFourDirectionSurroundingPoints(int nXExtent, int nYExtent)
         {
-            List<Point2D> points = new List<Point2D>();
+            List<Point2D> points = new();
 
             if (X - 1 >= 0) points.Add(new Point2D(X - 1, Y));
             if (Y - 1 >= 0) points.Add(new Point2D(X, Y - 1));
@@ -266,7 +266,7 @@ namespace Ultima5Redux
             Debug.Assert(nUnitsOut >= 0);
             if (nUnitsOut == 0) return new List<Point2D> { this };
 
-            List<Point2D> points = new List<Point2D>();
+            List<Point2D> points = new();
 
             void addAcross(int nY)
             {

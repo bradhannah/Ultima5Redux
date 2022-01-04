@@ -10,15 +10,15 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
     {
         private const int N_TOTAL_MONSTERS = 0x30;
 
-        public List<EnemyReference> AllEnemyReferences { get; } = new List<EnemyReference>(N_TOTAL_MONSTERS);
+        public List<EnemyReference> AllEnemyReferences { get; } = new(N_TOTAL_MONSTERS);
 
         public EnemyReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)
         {
-            AdditionalEnemyFlagList additionalEnemyFlagList = new AdditionalEnemyFlagList();
+            AdditionalEnemyFlagList additionalEnemyFlagList = new();
 
             for (int nMonsterIndex = 0; nMonsterIndex < N_TOTAL_MONSTERS; nMonsterIndex++)
             {
-                EnemyReference enemyReference = new EnemyReference(dataOvlReference, tileReferences, nMonsterIndex,
+                EnemyReference enemyReference = new(dataOvlReference, tileReferences, nMonsterIndex,
                     additionalEnemyFlagList.AllAdditionalEnemyFlags[nMonsterIndex]);
                 AllEnemyReferences.Add(enemyReference);
             }
@@ -82,7 +82,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             }
         }
 
-        [JsonObject(MemberSerialization.OptIn)] public class AdditionalEnemyFlags
+        [JsonObject(MemberSerialization.OptIn)]
+        public class AdditionalEnemyFlags
         {
             [JsonProperty] public bool ActivelyAttacks { get; set; }
             [JsonProperty] public bool CanFlyOverWater { get; set; }

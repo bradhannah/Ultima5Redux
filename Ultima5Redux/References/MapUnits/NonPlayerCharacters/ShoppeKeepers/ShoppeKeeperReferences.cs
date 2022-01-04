@@ -14,15 +14,12 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private readonly DataOvlReference _dataOvlReference;
 
         // ReSharper disable once CollectionNeverQueried.Local
-        private readonly Dictionary<string, ShoppeKeeperReference> _shoppeKeepers =
-            new Dictionary<string, ShoppeKeeperReference>();
+        private readonly Dictionary<string, ShoppeKeeperReference> _shoppeKeepers = new();
 
         private readonly
             Dictionary<SmallMapReferences.SingleMapReference.Location,
                 Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>>
-            _shoppeKeepersByLocationAndType =
-                new Dictionary<SmallMapReferences.SingleMapReference.Location,
-                    Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>>();
+            _shoppeKeepersByLocationAndType = new();
 
         public ShoppeKeeperReferences(DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcReferences)
         {

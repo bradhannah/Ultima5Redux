@@ -1138,22 +1138,53 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsMapUnitOccupiedTile(in Point2D xy)
         {
-            //return TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).IsMapUnitOccupiedTile(xy, CurrentPosition.Floor);
-
             IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            //for (int index = 0; index < mapUnits.Count; index++)
+            int nFloor = CurrentPosition.Floor;
             foreach (MapUnit mapUnit in mapUnits)
             {
                 // sometimes characters are null because they don't exist - and that is OK
-                //Debug.Assert(mapUnits[index].IsActive);
-                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, CurrentPosition.Floor))
-                    // MapUnitPosition mapUnitPosition = mapUnits[index].MapUnitPosition;
-                    // if (mapUnitPosition.X == xy.X && mapUnitPosition.Y == xy.Y &&
-                    //     mapUnitPosition.Floor == CurrentPosition.Floor)
+                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor))
                     return true;
             }
 
             return false;
+        }
+
+        public Dictionary<int, Dictionary<int, bool>> GetAllMapOccupiedTilesFast()
+        {
+            Dictionary<int, Dictionary<int, bool>> occupiedTiles = new();
+
+            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            int nFloor = CurrentPosition.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
+
+                int x = mapUnit.MapUnitPosition.XY.X;
+                int y = mapUnit.MapUnitPosition.XY.Y;
+                if (!occupiedTiles.ContainsKey(x)) occupiedTiles.Add(x, new());
+                if (!occupiedTiles[x].ContainsKey(y)) occupiedTiles[x].Add(y, true);
+            }
+
+            return occupiedTiles;
+        }
+
+        public Dictionary<Point2D, bool> GetAllMapOccupiedTiles()
+        {
+            Dictionary<Point2D, bool> occupiedDictionary = new();
+
+            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            int nFloor = CurrentPosition.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
+                if (!occupiedDictionary.ContainsKey(mapUnit.MapUnitPosition.XY))
+                    occupiedDictionary.Add(mapUnit.MapUnitPosition.XY, true);
+            }
+
+            return occupiedDictionary;
         }
 
         public bool IsNPCInBed(NonPlayerCharacter npc)

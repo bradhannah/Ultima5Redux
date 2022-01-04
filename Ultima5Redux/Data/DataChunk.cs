@@ -16,7 +16,7 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     A Dictionary that maps the DataChunkName to the specific location
         /// </summary>
-        private readonly Dictionary<T, DataChunk> _chunkMap = new Dictionary<T, DataChunk>();
+        private readonly Dictionary<T, DataChunk> _chunkMap = new();
 
         /// <summary>
         ///     Full list of data chunks
@@ -92,7 +92,7 @@ namespace Ultima5Redux.Data
             int dataLength, byte addToValue, T dataChunkName)
         {
             // create the data chunk 
-            DataChunk chunk = new DataChunk(dataFormat, description, FileByteList, offset, dataLength, addToValue);
+            DataChunk chunk = new(dataFormat, description, FileByteList, offset, dataLength, addToValue);
 
             // all data chunks get added to the chunk list
             AddDataChunk(chunk);
@@ -248,7 +248,7 @@ namespace Ultima5Redux.Data
         private static List<string> GetAsStringListFromIndexes(IReadOnlyCollection<ushort> indexList,
             List<byte> rawByteList)
         {
-            List<string> strList = new List<string>(indexList.Count);
+            List<string> strList = new(indexList.Count);
             const int MaxStrLength = 20;
 
             foreach (ushort index in indexList)
@@ -274,13 +274,13 @@ namespace Ultima5Redux.Data
         public static DataChunk CreateDataChunk(DataFormatType dataFormat, string description, List<byte> rawData,
             int offset, int dataLength)
         {
-            DataChunk dataChunk = new DataChunk(dataFormat, description, rawData, offset, dataLength);
+            DataChunk dataChunk = new(dataFormat, description, rawData, offset, dataLength);
             return dataChunk;
         }
 
         public List<bool> GetAsBitmapBoolList(int nStart, int nLength)
         {
-            List<bool> boolList = new List<bool>(nLength);
+            List<bool> boolList = new(nLength);
 
             // loop through all bytes, then each of their bits, creating a list of Booleans
             for (int nByte = nStart; nByte < nStart + nLength; nByte++)
@@ -316,7 +316,7 @@ namespace Ultima5Redux.Data
         /// <returns>a list of bytes</returns>
         public List<byte> GetAsByteList()
         {
-            List<byte> data = new List<byte>(DataLength);
+            List<byte> data = new(DataLength);
 
             for (int i = 0; i < DataLength; i++)
             {

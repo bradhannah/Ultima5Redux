@@ -36,7 +36,7 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         private readonly Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>
             _talkRefs =
-                new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, byte[]>>(
+                new(
                     sizeof(SmallMapReferences.SingleMapReference.SmallMapMasterFiles));
 
         /// <summary>
@@ -44,9 +44,7 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         private readonly
             Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles, Dictionary<int, TalkScript>>
-            _talkScriptRefs =
-                new Dictionary<SmallMapReferences.SingleMapReference.SmallMapMasterFiles,
-                    Dictionary<int, TalkScript>>();
+            _talkScriptRefs = new();
 
         /// <summary>
         ///     Build the talk scripts
@@ -94,10 +92,9 @@ namespace Ultima5Redux.References.Dialogue
         private TalkScript InitializeTalkScriptFromRaw(
             SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int index)
         {
-            TalkScript talkScript = new TalkScript(); // the script we are building and will return
+            TalkScript talkScript = new(); // the script we are building and will return
 
-            List<bool> labelsSeenList =
-                new List<bool>(TalkScript.TOTAL_LABELS); // keeps track of the labels we have already seen
+            List<bool> labelsSeenList = new(TalkScript.TOTAL_LABELS); // keeps track of the labels we have already seen
             labelsSeenList.AddRange(Enumerable.Repeat(false,
                 TalkScript.TOTAL_LABELS)); // creates a list of "false" bools to set the default labelsSeenList
 
@@ -250,7 +247,7 @@ namespace Ultima5Redux.References.Dialogue
             List<byte> talkByteList = Utils.GetFileAsByteList(talkFilename);
 
             // need this to make sure we don't fall of the end of the file when we read it
-            FileInfo fi = new FileInfo(talkFilename);
+            FileInfo fi = new(talkFilename);
             long talkFileSize = fi.Length;
 
             // keep track of the NPC to file offset mappings
@@ -264,7 +261,7 @@ namespace Ultima5Redux.References.Dialogue
 
             // a list of all the offsets
             //npcOffsets = new List<NPC_TalkOffset>(nEntries);
-            Dictionary<int, NPCTalkOffset> npcOffsets = new Dictionary<int, NPCTalkOffset>(nEntries);
+            Dictionary<int, NPCTalkOffset> npcOffsets = new(nEntries);
 
             unsafe
             {
@@ -319,7 +316,8 @@ namespace Ultima5Redux.References.Dialogue
         /// <summary>
         ///     the mapping of NPC # to file .tlk file offset
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)] private readonly struct NPCTalkOffset
+        [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
+        private readonly struct NPCTalkOffset
         {
             public readonly ushort npcIndex;
             public readonly ushort fileOffset;

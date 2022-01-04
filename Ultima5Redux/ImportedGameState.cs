@@ -97,13 +97,13 @@ namespace Ultima5Redux
         internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
         internal SmallMapCharacterStates SmallMapCharacterStates { get; private set; }
 
-        internal Moongates TheMoongates => new Moongates(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
+        internal Moongates TheMoongates => new(GetDataChunk(DataChunkName.MOONSTONE_X_COORDS),
             GetDataChunk(DataChunkName.MOONSTONE_Y_COORDS), GetDataChunk(DataChunkName.MOONSTONE_BURIED),
             GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
 
         internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
 
-        internal TimeOfDay TheTimeOfDay => new TimeOfDay(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
+        internal TimeOfDay TheTimeOfDay => new(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
             DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH), DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY),
             DataChunks.GetDataChunk(DataChunkName.CURRENT_HOUR), DataChunks.GetDataChunk(DataChunkName.CURRENT_MINUTE));
 

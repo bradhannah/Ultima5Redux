@@ -45,7 +45,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         [DataMember] public CharacterClass Class { get; set; }
 
-        [DataMember] public CharacterEquipped Equipped { get; private set; } = new CharacterEquipped();
+        [DataMember] public CharacterEquipped Equipped { get; private set; } = new();
         [DataMember] public CharacterGender Gender { get; set; }
         [DataMember] public bool IsInvisible { get; private set; }
         [DataMember] public bool IsRat { get; private set; }
@@ -102,7 +102,7 @@ namespace Ultima5Redux.PlayerCharacters
         public PlayerCharacterRecord(IReadOnlyCollection<byte> rawRecord)
         {
             Debug.Assert(rawRecord.Count == CHARACTER_RECORD_BYTE_ARRAY_SIZE);
-            List<byte> rawRecordByteList = new List<byte>(rawRecord);
+            List<byte> rawRecordByteList = new(rawRecord);
 
             Name = DataChunk.CreateDataChunk(DataChunk.DataFormatType.SimpleString, "Character Name", rawRecordByteList,
                 (int)CharacterRecordOffsets.Name, 9).GetChunkAsString();

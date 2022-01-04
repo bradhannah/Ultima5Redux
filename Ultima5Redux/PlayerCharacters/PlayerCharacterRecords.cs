@@ -18,8 +18,7 @@ namespace Ultima5Redux.PlayerCharacters
         public const int AVATAR_RECORD = 0x00;
         public const int MAX_PARTY_MEMBERS = 6;
 
-        [DataMember]
-        public readonly List<PlayerCharacterRecord> Records = new List<PlayerCharacterRecord>(TOTAL_CHARACTER_RECORDS);
+        [DataMember] public readonly List<PlayerCharacterRecord> Records = new(TOTAL_CHARACTER_RECORDS);
 
         [IgnoreDataMember] public PlayerCharacterRecord AvatarRecord => Records[0];
 
@@ -136,7 +135,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// <returns></returns>
         public List<PlayerCharacterRecord> GetActiveCharacterRecords()
         {
-            List<PlayerCharacterRecord> activeCharacterRecords = new List<PlayerCharacterRecord>();
+            List<PlayerCharacterRecord> activeCharacterRecords = new();
 
             foreach (PlayerCharacterRecord characterRecord in Records)
             {
@@ -256,7 +255,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         public void RoughSeasInjure()
         {
-            Random ran = new Random();
+            Random ran = new();
             foreach (PlayerCharacterRecord record in Records)
             {
                 record.Stats.CurrentHp -= ran.Next(1, 9);
