@@ -10,11 +10,16 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public class MapUnitCollection
     {
+        private bool bForceNewAvatar;
         [DataMember(Name = "Avatars")]
         private Avatar[] SaveAvatars
         {
             get => GetMapUnitByTypeToArray<Avatar>();
-            set => ReplaceAll(value);
+            set
+            {
+                ReplaceAll(value);
+                bForceNewAvatar = true;
+            }
         }
 
         [DataMember(Name = "CombatPlayers")]
@@ -99,7 +104,23 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public IEnumerable<Skiff> Skiffs => GetMapUnitByType<Skiff>();
 
-        [IgnoreDataMember] public Avatar TheAvatar => Avatars.First();
+        private Avatar _avatar;
+
+        [IgnoreDataMember] public Avatar TheAvatar
+        {
+            get
+            {
+                if (_avatar != null && !bForceNewAvatar) return _avatar;
+                bForceNewAvatar = false;
+                _avatar = Avatars.Any() ? Avatars.First() : null;
+                return _avatar;
+            }
+        }
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            bForceNewAvatar = true;
+        }
 
         public void AddMapUnit(MapUnit mapUnit)
         {
