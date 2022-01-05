@@ -89,22 +89,9 @@ namespace Ultima5Redux.References.Maps
         private Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
             int nFloor)
         {
-            //Dictionary<Point2D, TileOverrideReference> tileOverrideList = new();
-
             if (!TileOverrideExists(territory, nMapNumber, nFloor)) return null;
 
             return _tileOverrideMap[territory][nMapNumber][nFloor];
-
-            // foreach (TileOverrideReference tileOverride in GetTileOverrides(territory, nMapNumber, nFloor))
-            // {
-            //     Point2D xy = new(tileOverride.X, tileOverride.Y);
-            //     if (tileOverrideList.ContainsKey(xy))
-            //         throw new Ultima5ReduxException("You have a duplicate record in TileOverrides: " + nMapNumber +
-            //                                         " " + xy);
-            //     tileOverrideList.Add(xy, tileOverride);
-            // }
-            //
-            // return tileOverrideList;
         }
 
         private bool TileOverrideExists(AllTerritories territory, int nMapNumber, int nFloor)
@@ -114,10 +101,6 @@ namespace Ultima5Redux.References.Maps
             if (!_tileOverrideMap[territory][nMapNumber].ContainsKey(nFloor)) return false;
 
             return true;
-            // if (!_tileOverrides.ContainsKey(territory)) return false;
-            // if (!_tileOverrides[territory].Exists(s => s.MapNumber == nMapNumber)) return false;
-            // return (_tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
-            //     .FirstOrDefault(tileOverride => nFloor == tileOverride.Position.Floor) != null);
         }
 
         public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>

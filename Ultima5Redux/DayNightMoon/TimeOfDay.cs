@@ -53,7 +53,7 @@ namespace Ultima5Redux.DayNightMoon
         [IgnoreDataMember] private byte _nMinute;
 
         // ReSharper disable once UnusedMember.Global
-        [IgnoreDataMember] public string FormattedDate => Month + "-" + Day + "-" + Year;
+        [IgnoreDataMember] public string FormattedDate => $"{Month} - {Day} - {Year}";
 
         [IgnoreDataMember]
         public string FormattedTime
@@ -61,7 +61,8 @@ namespace Ultima5Redux.DayNightMoon
             get
             {
                 string suffix = Hour < 12 ? "AM" : "PM";
-                return (Hour % 12 == 0 ? 12 : Hour % 12) + ":" + $"{Minute:D2}" + " " + suffix;
+                int nHour = (Hour % 12 == 0 ? 12 : Hour % 12);
+                return $"{nHour}:{Minute:D2} {suffix}";
             }
         }
 

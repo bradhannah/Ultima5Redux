@@ -23,6 +23,8 @@ namespace Ultima5Redux.DayNightMoon
         [DataMember(Name = "MoongatePositions")]
         private readonly List<Point3D> _moongatePositions = new(TOTAL_MOONSTONES);
 
+        private readonly Dictionary<Point3D, bool> _moongatePositionsDictionary = new(TOTAL_MOONSTONES);
+
         /// <summary>
         ///     Are moonstones buried?
         /// </summary>
@@ -50,9 +52,13 @@ namespace Ultima5Redux.DayNightMoon
 
             for (int i = 0; i < TOTAL_MOONSTONES; i++)
             {
-                Point3D moongatePos = new(xPositions[i], yPositions[i], zPositions[i]);
-                _moongatePositions.Add(moongatePos);
-                _moonstonesBuried.Add(buried[i] == 0);
+                Point3D moongatePosition = new(xPositions[i], yPositions[i], zPositions[i]);
+
+                bool bIsBuried = buried[i] == 0;
+                _moongatePositions.Add(moongatePosition);
+                _moonstonesBuried.Add(bIsBuried);
+                if (bIsBuried)
+                    _moongatePositionsDictionary.Add(moongatePosition, true);
             }
         }
 
@@ -106,6 +112,8 @@ namespace Ultima5Redux.DayNightMoon
         /// <returns>true if one is buried</returns>
         public bool IsMoonstoneBuried(Point3D position)
         {
+            return _moongatePositionsDictionary.ContainsKey(position);
+
             if (!_moongatePositions.Contains(position)) return false;
 
             // feels inefficient but it's only 8 loops
@@ -132,6 +140,17 @@ namespace Ultima5Redux.DayNightMoon
         /// <param name="bBuried"></param>
         public void SetMoonstoneBuried(int nMoonstoneIndex, bool bBuried)
         {
+            Point3D currentPosition = GetMoongatePosition(nMoonstoneIndex);
+            if (bBuried)
+            {
+                _moongatePositionsDictionary.Add(currentPosition, true);
+            }
+            else
+            {
+                if (_moongatePositionsDictionary.ContainsKey(currentPosition))
+                    _moongatePositionsDictionary.Remove(currentPosition);
+            }
+
             _moonstonesBuried[nMoonstoneIndex] = bBuried;
         }
 

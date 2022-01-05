@@ -290,21 +290,43 @@ namespace Ultima5Redux.Maps
             return false;
         }
 
+        private bool SetVisibleTile(int x, int y)
+        {
+            if ((x < 0 || x > NumOfXTiles - 1 || (y < 0 || y > NumOfYTiles - 1)))
+            {
+                return false;
+            }
+
+            //if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
+            VisibleOnMap[x][y] = true;
+            return false;
+        }
+
         private void SetSurroundingTilesVisible(in Point2D xy, bool bIncludeDiagonal)
         {
-            SetVisibleTile(new Point2D(xy.X - 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            SetVisibleTile(new Point2D(xy.X + 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            SetVisibleTile(new Point2D(xy.X, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            SetVisibleTile(new Point2D(xy.X, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            SetVisibleTile(xy.X - 1, xy.Y);
+            SetVisibleTile(xy.X + 1, xy.Y);
+            SetVisibleTile(xy.X, xy.Y - 1);
+            SetVisibleTile(xy.X, xy.Y + 1);
             if (!bIncludeDiagonal) return;
-            SetVisibleTile(
-                new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            SetVisibleTile(
-                new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            SetVisibleTile(
-                new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            SetVisibleTile(
-                new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            SetVisibleTile(xy.X - 1, xy.Y - 1);
+            SetVisibleTile(xy.X + 1, xy.Y + 1);
+            SetVisibleTile(xy.X - 1, xy.Y + 1);
+            SetVisibleTile(xy.X + 1, xy.Y - 1);
+
+            //     SetVisibleTile(new Point2D(xy.X - 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            //     SetVisibleTile(new Point2D(xy.X + 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            //     SetVisibleTile(new Point2D(xy.X, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            //     SetVisibleTile(new Point2D(xy.X, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            //     if (!bIncludeDiagonal) return;
+            //     SetVisibleTile(
+            //         new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            //     SetVisibleTile(
+            //         new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            //     SetVisibleTile(
+            //         new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+            //     SetVisibleTile(
+            //         new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
         }
 
         /// <summary>
@@ -317,8 +339,7 @@ namespace Ultima5Redux.Maps
         /// <param name="overrideAvatarPos"></param>
         /// <param name="bAlwaysLookThroughWindows"></param>
         protected void FloodFillMap(in Point2D xy, bool bFirst, int nCharacterIndex = 0,
-            Point2D overrideAvatarPos = null,
-            bool bAlwaysLookThroughWindows = false)
+            Point2D overrideAvatarPos = null, bool bAlwaysLookThroughWindows = false)
         {
             if (xy == null)
             {
@@ -387,7 +408,7 @@ namespace Ultima5Redux.Maps
                 false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
         }
 
-        protected virtual Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
+        protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
         {
             return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
         }

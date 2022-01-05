@@ -108,7 +108,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="direction"></param>
         /// <param name="nSpaces"></param>
         /// <returns></returns>
-        internal static Point2D GetAdjustedPos(Point2D xy, MovementCommandDirection direction, int nSpaces = 1)
+        internal static Point2D GetAdjustedPos(in Point2D xy, MovementCommandDirection direction, int nSpaces = 1)
         {
             Point2D adjustedPos = new(xy.X, xy.Y);
 

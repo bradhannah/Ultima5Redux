@@ -133,7 +133,7 @@ namespace Ultima5Redux.Maps
         /// <param name="direction"></param>
         /// <param name="xy"></param>
         /// <returns></returns>
-        protected override Point2D GetAdjustedPos(Point2D.Direction direction, Point2D xy)
+        protected override Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
         {
             int nPositiveX = xy.X + NumOfXTiles;
             int nPositiveY = xy.Y + NumOfYTiles;
