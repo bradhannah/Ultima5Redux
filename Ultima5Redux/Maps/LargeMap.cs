@@ -10,7 +10,6 @@ namespace Ultima5Redux.Maps
 {
     [DataContract] public sealed class LargeMap : RegularMap
     {
-        //[DataMember(Name = "DataDirectory")] private readonly string _dataDirectory;
         [DataMember(Name = "MapChoice")] private readonly Maps _mapChoice;
 
         [DataMember(Name = "BottomRightExtent")]
@@ -86,27 +85,15 @@ namespace Ultima5Redux.Maps
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
-            VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            //VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
 
             if (XRayMode)
             {
-                //VisibleOnMap = //Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
                 Utils.Set2DArrayAllToValue(VisibleOnMap, true);
                 return;
             }
 
             NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
-
-            //  
-            // TestForVisibility = new List<bool[][]>();
-            // reinitialize the array for all potential party members
-
-            // only initialize the first time, it will fix itself
-            if (TestForVisibility.Count <= 0)
-                //for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
-            {
-                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-            }
 
             TouchedOuterBorder = false;
 
@@ -117,7 +104,8 @@ namespace Ultima5Redux.Maps
             _bottomRightExtent = new Point2D(AvatarXyPos.X + VisibleInEachDirectionOfAvatar,
                 AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
 
-            FloodFillMap(AvatarXyPos, true);
+            RefreshTestForVisibility(1);
+            FloodFillMap(AvatarXyPos.X, AvatarXyPos.Y, true);
         }
 
         // ReSharper disable once UnusedMember.Global

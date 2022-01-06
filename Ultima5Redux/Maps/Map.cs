@@ -24,11 +24,11 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public bool XRayMode { get; set; }
 
-        [IgnoreDataMember] //(Name = "AStarDictionary")]
-        private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new();
+        [IgnoreDataMember] private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new();
 
-        [IgnoreDataMember] //[DataMember(Name = "AStarNodes")]
-        private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new();
+        [IgnoreDataMember] private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new();
+
+        protected const int TOTAL_VISIBLE_TILES = 26;
 
         public abstract int NumOfXTiles { get; }
 
@@ -261,8 +261,10 @@ namespace Ultima5Redux.Maps
         #region FLOOD FILL
 
         // FLOOD FILL STUFF
-        public bool[][] VisibleOnMap { get; protected set; } //=Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+        public bool[][] VisibleOnMap { get; protected set; }
         protected readonly List<bool[][]> TestForVisibility = new();
+
+        //protected readonly List<Dictionary<int, Dictionary<int, bool>>> TestForVisibility = new();
         protected readonly int VisibleInEachDirectionOfAvatar = 10;
         protected int NVisibleLargeMapTiles;
         protected Point2D AvatarXyPos;
@@ -280,16 +282,15 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="visibleTilePos"></param>
         /// <returns>true if the coordinate is out of bounds</returns>
-        private bool SetVisibleTile(in Point2D visibleTilePos)
-        {
-            if (visibleTilePos == null) return true;
-            if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
-                VisibleOnMap[visibleTilePos.X][visibleTilePos.Y] = true;
-            //else
-            //  VisibleOnMap[visibleTilePos.X][visibleTilePos.Y] = false;
-            return false;
-        }
-
+        // private bool SetVisibleTile(in Point2D visibleTilePos)
+        // {
+        //     if (visibleTilePos == null) return true;
+        //     if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
+        //         VisibleOnMap[visibleTilePos.X][visibleTilePos.Y] = true;
+        //     //else
+        //     //  VisibleOnMap[visibleTilePos.x][visibleTilePos.y] = false;
+        //     return false;
+        // }
         private bool SetVisibleTile(int x, int y)
         {
             if ((x < 0 || x > NumOfXTiles - 1 || (y < 0 || y > NumOfYTiles - 1)))
@@ -297,115 +298,131 @@ namespace Ultima5Redux.Maps
                 return false;
             }
 
-            //if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
             VisibleOnMap[x][y] = true;
             return false;
         }
 
-        private void SetSurroundingTilesVisible(in Point2D xy, bool bIncludeDiagonal)
-        {
-            SetVisibleTile(xy.X - 1, xy.Y);
-            SetVisibleTile(xy.X + 1, xy.Y);
-            SetVisibleTile(xy.X, xy.Y - 1);
-            SetVisibleTile(xy.X, xy.Y + 1);
-            if (!bIncludeDiagonal) return;
-            SetVisibleTile(xy.X - 1, xy.Y - 1);
-            SetVisibleTile(xy.X + 1, xy.Y + 1);
-            SetVisibleTile(xy.X - 1, xy.Y + 1);
-            SetVisibleTile(xy.X + 1, xy.Y - 1);
+        // private void SetSurroundingTilesVisible(in Point2D xy, bool bIncludeDiagonal)
+        // {
+        //     SetVisibleTile(xy.X - 1, xy.Y);
+        //     SetVisibleTile(xy.X + 1, xy.Y);
+        //     SetVisibleTile(xy.X, xy.Y - 1);
+        //     SetVisibleTile(xy.X, xy.Y + 1);
+        //     if (!bIncludeDiagonal) return;
+        //     SetVisibleTile(xy.X - 1, xy.Y - 1);
+        //     SetVisibleTile(xy.X + 1, xy.Y + 1);
+        //     SetVisibleTile(xy.X - 1, xy.Y + 1);
+        //     SetVisibleTile(xy.X + 1, xy.Y - 1);
+        // }
 
-            //     SetVisibleTile(new Point2D(xy.X - 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            //     SetVisibleTile(new Point2D(xy.X + 1, xy.Y).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            //     SetVisibleTile(new Point2D(xy.X, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            //     SetVisibleTile(new Point2D(xy.X, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            //     if (!bIncludeDiagonal) return;
-            //     SetVisibleTile(
-            //         new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            //     SetVisibleTile(
-            //         new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            //     SetVisibleTile(
-            //         new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
-            //     SetVisibleTile(
-            //         new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1));
+        private void SetSurroundingTilesVisible(int x, int y, bool bIncludeDiagonal)
+        {
+            SetVisibleTile(x - 1, y);
+            SetVisibleTile(x + 1, y);
+            SetVisibleTile(x, y - 1);
+            SetVisibleTile(x, y + 1);
+            if (!bIncludeDiagonal) return;
+            SetVisibleTile(x - 1, y - 1);
+            SetVisibleTile(x + 1, y + 1);
+            SetVisibleTile(x - 1, y + 1);
+            SetVisibleTile(x + 1, y - 1);
         }
 
         /// <summary>
         ///     Recursive method for determining which tiles are visible and which are hidden based on the Avatar's
         ///     current position
         /// </summary>
-        /// <param name="xy"></param>
+        /// <param name="y"></param>
         /// <param name="bFirst">is this the initial call to the method?</param>
         /// <param name="nCharacterIndex"></param>
         /// <param name="overrideAvatarPos"></param>
         /// <param name="bAlwaysLookThroughWindows"></param>
-        protected void FloodFillMap(in Point2D xy, bool bFirst, int nCharacterIndex = 0,
+        /// <param name="x"></param>
+        protected void FloodFillMap(int x, int y, bool bFirst, int nCharacterIndex = 0,
             Point2D overrideAvatarPos = null, bool bAlwaysLookThroughWindows = false)
         {
-            if (xy == null)
-            {
-                TouchedOuterBorder = true;
-                return; // out of bounds
-            }
-
             if (bFirst)
             {
-                Utils.Set2DArrayAllToValue(VisibleOnMap, false);
-                Utils.Set2DArrayAllToValue(TestForVisibility[nCharacterIndex], false);
+                VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
             }
 
             Point2D characterPosition = overrideAvatarPos == null ? AvatarXyPos : overrideAvatarPos;
 
-            Point2D adjustedXy = xy.Copy();
+            int nAdjustedX = x, nAdjustedY = y;
 
             // let's check to make sure it is within bounds
             if (IsRepeatingMap)
-                adjustedXy.AdjustXAndYToMax(NumOfXTiles);
+            {
+                nAdjustedX = Point2D.AdjustToMax(x, NumOfXTiles);
+                nAdjustedY = Point2D.AdjustToMax(y, NumOfXTiles);
+            }
+            else
+            {
+                if (x < 0 || y < 0) return;
+                if (x > NumOfXTiles - 1 || y > nAdjustedY - 1) return;
+            }
 
-            if (TestForVisibility[nCharacterIndex][adjustedXy.X][adjustedXy.Y]) return; // already did it
-            TestForVisibility[nCharacterIndex][adjustedXy.X][adjustedXy.Y] = true;
+            if (TestForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY]) return; // already did it
+            TestForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY] = true;
 
             // if it blocks light then we make it visible but do not make subsequent tiles visible
             TileReference tileReference =
-                GameReferences.SpriteTileReferences.GetTileReference(TheMap[adjustedXy.X][adjustedXy.Y]);
+                GameReferences.SpriteTileReferences.GetTileReference(TheMap[nAdjustedX][nAdjustedY]);
 
             bool bBlocksLight = tileReference.BlocksLight // if it says it blocks light AND 
                                 && !bFirst // it is not the first tile (aka the one you are on) AND
-                                && !IsOpenDoor(xy) // it's not an open door 
-                                && !(tileReference.IsWindow && (characterPosition.IsWithinNFourDirections(adjustedXy) ||
-                                                                bAlwaysLookThroughWindows)); //  you are not next to a window
+                                && !(tileReference.IsWindow &&
+                                     (characterPosition.IsWithinNFourDirections(nAdjustedX, nAdjustedY) ||
+                                      bAlwaysLookThroughWindows))
+                                && !IsOpenDoor(new Point2D(x, y)) // it's not an open door 
+                ; //  you are not next to a window
 
             // if we are on a tile that doesn't block light then we automatically see things in every direction
             if (!bBlocksLight)
             {
-                SetSurroundingTilesVisible(adjustedXy, true);
+                SetSurroundingTilesVisible(nAdjustedX, nAdjustedY, true);
             }
 
             // if we are this far then we are certain that we will make this tile visible
-            TouchedOuterBorder |= SetVisibleTile(xy);
+            TouchedOuterBorder |= SetVisibleTile(x, y);
 
             // if the tile blocks the light then we don't calculate the surrounding tiles
             if (bBlocksLight) return;
 
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Up, xy), false, nCharacterIndex, characterPosition,
-                bAlwaysLookThroughWindows);
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Down, xy), false, nCharacterIndex, characterPosition,
-                bAlwaysLookThroughWindows);
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Left, xy), false, nCharacterIndex, characterPosition,
-                bAlwaysLookThroughWindows);
-            FloodFillMap(GetAdjustedPos(Point2D.Direction.Right, xy), false, nCharacterIndex, characterPosition,
-                bAlwaysLookThroughWindows);
+            int nTilesMax = NumOfXTiles - 1;
 
-            if (!bFirst) return;
+            void floodFillIfInside(int nXDiff, int nYDiff)
+            {
+                if (!bFirst)
+                {
+                    // if we have gone beyond the viewable borders, we stop
+                    if ((Math.Abs(characterPosition.X - x) > (TOTAL_VISIBLE_TILES / 2) ||
+                         (Math.Abs(characterPosition.Y - y) > (TOTAL_VISIBLE_TILES / 2))))
+                    {
+                        return;
+                    }
 
-            // if it is the first call (avatar tile) then we always check the diagonals as well 
-            FloodFillMap(new Point2D(xy.X - 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1),
-                false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
-            FloodFillMap(new Point2D(xy.X + 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1),
-                false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
-            FloodFillMap(new Point2D(xy.X - 1, xy.Y + 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1),
-                false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
-            FloodFillMap(new Point2D(xy.X + 1, xy.Y - 1).GetPoint2DOrNullOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1),
-                false, nCharacterIndex, characterPosition, bAlwaysLookThroughWindows);
+                    if (Point2D.IsOutOfRangeStatic(x + nXDiff, y + nYDiff, nTilesMax, nTilesMax))
+                        return;
+                }
+
+                FloodFillMap(x + nXDiff, y + nYDiff, false, nCharacterIndex, characterPosition,
+                    bAlwaysLookThroughWindows);
+            }
+
+            floodFillIfInside(0, -1);
+            floodFillIfInside(0, 1);
+            floodFillIfInside(-1, 0);
+            floodFillIfInside(1, 0);
+
+            if (bFirst)
+            {
+                // we ONLY do the diagonals during the very first 
+                floodFillIfInside(-1, -1);
+                floodFillIfInside(1, 1);
+                floodFillIfInside(-1, +1);
+                floodFillIfInside(1, -1);
+            }
         }
 
         protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
@@ -413,31 +430,32 @@ namespace Ultima5Redux.Maps
             return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
         }
 
+        protected void RefreshTestForVisibility(int nCharacters)
+        {
+            TestForVisibility.Clear();
+            for (int i = 0; i < nCharacters; i++)
+            {
+                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+            }
+        }
+
         public virtual void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
-            VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            //VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
 
             // XRay Mode makes sure you can see every tile
             if (XRayMode)
             {
                 Utils.Set2DArrayAllToValue(VisibleOnMap, true);
-                //VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
                 return;
             }
-
-            //VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-            //TestForVisibility = new List<bool[][]>();
-            // reinitialize the array for all potential party members
-            if (TestForVisibility.Count <= 0)
-                for (int i = 0; i < PlayerCharacterRecords.MAX_PARTY_MEMBERS; i++)
-                {
-                    TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-                }
 
             TouchedOuterBorder = false;
             AvatarXyPos = initialFloodFillPosition;
 
-            FloodFillMap(initialFloodFillPosition, true);
+            RefreshTestForVisibility(PlayerCharacterRecords.MAX_PARTY_MEMBERS);
+
+            FloodFillMap(initialFloodFillPosition.X, initialFloodFillPosition.Y, true);
         }
 
         public void SetOpenDoor(in Point2D xy)

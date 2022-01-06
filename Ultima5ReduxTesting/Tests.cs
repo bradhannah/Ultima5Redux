@@ -255,6 +255,35 @@ namespace Ultima5ReduxTesting
             }
         }
 
+        [Test] [TestCase(SaveFiles.b_carpet)] public void CarpetOverworldDayWandering(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            int i = 24 * (60 / 2) / 4;
+            while (i > 0)
+            {
+                world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult tryToMoveResult,
+                    true);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
+                world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult,
+                    true);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
+                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                    true);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
+                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                    true);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
+                i--;
+            }
+
+            Assert.True(true);
+        }
+
         [Test] [TestCase(SaveFiles.Britain2)] public void SingleSmallMapWithDayWandering(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);

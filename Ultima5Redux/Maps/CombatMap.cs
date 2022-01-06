@@ -725,23 +725,19 @@ namespace Ultima5Redux.Maps
                 return;
             }
 
-            VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
+            //VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
 
-            //TestForVisibility = new List<bool[][]>();
             // reinitialize the array for all potential party members
             IEnumerable<CombatPlayer> combatPlayers = AllCombatPlayers;
-            if (TestForVisibility.Count <= 0)
+
+            RefreshTestForVisibility(MapUnits.MapUnits.MAX_MAP_CHARACTERS);
+
+            int nIndex = 0;
+            foreach (CombatPlayer combatPlayer in combatPlayers)
             {
-                //for (int i = 0; i < combatPlayers.Count; i++)
-                int nIndex = 0;
-                foreach (CombatPlayer combatPlayer in combatPlayers)
-                {
-                    // bajh: a gross hack for now to confirm I can flood fill from multiple tiles
-                    TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
-                    FloodFillMap(combatPlayer.MapUnitPosition.XY, true, nIndex, combatPlayer.MapUnitPosition.XY,
-                        true);
-                    nIndex++;
-                }
+                FloodFillMap(combatPlayer.MapUnitPosition.X, combatPlayer.MapUnitPosition.Y, true, nIndex,
+                    combatPlayer.MapUnitPosition.XY, true);
+                nIndex++;
             }
 
             TouchedOuterBorder = false;
