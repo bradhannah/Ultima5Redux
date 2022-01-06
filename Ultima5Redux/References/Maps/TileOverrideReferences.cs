@@ -98,9 +98,7 @@ namespace Ultima5Redux.References.Maps
         {
             if (!_tileOverrideMap.ContainsKey(territory)) return false;
             if (!_tileOverrideMap[territory].ContainsKey(nMapNumber)) return false;
-            if (!_tileOverrideMap[territory][nMapNumber].ContainsKey(nFloor)) return false;
-
-            return true;
+            return _tileOverrideMap[territory][nMapNumber].ContainsKey(nFloor);
         }
 
         public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>

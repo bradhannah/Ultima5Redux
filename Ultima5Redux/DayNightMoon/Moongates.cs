@@ -113,22 +113,9 @@ namespace Ultima5Redux.DayNightMoon
         public bool IsMoonstoneBuried(Point3D position)
         {
             return _moongatePositionsDictionary.ContainsKey(position);
-
-            if (!_moongatePositions.Contains(position)) return false;
-
-            // feels inefficient but it's only 8 loops
-            for (int i = 0; i < _moongatePositions.Count; i++)
-            {
-                if (_moongatePositions[i] == position)
-                {
-                    return _moonstonesBuried[i];
-                }
-            }
-
-            return false;
         }
 
-        public bool IsMoonstoneBuried(Point2D position, Map.Maps map)
+        public bool IsMoonstoneBuried(in Point2D position, Map.Maps map)
         {
             return IsMoonstoneBuried(new Point3D(position.X, position.Y, map == Map.Maps.Overworld ? 0 : 0xFF));
         }

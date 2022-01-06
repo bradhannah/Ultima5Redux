@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
-using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -359,7 +358,7 @@ namespace Ultima5Redux.Maps
             else
             {
                 if (x < 0 || y < 0) return;
-                if (x > NumOfXTiles - 1 || y > nAdjustedY - 1) return;
+                if (x > NumOfXTiles - 1 || y > NumOfYTiles - 1) return;
             }
 
             if (TestForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY]) return; // already did it
@@ -453,7 +452,7 @@ namespace Ultima5Redux.Maps
             TouchedOuterBorder = false;
             AvatarXyPos = initialFloodFillPosition;
 
-            RefreshTestForVisibility(PlayerCharacterRecords.MAX_PARTY_MEMBERS);
+            RefreshTestForVisibility(1); //PlayerCharacterRecords.MAX_PARTY_MEMBERS);
 
             FloodFillMap(initialFloodFillPosition.X, initialFloodFillPosition.Y, true);
         }

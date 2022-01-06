@@ -913,35 +913,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
         {
-            // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
-            if (!bIgnoreExposed)
-                if (TheMapOverrides.HasExposedSearchItems(x, y))
-                {
-                    Queue<InventoryItem> searchItems = TheMapOverrides.GetExposedSearchItems(x, y);
-                    if (searchItems.Count > 0)
-                        // we get the top most exposed item and only show it
-                        return GameReferences.SpriteTileReferences.GetTileReference(searchItems.Peek().SpriteNum);
-                }
-
-            // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
-            // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
-            if (!bIgnoreMoongate && IsLargeMap &&
-                GameStateReference.State.TheMoongates.IsMoonstoneBuried(new Point3D(x, y,
-                    LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF)))
-            {
-                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
-                       throw new Ultima5ReduxException("Supposed to get a moongate override: " + new Point2D(x, y));
-            }
-
-            // we check to see if our override map has something on top of it
-            if (TheMapOverrides.HasOverrideTile(x, y))
-            {
-                return TheMapOverrides.GetOverrideTileReference(x, y) ??
-                       throw new Ultima5ReduxException("Expected tile override at " + new Point2D(x, y));
-            }
-
-            // the GetTileReference accounts for any forced overrides across the entire world
-            return CurrentMap.GetTileReference(new Point2D(x, y));
+            return GetTileReference(new Point2D(x, y));
         }
 
         /// <summary>
@@ -949,9 +921,36 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(in Point2D xy)
+        public TileReference GetTileReference(in Point2D xy, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
         {
-            return GetTileReference(xy.X, xy.Y);
+            // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
+            if (!bIgnoreExposed && TheMapOverrides.HasExposedSearchItems(xy.X, xy.Y))
+            {
+                Queue<InventoryItem> searchItems = TheMapOverrides.GetExposedSearchItems(xy.X, xy.Y);
+                if (searchItems.Count > 0)
+                    // we get the top most exposed item and only show it
+                    return GameReferences.SpriteTileReferences.GetTileReference(searchItems.Peek().SpriteNum);
+            }
+
+            // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
+            // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
+            if (!bIgnoreMoongate && IsLargeMap &&
+                GameStateReference.State.TheMoongates.IsMoonstoneBuried(new Point3D(xy.X, xy.Y,
+                    LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF)))
+            {
+                return GameReferences.SpriteTileReferences.GetTileReferenceByName("Moongate") ??
+                       throw new Ultima5ReduxException("Supposed to get a moongate override: " + xy);
+            }
+
+            // we check to see if our override map has something on top of it
+            if (TheMapOverrides.HasOverrideTile(xy))
+            {
+                return TheMapOverrides.GetOverrideTileReference(xy.X, xy.Y) ??
+                       throw new Ultima5ReduxException("Expected tile override at " + xy);
+            }
+
+            // the GetTileReference accounts for any forced overrides across the entire world
+            return CurrentMap.GetTileReference(xy);
         }
 
         /// <summary>

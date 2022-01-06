@@ -121,19 +121,18 @@ namespace Ultima5Redux.Maps
         /// <param name="direction"></param>
         /// <param name="xy"></param>
         /// <returns></returns>
-        protected override Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
-        {
-            int nPositiveX = xy.X + NumOfXTiles;
-            int nPositiveY = xy.Y + NumOfYTiles;
-
-            if (nPositiveX <= _topLeftExtent.X + NumOfXTiles || xy.X >= _bottomRightExtent.X)
-                return null;
-            if (nPositiveY <= _topLeftExtent.Y + NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
-                return null;
-
-            return xy.GetAdjustedPosition(direction);
-        }
-
+        // protected override Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
+        // {
+        //     int nPositiveX = xy.X + NumOfXTiles;
+        //     int nPositiveY = xy.Y + NumOfYTiles;
+        //
+        //     if (nPositiveX <= _topLeftExtent.X + NumOfXTiles || xy.X >= _bottomRightExtent.X)
+        //         return null;
+        //     if (nPositiveY <= _topLeftExtent.Y + NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
+        //         return null;
+        //
+        //     return xy.GetAdjustedPosition(direction);
+        // }
         protected override float GetAStarWeight(in Point2D xy)
         {
             return 1;
