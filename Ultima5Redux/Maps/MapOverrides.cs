@@ -98,7 +98,8 @@ namespace Ultima5Redux.Maps
 
         public bool HasExposedSearchItems(in Point2D xy)
         {
-            return _exposedSearchItems.ContainsKey(xy);
+            if (!_exposedSearchItems.ContainsKey(xy)) return false;
+            return (_exposedSearchItems[xy].Count > 0);
             //GetExposedSearchItems(xy).Count > 0;
             //HasExposedSearchItems(xy.X, xy.Y);
         }
