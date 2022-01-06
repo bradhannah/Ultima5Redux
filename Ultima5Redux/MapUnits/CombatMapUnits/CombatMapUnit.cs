@@ -98,8 +98,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, int nMaxDamage)
         {
-            // start with the weapons attack value
-            //int nMaxDamage = weapon?.AttackStat ?? BareHandAttack;
             // add the characters strength
             nMaxDamage += Stats.Strength;
             // subtract the defense of unit being attacked
@@ -125,7 +123,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         private bool IsHit(CombatMapUnit enemyCombatMapUnit, out string debugStr)
         {
             const int nHitOffset = 128;
-            int randomNum = _random.Next(255); // % 256;
+            int randomNum = _random.Next(255);
             bool bWasHit = (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
             debugStr =
                 $"Ran:{randomNum} Dex:{enemyCombatMapUnit.Stats.Dexterity} Dex+128:{enemyCombatMapUnit.Stats.Dexterity + 128} Hit:{bWasHit}";

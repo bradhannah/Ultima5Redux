@@ -69,8 +69,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public CombatPlayer(PlayerCharacterRecord record, Point2D xy)
         {
-            // _inventory = inventory;
-            // _inventory = inventory;
             Record = record;
             KeyTileReference = GameReferences.SpriteTileReferences.GetTileReference(record.PrimarySpriteIndex);
             MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);

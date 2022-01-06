@@ -98,12 +98,12 @@ namespace Ultima5Redux
             Y = y;
         }
 
-        public static bool operator ==(Point2D point1, Point2D point2)
+        public static bool operator ==(in Point2D point1, in Point2D point2)
         {
             return point1?.Equals(point2) ?? ReferenceEquals(point2, null);
         }
 
-        public static bool operator !=(Point2D point1, Point2D point2)
+        public static bool operator !=(in Point2D point1, in Point2D point2)
         {
             return !(point1 == point2);
         }
@@ -190,7 +190,7 @@ namespace Ultima5Redux
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool Equals(Point2D other)
+        public bool Equals(in Point2D other)
         {
             if (other == null) return false;
             if (X != other.X)
@@ -320,7 +320,7 @@ namespace Ultima5Redux
         }
 
         // is the point given point in one of the four directions given?
-        public bool IsWithinNFourDirections(Point2D xy)
+        public bool IsWithinNFourDirections(in Point2D xy)
         {
             return Math.Abs(DistanceBetween(xy) - 1) < 0.01;
         }
@@ -330,6 +330,6 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="endPoint">the end point you want to point to</param>
         /// <returns>A list of intersecting points</returns>
-        public List<Point2D> Raytrace(Point2D endPoint) => Raytrace(this, endPoint);
+        public List<Point2D> Raytrace(in Point2D endPoint) => Raytrace(this, endPoint);
     }
 }

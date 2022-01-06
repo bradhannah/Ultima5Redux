@@ -293,7 +293,6 @@ namespace Ultima5Redux.Data
                     bool curBit = (compareByte & curByte) > 0;
                     compareByte >>= 1;
                     boolList.Add(curBit);
-                    // if (isDebug) Debug.WriteLine("Byte #" + nByte.ToString() + "  Bit #" + nBit.ToString() + "=" + curBit.ToString());
                 }
             }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Ultima5Redux.Properties;
 using Ultima5Redux.References.Maps;
@@ -21,36 +20,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 EnemyReference enemyReference = new(dataOvlReference, tileReferences, nMonsterIndex,
                     additionalEnemyFlagList.AllAdditionalEnemyFlags[nMonsterIndex]);
                 AllEnemyReferences.Add(enemyReference);
-            }
-
-            //PrintDebugCSV();
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void PrintDebugCsv()
-        {
-            Console.Write(@"Name,Plural,Singular,ClosestAttackRange,MissileType,Friend,Thing");
-            //var dExampleBitfield = 0x8000;
-            foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
-            {
-                Console.Write(@"," + ability);
-            }
-
-            Console.WriteLine();
-
-            foreach (EnemyReference enemy in AllEnemyReferences)
-            {
-                Console.Write(enemy.KeyTileReference.Name + @"," + enemy.AllCapsPluralName + @"," +
-                              enemy.MixedCaseSingularName + @"," + $@"0x{enemy.AttackRange:X2}");
-                Console.Write(@"," + $@"{enemy.TheMissileType}");
-                EnemyReference friend = AllEnemyReferences[enemy.FriendIndex];
-                Console.Write(@"," + $@"{friend.AllCapsPluralName}");
-                foreach (EnemyReference.EnemyAbility ability in Enum.GetValues(typeof(EnemyReference.EnemyAbility)))
-                {
-                    Console.Write(@"," + enemy.IsEnemyAbility(ability));
-                }
-
-                Console.WriteLine();
             }
         }
 

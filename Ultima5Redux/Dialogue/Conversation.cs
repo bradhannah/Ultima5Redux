@@ -83,7 +83,6 @@ namespace Ultima5Redux.Dialogue
         /// <param name="npcState"></param>
         public Conversation(GameState state, NonPlayerCharacterState npcState)
         {
-            //Npc = npc;
             _script = npcState.NPCRef.Script;
             _gameState = state;
             TheNonPlayerCharacterState = npcState;
@@ -220,14 +219,12 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.DefineLabel:
                         // if I find a goto label, then i expect I have no further conversation lines left
-                        //Debug.Assert(nConversationIndex == conversationOrderScriptLines.Count - 1);
                         // we are going to add the GotoLabel to the script
                         _conversationOrder.Add(_script.GetScriptLineLabelIndex(item.LabelNum));
                         _conversationOrderScriptLines.Add(
                             _script.GetScriptLine(_script.GetScriptLineLabelIndex(item.LabelNum)));
                         _currentSkipInstruction = SkipInstruction.SkipToLabel;
                         return;
-                    //return SkipInstruction.SkipToLabel;
                     case TalkScript.TalkCommand.EndConversation:
                         EnqueueToOutputBuffer(item);
                         ConversationEnded = true;
@@ -244,7 +241,6 @@ namespace Ultima5Redux.Dialogue
                                 GetConversationStr(DataOvlReference.ChunkPhrasesConversation.CANT_JOIN_2);
                             EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                                 noJoinResponse));
-                            //"Thou hast no room for me in thy party! Seek me again if one of thy members doth leave thee.\n"));
                         }
                         else
                         {
@@ -309,7 +305,6 @@ namespace Ultima5Redux.Dialogue
             } while (nItem < nItems);
 
             _currentSkipInstruction = SkipInstruction.DontSkip;
-            //return SkipInstruction.DontSkip;
         }
 
         /// <summary>
@@ -508,7 +503,7 @@ namespace Ultima5Redux.Dialogue
                         .GetScriptLine(TalkScript.TalkConstants.Name)
                         .ContainsCommand(TalkScript.TalkCommand.IfElseKnowsName)))
                     // randomly add an introduction of the Avatar since they haven't met him
-                    if (Utils.OneInXOdds(2)) // || true)
+                    if (Utils.OneInXOdds(2))
                         // okay, tell them who you are
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                             "\nI am called " + TheNonPlayerCharacterState.NPCRef.Name));
@@ -557,8 +552,7 @@ namespace Ultima5Redux.Dialogue
                             else
                             {
                                 EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
-                                    GetConversationStr(DataOvlReference.ChunkPhrasesConversation
-                                        .WHAT_YOU_SAY))); //"What didst thou say?"));
+                                    GetConversationStr(DataOvlReference.ChunkPhrasesConversation.WHAT_YOU_SAY)));
                                 EnqueueToOutputBuffer(
                                     new TalkScript.ScriptItem(TalkScript.TalkCommand.PromptUserForInput_NPCQuestion));
                             }
@@ -582,7 +576,6 @@ namespace Ultima5Redux.Dialogue
                         // let's get the answer details including the ScriptLine that will follow
                         TalkScript.ScriptQuestionAnswer qa =
                             scriptLabel.QuestionAnswers.GetQuestionAnswer(userResponse);
-                        // TalkScript.ScriptLine npcResponseLine = qa.Answer;
 
                         await ProcessMultipleLines(qa.Answer.SplitIntoSections(), nTalkLineIndex);
                     }

@@ -53,13 +53,13 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public bool CanPassThroughWalls => _additionalEnemyFlags.CanPassThroughWalls;
 
         public bool DoesNotMove => _additionalEnemyFlags.DoNotMove;
-        public int Experience => _additionalEnemyFlags.Experience; //_enemyExp[_monsterIndex]; 
+        public int Experience => _additionalEnemyFlags.Experience;
         public int FriendIndex { get; }
 
         public bool IsNpc => KeyTileReference.IsNPC;
 
         public bool IsWaterEnemy =>
-            _additionalEnemyFlags.IsWaterEnemy; //KeyTileReference.Index >= 384 && KeyTileReference.Index < 400;
+            _additionalEnemyFlags.IsWaterEnemy;
 
         public TileReference KeyTileReference { get; }
         public string MixedCaseSingularName { get; }
@@ -92,7 +92,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     .GetDataChunk(DataOvlReference.DataChunkName.ENEMY_RANGE_THING).GetByte(nMonsterIndex);
 
             // the friend index technically starts at the Mage, and skips 4 animations frames per enemy
-            //const int StartFriendIndex = 320;
             FriendIndex = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.ENEMY_FRIENDS)
                 .GetByte(nMonsterIndex);
 

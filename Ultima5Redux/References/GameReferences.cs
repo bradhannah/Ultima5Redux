@@ -10,7 +10,6 @@ namespace Ultima5Redux.References
 {
     public class GameReferences
     {
-
         private const string GOLD_DIR = @"C:\games\Ultima_5\Gold";
         private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
         private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
@@ -95,7 +94,6 @@ namespace Ultima5Redux.References
 
         public static TileOverrideReferences TileOverrideRefs { get; private set; }
 
-        //=> ;
         public static GameReferences Instance { get; set; }
 
         public static bool IsInitialized { get; private set; }

@@ -267,13 +267,20 @@ namespace Ultima5ReduxTesting
             {
                 world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult tryToMoveResult,
                     true);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
                 world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult,
                     true);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
                 world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
                     true);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
                 world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
                     true);
-                //world.AdvanceTime(2);
+                world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
+                    .XY);
                 i--;
             }
 

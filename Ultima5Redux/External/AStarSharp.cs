@@ -23,7 +23,6 @@ namespace Ultima5Redux.External
             }
         }
         // Change this depending on what the desired size is for each element in the grid
-        //internal const int NODE_SIZE = 1;
 
         public bool Walkable { get; set; }
 
@@ -113,7 +112,6 @@ namespace Ultima5Redux.External
             Node end = new(endPosition, true);
 
             Stack<Node> path = new();
-            //List<Node> openList = new();
             SortedDictionary<float, Node> openList = new();
             List<Node> closedList = new();
             Node current = start;
@@ -127,10 +125,8 @@ namespace Ultima5Redux.External
             {
                 // get the "BEST" open list position to test
                 current = openList.First().Value;
-                //0];
                 // remove the "BEST" open list position
                 openList.Remove(current.F);
-                //RemoveAt(0);
 
                 closedList.Add(current);
                 IEnumerable<Node> adjacencies = GetAdjacentNodes(current);
@@ -160,7 +156,6 @@ namespace Ultima5Redux.External
                     }
 
                     openList.Add(n.F, n);
-                    //openList = openList.OrderBy(node => node.F).ToList();
                 }
             }
 

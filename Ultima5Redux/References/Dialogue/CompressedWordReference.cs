@@ -25,7 +25,6 @@ namespace Ultima5Redux.References.Dialogue
         {
             _compressedWords = dataRef.GetDataChunk(DataOvlReference.DataChunkName.TALK_COMPRESSED_WORDS)
                 .GetChunkAsStringList();
-            //_compressedWords.PrintSomeStrings();
 
             // we are creating a lookup map because the indexes are not concurrent
             _compressWordLookupMap = new Dictionary<int, byte>(_compressedWords.StringList.Count);

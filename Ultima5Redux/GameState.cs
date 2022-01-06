@@ -270,7 +270,6 @@ namespace Ultima5Redux
 
                 GameSummary gameSummary = CreateGameSummary(currentSaveGamePath);
                 string gameSummaryJsonStr = gameSummary.SerializeGameSummary();
-                //string gameSummaryJsonStr = SerializeGameDescription(currentSaveGamePath);
                 File.WriteAllText(currentSaveGameSummaryPathAndFile, gameSummaryJsonStr);
             } catch (Exception e)
             {

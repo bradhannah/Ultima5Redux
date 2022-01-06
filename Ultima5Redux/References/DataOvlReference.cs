@@ -146,7 +146,8 @@ namespace Ultima5Redux.References
         /// <summary>
         ///     Chunk names specific to the Data.ovl file
         /// </summary>
-        [SuppressMessage("ReSharper", "IdentifierTypo")] public enum DataChunkName
+        [SuppressMessage("ReSharper", "IdentifierTypo")]
+        public enum DataChunkName
         {
             Unused = -1, TALK_COMPRESSED_WORDS, LOCATION_NAME_INDEXES, LOCATION_NAMES, PHRASES_CONVERSATION,
             LOCATIONS_X, LOCATIONS_Y, TRAVEL, WORLD, CHIT_CHAT, KEYPRESS_COMMANDS, VISION2, OPENING_THINGS_STUFF,
@@ -239,7 +240,8 @@ namespace Ultima5Redux.References
             ROT_WORMS, SHADOW_LORD
         }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum Equipment
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum Equipment
         {
             BareHands = -2, LeatherHelm = 0, ChainCoif = 1, IronHelm = 2, SpikedHelm = 3, SmallShield = 4,
             LargeShield = 5, SpikedShield = 6, MagicShield = 7, JewelShield = 8, ClothArmour = 9, LeatherArmour = 10,
@@ -1000,11 +1002,9 @@ namespace Ultima5Redux.References
         public DataOvlReference(string dataDirectory)
         {
             DataDirectory = dataDirectory;
-            //string dataOvlFileAndPath = Path.Combine(u5Directory, FileConstants.DATA_OVL);
 
             _dataChunks = new DataChunks<DataChunkName>(dataDirectory, FileConstants.DATA_OVL, DataChunkName.Unused);
 
-            //dataOvlByteArray = Utils.GetFileAsByteList(dataOvlFileAndPath);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x00, 0x18);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.FixedString, "Licence for the MS-Runtime", 0x18, 0x38);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Long Armour strings (13 of them)", 0x52,
@@ -1015,11 +1015,9 @@ namespace Ultima5Redux.References
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (mixed case)", 0x1d3, 0x158,
                 0x00, DataChunkName.MONSTER_NAMES_MIXED);
-            //SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_MIXED).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Enemy Names (upper case)", 0x32b, 0x165,
                 0x00, DataChunkName.MONSTER_NAMES_UPPER);
-            // SomeStrings strs = _dataChunks.GetDataChunk(DataChunkName.MONSTER_NAMES_UPPER).GetChunkAsStringList();
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
                 "Character type, monster names in capital letters (44 of them)", 0x32b, 0x165);
@@ -1033,7 +1031,6 @@ namespace Ultima5Redux.References
                 0x43, 0, DataChunkName.SPECIAL_ITEM_NAMES2);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names - Armour", 0x572, 0x77, 0,
                 DataChunkName.SHORT_ARMOUR);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Shortened names (29 of them)", 0x572, 0x11a);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Potion colors (8 of them)", 0x68c, 0x30, 0,
                 DataChunkName.POTIONS);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Reagents (8 of them)", 0x6bc, 0x4d, 0,
@@ -1058,7 +1055,6 @@ namespace Ultima5Redux.References
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList,
                 "Compressed words used in the conversation files", 0x104c, 0x24e, 0,
                 DataChunkName.TALK_COMPRESSED_WORDS);
-            //dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Compressed words used in the conversation files", 0x104c, 0x24e);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Filenames", 0x129a, 0x11c);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Unknown", 0x13b6, 0x3a6);
@@ -1297,8 +1293,6 @@ namespace Ultima5Redux.References
                 0x179);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Battle messages", 0x6efe, 0x112, 0x00,
                 DataChunkName.BATTLE2);
-            // SomeStrings strs2 = _dataChunks.GetDataChunk(DataChunkName.BATTLE2).GetChunkAsStringList();
-            //_dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things that happened to you", 0x6f1c, 0xf4);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "MISC file names", 0x7010, 0x1a);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.SimpleString, "Unknown String", 0x702A, 0Xa);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things said in jail", 0x7034, 0xb4);
@@ -1320,7 +1314,6 @@ namespace Ultima5Redux.References
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Look2.dat (x2)", 0x7384, 0x14);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs?", 0x7398, 0x15e);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Signs.dat (x2)", 0x74f6, 0x14);
-//            _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Vision strings", 0x750a, 0x22, 0x00, DataChunkName.VISION1);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.StringList, "Things you see (dungeons I think)", 0x750A,
                 0x205, 0x00, DataChunkName.VISION2);
 
@@ -1455,7 +1448,6 @@ namespace Ultima5Redux.References
                 DataChunkName.ADDITIONAL);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.Unknown, "Nil", 0xA530, 0x1820);
-            //dataChunks.PrintEverything();
 
             // load the super simple string lookup 
             StringReferences = new U5StringRef(this);
