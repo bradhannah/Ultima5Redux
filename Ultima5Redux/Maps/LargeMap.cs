@@ -34,7 +34,6 @@ namespace Ultima5Redux.Maps
         [JsonConstructor] private LargeMap()
         {
             // for now combat maps don't have overrides
-            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
         }
 
         /// <summary>
@@ -50,7 +49,6 @@ namespace Ultima5Redux.Maps
             _mapChoice = mapChoice;
 
             // for now combat maps don't have overrides
-            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
             BuildMap(mapChoice);
             BuildAStar();
@@ -85,15 +83,11 @@ namespace Ultima5Redux.Maps
 
         public override void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
-            //VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-
             if (XRayMode)
             {
                 Utils.Set2DArrayAllToValue(VisibleOnMap, true);
                 return;
             }
-
-            NVisibleLargeMapTiles = VisibleInEachDirectionOfAvatar * 2 + 1;
 
             TouchedOuterBorder = false;
 
@@ -105,6 +99,7 @@ namespace Ultima5Redux.Maps
                 AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
 
             RefreshTestForVisibility(1);
+            SetMaxVisibleArea(AvatarXyPos, TOTAL_VISIBLE_TILES);
             FloodFillMap(AvatarXyPos.X, AvatarXyPos.Y, true);
         }
 
@@ -114,25 +109,6 @@ namespace Ultima5Redux.Maps
             PrintMapSection(TheMap, 0, 0, 160, 80);
         }
 
-        /// <summary>
-        ///     Gets a positive based Point2D for LargeMaps - it was return null if it outside of the
-        ///     current extends
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        // protected override Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
-        // {
-        //     int nPositiveX = xy.X + NumOfXTiles;
-        //     int nPositiveY = xy.Y + NumOfYTiles;
-        //
-        //     if (nPositiveX <= _topLeftExtent.X + NumOfXTiles || xy.X >= _bottomRightExtent.X)
-        //         return null;
-        //     if (nPositiveY <= _topLeftExtent.Y + NumOfYTiles || xy.Y >= _bottomRightExtent.Y)
-        //         return null;
-        //
-        //     return xy.GetAdjustedPosition(direction);
-        // }
         protected override float GetAStarWeight(in Point2D xy)
         {
             return 1;

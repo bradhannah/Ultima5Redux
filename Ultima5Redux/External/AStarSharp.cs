@@ -6,11 +6,11 @@ namespace Ultima5Redux.External
 {
     public class Node
     {
-        public readonly float Weight;
-        public float Cost;
+        internal float Weight { get; }
+        public float Cost { get; internal set; }
 
-        public float DistanceToTarget;
-        public Node Parent;
+        public float DistanceToTarget { get; internal set; }
+        public Node Parent { get; internal set; }
         public readonly Point2D Position;
 
         public float F
@@ -178,7 +178,7 @@ namespace Ultima5Redux.External
         {
             if (position.X >= _grid.Count || position.Y >= _grid[position.X].Count)
                 throw new Ultima5ReduxException("Tried to get a node with position=" + position +
-                                                " but didn't exist in the astar grid");
+                                                " but didn't exist in the aStar grid");
             return _grid[position.X][position.Y];
         }
 

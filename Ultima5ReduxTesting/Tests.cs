@@ -1516,5 +1516,43 @@ namespace Ultima5ReduxTesting
             Assert.True(
                 world.State.TheVirtualMap.TheMapUnits.OverworldMapMapUnitCollection.Enemies.Count(m => m.IsActive) > 0);
         }
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_WorldVisibilityLargeMapAtEdge(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
+            Point2D newAvatarPos = new Point2D(146, 254);
+            newAvatarPos = new Point2D(146, 255);
+            world.State.TheVirtualMap.MoveAvatar(newAvatarPos);
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(newAvatarPos);
+
+            Assert.True(world.State.TheVirtualMap.CurrentMap.VisibleOnMap[146][0]);
+        }
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_SmallMapVisibilityAtEdge(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
+
+            Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
+        }
     }
 }

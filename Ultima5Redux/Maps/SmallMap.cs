@@ -35,9 +35,6 @@ namespace Ultima5Redux.Maps
         public SmallMap(SmallMapReferences.SingleMapReference singleSmallMapReference) : base(
             singleSmallMapReference.MapLocation, singleSmallMapReference.Floor)
         {
-            // for now combat maps don't have overrides
-            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
-
             // load the map into memory
             TheMap = CurrentSingleMapReference.GetDefaultMap();
 
@@ -47,9 +44,6 @@ namespace Ultima5Redux.Maps
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheMap = CurrentSingleMapReference.GetDefaultMap();
-
-            // for now combat maps don't have overrides
-            //XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(CurrentSingleMapReference);
 
             InitializeAStarMap(WalkableType.StandardWalking);
         }
@@ -66,8 +60,6 @@ namespace Ultima5Redux.Maps
                 GameReferences.SpriteTileReferences.IsPath(nSprite);
 
             const int fDefaultDeduction = 2;
-
-            TileReference unused = GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
 
             float fCost = 10;
 

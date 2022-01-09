@@ -12,7 +12,7 @@ namespace Ultima5Redux
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-    public class Point2DFloat
+    public sealed class Point2DFloat
     {
         public float X { get; set; }
         public float Y { get; set; }
@@ -77,7 +77,7 @@ namespace Ultima5Redux
         }
     }
 
-    [DataContract] public class Point2D
+    [DataContract] public sealed class Point2D
     {
         /// <summary>
         ///     4 way direction
@@ -132,7 +132,6 @@ namespace Ultima5Redux
 
             for (; n > 0; --n)
             {
-                //visit(x, y);
                 intersectingPoints.Add(new Point2D(x, y));
 
                 if (error > 0)
@@ -163,11 +162,6 @@ namespace Ultima5Redux
             hashCode = hashCode * -1521134295 + Y.GetHashCode();
             return hashCode;
         }
-
-        // public override string ToString()
-        // {
-        //     return "X=" + X + ",Y=" + Y;
-        // }
 
         public void AdjustXAndYToMax(int nMax)
         {

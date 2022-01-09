@@ -263,11 +263,9 @@ namespace Ultima5Redux.Maps
         public bool[][] VisibleOnMap { get; protected set; }
         protected readonly List<bool[][]> TestForVisibility = new();
 
-        //protected readonly List<Dictionary<int, Dictionary<int, bool>>> TestForVisibility = new();
         protected readonly int VisibleInEachDirectionOfAvatar = 10;
-        protected int NVisibleLargeMapTiles;
         protected Point2D AvatarXyPos;
-        protected bool TouchedOuterBorder;
+        public bool TouchedOuterBorder { get; protected set; }
 
         protected abstract bool IsRepeatingMap { get; }
 
@@ -276,20 +274,6 @@ namespace Ultima5Redux.Maps
             _openDoors.Clear();
         }
 
-        /// <summary>
-        ///     Attempts to set the visible tile flag
-        /// </summary>
-        /// <param name="visibleTilePos"></param>
-        /// <returns>true if the coordinate is out of bounds</returns>
-        // private bool SetVisibleTile(in Point2D visibleTilePos)
-        // {
-        //     if (visibleTilePos == null) return true;
-        //     if (!visibleTilePos.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
-        //         VisibleOnMap[visibleTilePos.X][visibleTilePos.Y] = true;
-        //     //else
-        //     //  VisibleOnMap[visibleTilePos.x][visibleTilePos.y] = false;
-        //     return false;
-        // }
         private bool SetVisibleTile(int x, int y)
         {
             if ((x < 0 || x > NumOfXTiles - 1 || (y < 0 || y > NumOfYTiles - 1)))
@@ -298,21 +282,8 @@ namespace Ultima5Redux.Maps
             }
 
             VisibleOnMap[x][y] = true;
-            return false;
+            return true;
         }
-
-        // private void SetSurroundingTilesVisible(in Point2D xy, bool bIncludeDiagonal)
-        // {
-        //     SetVisibleTile(xy.X - 1, xy.Y);
-        //     SetVisibleTile(xy.X + 1, xy.Y);
-        //     SetVisibleTile(xy.X, xy.Y - 1);
-        //     SetVisibleTile(xy.X, xy.Y + 1);
-        //     if (!bIncludeDiagonal) return;
-        //     SetVisibleTile(xy.X - 1, xy.Y - 1);
-        //     SetVisibleTile(xy.X + 1, xy.Y + 1);
-        //     SetVisibleTile(xy.X - 1, xy.Y + 1);
-        //     SetVisibleTile(xy.X + 1, xy.Y - 1);
-        // }
 
         private void SetSurroundingTilesVisible(int x, int y, bool bIncludeDiagonal)
         {
@@ -357,8 +328,8 @@ namespace Ultima5Redux.Maps
             }
             else
             {
-                if (x < 0 || y < 0) return;
-                if (x > NumOfXTiles - 1 || y > NumOfYTiles - 1) return;
+                if (nAdjustedX < 0 || nAdjustedY < 0) return;
+                if (nAdjustedX > NumOfXTiles - 1 || nAdjustedY > NumOfYTiles - 1) return;
             }
 
             if (TestForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY]) return; // already did it
@@ -383,7 +354,7 @@ namespace Ultima5Redux.Maps
             }
 
             // if we are this far then we are certain that we will make this tile visible
-            TouchedOuterBorder |= SetVisibleTile(x, y);
+            SetVisibleTile(nAdjustedX, nAdjustedY);
 
             // if the tile blocks the light then we don't calculate the surrounding tiles
             if (bBlocksLight) return;
@@ -392,27 +363,23 @@ namespace Ultima5Redux.Maps
 
             void floodFillIfInside(int nXDiff, int nYDiff)
             {
-                if (!bFirst)
+                // if we aren't on a repeating map then we check to see if it is out of bounds
+                // if we are then we note that the flood fill hit the edges
+                if (!bFirst && !IsRepeatingMap &&
+                    Point2D.IsOutOfRangeStatic(nAdjustedX + nXDiff, nAdjustedY + nYDiff, nTilesMax, nTilesMax))
                 {
-                    // if we have gone beyond the viewable borders, we stop
-                    if ((Math.Abs(characterPosition.X - x) > (TOTAL_VISIBLE_TILES / 2) ||
-                         (Math.Abs(characterPosition.Y - y) > (TOTAL_VISIBLE_TILES / 2))))
-                    {
-                        return;
-                    }
-
-                    if (Point2D.IsOutOfRangeStatic(x + nXDiff, y + nYDiff, nTilesMax, nTilesMax))
-                        return;
+                    TouchedOuterBorder = true;
+                    return;
                 }
 
-                FloodFillMap(x + nXDiff, y + nYDiff, false, nCharacterIndex, characterPosition,
+                FloodFillMap(nAdjustedX + nXDiff, nAdjustedY + nYDiff, false, nCharacterIndex, characterPosition,
                     bAlwaysLookThroughWindows);
             }
 
-            floodFillIfInside(0, -1);
             floodFillIfInside(0, 1);
-            floodFillIfInside(-1, 0);
             floodFillIfInside(1, 0);
+            floodFillIfInside(0, -1);
+            floodFillIfInside(-1, 0);
 
             if (bFirst)
             {
@@ -429,6 +396,10 @@ namespace Ultima5Redux.Maps
             return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
         }
 
+        /// <summary>
+        ///     Refreshes the map that tracks which tiles have been tested for visibility
+        /// </summary>
+        /// <param name="nCharacters"></param>
         protected void RefreshTestForVisibility(int nCharacters)
         {
             TestForVisibility.Clear();
@@ -438,10 +409,39 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        protected void SetMaxVisibleArea(in Point2D startPos, int nVisibleTiles)
+        {
+            if (nVisibleTiles < 3) throw new Ultima5ReduxException("Can't set visible area if smaller than 3");
+            if (startPos == null) throw new Ultima5ReduxException("Must have a proper start position");
+            if (TestForVisibility.Count <= 0)
+                throw new Ultima5ReduxException("You must refresh the visible area before setting the max");
+
+            int nVisibleTilesPerSide = nVisibleTiles / 2;
+            int nStartX = startPos.X, nStartY = startPos.Y;
+
+            for (int nXDiff = 0; nXDiff < nVisibleTiles; nXDiff++)
+            {
+                int nX = Point2D.AdjustToMax(nStartX - nVisibleTilesPerSide + nXDiff, NumOfXTiles);
+                int nTopY = Point2D.AdjustToMax(nStartY - nVisibleTilesPerSide, NumOfYTiles);
+                int nBottomY = Point2D.AdjustToMax(nStartY + nVisibleTilesPerSide, NumOfYTiles);
+
+                TestForVisibility[0][nX][nTopY] = true;
+                TestForVisibility[0][nX][nBottomY] = true;
+            }
+
+            for (int nYDiff = 0; nYDiff < nVisibleTiles; nYDiff++)
+            {
+                int nY = Point2D.AdjustToMax(nStartY - nVisibleTilesPerSide + nYDiff, NumOfYTiles);
+                int nTopX = Point2D.AdjustToMax(nStartX - nVisibleTilesPerSide, NumOfXTiles);
+                int nBottomX = Point2D.AdjustToMax(nStartX + nVisibleTilesPerSide, NumOfXTiles);
+
+                TestForVisibility[0][nTopX][nY] = true;
+                TestForVisibility[0][nBottomX][nY] = true;
+            }
+        }
+
         public virtual void RecalculateVisibleTiles(in Point2D initialFloodFillPosition)
         {
-            //VisibleOnMap ??= Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
-
             // XRay Mode makes sure you can see every tile
             if (XRayMode)
             {
@@ -452,8 +452,8 @@ namespace Ultima5Redux.Maps
             TouchedOuterBorder = false;
             AvatarXyPos = initialFloodFillPosition;
 
-            RefreshTestForVisibility(1); //PlayerCharacterRecords.MAX_PARTY_MEMBERS);
-
+            RefreshTestForVisibility(1);
+            SetMaxVisibleArea(AvatarXyPos, TOTAL_VISIBLE_TILES);
             FloodFillMap(initialFloodFillPosition.X, initialFloodFillPosition.Y, true);
         }
 

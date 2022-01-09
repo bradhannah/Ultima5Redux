@@ -112,7 +112,6 @@ namespace Ultima5Redux.Maps
         {
             CombatMapUnits = GameStateReference.State.TheVirtualMap.TheMapUnits;
             TheCombatMapReference = singleCombatMapReference;
-            // _inventory = inventory;
             XYOverrides = GameReferences.TileOverrideRefs.GetTileXYOverrides(singleCombatMapReference);
 
             InitializeAStarMap(WalkableType.CombatLand);
@@ -246,7 +245,6 @@ namespace Ultima5Redux.Maps
             switch (combatMapSpriteType)
             {
                 case SingleCombatMapReference.CombatMapSpriteType.Nothing:
-                    //Debug.Assert(enemyPosition.X == 0 && enemyPosition.Y == 0);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.Thing:
                     Debug.WriteLine("It's a chest or maybe a dead body!");
@@ -275,7 +273,6 @@ namespace Ultima5Redux.Maps
             double dBestDistanceToAttack = 150f;
             T bestOpponent = null;
 
-            //or (int nIndex = 0; nIndex < nMapUnits; nIndex++)
             foreach (CombatMapUnit combatMapUnit in CombatMapUnits.CombatMapMapUnitCollection.AllCombatMapUnits)
             {
                 if (!(combatMapUnit is T enemy)) continue;
@@ -284,10 +281,11 @@ namespace Ultima5Redux.Maps
                 if (enemy.IsInvisible || enemy.IsCharmed) continue;
 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(attackingUnit.MapUnitPosition.XY);
-                if (!(dDistance < dBestDistanceToAttack)) continue;
-
-                dBestDistanceToAttack = dDistance;
-                bestOpponent = enemy;
+                if (dDistance < dBestDistanceToAttack)
+                {
+                    dBestDistanceToAttack = dDistance;
+                    bestOpponent = enemy;
+                }
             }
 
             return bestOpponent;
@@ -371,14 +369,14 @@ namespace Ultima5Redux.Maps
                 surroundThisPoint.GetConstrainedSurroundingPoints(1, NumOfXTiles - 1, NumOfYTiles - 1);
             Point2D randomSurroundingPoint;
             Random random = new();
-            for (;;)
+            do
             {
                 int nIndex = random.Next() % surroundingCombatPlayerPoints.Count;
                 randomSurroundingPoint = surroundingCombatPlayerPoints[nIndex];
                 if (randomSurroundingPoint != notThisPoint)
                     break;
                 surroundingCombatPlayerPoints.RemoveAt(nIndex);
-            }
+            } while (true);
 
             return randomSurroundingPoint;
         }
@@ -402,15 +400,12 @@ namespace Ultima5Redux.Maps
         {
             AdditionalHitStateAction additionalHitStateAction = AdditionalHitStateAction.None;
             // some things only occur if they are hit - but not if they are killed or missed
-            if (IsHitButNotKilled(hitState))
+            if (IsHitButNotKilled(hitState) && affectedCombatMapUnit is Enemy enemy &&
+                enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) && Utils.OneInXOdds(2))
             {
                 // do they multiply?
-                if (affectedCombatMapUnit is Enemy enemy &&
-                    enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) && Utils.OneInXOdds(2))
-                {
-                    Enemy newEnemy = DivideEnemy(enemy);
-                    if (newEnemy != null) additionalHitStateAction = AdditionalHitStateAction.EnemyDivided;
-                }
+                Enemy newEnemy = DivideEnemy(enemy);
+                if (newEnemy != null) additionalHitStateAction = AdditionalHitStateAction.EnemyDivided;
             }
 
             switch (hitState)
@@ -486,7 +481,7 @@ namespace Ultima5Redux.Maps
 
             outputStr += "\nBut they accidentally hit another!";
             // we attack the thing we accidentally hit
-            CombatMapUnit.HitState _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit, nAttackMax,
+            CombatMapUnit.HitState unused = attackingCombatMapUnit.Attack(targetedCombatMapUnit, nAttackMax,
                 out string missedAttackOutputStr, out string debugStr, true);
             // temporary for debugging
             missedAttackOutputStr += "\n" + debugStr;
@@ -558,7 +553,6 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException("Passed a null active combat unit when moving to closest unit");
 
             const int NoPath = 0xFFFF;
-            //bool bCharmed = activeCombatUnit.IsCharmed;
             bMoved = false;
 
             int nMinMoves = 0xFFFF;
@@ -724,8 +718,6 @@ namespace Ultima5Redux.Maps
                 VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
                 return;
             }
-
-            //VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles);
 
             // reinitialize the array for all potential party members
             IEnumerable<CombatPlayer> combatPlayers = AllCombatPlayers;
@@ -1032,7 +1024,7 @@ namespace Ultima5Redux.Maps
 
                         missedPoint = actionPosition;
                         targetedHitState = CombatMapUnit.HitState.Missed;
-                        return TurnResult.CombatPlayerMissed; //true;
+                        return TurnResult.CombatPlayerMissed;
                     }
 
                     // if the top most unit is a combat map unit, then let's fight!
