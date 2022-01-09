@@ -14,36 +14,6 @@ namespace Ultima5Redux.MapUnits
         [JsonConverter(typeof(StringEnumConverter))]
         public enum AvatarState { Regular, Carpet, Horse, Frigate, Skiff, Hidden }
 
-        // [DataMember] private Frigate CurrentBoardedFrigate
-        // {
-        //     get => CurrentBoardedMapUnit is Frigate frigate ? frigate : null;
-        //     set => CurrentBoardedMapUnit = value;
-        // }
-        //
-        // [DataMember] private Horse CurrentBoardedHorse
-        // {
-        //     get => CurrentBoardedMapUnit is Horse horse ? horse : null;
-        //     set => CurrentBoardedMapUnit = value;
-        // }
-        //
-        // [IgnoreDataMember] private MagicCarpet CurrentBoardedMagicCarpet
-        // {
-        //     get => CurrentBoardedMapUnit is MagicCarpet magicCarpet ? magicCarpet : null;
-        //     set
-        //     {
-        //         CurrentBoardedMapUnit = value;
-        //         _currentMagicCarpet = value;
-        //     }
-        // }
-        //
-        // [DataMember] private Skiff CurrentBoardedSkiff
-        // {
-        //     get => CurrentBoardedMapUnit is Skiff skiff ? skiff : null;
-        //     set => CurrentBoardedMapUnit = value;
-        // }
-
-        //[DataMember] private MagicCarpet _currentMagicCarpet;
-
         [DataMember] internal AvatarState CurrentAvatarState { get; private set; }
 
         [DataMember(Name = "UseExtendedSprites")]
@@ -163,7 +133,6 @@ namespace Ultima5Redux.MapUnits
 
         private void BoardMapUnitFromAvatarState(AvatarState avatarState)
         {
-            //MapUnitState vehicleState = new MapUnitState();
             // we copy the Avatar map unit state as a starting point
             MapUnitMovement emptyMapUnitMovement = new(0, null, null);
 
@@ -180,13 +149,14 @@ namespace Ultima5Redux.MapUnits
                     BoardMapUnit(horse);
                     break;
                 case AvatarState.Frigate:
-                    // todo: this is incorrect - we need to figure out the correct number of skiffs when we board it and create it
+                    // bajh: this is incorrect - we need to figure out the correct number of skiffs when we board it and create it
                     Frigate frigate = new(emptyMapUnitMovement, MapLocation, CurrentDirection, null,
-                        MapUnitPosition);
-                    //frigate
-                    // must decide how many skiffs are there and assign them
-                    frigate.SkiffsAboard = 1;
-                    //TheMapUnitState.Depends3;
+                        MapUnitPosition)
+                    {
+                        // must decide how many skiffs are there and assign them
+                        //frigate
+                        SkiffsAboard = 1
+                    };
                     BoardMapUnit(frigate);
                     break;
                 case AvatarState.Skiff:
@@ -231,7 +201,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="tileReference"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <returns></returns>
-        public static MapUnit CreateAvatar(SmallMapReferences.SingleMapReference.Location location,
+        public static Avatar CreateAvatar(SmallMapReferences.SingleMapReference.Location location,
             MapUnitMovement movement, MapUnitPosition mapUnitPosition, TileReference tileReference,
             bool bUseExtendedSprites)
         {
@@ -294,7 +264,6 @@ namespace Ultima5Redux.MapUnits
 
             // set the new sprite to reflect the new direction
             if (bChangeTile) KeyTileReference = GetCurrentTileReference();
-            //TheMapUnitState.SetTileReference(GetCurrentTileReference());
 
             // return false if the direction changed AND your on a Frigate
             // because you will just change direction

@@ -30,7 +30,7 @@ namespace Ultima5Redux
             CURRENT_HOUR, CURRENT_MINUTE, NPC_TYPES, NPC_MOVEMENT_LISTS, NPC_MOVEMENT_OFFSETS, NPC_SPRITE_INDEXES,
             PARTY_LOC, Z_COORD, X_COORD, Y_COORD, CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
             MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, GRAPPLE, SKULL_KEYS_QUANTITY,
-            KARMA
+            KARMA, TURNS_SINCE_START
         }
 
         private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }
@@ -102,6 +102,10 @@ namespace Ultima5Redux
             GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
 
         internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
+
+        internal int TurnsSinceStart => DataChunks.GetDataChunk(DataChunkName.TURNS_SINCE_START).GetChunkAsByte();
+
+        internal bool IsInitialSaveFile => TurnsSinceStart == 0;
 
         internal TimeOfDay TheTimeOfDay => new(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
             DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH), DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY),
@@ -256,6 +260,8 @@ namespace Ultima5Redux
 
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Player Karma", 0x2E2, 0x01, 0x00,
                 DataChunkName.KARMA);
+            DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Number of Turns Since Start", 0x2E5, 0x01, 0x00,
+                DataChunkName.TURNS_SINCE_START);
 
             // player location
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party _location", 0x2ED, 0x01, 0x00,

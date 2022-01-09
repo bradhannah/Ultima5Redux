@@ -170,6 +170,7 @@ namespace Ultima5Redux
 
             // import the players inventory
             PlayerInventory = new Inventory(ImportedGameState);
+
             InitializeVirtualMap(smallMaps, overworldMap, underworldMap, bUseExtendedSprites,
                 ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor);
         }

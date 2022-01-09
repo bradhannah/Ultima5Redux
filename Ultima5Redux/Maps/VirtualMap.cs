@@ -137,9 +137,8 @@ namespace Ultima5Redux.Maps
         ///     Are we currently on a large map?
         /// </summary>
         [IgnoreDataMember]
-        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small; //{ get; private set; }
+        public bool IsLargeMap => LargeMapOverUnder != Map.Maps.Small;
 
-        //set => TheMapUnits.CurrentAvatarPosition = value;
         /// <summary>
         ///     Number of total columns for current map
         /// </summary>
@@ -176,16 +175,7 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember]
         public MapUnitPosition CurrentPosition
         {
-            get
-            {
-                // if (CurrentMap is CombatMap combatMap)
-                // {
-                //     return combatMap.CurrentCombatMapUnit?.MapUnitPosition ??
-                //            throw new Ultima5ReduxException("Combat map was unexpectedly null");
-                // }
-
-                return TheMapUnits.CurrentAvatarPosition;
-            }
+            get => TheMapUnits.CurrentAvatarPosition;
             set => TheMapUnits.CurrentAvatarPosition = value;
         }
 
@@ -218,7 +208,7 @@ namespace Ultima5Redux.Maps
             switch (initialMap)
             {
                 case Map.Maps.Small:
-                    LoadSmallMap(currentSmallMapReference, null, true);
+                    LoadSmallMap(currentSmallMapReference, null, !importedGameState.IsInitialSaveFile);
                     break;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
@@ -394,7 +384,6 @@ namespace Ultima5Redux.Maps
             }
 
             // there is not an NPC on the tile, it is walkable and the Avatar is not currently occupying it
-            // return !bIsNpcTile && bIsWalkable && !bIsAvatarTile;
             return bIsWalkable && !bIsAvatarTile;
         }
 
@@ -727,7 +716,7 @@ namespace Ultima5Redux.Maps
 
             bool bIsStaircase = GameReferences.SpriteTileReferences.IsStaircase(nSprite); // is it a staircase
 
-            int nNewSpriteIndex; //= nSprite;
+            int nNewSpriteIndex;
 
             if (bIsStaircase)
             {
@@ -986,10 +975,8 @@ namespace Ultima5Redux.Maps
                 {
                     if (!mapUnit.IsActive) continue;
                     // if it's a combat unit but they dead or gone then we skip
-                    if (mapUnit is CombatMapUnit combatMapUnit)
-                    {
-                        if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0) continue;
-                    }
+                    if (mapUnit is CombatMapUnit combatMapUnit &&
+                        (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0)) continue;
 
                     // if we find the first highest priority item, then we simply return it
                     if (mapUnit.GetType() == type) return mapUnit;
@@ -1310,8 +1297,7 @@ namespace Ultima5Redux.Maps
             }
 
             // this will probably fail, which means creating a new map was a good idea
-            //Debug.Assert(TheMapOverrides.TheMap is LargeMap && TheMapOverrides.TheMap == CurrentLargeMap);
-            // todo: maybe we store each map override indefinitely so we never lose anything 
+            // bajh: maybe we store each map override indefinitely so we never lose anything 
             TheMapOverrides = new MapOverrides(CurrentLargeMap);
 
             LargeMapOverUnder = map;
@@ -1384,9 +1370,6 @@ namespace Ultima5Redux.Maps
             SetOverridingTileReferece(tileRef1, tile2Pos);
             SetOverridingTileReferece(tileRef2, tile1Pos);
         }
-
-        // private bool IsTileFreeToTravelLocal(Point2D.Direction direction, Point2D xy, Avatar.AvatarState avatarState) =>
-        //     IsTileFreeToTravel(xy.GetAdjustedPosition(direction), true, avatarState);
 
         /// <summary>
         ///     Use the stairs and change floors, loading a new map

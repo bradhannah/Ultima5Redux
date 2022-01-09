@@ -30,8 +30,6 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public SmallMapReferences.SingleMapReference.Location CurrentLocation { get; private set; }
 
-        //[DataMember] private SmallMapCharacterStates MapCharacterStates { get; set; }
-
         [DataMember] public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } = new();
 
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
@@ -82,9 +80,6 @@ namespace Ultima5Redux.MapUnits
             _bUseExtendedSprites = bUseExtendedSprites;
             _importedGameState = importedGameState;
             CurrentLocation = currentSmallMap;
-
-            // map character states pertain to whichever map was loaded from disk
-            //MapCharacterStates = importedGameState.SmallMapCharacterStates;
 
             // movements pertain to whichever map was loaded from disk
             _importedMovements = importedGameState.CharacterMovements;
@@ -343,8 +338,6 @@ namespace Ultima5Redux.MapUnits
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void GenerateMapUnitsForLargeMap(Map.Maps map, bool bInitialLoad)
         {
-            //List<MapUnit> mapUnits;
-
             MapUnitCollection mapUnitCollection;
             // the over and underworld animation states are already loaded and can stick around
             switch (map)
@@ -361,7 +354,6 @@ namespace Ultima5Redux.MapUnits
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
             }
-            //mapUnits = mapUnitCollection.AllMapUnits;
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
@@ -396,7 +388,6 @@ namespace Ultima5Redux.MapUnits
                         mapUnitPosition, tileReference, _bUseExtendedSprites);
 
                     mapUnitCollection.AddMapUnit(theAvatar);
-                    //mapUnits.Add(theAvatar);
                     continue;
                 }
 
@@ -405,7 +396,6 @@ namespace Ultima5Redux.MapUnits
                     tileReference);
                 // add the new character to our list of characters currently on the map
                 mapUnitCollection.AddMapUnit(newUnit);
-                //mapUnits.Add(newUnit);
             }
         }
 
@@ -432,9 +422,8 @@ namespace Ultima5Redux.MapUnits
                 {
                     mapUnitMovement.ClearMovements();
                     // load the existing AvatarMapUnit with boarded MapUnits
+
                     SmallMapUnitCollection.Add(MasterAvatarMapUnit);
-                    //_masterAvatarMapUnit);
-                    AvatarMapUnit.MapUnitPosition = SmallMapReferences.GetStartingXYZByLocation();
                     AvatarMapUnit.MapLocation = location;
                     continue;
                 }
@@ -465,9 +454,6 @@ namespace Ultima5Redux.MapUnits
                     ? _importedGameState.SmallMapCharacterStates.GetCharacterState(i)
                     : new SmallMapCharacterState(npcState.NPCRef, i);
 
-                // MapUnitPosition mapUnitPosition = new MapUnitPosition((byte)smallMapCharacterState.TheMapUnitPosition.X,
-                //     (byte)smallMapCharacterState.TheMapUnitPosition.Y,
-                //     (byte)smallMapCharacterState.TheMapUnitPosition.Floor);
                 MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState,
                     smallMapCharacterState.TheMapUnitPosition,
                     GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
@@ -656,8 +642,6 @@ namespace Ultima5Redux.MapUnits
                 throw new Ultima5ReduxException("Passed a null map ref to SetCurrentMapType");
 
             CurrentLocation = mapRef.MapLocation;
-            // if the current location hasn't changed then we don't reload the map info
-            //bSkipLoadSmallMap |= _currentLocation == mapRef.MapLocation; 
 
             // I may need make an additional save of state before wiping these MapUnits out
             GameStateReference.State.CharacterRecords.ClearCombatStatuses();

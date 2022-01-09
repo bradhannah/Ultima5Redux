@@ -51,7 +51,7 @@ namespace Ultima5ReduxTesting
     {
         public enum SaveFiles
         {
-            Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave
+            Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave, fresh
         }
 
         [SetUp] public void Setup()
@@ -1553,6 +1553,27 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
 
             Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
+        }
+
+        [Test] [TestCase(SaveFiles.fresh)] public void test_LoadLegacyFreshAvatarExists(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            Assert.True(world.State.TheVirtualMap.IsMapUnitOccupiedTile(new Point2D(15, 15)));
+
+            // world.ReLoadFromJson();
+
+            // world.State.TheVirtualMap.LoadSmallMap(
+            //     GameReferences.SmallMapRef.GetSingleMapByLocation(
+            //         SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+            //
+            // world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
+
+            // Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
         }
     }
 }
