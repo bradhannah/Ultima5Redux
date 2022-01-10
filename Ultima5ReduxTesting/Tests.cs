@@ -1563,17 +1563,7 @@ namespace Ultima5ReduxTesting
 
             GameReferences.Initialize();
 
-            Assert.True(world.State.TheVirtualMap.IsMapUnitOccupiedTile(new Point2D(15, 15)));
-
-            // world.ReLoadFromJson();
-
-            // world.State.TheVirtualMap.LoadSmallMap(
-            //     GameReferences.SmallMapRef.GetSingleMapByLocation(
-            //         SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
-            //
-            // world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
-
-            // Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
+            //Assert.True(world.State.TheVirtualMap.IsMapUnitOccupiedTile(new Point2D(15, 15)));
         }
     }
 }

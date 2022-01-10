@@ -136,7 +136,8 @@ namespace Ultima5Redux.References
                 throw new Ultima5ReduxException("Missing the data directory: " + dataDirectory);
             }
 
-            if (!File.Exists(Path.Combine(dataDirectory, FileConstants.DATA_OVL)))
+            if (!File.Exists(
+                    Utils.GetFirstFileAndPathCaseInsensitive(Path.Combine(dataDirectory, FileConstants.DATA_OVL))))
             {
                 throw new Ultima5ReduxException("Missing the Data.OVL file: " +
                                                 Path.Combine(dataDirectory, FileConstants.DATA_OVL));

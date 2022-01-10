@@ -114,7 +114,7 @@ namespace Ultima5Redux.References.Maps
             // dirty little move - we just simply skip some code if ignoreOverlay is set
             if (!ignoreOverlay)
             {
-                dataOvl = new BinaryReader(File.OpenRead(overlayFilename));
+                dataOvl = new BinaryReader(File.OpenRead(Utils.GetFirstFileAndPathCaseInsensitive(overlayFilename)));
 
                 dataOvl.BaseStream.Seek(DAT_OVERLAY_BRIT_MAP, new SeekOrigin());
             }

@@ -90,7 +90,7 @@ namespace Ultima5Redux
         ///     Creates an offset list when uint16 offsets are described in a data file
         /// </summary>
         /// <remarks>this is only midly useful due to it not passing back the byte array</remarks>
-        /// <param name="filename">data filename and path</param>
+        /// <param name="filename">data fileNameAndPath and path</param>
         /// <param name="offset">initial offset (typically 0)</param>
         /// <param name="length">number of bytes to read</param>
         /// <returns>a list of offsets</returns>
@@ -135,19 +135,41 @@ namespace Ultima5Redux
             return randomizedQueue;
         }
 
+        public static string GetFirstFileAndPathCaseInsensitive(string fileNameAndPath)
+        {
+            if (string.IsNullOrEmpty(fileNameAndPath))
+                throw new Ultima5ReduxException($"{fileNameAndPath} (file) does not exist");
+            string dirName = Path.GetDirectoryName(fileNameAndPath);
+            if (string.IsNullOrEmpty(dirName))
+                throw new Ultima5ReduxException($"{dirName} (directory) does not exist!");
+
+            string cleanedFileNameAndPath = Path.GetFullPath(fileNameAndPath);
+            foreach (string checkFileName in Directory.GetFiles(dirName))
+            {
+                if (string.Compare(checkFileName, cleanedFileNameAndPath,
+                        StringComparison.InvariantCultureIgnoreCase) == 0)
+                {
+                    return checkFileName;
+                }
+            }
+
+            throw new FileNotFoundException($"Can't find {fileNameAndPath}");
+        }
+
         /// <summary>
         ///     Reads a list of bytes from a file.
         /// </summary>
         /// <remarks>Could be optimized with a cache function that keeps the particular file in memory</remarks>
-        /// <param name="filename">Filename to open (read only)</param>
+        /// <param name="fileNameAndPath">Filename to open (read only)</param>
         /// <param name="offset">byte offset to start at</param>
         /// <param name="length">number of bytes to read, use -1 to indicate to read until EOF</param>
         /// <returns></returns>
-        public static List<byte> GetFileAsByteList(string filename, int offset = 0, int length = -1)
+        public static List<byte> GetFileAsByteList(string fileNameAndPath, int offset = 0, int length = -1)
         {
-            FileStream fs = File.OpenRead(filename);
+            string fileThatExists = GetFirstFileAndPathCaseInsensitive(fileNameAndPath);
 
-            byte[] fileContents = File.ReadAllBytes(filename);
+            byte[] fileContents = File.ReadAllBytes(fileThatExists);
+
             if (length == -1) return fileContents.ToList();
 
             List<byte> specificContents = new(length);
@@ -157,7 +179,6 @@ namespace Ultima5Redux
                 specificContents.Add(fileContents[i]);
             }
 
-            fs.Close();
             return specificContents;
         }
 
