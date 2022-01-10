@@ -143,10 +143,10 @@ namespace Ultima5Redux
             if (string.IsNullOrEmpty(dirName))
                 throw new Ultima5ReduxException($"{dirName} (directory) does not exist!");
 
-            string cleanedFileNameAndPath = Path.GetFullPath(fileNameAndPath);
+            //string cleanedFileNameAndPath = Path.GetFullPath(fileNameAndPath);
             foreach (string checkFileName in Directory.GetFiles(dirName))
             {
-                if (string.Compare(checkFileName, cleanedFileNameAndPath,
+                if (string.Compare(Path.GetFileName(checkFileName), Path.GetFileName(fileNameAndPath),
                         StringComparison.InvariantCultureIgnoreCase) == 0)
                 {
                     return checkFileName;
