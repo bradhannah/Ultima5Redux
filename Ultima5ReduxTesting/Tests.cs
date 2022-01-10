@@ -1552,7 +1552,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
 
-            Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
+            //Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
         }
 
         [Test] [TestCase(SaveFiles.fresh)] public void test_LoadLegacyFreshAvatarExists(SaveFiles saveFiles)
@@ -1563,7 +1563,7 @@ namespace Ultima5ReduxTesting
 
             GameReferences.Initialize();
 
-            //Assert.True(world.State.TheVirtualMap.IsMapUnitOccupiedTile(new Point2D(15, 15)));
+            Assert.True(world.State.TheVirtualMap.IsMapUnitOccupiedTile(new Point2D(15, 15)));
         }
     }
 }
