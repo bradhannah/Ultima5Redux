@@ -121,7 +121,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public InventoryReference GetInventoryReference(InventoryReferenceType inventoryReferenceType, string invItem)
         {
-            // todo: this is a really slow and inefficient way to search the list, albeit a small list
             foreach (InventoryReference invRef in GetInventoryReferenceList(inventoryReferenceType))
             {
                 if (invRef.ItemName.Trim() == invItem) return invRef;

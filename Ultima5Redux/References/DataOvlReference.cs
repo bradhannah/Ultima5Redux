@@ -1207,7 +1207,7 @@ namespace Ultima5Redux.References
                 DataChunkName.EQUIPMENT_BASE_PRICE);
 
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
-                "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)	",
+                "What weapons are sold by the merchant in cities: Britain, Jhelom, Yew, Minoc, Trinsic, British Castle, Buccaneer's Den, Border March, Serpent Hold - (9 groups of 8 bytes)",
                 0x3af2, 0x48, 0, DataChunkName.WEAPONS_SOLD_BY_MERCHANTS);
 
             // Healer prices

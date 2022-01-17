@@ -134,12 +134,6 @@ namespace Ultima5Redux
             {
                 State = GameState.DeserializeFromFile(Path.Combine(SaveGameDirectory, FileConstants.NEW_SAVE_FILE));
             }
-
-            // Force a full reserialization for the sake of testing
-            //State = GameState.Deserialize(State.Serialize());
-
-            // sadly I have to initialize this after the NPCs are created because there is a circular dependency
-            //State.InitializeVirtualMap(AllSmallMaps, OverworldMap, UnderworldMap, bUseExtendedSprites);
         }
 
         /// <summary>
@@ -619,9 +613,6 @@ namespace Ultima5Redux
         {
             string stateJsonOrig = State.Serialize();
             GameState newState = GameState.Deserialize(stateJsonOrig);
-            // string stateJsonNew = newState.Serialize();
-            // GameState newState2 = GameState.Deserialize(stateJsonNew);
-            //GameStateReference.State = newState;
             State = newState;
         }
 
@@ -629,6 +620,7 @@ namespace Ultima5Redux
         // ReSharper disable once UnusedParameter.Global
         public void SetAggressiveGuards(bool bAggressiveGuards)
         {
+            // empty because it's not implemented yet
         }
 
         public string TryToAttack(Point2D xy, out bool bCanAttack, out MapUnit mapUnit,
@@ -841,17 +833,16 @@ namespace Ultima5Redux
                         GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN));
                 }
             }
-            else if (GameReferences.SpriteTileReferences.IsLadderUp(tileReference.Index))
+            // else if there is a ladder up and we are not yet on the top floor
+            else if (GameReferences.SpriteTileReferences.IsLadderUp(tileReference.Index) &&
+                     nCurrentFloor + 1 < nTopFloor)
             {
-                if (nCurrentFloor + 1 < nTopFloor)
-                {
-                    State.TheVirtualMap.LoadSmallMap(
-                        GameReferences.SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1),
-                        State.TheVirtualMap.CurrentPosition.XY);
-                    klimbResult = KlimbResult.Success;
-                    return getKlimbOutput(
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
-                }
+                State.TheVirtualMap.LoadSmallMap(
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor + 1),
+                    State.TheVirtualMap.CurrentPosition.XY);
+                klimbResult = KlimbResult.Success;
+                return getKlimbOutput(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
             }
 
             klimbResult = KlimbResult.RequiresDirection;
@@ -1016,7 +1007,8 @@ namespace Ultima5Redux
                     break;
                 case Avatar.AvatarState.Hidden:
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(direction),
+                        @"Tried to move in an unknown avatar boarding state");
             }
 
             // if we have reached 0, and we are adjusting -1 then we should assume it's a round world and we are going to the opposite side
@@ -1133,8 +1125,6 @@ namespace Ultima5Redux
             {
                 tryToMoveResult = TryToMoveResult.UsedStairs;
                 State.TheVirtualMap.UseStairs(State.TheVirtualMap.CurrentPosition.XY);
-                // todo: i need to figure out if I am going up or down stairs
-                //if (State.TheVirtualMap.GetStairsSprite(State.TheVirtualMap.CurrentPosition.XY) == )
                 if (State.TheVirtualMap.IsStairGoingDown(State.TheVirtualMap.CurrentPosition.XY))
                 {
                     return retStr.TrimEnd() + "\n" +
@@ -1219,7 +1209,6 @@ namespace Ultima5Redux
                 return retStr;
             }
 
-            // todo: this is a gross way to update location information
             currentCombatMap.MoveActiveCombatMapUnit(newPosition);
 
             tryToMoveResult = TryToMoveResult.Moved;
@@ -1381,16 +1370,14 @@ namespace Ultima5Redux
                     retStr += CastSleep(record, out bool _);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(potion), @"Tried to use an undefined potion");
             }
 
             return retStr;
-            // return $"Potion: {potion.Color}\n\nPoof!";
         }
 
         public string TryToUseScroll(Scroll scroll, PlayerCharacterRecord record)
         {
-            //State.PlayerInventory.RefreshInventory();
             PassTime();
 
             return $"Scroll: {scroll.ScrollSpell}\n\nA-la-Kazam!";
@@ -1422,7 +1409,8 @@ namespace Ultima5Redux
                                .WIELD_SCEPTRE) + "\n" + GameReferences.DataOvlRef.StringReferences.GetString(
                                DataOvlReference.WearUseItemStrings.SPACE_OF_LORD_BRITISH_DOT_N);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(lordBritishArtifact),
+                        @"Tried to use an undefined lordBritishArtifact");
             }
         }
 
@@ -1471,7 +1459,8 @@ namespace Ultima5Redux
                         GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
                             .COWARDICE_DOT));
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(shadowlordShard),
+                        @"Tried to use an undefined shadowlordShard");
             }
         }
 
@@ -1505,7 +1494,8 @@ namespace Ultima5Redux
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                         .SEXTANT_N_N);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(spcItem),
+                        @"Tried to use an unknown special item");
             }
         }
 
@@ -1550,6 +1540,7 @@ namespace Ultima5Redux
 
         public void YellWord(string word)
         {
+            // not yet implemented
         }
     }
 }

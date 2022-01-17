@@ -138,8 +138,6 @@ namespace Ultima5Redux.References.Dialogue
                     // it didn't match which means that it's one the special phrases and we will perform a lookup
                     usePhraseLookup = true;
 
-                // Debug code to help track down particular codes being written
-                // if (tempByte == 119) { Console.Write("");  }
                 // it wasn't a special phrase which means that the words are being typed one word at a time
                 if (!usePhraseLookup)
                 {
@@ -147,18 +145,13 @@ namespace Ultima5Redux.References.Dialogue
                     writingSingleCharacters = true;
                     // this signifies the end of the printing (sample code enters a newline)
                     if ((char)tempByte == '@')
-                        //Console.WriteLine("");
                         continue;
-                    //Console.Write((char)tempByte);
                     buildAWord += (char)tempByte;
                     if (nGoldCharsLeft > 0 && --nGoldCharsLeft == 0)
                     {
                         talkScript.AddTalkCommand(TalkScript.TalkCommand.PlainString, buildAWord);
                         buildAWord = string.Empty;
                     }
-
-                    // Debug code to help track down an NPCs question or response
-                    //if (buildAWord.Contains("to give unto charity")) { Console.Write(""); }
                 }
                 else // usePhraseLookup = true      
                 {
@@ -204,7 +197,6 @@ namespace Ultima5Redux.References.Dialogue
                             {
                                 // the first time you see the label is a goto statement
                                 talkScript.AddTalkLabel(TalkScript.TalkCommand.DefineLabel, offset);
-                                //talkScript.AddTalkLabel(TalkScript.TalkCommand.GotoLabel, offset);
                                 labelsSeenList[offset] = true;
                             }
                         }
@@ -250,27 +242,22 @@ namespace Ultima5Redux.References.Dialogue
             FileInfo fi = new(talkFilename);
             long talkFileSize = fi.Length;
 
-            // keep track of the NPC to file offset mappings
-            //List<NPC_TalkOffset> npcOffsets;
-
             // the first word in the talk file tells you how many characters are referenced in script
             int nEntries = Utils.LittleEndianConversion(talkByteList[0], talkByteList[1]);
 
-            //talkRefs.Add(mapMaster, new List<byte[]>(nEntries));
             _talkRefs.Add(mapMaster, new Dictionary<int, byte[]>(nEntries));
 
             // a list of all the offsets
-            //npcOffsets = new List<NPC_TalkOffset>(nEntries);
-            Dictionary<int, NPCTalkOffset> npcOffsets = new(nEntries);
+            Dictionary<int, NpcTalkOffset> npcOffsets = new(nEntries);
 
             unsafe
             {
                 // you are in a single file right now
-                for (int i = 0; i < nEntries * sizeof(NPCTalkOffset); i += sizeof(NPCTalkOffset))
+                for (int i = 0; i < nEntries * sizeof(NpcTalkOffset); i += sizeof(NpcTalkOffset))
                 {
                     // add 2 because we know we are starting at an offset
-                    NPCTalkOffset talkOffset =
-                        (NPCTalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NPCTalkOffset));
+                    NpcTalkOffset talkOffset =
+                        (NpcTalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NpcTalkOffset));
                     npcOffsets[talkOffset.npcIndex] = talkOffset;
 
                     // OMG I'm tired.. figure out why this isn't printing properly....
@@ -317,7 +304,7 @@ namespace Ultima5Redux.References.Dialogue
         ///     the mapping of NPC # to file .tlk file offset
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-        private readonly struct NPCTalkOffset
+        private readonly struct NpcTalkOffset
         {
             public readonly ushort npcIndex;
             public readonly ushort fileOffset;

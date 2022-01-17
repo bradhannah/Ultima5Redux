@@ -886,7 +886,7 @@ namespace Ultima5Redux.Maps
                 case Point2D.Direction.None:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(xy), @"Point2D is out of range for stairs check");
             }
 
             return nSpriteNum;

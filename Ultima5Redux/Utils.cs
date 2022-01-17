@@ -33,12 +33,10 @@ namespace Ultima5Redux
         {
             int listCount = byteList.Count;
 
-            // TODO: add safety code to make sure there is no remainder when dividing listCount/splitEveryN
             _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
             if (remainder != 0)
-                throw new IndexOutOfRangeException("The Remainder: " + remainder +
-                                                   " should be zero when loading a map");
+                throw new ArgumentOutOfRangeException($"The Remainder: {remainder} should be zero when loading a map");
 
             byte[][] byteArray = Init2DArray<byte>(length / splitEveryN, length / splitEveryN);
 
@@ -135,26 +133,6 @@ namespace Ultima5Redux
             return randomizedQueue;
         }
 
-        public static string GetFirstFileAndPathCaseInsensitive(string fileNameAndPath)
-        {
-            if (string.IsNullOrEmpty(fileNameAndPath))
-                throw new Ultima5ReduxException($"{fileNameAndPath} (file) does not exist");
-            string dirName = Path.GetDirectoryName(fileNameAndPath);
-            if (string.IsNullOrEmpty(dirName))
-                throw new Ultima5ReduxException($"{dirName} (directory) does not exist!");
-
-            foreach (string checkFileName in Directory.GetFiles(dirName))
-            {
-                if (string.Compare(Path.GetFileName(checkFileName), Path.GetFileName(fileNameAndPath),
-                        StringComparison.InvariantCultureIgnoreCase) == 0)
-                {
-                    return checkFileName;
-                }
-            }
-
-            throw new FileNotFoundException($"Can't find {fileNameAndPath}");
-        }
-
         /// <summary>
         ///     Reads a list of bytes from a file.
         /// </summary>
@@ -181,6 +159,26 @@ namespace Ultima5Redux
             return specificContents;
         }
 
+        public static string GetFirstFileAndPathCaseInsensitive(string fileNameAndPath)
+        {
+            if (string.IsNullOrEmpty(fileNameAndPath))
+                throw new Ultima5ReduxException($"{fileNameAndPath} (file) does not exist");
+            string dirName = Path.GetDirectoryName(fileNameAndPath);
+            if (string.IsNullOrEmpty(dirName))
+                throw new Ultima5ReduxException($"{dirName} (directory) does not exist!");
+
+            foreach (string checkFileName in Directory.GetFiles(dirName))
+            {
+                if (string.Compare(Path.GetFileName(checkFileName), Path.GetFileName(fileNameAndPath),
+                        StringComparison.InvariantCultureIgnoreCase) == 0)
+                {
+                    return checkFileName;
+                }
+            }
+
+            throw new FileNotFoundException($"Can't find {fileNameAndPath}");
+        }
+
         /// <summary>
         ///     Nasty catch all function that cleans up typical mixed case strings
         /// </summary>
@@ -192,8 +190,6 @@ namespace Ultima5Redux
             if (!friendlyStr.Contains(" ")) friendlyStr = AddSpacesBeforeCaps(friendlyStr);
 
             friendlyStr = EnTextInfo.ToTitleCase(friendlyStr.ToLower());
-            // friendlyStr = AddSpacesBeforeCaps(friendlyStr);
-            // friendlyStr = friendlyStr.Replace("  ", " ");
             return friendlyStr;
         }
 
@@ -214,17 +210,6 @@ namespace Ultima5Redux
             }
 
             return theArray;
-        }
-
-        public static void Set2DArrayAllToValue<T>(IEnumerable<T[]> twoDArray, T value)
-        {
-            foreach (T[] t in twoDArray)
-            {
-                for (int j = 0; j < t.Length; j++)
-                {
-                    t[j] = value;
-                }
-            }
         }
 
         public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols, T defaultValue)
@@ -268,12 +253,10 @@ namespace Ultima5Redux
         {
             int listCount = theList.Count;
 
-            // TODO: add safety code to make sure there is no remainder when dividing listCount/splitEveryN
             _ = Math.DivRem(listCount, splitEveryN, out int remainder);
 
             if (remainder != 0)
-                throw new IndexOutOfRangeException("The Remainder: " + remainder +
-                                                   " should be zero when loading a map");
+                throw new ArgumentOutOfRangeException($"The Remainder: {remainder} should be zero when loading a map");
 
             // if a problem pops up for the maps in the future, then it's because of this call... am I creating the array correctly???
             T[][] theArray = Init2DArray<T>(length / splitEveryN, splitEveryN);
@@ -335,6 +318,17 @@ namespace Ultima5Redux
             object temp = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), t);
             handle.Free();
             return temp;
+        }
+
+        public static void Set2DArrayAllToValue<T>(IEnumerable<T[]> twoDArray, T value)
+        {
+            foreach (T[] t in twoDArray)
+            {
+                for (int j = 0; j < t.Length; j++)
+                {
+                    t[j] = value;
+                }
+            }
         }
 
         public static T[][] TransposeArray<T>(T[][] ts)

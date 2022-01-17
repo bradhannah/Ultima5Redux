@@ -94,23 +94,18 @@ namespace Ultima5Redux.Maps
         // SEARCH ITEMS
 
         public bool HasExposedSearchItems(int x, int y) => _exposedSearchItems.ContainsKey(new Point2D(x, y));
-        //GetExposedSearchItems(x, y).Count > 0;
 
         public bool HasExposedSearchItems(in Point2D xy)
         {
             if (!_exposedSearchItems.ContainsKey(xy)) return false;
             return (_exposedSearchItems[xy].Count > 0);
-            //GetExposedSearchItems(xy).Count > 0;
-            //HasExposedSearchItems(xy.X, xy.Y);
         }
 
         public bool HasOverrideTile(int x, int y) => _overrideMap.ContainsKey(new Point2D(x, y));
-        //GetOverrideTileReference(x, y) != null;
 
         public bool HasOverrideTile(in Point2D xy)
         {
             return _overrideMap.ContainsKey(xy);
-            //HasOverrideTile(xy.X, xy.Y);
         }
 
         public void SetOverrideTile(in Point2D xy, int nIndex)
