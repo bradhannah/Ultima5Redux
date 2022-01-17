@@ -14,7 +14,7 @@ namespace Ultima5Redux.Maps
     [DataContract] public abstract class Map
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum Maps { Small = -1, Overworld, Underworld, Combat }
+        public enum Maps { Small = -1, Overworld, Underworld, Combat, Dungeon }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }

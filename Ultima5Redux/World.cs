@@ -414,7 +414,21 @@ namespace Ultima5Redux
             {
                 SmallMapReferences.SingleMapReference.Location location =
                     GameReferences.LargeMapRef.GetLocationByMapXY(xy);
-                State.TheVirtualMap.LoadSmallMap(GameReferences.SmallMapRef.GetSingleMapByLocation(location, 0));
+                SmallMapReferences.SingleMapReference singleMap =
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(location, 0);
+                if (singleMap.MapType == Map.Maps.Dungeon)
+                {
+                    retStr =
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                            .ENTER_SPACE) +
+                        GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
+                        GameReferences.SmallMapRef.GetLocationName(location);
+                    retStr += "\nUnable to enter the dungeons at this time!";
+                    bWasSuccessful = false;
+                    return retStr;
+                }
+
+                State.TheVirtualMap.LoadSmallMap(singleMap);
                 // set us to the front of the building
                 State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
 

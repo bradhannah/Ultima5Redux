@@ -114,8 +114,11 @@ namespace Ultima5ReduxTesting
             _ = "";
             foreach (SmallMapReferences.SingleMapReference smr in GameReferences.SmallMapRef.MapReferenceList)
             {
-                world.State.TheVirtualMap.LoadSmallMap(
-                    GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
+                SmallMapReferences.SingleMapReference singleMap =
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
+                // we don't test dungeon maps here
+                if (singleMap.MapType == Map.Maps.Dungeon) continue;
+                world.State.TheVirtualMap.LoadSmallMap(singleMap);
             }
 
             Assert.True(true);
@@ -241,6 +244,9 @@ namespace Ultima5ReduxTesting
             foreach (SmallMapReferences.SingleMapReference smr in GameReferences.SmallMapRef.MapReferenceList)
             {
                 Debug.WriteLine("***** Loading " + smr.MapLocation + " on floor " + smr.Floor);
+                SmallMapReferences.SingleMapReference singleMapReference =
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
+                if (singleMapReference.MapType == Map.Maps.Dungeon) continue;
                 world.State.TheVirtualMap.LoadSmallMap(
                     GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor));
 
@@ -1564,6 +1570,20 @@ namespace Ultima5ReduxTesting
             GameReferences.Initialize();
 
             Assert.True(world.State.TheVirtualMap.IsMapUnitOccupiedTile(new Point2D(15, 15)));
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void test_EnterDungeon(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            Point2D minocCovetousDungeon = new Point2D(156, 27);
+            world.State.TheVirtualMap.MoveAvatar(minocCovetousDungeon);
+            world.EnterBuilding(minocCovetousDungeon, out bool bWasSuccessful);
+            Assert.IsNotNull(world);
         }
     }
 }

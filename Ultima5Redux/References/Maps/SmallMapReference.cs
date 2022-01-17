@@ -39,8 +39,8 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         public List<SingleMapReference> MapReferenceList { get; } = new();
 
-        public Dictionary<SingleMapReference.Location, Dictionary<int, SingleMapReference>> MapReferenceDictionary =
-            new();
+        private readonly Dictionary<SingleMapReference.Location, Dictionary<int, SingleMapReference>>
+            _mapReferenceDictionary = new();
 
         /// <summary>
         ///     Construct all small map references
@@ -96,14 +96,14 @@ namespace Ultima5Redux.References.Maps
             AddLocation(SingleMapReference.Location.Empath_Abbey, false, 3);
             AddLocation(SingleMapReference.Location.Serpents_Hold, true, 3);
 
-            AddLocation(SingleMapReference.Location.Deceit, false, 0);
-            AddLocation(SingleMapReference.Location.Despise, false, 0);
-            AddLocation(SingleMapReference.Location.Destard, false, 0);
-            AddLocation(SingleMapReference.Location.Wrong, false, 0);
-            AddLocation(SingleMapReference.Location.Covetous, false, 0);
-            AddLocation(SingleMapReference.Location.Shame, false, 0);
-            AddLocation(SingleMapReference.Location.Hythloth, false, 0);
-            AddLocation(SingleMapReference.Location.Doom, false, 0);
+            AddLocation(SingleMapReference.Location.Deceit, false, 8);
+            AddLocation(SingleMapReference.Location.Despise, false, 8);
+            AddLocation(SingleMapReference.Location.Destard, false, 8);
+            AddLocation(SingleMapReference.Location.Wrong, false, 8);
+            AddLocation(SingleMapReference.Location.Covetous, false, 8);
+            AddLocation(SingleMapReference.Location.Shame, false, 8);
+            AddLocation(SingleMapReference.Location.Hythloth, false, 8);
+            AddLocation(SingleMapReference.Location.Doom, false, 8);
         }
 
         /// <summary>
@@ -150,6 +150,12 @@ namespace Ultima5Redux.References.Maps
                 _masterFileLocationDictionary.Add(masterMap, new List<SingleMapReference.Location>());
             _masterFileLocationDictionary[masterMap].Add(location);
 
+            // temporary to prevent crashing when trying to enter a dungeon
+            //if (masterMap == SingleMapReference.SmallMapMasterFiles.Dungeon)
+            {
+                //  return;
+            }
+
             // get the filename of the location - we use it as key into a map
             string dataFilename = SingleMapReference.GetFilenameFromLocation(location);
 
@@ -163,10 +169,10 @@ namespace Ultima5Redux.References.Maps
             IEnumerable<SingleMapReference> singleMaps =
                 GenerateSingleMapReferences(location, hasBasement ? -1 : 0, nFloors, roomOffset);
             MapReferenceList.AddRange(singleMaps);
-            MapReferenceDictionary.Add(location, new Dictionary<int, SingleMapReference>());
+            _mapReferenceDictionary.Add(location, new Dictionary<int, SingleMapReference>());
             foreach (SingleMapReference singleMapReference in singleMaps)
             {
-                MapReferenceDictionary[location].Add(singleMapReference.Floor, singleMapReference);
+                _mapReferenceDictionary[location].Add(singleMapReference.Floor, singleMapReference);
             }
 
             // add the number of floors you have just added so that it can increment the file offset for subsequent calls
@@ -339,17 +345,10 @@ namespace Ultima5Redux.References.Maps
         /// <returns>a single map reference providing details on the map itself</returns>
         public SingleMapReference GetSingleMapByLocation(SingleMapReference.Location location, int floor)
         {
-            if (!MapReferenceDictionary[location].ContainsKey(floor))
+            if (!_mapReferenceDictionary[location].ContainsKey(floor))
                 throw new Ultima5ReduxException(location + ": " + floor + " was not found!");
 
-            return MapReferenceDictionary[location][floor];
-            // foreach (SingleMapReference mapRef in MapReferenceList.Where(mapRef =>
-            //     mapRef.MapLocation == location && mapRef.Floor == floor))
-            // {
-            //     return mapRef;
-            // }
-            //
-            // throw new Ultima5ReduxException("_location was not found!");
+            return _mapReferenceDictionary[location][floor];
         }
 
         public bool HasBasement(SingleMapReference.Location location)

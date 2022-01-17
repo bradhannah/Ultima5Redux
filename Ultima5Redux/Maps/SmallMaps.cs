@@ -20,6 +20,15 @@ namespace Ultima5Redux.Maps
 
             foreach (SmallMapReferences.SingleMapReference mapRef in GameReferences.SmallMapRef.MapReferenceList)
             {
+                // TEMPORARY while we don't currently read in Dungeons
+                if (mapRef.MapType == Map.Maps.Dungeon)
+                {
+                    if (!_mapLocationDictionary.ContainsKey(mapRef.MapLocation))
+                        _mapLocationDictionary.Add(mapRef.MapLocation, new Dictionary<int, SmallMap>());
+                    _mapLocationDictionary[mapRef.MapLocation].Add(mapRef.Floor, null);
+                    continue;
+                }
+
                 // now I can go through each and every reference
                 SmallMap smallMap = new(mapRef);
 
