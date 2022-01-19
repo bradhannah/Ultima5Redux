@@ -143,7 +143,7 @@ namespace Ultima5Redux
         private void BoardAndCleanFromWorld(MapUnit mapUnit)
         {
             // board the unit
-            State.TheVirtualMap.TheMapUnits.AvatarMapUnit.BoardMapUnit(mapUnit);
+            State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().BoardMapUnit(mapUnit);
             // clean it from the world so it no longer appears
             State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(mapUnit);
         }
@@ -255,7 +255,7 @@ namespace Ultima5Redux
             Debug.Assert((State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
                 .HasOneOfMore));
 
-            if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
+            if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing)
             {
                 bWasUsed = false;
                 return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
@@ -264,7 +264,8 @@ namespace Ultima5Redux
 
             State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity--;
             MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
-                State.TheVirtualMap.CurrentPosition.XY, State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentDirection,
+                State.TheVirtualMap.CurrentPosition.XY,
+                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentDirection,
                 out int _);
             BoardAndCleanFromWorld(carpet);
             return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
@@ -945,7 +946,7 @@ namespace Ultima5Redux
 
             // we change the direction of the Avatar map unit
             // this will be used to determine which is the appropriate sprite to show
-            bool bAvatarActuallyMoved = State.TheVirtualMap.TheMapUnits.AvatarMapUnit.Move(direction);
+            bool bAvatarActuallyMoved = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Move(direction);
 
             if (!bAvatarActuallyMoved)
             {
@@ -958,7 +959,7 @@ namespace Ultima5Redux
             // we know that if the avatar is on a frigate, then he hasn't just changed direction
             // so, if sails are hoisted and they are heading in a specific direction, then we will ignore
             // any additional keystrokes
-            if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.AreSailsHoisted &&
+            if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().AreSailsHoisted &&
                 State.WindDirection != Point2D.Direction.None && bManualMovement)
             {
                 tryToMoveResult = TryToMoveResult.IgnoredMovement;
@@ -966,7 +967,7 @@ namespace Ultima5Redux
             }
 
             // we start with a different descriptor depending on the vehicle the Avatar is currently on
-            switch (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState)
+            switch (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState)
             {
                 case Avatar.AvatarState.Regular:
                     retStr = GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
@@ -980,7 +981,7 @@ namespace Ultima5Redux
                              GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
                     break;
                 case Avatar.AvatarState.Frigate:
-                    if (State.TheVirtualMap.TheMapUnits.AvatarMapUnit.AreSailsHoisted)
+                    if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().AreSailsHoisted)
                     {
                         if (bManualMovement)
                         {
@@ -1059,7 +1060,7 @@ namespace Ultima5Redux
             }
             else // it is not passable
             {
-                Avatar avatar = State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+                Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
                 if (!bManualMovement && avatar.AreSailsHoisted)
                 {
                     int nDamage = _random.Next(5, 15);
@@ -1144,8 +1145,10 @@ namespace Ultima5Redux
                     .GetSlowMovementString(newTileReference.Index).TrimEnd();
 
                 // if you are on the carpet or skiff and hit rough seas then we injure the players and report it back 
-                if ((State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState == Avatar.AvatarState.Carpet ||
-                     State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentAvatarState == Avatar.AvatarState.Skiff) &&
+                if ((State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState ==
+                     Avatar.AvatarState.Carpet ||
+                     State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState ==
+                     Avatar.AvatarState.Skiff) &&
                     newTileReference.Index == 1)
                 {
                     State.CharacterRecords.RoughSeasInjure();
@@ -1522,9 +1525,9 @@ namespace Ultima5Redux
         /// <returns>output string</returns>
         public string YellForSails(out bool bSailsHoisted)
         {
-            Debug.Assert(State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate);
+            Debug.Assert(State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Frigate);
 
-            if (!(State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate avatarsFrigate))
+            if (!(State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Frigate avatarsFrigate))
                 throw new Ultima5ReduxException("Tried get Avatar's frigate, but it was null");
 
             avatarsFrigate.SailsHoisted = !avatarsFrigate.SailsHoisted;

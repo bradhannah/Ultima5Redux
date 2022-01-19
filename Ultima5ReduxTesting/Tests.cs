@@ -901,12 +901,13 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
 
             string retStr = world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult result,
                 true);
             // make sure it is using the extended sprite
-            Assert.True(world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit.BoardedTileReference
+            Assert.True(world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit
+                .BoardedTileReference
                 .Index == 515);
         }
 
@@ -914,7 +915,7 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
@@ -972,7 +973,7 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
@@ -986,7 +987,7 @@ namespace Ultima5ReduxTesting
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
 
-            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
@@ -1000,7 +1001,7 @@ namespace Ultima5ReduxTesting
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
 
-            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
@@ -1014,7 +1015,7 @@ namespace Ultima5ReduxTesting
             // World world = new World(SaveDirectory);
             World world = CreateWorldFromLegacy(saveFiles);
 
-            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.AvatarMapUnit;
+            Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
@@ -1355,7 +1356,7 @@ namespace Ultima5ReduxTesting
             string reagentName = reagent.LongName;
 
             CombatItemReference weaponRef =
-                world.State.PlayerInventory.TheWeapons.AllCombatItems[0].TheCombatItemReference;
+                world.State.PlayerInventory.TheWeapons.AllCombatItems.ToList()[0].TheCombatItemReference;
             Assert.NotNull(weaponRef);
             string weaponRefStr = weaponRef.EquipmentName;
 

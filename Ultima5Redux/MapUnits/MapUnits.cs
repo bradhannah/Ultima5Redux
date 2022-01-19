@@ -45,8 +45,8 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember]
         internal MapUnitPosition CurrentAvatarPosition
         {
-            get => AvatarMapUnit.MapUnitPosition;
-            set => AvatarMapUnit.MapUnitPosition = value;
+            get => GetAvatarMapUnit().MapUnitPosition;
+            set => GetAvatarMapUnit().MapUnitPosition = value;
         }
 
         [IgnoreDataMember] private readonly ImportedGameState _importedGameState;
@@ -55,7 +55,15 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; set; }
 
-        [IgnoreDataMember] public Avatar AvatarMapUnit => CurrentMapUnits.TheAvatar;
+        public Avatar GetAvatarMapUnit()
+        {
+            if (CurrentMapUnits == null)
+                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits is null");
+            if (CurrentMapUnits.TheAvatar == null)
+                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits.TheAvatar is null");
+
+            return CurrentMapUnits.TheAvatar;
+        }
 
         [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
 
@@ -107,9 +115,9 @@ namespace Ultima5Redux.MapUnits
 
             // We will reassign each AvatarMapUnit to the active one. This will ensure that when the Avatar
             // has boarded something, it should carry between maps
-            MasterAvatarMapUnit = AvatarMapUnit;
-            GetMapUnitCollection(Map.Maps.Overworld).AllMapUnits[0] = AvatarMapUnit;
-            GetMapUnitCollection(Map.Maps.Underworld).AllMapUnits[0] = AvatarMapUnit;
+            MasterAvatarMapUnit = GetAvatarMapUnit();
+            GetMapUnitCollection(Map.Maps.Overworld).AllMapUnits[0] = GetAvatarMapUnit();
+            GetMapUnitCollection(Map.Maps.Underworld).AllMapUnits[0] = GetAvatarMapUnit();
 
             SetAllExtendedSprites();
 
@@ -123,7 +131,7 @@ namespace Ultima5Redux.MapUnits
 
         [OnDeserialized] private void PostDeserialized(StreamingContext context)
         {
-            MasterAvatarMapUnit = AvatarMapUnit;
+            MasterAvatarMapUnit = GetAvatarMapUnit();
         }
 
         /// <summary>
@@ -424,7 +432,7 @@ namespace Ultima5Redux.MapUnits
                     // load the existing AvatarMapUnit with boarded MapUnits
 
                     SmallMapUnitCollection.Add(MasterAvatarMapUnit);
-                    AvatarMapUnit.MapLocation = location;
+                    GetAvatarMapUnit().MapLocation = location;
                     continue;
                 }
 
@@ -619,8 +627,9 @@ namespace Ultima5Redux.MapUnits
 
         public Skiff MakeAndBoardSkiff()
         {
-            Skiff skiff = CreateSkiff(AvatarMapUnit.MapUnitPosition.XY, AvatarMapUnit.CurrentDirection, out int _);
-            AvatarMapUnit.BoardMapUnit(skiff);
+            Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().CurrentDirection,
+                out int _);
+            GetAvatarMapUnit().BoardMapUnit(skiff);
             ClearAndSetEmptyMapUnits(skiff);
             return skiff;
         }
@@ -660,8 +669,8 @@ namespace Ultima5Redux.MapUnits
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
             }
 
-            AvatarMapUnit.MapLocation = mapRef.MapLocation;
-            AvatarMapUnit.MapUnitPosition.Floor = mapRef.Floor;
+            GetAvatarMapUnit().MapLocation = mapRef.MapLocation;
+            GetAvatarMapUnit().MapUnitPosition.Floor = mapRef.Floor;
         }
 
         /// <summary>
@@ -684,27 +693,27 @@ namespace Ultima5Redux.MapUnits
             retStr = GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.XIT)
                 .TrimEnd();
 
-            if (!virtualMap.TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing)
+            if (!virtualMap.TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing)
             {
                 retStr += " " + GameReferences.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.KeypressCommandsStrings.WHAT_Q).Trim();
                 return null;
             }
 
-            if (!AvatarMapUnit.CurrentBoardedMapUnit.CanBeExited(virtualMap))
+            if (!GetAvatarMapUnit().CurrentBoardedMapUnit.CanBeExited(virtualMap))
             {
                 retStr += "\n" + GameReferences.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.SleepTransportStrings.N_NO_LAND_NEARBY_BANG_N).Trim();
                 return null;
             }
 
-            MapUnit unboardedMapUnit = AvatarMapUnit.UnboardedAvatar();
+            MapUnit unboardedMapUnit = GetAvatarMapUnit().UnboardedAvatar();
             Debug.Assert(unboardedMapUnit != null);
 
             // set the current positions to the equal the Avatar's as he exits the vehicle 
             unboardedMapUnit.MapLocation = CurrentLocation;
             unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
-            unboardedMapUnit.Direction = AvatarMapUnit.CurrentDirection;
+            unboardedMapUnit.Direction = GetAvatarMapUnit().CurrentDirection;
             unboardedMapUnit.KeyTileReference = unboardedMapUnit.NonBoardedTileReference;
 
             AddNewMapUnit(CurrentMapType, unboardedMapUnit);

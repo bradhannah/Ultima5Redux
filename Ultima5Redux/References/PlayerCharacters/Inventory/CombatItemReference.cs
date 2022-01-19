@@ -62,9 +62,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             EquipmentName = GetEquipmentString(dataOvlReference, (int)specificEquipment);
             RequiredStrength = GetRequiredStrength(dataOvlReference, (int)specificEquipment);
             SpecificEquipment = specificEquipment;
-            //Sprite = inventoryReference.ItemSpriteExposed;
             Sprite = inventoryReference.ItemSpriteExposed;
-            //GameReferences.SpriteTileReferences.GetTileNumberByName(inventoryReference.ItemName);
             InitializePrices();
         }
 

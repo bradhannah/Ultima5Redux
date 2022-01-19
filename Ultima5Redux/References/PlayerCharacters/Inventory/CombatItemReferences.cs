@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory
@@ -11,20 +12,26 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         private readonly Dictionary<DataOvlReference.Equipment, CombatItemReference> _equipmentToCombatItemReference =
             new();
 
-        public readonly List<ArmourReference> AllArmour = new();
-        public readonly List<ArmourReference> Amulets = new();
-        public readonly List<ArmourReference> ChestArmours = new();
-        public readonly List<ArmourReference> Helms = new();
-        public readonly List<ArmourReference> Rings = new();
+        private readonly List<ArmourReference> _allArmour = new();
+        private readonly List<ArmourReference> _amulets = new();
+        private readonly List<ArmourReference> _chestArmours = new();
+        private readonly List<ArmourReference> _helms = new();
+        private readonly List<ArmourReference> _rings = new();
+        private readonly List<WeaponReference> _weaponReferences = new();
 
-        public readonly List<WeaponReference> WeaponReferences = new();
+        public ReadOnlyCollection<ArmourReference> AllArmour => _allArmour.AsReadOnly();
+        public ReadOnlyCollection<ArmourReference> Amulets => _amulets.AsReadOnly();
+        public ReadOnlyCollection<ArmourReference> ChestArmours => _chestArmours.AsReadOnly();
+        public ReadOnlyCollection<ArmourReference> Helms => _helms.AsReadOnly();
+        public ReadOnlyCollection<ArmourReference> Rings => _rings.AsReadOnly();
+
+        public ReadOnlyCollection<WeaponReference> WeaponReferences => _weaponReferences.AsReadOnly();
 
         public CombatItemReferences(InventoryReferences inventoryReferences)
         {
             List<InventoryReference> combatItems =
                 inventoryReferences.GetInventoryReferenceList(InventoryReferences.InventoryReferenceType.Armament);
             // foreach of the weapon references
-            ///// NOTE! I need to actually sort by the armours into the right arrays!!!!!!!!!!!!!!!!!
             foreach (InventoryReference inventoryReference in combatItems)
             {
                 DataOvlReference.Equipment equipment = inventoryReference.GetAsEquipment();
@@ -34,41 +41,46 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                         ArmourReference armourReference = new(GameReferences.DataOvlRef, inventoryReference);
                         _equipmentToCombatItemReference.Add(equipment, armourReference);
 
-                        AllArmour.Add(armourReference);
+                        _allArmour.Add(armourReference);
                         switch (armourReference.TheArmourType)
                         {
                             case ArmourReference.ArmourType.Amulet:
-                                Amulets.Add(armourReference);
+                                _amulets.Add(armourReference);
                                 break;
                             case ArmourReference.ArmourType.ChestArmour:
-                                ChestArmours.Add(armourReference);
+                                _chestArmours.Add(armourReference);
                                 break;
                             case ArmourReference.ArmourType.Helm:
-                                Helms.Add(armourReference);
+                                _helms.Add(armourReference);
                                 break;
                             case ArmourReference.ArmourType.Ring:
-                                Rings.Add(armourReference);
+                                _rings.Add(armourReference);
                                 break;
                             default:
-                                throw new ArgumentOutOfRangeException();
+                                throw new ArgumentOutOfRangeException(nameof(inventoryReferences),
+                                    @"Bad combat item (armour) reference type");
                         }
 
                         break;
                     case CombatItemType.Weapon:
                         WeaponReference weaponReference = new(GameReferences.DataOvlRef, inventoryReference);
-                        WeaponReferences.Add(weaponReference);
+                        _weaponReferences.Add(weaponReference);
                         _equipmentToCombatItemReference.Add(equipment, weaponReference);
                         break;
                     case CombatItemType.Other:
                         throw new Ultima5ReduxException("Tried to create CombatItemReference from " + equipment);
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(inventoryReferences),
+                            @"Bad combat item reference type");
                 }
             }
         }
 
         internal static bool EquipmentMatches(Array theArray, ref DataOvlReference.Equipment equipment)
         {
+            if (theArray == null)
+                throw new Ultima5ReduxException("Tried to match equipment, but passed in null array");
+
             foreach (object theEnum in theArray)
             {
                 if (string.Equals(equipment.ToString(), theEnum.ToString(),
@@ -82,13 +94,13 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         {
             if (EquipmentMatches(Enum.GetValues(typeof(WeaponReference.WeaponTypeEnum)), ref equipment))
                 return CombatItemType.Weapon;
-            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.HelmEnum)), ref equipment))
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.SpecificHelm)), ref equipment))
                 return CombatItemType.Armour;
-            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.ChestArmourEnum)), ref equipment))
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.SpecificChestArmour)), ref equipment))
                 return CombatItemType.Armour;
-            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.RingEnum)), ref equipment))
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.SpecificRing)), ref equipment))
                 return CombatItemType.Armour;
-            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.AmuletEnum)), ref equipment))
+            if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.SpecificAmulet)), ref equipment))
                 return CombatItemType.Armour;
 
             throw new Ultima5ReduxException("Tried to create CombatItemReference from " + equipment);

@@ -324,7 +324,7 @@ namespace Ultima5Redux.Maps
             if (IsRepeatingMap)
             {
                 nAdjustedX = Point2D.AdjustToMax(x, NumOfXTiles);
-                nAdjustedY = Point2D.AdjustToMax(y, NumOfXTiles);
+                nAdjustedY = Point2D.AdjustToMax(y, NumOfYTiles);
             }
             else
             {

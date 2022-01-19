@@ -14,17 +14,15 @@ namespace Ultima5Redux.References
         private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
         private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
 
-        private static string U5Directory
+        private static string GetU5Directory()
         {
-            get
-            {
-                if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
-                if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
-                if (Directory.Exists(GOLD_DIR)) return GOLD_DIR;
-                throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
-                                                Directory.GetCurrentDirectory() + "\nDirs: " +
-                                                Directory.GetDirectories(Directory.GetCurrentDirectory()));
-            }
+            if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
+            if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
+            if (Directory.Exists(GOLD_DIR)) return GOLD_DIR;
+
+            throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
+                                            Directory.GetCurrentDirectory() + "\nDirs: " +
+                                            Directory.GetDirectories(Directory.GetCurrentDirectory()));
         }
 
         public static CombatItemReferences CombatItemRefs { get; private set; }
@@ -128,7 +126,7 @@ namespace Ultima5Redux.References
         {
             if (dataDirectory == "")
             {
-                dataDirectory = U5Directory;
+                dataDirectory = GetU5Directory();
             }
 
             if (!Directory.Exists(dataDirectory))

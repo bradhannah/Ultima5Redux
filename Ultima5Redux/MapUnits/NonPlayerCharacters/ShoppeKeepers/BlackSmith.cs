@@ -173,10 +173,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Gets request of which item you would like to sell to the blacksmith
         /// </summary>
         /// <returns></returns>
-        public string GetWhichItemToSell()
-        {
-            return "Which item wouldst thou like to sell?";
-        }
+        public string GetWhichItemToSell() => "Which item wouldst thou like to sell?";
 
         /// <summary>
         ///     Gets the response of blacksmith offering to show you what they have

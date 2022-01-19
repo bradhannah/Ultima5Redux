@@ -56,10 +56,10 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             foreach (Armour armour in AllCombatItems.OfType<Armour>())
             {
-                if (armour.ArmourRef == null)
+                if (armour.GetArmourRef() == null)
                     throw new Ultima5ReduxException("Tried to read in armour ref, but failed.");
 
-                ArmourReference.ArmourType armourType = armour.ArmourRef.TheArmourType;
+                ArmourReference.ArmourType armourType = armour.GetArmourRef().TheArmourType;
                 ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
                 if (!Items.ContainsKey(armourType)) Items.Add(armourType, new List<Armour>());
                 Items[armourType].Add(armour);
@@ -84,30 +84,26 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             {
                 case ArmourReference.ArmourType.Amulet:
                     Amulet amulet = new(armourReference, nQuantity);
-                    //GameStateByteArray[(int)armourReference.SpecificEquipment]
                     armour = amulet;
                     Amulets.Add(amulet);
                     break;
                 case ArmourReference.ArmourType.ChestArmour:
                     ChestArmour chestArmour = new(armourReference, nQuantity);
-                    //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = chestArmour;
                     ChestArmours.Add(chestArmour);
                     break;
                 case ArmourReference.ArmourType.Helm:
                     Helm helm = new(armourReference, nQuantity);
-                    //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = helm;
                     Helms.Add(helm);
                     break;
                 case ArmourReference.ArmourType.Ring:
                     Ring ring = new(armourReference, nQuantity);
-                    //GameStateByteArray[(int)armourReference.SpecificEquipment]);
                     armour = ring;
                     Rings.Add(ring);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(armourReference), @"Armour reference not found");
             }
 
             ItemsFromEquipment.Add(armour.SpecificEquipment, armour);

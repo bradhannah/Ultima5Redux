@@ -244,9 +244,11 @@ namespace Ultima5Redux.MapUnits
             // go left or right, otherwise we maintain direction - UNLESS we have forced extended sprites on
             // for the vehicle
             bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections ?? false;
-            if (_onlyLeftRight[CurrentAvatarState] && !bUseFourDirections)
-                if (direction != Point2D.Direction.Left && direction != Point2D.Direction.Right)
-                    bChangeTile = false;
+            if (_onlyLeftRight[CurrentAvatarState] &&
+                !bUseFourDirections &&
+                direction != Point2D.Direction.Left &&
+                direction != Point2D.Direction.Right)
+                bChangeTile = false;
 
             // we only track changes in tile if we are changing the direction of the sprite, otherwise we don't track
             // it and don't care - this makes sure carpets and horses don't change direction when going up

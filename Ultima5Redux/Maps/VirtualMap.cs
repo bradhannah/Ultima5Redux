@@ -109,15 +109,19 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        [IgnoreDataMember] public bool IsAvatarInFrigate => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Frigate;
-        [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Skiff;
+        [IgnoreDataMember]
+        public bool IsAvatarInFrigate => TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Frigate;
+
+        [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Skiff;
 
         [IgnoreDataMember]
         public bool IsAvatarRidingCarpet =>
-            TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is MagicCarpet;
+            TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is MagicCarpet;
 
-        [IgnoreDataMember] public bool IsAvatarRidingHorse => TheMapUnits.AvatarMapUnit.CurrentBoardedMapUnit is Horse;
-        [IgnoreDataMember] public bool IsAvatarRidingSomething => TheMapUnits.AvatarMapUnit.IsAvatarOnBoardedThing;
+        [IgnoreDataMember]
+        public bool IsAvatarRidingHorse => TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Horse;
+
+        [IgnoreDataMember] public bool IsAvatarRidingSomething => TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing;
 
         [IgnoreDataMember]
         public bool IsBasement
@@ -334,7 +338,7 @@ namespace Ultima5Redux.Maps
 
         internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases = false)
         {
-            return IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
+            return IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.GetAvatarMapUnit().CurrentAvatarState);
         }
 
         internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
@@ -1090,7 +1094,7 @@ namespace Ultima5Redux.Maps
         }
 
         public bool IsLandNearby() =>
-            IsLandNearby(CurrentPosition.XY, false, TheMapUnits.AvatarMapUnit.CurrentAvatarState);
+            IsLandNearby(CurrentPosition.XY, false, TheMapUnits.GetAvatarMapUnit().CurrentAvatarState);
 
         public bool IsLandNearby(in Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState)
         {
@@ -1319,7 +1323,7 @@ namespace Ultima5Redux.Maps
 
             TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, bLoadFromDisk);
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
-            TheMapUnits.AvatarMapUnit.MapUnitPosition.Floor = singleMapReference.Floor;
+            TheMapUnits.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
 
             if (xy != null) CurrentPosition.XY = xy;
         }
@@ -1342,7 +1346,7 @@ namespace Ultima5Redux.Maps
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
                     TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder, false);
-                    TheMapUnits.AvatarMapUnit.MapUnitPosition = PreMapUnitPosition;
+                    TheMapUnits.GetAvatarMapUnit().MapUnitPosition = PreMapUnitPosition;
                     PreCombatMap = null;
                     break;
                 default:
