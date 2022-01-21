@@ -30,13 +30,13 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public SmallMapReferences.SingleMapReference.Location CurrentLocation { get; private set; }
 
-        [DataMember] public MapUnitCollection OverworldMapMapUnitCollection { get; private set; } = new();
+        [DataMember] public MapUnitCollection OverworldMapMapUnitCollection { get; protected set; } = new();
 
         // load the SmallMapCharacterStates once from disk, don't worry abut again until you are saving to disk
-        [DataMember] public MapUnitCollection SmallMapUnitCollection { get; private set; } = new();
+        [DataMember] public MapUnitCollection SmallMapUnitCollection { get; protected set; } = new();
 
         [DataMember]
-        public MapUnitCollection UnderworldMapUnitCollection { get; private set; } =
+        public MapUnitCollection UnderworldMapUnitCollection { get; protected set; } =
             new();
 
         /// <summary>

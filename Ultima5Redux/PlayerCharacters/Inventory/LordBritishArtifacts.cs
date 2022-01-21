@@ -25,13 +25,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             addArtifactLegacy(LordBritishArtifact.ArtifactType.Amulet);
             addArtifactLegacy(LordBritishArtifact.ArtifactType.Crown);
             addArtifactLegacy(LordBritishArtifact.ArtifactType.Sceptre);
-
-            // Items[LordBritishArtifact.ArtifactType.Amulet] = new LordBritishArtifact(
-            //     LordBritishArtifact.ArtifactType.Amulet, gameStateByteArray[(int)Offsets.AMULET]);
-            // Items[LordBritishArtifact.ArtifactType.Crown] = new LordBritishArtifact(
-            //     LordBritishArtifact.ArtifactType.Crown, gameStateByteArray[(int)Offsets.CROWN]);
-            // Items[LordBritishArtifact.ArtifactType.Sceptre] = new LordBritishArtifact(
-            //     LordBritishArtifact.ArtifactType.Sceptre, gameStateByteArray[(int)Offsets.SCEPTRE]);
         }
     }
 }

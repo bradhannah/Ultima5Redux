@@ -128,9 +128,13 @@ namespace Ultima5Redux.DayNightMoon
         public void SetMoonstoneBuried(int nMoonstoneIndex, bool bBuried)
         {
             Point3D currentPosition = GetMoongatePosition(nMoonstoneIndex);
+            bool bPositionRegistered = _moongatePositionsDictionary.ContainsKey(currentPosition);
             if (bBuried)
             {
-                _moongatePositionsDictionary.Add(currentPosition, true);
+                if (bPositionRegistered)
+                    _moongatePositionsDictionary[currentPosition] = true;
+                else
+                    _moongatePositionsDictionary.Add(currentPosition, true);
             }
             else
             {

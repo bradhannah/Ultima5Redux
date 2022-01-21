@@ -49,9 +49,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public class InnKeeperServices
         {
-            // ReSharper disable once NotAccessedField.Local
-            private readonly int _offset;
-
             public int DialogueOfferIndex { get; }
             public int MonthlyLeaveCost { get; }
             public int RestCost { get; }
@@ -61,7 +58,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             internal InnKeeperServices(int nOffset, int nDialogueOfferIndex, int nRestCost, int nMonthlyLeaveCost,
                 DataOvlReference dataOvlReference)
             {
-                _offset = nOffset;
                 List<byte> xBedList = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.INN_BED_X_COORDS)
                     .GetAsByteList();
                 List<byte> yBedList = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.INN_BED_Y_COORDS)

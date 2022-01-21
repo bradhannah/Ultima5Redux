@@ -29,9 +29,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public int Gold => TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity;
         [IgnoreDataMember] public List<CombatItem> ReadyItems { get; } = new();
 
-        [IgnoreDataMember]
-        public List<InventoryItem> ReadyItemsAsInventoryItem =>
-            ReadyItems.Cast<InventoryItem>().ToList();
+        [IgnoreDataMember] public IEnumerable<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems;
 
         [IgnoreDataMember] public List<InventoryItem> UseItems { get; } = new();
         private readonly ImportedGameState _importedGameState;
@@ -39,15 +37,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         internal Inventory(ImportedGameState importedGameState)
         {
             _importedGameState = importedGameState;
-            // _gameStateByteArray = gameStateByteArray;
-            // _moongates = moongates;
-            // _state = state;
 
             RefreshInventoryFromLegacySave();
         }
-        // private readonly List<byte> _gameStateByteArray;
-        // private readonly Moongates _moongates;
-        // private readonly GameState _state;
 
         [JsonConstructor] private Inventory()
         {
@@ -57,9 +49,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             // update the statically cached lists 
             RefreshRollupInventory();
-            // when deserializing, we have not saved the inventory references because they are static, 
-            // so we will add them after the fact
-            //UpdateAllInventoryReferences();
         }
 
         /// <summary>
@@ -193,41 +182,5 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             TheProvisions.Items[Provision.ProvisionTypeEnum.Gold].Quantity -= nGold;
             return true;
         }
-
-        // private void UpdateAllInventoryReferences()
-        // {
-        //     foreach (InventoryItem item in AllItems)
-        //     {
-        //         switch (item)
-        //         {
-        //             case LordBritishArtifact _:
-        //             case ShadowlordShard _:
-        //             case Potion _:
-        //             case Scroll _:
-        //             case SpecialItem _:
-        //             case Moonstone _:
-        //             case Provision _:
-        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
-        //                     InventoryReferences.InventoryReferenceType.Item, item.InventoryReferenceString);
-        //                 break;
-        //             case Spell _:
-        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
-        //                     InventoryReferences.InventoryReferenceType.Spell, item.InventoryReferenceString);
-        //                 break;
-        //             case Reagent _:
-        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
-        //                     InventoryReferences.InventoryReferenceType.Reagent, item.InventoryReferenceString);
-        //                 break;
-        //             case CombatItem _:
-        //                 // we have to assign this manually because when we serialize from JSON it is unable to link it 
-        //                 // itself
-        //                 item.InvRef = GameReferences.InvRef.GetInventoryReference(
-        //                     InventoryReferences.InventoryReferenceType.Armament, item.InventoryReferenceString);
-        //                 break;
-        //             default:
-        //                 throw new Ultima5ReduxException("Tried to update InventoryReference on " + item.GetType());
-        //         }
-        //     }
-        // }
     }
 }

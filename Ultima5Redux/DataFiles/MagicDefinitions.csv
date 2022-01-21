@@ -1,4 +1,4 @@
-﻿SpellEnum,Spell,SulfurAsh,Ginseng,Garlic,SpiderSilk,BloodMoss,BlackPearl,NightShade,MandrakeRoot,Circle,Type,SimpleDescription,SimilarFunction,TimePermitted,Gold,RawGoldReagents,SpellTargetType,SpellSubType
+﻿SpellKey,Spell,SulfurAsh,Ginseng,Garlic,SpiderSilk,BloodMoss,BlackPearl,NightShade,MandrakeRoot,Circle,Type,SimpleDescription,SimilarFunction,TimePermitted,Gold,RawGoldReagents,SpellTargetType,SpellSubType
 In_Lor,In Lor,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,peace,creates light,torch,peace,1,1: ash,noSelection,utility
 Grav_Por,Grav Por,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,1,attack,minor attack against foe,"magic bow, magic axe",combat,4,"4: ash, pearl",direction,magicAttack
 An_Zu,An Zu,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,1,support,awaken companion,"blue potion, Crown",combat,4,"4: ginseng, garlic",selectedCombatPlayer,healing

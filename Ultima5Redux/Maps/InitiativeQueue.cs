@@ -29,11 +29,6 @@ namespace Ultima5Redux.Maps
         private readonly PlayerCharacterRecords _playerCharacterRecords;
 
         /// <summary>
-        ///     Highest player/enemy dexterity encountered
-        /// </summary>
-        private int _nHighestDexterity;
-
-        /// <summary>
         ///     Lowest player/enemy dexterity encountered
         /// </summary>
         private int _nLowestDexterity;
@@ -43,7 +38,7 @@ namespace Ultima5Redux.Maps
         public int Round { get; private set; }
 
         public int TotalTurnsInQueue => _initiativeQueue.Sum(combatMapUnitQueue =>
-            combatMapUnitQueue.Where((CombatMapUnitIsPresentAndActive)).Count());
+            combatMapUnitQueue.Count(CombatMapUnitIsPresentAndActive));
 
         public int Turn { get; private set; }
 
@@ -231,30 +226,21 @@ namespace Ultima5Redux.Maps
                     break;
             }
 
-            foreach (Queue<CombatMapUnit> mapUnits in _initiativeQueue)
+            foreach (CombatMapUnit combatMapUnit in _initiativeQueue.SelectMany(mapUnits => mapUnits))
             {
-                foreach (CombatMapUnit combatMapUnit in mapUnits)
+                if (CombatMapUnitIsPresentAndActive(combatMapUnit))
                 {
-                    if (CombatMapUnitIsPresentAndActive(combatMapUnit))
-                    {
-                        if (combatMapUnit is CombatPlayer player)
-                        {
-                            if (!CombatPlayerIsActive(player)) continue;
-                        }
+                    if (combatMapUnit is CombatPlayer player && !CombatPlayerIsActive(player)) continue;
 
-                        combatMapUnits.Add(combatMapUnit);
-                        nTally++;
-                    }
-
-                    if (nTally == nUnits) return combatMapUnits;
+                    combatMapUnits.Add(combatMapUnit);
+                    nTally++;
                 }
+
+                if (nTally == nUnits) return combatMapUnits;
             }
 
             // we will return what we have which is likely zero
             return combatMapUnits;
-
-            // throw new Ultima5ReduxException("Tried to get " + nUnits + " CombatMapUnits, but only had " + nTally +
-            //                                 " in queues");
         }
 
         /// <summary>
@@ -265,14 +251,13 @@ namespace Ultima5Redux.Maps
             _initiativeQueue.Clear();
             _combatInitiativeTally.Clear();
             _nLowestDexterity = 50;
-            _nHighestDexterity = 0;
+            // Highest player/enemy dexterity encountered
+            int nHighestDexterity = 0;
             Round = 0;
             Turn = 0;
 
             foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
             {
-                //if (!IsCombatMapUnit(combatMapUnit)) continue;
-
                 int nDexterity = combatMapUnit.Dexterity;
 
                 // if it's an enemy and they aren't an active attacker such as a POISON FIELD
@@ -281,7 +266,7 @@ namespace Ultima5Redux.Maps
 
                 // get the highest and lowest dexterity values to be used in ongoing tally
                 if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
-                if (_nHighestDexterity < nDexterity) _nHighestDexterity = nDexterity;
+                if (nHighestDexterity < nDexterity) nHighestDexterity = nDexterity;
 
                 AddCombatMapUnitToQueue(combatMapUnit);
             }
@@ -290,9 +275,9 @@ namespace Ultima5Redux.Maps
         private bool CombatMapUnitIsPresent(CombatMapUnit combatMapUnit)
         {
             // if the combat unit is not visible then we skip them and don't ruin the surprise that they are on the map
-            if (_combatMap.VisibleOnMap != null)
-                if (!_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
-                    return false;
+            if (_combatMap.VisibleOnMap != null &&
+                !_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
+                return false;
 
             return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0;
         }

@@ -133,7 +133,6 @@ namespace Ultima5Redux.References.Maps
             {
                 int col = chunk % TILES_PER_CHUNK_X; // get the chunk column
                 int row = chunk / TILES_PER_CHUNK_Y; // get the chunk row
-                //System.Console.WriteLine("Row: " + row + "    Col: " + col + "   chunk: " + chunk);
 
                 // get the overlay chunk value... to help determine if it is a water only tile
                 // but if we are ignoring the overlay - then just give it zero, so the map will be processed without overlay considerations
@@ -144,7 +143,6 @@ namespace Ultima5Redux.References.Maps
                      curRow < row * TILES_PER_CHUNK_Y + TILES_PER_CHUNK_Y;
                      curRow++)
                 {
-                    //System.Console.WriteLine("CurRow : " + curRow);
                     // go through each horizon
                     for (int curCol = col * 16; curCol < col * TILES_PER_CHUNK_X + TILES_PER_CHUNK_X; curCol++)
                     {

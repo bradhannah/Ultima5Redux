@@ -523,7 +523,7 @@ namespace Ultima5Redux
                     throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
                 retStr = GameReferences.DataOvlRef.StringReferences
                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                         Maps.Look.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
+                         GameReferences.LookRef.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
             }
             // if we are any one of these signs then we superimpose it on the screen
             else if (GameReferences.SpriteTileReferences.IsSign(tileReference.Index))
@@ -535,14 +535,14 @@ namespace Ultima5Redux
             {
                 retStr = GameReferences.DataOvlRef.StringReferences
                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                         Maps.Look.GetLookDescription(tileReference.Index).TrimStart() +
+                         GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart() +
                          State.TheTimeOfDay.FormattedTime;
             }
             else // lets see what we've got here!
             {
                 retStr = GameReferences.DataOvlRef.StringReferences
                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                         Maps.Look.GetLookDescription(tileReference.Index).TrimStart();
+                         GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart();
             }
 
             // pass time at the end to make sure moving characters are accounted for

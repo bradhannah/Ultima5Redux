@@ -14,7 +14,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     public class MagicReference
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum MagicTypeEnum { Peace, Support, Attack, Debuff, None }
+        public enum SpecificMagicType { Peace, Support, Attack, Debuff, None }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpellWords
@@ -29,17 +29,17 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum TimePermittedEnum { Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never }
+        public enum SpecificTimePermitted { Peace, Combat, Anytime, Combat_Dungeon, Dungeon, Never }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpellTargetTypeEnum
+        public enum SpecificSpellTargetType
         {
             NoSelection, CastingCombatPlayer, SelectedCombatPlayer, SelectedMapUnit, Direction,
             SelectedCombatMapPosition, SelectedMapPosition
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpellSubTypeEnum
+        public enum SpecificSpellSubType
         {
             /// <summary>
             ///     Adds new MapUnit to map
@@ -148,21 +148,21 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             set => SetReagentState(Reagent.ReagentTypeEnum.SulfurAsh, value);
         }
 
-        [DataMember] public int Circle;
+        [DataMember] public int Circle { get; private set; }
 
-        [DataMember] public int Gold;
+        [DataMember] public int Gold { get; private set; }
 
-        [DataMember] public string RawGoldReagents;
-        [DataMember] public string SimilarFunction;
-        [DataMember] public string SimpleDescription;
-        [DataMember] public string Spell;
+        [DataMember] public string RawGoldReagents { get; private set; }
+        [DataMember] public string SimilarFunction { get; private set; }
+        [DataMember] public string SimpleDescription { get; private set; }
+        [DataMember] public string Spell { get; private set; }
 
-        [DataMember] public SpellWords SpellEnum;
+        [DataMember] public SpellWords SpellEnum { get; set; }
 
-        [DataMember] public TimePermittedEnum TimePermitted;
-        [DataMember] public MagicTypeEnum Type;
-        [DataMember] public SpellSubTypeEnum SpellSubType;
-        [DataMember] public SpellTargetTypeEnum SpellTargetType;
+        [DataMember] public SpecificTimePermitted TimePermitted { get; private set; }
+        [DataMember] public SpecificMagicType MagicType { get; private set; }
+        [DataMember] public SpecificSpellSubType SpellSubType { get; private set; }
+        [DataMember] public SpecificSpellTargetType SpellTargetType { get; private set; }
 
         private readonly Dictionary<Reagent.ReagentTypeEnum, bool> _reagentsDictionary = new();
 
@@ -205,16 +205,16 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         {
             return SpellSubType switch
             {
-                SpellSubTypeEnum.SummonCreature => new SummonCreatureSubType(this),
-                SpellSubTypeEnum.Healing => new HealingSpellSubType(this),
-                SpellSubTypeEnum.SprayBlast => new SprayBlastSpellSubType(this),
-                SpellSubTypeEnum.Buff => new BuffSpellSubType(this),
-                SpellSubTypeEnum.Utility => new UtilitySpellSubType(this),
-                SpellSubTypeEnum.Dispel => new DispelSpellSubType(this),
-                SpellSubTypeEnum.MagicAttack => new MagicAttackSpellSubType(this),
-                SpellSubTypeEnum.AscendDescend => new AscendDescendSpellSubType(this),
-                SpellSubTypeEnum.ChangeEnemyState => new ChangeEnemyStateSpellSubType(this),
-                SpellSubTypeEnum.Other => new OtherSpellSubType(this),
+                SpecificSpellSubType.SummonCreature => new SummonCreatureSubType(this),
+                SpecificSpellSubType.Healing => new HealingSpellSubType(this),
+                SpecificSpellSubType.SprayBlast => new SprayBlastSpellSubType(this),
+                SpecificSpellSubType.Buff => new BuffSpellSubType(this),
+                SpecificSpellSubType.Utility => new UtilitySpellSubType(this),
+                SpecificSpellSubType.Dispel => new DispelSpellSubType(this),
+                SpecificSpellSubType.MagicAttack => new MagicAttackSpellSubType(this),
+                SpecificSpellSubType.AscendDescend => new AscendDescendSpellSubType(this),
+                SpecificSpellSubType.ChangeEnemyState => new ChangeEnemyStateSpellSubType(this),
+                SpecificSpellSubType.Other => new OtherSpellSubType(this),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

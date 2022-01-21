@@ -17,12 +17,12 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
         {
             bool bResult = MagicRef.TimePermitted switch
             {
-                MagicReference.TimePermittedEnum.Peace => !state.TheVirtualMap.IsCombatMap,
-                MagicReference.TimePermittedEnum.Combat => state.TheVirtualMap.IsCombatMap,
-                MagicReference.TimePermittedEnum.Anytime => true,
-                MagicReference.TimePermittedEnum.Combat_Dungeon => state.TheVirtualMap.IsCombatMap || true,
-                MagicReference.TimePermittedEnum.Dungeon => false,
-                MagicReference.TimePermittedEnum.Never => false,
+                MagicReference.SpecificTimePermitted.Peace => !state.TheVirtualMap.IsCombatMap,
+                MagicReference.SpecificTimePermitted.Combat => state.TheVirtualMap.IsCombatMap,
+                MagicReference.SpecificTimePermitted.Anytime => true,
+                MagicReference.SpecificTimePermitted.Combat_Dungeon => state.TheVirtualMap.IsCombatMap || true,
+                MagicReference.SpecificTimePermitted.Dungeon => false,
+                MagicReference.SpecificTimePermitted.Never => false,
                 _ => throw new ArgumentOutOfRangeException()
             };
 

@@ -16,13 +16,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         public const int MAX_INVENTORY_ITEM_QUANTITY = 99;
 
-        [DataMember] public virtual int Quantity
-        {
-            get => _quantity;
-            set => _quantity = value;
-        }
+        [DataMember] public virtual int Quantity { get; set; }
 
-        //[DataMember] public string InvRefName { get; set; }
         [DataMember] public InventoryReferences.InventoryReferenceType InvRefType { get; set; }
 
         [DataMember] public int SpriteNum { get; private set; }
@@ -40,7 +35,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public virtual string ShortName => InvRef.ItemName;
 
-        [IgnoreDataMember] public string QuantityString
+        [IgnoreDataMember]
+        public string QuantityString
         {
             get
             {
@@ -49,30 +45,23 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
         }
 
-        [IgnoreDataMember] public InventoryReference InvRef
+        [IgnoreDataMember]
+        public InventoryReference InvRef
         {
-            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InventoryReferenceString); //InvRefName);
+            get => GameReferences.InvRef.GetInventoryReference(InvRefType, InventoryReferenceString);
             protected internal set =>
                 InvRefType = value.InvRefType;
         }
-
-        private int _quantity;
 
         [JsonConstructor] protected InventoryItem()
         {
         }
 
-        // protected InventoryItem(int quantity, int spriteNum) : this(quantity, "", spriteNum)
-        // {
-        // }
-
         protected InventoryItem(int quantity, int spriteNum, InventoryReferences.InventoryReferenceType invRefType)
         {
-            _quantity = quantity;
+            Quantity = quantity;
             SpriteNum = spriteNum;
             InvRefType = invRefType;
-            // GameGameReferences.InvRef.GetInventoryReference()
-            //FindDescription = findDescription;
         }
 
         public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records,

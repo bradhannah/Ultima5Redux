@@ -18,7 +18,7 @@ namespace Ultima5Redux.References
         {
             if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
             if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
-            if (Directory.Exists(GOLD_DIR)) return GOLD_DIR;
+            if (Directory.Exists(GOLD_DIR)) return GOLD_DIR; //-V3039
 
             throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
                                             Directory.GetCurrentDirectory() + "\nDirs: " +

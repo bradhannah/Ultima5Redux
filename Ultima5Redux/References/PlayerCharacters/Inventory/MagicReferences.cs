@@ -25,11 +25,22 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         public MagicReference GetMagicReference(MagicReference.SpellWords spellWords)
         {
+            if (!_magicReferences.ContainsKey(spellWords))
+                throw new Ultima5ReduxException("Bad spell words: " + spellWords);
+
             return _magicReferences[spellWords];
         }
 
-        public MagicReference GetMagicReference(string spellWords) =>
-            _magicReferences.Values.FirstOrDefault(magicReference =>
-                magicReference.Spell.ToLower().Trim() == spellWords.ToLower().Trim());
+        public MagicReference GetMagicReference(string spellWords)
+        {
+            string cleanSpellWords = spellWords.ToLower().Trim().Replace("_", " ");
+            return _magicReferences.Values.FirstOrDefault(magicReference =>
+                magicReference.Spell.Trim().ToLower()
+                == cleanSpellWords);
+        }
     }
+
+    //         _magicReferences.Values.FirstOrDefault(magicReference =>
+    //             magicReference.SpellKey.ToLower().Trim() == spellWords.ToLower().Trim());
+    // }
 }

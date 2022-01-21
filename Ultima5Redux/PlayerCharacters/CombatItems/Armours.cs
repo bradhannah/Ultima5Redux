@@ -56,10 +56,11 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
         {
             foreach (Armour armour in AllCombatItems.OfType<Armour>())
             {
-                if (armour.GetArmourRef() == null)
+                ArmourReference armourRef = armour.GetArmourRef();
+                if (armourRef == null)
                     throw new Ultima5ReduxException("Tried to read in armour ref, but failed.");
 
-                ArmourReference.ArmourType armourType = armour.GetArmourRef().TheArmourType;
+                ArmourReference.ArmourType armourType = armourRef.TheArmourType;
                 ItemsFromEquipment.Add(armour.SpecificEquipment, armour);
                 if (!Items.ContainsKey(armourType)) Items.Add(armourType, new List<Armour>());
                 Items[armourType].Add(armour);

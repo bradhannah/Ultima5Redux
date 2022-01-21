@@ -1510,6 +1510,20 @@ namespace Ultima5ReduxTesting
             Assert.True(result.Status == SpellResult.SpellResultStatus.Success);
         }
 
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_GetMagicReferenceByString(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            MagicReference magReg = GameReferences.MagicRefs.GetMagicReference("In_Lor");
+            // world.State.PlayerInventory.Mag 
+
+            Assert.NotNull(magReg);
+        }
+
         [Test] [TestCase(SaveFiles.b_carpet)] public void test_CarpetEnemiesExist(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
