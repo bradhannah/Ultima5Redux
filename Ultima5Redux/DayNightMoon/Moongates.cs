@@ -62,6 +62,18 @@ namespace Ultima5Redux.DayNightMoon
             }
         }
 
+        [OnDeserialized] private void PostDeserialize(StreamingContext streamingContext)
+        {
+            for (int i = 0; i < TOTAL_MOONSTONES; i++)
+            {
+                bool bIsBuried = _moonstonesBuried[i];
+                Point3D moongatePosition = _moongatePositions[i];
+
+                if (bIsBuried)
+                    _moongatePositionsDictionary.Add(moongatePosition, true);
+            }
+        }
+
         /// <summary>
         ///     Gets the position of an indexed moongate (in order from the save file)
         /// </summary>

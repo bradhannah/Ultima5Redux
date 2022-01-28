@@ -31,22 +31,6 @@ using Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes;
 
 namespace Ultima5ReduxTesting
 {
-    // [SetUpFixture]
-    // public class SetupTrace
-    // {
-    //     [OneTimeSetUp]
-    //     public void StartTest()
-    //     {
-    //         Trace.Listeners.Add(new ConsoleTraceListener());
-    //     }
-    //
-    //     [OneTimeTearDown]
-    //     public void EndTest()
-    //     {
-    //         Trace.Flush();
-    //     }
-    // }
-
     [TestFixture] public class Tests
     {
         public enum SaveFiles
@@ -1599,6 +1583,19 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.MoveAvatar(minocCovetousDungeon);
             world.EnterBuilding(minocCovetousDungeon, out bool bWasSuccessful);
             Assert.IsNotNull(world);
+        }
+
+        [Test] [TestCase(SaveFiles.fresh)] public void test_DefaultMoonstoneCheckMinoc(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            world.ReLoadFromJson();
+
+            Assert.True(world.State.TheMoongates.IsMoonstoneBuried(new Point3D(224, 133, 0)));
         }
     }
 }
