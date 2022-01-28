@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -216,8 +217,8 @@ namespace Ultima5Redux
         internal int GetPotionQuantity(Potion.PotionColor color) =>
             GetByteAsIntFromGameStateByteArray((int)color);
 
-        internal int GetReagentQuantity(Reagent.ReagentTypeEnum reagentType) =>
-            GetByteAsIntFromGameStateByteArray((int)reagentType);
+        internal int GetReagentQuantity(Reagent.SpecificReagentType specificReagentType) =>
+            GetByteAsIntFromGameStateByteArray((int)specificReagentType);
 
         internal int GetScrollQuantity(MagicReference.SpellWords spellWord)
         {
@@ -231,7 +232,7 @@ namespace Ultima5Redux
         internal int GetShadowlordShardQuantity(ShadowlordShard.ShardType shard) =>
             GetByteAsIntFromGameStateByteArray((int)shard);
 
-        internal int GetSpecialItemQuantity(SpecialItem.ItemTypeEnum specialItem) =>
+        internal int GetSpecialItemQuantity(SpecialItem.SpecificItemType specialItem) =>
             GetByteAsIntFromGameStateByteArray((int)specialItem);
 
         internal int GetSpellQuantity(MagicReference.SpellWords spellWord) =>
@@ -389,7 +390,7 @@ namespace Ultima5Redux
                 case Map.Maps.Combat:
                     throw new Ultima5ReduxException("You can't initialize the MapUnits with a combat map");
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(((int)InitialMap).ToString());
             }
 
             SmallMapCharacterStates = new SmallMapCharacterStates(CharacterStatesDataChunk);

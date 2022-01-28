@@ -92,7 +92,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 
         private static CombatItemType GetCombatItemTypeByEquipment(DataOvlReference.Equipment equipment)
         {
-            if (EquipmentMatches(Enum.GetValues(typeof(WeaponReference.WeaponTypeEnum)), ref equipment))
+            if (EquipmentMatches(Enum.GetValues(typeof(WeaponReference.SpecificWeaponType)), ref equipment))
                 return CombatItemType.Weapon;
             if (EquipmentMatches(Enum.GetValues(typeof(ArmourReference.SpecificHelm)), ref equipment))
                 return CombatItemType.Armour;

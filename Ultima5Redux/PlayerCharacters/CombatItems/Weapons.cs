@@ -6,10 +6,10 @@ using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
-    [DataContract] public sealed class Weapons : CombatItems<WeaponReference.WeaponTypeEnum, Weapon>
+    [DataContract] public sealed class Weapons : CombatItems<WeaponReference.SpecificWeaponType, Weapon>
     {
         [DataMember]
-        public override Dictionary<WeaponReference.WeaponTypeEnum, Weapon> Items { get; internal set; } =
+        public override Dictionary<WeaponReference.SpecificWeaponType, Weapon> Items { get; internal set; } =
             new();
 
         [IgnoreDataMember] private Dictionary<DataOvlReference.Equipment, Weapon> ItemsFromEquipment { get; } = new();
@@ -42,17 +42,9 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 
         private void AddWeapon(WeaponReference weaponReference, int nQuantity)
         {
-            Weapon newWeapon;
-
-            if (weaponReference.SpecificEquipment == DataOvlReference.Equipment.BareHands)
-            {
-                newWeapon = new Weapon(weaponReference, 262);
-            }
-            else
-            {
-                newWeapon = new Weapon(weaponReference, nQuantity);
-                //GameStateByteArray[(int)weaponReference.SpecificEquipment]);
-            }
+            Weapon newWeapon = weaponReference.SpecificEquipment == DataOvlReference.Equipment.BareHands
+                ? new Weapon(weaponReference, 262)
+                : new Weapon(weaponReference, nQuantity);
 
             Items.Add(weaponReference.WeaponType, newWeapon);
 

@@ -9,7 +9,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
     {
         private readonly
             Dictionary<SmallMapReferences.SingleMapReference.Location,
-                Dictionary<Reagent.ReagentTypeEnum, ReagentPriceAndQuantity>> _reagentPriceAndQuantities = new();
+                Dictionary<Reagent.SpecificReagentType, ReagentPriceAndQuantity>> _reagentPriceAndQuantities = new();
 
         public ReagentReferences()
         {
@@ -18,16 +18,16 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             List<byte> quantities = GameReferences.DataOvlRef
                 .GetDataChunk(DataOvlReference.DataChunkName.REAGENT_QUANTITES).GetAsByteList();
 
-            int nReagents = Enum.GetNames(typeof(Reagent.ReagentTypeEnum)).Length;
+            int nReagents = Enum.GetNames(typeof(Reagent.SpecificReagentType)).Length;
 
             // Get the locations that reagents are sold at
             List<SmallMapReferences.SingleMapReference.Location> locations = GetLocations();
             // cycle through each location and add reagents to location<->reagent map
             for (int i = 0; i < locations.Count; i++)
             {
-                foreach (Reagent.ReagentTypeEnum reagentType in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
+                foreach (Reagent.SpecificReagentType reagentType in Enum.GetValues(typeof(Reagent.SpecificReagentType)))
                 {
-                    int nOffset = (int)reagentType - (int)Reagent.ReagentTypeEnum.SulfurAsh;
+                    int nOffset = (int)reagentType - (int)Reagent.SpecificReagentType.SulfurAsh;
 
                     int nIndex = i * nReagents + nOffset;
                     SmallMapReferences.SingleMapReference.Location location = locations[i];
@@ -36,7 +36,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                         if (!_reagentPriceAndQuantities.ContainsKey(location))
                         {
                             _reagentPriceAndQuantities.Add(location,
-                                new Dictionary<Reagent.ReagentTypeEnum, ReagentPriceAndQuantity>());
+                                new Dictionary<Reagent.SpecificReagentType, ReagentPriceAndQuantity>());
                         }
 
                         _reagentPriceAndQuantities[location].Add(reagentType,
@@ -67,23 +67,23 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         }
 
         public ReagentPriceAndQuantity GetPriceAndQuantity(SmallMapReferences.SingleMapReference.Location location,
-            Reagent.ReagentTypeEnum reagentType)
+            Reagent.SpecificReagentType specificReagentType)
         {
             if (!_reagentPriceAndQuantities.ContainsKey(location))
                 throw new Ultima5ReduxException("Tried to buy reagent at location that doesn't sell them: " + location);
-            if (!_reagentPriceAndQuantities[location].ContainsKey(reagentType))
-                throw new Ultima5ReduxException("Tried to buy " + reagentType + " in " + location +
+            if (!_reagentPriceAndQuantities[location].ContainsKey(specificReagentType))
+                throw new Ultima5ReduxException("Tried to buy " + specificReagentType + " in " + location +
                                                 " but they don't sell it");
 
-            return _reagentPriceAndQuantities[location][reagentType];
+            return _reagentPriceAndQuantities[location][specificReagentType];
         }
 
         public bool IsReagentSoldAtLocation(SmallMapReferences.SingleMapReference.Location location,
-            Reagent.ReagentTypeEnum reagentType)
+            Reagent.SpecificReagentType specificReagentType)
         {
             if (!_reagentPriceAndQuantities.ContainsKey(location))
                 return false;
-            if (!_reagentPriceAndQuantities[location].ContainsKey(reagentType))
+            if (!_reagentPriceAndQuantities[location].ContainsKey(specificReagentType))
                 return false;
 
             return true;

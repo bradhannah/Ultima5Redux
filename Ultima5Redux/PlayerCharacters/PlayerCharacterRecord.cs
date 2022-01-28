@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -88,7 +89,7 @@ namespace Ultima5Redux.PlayerCharacters
                 CharacterClass.Bard => 324,
                 CharacterClass.Fighter => 328,
                 CharacterClass.Mage => 320,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidEnumArgumentException(((int)Class).ToString())
             };
 
         [JsonConstructor] private PlayerCharacterRecord()
@@ -226,13 +227,11 @@ namespace Ultima5Redux.PlayerCharacters
                 DataOvlReference.Equipment leftHandEquippedEquipment =
                     Equipped.GetEquippedEquipment(CharacterEquipped.EquippableSlot.LeftHand);
 
-                if (inventory.GetItemFromEquipment(leftHandEquippedEquipment) is Weapon leftHandWeapon)
+                if (inventory.GetItemFromEquipment(leftHandEquippedEquipment) is Weapon leftHandWeapon
+                    && leftHandWeapon.TheCombatItemReference.IsTwoHanded)
                 {
-                    if (leftHandWeapon.TheCombatItemReference.IsTwoHanded)
-                    {
-                        // if the left hand weapon is 2 handed then we unequip it
-                        bUnequippedLeft = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
-                    }
+                    // if the left hand weapon is 2 handed then we unequip it
+                    bUnequippedLeft = UnequipEquipment(CharacterEquipped.EquippableSlot.LeftHand, inventory);
                 }
 
                 return bUnequippedLeft ? EquipResult.SuccessUnequipLeft : EquipResult.Success;
@@ -260,7 +259,7 @@ namespace Ultima5Redux.PlayerCharacters
                 case CharacterStatus.Dead:
                     return $"Invalid!\n {Name} is a late player character! He is no longer!";
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(((int)Stats.Status).ToString());
             }
         }
 

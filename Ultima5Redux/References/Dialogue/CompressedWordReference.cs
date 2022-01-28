@@ -173,7 +173,6 @@ namespace Ultima5Redux.References.Dialogue
                     }
                     else
                     {
-                        //Console.WriteLine("test");
                         throw new NoTalkingWordException("Shoppe keeper has uncertain instruction +" + tempByte);
                     }
                 }

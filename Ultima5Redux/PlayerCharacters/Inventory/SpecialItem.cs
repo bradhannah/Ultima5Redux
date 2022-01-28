@@ -8,23 +8,25 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class SpecialItem : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum ItemTypeEnum
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum SpecificItemType
         {
             Carpet = 0x20A, Grapple = 0x209, Spyglass = 0x214, HMSCape = 0x215, PocketWatch = 0, BlackBadge = 0x218,
             WoodenBox = 0x219, Sextant = 0x216
         }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum ItemTypeSpriteEnum
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum SpecificItemTypeSprite
         {
             Carpet = 170, Grapple = 12, Spyglass = 89, HMSCape = 260, PocketWatch = 232, BlackBadge = 281,
             WoodenBox = 270, Sextant = 256
         }
 
-        [DataMember] public ItemTypeSpriteEnum ItemType { get; private set; }
+        [DataMember] public SpecificItemTypeSprite ItemType { get; private set; }
 
         [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
 
-        [IgnoreDataMember] public override bool HideQuantity => ItemType != ItemTypeSpriteEnum.Carpet;
+        [IgnoreDataMember] public override bool HideQuantity => ItemType != SpecificItemTypeSprite.Carpet;
 
         [IgnoreDataMember] public override string InventoryReferenceString => ItemType.ToString();
 
@@ -36,16 +38,17 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public SpecialItem(ItemTypeSpriteEnum itemType, int quantity) : base(quantity, (int)itemType,
+        public SpecialItem(SpecificItemTypeSprite itemType, int quantity) : base(quantity, (int)itemType,
             InventoryReferences.InventoryReferenceType.Item)
         {
             ItemType = itemType;
         }
 
-        public static ItemTypeEnum GetItemOffset(ItemTypeSpriteEnum itemTypeSpriteEnum)
+        public static SpecificItemType GetItemOffset(SpecificItemTypeSprite specificItemTypeSprite)
         {
-            ItemTypeEnum itemType = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), itemTypeSpriteEnum.ToString());
-            return itemType;
+            SpecificItemType specificItemType =
+                (SpecificItemType)Enum.Parse(typeof(SpecificItemType), specificItemTypeSprite.ToString());
+            return specificItemType;
         }
     }
 }

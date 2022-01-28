@@ -22,13 +22,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             addShardLegacy(ShadowlordShard.ShardType.Falsehood);
             addShardLegacy(ShadowlordShard.ShardType.Hatred);
             addShardLegacy(ShadowlordShard.ShardType.Cowardice);
-
-            // Items[ShadowlordShard.ShardType.Falsehood] = new ShadowlordShard(ShadowlordShard.ShardType.Falsehood,
-            //     gameStateByteArray[(int)Offsets.FALSEHOOD]);
-            // Items[ShadowlordShard.ShardType.Hatred] = new ShadowlordShard(ShadowlordShard.ShardType.Hatred,
-            //     gameStateByteArray[(int)Offsets.HATRED]);
-            // Items[ShadowlordShard.ShardType.Cowardice] = new ShadowlordShard(ShadowlordShard.ShardType.Cowardice,
-            //     gameStateByteArray[(int)Offsets.COWARDICE]);
         }
     }
 }

@@ -217,16 +217,8 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public bool IsEquipmentEquipped(DataOvlReference.Equipment equipment)
-        {
-            foreach (PlayerCharacterRecord record in Records)
-            {
-                if (record.Equipped.IsEquipped(equipment))
-                    return true;
-            }
-
-            return false;
-        }
+        public bool IsEquipmentEquipped(DataOvlReference.Equipment equipment) =>
+            Records.Any(record => record.Equipped.IsEquipped(equipment));
 
         /// <summary>
         ///     Is my party full (at capacity)
@@ -234,7 +226,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// <returns>true if party is full</returns>
         public bool IsFullParty()
         {
-            Debug.Assert(!(TotalPartyMembers() > MAX_PARTY_MEMBERS), "You have more party members than you should.");
+            Debug.Assert((TotalPartyMembers() <= MAX_PARTY_MEMBERS), "You have more party members than you should.");
             return TotalPartyMembers() == MAX_PARTY_MEMBERS;
         }
 

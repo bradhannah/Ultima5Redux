@@ -36,9 +36,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Scroll.ScrollSpells scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
 
-            int nIndex = 0x27A + (int)scrollSpell;
             Items[spellWord] = new Scroll(spellWord, nQuantity,
-                //GameStateByteArray[nIndex],
                 GameReferences.MagicRefs.GetMagicReference(spellWord));
         }
     }

@@ -152,8 +152,6 @@ namespace Ultima5Redux.MapUnits
                 throw new Ultima5ReduxException("Asked to build a path, but " + mapUnit.FriendlyName +
                                                 " is already at " + targetXy.X + "," + targetXy.Y);
 
-            // todo: need some code that checks for different floors and directs them to closest ladder or staircase instead of same floor position
-
             Stack<Node> nodeStack = aStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
 
             MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
@@ -167,7 +165,6 @@ namespace Ultima5Redux.MapUnits
             // builds the movement list that is compatible with the original U5 movement instruction queue stored in the state file
             foreach (Node node in nodeStack)
             {
-                //Point2D newPosition = Vector2ToPoint2D(node.Position);
                 newDirection = GetCommandDirection(prevPosition, node.Position);
 
                 // if the previous direction is the same as the current direction, then we keep track so that we can issue a single instruction

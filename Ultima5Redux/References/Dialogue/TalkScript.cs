@@ -98,8 +98,6 @@ namespace Ultima5Redux.References.Dialogue
         /// <param name="talkCommand"></param>
         public void AddTalkCommand(TalkCommand talkCommand)
         {
-            //System.Console.Write("<" + (talkCommand.ToString() + ">"));
-
             _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, string.Empty));
         }
 
@@ -130,7 +128,6 @@ namespace Ultima5Redux.References.Dialogue
 
             if (talkCommand == TalkCommand.GotoLabel || talkCommand == TalkCommand.DefineLabel)
                 _currentScriptLine.AddScriptItem(new ScriptItem(talkCommand, nLabel));
-            //System.Console.Write("<" + (talkCommand.ToString() + " " + nLabel + ">"));
             else
                 throw new Ultima5ReduxException("You passed a talk command that isn't a label! ");
         }
@@ -168,10 +165,6 @@ namespace Ultima5Redux.References.Dialogue
             // we keep track of the index into the ScriptLines all the way through the entire method
             int nIndex = END_BASE_INDEXES + 1;
 
-            // have we encountered a label yet?
-
-            //bool labelEncountered = false;
-
             string question;
 
             // we are going to add name, job and bye to all scripts by default. We use the QuestionAnswer objects to make it seamless
@@ -190,7 +183,6 @@ namespace Ultima5Redux.References.Dialogue
 
                 // if we just hit a label, then it's time to jump out of this loop and move onto the label reading loop
                 if (line.GetScriptItem(0).Command == TalkCommand.StartLabelDefinition)
-                    //labelEncountered = true;
                     break;
 
                 // first time around we KNOW there is a first question, all NPCs have at least one question
@@ -254,7 +246,6 @@ namespace Ultima5Redux.References.Dialogue
                     // let's make sure there are actually labels to look at
                     if (line.IsEndOfLabelSection)
                     {
-                        // nextCommandDefaultMessage = true;
                         break;
                     }
 
@@ -286,9 +277,6 @@ namespace Ultima5Redux.References.Dialogue
 
                     do // go through the question/answer and <or>
                     {
-                        // Debug code to stop at given index
-                        //if (nIndex == 22) { Console.WriteLine(""); }
-
                         List<string> currQuestions = new();
                         // if the next line is an <or> then process the <or> 
                         if (_scriptLines[nIndex + 2].ContainsCommand(TalkCommand.Or))
@@ -323,7 +311,7 @@ namespace Ultima5Redux.References.Dialogue
                         }
                         // the NPC has tricked me - this is a second line of dialog for the given 
                         // that dastardly LB has put an extra response line in....
-                        else //if (scriptLines[nIndex + 1].GetScriptItem(0).Str.Trim().Length > 4)
+                        else
                         {
                             line = _scriptLines[++nIndex];
                             Debug.Assert(!line.IsQuestion);
@@ -550,7 +538,6 @@ namespace Ultima5Redux.References.Dialogue
                 if (defaultAnswers == null)
                     DefaultAnswers = new List<ScriptLine>();
                 else
-                    //DefaultAnswers = DefaultAnswers;
                     DefaultAnswers = defaultAnswers;
                 LabelNum = labelNum;
             }
@@ -711,7 +698,6 @@ namespace Ultima5Redux.References.Dialogue
             public TalkCommand Command { get; }
 
             public int ItemAdditionalData { get; set; }
-            //=> str;
 
             /// <summary>
             ///     If there is a label, then this is a zero based index
@@ -870,20 +856,6 @@ namespace Ultima5Redux.References.Dialogue
             /// <returns>true if it's present, false if it isn't</returns>
             public bool ContainsCommand(TalkCommand command) =>
                 ScriptItems.Any(scriptItem => scriptItem.Command == command);
-
-            public void EncloseInQuotes()
-            {
-                if (GetScriptItem(0).Command == TalkCommand.PlainString && GetScriptItem(0).Str != "\"")
-                {
-                    //InsertScriptItemAtFront(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
-                }
-
-                if (GetScriptItem(NumberOfScriptItems - 1).Command == TalkCommand.PlainString &&
-                    GetScriptItem(NumberOfScriptItems - 1).Str != "\"")
-                {
-                    //AddScriptItem(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString, "\""));
-                }
-            }
 
             /// <summary>
             ///     Get a script item based on an index into the list

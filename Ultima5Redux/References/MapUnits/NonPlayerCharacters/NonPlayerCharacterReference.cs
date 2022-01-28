@@ -3,8 +3,6 @@ using System.Runtime.InteropServices;
 using Ultima5Redux.References.Dialogue;
 using Ultima5Redux.References.Maps;
 
-//using static Ultima5Redux.NonPlayerCharacterReferences;
-
 namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 {
     /// <summary>
@@ -15,7 +13,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     NPC Type, any other value is a specific character
         /// </summary>
-        public enum NPCDialogTypeEnum
+        public enum SpecificNpcDialogType
         {
             Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87, InnKeeper = 0x88,
             MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF
@@ -40,9 +38,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     friendlier version of name in case they are a profession and not named
         /// </summary>
-        public string FriendlyName => Name == "" ? NPCType.ToString() : Name;
+        public string FriendlyName => Name == "" ? NpcType.ToString() : Name;
 
-        public bool IsShoppeKeeper => NPCType != NPCDialogTypeEnum.None;
+        public bool IsShoppeKeeper => NpcType != SpecificNpcDialogType.None;
 
         /// <summary>
         ///     Which map is the NPC on?
@@ -64,34 +62,34 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <summary>
         ///     They are either a merchant or they have a speaking role
         /// </summary>
-        public bool NormalNPC => NPCType != NPCDialogTypeEnum.None || DialogNumber > 0;
+        public bool NormalNPC => NpcType != SpecificNpcDialogType.None || DialogNumber > 0;
 
         public int NPCKeySprite => CharacterType + 0x100;
 
         /// <summary>
         ///     What type of NPC are they?
         /// </summary>
-        public NPCDialogTypeEnum NPCType
+        public SpecificNpcDialogType NpcType
         {
             get
             {
                 // it's the Avatar
-                if (NPCKeySprite == 256) return NPCDialogTypeEnum.None;
+                if (NPCKeySprite == 256) return SpecificNpcDialogType.None;
 
                 // it's a merchant
-                foreach (int npcType in Enum.GetValues(typeof(NPCDialogTypeEnum)))
+                foreach (int npcType in Enum.GetValues(typeof(SpecificNpcDialogType)))
                 {
                     if (npcType == DialogNumber)
-                        return (NPCDialogTypeEnum)npcType;
+                        return (SpecificNpcDialogType)npcType;
                 }
 
-                foreach (int npcType in Enum.GetValues(typeof(NPCDialogTypeEnum)))
+                foreach (int npcType in Enum.GetValues(typeof(SpecificNpcDialogType)))
                 {
                     if (npcType == CharacterType)
-                        return (NPCDialogTypeEnum)npcType;
+                        return (SpecificNpcDialogType)npcType;
                 }
 
-                return NPCDialogTypeEnum.None;
+                return SpecificNpcDialogType.None;
             }
         }
 
@@ -115,7 +113,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <param name="talkScript">their conversation script</param>
         /// <param name="location"></param>
         public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location,
-            NPCSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
+            NpcSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
         {
             Schedule = new NonPlayerCharacterSchedule(schedule);
 
@@ -125,10 +123,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             DialogNumber = dialogNumber;
             Script = talkScript;
             DialogIndex = dialogIndex;
-
-            // no schedule? I guess you're not real
-            //if (!IsEmptySchedule(schedule))
-            //Debug.WriteLine(location + "     NPC Number: " + DialogNumber + " in " + location);
         }
 
         /// <summary>
@@ -136,7 +130,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// </summary>
         /// <param name="schedule">daily schedule</param>
         /// <returns></returns>
-        private static bool IsEmptySchedule(NPCSchedule schedule)
+        private static bool IsEmptySchedule(NpcSchedule schedule)
         {
             unsafe
             {
@@ -153,11 +147,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// </summary>
         /// <param name="dialogType">The dialog type that yu want to compare</param>
         /// <returns></returns>
-        public static bool IsSpecialDialogType(NPCDialogTypeEnum dialogType)
+        public static bool IsSpecialDialogType(SpecificNpcDialogType dialogType)
         {
             if (dialogType == 0) return true;
-            //if (dialogType == NPCDialogTypeEnum.Avatar) return true;
-            foreach (NPCDialogTypeEnum tempDialogType in (NPCDialogTypeEnum[])Enum.GetValues(typeof(NPCDialogTypeEnum)))
+            foreach (SpecificNpcDialogType tempDialogType in (SpecificNpcDialogType[])Enum.GetValues(
+                         typeof(SpecificNpcDialogType)))
             {
                 if (dialogType == tempDialogType)
                     return true;
@@ -170,7 +164,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         ///     Original structure
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public unsafe struct NPCSchedule
+        public unsafe struct NpcSchedule
         {
             public fixed byte AI_types[3];
             public fixed byte x_coordinates[3];

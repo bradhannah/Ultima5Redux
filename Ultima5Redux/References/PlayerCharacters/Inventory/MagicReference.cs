@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -95,57 +95,57 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [DataMember]
         private bool BlackPearl
         {
-            get => GetReagentState(Reagent.ReagentTypeEnum.BlackPearl);
-            set => SetReagentState(Reagent.ReagentTypeEnum.BlackPearl, value);
+            get => GetReagentState(Reagent.SpecificReagentType.BlackPearl);
+            set => SetReagentState(Reagent.SpecificReagentType.BlackPearl, value);
         }
 
         [DataMember]
         private bool BloodMoss
         {
-            get => GetReagentState(Reagent.ReagentTypeEnum.BloodMoss);
-            set => SetReagentState(Reagent.ReagentTypeEnum.BloodMoss, value);
+            get => GetReagentState(Reagent.SpecificReagentType.BloodMoss);
+            set => SetReagentState(Reagent.SpecificReagentType.BloodMoss, value);
         }
 
         [DataMember]
         private bool Garlic
         {
-            get => GetReagentState(Reagent.ReagentTypeEnum.Garlic);
-            set => SetReagentState(Reagent.ReagentTypeEnum.Garlic, value);
+            get => GetReagentState(Reagent.SpecificReagentType.Garlic);
+            set => SetReagentState(Reagent.SpecificReagentType.Garlic, value);
         }
 
         [DataMember]
         private bool Ginseng
         {
-            get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.Ginseng);
-            set => SetReagentState(Reagent.ReagentTypeEnum.Ginseng, value);
+            get => _reagentsDictionary.ContainsKey(Reagent.SpecificReagentType.Ginseng);
+            set => SetReagentState(Reagent.SpecificReagentType.Ginseng, value);
         }
 
         [DataMember]
         private bool MandrakeRoot
         {
-            get => GetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot);
-            set => SetReagentState(Reagent.ReagentTypeEnum.MandrakeRoot, value);
+            get => GetReagentState(Reagent.SpecificReagentType.MandrakeRoot);
+            set => SetReagentState(Reagent.SpecificReagentType.MandrakeRoot, value);
         }
 
         [DataMember]
         private bool NightShade
         {
-            get => GetReagentState(Reagent.ReagentTypeEnum.NightShade);
-            set => SetReagentState(Reagent.ReagentTypeEnum.NightShade, value);
+            get => GetReagentState(Reagent.SpecificReagentType.NightShade);
+            set => SetReagentState(Reagent.SpecificReagentType.NightShade, value);
         }
 
         [DataMember]
         private bool SpiderSilk
         {
-            get => GetReagentState(Reagent.ReagentTypeEnum.SpiderSilk);
-            set => SetReagentState(Reagent.ReagentTypeEnum.SpiderSilk, value);
+            get => GetReagentState(Reagent.SpecificReagentType.SpiderSilk);
+            set => SetReagentState(Reagent.SpecificReagentType.SpiderSilk, value);
         }
 
         [DataMember]
         private bool SulfurAsh
         {
-            get => _reagentsDictionary.ContainsKey(Reagent.ReagentTypeEnum.SulfurAsh);
-            set => SetReagentState(Reagent.ReagentTypeEnum.SulfurAsh, value);
+            get => _reagentsDictionary.ContainsKey(Reagent.SpecificReagentType.SulfurAsh);
+            set => SetReagentState(Reagent.SpecificReagentType.SulfurAsh, value);
         }
 
         [DataMember] public int Circle { get; private set; }
@@ -164,21 +164,22 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [DataMember] public SpecificSpellSubType SpellSubType { get; private set; }
         [DataMember] public SpecificSpellTargetType SpellTargetType { get; private set; }
 
-        private readonly Dictionary<Reagent.ReagentTypeEnum, bool> _reagentsDictionary = new();
+        private readonly Dictionary<Reagent.SpecificReagentType, bool> _reagentsDictionary = new();
 
-        private bool GetReagentState(Reagent.ReagentTypeEnum reagentType) =>
-            _reagentsDictionary.ContainsKey(reagentType) && _reagentsDictionary[reagentType];
+        private bool GetReagentState(Reagent.SpecificReagentType specificReagentType) =>
+            _reagentsDictionary.ContainsKey(specificReagentType) && _reagentsDictionary[specificReagentType];
 
-        private void SetReagentState(Reagent.ReagentTypeEnum reagentType, bool bSpellRequirement)
+        private void SetReagentState(Reagent.SpecificReagentType specificReagentType, bool bSpellRequirement)
         {
-            if (_reagentsDictionary.ContainsKey(reagentType)) _reagentsDictionary[reagentType] = bSpellRequirement;
-            else _reagentsDictionary.Add(reagentType, bSpellRequirement);
+            if (_reagentsDictionary.ContainsKey(specificReagentType))
+                _reagentsDictionary[specificReagentType] = bSpellRequirement;
+            else _reagentsDictionary.Add(specificReagentType, bSpellRequirement);
         }
 
-        public bool IsCorrectReagents(IEnumerable<Reagent.ReagentTypeEnum> reagents)
+        public bool IsCorrectReagents(IEnumerable<Reagent.SpecificReagentType> reagents)
         {
             int nReagents = 0;
-            foreach (Reagent.ReagentTypeEnum reagent in reagents)
+            foreach (Reagent.SpecificReagentType reagent in reagents)
             {
                 if (!IsReagentRequired(reagent)) return false;
                 nReagents++;
@@ -187,7 +188,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             return (nReagents == _reagentsDictionary.Count(r => r.Value));
         }
 
-        public bool IsReagentRequired(Reagent.ReagentTypeEnum reagentType) => _reagentsDictionary[reagentType];
+        public bool IsReagentRequired(Reagent.SpecificReagentType specificReagentType) =>
+            _reagentsDictionary[specificReagentType];
 
         internal SpellResult CastSpell(GameState state, SpellCastingDetails details)
         {
@@ -215,7 +217,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 SpecificSpellSubType.AscendDescend => new AscendDescendSpellSubType(this),
                 SpecificSpellSubType.ChangeEnemyState => new ChangeEnemyStateSpellSubType(this),
                 SpecificSpellSubType.Other => new OtherSpellSubType(this),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidEnumArgumentException(((int)SpellSubType).ToString())
             };
         }
     }

@@ -1040,11 +1040,11 @@ namespace Ultima5Redux.Maps
             foreach (int nTile in tileCountDictionary.Keys)
             {
                 int nTotal = tileCountDictionary[nTile];
-                if (nMostTile == -1 || nTotal > nMostTileTotal)
-                {
-                    nMostTile = nTile;
-                    nMostTileTotal = nTotal;
-                }
+
+                if (nMostTile != -1 && nTotal <= nMostTileTotal) continue;
+
+                nMostTile = nTile;
+                nMostTileTotal = nTotal;
             }
 
             // just in case we didn't find a match - just use grass for now
@@ -1130,6 +1130,7 @@ namespace Ultima5Redux.Maps
         {
             IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
             int nFloor = CurrentPosition.Floor;
+
             foreach (MapUnit mapUnit in mapUnits)
             {
                 // sometimes characters are null because they don't exist - and that is OK

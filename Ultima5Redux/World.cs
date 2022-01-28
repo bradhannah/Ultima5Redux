@@ -252,7 +252,7 @@ namespace Ultima5Redux
             }
 
             bWasUsed = true;
-            Debug.Assert((State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+            Debug.Assert((State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .HasOneOfMore));
 
             if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing)
@@ -262,7 +262,7 @@ namespace Ultima5Redux
                     .ONLY_ON_FOOT);
             }
 
-            State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity--;
+            State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity--;
             MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
                 State.TheVirtualMap.CurrentPosition.XY,
                 State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentDirection,
@@ -352,7 +352,7 @@ namespace Ultima5Redux
 
                         if (State.TheVirtualMap.IsAvatarRidingCarpet)
                             // we tuck the carpet away
-                            State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+                            State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                                 .Quantity++;
                         if (State.TheVirtualMap.IsAvatarInSkiff)
                             // add a skiff the the frigate
@@ -477,11 +477,11 @@ namespace Ultima5Redux
         {
             PassTime();
             // if there are no torches then report back and make no change
-            if (State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity <= 0)
+            if (State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity <= 0)
                 return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings
                     .NONE_OWNED_BANG_N);
 
-            State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity--;
+            State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity--;
             State.TurnsToExtinguish = N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH;
             // this will trigger a re-read of time of day changes
             State.TheTimeOfDay.SetAllChangeTrackers();
@@ -668,7 +668,7 @@ namespace Ultima5Redux
             if (tileReference.Index == GameReferences.SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
                 tileReference.Index == GameReferences.SpriteTileReferences.GetTileNumberByName("RightSconce"))
             {
-                State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Torches].Quantity++;
+                State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity++;
 
                 State.TheVirtualMap.SetOverridingTileReferece(
                     GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
@@ -679,7 +679,7 @@ namespace Ultima5Redux
             if (magicCarpet != null)
             {
                 // add the carpet to the players inventory and remove it from the map
-                State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity++;
+                State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity++;
                 State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(magicCarpet);
                 bGotAThing = true;
                 return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings
@@ -732,7 +732,7 @@ namespace Ultima5Redux
                 if (bIsDoorMagical)
                 {
                     // we use up a key
-                    State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys].Quantity--;
+                    State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Keys].Quantity--;
 
                     // for now we will also just open the door so we can get around - will address when we have spells
                     State.TheVirtualMap.SetOverridingTileReferece(
@@ -748,7 +748,7 @@ namespace Ultima5Redux
                 else if (bIsDoorLocked)
                 {
                     // we use up a key
-                    State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys].Quantity--;
+                    State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Keys].Quantity--;
 
                     // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
 
@@ -790,7 +790,7 @@ namespace Ultima5Redux
             // if it's a large map, we either klimb with the grapple or don't klimb at all
             if (State.TheVirtualMap.IsLargeMap)
             {
-                if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Grapple]
+                if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Grapple]
                     .HasOneOfMore) // we don't have a grapple, so we can't klimb
                 {
                     klimbResult = KlimbResult.RequiresDirection;
@@ -1474,26 +1474,26 @@ namespace Ultima5Redux
             bWasUsed = true;
             switch (spcItem.ItemType)
             {
-                case SpecialItem.ItemTypeSpriteEnum.Carpet:
+                case SpecialItem.SpecificItemTypeSprite.Carpet:
                     return UseMagicCarpet(out bWasUsed);
-                case SpecialItem.ItemTypeSpriteEnum.Grapple:
+                case SpecialItem.SpecificItemTypeSprite.Grapple:
                     return "Grapple\n\nYou need to K-limb with it!";
-                case SpecialItem.ItemTypeSpriteEnum.Spyglass:
+                case SpecialItem.SpecificItemTypeSprite.Spyglass:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                         .SPYGLASS_N_N);
-                case SpecialItem.ItemTypeSpriteEnum.HMSCape:
+                case SpecialItem.SpecificItemTypeSprite.HMSCape:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                         .PLANS_N_N);
-                case SpecialItem.ItemTypeSpriteEnum.PocketWatch:
+                case SpecialItem.SpecificItemTypeSprite.PocketWatch:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                         .WATCH_N_N_THE_POCKET_W_READS) + " " + State.TheTimeOfDay.FormattedTime;
-                case SpecialItem.ItemTypeSpriteEnum.BlackBadge:
+                case SpecialItem.SpecificItemTypeSprite.BlackBadge:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                         .BADGE_N_N);
-                case SpecialItem.ItemTypeSpriteEnum.WoodenBox:
+                case SpecialItem.SpecificItemTypeSprite.WoodenBox:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                         .BOX_N_HOW_N);
-                case SpecialItem.ItemTypeSpriteEnum.Sextant:
+                case SpecialItem.SpecificItemTypeSprite.Sextant:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                         .SEXTANT_N_N);
                 default:

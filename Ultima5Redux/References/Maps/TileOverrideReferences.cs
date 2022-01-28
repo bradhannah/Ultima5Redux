@@ -40,7 +40,6 @@ namespace Ultima5Redux.References.Maps
                             new Dictionary<int, Dictionary<int, Dictionary<Point2D, TileOverrideReference>>>());
                     }
 
-                    //List<TileOverrideReference> tileOverrideReferences = GetTileOverrides(territory, tileOverrideReference.MapNumber, tileOverrideReference.Z);
                     if (!_tileOverrideMap[territory].ContainsKey(tileOverrideReference.MapNumber))
                         _tileOverrideMap[territory].Add(tileOverrideReference.MapNumber,
                             new Dictionary<int, Dictionary<Point2D, TileOverrideReference>>());
@@ -67,16 +66,10 @@ namespace Ultima5Redux.References.Maps
             singleMapReference.Floor == 0 ? AllTerritories.Britannia : AllTerritories.Underworld;
 
         private List<TileOverrideReference> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor)
-            //!TileOverrideExists(territory, nMapNumber, nFloor)
-
         {
             if (!TileOverrideExists(territory, nMapNumber, nFloor)) return new List<TileOverrideReference>();
             return _tileOverrideMap[territory][nMapNumber][nFloor].Values.ToList();
         }
-
-        // ? new List<TileOverrideReference>()
-        // : _tileOverrides[territory].FindAll(s => s.MapNumber == nMapNumber)
-        //     .Where(tile => nFloor == tile.Position.Floor).ToList();
 
         /// <summary>
         ///     Gets a full collection of all tile overrides for a particular territory and map
@@ -89,9 +82,9 @@ namespace Ultima5Redux.References.Maps
         private Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(AllTerritories territory, int nMapNumber,
             int nFloor)
         {
-            if (!TileOverrideExists(territory, nMapNumber, nFloor)) return null;
-
-            return _tileOverrideMap[territory][nMapNumber][nFloor];
+            if (TileOverrideExists(territory, nMapNumber, nFloor))
+                return _tileOverrideMap[territory][nMapNumber][nFloor];
+            return null;
         }
 
         private bool TileOverrideExists(AllTerritories territory, int nMapNumber, int nFloor)

@@ -11,6 +11,7 @@ namespace Ultima5Redux.MapUnits
     [DataContract] public class MapUnitCollection
     {
         private bool bForceNewAvatar;
+
         [DataMember(Name = "Avatars")]
         private Avatar[] SaveAvatars
         {
@@ -78,8 +79,7 @@ namespace Ultima5Redux.MapUnits
             set => ReplaceAll(value);
         }
 
-        [IgnoreDataMember]
-        public IEnumerable<MapUnit> AllActiveMapUnits => AllMapUnits.Where(s => s.IsActive); //.ToList();
+        [IgnoreDataMember] public IEnumerable<MapUnit> AllActiveMapUnits => AllMapUnits.Where(s => s.IsActive);
 
         [IgnoreDataMember] public IEnumerable<CombatMapUnit> AllCombatMapUnits => GetMapUnitByType<CombatMapUnit>();
         [IgnoreDataMember] public List<MapUnit> AllMapUnits { get; } = new(MapUnits.MAX_MAP_CHARACTERS);
@@ -106,7 +106,8 @@ namespace Ultima5Redux.MapUnits
 
         private Avatar _avatar;
 
-        [IgnoreDataMember] public Avatar TheAvatar
+        [IgnoreDataMember]
+        public Avatar TheAvatar
         {
             get
             {

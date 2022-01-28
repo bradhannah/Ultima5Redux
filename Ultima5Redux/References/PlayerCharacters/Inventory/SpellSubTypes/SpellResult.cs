@@ -16,6 +16,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
         public string OutputString => OutputStringBuilder.ToString();
 
         public readonly StringBuilder OutputStringBuilder = new();
-        public SpellResultStatus Status;
+        public SpellResultStatus Status { get; set; }
     }
 }

@@ -121,9 +121,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public virtual string GetHelloResponse(TimeOfDay tod = null)
         {
             if (tod == null) throw new Ultima5ReduxException("can't pass null TOD to blacksmith");
-            // todo: convert to data.ovl @ 0x8028
-            string response = @"Good " + tod.TimeOfDayName + ", and welcome to " + TheShoppeKeeperReference.ShoppeName +
-                              "!";
+            string response = $@"Good {tod.TimeOfDayName}, and welcome to {TheShoppeKeeperReference.ShoppeName}!";
             return response;
         }
 

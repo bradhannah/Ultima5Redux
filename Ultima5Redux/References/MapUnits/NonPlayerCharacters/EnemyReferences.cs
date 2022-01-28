@@ -40,7 +40,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             return AllEnemyReferences[enemyReference.FriendIndex];
         }
 
-        private class AdditionalEnemyFlagList
+        private sealed class AdditionalEnemyFlagList
         {
             public readonly List<AdditionalEnemyFlags> AllAdditionalEnemyFlags;
 

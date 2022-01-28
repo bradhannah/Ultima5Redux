@@ -6,11 +6,11 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
     public class ProvisionReferences
     {
-        private static readonly Dictionary<Provision.ProvisionTypeEnum, int> BundleQuantity =
+        private static readonly Dictionary<Provision.SpecificProvisionType, int> BundleQuantity =
             new()
             {
-                { Provision.ProvisionTypeEnum.Torches, 5 }, { Provision.ProvisionTypeEnum.Keys, 3 },
-                { Provision.ProvisionTypeEnum.Gems, 4 }
+                { Provision.SpecificProvisionType.Torches, 5 }, { Provision.SpecificProvisionType.Keys, 3 },
+                { Provision.SpecificProvisionType.Gems, 4 }
             };
 
         /// <summary>
@@ -30,21 +30,21 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         };
 
         // the order of the provisions in the _prices array
-        private static readonly Dictionary<Provision.ProvisionTypeEnum, int> ProvisionOrder =
+        private static readonly Dictionary<Provision.SpecificProvisionType, int> ProvisionOrder =
             new()
             {
-                { Provision.ProvisionTypeEnum.Keys, 0 }, { Provision.ProvisionTypeEnum.Gems, 1 },
-                { Provision.ProvisionTypeEnum.Torches, 2 }
+                { Provision.SpecificProvisionType.Keys, 0 }, { Provision.SpecificProvisionType.Gems, 1 },
+                { Provision.SpecificProvisionType.Torches, 2 }
             };
 
         /// <summary>
         ///     Gets the base price which is later adjusted based on intelligence
         /// </summary>
         /// <param name="location"></param>
-        /// <param name="provisionType"></param>
+        /// <param name="specificProvisionTypem>
         /// <returns>Greater than zero if it is sold, otherwise returns -1</returns>
         public int GetBasePrice(SmallMapReferences.SingleMapReference.Location location,
-            Provision.ProvisionTypeEnum provisionType)
+            Provision.SpecificProvisionType specificProvisionType)
         {
             int nIndex = 0;
             foreach (byte b in GameReferences.DataOvlRef
@@ -54,7 +54,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                     (SmallMapReferences.SingleMapReference.Location)b;
                 if (potentialLocation == location)
                     // they sell it, now we find it
-                    return Prices[nIndex, ProvisionOrder[provisionType]];
+                    return Prices[nIndex, ProvisionOrder[specificProvisionType]];
                 nIndex++;
             }
 
@@ -65,9 +65,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         ///     Gets the bundle quantity for the current provision
         /// </summary>
         /// <returns></returns>
-        public int GetBundleQuantity(Provision.ProvisionTypeEnum provisionType)
+        public int GetBundleQuantity(Provision.SpecificProvisionType specificProvisionType)
         {
-            return BundleQuantity[provisionType];
+            return BundleQuantity[specificProvisionType];
         }
     }
 }

@@ -19,10 +19,7 @@ namespace Ultima5Redux.MapUnits
 
         [JsonConstructor] public MapUnitMovements()
         {
-            // _movementList = new List<MapUnitMovement>() { new MapUnitMovement(0) };
-            // _movementList = Enumerable.Repeat(new MapUnitMovement(MAX_PLAYERS), 
-            // var bookList = Enumerable.Repeat(new Book(), 2).ToList();
-            // _movementList.Add(new MapUnitMovement(0));
+            // empty
         }
 
         public MapUnitMovements(DataChunk movementInstructionDataChunk, DataChunk movementOffsetDataChunk)

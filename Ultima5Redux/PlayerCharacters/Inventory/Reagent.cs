@@ -20,7 +20,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         //0x2AF 1 0-99 Black Pearl
         //0x2B0 1 0-99 Nightshade
         //0x2B1 1 0-99 Mandrake Root
-        [JsonConverter(typeof(StringEnumConverter))] public enum ReagentTypeEnum
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum SpecificReagentType
         {
             SulfurAsh = 0x2AA, Ginseng = 0x2AB, Garlic = 0x2AC, SpiderSilk = 0x2AD, BloodMoss = 0x2AE,
             BlackPearl = 0x2AF, NightShade = 0x2B0, MandrakeRoot = 0x2B1
@@ -28,15 +29,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private const int REAGENT_SPRITE = 259;
 
-        [DataMember] public override int Quantity
+        [DataMember]
+        public override int Quantity
         {
             get => base.Quantity;
             set => base.Quantity = value > MAX_INVENTORY_ITEM_QUANTITY ? MAX_INVENTORY_ITEM_QUANTITY : value;
         }
 
-        [DataMember] public ReagentTypeEnum ReagentType { get; private set; }
+        [DataMember] public SpecificReagentType ReagentType { get; private set; }
 
-        // [IgnoreDataMember] private readonly GameState _state;
         [IgnoreDataMember] public override int BasePrice => 0;
         [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
 
@@ -48,7 +49,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Standard index/order of reagents in data files
         /// </summary>
-        [IgnoreDataMember] public int ReagentIndex => (int)ReagentType - (int)ReagentTypeEnum.SulfurAsh;
+        [IgnoreDataMember]
+        public int ReagentIndex => (int)ReagentType - (int)SpecificReagentType.SulfurAsh;
 
         [JsonConstructor] private Reagent()
         {
@@ -57,14 +59,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Create a reagent
         /// </summary>
-        /// <param name="reagentType">The type of reagent</param>
+        /// <param name="specificReagentTypepe of reagent</param>
         /// <param name="quantity">how many the party has</param>
-        public Reagent(ReagentTypeEnum reagentType, int quantity) : base(quantity, REAGENT_SPRITE,
+        public Reagent(SpecificReagentType specificReagentType, int quantity) : base(quantity, REAGENT_SPRITE,
             InventoryReferences.InventoryReferenceType.Reagent)
         {
-            // capture the game state so we know the users Karma for cost calculations
-            // _state = state;
-            ReagentType = reagentType;
+            ReagentType = specificReagentType;
         }
 
         /// <summary>

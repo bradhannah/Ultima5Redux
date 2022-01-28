@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.External;
@@ -19,7 +20,7 @@ namespace Ultima5Redux.Maps
         // when computing what should happen when a player hits - these states can be triggered 
         private enum AdditionalHitStateAction { None, EnemyDivided }
 
-        public enum CombatMapUnitEnum { All, CombatPlayer, Enemy }
+        public enum SpecificCombatMapUnit { All, CombatPlayer, Enemy }
 
         public enum SelectionAction { None, Magic, Attack }
 
@@ -57,7 +58,10 @@ namespace Ultima5Redux.Maps
         public override byte[][] TheMap
         {
             get => TheCombatMapReference.TheMap;
-            protected set { }
+            protected set
+            {
+                // do nothing, not allowed
+            }
         }
 
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnit() is Enemy enemy ? enemy : null;
@@ -259,7 +263,7 @@ namespace Ultima5Redux.Maps
                         enemyReference, out int _);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(((int)combatMapSpriteType).ToString());
             }
 
             // make sure the tile that the enemy occupies is not walkable
@@ -496,11 +500,9 @@ namespace Ultima5Redux.Maps
             if (!opponentCombatMapUnit.IsActive) return false;
             if (!opponentCombatMapUnit.IsAttackable) return false;
             if (nRange == 1 && !attackingUnit.CanReachForMeleeAttack(opponentCombatMapUnit, nRange)) return false;
-            if (nRange > 1)
-            {
-                if (IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY,
-                        out _)) return false;
-            }
+            if (nRange > 1 &&
+                IsRangedPathBlocked(attackingUnit.MapUnitPosition.XY, opponentCombatMapUnit.MapUnitPosition.XY, out _))
+                return false;
 
             return true;
         }
@@ -547,7 +549,7 @@ namespace Ultima5Redux.Maps
         /// <param name="bMoved">did the CombatMapUnit move</param>
         /// <returns>The combat player that they are heading towards</returns>
         private CombatMapUnit MoveToClosestAttackableCombatMapUnit(CombatMapUnit activeCombatUnit,
-            CombatMapUnitEnum preferredAttackTarget, out bool bMoved)
+            SpecificCombatMapUnit preferredAttackTarget, out bool bMoved)
         {
             if (activeCombatUnit == null)
                 throw new Ultima5ReduxException("Passed a null active combat unit when moving to closest unit");
@@ -661,13 +663,13 @@ namespace Ultima5Redux.Maps
         }
 
         private CombatPlayer MoveToClosestAttackableCombatPlayer(CombatMapUnit activeCombatUnit, out bool bMoved) =>
-            MoveToClosestAttackableCombatMapUnit(activeCombatUnit, CombatMapUnitEnum.CombatPlayer, out bMoved) as
+            MoveToClosestAttackableCombatMapUnit(activeCombatUnit, SpecificCombatMapUnit.CombatPlayer, out bMoved) as
                 CombatPlayer;
 
         private Enemy MoveToClosestAttackableEnemy(CombatMapUnit activeMapUnit, out string outputStr, out bool bMoved)
         {
             Enemy enemy =
-                MoveToClosestAttackableCombatMapUnit(activeMapUnit, CombatMapUnitEnum.Enemy, out bMoved) as Enemy;
+                MoveToClosestAttackableCombatMapUnit(activeMapUnit, SpecificCombatMapUnit.Enemy, out bMoved) as Enemy;
             outputStr = "";
             if (enemy == null)
             {
@@ -776,18 +778,18 @@ namespace Ultima5Redux.Maps
             return newEnemy;
         }
 
-        public List<CombatMapUnit> GetActiveCombatMapUnitsByType(CombatMapUnitEnum combatMapUnitEnum)
+        public List<CombatMapUnit> GetActiveCombatMapUnitsByType(SpecificCombatMapUnit specificCombatMapUnit)
         {
-            switch (combatMapUnitEnum)
+            switch (specificCombatMapUnit)
             {
-                case CombatMapUnitEnum.All:
+                case SpecificCombatMapUnit.All:
                     return AllVisibleAttackableCombatMapUnits;
-                case CombatMapUnitEnum.CombatPlayer:
+                case SpecificCombatMapUnit.CombatPlayer:
                     return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive).ToList();
-                case CombatMapUnitEnum.Enemy:
+                case SpecificCombatMapUnit.Enemy:
                     return AllEnemiesGeneric.Where(enemy => enemy.IsActive).ToList();
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(combatMapUnitEnum), combatMapUnitEnum, null);
+                    throw new ArgumentOutOfRangeException(nameof(specificCombatMapUnit), specificCombatMapUnit, null);
             }
         }
 
@@ -1115,7 +1117,7 @@ namespace Ultima5Redux.Maps
                         ? TurnResult.CombatPlayerHit
                         : TurnResult.CombatPlayerMissed;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(((int)selectedAction).ToString());
             }
         }
 
@@ -1275,7 +1277,7 @@ namespace Ultima5Redux.Maps
                         break;
                     case CombatMapUnit.HitState.None:
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidEnumArgumentException(((int)hitState).ToString());
                 }
 
                 AdvanceToNextCombatMapUnit();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 {
@@ -23,7 +24,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
                 MagicReference.SpecificTimePermitted.Combat_Dungeon => state.TheVirtualMap.IsCombatMap || true,
                 MagicReference.SpecificTimePermitted.Dungeon => false,
                 MagicReference.SpecificTimePermitted.Never => false,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidEnumArgumentException(((int)MagicRef.TimePermitted).ToString())
             };
 
             return bResult;

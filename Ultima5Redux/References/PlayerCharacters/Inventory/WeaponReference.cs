@@ -7,7 +7,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
     [DataContract] public sealed class WeaponReference : CombatItemReference
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum WeaponTypeEnum
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum SpecificWeaponType
         {
             BareHands = -2, SmallShield = 0x21E, LargeShield = 0x21F, SpikedShield = 0x220, MagicShield = 0x221,
             JewelShield = 0x222, Dagger = 0x22a, Sling, Club, FlamingOil, MainGauche, Spear, ThrowingAxe, ShortSword,
@@ -15,7 +16,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             SwordofChaos, MagicBow, SilverSword, MagicAxe, GlassSword, JeweledSword, MysticSword
         }
 
-        [DataMember] public WeaponTypeEnum WeaponType { get; private set; }
+        [DataMember] public SpecificWeaponType WeaponType { get; private set; }
 
         [IgnoreDataMember] public override bool CanSell => BasePrice > 0 || IsAmmo;
 
@@ -27,7 +28,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             dataOvlReference, inventoryReference)
         {
             WeaponType =
-                (WeaponTypeEnum)Enum.Parse(typeof(WeaponTypeEnum), inventoryReference.GetAsEquipment().ToString());
+                (SpecificWeaponType)Enum.Parse(typeof(SpecificWeaponType),
+                    inventoryReference.GetAsEquipment().ToString());
         }
     }
 }

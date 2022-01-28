@@ -56,8 +56,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             return ShoppeKeeperDialogueReference.GetMerchantString(123).TrimStart() + "\n\n" +
                    ShoppeKeeperDialogueReference.GetMerchantString(124).Trim() + " Avatar?\"";
-            // I'm lazy, may fix later
-            // genderedAddress:records.Records[0].Gender == PlayerCharacterRecord.CharacterGender.Male ? "sir":"mam");
         }
 
         public override string GetWhichWouldYouSee()

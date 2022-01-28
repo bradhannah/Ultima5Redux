@@ -16,21 +16,9 @@ namespace Ultima5Redux.MapUnits
             set => _floor = value == 0xFF ? -1 : value;
         }
 
-        [DataMember]
-        public int X
-        {
-            get;
-            set;
-            //XY.X = value;
-        }
+        [DataMember] public int X { get; set; }
 
-        [DataMember]
-        public int Y
-        {
-            get;
-            set;
-            //XY.Y = value;
-        }
+        [DataMember] public int Y { get; set; }
 
         [IgnoreDataMember] private int _floor;
 

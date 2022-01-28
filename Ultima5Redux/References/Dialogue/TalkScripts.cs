@@ -295,7 +295,8 @@ namespace Ultima5Redux.References.Dialogue
 
         public TalkScript GetTalkScript(SmallMapReferences.SingleMapReference.SmallMapMasterFiles smallMapRef, int nNPC)
         {
-            if (NonPlayerCharacterReference.IsSpecialDialogType((NonPlayerCharacterReference.NPCDialogTypeEnum)nNPC))
+            if (NonPlayerCharacterReference.IsSpecialDialogType(
+                    (NonPlayerCharacterReference.SpecificNpcDialogType)nNPC))
                 return null;
             return _talkScriptRefs[smallMapRef][nNPC];
         }

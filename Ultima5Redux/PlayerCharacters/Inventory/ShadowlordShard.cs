@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -10,21 +10,20 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class ShadowlordShard : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum ShardType
-        {
-            Falsehood = 0x210, Hatred = 0x211, Cowardice = 0x212
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum ShardType { Falsehood = 0x210, Hatred = 0x211, Cowardice = 0x212 }
         // private enum Offsets { FALSEHOOD = 0x210, HATRED = 0x211, COWARDICE = 0x212 }
 
         private const int SHARD_SPRITE = 436;
 
-        [DataMember] public string EquipMessage =>
+        [DataMember]
+        public string EquipMessage =>
             Shard switch
             {
                 ShardType.Falsehood => GetEquipStr(DataOvlReference.ShadowlordStrings.HATRED_DOT),
                 ShardType.Hatred => GetEquipStr(DataOvlReference.ShadowlordStrings.HATRED_DOT),
                 ShardType.Cowardice => GetEquipStr(DataOvlReference.ShadowlordStrings.COWARDICE_DOT),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidEnumArgumentException(((int)Shard).ToString())
             };
 
         [DataMember] public ShardType Shard { get; private set; }

@@ -195,7 +195,6 @@ namespace Ultima5Redux.DayNightMoon
         public Guid RegisterChangeTracker()
         {
             Guid changeTrackerId = Guid.NewGuid();
-            //_nTotalChangeTrackers++;
             _timeHasChangedDictionary[changeTrackerId] = true;
             return changeTrackerId;
         }

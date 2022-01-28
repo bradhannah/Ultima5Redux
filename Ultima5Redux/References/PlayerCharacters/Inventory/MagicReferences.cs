@@ -39,8 +39,4 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 == cleanSpellWords);
         }
     }
-
-    //         _magicReferences.Values.FirstOrDefault(magicReference =>
-    //             magicReference.SpellKey.ToLower().Trim() == spellWords.ToLower().Trim());
-    // }
 }

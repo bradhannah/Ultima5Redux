@@ -27,7 +27,6 @@ namespace Ultima5Redux.MapUnits
         public SmallMapCharacterState(NonPlayerCharacterReference npcRef, int nMapUnitAnimationStateIndex)
         {
             NPCIndex = npcRef.DialogIndex;
-            // TileRef = GameReferences.SpriteTileReferences.GetTileReference(npcRef.NPCKeySprite);
             MapUnitAnimationStateIndex = nMapUnitAnimationStateIndex;
             // if you are adding by hand then we can assume that the character is active
             TheMapUnitPosition =
@@ -57,7 +56,6 @@ namespace Ultima5Redux.MapUnits
             TheMapUnitPosition.Y = stateUInts[2];
             TheMapUnitPosition.Floor = stateUInts[3];
             Active = !(TheMapUnitPosition.X == 0 && TheMapUnitPosition.Y == 0);
-            //stateUInts[7] > 0;
         }
     }
 }

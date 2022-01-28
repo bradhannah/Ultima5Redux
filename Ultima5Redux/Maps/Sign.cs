@@ -117,7 +117,7 @@ namespace Ultima5Redux.Maps
                 { ']', "NG" },
                 { '\\', "EE" }
             };
-            // the actual character is a solid circle for separation //((char)0xA7).ToString());
+            // the actual character is a solid circle for separation ((char)0xA7).ToString());
 
             char prevChar = '\0';
             foreach (char signChar in signTextArray)

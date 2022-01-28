@@ -52,19 +52,19 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 .Replace("Yes", "").TrimStart();
         }
 
-        public string GetProvisionBuyOutput(Provision.ProvisionTypeEnum provision, int nGold)
+        public string GetProvisionBuyOutput(Provision.SpecificProvisionType specificProvision, int nGold)
         {
-            switch (provision)
+            switch (specificProvision)
             {
-                case Provision.ProvisionTypeEnum.Torches:
+                case Provision.SpecificProvisionType.Torches:
                     return ShoppeKeeperDialogueReference.GetMerchantString(162, nGold);
-                case Provision.ProvisionTypeEnum.Gems:
+                case Provision.SpecificProvisionType.Gems:
                     return ShoppeKeeperDialogueReference.GetMerchantString(161, nGold);
-                case Provision.ProvisionTypeEnum.Keys:
+                case Provision.SpecificProvisionType.Keys:
                     return ShoppeKeeperDialogueReference.GetMerchantString(160, nGold);
-                case Provision.ProvisionTypeEnum.SkullKeys:
+                case Provision.SpecificProvisionType.SkullKeys:
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(provision), provision, null);
+                    throw new ArgumentOutOfRangeException(nameof(specificProvision), specificProvision, null);
             }
         }
     }

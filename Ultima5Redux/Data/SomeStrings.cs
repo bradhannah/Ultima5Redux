@@ -38,7 +38,6 @@ namespace Ultima5Redux.Data
 
                 StringList.Add(str);
                 curOffset += str.Length + 1;
-                // str = string.Empty;
             }
         }
 

@@ -28,14 +28,14 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         ///     How many bytes is each town offset inside the NPC file
         /// </summary>
         private static readonly int TownOffsetSize =
-            (Marshal.SizeOf(typeof(NonPlayerCharacterReference.NPCSchedule)) + SIZEOF_NPC_TYPE_BLOCK +
+            (Marshal.SizeOf(typeof(NonPlayerCharacterReference.NpcSchedule)) + SIZEOF_NPC_TYPE_BLOCK +
              SIZEOF_NPC_DIALOG_BLOCK) * NPCS_PER_TOWN;
 
         /// <summary>
         ///     How many bytes does the schedule structure use?
         /// </summary>
         private static readonly int ScheduleOffsetSize =
-            Marshal.SizeOf(typeof(NonPlayerCharacterReference.NPCSchedule));
+            Marshal.SizeOf(typeof(NonPlayerCharacterReference.NpcSchedule));
 
         /// <summary>
         ///     starting position (within town) of NPC type
@@ -82,15 +82,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 talkScriptsRef);
         }
 
-        // left over structure
-        /* [StructLayout(LayoutKind.Sequential, Pack = 1)]
-                private unsafe struct NPC_Info
-                {
-                    NPC_Schedule schedule[32];
-                    fixed byte type[32]; // merchant, guard, etc.
-                    fixed byte dialog_number[32];
-                };*/
-
         /// <summary>
         ///     Initialize NPCs from a particular small map master file set
         /// </summary>
@@ -112,7 +103,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             for (int nTown = 0; nTown < TOWNS_PER_NPCFILE; nTown++)
             {
                 // fresh collections for each major loop to guarantee they are clean
-                List<NonPlayerCharacterReference.NPCSchedule> schedules = new(NPCS_PER_TOWN);
+                List<NonPlayerCharacterReference.NpcSchedule> schedules = new(NPCS_PER_TOWN);
                 List<byte> npcTypes = new(NPCS_PER_TOWN);
                 List<byte> npcDialogNumber = new(NPCS_PER_TOWN);
 
@@ -128,9 +119,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 // start at the town offset, increment by an NPC record each time, for 32 loops
                 for (int offset = townOffset; count < NPCS_PER_TOWN; offset += ScheduleOffsetSize, count++)
                 {
-                    NonPlayerCharacterReference.NPCSchedule schedule =
-                        (NonPlayerCharacterReference.NPCSchedule)Utils.ReadStruct(npcData, offset,
-                            typeof(NonPlayerCharacterReference.NPCSchedule));
+                    NonPlayerCharacterReference.NpcSchedule schedule =
+                        (NonPlayerCharacterReference.NpcSchedule)Utils.ReadStruct(npcData, offset,
+                            typeof(NonPlayerCharacterReference.NpcSchedule));
                     schedules.Add(schedule);
                 }
 
@@ -145,8 +136,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     // add NPC dialog #
                     npcDialogNumber.Add(npcData[offset + StartingNPCDialogTownOffset]);
                 }
-
-                //List<byte> keySpriteList = gameStateRef.NonPlayerCharacterKeySprites.GetAsByteList();
 
                 // go over all of the NPCs, create them and add them to the collection
                 for (int nNpc = 0; nNpc < NPCS_PER_TOWN; nNpc++)
@@ -174,15 +163,15 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         ///     Best used for shoppe keepers
         /// </summary>
         /// <param name="location"></param>
-        /// <param name="npcType"></param>
+        /// <param name="specificNpcType"></param>
         /// <returns>NPC Reference</returns>
         public List<NonPlayerCharacterReference> GetNonPlayerCharacterByLocationAndNPCType(
             SmallMapReferences.SingleMapReference.Location location,
-            NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+            NonPlayerCharacterReference.SpecificNpcDialogType specificNpcType)
         {
             List<NonPlayerCharacterReference> npcRefs = GetNonPlayerCharactersByLocation(location);
 
-            return npcRefs.Where(npcRef => npcRef.NPCType == npcType).ToList();
+            return npcRefs.Where(npcRef => npcRef.NpcType == specificNpcType).ToList();
         }
 
         public NonPlayerCharacterReference GetNonPlayerCharacterByName(string name)

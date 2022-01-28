@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -22,7 +22,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                     .WearUseItemStrings.DON_THE_CROWN),
                 ArtifactType.Sceptre => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
                     .WearUseItemStrings.WIELD_SCEPTRE),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidEnumArgumentException(((int)Artifact).ToString())
             };
 
         [DataMember] public ArtifactType Artifact { get; private set; }

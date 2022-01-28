@@ -1,7 +1,5 @@
 ﻿using System.IO;
 
-//using System.Drawing;
-
 namespace Ultima5Redux.Maps
 {
     public class GenericTileset
@@ -71,7 +69,6 @@ namespace Ultima5Redux.Maps
                         break;
                     default:
                         WriteBitmapRgb(255, 255, 255);
-                        //printf("Got code %d that I wasn't expecting\n", pic);
 
                         break;
                 }

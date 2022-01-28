@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -162,7 +163,7 @@ namespace Ultima5Redux.MapUnits
                 Map.Maps.Overworld => OverworldMapMapUnitCollection,
                 Map.Maps.Underworld => UnderworldMapUnitCollection,
                 Map.Maps.Combat => CombatMapMapUnitCollection,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new InvalidEnumArgumentException(((int)map).ToString())
             };
         }
 

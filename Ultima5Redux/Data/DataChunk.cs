@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -443,7 +444,7 @@ namespace Ultima5Redux.Data
                     Console.WriteLine(@"Unknown");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(((int)DataFormat).ToString());
             }
         }
 

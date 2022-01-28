@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
@@ -237,7 +238,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                             ._KILLED_BANG_N);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(((int)enemyHitState).ToString());
             }
 
             return enemyHitState;

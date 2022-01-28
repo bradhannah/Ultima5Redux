@@ -39,12 +39,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; internal set; } = new();
 
-        [IgnoreDataMember] public List<Spell> ItemsList => Items.Values.ToList();
-
         [IgnoreDataMember]
-        public List<Spell> SortedSpellsByCircleAndAlpha
+        public IEnumerable<Spell> SortedSpellsByCircleAndAlpha
         {
-            get { return Items.Values.OrderBy(s => s.MinCircle).ThenBy(s => s.LongName).ToList(); }
+            get { return Items.Values.OrderBy(s => s.MinCircle).ThenBy(s => s.LongName); }
         }
 
         [JsonConstructor] private Spells()

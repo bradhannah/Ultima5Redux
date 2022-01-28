@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
 using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.References.Maps
@@ -6,11 +6,11 @@ namespace Ultima5Redux.References.Maps
     /// <summary>
     ///     A single overriden tile
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)] public class TileOverrideReference
+    [DataContract] public class TileOverrideReference
     {
-        [JsonProperty] public int MapNumber;
+        [DataMember] public int MapNumber { get; private set; }
 
-        [JsonProperty] public string Comment { get; set; }
+        [DataMember] public string Comment { get; set; }
         public bool IsOverworld => MapNumber == 0 && Z == 0;
 
         public bool IsSmallMap => MapNumber != 0;
@@ -19,14 +19,14 @@ namespace Ultima5Redux.References.Maps
 
         public MapUnitPosition Position => new(X, Y, Z);
 
-        [JsonProperty] public string SpriteName { get; set; }
+        [DataMember] public string SpriteName { get; set; }
 
-        [JsonProperty] public int SpriteNum { get; set; }
+        [DataMember] public int SpriteNum { get; set; }
 
-        [JsonProperty] public int X { get; set; }
+        [DataMember] public int X { get; set; }
 
-        [JsonProperty] public int Y { get; set; }
+        [DataMember] public int Y { get; set; }
 
-        [JsonProperty] public int Z { get; set; }
+        [DataMember] public int Z { get; set; }
     }
 }

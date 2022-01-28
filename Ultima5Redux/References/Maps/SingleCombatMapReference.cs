@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
 
 namespace Ultima5Redux.References.Maps
 {
-    [JsonObject(MemberSerialization.OptIn)] public class SingleCombatMapReference
+    [JsonObject(MemberSerialization.OptIn)]
+    public class SingleCombatMapReference
     {
         public enum BritanniaCombatMaps
         {
@@ -250,7 +252,6 @@ namespace Ultima5Redux.References.Maps
             foreach (byte nIndex in triggerTileIndexes)
             {
                 triggerTileReferences.Add(tileReferences.GetTileReference(nIndex));
-                //+ 0xFF));
             }
 
             // Gather all positions that change as a result of a trigger
@@ -354,16 +355,8 @@ namespace Ultima5Redux.References.Maps
             return _enemyPositions[nIndex];
         }
 
-        public List<EntryDirection> GetEntryDirections()
-        {
-            List<EntryDirection> validEntryDirections = new();
-            foreach (EntryDirection entryDirection in Enum.GetValues(typeof(EntryDirection)))
-            {
-                if (IsValidDirection(entryDirection)) validEntryDirections.Add(entryDirection);
-            }
-
-            return validEntryDirections;
-        }
+        public IEnumerable<EntryDirection> GetEntryDirections() =>
+            Enum.GetValues(typeof(EntryDirection)).Cast<EntryDirection>().Where(IsValidDirection);
 
         public int GetNumberOfTileReferencesOnMap(TileReference tileReference)
         {
@@ -408,7 +401,8 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsValidDirection(EntryDirection entryDirection) => IsEntryDirectionValid(entryDirection);
 
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")] private readonly struct PointAndTileReference
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+        private readonly struct PointAndTileReference
         {
             public PointAndTileReference(Point2D point, TileReference tileReference)
             {

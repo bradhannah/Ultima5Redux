@@ -34,10 +34,8 @@ namespace Ultima5Redux.References.Maps
                 JsonConvert.DeserializeObject<Dictionary<SingleCombatMapReference.Territory, List<CombatMapData>>>(
                     Resources.CombatMaps);
 
-            // string britCbtPath = Path.Combine(u5Directory, FileConstants.BRIT_CBT);
             DataChunks<DataChunkName> britDataChunks = new(u5Directory, FileConstants.BRIT_CBT, DataChunkName.Unused);
 
-            // string dungeonCbtPath = Path.Combine(u5Directory, FileConstants.DUNGEON_CBT);
             DataChunks<DataChunkName> dungeonDataChunks =
                 new(u5Directory, FileConstants.DUNGEON_CBT, DataChunkName.Unused);
 
@@ -96,9 +94,6 @@ namespace Ultima5Redux.References.Maps
 
         public sealed class CombatMapData
         {
-            // [DataMember] public string Description;
-            // [DataMember] public int Index;
-            // [DataMember] public SingleCombatMapReference.Territory MapType;
             [DataMember] public string Description { get; set; }
             [DataMember] public int Index { get; set; }
             [DataMember] public SingleCombatMapReference.Territory MapType { get; set; }

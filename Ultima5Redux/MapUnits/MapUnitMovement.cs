@@ -59,8 +59,6 @@ namespace Ultima5Redux.MapUnits
             // we totally ignore the first entry, since it's bad stuff
             if (nDialogIndex == 0) return;
 
-            //_movementInstructionDataChunk = movementInstructionDataChunk;
-            //_movementOffsetDataChunk = movementOffsetDataChunk;
             _nDialogIndex = nDialogIndex;
 
             // Note: not a very efficient method of getting a UINT16 from the list -> it has to create a brand new list!
@@ -93,7 +91,6 @@ namespace Ultima5Redux.MapUnits
 
                 // we have a proper movement instruction so let's add it to the queue
                 MovementCommand movementCommand = new(direction, nIterations);
-                //this.movementQueue.Enqueue(movementCommand);
                 AddNewMovementInstruction(movementCommand);
 
                 // we actually grab from the offset, but it is circular, so we need to mod it
@@ -187,7 +184,7 @@ namespace Ultima5Redux.MapUnits
             else if (!bPeek)
             {
                 // we have more moves, but we are going to spend one 
-                int _ = _movementQueue.Peek().SpendSingleMovement();
+                _movementQueue.Peek().SpendSingleMovement();
             }
 
             return direction;

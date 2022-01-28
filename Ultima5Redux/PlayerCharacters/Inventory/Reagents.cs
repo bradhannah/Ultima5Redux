@@ -9,9 +9,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     /// <summary>
     ///     All reagents collection
     /// </summary>
-    [DataContract] public class Reagents : InventoryItems<Reagent.ReagentTypeEnum, Reagent>
+    [DataContract] public class Reagents : InventoryItems<Reagent.SpecificReagentType, Reagent>
     {
-        [DataMember] public override Dictionary<Reagent.ReagentTypeEnum, Reagent> Items { get; internal set; } = new();
+        [DataMember]
+        public override Dictionary<Reagent.SpecificReagentType, Reagent> Items { get; internal set; } = new();
 
         [JsonConstructor] private Reagents()
         {
@@ -19,19 +20,19 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public Reagents(ImportedGameState importedGameState)
         {
-            void addReagentLegacy(Reagent.ReagentTypeEnum reagentType) =>
+            void addReagentLegacy(Reagent.SpecificReagentType reagentType) =>
                 AddReagent(reagentType, importedGameState.GetReagentQuantity(reagentType));
 
-            foreach (Reagent.ReagentTypeEnum reagent in Enum.GetValues(typeof(Reagent.ReagentTypeEnum)))
+            foreach (Reagent.SpecificReagentType reagent in Enum.GetValues(typeof(Reagent.SpecificReagentType)))
             {
                 addReagentLegacy(reagent);
             }
         }
 
-        private void AddReagent(Reagent.ReagentTypeEnum reagentType, int nQuantity)
+        private void AddReagent(Reagent.SpecificReagentType specificReagentType, int nQuantity)
         {
-            Reagent reagent = new(reagentType, nQuantity);
-            Items[reagentType] = reagent;
+            Reagent reagent = new(specificReagentType, nQuantity);
+            Items[specificReagentType] = reagent;
         }
 
         public List<Reagent> GetReagentsForSale(SmallMapReferences.SingleMapReference.Location location)

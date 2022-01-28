@@ -18,7 +18,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         private readonly
             Dictionary<SmallMapReferences.SingleMapReference.Location,
-                Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>>
+                Dictionary<NonPlayerCharacterReference.SpecificNpcDialogType, ShoppeKeeperReference>>
             _shoppeKeepersByLocationAndType = new();
 
         public ShoppeKeeperReferences(DataOvlReference dataOvlReference, NonPlayerCharacterReferences npcReferences)
@@ -43,7 +43,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
             for (int i = 0; i < shoppeNames.Count; i++)
             {
                 // create a new shoppe keeper object then add it to the list
-                ShoppeKeeperReference shoppeKeeper = shoppeKeepersByIndex[i]; //new TheShoppeKeeperReference();
+                ShoppeKeeperReference shoppeKeeper = shoppeKeepersByIndex[i];
                 string shoppeKeeperName = shoppeKeeperNames[i];
                 shoppeKeeper.ShoppeName = shoppeNames[i];
                 shoppeKeeper.ShoppeKeeperName = shoppeKeeperName;
@@ -59,18 +59,19 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 // we keep track of the location + type for easier world access to shoppe keeper reference
                 if (!_shoppeKeepersByLocationAndType.ContainsKey(shoppeKeeper.ShoppeKeeperLocation))
                     _shoppeKeepersByLocationAndType.Add(shoppeKeeper.ShoppeKeeperLocation,
-                        new Dictionary<NonPlayerCharacterReference.NPCDialogTypeEnum, ShoppeKeeperReference>());
+                        new Dictionary<NonPlayerCharacterReference.SpecificNpcDialogType, ShoppeKeeperReference>());
 
                 _shoppeKeepersByLocationAndType[shoppeKeeper.ShoppeKeeperLocation]
                     .Add(shoppeKeeper.TheShoppeKeeperType, shoppeKeeper);
 
                 // if it's a blacksmith then we load their items for sale
-                if (shoppeKeeper.NpcRef.NPCType == NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith)
+                if (shoppeKeeper.NpcRef.NpcType == NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith)
                 {
                     shoppeKeeper.EquipmentForSaleList = GetEquipmentList(i);
                 }
-                else if (shoppeKeeper.NpcRef.NPCType == NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller)
+                else if (shoppeKeeper.NpcRef.NpcType == NonPlayerCharacterReference.SpecificNpcDialogType.MagicSeller)
                 {
+                    // do something special for the magic seller?
                 }
             }
         }
@@ -101,16 +102,16 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         }
 
         public ShoppeKeeperReference GetShoppeKeeperReference(SmallMapReferences.SingleMapReference.Location location,
-            NonPlayerCharacterReference.NPCDialogTypeEnum npcType)
+            NonPlayerCharacterReference.SpecificNpcDialogType specificNpcType)
         {
             if (!_shoppeKeepersByLocationAndType.ContainsKey(location))
                 throw new Ultima5ReduxException("You asked for " + location +
                                                 " and it wasn't in the _shoppeKeepersByLocationAndType");
 
-            if (!_shoppeKeepersByLocationAndType[location].ContainsKey(npcType))
-                throw new Ultima5ReduxException("You asked for " + npcType + " in " + location +
+            if (!_shoppeKeepersByLocationAndType[location].ContainsKey(specificNpcType))
+                throw new Ultima5ReduxException("You asked for " + specificNpcType + " in " + location +
                                                 " and it wasn't in the _shoppeKeepersByLocationAndType");
-            return _shoppeKeepersByLocationAndType[location][npcType];
+            return _shoppeKeepersByLocationAndType[location][specificNpcType];
         }
 
         // Custom = -1, Guard = 0, Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87,

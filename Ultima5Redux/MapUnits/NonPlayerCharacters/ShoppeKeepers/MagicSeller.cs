@@ -83,10 +83,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        .GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
         }
 
-        public List<Reagent> GetReagentsForSale() //SmallMapReferences.SingleMapReference.Location location)
+        public List<Reagent> GetReagentsForSale()
         {
             return _inventory.SpellReagents.GetReagentsForSale(TheShoppeKeeperReference
-                .ShoppeKeeperLocation); //location);
+                .ShoppeKeeperLocation);
         }
     }
 }

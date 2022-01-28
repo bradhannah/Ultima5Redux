@@ -673,7 +673,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             BlackSmith blacksmith = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Minoc,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Blacksmith, null,
+                NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith, null,
                 world.State.PlayerInventory) as BlackSmith;
 
             Assert.True(blacksmith != null, nameof(blacksmith) + " != null");
@@ -699,7 +699,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             Healer healer = (Healer)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Cove,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Healer, null,
+                NonPlayerCharacterReference.SpecificNpcDialogType.Healer, null,
                 world.State.PlayerInventory);
 
             _ = healer.NoNeedForMyArt();
@@ -712,7 +712,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             BarKeeper barKeeper = (BarKeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Paws,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Barkeeper, null, world.State.PlayerInventory);
+                NonPlayerCharacterReference.SpecificNpcDialogType.Barkeeper, null, world.State.PlayerInventory);
 
             string myOppressionTest = barKeeper.GetGossipResponse("oppr", true);
         }
@@ -722,7 +722,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             MagicSeller magicSeller = (MagicSeller)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Cove,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.MagicSeller, null, world.State.PlayerInventory);
+                NonPlayerCharacterReference.SpecificNpcDialogType.MagicSeller, null, world.State.PlayerInventory);
             List<Reagent> reagents = magicSeller.GetReagentsForSale();
 
             int price1 = reagents[0].GetAdjustedBuyPrice(world.State.CharacterRecords,
@@ -742,22 +742,23 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[WeaponReference.WeaponTypeEnum.Crossbow]
+            int nCrossbowBuy = world.State.PlayerInventory.TheWeapons.Items[WeaponReference.SpecificWeaponType.Crossbow]
                 .GetAdjustedBuyPrice(world.State.CharacterRecords,
                     ((RegularMap)world.State.TheVirtualMap.CurrentMap).CurrentSingleMapReference.MapLocation);
-            int nCrossbowSell = world.State.PlayerInventory.TheWeapons.Items[WeaponReference.WeaponTypeEnum.Crossbow]
+            int nCrossbowSell = world.State.PlayerInventory.TheWeapons
+                .Items[WeaponReference.SpecificWeaponType.Crossbow]
                 .GetAdjustedSellPrice(world.State.CharacterRecords,
                     ((RegularMap)world.State.TheVirtualMap.CurrentMap).CurrentSingleMapReference.MapLocation);
             Assert.True(nCrossbowBuy > 0);
             Assert.True(nCrossbowSell > 0);
 
-            int nKeysPrice = world.State.PlayerInventory.TheProvisions.Items[Provision.ProvisionTypeEnum.Keys]
+            int nKeysPrice = world.State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Keys]
                 .GetAdjustedBuyPrice(world.State.CharacterRecords,
                     SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
             GuildMaster guildMaster = (GuildMaster)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.GuildMaster, null, world.State.PlayerInventory);
-            string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.ProvisionTypeEnum.Keys, 240);
+                NonPlayerCharacterReference.SpecificNpcDialogType.GuildMaster, null, world.State.PlayerInventory);
+            string buyKeys = guildMaster.GetProvisionBuyOutput(Provision.SpecificProvisionType.Keys, 240);
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_SimpleStringTest(SaveFiles saveFiles)
@@ -772,7 +773,7 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             Shipwright shipwright = (Shipwright)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.Shipwright, null, world.State.PlayerInventory);
+                NonPlayerCharacterReference.SpecificNpcDialogType.Shipwright, null, world.State.PlayerInventory);
 
             string hi = shipwright.GetHelloResponse(world.State.TheTimeOfDay);
         }
@@ -813,7 +814,7 @@ namespace Ultima5ReduxTesting
 
             Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null, world.State.PlayerInventory);
+                NonPlayerCharacterReference.SpecificNpcDialogType.InnKeeper, null, world.State.PlayerInventory);
 
             Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
 
@@ -847,7 +848,7 @@ namespace Ultima5ReduxTesting
 
             Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Britain,
-                NonPlayerCharacterReference.NPCDialogTypeEnum.InnKeeper, null, world.State.PlayerInventory);
+                NonPlayerCharacterReference.SpecificNpcDialogType.InnKeeper, null, world.State.PlayerInventory);
 
             Point2D bedPosition = innKeeper.InnKeeperServices.SleepingPosition;
 
@@ -903,17 +904,17 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity;
             world.Xit(out bool bWasSuccessful);
             Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems
-                .Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
+                .Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity);
             Assert.True(bWasSuccessful);
             world.Board(out bool bWasSuccessfulBoard);
             Assert.True(bWasSuccessfulBoard);
             world.Xit(out bWasSuccessful);
 
-            nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+            nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity;
             Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
             world.TryToMove(Point2D.Direction.Left, false, false, out World.TryToMoveResult result);
@@ -921,12 +922,12 @@ namespace Ultima5ReduxTesting
             Assert.True(bGotACarpet);
             //Assert.True(carpet!=null);
             Assert.True(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems
-                .Items[SpecialItem.ItemTypeSpriteEnum.Carpet].Quantity);
+                .Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity);
             world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
             Assert.True(!bGotACarpet);
 
             world.UseSpecialItem(
-                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
+                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
                 out bool bAbleToUseItem);
             Assert.True(bAbleToUseItem);
             world.Xit(out bWasSuccessful);
@@ -943,13 +944,13 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity;
             world.UseSpecialItem(
-                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet],
+                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
                 out bool bAbleToUseItem);
             Assert.True(bAbleToUseItem);
-            Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.ItemTypeSpriteEnum.Carpet]
+            Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity == nCarpets - 1);
         }
 
@@ -1217,9 +1218,10 @@ namespace Ultima5ReduxTesting
                     GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
                         i);
 
-                if (singleCombatMapReference.GetEntryDirections().Count == 0)
+                if (!singleCombatMapReference.GetEntryDirections().Any())
                 {
-                    List<SingleCombatMapReference.EntryDirection> dirs = singleCombatMapReference.GetEntryDirections();
+                    IEnumerable<SingleCombatMapReference.EntryDirection> dirs =
+                        singleCombatMapReference.GetEntryDirections();
                 }
 
                 foreach (SingleCombatMapReference.EntryDirection dungeonEntryDirection in singleCombatMapReference
@@ -1335,7 +1337,7 @@ namespace Ultima5ReduxTesting
 
             Assert.AreEqual(loadedJson, newLoadedJson);
 
-            Reagent reagent = world.State.PlayerInventory.SpellReagents.Items[Reagent.ReagentTypeEnum.Garlic];
+            Reagent reagent = world.State.PlayerInventory.SpellReagents.Items[Reagent.SpecificReagentType.Garlic];
             Assert.NotNull(reagent);
             string reagentName = reagent.LongName;
 
@@ -1400,9 +1402,9 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles, true, false);
 
-            List<Reagent.ReagentTypeEnum> reagents = new List<Reagent.ReagentTypeEnum>
+            List<Reagent.SpecificReagentType> reagents = new List<Reagent.SpecificReagentType>
             {
-                Reagent.ReagentTypeEnum.SulfurAsh
+                Reagent.SpecificReagentType.SulfurAsh
             };
 
             Assert.True(GameReferences.MagicRefs.GetMagicReference(MagicReference.SpellWords.In_Lor)

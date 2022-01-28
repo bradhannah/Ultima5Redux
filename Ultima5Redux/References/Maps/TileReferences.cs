@@ -172,9 +172,7 @@ namespace Ultima5Redux.References.Maps
                 case 1:
                 case -1:
                 default:
-                    //throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: " + nSprite.ToString());
                     return "Untrodden CombatLand";
-                // throw new Ultima5ReduxException("Asked for a movement string on something that should never be trodden on: "+nSprite.ToString());
             }
         }
 

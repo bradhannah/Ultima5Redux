@@ -31,12 +31,12 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public string ShoppeKeeperName { get; set; }
         public string ShoppeName { get; set; }
 
-        public NonPlayerCharacterReference.NPCDialogTypeEnum TheShoppeKeeperType
+        public NonPlayerCharacterReference.SpecificNpcDialogType TheShoppeKeeperType
         {
             get
             {
                 bool bSuccess = Enum.TryParse(_shoppeKeeperType,
-                    out NonPlayerCharacterReference.NPCDialogTypeEnum npcDialogTypeEnum);
+                    out NonPlayerCharacterReference.SpecificNpcDialogType npcDialogTypeEnum);
                 if (!bSuccess)
                     throw new Ultima5ReduxException("Asked for an NPC " + _shoppeKeeperType +
                                                     " type but the type didn't exist");
@@ -46,7 +46,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         }
 #pragma warning disable CS0649
         [DataMember(Name = "Location")] private string _locationStr;
-        [DataMember(Name = "ShoppeKeeperType")] private string _shoppeKeeperType;
+        [DataMember(Name = "ShoppeKeeperType")]
+        private string _shoppeKeeperType;
 #pragma warning restore CS0649
     }
 }

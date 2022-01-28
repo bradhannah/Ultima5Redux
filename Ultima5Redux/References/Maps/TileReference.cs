@@ -5,38 +5,39 @@ using Ultima5Redux.MapUnits;
 
 namespace Ultima5Redux.References.Maps
 {
-    [DataContract] [SuppressMessage("ReSharper", "InconsistentNaming")] public class TileReference
+    [DataContract] [SuppressMessage("ReSharper", "InconsistentNaming")]
+    public class TileReference
     {
-        [DataMember] public int AnimationIndex;
-        [DataMember] public bool BlocksLight;
-        [DataMember] public SingleCombatMapReference.BritanniaCombatMaps CombatMapIndex;
-        [DataMember] public string Description;
-        [DataMember] public bool DontDraw;
-        [DataMember] public int FlatTileSubstitutionIndex;
-        [DataMember] public string FlatTileSubstitutionName;
-        [DataMember] public int Index;
-        [DataMember] public bool IsBoardable;
-        [DataMember] public bool IsBoat_Passable;
-        [DataMember] public bool IsBuilding;
-        [DataMember] public bool IsCarpet_Passable;
-        [DataMember] public bool IsEnemy;
-        [DataMember] public bool IsGuessableFloor;
-        [DataMember] public bool IsHorse_Passable;
-        [DataMember] public bool IsKlimable;
-        [DataMember] public bool IsLandEnemyPassable;
-        [DataMember] public bool IsNPC;
-        [DataMember] public bool IsOpenable;
-        [DataMember] public bool IsPartOfAnimation;
-        [DataMember] public bool IsPushable;
-        [DataMember] public bool IsSkiff_Passable;
-        [DataMember] public bool IsTalkOverable;
-        [DataMember] public bool IsUpright;
-        [DataMember] public bool IsWalking_Passable;
-        [DataMember] public bool IsWaterEnemyPassable;
-        [DataMember] public bool IsWindow;
-        [DataMember] public string Name;
-        [DataMember] public bool RangeWeapon_Passable;
-        [DataMember] public int SpeedFactor;
+        [DataMember] public int AnimationIndex { get; private set; }
+        [DataMember] public bool BlocksLight { get; private set; }
+        [DataMember] public SingleCombatMapReference.BritanniaCombatMaps CombatMapIndex { get; private set; }
+        [DataMember] public string Description { get; private set; }
+        [DataMember] public bool DontDraw { get; private set; }
+        [DataMember] public int FlatTileSubstitutionIndex { get; private set; }
+        [DataMember] public string FlatTileSubstitutionName { get; private set; }
+        [DataMember] public int Index { get; internal set; }
+        [DataMember] public bool IsBoardable { get; private set; }
+        [DataMember] public bool IsBoat_Passable { get; private set; }
+        [DataMember] public bool IsBuilding { get; private set; }
+        [DataMember] public bool IsCarpet_Passable { get; private set; }
+        [DataMember] public bool IsEnemy { get; private set; }
+        [DataMember] public bool IsGuessableFloor { get; private set; }
+        [DataMember] public bool IsHorse_Passable { get; private set; }
+        [DataMember] public bool IsKlimable { get; private set; }
+        [DataMember] public bool IsLandEnemyPassable { get; private set; }
+        [DataMember] public bool IsNPC { get; private set; }
+        [DataMember] public bool IsOpenable { get; private set; }
+        [DataMember] public bool IsPartOfAnimation { get; private set; }
+        [DataMember] public bool IsPushable { get; private set; }
+        [DataMember] public bool IsSkiff_Passable { get; private set; }
+        [DataMember] public bool IsTalkOverable { get; private set; }
+        [DataMember] public bool IsUpright { get; private set; }
+        [DataMember] public bool IsWalking_Passable { get; private set; }
+        [DataMember] public bool IsWaterEnemyPassable { get; private set; }
+        [DataMember] public bool IsWindow { get; private set; }
+        [DataMember] public string Name { get; private set; }
+        [DataMember] public bool RangeWeapon_Passable { get; private set; }
+        [DataMember] public int SpeedFactor { get; private set; }
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
         public bool IsRangeWeaponPassable => RangeWeapon_Passable;

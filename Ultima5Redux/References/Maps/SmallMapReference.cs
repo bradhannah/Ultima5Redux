@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.Data;
 using Ultima5Redux.Maps;
@@ -149,12 +150,6 @@ namespace Ultima5Redux.References.Maps
             if (!_masterFileLocationDictionary.ContainsKey(masterMap))
                 _masterFileLocationDictionary.Add(masterMap, new List<SingleMapReference.Location>());
             _masterFileLocationDictionary[masterMap].Add(location);
-
-            // temporary to prevent crashing when trying to enter a dungeon
-            //if (masterMap == SingleMapReference.SmallMapMasterFiles.Dungeon)
-            {
-                //  return;
-            }
 
             // get the filename of the location - we use it as key into a map
             string dataFilename = SingleMapReference.GetFilenameFromLocation(location);
@@ -326,7 +321,7 @@ namespace Ultima5Redux.References.Maps
                 case SingleMapReference.Location.Combat_resting_shrine:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(((int)location).ToString());
             }
 
             return "";

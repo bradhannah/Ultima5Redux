@@ -46,7 +46,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 // if there is a small map character state then we prefer to use it to determine if the 
                 // unit is active
                 Debug.Assert(TheSmallMapCharacterState != null);
-                //if (TheSmallMapCharacterState.MapUnitAnimationStateIndex != 0) return TheSmallMapCharacterState.Active;
 
                 return true;
             }
@@ -244,7 +243,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
             // need to evaluate if I can even move to the next tile before actually popping out of the queue
             bool bIsNpcOnSpace = virtualMap.IsMapUnitOccupiedTile(adjustedPos);
-            //TileReference adjustedTile = GetTileReference(adjustedPos);
             if (virtualMap.GetTileReference(adjustedPos).IsNPCCapableSpace && !bIsNpcOnSpace)
             {
                 // pop the direction from the queue
@@ -309,14 +307,11 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
             // a little hacky - if they are dead then we just place them at 0,0 which is understood to be the 
             // location for NPCs that aren't present on the map
-            if (NPCState.IsDead)
+            if (NPCState.IsDead && (npcXy.X != 0 || npcXy.Y != 0))
             {
-                if (npcXy.X != 0 || npcXy.Y != 0)
-                {
-                    npcXy.X = 0;
-                    npcXy.Y = 0;
-                    Move(npcXy, timeOfDay, false);
-                }
+                npcXy.X = 0;
+                npcXy.Y = 0;
+                Move(npcXy, timeOfDay, false);
             }
 
             // the NPC is a non-NPC, so we keep looking
