@@ -261,9 +261,9 @@ namespace Ultima5Redux.Maps
 
         // FLOOD FILL STUFF
         public bool[][] VisibleOnMap { get; protected set; }
-        protected readonly List<bool[][]> TestForVisibility = new();
+        private readonly List<bool[][]> _testForVisibility = new();
 
-        protected readonly int VisibleInEachDirectionOfAvatar = 10;
+        protected const int VISIBLE_IN_EACH_DIRECTION_OF_AVATAR = 10;
         protected Point2D AvatarXyPos;
         public bool TouchedOuterBorder { get; protected set; }
 
@@ -332,8 +332,8 @@ namespace Ultima5Redux.Maps
                 if (nAdjustedX > NumOfXTiles - 1 || nAdjustedY > NumOfYTiles - 1) return;
             }
 
-            if (TestForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY]) return; // already did it
-            TestForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY] = true;
+            if (_testForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY]) return; // already did it
+            _testForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY] = true;
 
             // if it blocks light then we make it visible but do not make subsequent tiles visible
             TileReference tileReference =
@@ -402,10 +402,10 @@ namespace Ultima5Redux.Maps
         /// <param name="nCharacters"></param>
         protected void RefreshTestForVisibility(int nCharacters)
         {
-            TestForVisibility.Clear();
+            _testForVisibility.Clear();
             for (int i = 0; i < nCharacters; i++)
             {
-                TestForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
+                _testForVisibility.Add(Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles));
             }
         }
 
@@ -413,7 +413,7 @@ namespace Ultima5Redux.Maps
         {
             if (nVisibleTiles < 3) throw new Ultima5ReduxException("Can't set visible area if smaller than 3");
             if (startPos == null) throw new Ultima5ReduxException("Must have a proper start position");
-            if (TestForVisibility.Count <= 0)
+            if (_testForVisibility.Count <= 0)
                 throw new Ultima5ReduxException("You must refresh the visible area before setting the max");
 
             int nVisibleTilesPerSide = nVisibleTiles / 2;
@@ -425,8 +425,8 @@ namespace Ultima5Redux.Maps
                 int nTopY = Point2D.AdjustToMax(nStartY - nVisibleTilesPerSide, NumOfYTiles);
                 int nBottomY = Point2D.AdjustToMax(nStartY + nVisibleTilesPerSide, NumOfYTiles);
 
-                TestForVisibility[0][nX][nTopY] = true;
-                TestForVisibility[0][nX][nBottomY] = true;
+                _testForVisibility[0][nX][nTopY] = true;
+                _testForVisibility[0][nX][nBottomY] = true;
             }
 
             for (int nYDiff = 0; nYDiff < nVisibleTiles; nYDiff++)
@@ -435,8 +435,8 @@ namespace Ultima5Redux.Maps
                 int nTopX = Point2D.AdjustToMax(nStartX - nVisibleTilesPerSide, NumOfXTiles);
                 int nBottomX = Point2D.AdjustToMax(nStartX + nVisibleTilesPerSide, NumOfXTiles);
 
-                TestForVisibility[0][nTopX][nY] = true;
-                TestForVisibility[0][nBottomX][nY] = true;
+                _testForVisibility[0][nTopX][nY] = true;
+                _testForVisibility[0][nBottomX][nY] = true;
             }
         }
 

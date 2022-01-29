@@ -95,7 +95,7 @@ namespace Ultima5Redux.Maps
             get
             {
                 if (CurrentSingleMapReference == null)
-                    throw new Ultima5ReduxException("No single map is set in virtual map");
+                    return null;
 
                 switch (CurrentSingleMapReference.MapLocation)
                 {
@@ -128,8 +128,7 @@ namespace Ultima5Redux.Maps
         {
             get
             {
-                if (CurrentSingleMapReference == null)
-                    throw new Ultima5ReduxException("No single map is set in virtual map");
+                if (CurrentSingleMapReference == null) return false;
 
                 return !IsLargeMap && CurrentSingleMapReference.Floor == -1;
             }

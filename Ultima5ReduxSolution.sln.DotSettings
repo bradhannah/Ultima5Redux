@@ -506,6 +506,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/NUnitProvider/TestParameters/@EntryValue">DataDirectory=F:\\GitHub\\Ultima5ReduxTestDependancies\\Ultima5ReduxTestDependancies\\DataFiles;SaveRootDirectory=F:\\GitHub\\Ultima5ReduxTestDependancies\\Ultima5ReduxTestDependancies\\Saves</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=adjacencies/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=argh/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Attackable/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=bagillion/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=bajh/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Blackthorne_0027s/@EntryIndexedValue">True</s:Boolean>

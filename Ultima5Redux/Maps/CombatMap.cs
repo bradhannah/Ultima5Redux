@@ -42,8 +42,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private PlayerCharacterRecords _playerCharacterRecords;
 
-        private List<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers.Cast<CombatMapUnit>().ToList();
-        private List<CombatMapUnit> AllEnemiesGeneric => AllEnemies.Cast<CombatMapUnit>().ToList();
+        private IEnumerable<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers;
+        private IEnumerable<CombatMapUnit> AllEnemiesGeneric => AllEnemies;
 
         /// <summary>
         ///     Current combat map units for current combat map
@@ -69,9 +69,9 @@ namespace Ultima5Redux.Maps
         public IEnumerable<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
         public IEnumerable<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
 
-        public List<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
+        public IEnumerable<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
             CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
-                combatMapUnit.IsAttackable && combatMapUnit.IsActive).ToList();
+                combatMapUnit.IsAttackable && combatMapUnit.IsActive);
 
         public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
 
@@ -485,7 +485,7 @@ namespace Ultima5Redux.Maps
 
             outputStr += "\nBut they accidentally hit another!";
             // we attack the thing we accidentally hit
-            CombatMapUnit.HitState unused = attackingCombatMapUnit.Attack(targetedCombatMapUnit, nAttackMax,
+            _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit, nAttackMax,
                 out string missedAttackOutputStr, out string debugStr, true);
             // temporary for debugging
             missedAttackOutputStr += "\n" + debugStr;
@@ -778,16 +778,16 @@ namespace Ultima5Redux.Maps
             return newEnemy;
         }
 
-        public List<CombatMapUnit> GetActiveCombatMapUnitsByType(SpecificCombatMapUnit specificCombatMapUnit)
+        public IEnumerable<CombatMapUnit> GetActiveCombatMapUnitsByType(SpecificCombatMapUnit specificCombatMapUnit)
         {
             switch (specificCombatMapUnit)
             {
                 case SpecificCombatMapUnit.All:
                     return AllVisibleAttackableCombatMapUnits;
                 case SpecificCombatMapUnit.CombatPlayer:
-                    return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive).ToList();
+                    return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive);
                 case SpecificCombatMapUnit.Enemy:
-                    return AllEnemiesGeneric.Where(enemy => enemy.IsActive).ToList();
+                    return AllEnemiesGeneric.Where(enemy => enemy.IsActive);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(specificCombatMapUnit), specificCombatMapUnit, null);
             }

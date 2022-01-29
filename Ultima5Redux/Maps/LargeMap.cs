@@ -93,10 +93,10 @@ namespace Ultima5Redux.Maps
 
             AvatarXyPos = initialFloodFillPosition;
 
-            _topLeftExtent = new Point2D(AvatarXyPos.X - VisibleInEachDirectionOfAvatar,
-                AvatarXyPos.Y - VisibleInEachDirectionOfAvatar);
-            _bottomRightExtent = new Point2D(AvatarXyPos.X + VisibleInEachDirectionOfAvatar,
-                AvatarXyPos.Y + VisibleInEachDirectionOfAvatar);
+            _topLeftExtent = new Point2D(AvatarXyPos.X - VISIBLE_IN_EACH_DIRECTION_OF_AVATAR,
+                AvatarXyPos.Y - VISIBLE_IN_EACH_DIRECTION_OF_AVATAR);
+            _bottomRightExtent = new Point2D(AvatarXyPos.X + VISIBLE_IN_EACH_DIRECTION_OF_AVATAR,
+                AvatarXyPos.Y + VISIBLE_IN_EACH_DIRECTION_OF_AVATAR);
 
             RefreshTestForVisibility(1);
             SetMaxVisibleArea(AvatarXyPos, TOTAL_VISIBLE_TILES);

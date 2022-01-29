@@ -55,6 +55,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             // let's make sure they all line up properly first
             Debug.Assert(gossipLocations != null && gossipPeople != null && gossipWordByPosition != null &&
                          gossipPeople.Count == gossipWordByPosition.Count);
+            if (gossipWordByPosition == null) throw new Ultima5ReduxException("Missing gossip words!");
+            if (gossipPeople == null) throw new Ultima5ReduxException("Missing gossip people!");
 
             for (int nIndex = 0; nIndex < gossipWordByPosition.Count; nIndex++)
             {
