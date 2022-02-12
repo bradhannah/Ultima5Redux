@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -247,17 +246,61 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         public void RoughSeasInjure()
         {
-            Random ran = new();
             foreach (PlayerCharacterRecord record in Records)
             {
-                record.Stats.CurrentHp -= ran.Next(1, 9);
+                record.Stats.CurrentHp -= Utils.Ran.Next(1, 9);
             }
+        }
+
+        public void SteppedOnLava()
+        {
+            // injure players!
+            foreach (PlayerCharacterRecord record in Records)
+            {
+                record.Stats.CurrentHp -= Utils.Ran.Next(1, 5);
+            }
+        }
+
+        public bool SteppedOnSwamp()
+        {
+            bool bWasPoisoned = false;
+            // do some thing that maybe poisons people?
+            foreach (PlayerCharacterRecord record in Records)
+            {
+                if (!Utils.OneInXOdds(4)) continue;
+
+                if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned) continue;
+                bWasPoisoned = true;
+                record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+                record.Stats.CurrentHp -= 1;
+            }
+
+            return bWasPoisoned;
         }
 
         public void SendCharacterToInn(PlayerCharacterRecord record,
             SmallMapReferences.SingleMapReference.Location location)
         {
             record.SendCharacterToInn(location);
+        }
+
+        public void SwapPositions(PlayerCharacterRecord record1, PlayerCharacterRecord record2)
+        {
+            int nPosition1 = -1;
+            int nPosition2 = -1;
+
+            int nIndex = 0;
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
+            {
+                if (record == record1) nPosition1 = nIndex;
+                if (record == record2) nPosition2 = nIndex;
+                nIndex++;
+            }
+
+            if (nPosition1 == -1 || nPosition2 == -1)
+                throw new Ultima5ReduxException($"Tried to swap indexes {nPosition1} and {nPosition2}");
+
+            SwapPositions(nPosition1, nPosition2);
         }
 
         public void SwapPositions(int nFirstPos, int nSecondPos)

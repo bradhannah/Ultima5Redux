@@ -32,7 +32,7 @@ namespace Ultima5Redux
         public enum TryToMoveResult
         {
             Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell, ShipBreakingUp, ShipDestroyed,
-            MovedWithDamage, MovedSelectionCursor, IgnoredMovement
+            RoughSeas, MovedSelectionCursor, IgnoredMovement, Poisoned, Burning
         }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
@@ -1136,6 +1136,31 @@ namespace Ultima5Redux
                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP);
             }
 
+            Avatar.AvatarState currentAvatarState =
+                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState;
+
+            if (currentAvatarState != Avatar.AvatarState.Carpet && newTileReference.Index == 4) // swamp
+            {
+                bool bWasPoisoned = State.CharacterRecords.SteppedOnSwamp();
+                if (!bWasPoisoned)
+                {
+                    tryToMoveResult = TryToMoveResult.Moved;
+                }
+                else
+                {
+                    tryToMoveResult = TryToMoveResult.Poisoned;
+                    retStr += "\n" +
+                              GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                                  .POISONED_BANG_N);
+                }
+            }
+            else if (newTileReference.Index == 143) // lava
+            {
+                State.CharacterRecords.SteppedOnLava();
+                tryToMoveResult = TryToMoveResult.Burning;
+                retStr += "\nBurning!";
+            }
+
             // if we are on a big map then we may issue extra information about slow moving terrain
             if (State.TheVirtualMap.IsLargeMap)
             {
@@ -1145,14 +1170,11 @@ namespace Ultima5Redux
                     .GetSlowMovementString(newTileReference.Index).TrimEnd();
 
                 // if you are on the carpet or skiff and hit rough seas then we injure the players and report it back 
-                if ((State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState ==
-                     Avatar.AvatarState.Carpet ||
-                     State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState ==
-                     Avatar.AvatarState.Skiff) &&
-                    newTileReference.Index == 1)
+                if ((currentAvatarState == Avatar.AvatarState.Carpet || currentAvatarState == Avatar.AvatarState.Skiff)
+                    && newTileReference.Index == 1) // rough seas
                 {
                     State.CharacterRecords.RoughSeasInjure();
-                    tryToMoveResult = TryToMoveResult.MovedWithDamage;
+                    tryToMoveResult = TryToMoveResult.RoughSeas;
                     retStr += "\n" +
                               GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
                                   .ROUGH_SEAS);
