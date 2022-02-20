@@ -273,9 +273,15 @@ namespace Ultima5Redux.PlayerCharacters
         public bool Poison()
         {
             if (Stats.Status == CharacterStatus.Dead) return false;
-            Debug.Assert(Stats.Status == CharacterStatus.Good || Stats.Status == CharacterStatus.Poisoned);
+            Debug.Assert(Stats.Status is CharacterStatus.Good or CharacterStatus.Poisoned);
             Stats.Status = CharacterStatus.Poisoned;
             return true;
+        }
+
+        public void ProcessTurnPoison()
+        {
+            if (Stats.Status == CharacterStatus.Poisoned)
+                Stats.CurrentHp -= 1;
         }
 
         public bool Resurrect()

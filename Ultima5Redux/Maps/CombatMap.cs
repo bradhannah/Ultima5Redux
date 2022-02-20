@@ -73,6 +73,12 @@ namespace Ultima5Redux.Maps
             CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
                 combatMapUnit.IsAttackable && combatMapUnit.IsActive);
 
+        /// <summary>
+        ///     The player character who the player has selected to focus on (#1-#6)
+        /// </summary>
+        /// <returns>active player character record OR null if none selected</returns>
+        public PlayerCharacterRecord ActivePlayerCharacterRecord => _initiativeQueue.ActivePlayerCharacterRecord;
+
         public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
 
         public bool AreEnemiesLeft => NumberOfEnemies > 0;

@@ -261,6 +261,14 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        public void ProcessTurn()
+        {
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
+            {
+                if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned) record.ProcessTurnPoison();
+            }
+        }
+
         public bool SteppedOnSwamp()
         {
             bool bWasPoisoned = false;
@@ -272,7 +280,6 @@ namespace Ultima5Redux.PlayerCharacters
                 if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned) continue;
                 bWasPoisoned = true;
                 record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
-                record.Stats.CurrentHp -= 1;
             }
 
             return bWasPoisoned;

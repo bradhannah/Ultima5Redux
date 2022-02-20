@@ -888,7 +888,7 @@ namespace Ultima5ReduxTesting
 
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
 
-            string retStr = world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult result,
+            world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult result,
                 true);
             // make sure it is using the extended sprite
             Assert.True(world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit
