@@ -445,7 +445,7 @@ namespace Ultima5ReduxTesting
             Assert.True(item != null);
             Assert.True(item.GetType() == typeof(Moonstone));
 
-            string useStr = world.UseMoonstone((Moonstone)item, out bWasSuccessful);
+            world.UseMoonstone((Moonstone)item, out bWasSuccessful);
             Assert.True(bWasSuccessful);
         }
 
@@ -934,7 +934,7 @@ namespace Ultima5ReduxTesting
             Assert.True(bWasSuccessful);
             world.TryToMove(Point2D.Direction.Left, false, false, out result);
             curPos = world.State.TheVirtualMap.CurrentPosition.XY;
-            string retStr = world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
             Assert.True(bGotACarpet);
 
             _ = "";
