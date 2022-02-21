@@ -147,7 +147,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
 
             world.State.TheVirtualMap.MoveAvatar(new Point2D(frigate2.MapUnitPosition.X, frigate2.MapUnitPosition.Y));
-            string retStr = world.Board(out bool bWasSuccessful);
+            world.Board(out bool bWasSuccessful);
             Assert.True(bWasSuccessful);
 
             Assert.True(frigate2 != null);
@@ -181,7 +181,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.MoveAvatar(new Point2D(skiff.MapUnitPosition.X,
                 skiff.MapUnitPosition.Y)); //-V3095
-            string retStr = world.Board(out bool bWasSuccessful);
+            world.Board(out bool bWasSuccessful);
             Assert.True(bWasSuccessful);
 
             Assert.True(skiff != null);
@@ -361,18 +361,15 @@ namespace Ultima5ReduxTesting
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Britain, 0));
 
-            string pushAThing = world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed);
+            world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed);
             Assert.False(bWasPushed);
-            Debug.WriteLine(pushAThing);
 
-            pushAThing = world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed);
+            world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed);
             Assert.True(bWasPushed);
-            Debug.WriteLine(pushAThing);
             string derp = world.State.Serialize();
 
-            pushAThing = world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed);
+            world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed);
             Assert.True(bWasPushed);
-            Debug.WriteLine(pushAThing);
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_FreeMoveAcrossWorld(SaveFiles saveFiles)

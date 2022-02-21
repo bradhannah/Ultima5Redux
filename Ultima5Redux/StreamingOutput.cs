@@ -24,5 +24,22 @@ namespace Ultima5Redux
         }
 
         public bool HasItems => OutputItems.Count > 0;
+
+        private bool _bLastMessageEndedWithNewline;
+
+        public string GetFinalString(StreamingOutputItem item)
+        {
+            string outputStr = item.Message.Trim();
+            if (item.UseArrow)
+            {
+                string addStr = _bLastMessageEndedWithNewline ? "\n" : "\n\n";
+                outputStr = addStr + "> " + outputStr;
+            }
+
+            if (item.ForceNewLine) outputStr += "\n";
+
+            _bLastMessageEndedWithNewline = outputStr.EndsWith("\n");
+            return outputStr;
+        }
     }
 }

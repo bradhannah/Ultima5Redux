@@ -148,10 +148,12 @@ namespace Ultima5Redux
             State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(mapUnit);
         }
 
-        private string CastSleep(PlayerCharacterRecord record, out bool bWasPutToSleep)
+        private void CastSleep(PlayerCharacterRecord record, out bool bWasPutToSleep)
         {
             bWasPutToSleep = record.Sleep();
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N);
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N),
+                false);
         }
 
         /// <summary>
@@ -196,7 +198,7 @@ namespace Ultima5Redux
         /// <param name="chairDirection"></param>
         /// <returns></returns>
         /// <exception cref="Ultima5ReduxException"></exception>
-        private TileReference GetChairNewDirection(Point2D.Direction chairDirection)
+        private static TileReference GetChairNewDirection(Point2D.Direction chairDirection)
         {
             switch (chairDirection)
             {
@@ -242,13 +244,15 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="bWasUsed">was the magic carpet used?</param>
         /// <returns>string to print and show user</returns>
-        private string UseMagicCarpet(out bool bWasUsed)
+        private void UseMagicCarpet(out bool bWasUsed)
         {
             if (IsCombatMap)
             {
                 bWasUsed = false;
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                    .NOT_HERE_BANG);
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.ExclaimStrings
+                        .NOT_HERE_BANG), false);
+                return;
             }
 
             bWasUsed = true;
@@ -258,8 +262,10 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing)
             {
                 bWasUsed = false;
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
-                    .ONLY_ON_FOOT);
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.WearUseItemStrings
+                        .ONLY_ON_FOOT), false);
+                return;
             }
 
             State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity--;
@@ -268,8 +274,9 @@ namespace Ultima5Redux
                 State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentDirection,
                 out int _);
             BoardAndCleanFromWorld(carpet);
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
-                .CARPET_BANG);
+            StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
+                .WearUseItemStrings
+                .CARPET_BANG), false);
         }
 
         /// <summary>
@@ -337,7 +344,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="bWasSuccessful"></param>
         /// <returns></returns>
-        public string Board(out bool bWasSuccessful)
+        public void Board(out bool bWasSuccessful)
         {
             MapUnit currentAvatarTileRef = State.TheVirtualMap.GetMapUnitOnCurrentTile();
             bWasSuccessful = true;
@@ -346,9 +353,12 @@ namespace Ultima5Redux
             {
                 bWasSuccessful = false;
                 // can't board it
-                return GameReferences.DataOvlRef.StringReferences
-                           .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + " " +
-                       GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT);
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences
+                                                         .GetString(DataOvlReference.KeypressCommandsStrings.BOARD)
+                                                         .Trim() + " " +
+                                                     GameReferences.DataOvlRef.StringReferences.GetString(
+                                                         DataOvlReference.TravelStrings.WHAT));
+                return;
             }
 
             bool bAvatarIsBoarded = State.TheVirtualMap.IsAvatarRidingSomething;
@@ -373,13 +383,15 @@ namespace Ultima5Redux
             {
                 case MagicCarpet _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
-                    return getOnFootResponse();
+                    StreamingOutput.Instance.PushMessage(getOnFootResponse(), false);
+                    return;
                 case MagicCarpet _:
                     BoardAndCleanFromWorld(boardableMapUnit);
                     break;
                 case Horse _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
-                    return getOnFootResponse();
+                    StreamingOutput.Instance.PushMessage(getOnFootResponse());
+                    return;
                 // delete or deactivate the horse we just mounted
                 case Horse _:
                     BoardAndCleanFromWorld(boardableMapUnit);
@@ -391,7 +403,8 @@ namespace Ultima5Redux
                         if (State.TheVirtualMap.IsAvatarRidingHorse)
                         {
                             bWasSuccessful = false;
-                            return getOnFootResponse();
+                            StreamingOutput.Instance.PushMessage(getOnFootResponse());
+                            return;
                         }
 
                         if (State.TheVirtualMap.IsAvatarRidingCarpet)
@@ -418,7 +431,7 @@ namespace Ultima5Redux
                     break;
             }
 
-            return retStr;
+            StreamingOutput.Instance.PushMessage(retStr);
         }
 
         /// <summary>
@@ -445,10 +458,9 @@ namespace Ultima5Redux
         /// <param name="xy">position of building</param>
         /// <param name="bWasSuccessful">true if successfully entered</param>
         /// <returns>output string</returns>
-        public string EnterBuilding(Point2D xy, out bool bWasSuccessful)
+        public void EnterBuilding(Point2D xy, out bool bWasSuccessful)
         {
             bool isOnBuilding = GameReferences.LargeMapRef.IsMapXYEnterable(xy);
-            string retStr;
             if (isOnBuilding)
             {
                 SmallMapReferences.SingleMapReference.Location location =
@@ -457,36 +469,36 @@ namespace Ultima5Redux
                     GameReferences.SmallMapRef.GetSingleMapByLocation(location, 0);
                 if (singleMap.MapType == Map.Maps.Dungeon)
                 {
-                    retStr =
+                    string retStr =
                         GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
                             .ENTER_SPACE) +
                         GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
                         GameReferences.SmallMapRef.GetLocationName(location);
                     retStr += "\nUnable to enter the dungeons at this time!";
                     bWasSuccessful = false;
-                    return retStr;
+                    StreamingOutput.Instance.PushMessage(retStr, false);
+                    return;
                 }
 
                 State.TheVirtualMap.LoadSmallMap(singleMap);
                 // set us to the front of the building
                 State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
 
-                retStr =
+                StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
                     GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
-                    GameReferences.SmallMapRef.GetLocationName(location);
+                    GameReferences.SmallMapRef.GetLocationName(location), false);
                 bWasSuccessful = true;
             }
             else
             {
-                retStr =
+                StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT);
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT), false);
                 bWasSuccessful = false;
             }
 
             PassTime();
-            return retStr;
         }
 
         /// <summary>
@@ -517,20 +529,25 @@ namespace Ultima5Redux
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        public string IgniteTorch()
+        public void IgniteTorch()
         {
             PassTime();
             // if there are no torches then report back and make no change
             if (State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity <= 0)
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.SleepTransportStrings
-                    .NONE_OWNED_BANG_N);
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.SleepTransportStrings
+                        .NONE_OWNED_BANG_N), false);
+                return;
+            }
 
             State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity--;
             State.TurnsToExtinguish = N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH;
             // this will trigger a re-read of time of day changes
             State.TheTimeOfDay.SetAllChangeTrackers();
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                .IGNITE_TORCH);
+            StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
+                .KeypressCommandsStrings
+                .IGNITE_TORCH), false);
         }
 
         /// <summary>
@@ -539,8 +556,7 @@ namespace Ultima5Redux
         /// <returns>true if the Avatar is on an active moongate</returns>
         public bool IsAvatarOnActiveMoongate()
         {
-            if (!State.TheVirtualMap.IsLargeMap) return false;
-            if (State.TheTimeOfDay.IsDayLight) return false;
+            if (!State.TheVirtualMap.IsLargeMap || State.TheTimeOfDay.IsDayLight) return false;
 
             return State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.GetCurrent3DPosition());
         }
@@ -553,7 +569,7 @@ namespace Ultima5Redux
         /// <param name="specialLookCommand">Special command such as look at gem or sign</param>
         /// <returns>String to output to user</returns>
         // ReSharper disable once UnusedMember.Global
-        public string Look(Point2D xy, out SpecialLookCommand specialLookCommand)
+        public void Look(Point2D xy, out SpecialLookCommand specialLookCommand)
         {
             specialLookCommand = SpecialLookCommand.None;
             string retStr;
@@ -591,13 +607,12 @@ namespace Ultima5Redux
 
             // pass time at the end to make sure moving characters are accounted for
             PassTime();
-            return retStr;
+            StreamingOutput.Instance.PushMessage(retStr, false);
         }
 
         /// <summary>
         ///     Standard way of passing time, makes sure it passes the default amount of time (2 minutes)
         /// </summary>
-        /// <param name="tryToMoveResult"></param>
         /// <returns>"" or a string that describes what happened when passing time</returns>
         public TryToMoveResult PassTime()
         {
@@ -611,7 +626,7 @@ namespace Ultima5Redux
         /// <param name="direction">the direction of the thing the avatar wants to push</param>
         /// <param name="bPushedAThing">was a thing actually pushed?</param>
         /// <returns>the string to output to the user</returns>
-        public string PushAThing(Point2D avatarXy, Point2D.Direction direction, out bool bPushedAThing)
+        public void PushAThing(Point2D avatarXy, Point2D.Direction direction, out bool bPushedAThing)
         {
             bPushedAThing = false;
             Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
@@ -620,8 +635,12 @@ namespace Ultima5Redux
 
             // it's not pushable OR if an NPC occupies the tile -so let's bail
             if (!adjustedTileReference.IsPushable || State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPos))
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                    .WONT_BUDGE_BANG_N);
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.ExclaimStrings
+                        .WONT_BUDGE_BANG_N), false);
+                return;
+            }
 
             bPushedAThing = true;
 
@@ -631,8 +650,12 @@ namespace Ultima5Redux
 
             // if I'm sitting and the proceeding tile is an upright tile then I can't swap things 
             if (State.TheVirtualMap.IsAvatarSitting() && oneMoreTileReference.IsUpright)
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                    .WONT_BUDGE_BANG_N);
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.ExclaimStrings
+                        .WONT_BUDGE_BANG_N), false);
+                return;
+            }
 
             // if you are pushing a chair then change the direction of chair when it's pushed
             if (GameReferences.SpriteTileReferences.IsChair(adjustedTileReference.Index))
@@ -656,7 +679,9 @@ namespace Ultima5Redux
 
             PassTime();
 
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N);
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N),
+                false);
         }
 
         public void ReLoadFromJson()
@@ -673,7 +698,7 @@ namespace Ultima5Redux
             // empty because it's not implemented yet
         }
 
-        public string TryToAttack(Point2D xy, out bool bCanAttack, out MapUnit mapUnit,
+        public void TryToAttack(Point2D xy, out bool bCanAttack, out MapUnit mapUnit,
             out SingleCombatMapReference singleCombatMapReference)
         {
             bCanAttack = false;
@@ -681,13 +706,18 @@ namespace Ultima5Redux
             singleCombatMapReference = null;
 
             if (mapUnit == null || mapUnit.IsAttackable)
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings
-                    .NOTHING_TO_ATTACK);
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.TravelStrings
+                        .NOTHING_TO_ATTACK), false);
+                return;
+            }
 
             bCanAttack = true;
-            return mapUnit.FriendlyName + "\n" +
-                   GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.AdditionalStrings
-                       .STARS_CONFLICT_STARS_N_N);
+            StreamingOutput.Instance.PushMessage(mapUnit.FriendlyName + "\n" +
+                                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                                     .AdditionalStrings
+                                                     .STARS_CONFLICT_STARS_N_N), false);
         }
 
         /// <summary>
@@ -1387,7 +1417,7 @@ namespace Ultima5Redux
         public void TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded,
             out MagicReference.SpellWords spell)
         {
-            string potionColorStr = $"{potion.Color} Potion\n";
+            //string potionColorStr = $"{potion.Color} Potion\n";
 
             PassTime();
 
@@ -1400,77 +1430,78 @@ namespace Ultima5Redux
 
             potion.Quantity--;
 
+            StreamingOutput.Instance.PushMessage($"{potion.Color} Potion\n", false);
+
             switch (potion.Color)
             {
                 case Potion.PotionColor.Blue:
                     // awaken
                     record.WakeUp();
-                    potionColorStr += "Awoken!";
+                    StreamingOutput.Instance.PushMessage("Awoken!", false);
                     break;
                 case Potion.PotionColor.Yellow:
                     // lesser heal - mani
                     int nHealedPoints = record.CastSpellMani();
                     bSucceeded = nHealedPoints >= 0;
-                    potionColorStr += bSucceeded
-                        ? GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                            .HEALED_BANG_N)
-                        : GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                            .FAILED_BANG_N);
+                    StreamingOutput.Instance.PushMessage(
+                        bSucceeded
+                            ? GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                                .HEALED_BANG_N)
+                            : GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                                .FAILED_BANG_N), false);
                     break;
                 case Potion.PotionColor.Red:
                     // cure poison
                     record.Cure();
-                    potionColorStr += GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                        .ExclaimStrings
-                        .POISON_CURED_BANG_N);
+                    StreamingOutput.Instance.PushMessage(
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                            .POISON_CURED_BANG_N), false);
                     break;
                 case Potion.PotionColor.Green:
                     // poison user
                     bool bWasPoisoned = record.Poison();
                     if (bWasPoisoned)
-                        potionColorStr += GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                            .ExclaimStrings
-                            .POISONED_BANG_N);
+                        StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                            DataOvlReference.ExclaimStrings
+                                .POISONED_BANG_N), false);
                     else
-                        potionColorStr += GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                            .ExclaimStrings
-                            .NO_EFFECT_BANG);
+                        StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                            DataOvlReference.ExclaimStrings
+                                .NO_EFFECT_BANG), false);
                     break;
                 case Potion.PotionColor.Orange:
                     // sleep
-                    potionColorStr += CastSleep(record, out bool _);
+                    CastSleep(record, out bool _);
                     break;
                 case Potion.PotionColor.Purple:
                     // turn me into a rat
                     record.TurnIntoRat();
-                    potionColorStr += GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                        .ExclaimStrings
-                        .POOF_BANG_N);
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.ExclaimStrings
+                            .POOF_BANG_N), false);
                     break;
                 case Potion.PotionColor.Black:
                     // invisibility
                     record.TurnInvisible();
-                    potionColorStr += GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                        .ExclaimStrings
-                        .INVISIBLE_BANG_N);
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.ExclaimStrings
+                            .INVISIBLE_BANG_N), false);
                     break;
                 case Potion.PotionColor.White:
                     // x-ray
                     bSucceeded = _random.Next() % 2 == 0;
                     if (bSucceeded)
                     {
-                        potionColorStr += "X-Ray!";
+                        StreamingOutput.Instance.PushMessage("X-Ray!", false);
                         break;
                     }
 
                     // if you fail with the x-ray then 
-                    potionColorStr += CastSleep(record, out bool _);
+                    CastSleep(record, out bool _);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(potion), @"Tried to use an undefined potion");
             }
-
-            StreamingOutput.Instance.PushMessage(potionColorStr, false);
         }
 
         public void TryToUseScroll(Scroll scroll, PlayerCharacterRecord record)
@@ -1592,7 +1623,7 @@ namespace Ultima5Redux
             switch (spcItem.ItemType)
             {
                 case SpecialItem.SpecificItemTypeSprite.Carpet:
-                    StreamingOutput.Instance.PushMessage(UseMagicCarpet(out bWasUsed), false);
+                    UseMagicCarpet(out bWasUsed);
                     return;
                 case SpecialItem.SpecificItemTypeSprite.Grapple:
                     StreamingOutput.Instance.PushMessage("Grapple\n\nYou need to K-limb with it!", false);
