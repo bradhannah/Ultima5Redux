@@ -133,6 +133,76 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
+        ///     Gets the best next position that a map unit should dumbly move to to get to a particular point
+        ///     Note: this is currently a dumb algorithm, just making sure they don't go through other units
+        ///     or walls etc.
+        ///     In the future this could be expand to use aStar, but some extra optimization work will need to be done
+        /// </summary>
+        /// <param name="map">Current map</param>
+        /// <param name="toPosition">the position they are trying to get to</param>
+        /// <param name="aStar">the aStar for the the current map and character type</param>
+        /// <returns></returns>
+        public Point2D GetBestNextPositionToMoveTowardsWalkablePoint(Map map, Point2D toPosition, AStar aStar)
+        {
+            double fShortestPath = 999f;
+            Point2D bestMovePoint = null;
+
+            List<Point2D> wanderPoints = GetValidWanderPoints(map, toPosition, aStar);
+
+            foreach (Point2D point in wanderPoints)
+            {
+                // keep track of the points we could wander to if we don't find a good path
+                double fDistance = point.DistanceBetween(toPosition);
+                if (fDistance < fShortestPath)
+                {
+                    fShortestPath = fDistance;
+                    bestMovePoint = point;
+                }
+            }
+
+            return bestMovePoint;
+        }
+
+        public Point2D GetValidRandomWanderPoint(Map map, Point2D toPosition, AStar aStar)
+        {
+            List<Point2D> wanderablePoints = GetValidWanderPoints(map, toPosition, aStar);
+
+            if (wanderablePoints.Count == 0) return null;
+            //Random ran = new();
+
+            // wander logic - we are already the closest to the selected enemy
+            int nChoices = wanderablePoints.Count;
+            int nRandomChoice = Utils.Ran.Next() % nChoices;
+            return wanderablePoints[nRandomChoice];
+        }
+
+        /// <summary>
+        ///     Gets the valid points surrounding a map unit in which they could travel
+        /// </summary>
+        /// <param name="map">Current map</param>
+        /// <param name="toPosition">the position they are trying to get to</param>
+        /// <param name="aStar">the aStar for the the current map and character type</param>
+        /// <returns>a list of positions that the character can walk to  </returns>
+        public List<Point2D> GetValidWanderPoints(Map map, Point2D toPosition, AStar aStar)
+        {
+            // get the surrounding points around current active unit
+            List<Point2D> surroundingPoints =
+                MapUnitPosition.XY.GetConstrainedFourDirectionSurroundingPoints(map.NumOfXTiles - 1,
+                    map.NumOfYTiles - 1);
+
+            List<Point2D> wanderablePoints = new();
+
+            foreach (Point2D point in surroundingPoints)
+            {
+                // if it isn't walkable then we skip it
+                if (!aStar.GetWalkable(point)) continue;
+                wanderablePoints.Add(point);
+            }
+
+            return wanderablePoints;
+        }
+
+        /// <summary>
         ///     Move the map unit closer to the Avatar if possible
         /// </summary>
         /// <param name="map"></param>
@@ -179,6 +249,20 @@ namespace Ultima5Redux.MapUnits
                     positionToMoveTo = theWay.Pop().Position;
                 }
             }
+            else
+            {
+                // it IS a large map, so we do the less resource intense way of pathfinding
+                positionToMoveTo = GetBestNextPositionToMoveTowardsWalkablePoint(map, avatarPosition, aStar);
+
+                if (positionToMoveTo == null)
+                {
+                    // only a 50% chance they will wander
+                    if (Utils.Ran.Next() % 2 == 0) return;
+
+                    positionToMoveTo = GetValidRandomWanderPoint(map, avatarPosition, aStar);
+                    if (positionToMoveTo == null) return;
+                }
+            }
 
             if (positionToMoveTo == null) return;
 
@@ -188,7 +272,8 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition.XY = positionToMoveTo;
             map.SetWalkableTile(positionToMoveTo, false, walkableType);
 
-            map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand);
+            if (map.IsAStarMap(Map.WalkableType.StandardWalking))
+                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.StandardWalking);
             if (map.IsAStarMap(Map.WalkableType.CombatLand))
                 map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand);
             if (map.IsAStarMap(Map.WalkableType.CombatWater))

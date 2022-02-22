@@ -620,38 +620,47 @@ namespace Ultima5Redux.Maps
                     return null;
 
                 // we start with the shortest path being the current tiles distance to the best enemies tile
-                fShortestPath = activeCombatUnitXY.DistanceBetween(bestOpponentPoint);
+                // fShortestPath = activeCombatUnitXY.DistanceBetween(bestOpponentPoint);
+                //
+                // Point2D nextBestMovePoint = null;
+                // List<Point2D> wanderablePoints = new();
+                // // go through of each surrounding points and find the shortest path based to an opponent
+                // // on the free tiles
+                // foreach (Point2D point in surroundingPoints)
+                // {
+                //     // if it isn't walkable then we skip it
+                //     if (!GetAStarByMapUnit(activeCombatUnit).GetWalkable(point)) continue;
+                //     // keep track of the points we could wander to if we don't find a good path
+                //     wanderablePoints.Add(point);
+                //     double fDistance = point.DistanceBetween(bestOpponentPoint);
+                //     if (fDistance < fShortestPath)
+                //     {
+                //         fShortestPath = fDistance;
+                //         nextBestMovePoint = point;
+                //     }
+                // }
 
-                Point2D nextBestMovePoint = null;
-                List<Point2D> wanderablePoints = new();
-                // go through of each surrounding points and find the shortest path based to an opponent
-                // on the free tiles
-                foreach (Point2D point in surroundingPoints)
-                {
-                    // if it isn't walkable then we skip it
-                    if (!GetAStarByMapUnit(activeCombatUnit).GetWalkable(point)) continue;
-                    // keep track of the points we could wander to if we don't find a good path
-                    wanderablePoints.Add(point);
-                    double fDistance = point.DistanceBetween(bestOpponentPoint);
-                    if (fDistance < fShortestPath)
-                    {
-                        fShortestPath = fDistance;
-                        nextBestMovePoint = point;
-                    }
-                }
+                Point2D nextBestMovePoint =
+                    activeCombatUnit.GetBestNextPositionToMoveTowardsWalkablePoint(this, bestOpponentPoint, aStar);
 
                 if (nextBestMovePoint == null)
                 {
-                    if (wanderablePoints.Count == 0) return null;
-                    Random ran = new();
-
                     // only a 50% chance they will wander
-                    if (ran.Next() % 2 == 0) return null;
+                    if (Utils.Ran.Next() % 2 == 0) return null;
 
-                    // wander logic - we are already the closest to the selected enemy
-                    int nChoices = wanderablePoints.Count;
-                    int nRandomChoice = ran.Next() % nChoices;
-                    nextBestMovePoint = wanderablePoints[nRandomChoice];
+                    nextBestMovePoint = activeCombatUnit.GetValidRandomWanderPoint(this, bestOpponentPoint, aStar);
+                    if (nextBestMovePoint == null) return null;
+
+                    // if (wanderablePoints.Count == 0) return null;
+                    // Random ran = new();
+                    //
+                    // // only a 50% chance they will wander
+                    // if (ran.Next() % 2 == 0) return null;
+                    //
+                    // // wander logic - we are already the closest to the selected enemy
+                    // int nChoices = wanderablePoints.Count;
+                    // int nRandomChoice = ran.Next() % nChoices;
+                    // nextBestMovePoint = wanderablePoints[nRandomChoice];
                 }
 
                 // we think we found the next best path
