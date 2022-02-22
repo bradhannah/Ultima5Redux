@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.External;
+using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
@@ -56,7 +58,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new();
 
-        [DataMember] public override CharacterStats Stats { get; protected set; } = new();
+        [DataMember] public sealed override CharacterStats Stats { get; protected set; } = new();
 
         [JsonConstructor] private Enemy()
         {
@@ -92,6 +94,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool CanReachForMeleeAttack(CombatMapUnit combatMapUnit)
         {
             return CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
+        }
+
+        public override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        {
+            if (EnemyReference.DoesNotMove) return;
+            // are we water, sand or land?
+            ProcessNextMoveTowardsAvatar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar);
         }
     }
 }

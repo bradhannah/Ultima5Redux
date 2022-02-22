@@ -114,7 +114,7 @@ namespace Ultima5Redux.Maps
             return 1;
         }
 
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             switch (mapUnit)
             {

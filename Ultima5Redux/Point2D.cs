@@ -272,6 +272,18 @@ namespace Ultima5Redux
             return points;
         }
 
+        public List<Point2D> GetConstrainedFourDirectionSurroundingPointsWrapAround(int nXExtent, int nYExtent)
+        {
+            List<Point2D> points = new();
+
+            points.Add(X - 1 >= 0 ? new Point2D(X - 1, Y) : new Point2D(nXExtent, Y));
+            points.Add(Y - 1 >= 0 ? new Point2D(X, Y - 1) : new Point2D(X, nYExtent));
+            points.Add(X + 1 <= nXExtent ? new Point2D(X + 1, Y) : new Point2D(0, Y));
+            points.Add(Y + 1 <= nYExtent ? new Point2D(X, Y + 1) : new Point2D(X, 0));
+
+            return points;
+        }
+
         /// <summary>
         ///     Gets a list of points that surround a particular point at "n units out". If you outside points
         ///     exceed the given points then it will add the points of the outermost yet valid points

@@ -334,6 +334,7 @@ namespace Ultima5Redux
             // if a whole month has advanced then we go and add one month to the "staying at the inn" count
             if (nCurrentHour < State.TheTimeOfDay.Month) State.CharacterRecords.IncrementStayingAtInnCounters();
             if (State.TurnsToExtinguish > 0) State.TurnsToExtinguish--;
+
             State.TheVirtualMap.MoveMapUnitsToNextMove();
 
             State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);

@@ -308,6 +308,11 @@ namespace Ultima5Redux.MapUnits
             {
                 newUnit = new Horse(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
             }
+            else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active)
+            {
+                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
+                    mapUnitPosition, npcState);
+            }
             else if (GameReferences.SpriteTileReferences.IsMonster(tileReference.Index))
             {
                 Debug.Assert(GameReferences.EnemyRefs != null);

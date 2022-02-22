@@ -132,6 +132,73 @@ namespace Ultima5Redux.MapUnits
             // by default the thing doesn't move on it's own
         }
 
+        /// <summary>
+        ///     Move the map unit closer to the Avatar if possible
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="avatarPosition"></param>
+        /// <param name="aStar"></param>
+        protected void ProcessNextMoveTowardsAvatar(Map map, Point2D avatarPosition, AStar aStar)
+        {
+            const int noPath = 0xFFFF;
+
+            Map.WalkableType walkableType = map.GetWalkableTypeByMapUnit(this);
+
+            Point2D positionToMoveTo = null;
+
+            if (map is not LargeMap)
+            {
+                Stack<Node> theWay = aStar.FindPath(MapUnitPosition.XY, avatarPosition);
+
+                if (theWay == null) return;
+
+                int nMoves = theWay?.Count ?? noPath;
+
+                if (nMoves == noPath)
+                {
+                    // we do a quick wander check
+                    // get the surrounding points around current active unit
+                    List<Point2D> surroundingPoints =
+                        MapUnitPosition.XY.GetConstrainedFourDirectionSurroundingPointsWrapAround(map.NumOfXTiles - 1,
+                            map.NumOfYTiles - 1);
+
+                    Queue<int> positions = Utils.CreateRandomizedIntegerQueue(surroundingPoints.Count);
+                    int nQueueEntries = positions.Count;
+                    for (int i = 0; i < nQueueEntries; i++)
+                    {
+                        Point2D position = surroundingPoints[positions.Dequeue()];
+                        if (!aStar.GetWalkable(position)) continue;
+
+                        positionToMoveTo = position;
+                        break;
+                    }
+                }
+                else
+                {
+                    // we just follow the path
+                    positionToMoveTo = theWay.Pop().Position;
+                }
+            }
+
+            if (positionToMoveTo == null) return;
+
+            Point2D oldPosition = MapUnitPosition.XY;
+
+            // move to the new point
+            MapUnitPosition.XY = positionToMoveTo;
+            map.SetWalkableTile(positionToMoveTo, false, walkableType);
+
+            map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand);
+            if (map.IsAStarMap(Map.WalkableType.CombatLand))
+                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand);
+            if (map.IsAStarMap(Map.WalkableType.CombatWater))
+                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatWater);
+            if (map.IsAStarMap(Map.WalkableType.CombatFlyThroughWalls))
+                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatFlyThroughWalls);
+            if (map.IsAStarMap(Map.WalkableType.CombatLandAndWater))
+                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLandAndWater);
+        }
+
         // ReSharper disable once UnusedMember.Global
         public virtual string GetDebugDescription(TimeOfDay timeOfDay)
         {

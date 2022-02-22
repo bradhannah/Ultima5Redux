@@ -190,7 +190,7 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         protected abstract float GetAStarWeight(in Point2D xy);
 
-        protected abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
+        protected internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
         protected virtual bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
@@ -235,9 +235,7 @@ namespace Ultima5Redux.Maps
 
                     float fWeight = GetAStarWeight(new Point2D(x, y));
 
-                    Node node = new(new Point2D(x, y),
-                        //new Vector2(x, y),
-                        bIsWalkable, fWeight);
+                    Node node = new(new Point2D(x, y), bIsWalkable, fWeight);
                     aStarNodesLists[x].Add(node);
                 }
             }
@@ -252,7 +250,7 @@ namespace Ultima5Redux.Maps
             return (IsTileWalkable(tileReference, walkableType));
         }
 
-        protected void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType)
+        protected internal void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType)
         {
             SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
         }

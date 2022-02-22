@@ -562,7 +562,7 @@ namespace Ultima5Redux.Maps
             if (activeCombatUnit == null)
                 throw new Ultima5ReduxException("Passed a null active combat unit when moving to closest unit");
 
-            const int NoPath = 0xFFFF;
+            const int noPath = 0xFFFF;
             bMoved = false;
 
             int nMinMoves = 0xFFFF;
@@ -582,7 +582,7 @@ namespace Ultima5Redux.Maps
                 // get the shortest path to the unit - we ignore the range value because by calling this method we are insisting
                 // that they move
                 Stack<Node> theWay = aStar.FindPath(activeCombatUnit.MapUnitPosition.XY, combatMapUnitXY);
-                int nMoves = theWay?.Count ?? NoPath;
+                int nMoves = theWay?.Count ?? noPath;
                 if (nMoves < nMinMoves)
                 {
                     nMinMoves = nMoves;
@@ -593,7 +593,7 @@ namespace Ultima5Redux.Maps
 
             Point2D activeCombatUnitXY = activeCombatUnit.MapUnitPosition.XY;
 
-            if (nMinMoves == NoPath)
+            if (nMinMoves == noPath)
             {
                 // if there is no path, then lets do some dirty checks to see if we can at least move closer
 
@@ -1329,7 +1329,7 @@ namespace Ultima5Redux.Maps
             return 1.0f;
         }
 
-        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             return mapUnit switch
             {
