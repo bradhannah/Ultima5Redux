@@ -95,6 +95,8 @@ namespace Ultima5Redux
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
+        [DataMember] public int TurnsSinceStart { get; set; }
+
         /// <summary>
         ///     The name of the Avatar
         /// </summary>
@@ -161,6 +163,7 @@ namespace Ultima5Redux
             Karma = ImportedGameState.Karma;
             TurnsToExtinguish = ImportedGameState.TorchTurnsLeft;
             ActivePlayerNumber = ImportedGameState.ActivePlayerNumber;
+            TurnsSinceStart = ImportedGameState.TurnsSinceStart;
 
             TheMoongates = ImportedGameState.TheMoongates;
 

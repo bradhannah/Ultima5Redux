@@ -49,6 +49,11 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC;
 
+        [IgnoreDataMember]
+        public bool IsMonsterSpawnable =>
+            IsBoat_Passable || IsCarpet_Passable || IsHorse_Passable || IsWalking_Passable || IsWaterEnemyPassable ||
+            IsLandEnemyPassable;
+
         public override string ToString()
         {
             return Name;

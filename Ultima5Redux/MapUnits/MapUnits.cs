@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Maps;
@@ -16,7 +17,7 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public class MapUnits
     {
-        internal const int MAX_MAP_CHARACTERS = 0x20;
+        public const int MAX_MAP_CHARACTERS = 0x20;
 
         [DataMember(Name = "UseExtendedSprites")]
         private readonly bool _bUseExtendedSprites;
@@ -56,6 +57,9 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; set; }
 
+        [IgnoreDataMember]
+        public int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
+
         public Avatar GetAvatarMapUnit()
         {
             if (CurrentMapUnits == null)
@@ -64,6 +68,30 @@ namespace Ultima5Redux.MapUnits
                 throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits.TheAvatar is null");
 
             return CurrentMapUnits.TheAvatar;
+        }
+
+        public void ClearEnemiesIfFarAway()
+        {
+            const float fMaxDiagonalDistance = 22;
+            MapUnitPosition avatarPosition = CurrentAvatarPosition;
+
+            int nMaxXY = CurrentMapType is Map.Maps.Overworld or Map.Maps.Underworld
+                ? LargeMapLocationReferences.XTiles
+                : 32;
+
+            List<Enemy> enemiesToClear = null;
+            foreach (Enemy enemy in CurrentMapUnits.Enemies)
+            {
+                if (enemy.MapUnitPosition.XY.DistanceBetweenWithWrapAround(avatarPosition.XY, nMaxXY) <=
+                    fMaxDiagonalDistance)
+                    continue;
+
+                enemiesToClear ??= new();
+                // delete the mapunit
+                enemiesToClear.Add(enemy);
+            }
+
+            enemiesToClear?.ForEach(ClearMapUnit);
         }
 
         [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
@@ -495,6 +523,12 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        private void ClearMapUnit(MapUnit mapUnit)
+        {
+            int nIndex = CurrentMapUnits.AllMapUnits.IndexOf(mapUnit);
+            CurrentMapUnits.AllMapUnits[nIndex] = new EmptyMapUnit();
+        }
+
         /// <summary>
         ///     Clear a current map unit, essentially removing it from the world
         ///     Commonly used when something is boarded, and collapses into the Avatar himself
@@ -519,7 +553,26 @@ namespace Ultima5Redux.MapUnits
                 "You provided a MapUnit to clear, but it is not in the active MapUnit list");
         }
 
-        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference, out int nIndex)
+        public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference,
+            SmallMapReferences.SingleMapReference singleMapReference, out int nIndex)
+        {
+            Debug.Assert(CurrentMapType != Map.Maps.Combat);
+
+            nIndex = FindNextFreeMapUnitIndex(singleMapReference.MapType);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new MapUnitPosition(xy.X, xy.Y, singleMapReference.Floor);
+            Enemy enemy = new Enemy(new MapUnitMovement(0), enemyReference, singleMapReference.MapLocation, null,
+                mapUnitPosition);
+
+            GetMapUnitCollection(singleMapReference.MapType).AddMapUnit(enemy);
+
+            enemy.UseFourDirections = _bUseExtendedSprites;
+
+            return enemy;
+        }
+
+        public Enemy CreateEnemyOnCombatMap(Point2D xy, EnemyReference enemyReference, out int nIndex)
         {
             Debug.Assert(CurrentMapType == Map.Maps.Combat);
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
@@ -591,6 +644,11 @@ namespace Ultima5Redux.MapUnits
             }
 
             return mapUnits;
+        }
+
+        public bool IsTileOccupied(Point2D xy)
+        {
+            return CurrentMapUnits.AllActiveMapUnits.Any(m => m.MapUnitPosition.XY == xy);
         }
 
         public T GetSpecificMapUnitByLocation<T>(Map.Maps map, Point2D xy, int nFloor, bool bCheckBaseToo = false)

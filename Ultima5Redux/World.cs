@@ -336,6 +336,9 @@ namespace Ultima5Redux
             if (State.TurnsToExtinguish > 0) State.TurnsToExtinguish--;
             State.TheVirtualMap.MoveMapUnitsToNextMove();
 
+            State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
+
+            State.TurnsSinceStart++;
             return tryToMoveResult;
         }
 
@@ -994,7 +997,6 @@ namespace Ultima5Redux
                 {
                     // ie. a fence
                     klimbResult = KlimbResult.Success;
-                    //retStr = string.Empty;
                 }
                 else
                 {
@@ -1417,8 +1419,6 @@ namespace Ultima5Redux
         public void TryToUsePotion(Potion potion, PlayerCharacterRecord record, out bool bSucceeded,
             out MagicReference.SpellWords spell)
         {
-            //string potionColorStr = $"{potion.Color} Potion\n";
-
             PassTime();
 
             bSucceeded = true;

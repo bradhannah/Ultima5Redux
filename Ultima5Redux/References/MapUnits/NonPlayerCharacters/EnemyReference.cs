@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
@@ -39,10 +40,52 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         internal const int N_FIRST_SPRITE = 320;
         internal const int N_FRAMES_PER_SPRITE = 4;
 
+        internal readonly int[] BeginningOfEras = { 0, 10000, 30000 };
+
         private const int N_RAW_BYTES = 2;
         private readonly EnemyReferences.AdditionalEnemyFlags _additionalEnemyFlags;
 
         private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new();
+
+        public int GetEraWeightByTurn(int nTurn)
+        {
+            if (nTurn >= BeginningOfEras[2]) return _additionalEnemyFlags.Era3Weight;
+            if (nTurn >= BeginningOfEras[1]) return _additionalEnemyFlags.Era2Weight;
+            return _additionalEnemyFlags.Era1Weight;
+        }
+
+        public bool CanGoOnTile(TileReference tileReference)
+        {
+            if (!tileReference.IsMonsterSpawnable) return false;
+
+            switch (tileReference.CombatMapIndex)
+            {
+                case SingleCombatMapReference.BritanniaCombatMaps.None:
+                case SingleCombatMapReference.BritanniaCombatMaps.CampFire:
+                case SingleCombatMapReference.BritanniaCombatMaps.BigBridge:
+                case SingleCombatMapReference.BritanniaCombatMaps.Brick:
+                case SingleCombatMapReference.BritanniaCombatMaps.Basement:
+                case SingleCombatMapReference.BritanniaCombatMaps.Psychedelic:
+                    return false;
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatOcean:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatNorth:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatSouth:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatBoat:
+                case SingleCombatMapReference.BritanniaCombatMaps.Bay:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatCalc:
+                    return IsWaterEnemy && tileReference.IsWaterEnemyPassable;
+                case SingleCombatMapReference.BritanniaCombatMaps.Desert:
+                    return IsSandEnemy;
+                case SingleCombatMapReference.BritanniaCombatMaps.Swamp:
+                case SingleCombatMapReference.BritanniaCombatMaps.Glade:
+                case SingleCombatMapReference.BritanniaCombatMaps.Treed:
+                case SingleCombatMapReference.BritanniaCombatMaps.CleanTree:
+                case SingleCombatMapReference.BritanniaCombatMaps.Mountains:
+                    return !IsWaterEnemy && !IsSandEnemy;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
+        }
 
         public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
 
@@ -58,8 +101,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
         public bool IsNpc => KeyTileReference.IsNPC;
 
-        public bool IsWaterEnemy =>
-            _additionalEnemyFlags.IsWaterEnemy;
+        public bool IsWaterEnemy => _additionalEnemyFlags.IsWaterEnemy;
+        public bool IsSandEnemy => _additionalEnemyFlags.IsSandEnemy;
 
         public TileReference KeyTileReference { get; }
         public string MixedCaseSingularName { get; }
@@ -105,7 +148,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 Armour = GetStat(DefaultStats.Armour, dataOvlReference, nMonsterIndex),
                 Damage = GetStat(DefaultStats.Damage, dataOvlReference, nMonsterIndex),
                 // bajh: TEMPORARY so I can test and not kill them immediately
-                HitPoints = 40, //GetStat(DefaultStats.Hitpoints, dataOvlReference, nMonsterIndex),
+                HitPoints = //40, 
+                    GetStat(DefaultStats.Hitpoints, dataOvlReference, nMonsterIndex),
                 MaxPerMap = GetStat(DefaultStats.MaxPerMap, dataOvlReference, nMonsterIndex),
                 TreasureNumber = GetStat(DefaultStats.Treasure, dataOvlReference, nMonsterIndex)
             };
@@ -118,7 +162,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             if (nMonsterIndex > 8) nMixedCaseIndex += -2;
             if (nMonsterIndex > 41) nMixedCaseIndex += -2;
 
-            if (nMonsterIndex == 8 || nMonsterIndex == 9 || nMonsterIndex == 42 || nMonsterIndex == 43)
+            if (nMonsterIndex is 8 or 9 or 42 or 43)
             {
                 MixedCaseSingularName = "x";
             }

@@ -186,6 +186,18 @@ namespace Ultima5Redux
             return new Point2D(X, Y);
         }
 
+        [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
+        public double DistanceBetweenWithWrapAround(Point2D xy, int nMax)
+        {
+            float dX = Math.Abs(X - xy.X);
+            float dY = Math.Abs(Y - xy.Y);
+
+            if (dX > nMax / 2) dX = nMax - dX;
+            if (dY > nMax / 2) dY = nMax - dY;
+
+            return Math.Sqrt(dX * dX + dY * dY);
+        }
+
         public double DistanceBetween(Point2D xy)
         {
             return Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));

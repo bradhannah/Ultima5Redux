@@ -52,6 +52,14 @@ namespace Ultima5Redux.DayNightMoon
         [IgnoreDataMember] private byte _nHour;
         [IgnoreDataMember] private byte _nMinute;
 
+        const int N_DAYS_IN_MONTH = 28;
+        private const int N_MONTHS_PER_YEAR = 13;
+
+        [IgnoreDataMember]
+        public int MinutesSinceBeginning => Minute + (Hour * 60) + (Day * N_DAYS_IN_MONTH) +
+                                            (Month * N_DAYS_IN_MONTH * 24 * 60)
+                                            + (Year * N_MONTHS_PER_YEAR * N_DAYS_IN_MONTH * 24 * 60);
+
         // ReSharper disable once UnusedMember.Global
         [IgnoreDataMember] public string FormattedDate => $"{Month} - {Day} - {Year}";
 
@@ -112,8 +120,6 @@ namespace Ultima5Redux.DayNightMoon
         /// <exception cref="Ultima5ReduxException"></exception>
         public void AdvanceClock(int nMinutes)
         {
-            const int nDaysInMonth = 28;
-
             // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
             if (nMinutes > 60 * 9) throw new Ultima5ReduxException("You can not advance more than 9 hours at a time");
 
@@ -135,12 +141,12 @@ namespace Ultima5Redux.DayNightMoon
                     Hour = (byte)(newHour % 24);
                     // if the day + 1 is more days then we are allow in the month, then restart the days, and go to next month
                     int nDay = (byte)(Day + 1);
-                    if (nDay > nDaysInMonth)
+                    if (nDay > N_DAYS_IN_MONTH)
                     {
                         Day = 1;
                         int nMonth = (byte)(Month + 1);
                         // if the next month goes beyond 13, then we reset and advance the year
-                        if (nMonth > 13)
+                        if (nMonth > N_MONTHS_PER_YEAR)
                         {
                             Month = 1;
                             Year += 1;

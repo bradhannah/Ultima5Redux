@@ -20,6 +20,13 @@ namespace Ultima5Redux
                 .ToArray());
         }
 
+        public static void SwapInts(ref int a, ref int b)
+        {
+            int t = a;
+            b = a;
+            a = t;
+        }
+
         /// <summary>
         ///     Divides a list of bytes into a two dimension byte array
         ///     Ideal for serialized byte arrays from map files, into a more readable x,y
@@ -193,7 +200,7 @@ namespace Ultima5Redux
             return friendlyStr;
         }
 
-        public static int GetNumberBetween(int nMin, int nMax)
+        public static int GetNumberFromAndTo(int nMin, int nMax)
         {
             Debug.Assert(nMin < nMax);
             int nDiff = nMax - nMin;

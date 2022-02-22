@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -226,6 +227,88 @@ namespace Ultima5Redux.Maps
 
         [JsonConstructor] private VirtualMap()
         {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>true if a monster was created</returns>
+        /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
+        private bool CreateRandomMonster(int nTurn)
+        {
+            const int maxTries = 10;
+            const int nDistanceAway = 7;
+
+            // find a position or give up
+            int dX = nDistanceAway;
+            int dY;
+            for (int i = 0; i < maxTries; i++)
+            {
+                dY = Utils.Ran.Next() % nDistanceAway;
+
+                // this logic borrowed from Xu4 to create some randomness
+                if (Utils.OneInXOdds(2)) dX = -dX;
+                if (Utils.OneInXOdds(2)) dY = -dY;
+                if (Utils.OneInXOdds(2)) Utils.SwapInts(ref dX, ref dY);
+
+                Point2D tilePosition = new((CurrentPosition.X + dX) % NumberOfColumnTiles,
+                    (CurrentPosition.Y + dY) % NumberOfRowTiles);
+                if (TheMapUnits.IsTileOccupied(tilePosition)) continue;
+
+                // it's not occupied so we can create a monster
+                EnemyReference enemyRef =
+                    GameReferences.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn, GetTileReference(tilePosition));
+                if (enemyRef == null) continue;
+
+                // MapUnit newUnit = TheMapUnits.CreateNewMapUnit(mapUnitMovement, bInitialLoad,
+                //     SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, null, mapUnitPosition,
+                //     tileReference);
+                // add the new character to our list of characters currently on the map
+                Enemy enemy = TheMapUnits.CreateEnemy(tilePosition, enemyRef, CurrentLargeMap.CurrentSingleMapReference,
+                    out int _);
+
+                //Enemy enemy = TheMapUnits.CreateEnemy(tilePosition, enemyRef, out int nIndex);
+                return true;
+            }
+
+            //
+            //
+            // create a new monster
+            return false;
+            //TheMapUnits.CreateEnemy()
+        }
+
+        /// <summary>
+        ///     Decides if any enemies needed to be spawned or despawned
+        /// </summary>
+        public void GenerateAndCleanupEnemies(int nTurn)
+        {
+            switch (CurrentSingleMapReference.MapType)
+            {
+                case Map.Maps.Overworld:
+                case Map.Maps.Underworld:
+                    // let's do this!
+                    const int nOddsOfNewMonster = 2;
+                    //const int nMaxEnemyDistance = 16;
+
+                    TheMapUnits.ClearEnemiesIfFarAway();
+
+                    if (TheMapUnits.TotalMapUnitsOnMap >= MapUnits.MapUnits.MAX_MAP_CHARACTERS) break;
+                    if (Utils.OneInXOdds(nOddsOfNewMonster))
+                    {
+                        // make a random monster
+                        CreateRandomMonster(nTurn);
+                    }
+
+                    break;
+                case Map.Maps.Combat:
+                    break;
+                case Map.Maps.Small:
+                    break;
+                case Map.Maps.Dungeon:
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
         }
 
         /// <summary>

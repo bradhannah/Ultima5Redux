@@ -171,7 +171,7 @@ namespace Ultima5Redux.PlayerCharacters
                 return -1;
             }
 
-            int nHealPoints = Utils.GetNumberBetween(5, 25);
+            int nHealPoints = Utils.GetNumberFromAndTo(5, 25);
             Stats.CurrentHp = Math.Min(Stats.MaximumHp, Stats.CurrentHp + nHealPoints);
             return nHealPoints;
         }

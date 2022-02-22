@@ -3,432 +3,624 @@
     "Name": "Wizard1/WIZARDS",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Bard1/BARD",
     "Experience": 4,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Fighter1/FIGHTER",
     "Experience": 6,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Avatar1/x",
     "Experience": 0,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "TownsPerson1/VILLAGER",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Merchant1/MERCHANT",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Jester1/JESTER",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "BardPlaying1/BARD",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "PersonStocks1/PIRATES",
     "Experience": 0,
-    "IsWaterEnemy": false,
-    "DoNotMove": true,
+    "IsWaterEnemy": true,
+    "IsSandEnemy": false,
+    "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": false
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "WallPrisoner1/x",
     "Experience": 0,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": false
+    "ActivelyAttacks": false,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Child1/CHILD",
     "Experience": 2,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Begger1/BEGGAR",
     "Experience": 2,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Guard1/GUARDS",
     "Experience": 25,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Apparation1/x",
     "Experience": 0,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Blackthorn1/BLACKTHORN",
     "Experience": 0,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "LordBritish1/LORD BRITISH",
     "Experience": 0,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Seahorse1/SEA HORSES",
     "Experience": 8,
     "IsWaterEnemy": true,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Squid1/SQUIDS",
     "Experience": 13,
     "IsWaterEnemy": true,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "SeaSerpent1/SEA SERPENTS",
     "Experience": 18,
     "IsWaterEnemy": true,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Shark1/SHARKS",
     "Experience": 6,
     "IsWaterEnemy": true,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Rat1/GIANT RATS",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Bat1/BATS",
     "Experience": 2,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Spider1/SPIDERS",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Ghost1/GHOSTS",
     "Experience": 6,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
     "CanPassThroughWalls": true,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Slime1/SLIME",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Gremlin1/GREMLINS",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Mimic1/MIMICS",
     "Experience": 8,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Reaper1/REAPERS",
     "Experience": 11,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Gazer1/GAZERS",
     "Experience": 6,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 10
   },
   {
     "Name": "Shard/x",
     "Experience": 0,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "StoneGargoyle1/GARGOYLE",
     "Experience": 11,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "InsectSwarm1/INSECTS",
     "Experience": 2,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Orc1/ORCS",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Skeleton1/SKELETONS",
     "Experience": 6,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Snake1/SNAKES",
     "Experience": 3,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 10,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Ettin1/ETTINS",
     "Experience": 8,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Headless1/HEADLESSES",
     "Experience": 6,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Wisp1/WISPS",
     "Experience": 11,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 10
   },
   {
     "Name": "Daemon1/DAEMONS",
     "Experience": 13,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Dragon1/DRAGONS",
     "Experience": 25,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 10
   },
   {
     "Name": "SandTrap1/SAND TRAPS",
     "Experience": 21,
     "IsWaterEnemy": false,
+    "IsSandEnemy": true,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Troll1/TROLLS",
     "Experience": 4,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "PoisonField/x",
     "Experience": 0,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": true,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": false
+    "ActivelyAttacks": false,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   },
   {
     "Name": "Whirpool1/x",
     "Experience": 0,
     "IsWaterEnemy": true,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": false
+    "ActivelyAttacks": false,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 10
   },
   {
     "Name": "MongBat1/MONGBATS",
     "Experience": 6,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "Corpser1/CORPSERS",
     "Experience": 11,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 10
   },
   {
     "Name": "RotWork1/ROTWORMS",
     "Experience": 2,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 10,
+    "Era3Weight": 0
   },
   {
     "Name": "ShadowLord1/SHADOW LORD",
     "Experience": 25,
     "IsWaterEnemy": false,
+    "IsSandEnemy": false,
     "DoNotMove": false,
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
-    "ActivelyAttacks": true
+    "ActivelyAttacks": true,
+    "Era1Weight": 0,
+    "Era2Weight": 0,
+    "Era3Weight": 0
   }
 ]

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Properties;
 using Ultima5Redux.References.Maps;
@@ -40,6 +42,24 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             return AllEnemyReferences[enemyReference.FriendIndex];
         }
 
+        internal EnemyReference GetRandomEnemyReferenceByEraAndTile(int nTurn, TileReference tileReference)
+        {
+            List<EnemyReference> possibleEnemies =
+                AllEnemyReferences.Where(e => e.GetEraWeightByTurn(nTurn) > 0).ToList();
+
+            // if 0, then no possible enemies based on era
+            if (possibleEnemies.Count == 0)
+                throw new Ultima5ReduxException("You should always have more than zero enemies to fight in each era");
+
+            List<EnemyReference> enemiesThatCanGoOnTile =
+                possibleEnemies.Where(e => e.CanGoOnTile(tileReference)).ToList();
+
+            // no enemies are able to go on that tile
+            if (enemiesThatCanGoOnTile.Count == 0) return null;
+
+            return enemiesThatCanGoOnTile[Utils.GetNumberFromAndTo(0, enemiesThatCanGoOnTile.Count - 1)];
+        }
+
         private sealed class AdditionalEnemyFlagList
         {
             public readonly List<AdditionalEnemyFlags> AllAdditionalEnemyFlags;
@@ -51,16 +71,19 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             }
         }
 
-        [JsonObject(MemberSerialization.OptIn)]
-        public class AdditionalEnemyFlags
+        [DataContract] public class AdditionalEnemyFlags
         {
-            [JsonProperty] public bool ActivelyAttacks { get; set; }
-            [JsonProperty] public bool CanFlyOverWater { get; set; }
-            [JsonProperty] public bool CanPassThroughWalls { get; set; }
-            [JsonProperty] public bool DoNotMove { get; set; }
-            [JsonProperty] public int Experience { get; set; }
-            [JsonProperty] public bool IsWaterEnemy { get; set; }
-            [JsonProperty] public string Name { get; set; }
+            [DataMember] public bool ActivelyAttacks { get; set; }
+            [DataMember] public bool CanFlyOverWater { get; set; }
+            [DataMember] public bool CanPassThroughWalls { get; set; }
+            [DataMember] public bool DoNotMove { get; set; }
+            [DataMember] public int Experience { get; set; }
+            [DataMember] public bool IsWaterEnemy { get; set; }
+            [DataMember] public string Name { get; set; }
+            [DataMember] public int Era1Weight { get; set; }
+            [DataMember] public int Era2Weight { get; set; }
+            [DataMember] public int Era3Weight { get; set; }
+            [DataMember] public bool IsSandEnemy { get; set; }
         }
     }
 }

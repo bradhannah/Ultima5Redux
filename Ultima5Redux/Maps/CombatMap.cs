@@ -232,7 +232,7 @@ namespace Ultima5Redux.Maps
 
         private Enemy CreateEnemy(Point2D position, EnemyReference enemyReference)
         {
-            Enemy enemy = CombatMapUnits.CreateEnemy(position, enemyReference, out int _);
+            Enemy enemy = CombatMapUnits.CreateEnemyOnCombatMap(position, enemyReference, out int _);
             return enemy;
         }
 
@@ -260,12 +260,14 @@ namespace Ultima5Redux.Maps
                     Debug.WriteLine("It's a chest or maybe a dead body!");
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
-                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                    enemy = CombatMapUnits.CreateEnemyOnCombatMap(
+                        singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
-                    enemy = CombatMapUnits.CreateEnemy(singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
+                    enemy = CombatMapUnits.CreateEnemyOnCombatMap(
+                        singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         enemyReference, out int _);
                     break;
                 default:
@@ -361,7 +363,7 @@ namespace Ultima5Redux.Maps
             }
 
             if (emptySpacePoints.Count == 0) return null;
-            Point2D randomPoint = emptySpacePoints[Utils.GetNumberBetween(0, emptySpacePoints.Count - 1)];
+            Point2D randomPoint = emptySpacePoints[Utils.GetNumberFromAndTo(0, emptySpacePoints.Count - 1)];
             return (randomPoint);
         }
 

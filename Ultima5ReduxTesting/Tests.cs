@@ -575,6 +575,21 @@ namespace Ultima5ReduxTesting
             world.TryToMove(Point2D.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
         }
 
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_MoveALittleOverworld(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
+            world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
+
+            world.TryToMove(Point2D.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
+            world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult);
+            world.TryToMove(Point2D.Direction.Down, false, false, out tryToMoveResult);
+            world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult);
+            world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult);
+            world.TryToMove(Point2D.Direction.Right, false, false, out tryToMoveResult);
+        }
+
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_TalkToDelwyn(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
