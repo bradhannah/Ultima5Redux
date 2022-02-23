@@ -84,6 +84,8 @@ namespace Ultima5Redux.Maps
 
         [DataMember] public MapUnits.MapUnits TheMapUnits { get; private set; }
 
+        [DataMember] public int OneInXOddsOfNewMonster { get; set; } = 16;
+
         [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         /// <summary>
@@ -288,13 +290,13 @@ namespace Ultima5Redux.Maps
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
                     // let's do this!
-                    const int nOddsOfNewMonster = 2;
+                    //const int nOddsOfNewMonster = 2;
                     //const int nMaxEnemyDistance = 16;
 
                     TheMapUnits.ClearEnemiesIfFarAway();
 
                     if (TheMapUnits.TotalMapUnitsOnMap >= MapUnits.MapUnits.MAX_MAP_CHARACTERS) break;
-                    if (Utils.OneInXOdds(nOddsOfNewMonster))
+                    if (Utils.OneInXOdds(OneInXOddsOfNewMonster))
                     {
                         // make a random monster
                         CreateRandomMonster(nTurn);
