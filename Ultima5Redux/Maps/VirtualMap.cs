@@ -296,7 +296,7 @@ namespace Ultima5Redux.Maps
                     TheMapUnits.ClearEnemiesIfFarAway();
 
                     if (TheMapUnits.TotalMapUnitsOnMap >= MapUnits.MapUnits.MAX_MAP_CHARACTERS) break;
-                    if (Utils.OneInXOdds(OneInXOddsOfNewMonster))
+                    if (OneInXOddsOfNewMonster > 0 && Utils.OneInXOdds(OneInXOddsOfNewMonster))
                     {
                         // make a random monster
                         CreateRandomMonster(nTurn);
@@ -832,6 +832,48 @@ namespace Ultima5Redux.Maps
             SingleCombatMapReference.Territory territory)
         {
             TileReference tileReference = GetTileReference(xy);
+
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, xy,
+                CurrentSingleMapReference.Floor);
+
+            // if it is BoatCalc, then it tells us we need to look at our surroundings and who is attacking/attacked
+            // to determine which map we will use
+            if (tileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
+            {
+                // if we are on a boat
+                if (IsAvatarInFrigate)
+                {
+                    if (mapUnits.Count == 0 || !mapUnits[0].IsAttackable)
+                    {
+                        // FIRE THE CANNON!
+                        return null;
+                    }
+
+                    TileReference mapUnitTileReference = mapUnits[0].KeyTileReference;
+                    // if other mapunit is boat then
+                    if (GameReferences.SpriteTileReferences.IsFrigate(mapUnitTileReference.Index))
+                    {
+                        return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
+                            (int)SingleCombatMapReference.BritanniaCombatMaps.BoatBoat);
+                        ;
+                    }
+
+                    return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
+                        (int)SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+                    ;
+                }
+
+                // we are sure avatar is NOT on a Frigate at this point
+                //IsAvatarRidingSomething
+                // else if not on a boat
+                // if enemy is not boat
+                // SingleCombatMapReference.BritanniaCombatMaps.Bay
+                // else if other mapunit is left or up
+                // SingleCombatMapReference.BritanniaCombatMaps.BoatNorth
+                // else
+                // SingleCombatMapReference.BritanniaCombatMaps.BoatSouth
+            }
+
             return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
                 (int)tileReference.CombatMapIndex);
         }
@@ -875,7 +917,7 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException("No single map is set in virtual map");
 
             List<MapUnit> mapUnits =
-                TheMapUnits.GetMapUnitByLocation(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
+                TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
 
             return mapUnits;
         }
