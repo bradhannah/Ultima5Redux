@@ -8,6 +8,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -21,6 +23,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -34,6 +38,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -47,6 +53,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -60,6 +68,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -73,6 +83,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -86,6 +98,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -99,6 +113,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -112,6 +128,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "CannonBall",
+    "LargeMapMissileRange": 4,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -125,6 +143,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": false,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -138,6 +158,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -151,6 +173,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -164,6 +188,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -177,6 +203,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -190,6 +218,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -203,6 +233,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -216,6 +248,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -229,6 +263,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -242,6 +278,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "Red",
+    "LargeMapMissileRange": 4,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -255,6 +293,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -268,6 +308,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -281,6 +323,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -294,6 +338,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -307,6 +353,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": true,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -320,6 +368,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -333,6 +383,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -346,6 +398,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -359,6 +413,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -372,6 +428,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 10
@@ -385,6 +443,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -398,6 +458,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -411,6 +473,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -424,6 +488,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -437,6 +503,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -450,6 +518,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 10,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -463,6 +533,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -476,6 +548,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -489,6 +563,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 10
@@ -502,6 +578,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -515,6 +593,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 10
@@ -528,6 +608,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -541,6 +623,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -554,6 +638,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": false,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0
@@ -567,6 +653,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": false,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 10
@@ -580,6 +668,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -593,6 +683,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 10
@@ -606,6 +698,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 10,
     "Era3Weight": 0
@@ -619,6 +713,8 @@
     "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
+    "LargeMapMissile": "None",
+    "LargeMapMissileRange": 0,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 0

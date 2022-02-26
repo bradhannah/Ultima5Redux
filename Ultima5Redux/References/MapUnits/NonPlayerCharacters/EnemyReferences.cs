@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.Properties;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 {
@@ -84,6 +85,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             [DataMember] public int Era2Weight { get; set; }
             [DataMember] public int Era3Weight { get; set; }
             [DataMember] public bool IsSandEnemy { get; set; }
+            [DataMember] public CombatItemReference.MissileType LargeMapMissile { get; set; }
+            [DataMember] public int LargeMapMissileRange { get; set; }
         }
     }
 }

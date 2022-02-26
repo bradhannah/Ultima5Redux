@@ -104,6 +104,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public bool IsWaterEnemy => _additionalEnemyFlags.IsWaterEnemy;
         public bool IsSandEnemy => _additionalEnemyFlags.IsSandEnemy;
 
+        public bool HasLargeMapMissile => _additionalEnemyFlags.LargeMapMissile != CombatItemReference.MissileType.None;
+
+        public int LargeMapMissileRange => _additionalEnemyFlags.LargeMapMissileRange;
+        public CombatItemReference.MissileType LargeMapMissileType => _additionalEnemyFlags.LargeMapMissile;
+
         public TileReference KeyTileReference { get; }
         public string MixedCaseSingularName { get; }
 
