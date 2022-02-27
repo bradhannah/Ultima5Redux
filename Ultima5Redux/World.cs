@@ -708,26 +708,126 @@ namespace Ultima5Redux
             // empty because it's not implemented yet
         }
 
-        public void TryToAttack(Point2D xy, out bool bCanAttack, out MapUnit mapUnit,
-            out SingleCombatMapReference singleCombatMapReference)
+        public enum TryToAttackResult
+        {
+            Uninitialized, NothingToAttack, BrokenMirror, CombatMapEnemy, CombatMapNpc, NpcMurder, OnlyOnFoot,
+            ShootAProjectile
+        }
+
+        public TryToAttackResult TryToAttack(Point2D attackTargetPosition, out bool bCanAttack, out MapUnit mapUnit,
+            out SingleCombatMapReference singleCombatMapReference) //, out CombatItemReference.MissileType missileType)
         {
             bCanAttack = false;
-            mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
             singleCombatMapReference = null;
+            mapUnit = null;
+            //missileType = CombatItemReference.MissileType.None;
 
-            if (mapUnit == null || mapUnit.IsAttackable)
+            TileReference tileReference = State.TheVirtualMap.GetTileReference(attackTargetPosition);
+
+            // if you are attacking an unbroken mirror - then we break it and override the tile
+            if (GameReferences.SpriteTileReferences.IsUnbrokenMirror(tileReference.Index))
             {
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.TravelStrings
-                        .NOTHING_TO_ATTACK), false);
-                return;
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BROKEN),
+                    false);
+                TileReference brokenMirrorTileReference =
+                    GameReferences.SpriteTileReferences.GetTileReferenceByName("MirrorBroken");
+                State.TheVirtualMap.SetOverridingTileReferece(brokenMirrorTileReference,
+                    attackTargetPosition);
+                PassTime();
+                return TryToAttackResult.BrokenMirror;
             }
 
-            bCanAttack = true;
-            StreamingOutput.Instance.PushMessage(mapUnit.FriendlyName + "\n" +
-                                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                                                     .AdditionalStrings
-                                                     .STARS_CONFLICT_STARS_N_N), false);
+            mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(attackTargetPosition, true);
+
+            if (mapUnit is not { IsAttackable: true })
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.TravelStrings.NOTHING_TO_ATTACK), false);
+                return TryToAttackResult.NothingToAttack;
+            }
+
+            // we know there is a mapunit to attack at this point
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.ATTACK) +
+                mapUnit.FriendlyName,
+                false);
+
+            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+
+            // we get the combat map reference, if any - it also tells us if there should be a ranged attack in the overworld
+            // instead of a combat map
+            singleCombatMapReference =
+                State.TheVirtualMap.GetCombatMapReferenceByPosition(
+                    avatar.MapUnitPosition.XY,
+                    attackTargetPosition,
+                    SingleCombatMapReference.Territory.Britannia,
+                    avatar, out _);
+
+            // if there is a mapunit - BUT - no 
+            ////// NOTE - this doesn't make sense for the Avatar to attack like this
+            // if (singleCombatMapReference == null)
+            // {
+            //     // we were not able to attack, likely on a carpet or skiff and on the water
+            //     // but may be other edge cases
+            //     if (missileType == CombatItemReference.MissileType.None)
+            //     {
+            //         StreamingOutput.Instance.PushMessage(
+            //             GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+            //                 .ON_FOOT), false);
+            //         return TryToAttackResult.OnlyOnFoot;
+            //     }
+            //
+            //     StreamingOutput.Instance.PushMessage("Pretend I shot a projectile", false);
+            //     return TryToAttackResult.ShootAProjectile;
+            // }
+
+            if (singleCombatMapReference == null)
+                throw new Ultima5ReduxException(
+                    $"Have no single combat map reference while trying to attack {mapUnit.FriendlyName}");
+
+            TryToAttackResult tryToAttackResult = TryToAttackResult.Uninitialized;
+
+            switch (mapUnit)
+            {
+                case Enemy enemy:
+                    tryToAttackResult = TryToAttackResult.CombatMapEnemy;
+                    bCanAttack = true;
+                    break;
+                case NonPlayerCharacter npc:
+                    if (GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
+                        GameReferences.SpriteTileReferences.IsStocks(tileReference.Index))
+                    {
+                        StreamingOutput.Instance.PushMessage(
+                            GameReferences.DataOvlRef.StringReferences.GetString(
+                                DataOvlReference.TravelStrings.MURDERED), false);
+                        tryToAttackResult = TryToAttackResult.NpcMurder;
+                        MurderNPC(npc);
+                        break;
+                    }
+
+                    bCanAttack = true;
+                    tryToAttackResult = TryToAttackResult.CombatMapNpc;
+
+                    break;
+            }
+
+            if (tryToAttackResult is TryToAttackResult.CombatMapEnemy or TryToAttackResult.CombatMapNpc)
+            {
+                StreamingOutput.Instance.PushMessage(mapUnit.FriendlyName + "\n" +
+                                                     GameReferences.DataOvlRef.StringReferences.GetString(
+                                                         DataOvlReference.AdditionalStrings
+                                                             .STARS_CONFLICT_STARS_N_N), false);
+            }
+
+            PassTime();
+            return tryToAttackResult;
+        }
+
+        private void MurderNPC(NonPlayerCharacter npc)
+        {
+            npc.NPCState.IsDead = true;
+            State.Karma -= 10;
         }
 
         /// <summary>

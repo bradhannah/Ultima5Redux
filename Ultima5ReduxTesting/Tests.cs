@@ -1623,6 +1623,7 @@ namespace Ultima5ReduxTesting
             world.ReLoadFromJson();
 
             Assert.True(world.State.TheMoongates.IsMoonstoneBuried(new Point3D(224, 133, 0)));
+
             SingleCombatMapReference combatMapReference = world.State.TheVirtualMap.GetCombatMapReferenceByPosition(
                 world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY,
                 new Point2D(146, 238), SingleCombatMapReference.Territory.Britannia,
