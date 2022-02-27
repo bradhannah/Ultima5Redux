@@ -3004,7 +3004,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "97": {
     "Name": "WaterStream2",
@@ -3035,7 +3035,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "98": {
     "Name": "WaterStream3",
@@ -3066,7 +3066,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "99": {
     "Name": "WaterStream4",
@@ -3097,7 +3097,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "100": {
     "Name": "WaterStream5",
@@ -3128,7 +3128,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "101": {
     "Name": "WaterStream6",
@@ -3159,7 +3159,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "102": {
     "Name": "WaterStream7",
@@ -3190,7 +3190,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "103": {
     "Name": "WaterStream8",
@@ -3221,7 +3221,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "104": {
     "Name": "WaterStream9",
@@ -3252,7 +3252,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "105": {
     "Name": "WaterStream10",
@@ -3283,7 +3283,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "Glade"
+    "CombatMapIndex": "Bay"
   },
   "106": {
     "Name": "TrollBridgeHoriz",

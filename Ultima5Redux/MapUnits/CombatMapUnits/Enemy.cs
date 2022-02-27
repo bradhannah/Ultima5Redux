@@ -100,7 +100,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             if (EnemyReference.DoesNotMove) return;
             // are we water, sand or land?
-            ProcessNextMoveTowardsAvatar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar);
+            if (virtualMap.IsLargeMap)
+            {
+                ProcessNextMoveTowardsMapUnitDumb(virtualMap, MapUnitPosition.XY,
+                    virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar);
+                return;
+            }
+
+            ProcessNextMoveTowardsAvatarAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+                aStar);
         }
     }
 }

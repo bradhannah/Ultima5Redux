@@ -910,7 +910,17 @@ namespace Ultima5Redux.Maps
 
                 // there is someone to target
                 if (!IsAvatarInFrigate)
+                {
+                    // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
+                    // so we take the chance to force a Bay map just in case
+                    if (targettedMapUnit is Enemy waterCheckEnemy)
+                    {
+                        if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
+                            return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                    }
+
                     return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+                }
 
                 // BoatCalc indicates it is a water tile and requires special consideration
                 if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
@@ -918,10 +928,7 @@ namespace Ultima5Redux.Maps
                     if (attackToTileReference.IsWaterEnemyPassable)
                         return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
 
-                    // it's not boat-calc, but we are on a frigate, so we need to check to see who we are attacking on 
-                    // if (attackFromPosition.X < attackToPosition.X || attackFromPosition.Y < attackToPosition.Y)
-                    //     return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatNorth);
-
+                    // BoatSouth indicates the avatar is on the frigate, and the enemy on land
                     return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
                 }
 
@@ -991,11 +998,8 @@ namespace Ultima5Redux.Maps
                 return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
             }
 
-            // from = enemy, to = avatar
-            // if (attackFromPosition.X > attackToPosition.X || attackFromPosition.Y > attackToPosition.Y)
+            // BoatNorth indicates the avatar is on the land, and the enemy on the frigate (PIRATES)
             getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatNorth);
-
-            // return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
 
             return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
                 (int)attackToTileReference.CombatMapIndex);

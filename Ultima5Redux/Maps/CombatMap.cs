@@ -540,14 +540,15 @@ namespace Ultima5Redux.Maps
             return !tileReference.RangeWeapon_Passable;
         }
 
-        private bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
-                                                                       tileReference.Index == GameReferences
-                                                                           .SpriteTileReferences
-                                                                           .GetTileReferenceByName("RegularDoor")
-                                                                           .Index || tileReference.Index ==
-                                                                       GameReferences.SpriteTileReferences
-                                                                           .GetTileReferenceByName("RegularDoorView")
-                                                                           .Index;
+        private static bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
+                                                                              tileReference.Index == GameReferences
+                                                                                  .SpriteTileReferences
+                                                                                  .GetTileReferenceByName("RegularDoor")
+                                                                                  .Index || tileReference.Index ==
+                                                                              GameReferences.SpriteTileReferences
+                                                                                  .GetTileReferenceByName(
+                                                                                      "RegularDoorView")
+                                                                                  .Index;
 
         /// <summary>
         ///     Moves the combat map unit to the CombatPlayer for whom they can reach in the fewest number of steps
@@ -597,10 +598,6 @@ namespace Ultima5Redux.Maps
             {
                 // if there is no path, then lets do some dirty checks to see if we can at least move closer
 
-                // get the surrounding points around current active unit
-                List<Point2D> surroundingPoints =
-                    activeCombatUnitXY.GetConstrainedFourDirectionSurroundingPoints(NumOfXTiles - 1, NumOfYTiles - 1);
-
                 double fShortestPath = 999f;
                 Point2D bestOpponentPoint = null;
                 // cycle through all potential targets and determine and pick the closest available target
@@ -619,48 +616,16 @@ namespace Ultima5Redux.Maps
                 if (bestOpponentPoint == null)
                     return null;
 
-                // we start with the shortest path being the current tiles distance to the best enemies tile
-                // fShortestPath = activeCombatUnitXY.DistanceBetween(bestOpponentPoint);
-                //
-                // Point2D nextBestMovePoint = null;
-                // List<Point2D> wanderablePoints = new();
-                // // go through of each surrounding points and find the shortest path based to an opponent
-                // // on the free tiles
-                // foreach (Point2D point in surroundingPoints)
-                // {
-                //     // if it isn't walkable then we skip it
-                //     if (!GetAStarByMapUnit(activeCombatUnit).GetWalkable(point)) continue;
-                //     // keep track of the points we could wander to if we don't find a good path
-                //     wanderablePoints.Add(point);
-                //     double fDistance = point.DistanceBetween(bestOpponentPoint);
-                //     if (fDistance < fShortestPath)
-                //     {
-                //         fShortestPath = fDistance;
-                //         nextBestMovePoint = point;
-                //     }
-                // }
-
                 Point2D nextBestMovePoint =
-                    activeCombatUnit.GetBestNextPositionToMoveTowardsWalkablePoint(this, bestOpponentPoint, aStar);
+                    activeCombatUnit.GetBestNextPositionToMoveTowardsWalkablePointAStar(this, bestOpponentPoint, aStar);
 
                 if (nextBestMovePoint == null)
                 {
                     // only a 50% chance they will wander
                     if (Utils.Ran.Next() % 2 == 0) return null;
 
-                    nextBestMovePoint = activeCombatUnit.GetValidRandomWanderPoint(this, bestOpponentPoint, aStar);
+                    nextBestMovePoint = activeCombatUnit.GetValidRandomWanderPointAStar(this, aStar);
                     if (nextBestMovePoint == null) return null;
-
-                    // if (wanderablePoints.Count == 0) return null;
-                    // Random ran = new();
-                    //
-                    // // only a 50% chance they will wander
-                    // if (ran.Next() % 2 == 0) return null;
-                    //
-                    // // wander logic - we are already the closest to the selected enemy
-                    // int nChoices = wanderablePoints.Count;
-                    // int nRandomChoice = ran.Next() % nChoices;
-                    // nextBestMovePoint = wanderablePoints[nRandomChoice];
                 }
 
                 // we think we found the next best path

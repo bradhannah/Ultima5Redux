@@ -138,16 +138,18 @@ namespace Ultima5Redux.MapUnits
         ///     or walls etc.
         ///     In the future this could be expand to use aStar, but some extra optimization work will need to be done
         /// </summary>
-        /// <param name="map">Current map</param>
+        /// <param name="virtualMap"></param>
+        /// <param name="fromPosition"></param>
         /// <param name="toPosition">the position they are trying to get to</param>
-        /// <param name="aStar">the aStar for the the current map and character type</param>
         /// <returns></returns>
-        public Point2D GetBestNextPositionToMoveTowardsWalkablePoint(Map map, Point2D toPosition, AStar aStar)
+        private Point2D GetBestNextPositionToMoveTowardsWalkablePointDumb(VirtualMap virtualMap, Point2D fromPosition,
+            Point2D toPosition, AStar aStar)
         {
             double fShortestPath = 999f;
             Point2D bestMovePoint = null;
 
-            List<Point2D> wanderPoints = GetValidWanderPoints(map, toPosition, aStar);
+            // you want the valid wander points from the current position
+            List<Point2D> wanderPoints = GetValidWanderPointsDumb(virtualMap, fromPosition, aStar);
 
             foreach (Point2D point in wanderPoints)
             {
@@ -163,12 +165,69 @@ namespace Ultima5Redux.MapUnits
             return bestMovePoint;
         }
 
-        public Point2D GetValidRandomWanderPoint(Map map, Point2D toPosition, AStar aStar)
+        private Point2D GetValidRandomWanderPointDumb(VirtualMap virtualMap, Point2D toPosition, AStar aStar)
         {
-            List<Point2D> wanderablePoints = GetValidWanderPoints(map, toPosition, aStar);
+            List<Point2D> wanderablePoints = GetValidWanderPointsDumb(virtualMap, toPosition, aStar);
 
             if (wanderablePoints.Count == 0) return null;
-            //Random ran = new();
+
+            // wander logic - we are already the closest to the selected enemy
+            int nChoices = wanderablePoints.Count;
+            int nRandomChoice = Utils.Ran.Next() % nChoices;
+            return wanderablePoints[nRandomChoice];
+        }
+
+        /// <summary>
+        ///     Gets the valid points surrounding a map unit in which they could travel
+        /// </summary>
+        /// <param name="virtualMap"></param>
+        /// <param name="mapUnitPosition">the position they are trying to get to</param>
+        /// <returns>a list of positions that the character can walk to  </returns>
+        private List<Point2D> GetValidWanderPointsDumb(VirtualMap virtualMap, Point2D mapUnitPosition, AStar aStar)
+        {
+            // get the surrounding points around current active unit
+            List<Point2D> surroundingPoints =
+                mapUnitPosition.GetConstrainedFourDirectionSurroundingPoints(virtualMap.CurrentMap.NumOfXTiles - 1,
+                    virtualMap.CurrentMap.NumOfYTiles - 1);
+
+            List<Point2D> wanderablePoints = new();
+
+            foreach (Point2D point in surroundingPoints)
+            {
+                // if it isn't walkable then we skip it
+                if (virtualMap.IsTileFreeToTravel(point) && aStar.GetWalkable(point))
+                    wanderablePoints.Add(point);
+            }
+
+            return wanderablePoints;
+        }
+
+        protected void ProcessNextMoveTowardsMapUnitDumb(VirtualMap virtualMap, Point2D fromPosition,
+            Point2D toPosition, AStar aStar)
+        {
+            Point2D positionToMoveTo = null;
+
+            // it IS a large map, so we do the less resource intense way of pathfinding
+            positionToMoveTo =
+                GetBestNextPositionToMoveTowardsWalkablePointDumb(virtualMap, fromPosition, toPosition, aStar);
+
+            if (positionToMoveTo == null)
+            {
+                // only a 50% chance they will wander
+                if (Utils.Ran.Next() % 2 == 0) return;
+
+                positionToMoveTo = GetValidRandomWanderPointDumb(virtualMap, toPosition, aStar);
+                if (positionToMoveTo == null) return;
+            }
+
+            MapUnitPosition.XY = positionToMoveTo;
+        }
+
+        internal Point2D GetValidRandomWanderPointAStar(Map map, AStar aStar)
+        {
+            List<Point2D> wanderablePoints = GetValidWanderPointsAStar(map, aStar);
+
+            if (wanderablePoints.Count == 0) return null;
 
             // wander logic - we are already the closest to the selected enemy
             int nChoices = wanderablePoints.Count;
@@ -180,10 +239,9 @@ namespace Ultima5Redux.MapUnits
         ///     Gets the valid points surrounding a map unit in which they could travel
         /// </summary>
         /// <param name="map">Current map</param>
-        /// <param name="toPosition">the position they are trying to get to</param>
         /// <param name="aStar">the aStar for the the current map and character type</param>
         /// <returns>a list of positions that the character can walk to  </returns>
-        public List<Point2D> GetValidWanderPoints(Map map, Point2D toPosition, AStar aStar)
+        internal List<Point2D> GetValidWanderPointsAStar(Map map, AStar aStar)
         {
             // get the surrounding points around current active unit
             List<Point2D> surroundingPoints =
@@ -203,65 +261,82 @@ namespace Ultima5Redux.MapUnits
         }
 
         /// <summary>
-        ///     Move the map unit closer to the Avatar if possible
+        ///     Gets the best next position that a map unit should dumbly move to to get to a particular point
+        ///     Note: this is currently a dumb algorithm, just making sure they don't go through other units
+        ///     or walls etc.
+        ///     In the future this could be expand to use aStar, but some extra optimization work will need to be done
+        /// </summary>
+        /// <param name="map">Current map</param>
+        /// <param name="toPosition">the position they are trying to get to</param>
+        /// <param name="aStar">the aStar for the the current map and character type</param>
+        /// <returns></returns>
+        public Point2D GetBestNextPositionToMoveTowardsWalkablePointAStar(Map map, Point2D toPosition, AStar aStar)
+        {
+            double fShortestPath = 999f;
+            Point2D bestMovePoint = null;
+
+            List<Point2D> wanderPoints = GetValidWanderPointsAStar(map, aStar);
+
+            foreach (Point2D point in wanderPoints)
+            {
+                // keep track of the points we could wander to if we don't find a good path
+                double fDistance = point.DistanceBetween(toPosition);
+                if (fDistance < fShortestPath)
+                {
+                    fShortestPath = fDistance;
+                    bestMovePoint = point;
+                }
+            }
+
+            return bestMovePoint;
+        }
+
+        /// <summary>
+        ///     Move the map unit closer to the Avatar if possible\
+        ///     Uses aStar so only usable on small maps
         /// </summary>
         /// <param name="map"></param>
         /// <param name="avatarPosition"></param>
         /// <param name="aStar"></param>
-        protected void ProcessNextMoveTowardsAvatar(Map map, Point2D avatarPosition, AStar aStar)
+        protected void ProcessNextMoveTowardsAvatarAStar(Map map, Point2D avatarPosition, AStar aStar)
         {
             const int noPath = 0xFFFF;
 
             Map.WalkableType walkableType = map.GetWalkableTypeByMapUnit(this);
 
             Point2D positionToMoveTo = null;
+            if (map is not LargeMap) throw new Ultima5ReduxException("Cannot do aStar move towards Avatar on LargeMap");
 
-            if (map is not LargeMap)
+            // it's a small map so we can rely on the aStar to get us a decent path
+            Stack<Node> theWay = aStar.FindPath(MapUnitPosition.XY, avatarPosition);
+
+            if (theWay == null) return;
+
+            int nMoves = theWay?.Count ?? noPath;
+
+            if (nMoves == noPath)
             {
-                Stack<Node> theWay = aStar.FindPath(MapUnitPosition.XY, avatarPosition);
+                // we do a quick wander check
+                // get the surrounding points around current active unit
+                List<Point2D> surroundingPoints =
+                    MapUnitPosition.XY.GetConstrainedFourDirectionSurroundingPointsWrapAround(map.NumOfXTiles - 1,
+                        map.NumOfYTiles - 1);
 
-                if (theWay == null) return;
-
-                int nMoves = theWay?.Count ?? noPath;
-
-                if (nMoves == noPath)
+                Queue<int> positions = Utils.CreateRandomizedIntegerQueue(surroundingPoints.Count);
+                int nQueueEntries = positions.Count;
+                for (int i = 0; i < nQueueEntries; i++)
                 {
-                    // we do a quick wander check
-                    // get the surrounding points around current active unit
-                    List<Point2D> surroundingPoints =
-                        MapUnitPosition.XY.GetConstrainedFourDirectionSurroundingPointsWrapAround(map.NumOfXTiles - 1,
-                            map.NumOfYTiles - 1);
+                    Point2D position = surroundingPoints[positions.Dequeue()];
+                    if (!aStar.GetWalkable(position)) continue;
 
-                    Queue<int> positions = Utils.CreateRandomizedIntegerQueue(surroundingPoints.Count);
-                    int nQueueEntries = positions.Count;
-                    for (int i = 0; i < nQueueEntries; i++)
-                    {
-                        Point2D position = surroundingPoints[positions.Dequeue()];
-                        if (!aStar.GetWalkable(position)) continue;
-
-                        positionToMoveTo = position;
-                        break;
-                    }
-                }
-                else
-                {
-                    // we just follow the path
-                    positionToMoveTo = theWay.Pop().Position;
+                    positionToMoveTo = position;
+                    break;
                 }
             }
             else
             {
-                // it IS a large map, so we do the less resource intense way of pathfinding
-                positionToMoveTo = GetBestNextPositionToMoveTowardsWalkablePoint(map, avatarPosition, aStar);
-
-                if (positionToMoveTo == null)
-                {
-                    // only a 50% chance they will wander
-                    if (Utils.Ran.Next() % 2 == 0) return;
-
-                    positionToMoveTo = GetValidRandomWanderPoint(map, avatarPosition, aStar);
-                    if (positionToMoveTo == null) return;
-                }
+                // we just follow the path
+                positionToMoveTo = theWay.Pop().Position;
             }
 
             if (positionToMoveTo == null) return;
