@@ -337,7 +337,9 @@ namespace Ultima5Redux
             else
             {
                 tryToMoveResult = ProcessDamageOnAdvanceTime();
-                State.TheVirtualMap.MoveMapUnitsToNextMove();
+                Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                    State.TheVirtualMap.GetAggressiveMapUnitInfo();
+                State.TheVirtualMap.MoveMapUnitsToNextMove(aggressiveMapUnitInfos);
                 State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
             }
 
@@ -714,13 +716,19 @@ namespace Ultima5Redux
             ShootAProjectile
         }
 
-        public TryToAttackResult TryToAttack(Point2D attackTargetPosition, out bool bCanAttack, out MapUnit mapUnit,
-            out SingleCombatMapReference singleCombatMapReference) //, out CombatItemReference.MissileType missileType)
+        /// <summary>
+        ///     Called when the avatar is attempting to attack a particular target
+        /// </summary>
+        /// <param name="attackTargetPosition">where is the target</param>
+        /// <param name="mapUnit">the mapunit (if any) that is the target</param>
+        /// <param name="singleCombatMapReference">the combat map reference (if any) that should be loaded</param>
+        /// <returns>the final decision on how to handle the attack</returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        public TryToAttackResult TryToAttack(Point2D attackTargetPosition, out MapUnit mapUnit,
+            out SingleCombatMapReference singleCombatMapReference)
         {
-            bCanAttack = false;
             singleCombatMapReference = null;
             mapUnit = null;
-            //missileType = CombatItemReference.MissileType.None;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(attackTargetPosition);
 
@@ -762,25 +770,26 @@ namespace Ultima5Redux
                     avatar.MapUnitPosition.XY,
                     attackTargetPosition,
                     SingleCombatMapReference.Territory.Britannia,
-                    avatar, out _);
+                    avatar, out CombatItemReference.MissileType missileType);
 
             // if there is a mapunit - BUT - no 
             ////// NOTE - this doesn't make sense for the Avatar to attack like this
-            // if (singleCombatMapReference == null)
-            // {
-            //     // we were not able to attack, likely on a carpet or skiff and on the water
-            //     // but may be other edge cases
-            //     if (missileType == CombatItemReference.MissileType.None)
-            //     {
-            //         StreamingOutput.Instance.PushMessage(
-            //             GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-            //                 .ON_FOOT), false);
-            //         return TryToAttackResult.OnlyOnFoot;
-            //     }
-            //
-            //     StreamingOutput.Instance.PushMessage("Pretend I shot a projectile", false);
-            //     return TryToAttackResult.ShootAProjectile;
-            // }
+            if (singleCombatMapReference == null)
+            {
+                // we were not able to attack, likely on a carpet or skiff and on the water
+                // but may be other edge cases
+                if (missileType != CombatItemReference.MissileType.None)
+                    throw new Ultima5ReduxException(
+                        "Single combat map reference was null, but missile type wasn't null when avatar attacks");
+
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .ON_FOOT), false);
+                return TryToAttackResult.OnlyOnFoot;
+
+                // StreamingOutput.Instance.PushMessage("Pretend I shot a projectile", false);
+                // return TryToAttackResult.ShootAProjectile;
+            }
 
             if (singleCombatMapReference == null)
                 throw new Ultima5ReduxException(
@@ -792,7 +801,6 @@ namespace Ultima5Redux
             {
                 case Enemy enemy:
                     tryToAttackResult = TryToAttackResult.CombatMapEnemy;
-                    bCanAttack = true;
                     break;
                 case NonPlayerCharacter npc:
                     if (GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
@@ -806,7 +814,6 @@ namespace Ultima5Redux
                         break;
                     }
 
-                    bCanAttack = true;
                     tryToAttackResult = TryToAttackResult.CombatMapNpc;
 
                     break;

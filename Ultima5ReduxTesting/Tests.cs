@@ -1634,5 +1634,25 @@ namespace Ultima5ReduxTesting
             Assert.True(combatMapReference.CombatMapNum == 7);
             Assert.True(missileType == CombatItemReference.MissileType.None);
         }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void test_AvatarPassSomeTurnsInCarpet(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            world.ReLoadFromJson();
+
+            Assert.True(world.State.TheMoongates.IsMoonstoneBuried(new Point3D(224, 133, 0)));
+
+            world.PassTime();
+            world.PassTime();
+            world.PassTime();
+            world.PassTime();
+            world.PassTime();
+            world.PassTime();
+        }
     }
 }

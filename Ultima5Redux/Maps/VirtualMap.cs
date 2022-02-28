@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.External;
@@ -263,28 +264,82 @@ namespace Ultima5Redux.Maps
                     GameReferences.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn, GetTileReference(tilePosition));
                 if (enemyRef == null) continue;
 
-                // MapUnit newUnit = TheMapUnits.CreateNewMapUnit(mapUnitMovement, bInitialLoad,
-                //     SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, null, mapUnitPosition,
-                //     tileReference);
                 // add the new character to our list of characters currently on the map
                 Enemy enemy = TheMapUnits.CreateEnemy(tilePosition, enemyRef, CurrentLargeMap.CurrentSingleMapReference,
                     out int _);
 
-                //Enemy enemy = TheMapUnits.CreateEnemy(tilePosition, enemyRef, out int nIndex);
                 return true;
             }
 
-            //
-            //
-            // create a new monster
             return false;
-            //TheMapUnits.CreateEnemy()
+        }
+
+        public class AggressiveMapUnitInfo
+        {
+            public MapUnit AttackingMapUnit { get; }
+            public CombatItemReference.MissileType AttackingMissileType { get; internal set; }
+            public SingleCombatMapReference CombatMapReference { get; internal set; }
+
+            public AggressiveMapUnitInfo(MapUnit attackingMapUnit,
+                CombatItemReference.MissileType attackingMissileType = CombatItemReference.MissileType.None,
+                SingleCombatMapReference combatMapReference = null)
+            {
+                AttackingMapUnit = attackingMapUnit;
+                AttackingMissileType = attackingMissileType;
+                CombatMapReference = combatMapReference;
+            }
+        }
+
+        internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetAggressiveMapUnitInfo()
+        {
+            Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
+
+            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
+            {
+                // if enemy or aggressive NPC
+                if (false) // aggressive Npc)
+                {
+                }
+
+                if (mapUnit is Enemy enemy)
+                {
+                    AggressiveMapUnitInfo mapUnitInfo = new(enemy, enemy.EnemyReference.TheMissileType);
+
+                    // if the enemy is directly next to the avatar, then they can attack in a combat map
+                    SingleCombatMapReference singleCombatMapReference =
+                        GetCombatMapReferenceByPosition(
+                            enemy.MapUnitPosition.XY,
+                            TheMapUnits.CurrentAvatarPosition.XY,
+                            SingleCombatMapReference.Territory.Britannia,
+                            enemy, out CombatItemReference.MissileType missileType);
+
+                    // if they aren't attacking, and they have no missile type (should never happen?) 
+                    if (singleCombatMapReference == null && missileType == CombatItemReference.MissileType.None)
+                    {
+                        // for example if a sea serpent has a ranged attack but is too far away
+                        continue;
+                        // throw new Ultima5ReduxException(
+                        //     $"{enemy.FriendlyName} was within striking distance, but didn't return a combat map nor a missile type");
+                    }
+
+                    if (singleCombatMapReference != null)
+                    {
+                        mapUnitInfo.CombatMapReference = singleCombatMapReference;
+                    }
+
+                    // there is a missile type I guess 
+                    aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
+                }
+                // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
+            }
+
+            return aggressiveMapUnitInfos;
         }
 
         /// <summary>
         ///     Decides if any enemies needed to be spawned or despawned
         /// </summary>
-        public void GenerateAndCleanupEnemies(int nTurn)
+        internal void GenerateAndCleanupEnemies(int nTurn)
         {
             switch (CurrentSingleMapReference.MapType)
             {
@@ -480,13 +535,26 @@ namespace Ultima5Redux.Maps
         /// <summary>
         ///     Advances each of the NPCs by one movement each
         /// </summary>
-        internal void MoveMapUnitsToNextMove()
+        internal void MoveMapUnitsToNextMove(Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos)
         {
             // go through each of the NPCs on the map
-            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
+            foreach //(AggressiveMapUnitInfo aggressiveMapUnitInfo in aggressiveMapUnitInfos.Values)
+                (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
-                mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
-                    CurrentMap.GetAStarByMapUnit(mapUnit));
+                AggressiveMapUnitInfo aggressiveMapUnitInfo =
+                    aggressiveMapUnitInfos.ContainsKey(mapUnit) ? aggressiveMapUnitInfos[mapUnit] : null;
+
+                // if the map unit doesn't haven't a particular aggression then it moves 
+                if (aggressiveMapUnitInfo == null)
+                    mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
+                        CurrentMap.GetAStarByMapUnit(mapUnit));
+
+                // if (aggressiveMapUnitInfo.CombatMapReference == null && aggressiveMapUnitInfo.AttackingMissileType ==
+                //     CombatItemReference.MissileType.None)
+                // {
+                //     aggressiveMapUnitInfo.AttackingMapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
+                //         CurrentMap.GetAStarByMapUnit(aggressiveMapUnitInfo.AttackingMapUnit));
+                // }
             }
         }
 
@@ -874,7 +942,18 @@ namespace Ultima5Redux.Maps
                     break;
                 //return null;
                 case > 1:
-                    throw new Ultima5ReduxException($"Did not expect {mapUnits.Count} mapunits on targeted tile");
+                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
+                    if (mapUnits.Any(m => m is Avatar))
+                    {
+                        targettedMapUnit = mapUnits.OfType<Avatar>().First();
+                        targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
+                    }
+                    else
+                    {
+                        throw new Ultima5ReduxException($"Did not expect {mapUnits.Count} mapunits on targeted tile");
+                    }
+
+                    break;
                 default:
                     // a little lazy for now
                     targettedMapUnit = mapUnits[0];
