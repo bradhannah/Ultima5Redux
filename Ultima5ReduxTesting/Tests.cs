@@ -1624,15 +1624,18 @@ namespace Ultima5ReduxTesting
 
             Assert.True(world.State.TheMoongates.IsMoonstoneBuried(new Point3D(224, 133, 0)));
 
-            SingleCombatMapReference combatMapReference = world.State.TheVirtualMap.GetCombatMapReferenceByPosition(
-                world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY,
-                new Point2D(146, 238), SingleCombatMapReference.Territory.Britannia,
-                world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit(),
-                out CombatItemReference.MissileType missileType);
+            // VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo = world.State.TheVirtualMap.GetAggressiveMapUnitInfo(
+            //     world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY,
+            //     new Point2D(146, 238), SingleCombatMapReference.Territory.Britannia,
+            //     world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit());
+            SingleCombatMapReference singleCombatMapReference =
+                world.State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(
+                    world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY,
+                    new Point2D(146, 238), SingleCombatMapReference.Territory.Britannia);
 
             // attack insects
-            Assert.True(combatMapReference.CombatMapNum == 7);
-            Assert.True(missileType == CombatItemReference.MissileType.None);
+            Assert.True(singleCombatMapReference.CombatMapNum == 7);
+            //Assert.True(missileType == CombatItemReference.MissileType.None);
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void test_AvatarPassSomeTurnsInCarpet(SaveFiles saveFiles)
@@ -1646,6 +1649,18 @@ namespace Ultima5ReduxTesting
             world.ReLoadFromJson();
 
             Assert.True(world.State.TheMoongates.IsMoonstoneBuried(new Point3D(224, 133, 0)));
+
+            world.State.TheVirtualMap.OneInXOddsOfNewMonster = 2;
+            Utils.Ran = new Random(1);
+
+            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+                true);
 
             world.PassTime();
             world.PassTime();

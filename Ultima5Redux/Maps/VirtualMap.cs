@@ -178,7 +178,7 @@ namespace Ultima5Redux.Maps
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         [IgnoreDataMember]
-        public LargeMap CurrentLargeMap { get; private set; }
+        public LargeMap CurrentLargeMap => _largeMaps[LargeMapOverUnder];
 
         [IgnoreDataMember]
         public MapUnitPosition CurrentPosition
@@ -280,6 +280,23 @@ namespace Ultima5Redux.Maps
             public CombatItemReference.MissileType AttackingMissileType { get; internal set; }
             public SingleCombatMapReference CombatMapReference { get; internal set; }
 
+            public enum DecidedAction { MoveUnit, RangedAttack, MeleeOverworldAttack, Stay, EnemyAttackCombatMap }
+
+            public DecidedAction TheDecidedAction
+            {
+                get
+                {
+                    // if they have a combat map - then they are next to them and could go into combat
+                    // if they have a missile type then they are within range and will attack with that
+                    // if they have a Arrow missile type, then they will attack them melee in the overworld
+                    if (CombatMapReference != null) return DecidedAction.EnemyAttackCombatMap;
+                    if (AttackingMissileType == CombatItemReference.MissileType.Arrow)
+                        return DecidedAction.MeleeOverworldAttack;
+                    if (AttackingMissileType != CombatItemReference.MissileType.None) return DecidedAction.RangedAttack;
+                    return DecidedAction.MoveUnit;
+                }
+            }
+
             public AggressiveMapUnitInfo(MapUnit attackingMapUnit,
                 CombatItemReference.MissileType attackingMissileType = CombatItemReference.MissileType.None,
                 SingleCombatMapReference combatMapReference = null)
@@ -297,35 +314,39 @@ namespace Ultima5Redux.Maps
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
                 // if enemy or aggressive NPC
-                if (false) // aggressive Npc)
+                // if (false) // aggressive Npc)
+                // {
+                // }
+                //
+                // if (mapUnit is Enemy enemy)
                 {
-                }
-
-                if (mapUnit is Enemy enemy)
-                {
-                    AggressiveMapUnitInfo mapUnitInfo = new(enemy, enemy.EnemyReference.TheMissileType);
+                    //AggressiveMapUnitInfo mapUnitInfo = new(enemy, enemy.EnemyReference.TheMissileType);
 
                     // if the enemy is directly next to the avatar, then they can attack in a combat map
-                    SingleCombatMapReference singleCombatMapReference =
-                        GetCombatMapReferenceByPosition(
-                            enemy.MapUnitPosition.XY,
+                    AggressiveMapUnitInfo mapUnitInfo =
+                        GetAggressiveMapUnitInfo(
+                            mapUnit.MapUnitPosition.XY,
                             TheMapUnits.CurrentAvatarPosition.XY,
-                            SingleCombatMapReference.Territory.Britannia,
-                            enemy, out CombatItemReference.MissileType missileType);
+                            SingleCombatMapReference.Territory.Britannia, mapUnit);
+                    // GetAggressiveMapUnitInfo(
+                    //     enemy.MapUnitPosition.XY,
+                    //     TheMapUnits.CurrentAvatarPosition.XY,
+                    //     SingleCombatMapReference.Territory.Britannia,
+                    //     enemy, out CombatItemReference.MissileType missileType);
 
                     // if they aren't attacking, and they have no missile type (should never happen?) 
-                    if (singleCombatMapReference == null && missileType == CombatItemReference.MissileType.None)
-                    {
-                        // for example if a sea serpent has a ranged attack but is too far away
-                        continue;
-                        // throw new Ultima5ReduxException(
-                        //     $"{enemy.FriendlyName} was within striking distance, but didn't return a combat map nor a missile type");
-                    }
+                    // if (singleCombatMapReference == null && missileType == CombatItemReference.MissileType.None)
+                    // {
+                    //     // for example if a sea serpent has a ranged attack but is too far away
+                    //     continue;
+                    //     // throw new Ultima5ReduxException(
+                    //     //     $"{enemy.FriendlyName} was within striking distance, but didn't return a combat map nor a missile type");
+                    // }
 
-                    if (singleCombatMapReference != null)
-                    {
-                        mapUnitInfo.CombatMapReference = singleCombatMapReference;
-                    }
+                    // if (singleCombatMapReference != null)
+                    // {
+                    //     mapUnitInfo.CombatMapReference = singleCombatMapReference;
+                    // }
 
                     // there is a missile type I guess 
                     aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
@@ -543,18 +564,14 @@ namespace Ultima5Redux.Maps
             {
                 AggressiveMapUnitInfo aggressiveMapUnitInfo =
                     aggressiveMapUnitInfos.ContainsKey(mapUnit) ? aggressiveMapUnitInfos[mapUnit] : null;
+                if (aggressiveMapUnitInfo == null)
+                    throw new Ultima5ReduxException(
+                        $"Missing {mapUnit.FriendlyName} when looking to move units");
 
                 // if the map unit doesn't haven't a particular aggression then it moves 
-                if (aggressiveMapUnitInfo == null)
+                if (aggressiveMapUnitInfo.TheDecidedAction == AggressiveMapUnitInfo.DecidedAction.MoveUnit)
                     mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
                         CurrentMap.GetAStarByMapUnit(mapUnit));
-
-                // if (aggressiveMapUnitInfo.CombatMapReference == null && aggressiveMapUnitInfo.AttackingMissileType ==
-                //     CombatItemReference.MissileType.None)
-                // {
-                //     aggressiveMapUnitInfo.AttackingMapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
-                //         CurrentMap.GetAStarByMapUnit(aggressiveMapUnitInfo.AttackingMapUnit));
-                // }
             }
         }
 
@@ -897,23 +914,8 @@ namespace Ultima5Redux.Maps
             return nNewSpriteIndex;
         }
 
-        /// <summary>
-        ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
-        ///     combat
-        /// </summary>
-        /// <param name="attackFromPosition">where are they attacking from</param>
-        /// <param name="attackToPosition">where are they attack to</param>
-        /// <param name="territory"></param>
-        /// <param name="aggressorMapUnit">who is the one attacking?</param>
-        /// <param name="missileType">
-        ///     optionally if not able to attack, it will describe the missile type that should be used in
-        ///     the LargeMap
-        /// </param>
-        /// <returns></returns>
-        public SingleCombatMapReference GetCombatMapReferenceByPosition(Point2D attackFromPosition,
-            Point2D attackToPosition,
-            SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit,
-            out CombatItemReference.MissileType missileType)
+        public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
+            Point2D attackToPosition, SingleCombatMapReference.Territory territory)
         {
             SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map)
                 => GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
@@ -924,11 +926,103 @@ namespace Ultima5Redux.Maps
 
             // let's use this method to also determine if an enemy CAN attack the avatar from afar
 
-            missileType = CombatItemReference.MissileType.None;
+            TileReference attackToTileReference = GetTileReference(attackToPosition);
+            TileReference attackFromTileReference = GetTileReference(attackFromPosition);
+
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, attackToPosition,
+                CurrentSingleMapReference.Floor);
+
+            MapUnit targettedMapUnit = null;
+            TileReference targettedMapUniTileReference = null;
+
+            switch (mapUnits.Count)
+            {
+                case 0:
+                    // the avatar is attacking, but actually doesn't have anyone directly in their sights
+                    // nothing to do
+                    return null;
+                case >= 1:
+                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
+                    if (mapUnits.Any(m => m is Avatar))
+                    {
+                        throw new Ultima5ReduxException(
+                            "Did not expect Avatar mapunit on targeted tile when Avatar is attacking");
+                    }
+
+                    // a little lazy for now
+                    targettedMapUnit = mapUnits[0];
+                    targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
+                    break;
+            }
+
+            // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
+            if (IsAvatarInSkiff || IsAvatarRidingCarpet)
+            {
+                bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
+
+                if (bAvatarOnWaterTile)
+                {
+                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps
+                            .BoatCalc or SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    {
+                        // if no surrounding tiles are water tile then we skip the attack
+                        return null;
+                    }
+                }
+            }
+
+            // there is someone to target
+            if (!IsAvatarInFrigate)
+            {
+                // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
+                // so we take the chance to force a Bay map just in case
+                if (targettedMapUnit is Enemy waterCheckEnemy)
+                {
+                    if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
+                        return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                }
+
+                return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+            }
+
+            // BoatCalc indicates it is a water tile and requires special consideration
+            if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
+            {
+                if (attackToTileReference.IsWaterEnemyPassable)
+                    return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+
+                // BoatSouth indicates the avatar is on the frigate, and the enemy on land
+                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
+            }
+
+            // if attacking another frigate, then it's boat to boat
+            if (GameReferences.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
+            {
+                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat);
+            }
+
+            // otherwise it's boat (ours) to ocean
+            return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+            // it is not boat calc, but there is an enemy, so refer to our default combat map
+        }
+
+        /// <summary>
+        ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
+        ///     combat
+        /// </summary>
+        /// <param name="attackFromPosition">where are they attacking from</param>
+        /// <param name="attackToPosition">where are they attack to</param>
+        /// <param name="territory"></param>
+        /// <param name="aggressorMapUnit">who is the one attacking?</param>
+        /// <returns></returns>
+        public AggressiveMapUnitInfo GetAggressiveMapUnitInfo(Point2D attackFromPosition,
+            Point2D attackToPosition, SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit)
+        {
+            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map)
+                => GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
 
             TileReference attackToTileReference = GetTileReference(attackToPosition);
             TileReference attackFromTileReference = GetTileReference(attackFromPosition);
-            bool bIsAvatarAttacking = aggressorMapUnit is Avatar;
 
             List<MapUnit> mapUnits = TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, attackToPosition,
                 CurrentSingleMapReference.Floor);
@@ -961,69 +1055,13 @@ namespace Ultima5Redux.Maps
                     break;
             }
 
-            // if avatar is attacking...
-            if (bIsAvatarAttacking)
-            {
-                // the avatar is attacking, but actually doesn't have anyone directly in their sights
-                if (targettedMapUnit == null)
-                {
-                    // nothing to do
-                    return null;
-                }
-
-                // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
-                if (IsAvatarInSkiff || IsAvatarRidingCarpet)
-                {
-                    bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
-
-                    if (bAvatarOnWaterTile)
-                    {
-                        if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps
-                                .BoatCalc or SingleCombatMapReference.BritanniaCombatMaps.Bay)
-                        {
-                            // if no surrounding tiles are water tile then we skip the attack
-                            return null;
-                        }
-                    }
-                }
-
-                // there is someone to target
-                if (!IsAvatarInFrigate)
-                {
-                    // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
-                    // so we take the chance to force a Bay map just in case
-                    if (targettedMapUnit is Enemy waterCheckEnemy)
-                    {
-                        if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
-                            return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
-                    }
-
-                    return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
-                }
-
-                // BoatCalc indicates it is a water tile and requires special consideration
-                if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
-                {
-                    if (attackToTileReference.IsWaterEnemyPassable)
-                        return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
-
-                    // BoatSouth indicates the avatar is on the frigate, and the enemy on land
-                    return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
-                }
-
-                // if attacking another frigate, then it's boat to boat
-                if (GameReferences.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
-                {
-                    return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat);
-                }
-
-                // otherwise it's boat (ours) to ocean
-                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
-                // it is not boat calc, but there is an enemy, so refer to our default combat map
-            }
+            AggressiveMapUnitInfo mapUnitInfo = new(aggressorMapUnit);
 
             // if they are not Enemy type (probably NPC) then we are certain they don't have a range attack
-            if (aggressorMapUnit is not Enemy enemy || !enemy.EnemyReference.HasLargeMapMissile) return null;
+            if (aggressorMapUnit is not Enemy enemy)
+            {
+                return mapUnitInfo;
+            }
 
             // if avatar is being attacked..
             // we get to assume that the avatar is not necessarily next to the enemy
@@ -1034,27 +1072,27 @@ namespace Ultima5Redux.Maps
                 switch (enemy.EnemyReference.LargeMapMissileType)
                 {
                     case CombatItemReference.MissileType.None:
-                        return null;
+                        return mapUnitInfo;
                     // pirates = cannonball, snakes = poison, serpents = red, squid =
                     // the aggressor is an enemy so let's check to see if they have LargeMap projectiles
                     case CombatItemReference.MissileType.CannonBall:
-                    {
                         // if it's a cannon ball, and they are on the same X or Y then it can fire!
                         if ((attackFromPosition.X == attackToPosition.X ||
                              attackFromPosition.Y == attackToPosition.Y) &&
                             attackFromPosition.IsWithinN(attackToPosition, 3))
                         {
-                            missileType = CombatItemReference.MissileType.CannonBall;
+                            mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.CannonBall;
                         }
 
-                        return null;
-                    }
+                        break;
+                    default:
+                        // it's not a cannon ball but it is a missile
+                        if (attackFromPosition.IsWithinN(attackToPosition, 3))
+                            mapUnitInfo.AttackingMissileType = enemy.EnemyReference.LargeMapMissileType;
+                        break;
                 }
 
-                // it's not a cannon ball but it is a missile
-                if (attackFromPosition.IsWithinN(attackToPosition, 3))
-                    missileType = enemy.EnemyReference.LargeMapMissileType;
-                return null;
+                return mapUnitInfo;
             }
 
             // if avatar on skiff or carpet and avatar is on water then it's immediate ouch, no map
@@ -1062,26 +1100,27 @@ namespace Ultima5Redux.Maps
                 SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
             {
                 // we will use Arrow to denote the enemy attacking on the overworld, but no combat map
-                missileType = CombatItemReference.MissileType.Arrow;
-                return null;
+                mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.Arrow;
             }
-
             // avatar not on a boat
             // return avatar's current tile combat map
-            if (!IsAvatarInFrigate)
-                return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
-
-            // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
-            if (enemy.EnemyReference.IsWaterEnemy)
+            else if (!IsAvatarInFrigate)
             {
-                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+                mapUnitInfo.CombatMapReference = getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+            }
+            // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
+            else if (enemy.EnemyReference.IsWaterEnemy)
+            {
+                mapUnitInfo.CombatMapReference =
+                    getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+            }
+            else
+            {
+                mapUnitInfo.CombatMapReference = GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
+                    (int)attackToTileReference.CombatMapIndex);
             }
 
-            // BoatNorth indicates the avatar is on the land, and the enemy on the frigate (PIRATES)
-            getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatNorth);
-
-            return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
-                (int)attackToTileReference.CombatMapIndex);
+            return mapUnitInfo;
         }
 
         /// <summary>
@@ -1620,7 +1659,8 @@ namespace Ultima5Redux.Maps
         /// <param name="map"></param>
         public void LoadLargeMap(Map.Maps map)
         {
-            CurrentLargeMap = _largeMaps[map];
+            //CurrentLargeMap = _largeMaps[map];
+            LargeMapOverUnder = map;
             switch (map)
             {
                 case Map.Maps.Underworld:
@@ -1637,8 +1677,6 @@ namespace Ultima5Redux.Maps
             // this will probably fail, which means creating a new map was a good idea
             // bajh: maybe we store each map override indefinitely so we never lose anything 
             TheMapOverrides = new MapOverrides(CurrentLargeMap);
-
-            LargeMapOverUnder = map;
 
             TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map);
         }

@@ -758,19 +758,17 @@ namespace Ultima5Redux
             // we know there is a mapunit to attack at this point
             StreamingOutput.Instance.PushMessage(
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.ATTACK) +
-                mapUnit.FriendlyName,
-                false);
+                mapUnit.FriendlyName, false);
 
             Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
 
             // we get the combat map reference, if any - it also tells us if there should be a ranged attack in the overworld
             // instead of a combat map
             singleCombatMapReference =
-                State.TheVirtualMap.GetCombatMapReferenceByPosition(
+                State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(
                     avatar.MapUnitPosition.XY,
                     attackTargetPosition,
-                    SingleCombatMapReference.Territory.Britannia,
-                    avatar, out CombatItemReference.MissileType missileType);
+                    SingleCombatMapReference.Territory.Britannia);
 
             // if there is a mapunit - BUT - no 
             ////// NOTE - this doesn't make sense for the Avatar to attack like this
@@ -778,9 +776,9 @@ namespace Ultima5Redux
             {
                 // we were not able to attack, likely on a carpet or skiff and on the water
                 // but may be other edge cases
-                if (missileType != CombatItemReference.MissileType.None)
-                    throw new Ultima5ReduxException(
-                        "Single combat map reference was null, but missile type wasn't null when avatar attacks");
+                // if (missileType != CombatItemReference.MissileType.None)
+                //     throw new Ultima5ReduxException(
+                //         "Single combat map reference was null, but missile type wasn't null when avatar attacks");
 
                 StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
@@ -791,9 +789,9 @@ namespace Ultima5Redux
                 // return TryToAttackResult.ShootAProjectile;
             }
 
-            if (singleCombatMapReference == null)
-                throw new Ultima5ReduxException(
-                    $"Have no single combat map reference while trying to attack {mapUnit.FriendlyName}");
+            // if (singleCombatMapReference == null)
+            //     throw new Ultima5ReduxException(
+            //         $"Have no single combat map reference while trying to attack {mapUnit.FriendlyName}");
 
             TryToAttackResult tryToAttackResult = TryToAttackResult.Uninitialized;
 
