@@ -246,18 +246,20 @@ namespace Ultima5Redux.PlayerCharacters
         /// </summary>
         public void RoughSeasInjure()
         {
-            foreach (PlayerCharacterRecord record in Records)
-            {
-                record.Stats.CurrentHp -= Utils.Ran.Next(1, 9);
-            }
+            DamageEachCharacter(1, 9);
         }
 
         public void SteppedOnLava()
         {
             // injure players!
-            foreach (PlayerCharacterRecord record in Records)
+            DamageEachCharacter(1, 5);
+        }
+
+        public void DamageEachCharacter(int nMin, int nMax)
+        {
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
             {
-                record.Stats.CurrentHp -= Utils.Ran.Next(1, 5);
+                record.Stats.CurrentHp -= Utils.GetNumberFromAndTo(nMin, nMax);
             }
         }
 

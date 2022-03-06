@@ -340,6 +340,14 @@ namespace Ultima5Redux
                 Dictionary<MapUnit, VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
                     State.TheVirtualMap.GetAggressiveMapUnitInfo();
                 State.TheVirtualMap.MoveMapUnitsToNextMove(aggressiveMapUnitInfos);
+                State.TheVirtualMap.ProcessAggressiveMapUnitAttacks(State.CharacterRecords, aggressiveMapUnitInfos,
+                    out VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo);
+                if (aggressiveMapUnitInfo != null)
+                {
+                    Debug.Assert(aggressiveMapUnitInfo.CombatMapReference != null);
+                    //tryToMoveResult.
+                }
+
                 State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
             }
 

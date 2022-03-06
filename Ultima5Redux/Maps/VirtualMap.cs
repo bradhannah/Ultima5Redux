@@ -307,54 +307,90 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        /// <summary>
+        ///     Gathers the details of what if any aggressive action the mapunits would do this turn
+        /// </summary>
+        /// <returns></returns>
         internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetAggressiveMapUnitInfo()
         {
             Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
 
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
-                // if enemy or aggressive NPC
-                // if (false) // aggressive Npc)
-                // {
-                // }
-                //
-                // if (mapUnit is Enemy enemy)
-                {
-                    //AggressiveMapUnitInfo mapUnitInfo = new(enemy, enemy.EnemyReference.TheMissileType);
+                AggressiveMapUnitInfo mapUnitInfo =
+                    GetAggressiveMapUnitInfo(
+                        mapUnit.MapUnitPosition.XY,
+                        TheMapUnits.CurrentAvatarPosition.XY,
+                        SingleCombatMapReference.Territory.Britannia, mapUnit);
 
-                    // if the enemy is directly next to the avatar, then they can attack in a combat map
-                    AggressiveMapUnitInfo mapUnitInfo =
-                        GetAggressiveMapUnitInfo(
-                            mapUnit.MapUnitPosition.XY,
-                            TheMapUnits.CurrentAvatarPosition.XY,
-                            SingleCombatMapReference.Territory.Britannia, mapUnit);
-                    // GetAggressiveMapUnitInfo(
-                    //     enemy.MapUnitPosition.XY,
-                    //     TheMapUnits.CurrentAvatarPosition.XY,
-                    //     SingleCombatMapReference.Territory.Britannia,
-                    //     enemy, out CombatItemReference.MissileType missileType);
-
-                    // if they aren't attacking, and they have no missile type (should never happen?) 
-                    // if (singleCombatMapReference == null && missileType == CombatItemReference.MissileType.None)
-                    // {
-                    //     // for example if a sea serpent has a ranged attack but is too far away
-                    //     continue;
-                    //     // throw new Ultima5ReduxException(
-                    //     //     $"{enemy.FriendlyName} was within striking distance, but didn't return a combat map nor a missile type");
-                    // }
-
-                    // if (singleCombatMapReference != null)
-                    // {
-                    //     mapUnitInfo.CombatMapReference = singleCombatMapReference;
-                    // }
-
-                    // there is a missile type I guess 
-                    aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
-                }
+                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
                 // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
             }
 
             return aggressiveMapUnitInfos;
+        }
+
+        // Performs all of the aggressive actions and stores results
+        internal void ProcessAggressiveMapUnitAttacks(PlayerCharacterRecords records,
+            Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos,
+            out AggressiveMapUnitInfo combatMapAggressor)
+        {
+            combatMapAggressor = null;
+
+            // if there are monsters with combat maps attached to them - then we look at them first
+            // if you are going to a combat map then we will never process overworld ranged and melee attacks
+            List<AggressiveMapUnitInfo> aggressiveMapUnitInfosWithCombatMaps =
+                aggressiveMapUnitInfos.Values.Where(ag => ag.CombatMapReference != null).ToList();
+
+            if (aggressiveMapUnitInfos.Count > 0)
+            {
+                // there is at least one combat map reference
+                int nCombatMapEnemies = aggressiveMapUnitInfos.Count;
+                int nChoice = Utils.GetNumberFromAndTo(0, nCombatMapEnemies - 1);
+
+                combatMapAggressor = aggressiveMapUnitInfosWithCombatMaps[nChoice];
+                return;
+            }
+
+            //IsAvatarInFrigate
+            //IsAvatarInSkiff
+
+            // we are certain at this point that there is no combat map, so it's all ranged if anything at all
+            foreach (KeyValuePair<MapUnit, AggressiveMapUnitInfo> kvp in aggressiveMapUnitInfos)
+            {
+                AggressiveMapUnitInfo aggressiveMapUnitInfo = kvp.Value;
+                MapUnit mapUnit = kvp.Key;
+
+                Debug.Assert(aggressiveMapUnitInfo.CombatMapReference == null);
+
+                switch (aggressiveMapUnitInfo.AttackingMissileType)
+                {
+                    case CombatItemReference.MissileType.None:
+
+                    case CombatItemReference.MissileType.Arrow:
+                        // do they have any melee attacks? Melee attacks are noted with .Arrow for now
+                        // if on skiff then party takes damage
+                        // if on frigate then frigate takes damage
+                        if (IsAvatarInFrigate)
+                        {
+                            // frigate takes damage instead
+                            Frigate frigate = TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit as Frigate;
+                        }
+
+                        records.DamageEachCharacter(1, 9);
+
+                        continue;
+                    case CombatItemReference.MissileType.CannonBall:
+                        continue;
+                    case CombatItemReference.MissileType.Red:
+                        // if on skiff then party takes damage
+
+                        continue;
+                    default:
+                        throw new Ultima5ReduxException(
+                            "Only \"Red\" and CannonBall ranged attacks have been configured");
+                }
+            }
         }
 
         /// <summary>
