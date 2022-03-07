@@ -1062,8 +1062,7 @@ namespace Ultima5Redux.Maps
             }
 
             // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
-            if ((IsAvatarInSkiff || IsAvatarRidingCarpet) &&
-                attackToTileReference.CombatMapIndex is not SingleCombatMapReference.BritanniaCombatMaps.Bay)
+            if ((IsAvatarInSkiff || IsAvatarRidingCarpet))
             {
                 bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
 
@@ -1086,6 +1085,11 @@ namespace Ultima5Redux.Maps
                 {
                     if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
                         return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                    // if the enemy is on bay but is not a water creature then we cannot attack them
+                    if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    {
+                        return null;
+                    }
                 }
 
                 return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
