@@ -330,8 +330,11 @@ namespace Ultima5Redux.Maps
                         TheMapUnits.CurrentAvatarPosition.XY,
                         SingleCombatMapReference.Territory.Britannia, mapUnit);
 
-                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
+                if (mapUnitInfo.CombatMapReference != null)
+                    StreamingOutput.Instance.PushMessage(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
+                                                         mapUnitInfo.CombatMapReference.Description);
                 // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
+                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
             }
 
             return aggressiveMapUnitInfos;
@@ -421,6 +424,9 @@ namespace Ultima5Redux.Maps
 
                 Debug.Assert(aggressiveMapUnitInfo.CombatMapReference == null);
 
+                // bajh: I know all the conditions look identical now - but I suspect they have different attack
+                // powers I will tweak later
+
                 switch (aggressiveMapUnitInfo.AttackingMissileType)
                 {
                     case CombatItemReference.MissileType.None:
@@ -434,25 +440,43 @@ namespace Ultima5Redux.Maps
                         {
                             // frigate takes damage instead
                             DamageShip(Point2D.Direction.None);
-                            continue;
+                        }
+                        else
+                        {
+                            records.DamageEachCharacter(1, 9);
                         }
 
-                        records.DamageEachCharacter(1, 9);
-
+                        StreamingOutput.Instance.PushMessage(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
                         continue;
                     case CombatItemReference.MissileType.CannonBall:
+                        if (IsAvatarInFrigate)
+                        {
+                            DamageShip(Point2D.Direction.None);
+                        }
+                        else
+                        {
+                            records.DamageEachCharacter(1, 9);
+                        }
+
+                        StreamingOutput.Instance.PushMessage(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (cannonball)",
+                            false);
+
                         continue;
                     case CombatItemReference.MissileType.Red:
                         // if on a frigate then only the frigate takes damage, like a shield!
                         if (IsAvatarInFrigate)
                         {
                             DamageShip(Point2D.Direction.None);
-                            continue;
+                        }
+                        else
+                        {
+                            records.DamageEachCharacter(1, 9);
                         }
 
-                        records.DamageEachCharacter(1, 9);
                         StreamingOutput.Instance.PushMessage(
-                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party", false);
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (ranged)", false);
 
                         continue;
                     default:

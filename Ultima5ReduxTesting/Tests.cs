@@ -1669,5 +1669,42 @@ namespace Ultima5ReduxTesting
             world.PassTime();
             world.PassTime();
         }
+
+        [Test] [TestCase(SaveFiles.b_frigat)] public void test_AvatarMoveIntoOcean(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize();
+
+            world.ReLoadFromJson();
+
+            Assert.True(world.State.TheMoongates.IsMoonstoneBuried(new Point3D(224, 133, 0)));
+
+            world.State.TheVirtualMap.OneInXOddsOfNewMonster = 2;
+            Utils.Ran = new Random(1);
+
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+                true);
+        }
     }
 }

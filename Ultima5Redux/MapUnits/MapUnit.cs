@@ -195,7 +195,9 @@ namespace Ultima5Redux.MapUnits
             foreach (Point2D point in surroundingPoints)
             {
                 // if it isn't walkable then we skip it
-                if (virtualMap.IsTileFreeToTravel(point) && aStar.GetWalkable(point))
+                bool bIsMapUnitOnTile = virtualMap.IsMapUnitOccupiedTile(point);
+                // virtualMap.IsTileFreeToTravel(point) is for walking and stuff, not great for water creatures apparently
+                if (!bIsMapUnitOnTile && aStar.GetWalkable(point))
                     wanderablePoints.Add(point);
             }
 

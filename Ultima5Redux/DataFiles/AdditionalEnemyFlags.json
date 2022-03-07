@@ -130,9 +130,9 @@
     "ActivelyAttacks": true,
     "LargeMapMissile": "CannonBall",
     "LargeMapMissileRange": 4,
-    "Era1Weight": 0,
-    "Era2Weight": 0,
-    "Era3Weight": 0
+    "Era1Weight": 50,
+    "Era2Weight": 50,
+    "Era3Weight": 50
   },
   {
     "Name": "WallPrisoner1/x",

@@ -1177,24 +1177,30 @@ namespace Ultima5Redux
             // calculate our new x and y values based on the adjustments
             Point2D newPosition = new((State.TheVirtualMap.CurrentPosition.X + xAdjust) % nTilesPerMapCol,
                 (State.TheVirtualMap.CurrentPosition.Y + yAdjust) % nTilesPerMapRow);
-
+            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             // we change the direction of the Avatar map unit
             // this will be used to determine which is the appropriate sprite to show
-            bool bAvatarActuallyMoved = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Move(direction);
+            bool bAvatarActuallyMoved = avatar.Move(direction);
 
             if (!bAvatarActuallyMoved)
             {
                 tryToMoveResult = TryToMoveResult.ShipChangeDirection;
-                AdvanceTime(N_DEFAULT_ADVANCE_TIME);
                 StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HEAD) + " " +
                     GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction));
+
+                // hate this - I have to run a separate AdvanceTime because it NEEDS to stop processing 
+                TryToMoveResult shipChangeDirectionTryToMoveResult = AdvanceTime(N_DEFAULT_ADVANCE_TIME);
+                tryToMoveResult = shipChangeDirectionTryToMoveResult == TryToMoveResult.CombatMapLoaded
+                    ? TryToMoveResult.CombatMapLoaded
+                    : tryToMoveResult;
+                return;
             }
 
             // we know that if the avatar is on a frigate, then he hasn't just changed direction
             // so, if sails are hoisted and they are heading in a specific direction, then we will ignore
             // any additional keystrokes
-            if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().AreSailsHoisted &&
+            if (avatar.AreSailsHoisted &&
                 State.WindDirection != Point2D.Direction.None && bManualMovement)
             {
                 tryToMoveResult = TryToMoveResult.IgnoredMovement;
@@ -1202,7 +1208,7 @@ namespace Ultima5Redux
             }
 
             // we start with a different descriptor depending on the vehicle the Avatar is currently on
-            switch (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState)
+            switch (avatar.CurrentAvatarState)
             {
                 case Avatar.AvatarState.Regular:
                     StreamingOutput.Instance.PushMessage(
@@ -1219,7 +1225,7 @@ namespace Ultima5Redux
                         GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction));
                     break;
                 case Avatar.AvatarState.Frigate:
-                    if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().AreSailsHoisted)
+                    if (avatar.AreSailsHoisted)
                     {
                         if (bManualMovement)
                         {
@@ -1301,7 +1307,7 @@ namespace Ultima5Redux
             }
             else // it is not passable
             {
-                Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+                //Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
                 if (!bManualMovement && avatar.AreSailsHoisted)
                 {
                     tryToMoveResult = State.TheVirtualMap.DamageShip(State.WindDirection);

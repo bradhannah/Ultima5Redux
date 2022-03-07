@@ -205,8 +205,7 @@ namespace Ultima5Redux
             if (nMin == nMax) return nMin;
             Debug.Assert(nMin < nMax);
             int nDiff = nMax - nMin;
-            Random ran = new();
-            return (ran.Next() % nDiff) + nMin;
+            return (Ran.Next() % nDiff) + nMin;
         }
 
         public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
