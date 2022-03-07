@@ -819,6 +819,7 @@ namespace Ultima5Redux
             switch (mapUnit)
             {
                 case Enemy enemy:
+                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
                     tryToAttackResult = TryToAttackResult.CombatMapEnemy;
                     break;
                 case NonPlayerCharacter npc:
@@ -832,6 +833,8 @@ namespace Ultima5Redux
                         MurderNPC(npc);
                         break;
                     }
+
+                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
 
                     tryToAttackResult = TryToAttackResult.CombatMapNpc;
 
@@ -1301,47 +1304,7 @@ namespace Ultima5Redux
                 Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
                 if (!bManualMovement && avatar.AreSailsHoisted)
                 {
-                    int nDamage = _random.Next(5, 15);
-
-                    Debug.Assert(avatar.CurrentBoardedMapUnit is Frigate);
-                    if (avatar.CurrentBoardedMapUnit is not Frigate frigate)
-                        throw new Ultima5ReduxException("Tried to get Avatar's frigate, but it returned  null");
-
-                    // if the wind is blowing the same direction then we double the damage
-                    if (avatar.CurrentDirection == State.WindDirection) nDamage *= 2;
-                    // decrement the damage from the frigate
-                    frigate.Hitpoints -= nDamage;
-
-                    StreamingOutput.Instance.PushMessage(
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                            .BREAKING_UP), false);
-                    // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
-                    if (frigate.Hitpoints <= 0)
-                    {
-                        tryToMoveResult = TryToMoveResult.ShipDestroyed;
-                        // destroy the ship and leave board the Avatar onto a skiff
-                        StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                            DataOvlReference.WorldStrings2
-                                .SHIP_SUNK_BANG_N), false);
-                        StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences
-                            .GetString(DataOvlReference.WorldStrings2.ABANDON_SHIP_BANG_N).TrimEnd(), false);
-
-                        MapUnit newFrigate =
-                            State.TheVirtualMap.TheMapUnits.XitCurrentMapUnit(State.TheVirtualMap, out string _);
-                        State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(newFrigate);
-                        State.TheVirtualMap.TheMapUnits.MakeAndBoardSkiff();
-                    }
-                    else
-                    {
-                        if (frigate.Hitpoints <= 10)
-                        {
-                            StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                                DataOvlReference.WorldStrings
-                                    .HULL_WEAK), false);
-                        }
-
-                        tryToMoveResult = TryToMoveResult.ShipBreakingUp;
-                    }
+                    tryToMoveResult = State.TheVirtualMap.DamageShip(State.WindDirection);
                 }
                 else
                 {

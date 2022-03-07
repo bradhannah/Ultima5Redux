@@ -337,6 +337,56 @@ namespace Ultima5Redux.Maps
             return aggressiveMapUnitInfos;
         }
 
+        internal World.TryToMoveResult DamageShip(Point2D.Direction windDirection)
+        {
+            World.TryToMoveResult tryToMoveResult;
+            Avatar avatar = TheMapUnits.GetAvatarMapUnit();
+
+            int nDamage = Utils.Ran.Next(5, 15);
+
+            Debug.Assert(avatar.CurrentBoardedMapUnit is Frigate);
+            if (avatar.CurrentBoardedMapUnit is not Frigate frigate)
+                throw new Ultima5ReduxException("Tried to get Avatar's frigate, but it returned  null");
+
+            // if the wind is blowing the same direction then we double the damage
+            if (avatar.CurrentDirection == windDirection) nDamage *= 2;
+            // decrement the damage from the frigate
+            frigate.Hitpoints -= nDamage;
+
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                    .BREAKING_UP), false);
+            // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
+            if (frigate.Hitpoints <= 0)
+            {
+                tryToMoveResult = World.TryToMoveResult.ShipDestroyed;
+                // destroy the ship and leave board the Avatar onto a skiff
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.WorldStrings2
+                        .SHIP_SUNK_BANG_N), false);
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences
+                    .GetString(DataOvlReference.WorldStrings2.ABANDON_SHIP_BANG_N).TrimEnd(), false);
+
+                MapUnit newFrigate =
+                    TheMapUnits.XitCurrentMapUnit(this, out string _);
+                TheMapUnits.ClearAndSetEmptyMapUnits(newFrigate);
+                TheMapUnits.MakeAndBoardSkiff();
+            }
+            else
+            {
+                if (frigate.Hitpoints <= 10)
+                {
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.WorldStrings
+                            .HULL_WEAK), false);
+                }
+
+                tryToMoveResult = World.TryToMoveResult.ShipBreakingUp;
+            }
+
+            return tryToMoveResult;
+        }
+
         // Performs all of the aggressive actions and stores results
         internal void ProcessAggressiveMapUnitAttacks(PlayerCharacterRecords records,
             Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos,
@@ -383,7 +433,8 @@ namespace Ultima5Redux.Maps
                         if (IsAvatarInFrigate)
                         {
                             // frigate takes damage instead
-                            Frigate frigate = TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit as Frigate;
+                            DamageShip(Point2D.Direction.None);
+                            continue;
                         }
 
                         records.DamageEachCharacter(1, 9);
@@ -392,7 +443,16 @@ namespace Ultima5Redux.Maps
                     case CombatItemReference.MissileType.CannonBall:
                         continue;
                     case CombatItemReference.MissileType.Red:
-                        // if on skiff then party takes damage
+                        // if on a frigate then only the frigate takes damage, like a shield!
+                        if (IsAvatarInFrigate)
+                        {
+                            DamageShip(Point2D.Direction.None);
+                            continue;
+                        }
+
+                        records.DamageEachCharacter(1, 9);
+                        StreamingOutput.Instance.PushMessage(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party", false);
 
                         continue;
                     default:
@@ -1002,14 +1062,14 @@ namespace Ultima5Redux.Maps
             }
 
             // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
-            if (IsAvatarInSkiff || IsAvatarRidingCarpet)
+            if ((IsAvatarInSkiff || IsAvatarRidingCarpet) &&
+                attackToTileReference.CombatMapIndex is not SingleCombatMapReference.BritanniaCombatMaps.Bay)
             {
                 bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
 
                 if (bAvatarOnWaterTile)
                 {
-                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps
-                            .BoatCalc or SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
                     {
                         // if no surrounding tiles are water tile then we skip the attack
                         return null;
@@ -1142,8 +1202,8 @@ namespace Ultima5Redux.Maps
             }
 
             // if avatar on skiff or carpet and avatar is on water then it's immediate ouch, no map
-            if ((IsAvatarInSkiff || IsAvatarRidingCarpet) && attackToTileReference.CombatMapIndex ==
-                SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
+            if ((IsAvatarInSkiff || IsAvatarRidingCarpet) &&
+                attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
             {
                 // we will use Arrow to denote the enemy attacking on the overworld, but no combat map
                 mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.Arrow;
@@ -1160,7 +1220,18 @@ namespace Ultima5Redux.Maps
                 }
                 else
                 {
-                    mapUnitInfo.CombatMapReference = getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+                    // if you end up on a bay tile, but the monster is not a water monster, then we need to either
+                    // substitute another map, or have them attack them in the overworld
+                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    {
+                        mapUnitInfo.CombatMapReference = null;
+                        mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.Arrow;
+                    }
+                    else
+                    {
+                        mapUnitInfo.CombatMapReference =
+                            getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+                    }
                 }
             }
             // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
