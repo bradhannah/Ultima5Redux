@@ -32,7 +32,7 @@ namespace Ultima5Redux
         public enum TryToMoveResult
         {
             Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell, ShipBreakingUp, ShipDestroyed,
-            RoughSeas, MovedSelectionCursor, IgnoredMovement, Poisoned, Burning, Ignore
+            RoughSeas, MovedSelectionCursor, IgnoredMovement, Poisoned, Burning, Ignore, CombatMapLoaded, PassTurn
         }
 
         private const int N_DEFAULT_ADVANCE_TIME = 2;
@@ -342,13 +342,24 @@ namespace Ultima5Redux
                 State.TheVirtualMap.MoveMapUnitsToNextMove(aggressiveMapUnitInfos);
                 State.TheVirtualMap.ProcessAggressiveMapUnitAttacks(State.CharacterRecords, aggressiveMapUnitInfos,
                     out VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo);
+                // if there is an individual aggressive map unit, then we know that we are going to load a combat map
                 if (aggressiveMapUnitInfo != null)
                 {
                     Debug.Assert(aggressiveMapUnitInfo.CombatMapReference != null);
-                    //tryToMoveResult.
-                }
+                    // issue here is I need to be able to tell the caller to load a combat map
 
-                State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
+                    // let's delete the map unit from the map too since they disappear regardless of result
+                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(aggressiveMapUnitInfo.AttackingMapUnit);
+
+                    State.TheVirtualMap.LoadCombatMapWithCalculation(aggressiveMapUnitInfo.CombatMapReference,
+                        State.CharacterRecords, aggressiveMapUnitInfo.AttackingMapUnit);
+
+                    tryToMoveResult = TryToMoveResult.CombatMapLoaded;
+                }
+                else
+                {
+                    State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
+                }
             }
 
             // if a whole month has advanced then we go and add one month to the "staying at the inn" count
@@ -636,7 +647,9 @@ namespace Ultima5Redux
         /// <returns>"" or a string that describes what happened when passing time</returns>
         public TryToMoveResult PassTime()
         {
-            return AdvanceTime(2);
+            TryToMoveResult tryToMoveResult = AdvanceTime(2);
+            if (tryToMoveResult == TryToMoveResult.Ignore) return TryToMoveResult.PassTurn;
+            return tryToMoveResult;
         }
 
         /// <summary>
@@ -1395,7 +1408,10 @@ namespace Ultima5Redux
             tryToMoveResult = TryToMoveResult.Moved;
 
             // if we are indoors then all walking takes 2 minutes
-            AdvanceTime(nMinutesToAdvance);
+            TryToMoveResult tempTryToMoveResult = AdvanceTime(nMinutesToAdvance);
+            tryToMoveResult = tempTryToMoveResult == TryToMoveResult.CombatMapLoaded
+                ? TryToMoveResult.CombatMapLoaded
+                : tryToMoveResult;
         }
 
         public void TryToMoveCombatMap(Point2D.Direction direction, out TryToMoveResult tryToMoveResult) =>

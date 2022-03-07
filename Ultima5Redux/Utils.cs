@@ -202,6 +202,7 @@ namespace Ultima5Redux
 
         public static int GetNumberFromAndTo(int nMin, int nMax)
         {
+            if (nMin == nMax) return nMin;
             Debug.Assert(nMin < nMax);
             int nDiff = nMax - nMin;
             Random ran = new();

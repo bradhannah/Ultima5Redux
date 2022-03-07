@@ -317,6 +317,13 @@ namespace Ultima5Redux.Maps
 
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
+                // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
+                // in the list of aggressors
+                if (mapUnit is not Enemy && mapUnit is not NonPlayerCharacter)
+                {
+                    continue;
+                }
+
                 AggressiveMapUnitInfo mapUnitInfo =
                     GetAggressiveMapUnitInfo(
                         mapUnit.MapUnitPosition.XY,
@@ -342,10 +349,11 @@ namespace Ultima5Redux.Maps
             List<AggressiveMapUnitInfo> aggressiveMapUnitInfosWithCombatMaps =
                 aggressiveMapUnitInfos.Values.Where(ag => ag.CombatMapReference != null).ToList();
 
-            if (aggressiveMapUnitInfos.Count > 0)
+            if (aggressiveMapUnitInfosWithCombatMaps.Count > 0)
             {
                 // there is at least one combat map reference
-                int nCombatMapEnemies = aggressiveMapUnitInfos.Count;
+                int nCombatMapEnemies = aggressiveMapUnitInfosWithCombatMaps.Count;
+
                 int nChoice = Utils.GetNumberFromAndTo(0, nCombatMapEnemies - 1);
 
                 combatMapAggressor = aggressiveMapUnitInfosWithCombatMaps[nChoice];
@@ -366,6 +374,7 @@ namespace Ultima5Redux.Maps
                 switch (aggressiveMapUnitInfo.AttackingMissileType)
                 {
                     case CombatItemReference.MissileType.None:
+                        break;
 
                     case CombatItemReference.MissileType.Arrow:
                         // do they have any melee attacks? Melee attacks are noted with .Arrow for now
@@ -600,9 +609,10 @@ namespace Ultima5Redux.Maps
             {
                 AggressiveMapUnitInfo aggressiveMapUnitInfo =
                     aggressiveMapUnitInfos.ContainsKey(mapUnit) ? aggressiveMapUnitInfos[mapUnit] : null;
-                if (aggressiveMapUnitInfo == null)
-                    throw new Ultima5ReduxException(
-                        $"Missing {mapUnit.FriendlyName} when looking to move units");
+                // if we don't match the aggressive map unit then it means the map unit is not mobile
+                if (aggressiveMapUnitInfo == null) continue;
+                // throw new Ultima5ReduxException(
+                //     $"Missing {mapUnit.FriendlyName} when looking to move units");
 
                 // if the map unit doesn't haven't a particular aggression then it moves 
                 if (aggressiveMapUnitInfo.TheDecidedAction == AggressiveMapUnitInfo.DecidedAction.MoveUnit)
@@ -1142,7 +1152,16 @@ namespace Ultima5Redux.Maps
             // return avatar's current tile combat map
             else if (!IsAvatarInFrigate)
             {
-                mapUnitInfo.CombatMapReference = getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+                // when the avatar is not in boat and a water enemy attacks - they will always fight in the bay
+                if (enemy.EnemyReference.IsWaterEnemy)
+                {
+                    mapUnitInfo.CombatMapReference =
+                        getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                }
+                else
+                {
+                    mapUnitInfo.CombatMapReference = getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+                }
             }
             // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
             else if (enemy.EnemyReference.IsWaterEnemy)
@@ -1664,6 +1683,25 @@ namespace Ultima5Redux.Maps
             EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
         {
             LoadCombatMap(singleCombatMapReference, entryDirection, records, primaryEnemyReference, 1, null, 0, npcRef);
+        }
+
+        public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
+            PlayerCharacterRecords records, MapUnit mapUnit)
+        {
+            if (mapUnit is Enemy enemy)
+            {
+                LoadCombatMapWithCalculation(singleCombatMapReference,
+                    SingleCombatMapReference.EntryDirection.Direction3, records, enemy.EnemyReference);
+                return;
+            }
+
+            if (mapUnit is NonPlayerCharacter npc)
+            {
+                LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.Direction3, records,
+                    null, npc.NPCRef);
+            }
+
+            throw new Ultima5ReduxException("You can only calculate combat map loading with Enemies and NPCs");
         }
 
         /// <summary>

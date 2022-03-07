@@ -528,7 +528,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private void ClearMapUnit(MapUnit mapUnit)
+        internal void ClearMapUnit(MapUnit mapUnit)
         {
             int nIndex = CurrentMapUnits.AllMapUnits.IndexOf(mapUnit);
             CurrentMapUnits.AllMapUnits[nIndex] = new EmptyMapUnit();
