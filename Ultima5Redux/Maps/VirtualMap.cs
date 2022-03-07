@@ -1197,6 +1197,8 @@ namespace Ultima5Redux.Maps
                 return mapUnitInfo;
             }
 
+            bool bIsPirate = enemy.EnemyReference.LargeMapMissileType == CombatItemReference.MissileType.CannonBall;
+
             // if avatar is being attacked..
             // we get to assume that the avatar is not necessarily next to the enemy
             bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
@@ -1243,8 +1245,9 @@ namespace Ultima5Redux.Maps
                 // when the avatar is not in boat and a water enemy attacks - they will always fight in the bay
                 if (enemy.EnemyReference.IsWaterEnemy)
                 {
-                    mapUnitInfo.CombatMapReference =
-                        getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                    mapUnitInfo.CombatMapReference = getSingleCombatMapReference(bIsPirate
+                        ? SingleCombatMapReference.BritanniaCombatMaps.BoatNorth
+                        : SingleCombatMapReference.BritanniaCombatMaps.Bay);
                 }
                 else
                 {
@@ -1265,13 +1268,23 @@ namespace Ultima5Redux.Maps
             // if the enemy is a water enemy and we know the avatar is on a frigate, then we fight on the ocean
             else if (enemy.EnemyReference.IsWaterEnemy)
             {
-                mapUnitInfo.CombatMapReference =
-                    getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+                // we are on a frigate AND we are fighting a pirate ship
+                mapUnitInfo.CombatMapReference = getSingleCombatMapReference(bIsPirate
+                    ? SingleCombatMapReference.BritanniaCombatMaps.BoatBoat
+                    : SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
             }
             else
             {
-                mapUnitInfo.CombatMapReference = GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
-                    (int)attackToTileReference.CombatMapIndex);
+                if (!enemy.EnemyReference.IsWaterEnemy)
+                {
+                    mapUnitInfo.CombatMapReference =
+                        getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
+                }
+                else
+                {
+                    mapUnitInfo.CombatMapReference = GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory,
+                        (int)attackToTileReference.CombatMapIndex);
+                }
             }
 
             return mapUnitInfo;

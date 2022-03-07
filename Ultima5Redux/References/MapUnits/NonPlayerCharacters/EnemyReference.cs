@@ -9,6 +9,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 {
     public class EnemyReference
     {
+        public const int PIRATE_SHIP_NUMBER = 8;
+
         private enum DefaultStats
         {
             // ReSharper disable once UnusedMember.Local
@@ -167,7 +169,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             if (nMonsterIndex > 8) nMixedCaseIndex += -2;
             if (nMonsterIndex > 41) nMixedCaseIndex += -2;
 
-            if (nMonsterIndex is 8 or 9 or 42 or 43)
+            if (nMonsterIndex is PIRATE_SHIP_NUMBER or 9 or 42 or 43)
             {
                 MixedCaseSingularName = "x";
             }
@@ -179,7 +181,16 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             }
 
             int nKeySpriteIndex = N_FIRST_SPRITE + (nMonsterIndex * N_FRAMES_PER_SPRITE);
-            KeyTileReference = tileReferences.GetTileReferenceOfKeyIndex(nKeySpriteIndex);
+            if (nMonsterIndex == PIRATE_SHIP_NUMBER) // pirates!
+            {
+                // force a pirate ship when referring to an enemy (otherwise it will be person in stocks)
+                KeyTileReference = tileReferences.GetTileReference(300);
+            }
+            else
+            {
+                // everyone else makes sense, only pirates are doing double duty
+                KeyTileReference = tileReferences.GetTileReferenceOfKeyIndex(nKeySpriteIndex);
+            }
         }
 
         private int GetStat(DefaultStats stat, DataOvlReference dataOvlReference, int nMonsterIndex)
