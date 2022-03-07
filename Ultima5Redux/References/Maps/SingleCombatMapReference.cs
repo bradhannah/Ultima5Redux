@@ -313,14 +313,14 @@ namespace Ultima5Redux.References.Maps
             int nEnemyRawSprite = GetRawEnemySprite(nIndex);
             nSpriteIndex = nEnemyRawSprite + 0xFF;
 
-            // enemy sprite of 0 indicates no monster
-            if (nEnemyRawSprite == 0) return CombatMapSpriteType.Nothing;
-
-            // it's a chest or something like it
-            if (nEnemyRawSprite <= 15) return CombatMapSpriteType.Thing;
-
             switch (nEnemyRawSprite)
             {
+                // enemy sprite of 0 indicates no monster
+                case 0:
+                    return CombatMapSpriteType.Nothing;
+                // it's a chest or something like it
+                case <= 15:
+                    return CombatMapSpriteType.Thing;
                 // it's a dead body or blood spatter
                 case 30:
                 case 31:
@@ -333,13 +333,18 @@ namespace Ultima5Redux.References.Maps
             // if the sprite is lower than the crown index, then we add 4
             // OR
             // it's a Shadow Lord, but it breaks convention
-            if (nSpriteIndex < 436 || nSpriteIndex >= 504) nSpriteIndex += 4;
+            if (nSpriteIndex is < 436 or >= 504) nSpriteIndex += 4;
 
-            if (nSpriteIndex < 316 || nSpriteIndex > 511)
+            if (nSpriteIndex is < 316 or > 511)
             {
                 throw new Ultima5ReduxException(
                     $"Tried to get adjusted enemy sprite with index={nIndex} and raw sprite={nEnemyRawSprite}");
             }
+
+            // it lies - water maps seem to pretend they are auto selected
+            if (Index is 11 or 13 or 15) return CombatMapSpriteType.EncounterBased;
+            // pirates
+            if (Index is 12 or 14) return CombatMapSpriteType.AutoSelected;
 
             return CombatMapSpriteType.AutoSelected;
         }

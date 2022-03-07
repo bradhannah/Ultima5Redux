@@ -1790,6 +1790,14 @@ namespace Ultima5Redux.Maps
                 secondaryEnemyReference, nSecondaryEnemies, null);
         }
 
+        /// <summary>
+        ///     Specifically for loading combat maps when fighting NPCs instead of the typical Enemy
+        /// </summary>
+        /// <param name="singleCombatMapReference"></param>
+        /// <param name="entryDirection"></param>
+        /// <param name="records"></param>
+        /// <param name="primaryEnemyReference"></param>
+        /// <param name="npcRef"></param>
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,
             EnemyReference primaryEnemyReference, NonPlayerCharacterReference npcRef)
