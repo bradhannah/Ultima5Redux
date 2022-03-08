@@ -212,7 +212,7 @@ namespace Ultima5ReduxTesting
             int i = (24 * (60 / 2));
             while (i > 0)
             {
-                world.AdvanceTime(2);
+                world.AdvanceTime(2, out _);
                 i--;
             }
 
@@ -237,7 +237,7 @@ namespace Ultima5ReduxTesting
                 int i = (24 * (60 / 2));
                 while (i > 0)
                 {
-                    world.AdvanceTime(2);
+                    world.AdvanceTime(2, out _);
                     i--;
                 }
 
@@ -361,14 +361,14 @@ namespace Ultima5ReduxTesting
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Britain, 0));
 
-            world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed);
+            world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed, out _);
             Assert.False(bWasPushed);
 
-            world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed);
+            world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed, out _);
             Assert.True(bWasPushed);
             string derp = world.State.Serialize();
 
-            world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed);
+            world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed, out _);
             Assert.True(bWasPushed);
         }
 
@@ -434,15 +434,15 @@ namespace Ultima5ReduxTesting
             Point2D moongatePosition = new Point2D(166, 19);
             world.State.TheVirtualMap.CurrentPosition.XY = moongatePosition;
             // first search should find moonstone
-            world.TryToSearch(moongatePosition, out bool bWasSuccessful);
+            world.TryToSearch(moongatePosition, out bool bWasSuccessful, out _);
             Assert.True(bWasSuccessful);
 
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, out _);
             Assert.True(bWasSuccessful);
             Assert.True(item != null);
             Assert.True(item.GetType() == typeof(Moonstone));
 
-            world.UseMoonstone((Moonstone)item, out bWasSuccessful);
+            world.UseMoonstone((Moonstone)item, out bWasSuccessful, out _);
             Assert.True(bWasSuccessful);
         }
 
@@ -455,10 +455,10 @@ namespace Ultima5ReduxTesting
 
             Point2D moongatePosition = new Point2D(166, 19);
             // first search should find moonstone
-            world.TryToSearch(moongatePosition, out bool bWasSuccessful);
+            world.TryToSearch(moongatePosition, out bool bWasSuccessful, out _);
             Assert.True(bWasSuccessful);
             // second search should be empty
-            world.TryToSearch(moongatePosition, out bWasSuccessful);
+            world.TryToSearch(moongatePosition, out bWasSuccessful, out _);
             Assert.True(!bWasSuccessful);
             string derp = world.State.Serialize();
 
@@ -468,14 +468,14 @@ namespace Ultima5ReduxTesting
             int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
 
             // can't get it twice!
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, out _);
             Assert.True(bWasSuccessful);
             Assert.True(item != null);
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out item);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out item, out _);
             Assert.True(!bWasSuccessful);
             Assert.True(item == null);
 
-            world.TryToSearch(moongatePosition, out bWasSuccessful);
+            world.TryToSearch(moongatePosition, out bWasSuccessful, out _);
             Assert.True(!bWasSuccessful);
         }
 
@@ -930,23 +930,23 @@ namespace Ultima5ReduxTesting
                 .Quantity;
             Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
             world.TryToMove(Point2D.Direction.Left, false, false, out World.TryToMoveResult result);
-            world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet);
+            world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet, out _);
             Assert.True(bGotACarpet);
             //Assert.True(carpet!=null);
             Assert.True(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems
                 .Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity);
-            world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, out _);
             Assert.True(!bGotACarpet);
 
             world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
-                out bool bAbleToUseItem);
+                out bool bAbleToUseItem, out _);
             Assert.True(bAbleToUseItem);
             world.Xit(out bWasSuccessful);
             Assert.True(bWasSuccessful);
             world.TryToMove(Point2D.Direction.Left, false, false, out result);
             curPos = world.State.TheVirtualMap.CurrentPosition.XY;
-            world.TryToGetAThing(curPos, out bGotACarpet, out carpet);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, out _);
             Assert.True(bGotACarpet);
 
             _ = "";
@@ -960,7 +960,7 @@ namespace Ultima5ReduxTesting
                 .Quantity;
             world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
-                out bool bAbleToUseItem);
+                out bool bAbleToUseItem, out _);
             Assert.True(bAbleToUseItem);
             Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity == nCarpets - 1);
@@ -1662,12 +1662,12 @@ namespace Ultima5ReduxTesting
             world.TryToMove(Point2D.Direction.Left, false, false, out _,
                 true);
 
-            world.PassTime();
-            world.PassTime();
-            world.PassTime();
-            world.PassTime();
-            world.PassTime();
-            world.PassTime();
+            world.PassTime(out _);
+            world.PassTime(out _);
+            world.PassTime(out _);
+            world.PassTime(out _);
+            world.PassTime(out _);
+            world.PassTime(out _);
         }
 
         [Test] [TestCase(SaveFiles.b_frigat)] public void test_AvatarMoveIntoOcean(SaveFiles saveFiles)
