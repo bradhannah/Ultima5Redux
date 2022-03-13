@@ -1140,6 +1140,25 @@ namespace Ultima5Redux.Maps
             // it is not boat calc, but there is an enemy, so refer to our default combat map
         }
 
+        public bool AreAnyTilesWithinFourDirections(Point2D position, IEnumerable<TileReference> tileReferences) =>
+            tileReferences.Any(tileReference => IsTileWithinFourDirections(position, tileReference));
+
+        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference)
+        {
+            List<Point2D> positions;
+            if (IsLargeMap)
+                positions = position.GetConstrainedFourDirectionSurroundingPointsWrapAround(
+                    LargeMapLocationReferences.XTiles,
+                    LargeMapLocationReferences.YTiles);
+            else
+            {
+                positions = position.GetConstrainedFourDirectionSurroundingPoints(CurrentSmallMap.NumOfXTiles,
+                    CurrentSmallMap.NumOfYTiles);
+            }
+
+            return positions.Any(testTosition => GetTileReference(testTosition).Index == tileReference.Index);
+        }
+
         /// <summary>
         ///     Gets the appropriate (if any) SingleCombatMapReference based on the map and mapunits attempting to engage in
         ///     combat

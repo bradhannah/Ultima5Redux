@@ -1171,6 +1171,102 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        ///     Checks if you can fire
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckIfCanFire(bool bSendOutput = true)
+        {
+            if (State.TheVirtualMap.IsLargeMap)
+            {
+                if (State.TheVirtualMap.IsAvatarInFrigate)
+                    return true;
+
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .FIRE) +
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .D_WHAT));
+
+                return false;
+            }
+
+            if (IsCombatMap)
+            {
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .FIRE) +
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                        .DASH_NOT_HERE_BANG_N));
+                return false;
+            }
+
+            List<TileReference> cannonReferences = new List<TileReference>
+            {
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonUp"),
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonLeft"),
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonRight"),
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonDown"),
+            };
+            // small map
+            // if a cannon is any of the four directions
+            // 180 - 183
+            if (State.TheVirtualMap.AreAnyTilesWithinFourDirections(State.TheVirtualMap.CurrentPosition.XY,
+                    cannonReferences)) return true;
+
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                    .FIRE) +
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                    .D_WHAT));
+            return false;
+        }
+
+        /// <summary>
+        ///     Try to fire from whereever you are
+        /// </summary>
+        /// <param name="direction"></param>
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToFire(Point2D.Direction direction,
+            out TryToMoveResult tryToMoveResult)
+        {
+            if (!CheckIfCanFire())
+                throw new Ultima5ReduxException("Tried to fire, but are not able to - use CheckIfCanFire first");
+
+            tryToMoveResult = TryToMoveResult.Ignore;
+
+            // if overworld
+            if (State.TheVirtualMap.IsLargeMap)
+            {
+                // we assume they are in a frigate
+                if (!State.TheVirtualMap.IsAvatarInFrigate)
+                    throw new Ultima5ReduxException("can't fire on large map unless you're on a frigate");
+
+                // make sure the boat is facing the correct direction given the direction of the cannon
+                TileReference currentAvatarTileReference =
+                    State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().KeyTileReference;
+
+                bool bShipFacingUpDown = currentAvatarTileReference.Name.EndsWith("Up") ||
+                                         currentAvatarTileReference.Name.EndsWith("Down");
+
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .FIRE) + direction);
+                // are we pointing the right direction to fire the cannons?
+                if (((direction is Point2D.Direction.Down or Point2D.Direction.Up) && bShipFacingUpDown)
+                    || ((direction is Point2D.Direction.Left or Point2D.Direction.Right) && !bShipFacingUpDown))
+                {
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.SleepTransportStrings
+                            .FIRE_BROADSIDE_ONLY_BANG_N), false);
+                    return AdvanceTime(2, out tryToMoveResult);
+                }
+
+                // time to fire that cannon!
+            }
+
+            return null;
+        }
+
+        /// <summary>
         ///     Tries to move the avatar in a given direction - if successful it will move him
         /// </summary>
         /// <param name="direction">the direction you want to move</param>
@@ -1212,7 +1308,8 @@ namespace Ultima5Redux
             {
                 tryToMoveResult = TryToMoveResult.ShipChangeDirection;
                 StreamingOutput.Instance.PushMessage(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HEAD) + " " +
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HEAD).TrimEnd() +
+                    " " +
                     GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction));
 
                 // hate this - I have to run a separate AdvanceTime because it NEEDS to stop processing 
