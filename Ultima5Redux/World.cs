@@ -1226,12 +1226,16 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="direction"></param>
         public List<VirtualMap.AggressiveMapUnitInfo> TryToFire(Point2D.Direction direction,
-            out TryToMoveResult tryToMoveResult)
+            out TryToMoveResult tryToMoveResult,
+            out Point2D cannonBallDestination)
         {
             if (!CheckIfCanFire())
                 throw new Ultima5ReduxException("Tried to fire, but are not able to - use CheckIfCanFire first");
 
-            tryToMoveResult = TryToMoveResult.Ignore;
+            tryToMoveResult = TryToMoveResult.PassTurn;
+
+            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+            cannonBallDestination = null;
 
             // if overworld
             if (State.TheVirtualMap.IsLargeMap)
@@ -1241,8 +1245,7 @@ namespace Ultima5Redux
                     throw new Ultima5ReduxException("can't fire on large map unless you're on a frigate");
 
                 // make sure the boat is facing the correct direction given the direction of the cannon
-                TileReference currentAvatarTileReference =
-                    State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().KeyTileReference;
+                TileReference currentAvatarTileReference = avatar.KeyTileReference;
 
                 bool bShipFacingUpDown = currentAvatarTileReference.Name.EndsWith("Up") ||
                                          currentAvatarTileReference.Name.EndsWith("Down");
@@ -1261,6 +1264,28 @@ namespace Ultima5Redux
                 }
 
                 // time to fire that cannon!
+                const int frigateCannonFiresTiles = 3;
+
+                GetAdjustments(direction, out int nXOffset, out int nYOffset);
+                Point2D adjustedPosition = new(avatar.MapUnitPosition.X, avatar.MapUnitPosition.Y);
+                // if 
+                for (int i = 0; i < frigateCannonFiresTiles; i++)
+                {
+                    adjustedPosition = new(adjustedPosition.X + nXOffset, adjustedPosition.Y + nYOffset);
+                    if (State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPosition))
+                    {
+                        // kill them
+                        MapUnit targetedMapUnit = State.TheVirtualMap.GetMapUnitOnTile(adjustedPosition)[0];
+                        StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                            "Killed " + targetedMapUnit.FriendlyName), false);
+                        State.TheVirtualMap.TheMapUnits.ClearMapUnit(targetedMapUnit);
+                        cannonBallDestination = adjustedPosition;
+                        return AdvanceTime(2, out tryToMoveResult);
+                    }
+                }
+
+                cannonBallDestination = adjustedPosition;
+                return AdvanceTime(2, out tryToMoveResult);
             }
 
             return null;

@@ -19,6 +19,8 @@ namespace Ultima5Redux.Maps
         [JsonConverter(typeof(StringEnumConverter))]
         public enum WalkableType { StandardWalking, CombatLand, CombatWater, CombatFlyThroughWalls, CombatLandAndWater }
 
+        protected const int TOTAL_VISIBLE_TILES = 26;
+
         [DataMember(Name = "OpenDoors")] private readonly Dictionary<Point2D, int> _openDoors = new();
 
         [DataMember] public bool XRayMode { get; set; }
@@ -26,8 +28,6 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember] private readonly Dictionary<WalkableType, AStar> _aStarDictionary = new();
 
         [IgnoreDataMember] private readonly Dictionary<WalkableType, List<List<Node>>> _aStarNodes = new();
-
-        protected const int TOTAL_VISIBLE_TILES = 26;
 
         public abstract int NumOfXTiles { get; }
 
@@ -161,6 +161,13 @@ namespace Ultima5Redux.Maps
             _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
         }
 
+        protected internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
+
+        protected internal void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType)
+        {
+            SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
+        }
+
         /// <summary>
         ///     Prints the map in ASCII on the console
         /// </summary>
@@ -189,8 +196,6 @@ namespace Ultima5Redux.Maps
         /// <param name="xy"></param>
         /// <returns></returns>
         protected abstract float GetAStarWeight(in Point2D xy);
-
-        protected internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
 
         protected virtual bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
@@ -248,11 +253,6 @@ namespace Ultima5Redux.Maps
             if (IsOpenDoor(xy)) return true;
             TileReference tileReference = GetTileReference(xy);
             return (IsTileWalkable(tileReference, walkableType));
-        }
-
-        protected internal void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType)
-        {
-            SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
         }
 
         #region FLOOD FILL
