@@ -21,7 +21,21 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
 
-        [DataMember] public Point2D.Direction CurrentDirection { get; private set; }
+        private Point2D.Direction _currentDirection;
+
+        [DataMember]
+        public override Point2D.Direction Direction
+        {
+            get => _currentDirection;
+            set
+            {
+                _currentDirection = value;
+                if (IsAvatarOnBoardedThing)
+                {
+                    CurrentBoardedMapUnit.Direction = value;
+                }
+            }
+        }
 
         /// <summary>
         ///     Describes if there are only left right sprites
@@ -35,6 +49,8 @@ namespace Ultima5Redux.MapUnits
             { AvatarState.Skiff, false },
             { AvatarState.Regular, false }
         };
+
+        private bool _useFourDirections;
 
         [IgnoreDataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
@@ -63,8 +79,8 @@ namespace Ultima5Redux.MapUnits
             get =>
                 IsAvatarOnBoardedThing
                     ? GameReferences.SpriteTileReferences.GetTileReferenceByName(
-                        DirectionToTileNameBoarded[CurrentDirection])
-                    : GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[CurrentDirection]);
+                        DirectionToTileNameBoarded[Direction])
+                    : GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
             set
             {
                 CurrentAvatarState = CalculateAvatarState(value);
@@ -79,8 +95,7 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember]
         public MapUnit CurrentBoardedMapUnit { get; private set; }
 
-        [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+        private Dictionary<Point2D.Direction, string> DirectionToTileNameBasicAvatar { get; } =
             new()
             {
                 { Point2D.Direction.None, "BasicAvatar" },
@@ -91,8 +106,18 @@ namespace Ultima5Redux.MapUnits
             };
 
         [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
-            DirectionToTileName;
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName =>
+            DirectionToTileNameBasicAvatar;
+
+        [IgnoreDataMember]
+        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded
+        {
+            get
+            {
+                if (!IsAvatarOnBoardedThing) return DirectionToTileNameBasicAvatar;
+                return CurrentBoardedMapUnit.DirectionToTileName;
+            }
+        }
 
         [JsonConstructor] private Avatar()
         {
@@ -141,16 +166,16 @@ namespace Ultima5Redux.MapUnits
                 case AvatarState.Regular:
                     break;
                 case AvatarState.Carpet:
-                    MagicCarpet carpet = new(MapLocation, CurrentDirection, null, MapUnitPosition);
+                    MagicCarpet carpet = new(MapLocation, Direction, null, MapUnitPosition);
                     BoardMapUnit(carpet);
                     break;
                 case AvatarState.Horse:
-                    Horse horse = new(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
+                    Horse horse = new(emptyMapUnitMovement, MapLocation, Direction, null, MapUnitPosition);
                     BoardMapUnit(horse);
                     break;
                 case AvatarState.Frigate:
                     // bajh: this is incorrect - we need to figure out the correct number of skiffs when we board it and create it
-                    Frigate frigate = new(emptyMapUnitMovement, MapLocation, CurrentDirection, null,
+                    Frigate frigate = new(emptyMapUnitMovement, MapLocation, Direction, null,
                         MapUnitPosition)
                     {
                         // must decide how many skiffs are there and assign them
@@ -160,7 +185,7 @@ namespace Ultima5Redux.MapUnits
                     BoardMapUnit(frigate);
                     break;
                 case AvatarState.Skiff:
-                    Skiff skiff = new(emptyMapUnitMovement, MapLocation, CurrentDirection, null, MapUnitPosition);
+                    Skiff skiff = new(emptyMapUnitMovement, MapLocation, Direction, null, MapUnitPosition);
                     BoardMapUnit(skiff);
                     break;
                 case AvatarState.Hidden:
@@ -228,7 +253,7 @@ namespace Ultima5Redux.MapUnits
             // if we are going onto a frigate, then we want to make sure the Avatar can start rowing
             // in the direction that it's already facing
             PreviousDirection = mapUnit.Direction;
-            CurrentDirection = mapUnit.Direction;
+            Direction = mapUnit.Direction;
         }
 
         /// <summary>
@@ -239,30 +264,29 @@ namespace Ultima5Redux.MapUnits
         /// <returns>true if Avatar moved, false if they only changed direction</returns>
         public bool Move(Point2D.Direction direction)
         {
-            bool bChangeTile = true;
+            //bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections ?? false;
+
+            bool bChangeTile = !(_onlyLeftRight[CurrentAvatarState] &&
+                                 !UseFourDirections &&
+                                 direction != Point2D.Direction.Left &&
+                                 direction != Point2D.Direction.Right);
             // if there are only left and right sprites then we don't switch directions unless they actually
             // go left or right, otherwise we maintain direction - UNLESS we have forced extended sprites on
             // for the vehicle
-            bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections ?? false;
-            if (_onlyLeftRight[CurrentAvatarState] &&
-                !bUseFourDirections &&
-                direction != Point2D.Direction.Left &&
-                direction != Point2D.Direction.Right)
-                bChangeTile = false;
 
             // we only track changes in tile if we are changing the direction of the sprite, otherwise we don't track
             // it and don't care - this makes sure carpets and horses don't change direction when going up
             // and down
             if (bChangeTile)
             {
-                PreviousDirection = CurrentDirection;
-                CurrentDirection = direction;
+                PreviousDirection = Direction;
+                Direction = direction;
             }
 
-            if (CurrentBoardedMapUnit != null) CurrentBoardedMapUnit.Direction = CurrentDirection;
+            if (CurrentBoardedMapUnit != null) CurrentBoardedMapUnit.Direction = Direction;
 
             // did the Avatar change direction?
-            bool bDirectionChanged = PreviousDirection != CurrentDirection;
+            bool bDirectionChanged = PreviousDirection != Direction;
 
             // set the new sprite to reflect the new direction
             if (bChangeTile) KeyTileReference = GetCurrentTileReference();
@@ -270,6 +294,13 @@ namespace Ultima5Redux.MapUnits
             // return false if the direction changed AND your on a Frigate
             // because you will just change direction
             return !(bDirectionChanged && CurrentAvatarState == AvatarState.Frigate);
+        }
+
+        public override bool UseFourDirections
+        {
+            get => !_onlyLeftRight[CurrentAvatarState];
+            set => // generally ignored for now - don't love this 
+                _useFourDirections = value;
         }
     }
 }

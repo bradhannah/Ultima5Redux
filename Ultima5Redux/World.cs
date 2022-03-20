@@ -272,7 +272,7 @@ namespace Ultima5Redux
             State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity--;
             MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
                 State.TheVirtualMap.CurrentPosition.XY,
-                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentDirection,
+                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Direction,
                 out int _);
             BoardAndCleanFromWorld(carpet);
             StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
@@ -1245,7 +1245,9 @@ namespace Ultima5Redux
                     throw new Ultima5ReduxException("can't fire on large map unless you're on a frigate");
 
                 // make sure the boat is facing the correct direction given the direction of the cannon
-                TileReference currentAvatarTileReference = avatar.KeyTileReference;
+                TileReference currentAvatarTileReference = avatar.IsAvatarOnBoardedThing
+                    ? avatar.BoardedTileReference
+                    : avatar.KeyTileReference;
 
                 bool bShipFacingUpDown = currentAvatarTileReference.Name.EndsWith("Up") ||
                                          currentAvatarTileReference.Name.EndsWith("Down");
@@ -1276,8 +1278,8 @@ namespace Ultima5Redux
                     {
                         // kill them
                         MapUnit targetedMapUnit = State.TheVirtualMap.GetMapUnitOnTile(adjustedPosition)[0];
-                        StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                            "Killed " + targetedMapUnit.FriendlyName), false);
+                        StreamingOutput.Instance.PushMessage(
+                            "Killed " + targetedMapUnit.FriendlyName, false);
                         State.TheVirtualMap.TheMapUnits.ClearMapUnit(targetedMapUnit);
                         cannonBallDestination = adjustedPosition;
                         return AdvanceTime(2, out tryToMoveResult);

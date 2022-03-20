@@ -352,7 +352,7 @@ namespace Ultima5Redux.Maps
                 throw new Ultima5ReduxException("Tried to get Avatar's frigate, but it returned  null");
 
             // if the wind is blowing the same direction then we double the damage
-            if (avatar.CurrentDirection == windDirection) nDamage *= 2;
+            if (avatar.Direction == windDirection) nDamage *= 2;
             // decrement the damage from the frigate
             frigate.Hitpoints -= nDamage;
 

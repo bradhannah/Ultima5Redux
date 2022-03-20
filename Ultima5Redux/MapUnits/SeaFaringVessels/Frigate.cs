@@ -57,7 +57,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         /// </summary>
         public int SkiffsAboard { get; set; }
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
 
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
             SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;

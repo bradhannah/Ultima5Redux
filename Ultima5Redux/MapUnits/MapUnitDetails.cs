@@ -5,18 +5,19 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public abstract class MapUnitDetails
     {
-
         /// <summary>
         ///     How many iterations will I force the character to wander?
         /// </summary>
-        [DataMember] internal int ForcedWandering { get; set; }
+        [DataMember]
+        internal int ForcedWandering { get; set; }
 
         /// <summary>
         ///     All the movements for the map character
         /// </summary>
-        [DataMember] internal MapUnitMovement Movement { get; private protected set; }
+        [DataMember]
+        internal MapUnitMovement Movement { get; private protected set; }
 
-        [DataMember] public Point2D.Direction Direction { get; set; }
+        [DataMember] public virtual Point2D.Direction Direction { get; set; }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         [DataMember] public bool IsOccupiedByAvatar { get; protected internal set; }
@@ -25,14 +26,16 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Is the character currently active on the map?
         /// </summary>
-        [DataMember] protected internal bool IsInParty { get; set; }
+        [DataMember]
+        protected internal bool IsInParty { get; set; }
 
         [DataMember] protected internal int MovementAttempts { get; set; }
 
         /// <summary>
         ///     The location state of the character
         /// </summary>
-        [DataMember] protected internal SmallMapCharacterState TheSmallMapCharacterState { get; set; }
+        [DataMember]
+        protected internal SmallMapCharacterState TheSmallMapCharacterState { get; set; }
 
         [IgnoreDataMember] public abstract Avatar.AvatarState BoardedAvatarState { get; }
         [IgnoreDataMember] public abstract string BoardXitName { get; }
@@ -41,11 +44,12 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Is the map character currently an active character on the current map
         /// </summary>
-        [IgnoreDataMember] public abstract bool IsActive { get; }
+        [IgnoreDataMember]
+        public abstract bool IsActive { get; }
 
         [IgnoreDataMember] public abstract bool IsAttackable { get; }
         [IgnoreDataMember] public abstract MapUnitPosition MapUnitPosition { get; internal set; }
 
-        [IgnoreDataMember] public bool UseFourDirections { get; set; }
+        [IgnoreDataMember] public virtual bool UseFourDirections { get; set; }
     }
 }

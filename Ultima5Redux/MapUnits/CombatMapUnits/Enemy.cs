@@ -52,7 +52,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember] public bool IsFleeing { get; set; }
 
         [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
         [IgnoreDataMember]
         protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =

@@ -65,7 +65,9 @@ namespace Ultima5Redux.MapUnits
             set => _keyTileIndex = value.Index;
         }
 
-        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+        [IgnoreDataMember]
+        protected internal abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
+
         [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
 
         [IgnoreDataMember]

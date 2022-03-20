@@ -691,7 +691,7 @@ namespace Ultima5Redux.MapUnits
 
         public Skiff MakeAndBoardSkiff()
         {
-            Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().CurrentDirection,
+            Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
                 out int _);
             GetAvatarMapUnit().BoardMapUnit(skiff);
             ClearAndSetEmptyMapUnits(skiff);
@@ -777,7 +777,7 @@ namespace Ultima5Redux.MapUnits
             // set the current positions to the equal the Avatar's as he exits the vehicle 
             unboardedMapUnit.MapLocation = CurrentLocation;
             unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
-            unboardedMapUnit.Direction = GetAvatarMapUnit().CurrentDirection;
+            unboardedMapUnit.Direction = GetAvatarMapUnit().Direction;
             unboardedMapUnit.KeyTileReference = unboardedMapUnit.NonBoardedTileReference;
 
             AddNewMapUnit(CurrentMapType, unboardedMapUnit);

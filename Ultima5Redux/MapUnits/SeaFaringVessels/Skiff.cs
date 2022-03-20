@@ -29,7 +29,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public override bool IsAttackable => false;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } =
             new()
             {
                 { Point2D.Direction.None, "SkiffLeft" },
