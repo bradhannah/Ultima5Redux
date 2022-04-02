@@ -280,21 +280,33 @@ namespace Ultima5Redux.Maps
             public CombatItemReference.MissileType AttackingMissileType { get; internal set; }
             public SingleCombatMapReference CombatMapReference { get; internal set; }
 
-            public enum DecidedAction { MoveUnit, RangedAttack, MeleeOverworldAttack, Stay, EnemyAttackCombatMap }
-
-            public DecidedAction TheDecidedAction
+            public enum DecidedAction
             {
-                get
+                Unset = -1, MoveUnit = 0, RangedAttack, MeleeOverworldAttack, Stay, EnemyAttackCombatMap
+            }
+
+            private DecidedAction _decidedAction = DecidedAction.Unset;
+
+            public DecidedAction GetDecidedAction()
+            {
+                if (_decidedAction != DecidedAction.Unset) return _decidedAction;
+                // if they have a combat map - then they are next to them and could go into combat
+                // if they have a missile type then they are within range and will attack with that
+                // if they have a Arrow missile type, then they will attack them melee in the overworld
+                if (CombatMapReference != null) _decidedAction = DecidedAction.EnemyAttackCombatMap;
+                else if (AttackingMissileType == CombatItemReference.MissileType.Arrow)
+                    _decidedAction = DecidedAction.MeleeOverworldAttack;
+                else if (AttackingMissileType != CombatItemReference.MissileType.None)
                 {
-                    // if they have a combat map - then they are next to them and could go into combat
-                    // if they have a missile type then they are within range and will attack with that
-                    // if they have a Arrow missile type, then they will attack them melee in the overworld
-                    if (CombatMapReference != null) return DecidedAction.EnemyAttackCombatMap;
-                    if (AttackingMissileType == CombatItemReference.MissileType.Arrow)
-                        return DecidedAction.MeleeOverworldAttack;
-                    if (AttackingMissileType != CombatItemReference.MissileType.None) return DecidedAction.RangedAttack;
-                    return DecidedAction.MoveUnit;
+                    // we will not ALWAYS range attack, sometimes they will try to get closer to the avatar
+                    _decidedAction = Utils.OneInXOdds(2) ? DecidedAction.RangedAttack : DecidedAction.MoveUnit;
                 }
+                else
+                {
+                    _decidedAction = DecidedAction.MoveUnit;
+                }
+
+                return _decidedAction;
             }
 
             public AggressiveMapUnitInfo(MapUnit attackingMapUnit,
@@ -699,7 +711,7 @@ namespace Ultima5Redux.Maps
                 //     $"Missing {mapUnit.FriendlyName} when looking to move units");
 
                 // if the map unit doesn't haven't a particular aggression then it moves 
-                if (aggressiveMapUnitInfo.TheDecidedAction == AggressiveMapUnitInfo.DecidedAction.MoveUnit)
+                if (aggressiveMapUnitInfo.GetDecidedAction() == AggressiveMapUnitInfo.DecidedAction.MoveUnit)
                     mapUnit.CompleteNextMove(this, GameStateReference.State.TheTimeOfDay,
                         CurrentMap.GetAStarByMapUnit(mapUnit));
             }

@@ -358,18 +358,19 @@ namespace Ultima5Redux
                         Debug.Assert(aggressiveMapUnitInfo.CombatMapReference != null);
                         // issue here is I need to be able to tell the caller to load a combat map
 
+                        MapUnitPosition avatarPosition = State.TheVirtualMap.TheMapUnits.CurrentAvatarPosition;
+                        TileReference currentTile = State.TheVirtualMap.CurrentMap
+                            .GetTileReference(avatarPosition.XY);
+
                         if (!State.TheVirtualMap.IsAvatarRidingSomething &&
-                            aggressiveMapUnitInfo.AttackingMapUnit is Enemy enemy)
+                            aggressiveMapUnitInfo.AttackingMapUnit is Enemy enemy &&
+                            enemy.EnemyReference.IsWaterEnemy && !currentTile.IsWalking_Passable &&
+                            currentTile.IsWaterTile)
                         {
-                            MapUnitPosition avatarPosition = State.TheVirtualMap.TheMapUnits.CurrentAvatarPosition;
-                            if (enemy.EnemyReference.IsWaterEnemy && State.TheVirtualMap.CurrentMap
-                                    .GetTileReference(avatarPosition.XY).IsWaterTile)
-                            {
-                                // if the avatar is on a water tile & getting attacked by a water monster
-                                // and they are not riding anything, then we friendly indicate they are debugging
-                                StreamingOutput.Instance.PushMessage("It appears you are debugging - " +
-                                                                     enemy.FriendlyName + " tried to attack you.");
-                            }
+                            // if the avatar is on a water tile & getting attacked by a water monster
+                            // and they are not riding anything, then we friendly indicate they are debugging
+                            StreamingOutput.Instance.PushMessage("It appears you are debugging - " +
+                                                                 enemy.FriendlyName + " tried to attack you.");
                         }
                         else
                         {
