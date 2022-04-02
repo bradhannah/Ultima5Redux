@@ -293,9 +293,14 @@ namespace Ultima5Redux.Maps
                 // if they have a combat map - then they are next to them and could go into combat
                 // if they have a missile type then they are within range and will attack with that
                 // if they have a Arrow missile type, then they will attack them melee in the overworld
-                if (CombatMapReference != null) _decidedAction = DecidedAction.EnemyAttackCombatMap;
+                if (CombatMapReference != null)
+                {
+                    _decidedAction = DecidedAction.EnemyAttackCombatMap;
+                }
                 else if (AttackingMissileType == CombatItemReference.MissileType.Arrow)
+                {
                     _decidedAction = DecidedAction.MeleeOverworldAttack;
+                }
                 else if (AttackingMissileType != CombatItemReference.MissileType.None)
                 {
                     // we will not ALWAYS range attack, sometimes they will try to get closer to the avatar
@@ -422,6 +427,8 @@ namespace Ultima5Redux.Maps
                 int nChoice = Utils.GetNumberFromAndTo(0, nCombatMapEnemies - 1);
 
                 combatMapAggressor = aggressiveMapUnitInfosWithCombatMaps[nChoice];
+                aggressiveMapUnitInfos.Clear();
+                aggressiveMapUnitInfos[combatMapAggressor.AttackingMapUnit] = combatMapAggressor;
                 return;
             }
 
@@ -438,6 +445,10 @@ namespace Ultima5Redux.Maps
 
                 // bajh: I know all the conditions look identical now - but I suspect they have different attack
                 // powers I will tweak later
+
+                // it's possible that the aggressor may not actually be attacking even if they can
+                if (aggressiveMapUnitInfo.GetDecidedAction() !=
+                    AggressiveMapUnitInfo.DecidedAction.RangedAttack) continue;
 
                 switch (aggressiveMapUnitInfo.AttackingMissileType)
                 {

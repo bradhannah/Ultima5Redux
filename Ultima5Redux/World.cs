@@ -350,6 +350,8 @@ namespace Ultima5Redux
                 State.TheVirtualMap.MoveMapUnitsToNextMove(aggressiveMapUnitInfos);
                 if (!bNoAggression)
                 {
+                    // this routine will check to see if a combat map load occured - if so then we only focus on it
+                    // and ignore all other work
                     State.TheVirtualMap.ProcessAggressiveMapUnitAttacks(State.CharacterRecords, aggressiveMapUnitInfos,
                         out VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo);
                     // if there is an individual aggressive map unit, then we know that we are going to load a combat map
@@ -387,6 +389,10 @@ namespace Ultima5Redux
                     {
                         State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
                     }
+                }
+                else
+                {
+                    State.TheVirtualMap.GenerateAndCleanupEnemies(State.TheTimeOfDay.MinutesSinceBeginning);
                 }
             }
 
