@@ -358,13 +358,29 @@ namespace Ultima5Redux
                         Debug.Assert(aggressiveMapUnitInfo.CombatMapReference != null);
                         // issue here is I need to be able to tell the caller to load a combat map
 
-                        // let's delete the map unit from the map too since they disappear regardless of result
-                        State.TheVirtualMap.TheMapUnits.ClearMapUnit(aggressiveMapUnitInfo.AttackingMapUnit);
+                        if (!State.TheVirtualMap.IsAvatarRidingSomething &&
+                            aggressiveMapUnitInfo.AttackingMapUnit is Enemy enemy)
+                        {
+                            MapUnitPosition avatarPosition = State.TheVirtualMap.TheMapUnits.CurrentAvatarPosition;
+                            if (enemy.EnemyReference.IsWaterEnemy && State.TheVirtualMap.CurrentMap
+                                    .GetTileReference(avatarPosition.XY).IsWaterTile)
+                            {
+                                // if the avatar is on a water tile & getting attacked by a water monster
+                                // and they are not riding anything, then we friendly indicate they are debugging
+                                StreamingOutput.Instance.PushMessage("It appears you are debugging - " +
+                                                                     enemy.FriendlyName + " tried to attack you.");
+                            }
+                        }
+                        else
+                        {
+                            // let's delete the map unit from the map too since they disappear regardless of result
+                            State.TheVirtualMap.TheMapUnits.ClearMapUnit(aggressiveMapUnitInfo.AttackingMapUnit);
 
-                        State.TheVirtualMap.LoadCombatMapWithCalculation(aggressiveMapUnitInfo.CombatMapReference,
-                            State.CharacterRecords, aggressiveMapUnitInfo.AttackingMapUnit);
+                            State.TheVirtualMap.LoadCombatMapWithCalculation(aggressiveMapUnitInfo.CombatMapReference,
+                                State.CharacterRecords, aggressiveMapUnitInfo.AttackingMapUnit);
 
-                        tryToMoveResult = TryToMoveResult.CombatMapLoaded;
+                            tryToMoveResult = TryToMoveResult.CombatMapLoaded;
+                        }
                     }
                     else
                     {

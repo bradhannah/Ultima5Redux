@@ -248,7 +248,7 @@ namespace Ultima5Redux.MapUnits
 
             mapUnit.UseFourDirections = _bUseExtendedSprites;
 
-            if (!(mapUnit is Frigate)) return;
+            if (mapUnit is not Frigate) return;
 
             // if we are going onto a frigate, then we want to make sure the Avatar can start rowing
             // in the direction that it's already facing
