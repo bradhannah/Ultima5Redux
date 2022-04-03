@@ -1248,6 +1248,8 @@ namespace Ultima5Redux
         ///     Try to fire from whereever you are
         /// </summary>
         /// <param name="direction"></param>
+        /// <param name="tryToMoveResult"></param>
+        /// <param name="cannonBallDestination"></param>
         public List<VirtualMap.AggressiveMapUnitInfo> TryToFire(Point2D.Direction direction,
             out TryToMoveResult tryToMoveResult,
             out Point2D cannonBallDestination)

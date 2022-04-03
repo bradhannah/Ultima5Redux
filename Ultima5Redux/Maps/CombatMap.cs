@@ -28,7 +28,7 @@ namespace Ultima5Redux.Maps
         {
             RequireCharacterInput, EnemyMoved, EnemyAttacks, EnemyWandered, EnemyEscaped, EnemyMissed, EnemyGrazed,
             EnemyMissedButHit, CombatPlayerMissed, CombatPlayerMissedButHit, CombatPlayerHit, CombatPlayerGrazed,
-            CombatPlayerBlocked, NoAction, Sleeping
+            CombatPlayerBlocked, NoAction, Sleeping, OverworldAvatarAttacking
         }
 
         private bool _bPlayerHasChanged = true;
