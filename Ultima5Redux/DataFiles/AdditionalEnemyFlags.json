@@ -593,8 +593,8 @@
     "CanFlyOverWater": true,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
-    "LargeMapMissile": "None",
-    "LargeMapMissileRange": 0,
+    "LargeMapMissile": "Red",
+    "LargeMapMissileRange": 3,
     "Era1Weight": 0,
     "Era2Weight": 0,
     "Era3Weight": 10

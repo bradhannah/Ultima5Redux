@@ -311,7 +311,7 @@ namespace Ultima5Redux.References.Maps
         public CombatMapSpriteType GetAdjustedEnemySprite(int nIndex, out int nSpriteIndex)
         {
             int nEnemyRawSprite = GetRawEnemySprite(nIndex);
-            nSpriteIndex = nEnemyRawSprite + 0xFF;
+            nSpriteIndex = nEnemyRawSprite + 0x100;
 
             switch (nEnemyRawSprite)
             {
@@ -333,8 +333,8 @@ namespace Ultima5Redux.References.Maps
             // if the sprite is lower than the crown index, then we add 4
             // OR
             // it's a Shadow Lord, but it breaks convention
-            if (nSpriteIndex is < 436 or >= 504) nSpriteIndex += 4;
-
+            //if (nSpriteIndex is < 436 or >= 504) nSpriteIndex += 4;
+            return CombatMapSpriteType.AutoSelected;
             if (nSpriteIndex is < 316 or > 511)
             {
                 throw new Ultima5ReduxException(
