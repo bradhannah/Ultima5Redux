@@ -32,6 +32,12 @@ namespace Ultima5Redux.MapUnits
                 _currentDirection = value;
                 if (IsAvatarOnBoardedThing)
                 {
+                    // when we load from disk, there is possible missing map unit
+                    if (CurrentBoardedMapUnit == null)
+                    {
+                        BoardMapUnitFromAvatarState(CurrentAvatarState);
+                    }
+
                     CurrentBoardedMapUnit.Direction = value;
                 }
             }
@@ -42,17 +48,15 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         [IgnoreDataMember] private readonly Dictionary<AvatarState, bool> _onlyLeftRight = new()
         {
-            { AvatarState.Carpet, true },
+            { AvatarState.Carpet, false },
             { AvatarState.Frigate, false },
             { AvatarState.Hidden, false },
-            { AvatarState.Horse, true },
+            { AvatarState.Horse, false },
             { AvatarState.Skiff, false },
             { AvatarState.Regular, false }
         };
 
-        private bool _useFourDirections;
-
-        [IgnoreDataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
+        [DataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
         [IgnoreDataMember] public override string BoardXitName => "You can't board the Avatar you silly goose!";
 
@@ -210,7 +214,7 @@ namespace Ultima5Redux.MapUnits
 
         private TileReference GetCurrentTileReference()
         {
-            if (CurrentAvatarState == AvatarState.Regular || CurrentAvatarState == AvatarState.Hidden)
+            if (CurrentAvatarState is AvatarState.Regular or AvatarState.Hidden)
                 return NonBoardedTileReference;
 
             return CurrentBoardedMapUnit.BoardedTileReference;
@@ -266,10 +270,12 @@ namespace Ultima5Redux.MapUnits
         {
             //bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections ?? false;
 
-            bool bChangeTile = !(_onlyLeftRight[CurrentAvatarState] &&
-                                 !UseFourDirections &&
-                                 direction != Point2D.Direction.Left &&
-                                 direction != Point2D.Direction.Right);
+            // bool bChangeTile = !(_onlyLeftRight[CurrentAvatarState] &&
+            //                      !UseFourDirections &&
+            //                      direction != Point2D.Direction.Left &&
+            //                      direction != Point2D.Direction.Right);
+            bool bChangeTile = UseFourDirections ||
+                               (direction is Point2D.Direction.Left or Point2D.Direction.Right);
             // if there are only left and right sprites then we don't switch directions unless they actually
             // go left or right, otherwise we maintain direction - UNLESS we have forced extended sprites on
             // for the vehicle
@@ -299,8 +305,10 @@ namespace Ultima5Redux.MapUnits
         public override bool UseFourDirections
         {
             get => !_onlyLeftRight[CurrentAvatarState];
-            set => // generally ignored for now - don't love this 
-                _useFourDirections = value;
+            set
+            {
+                // generally ignored for now - don't love this 
+            }
         }
     }
 }

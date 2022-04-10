@@ -334,6 +334,7 @@ namespace Ultima5Redux.References.Maps
             // OR
             // it's a Shadow Lord, but it breaks convention
             //if (nSpriteIndex is < 436 or >= 504) nSpriteIndex += 4;
+
             return CombatMapSpriteType.AutoSelected;
             if (nSpriteIndex is < 316 or > 511)
             {

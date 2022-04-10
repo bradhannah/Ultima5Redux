@@ -18,15 +18,15 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [JsonConverter(typeof(StringEnumConverter))]
         public enum SpecificItemTypeSprite
         {
-            Carpet = 170, Grapple = 12, Spyglass = 89, HMSCape = 260, PocketWatch = 232, BlackBadge = 281,
+            Carpet = 170, Grapple = 12, Spyglass = 89, HMSCape = 260, PocketWatch = 232, BlackBadge = 88,
             WoodenBox = 270, Sextant = 256
         }
 
-        [DataMember] public SpecificItemTypeSprite ItemType { get; private set; }
+        [DataMember] public SpecificItemType ItemType { get; private set; }
 
         [IgnoreDataMember] public override string FindDescription => InvRef.FriendlyItemName;
 
-        [IgnoreDataMember] public override bool HideQuantity => ItemType != SpecificItemTypeSprite.Carpet;
+        [IgnoreDataMember] public override bool HideQuantity => ItemType != SpecificItemType.Carpet;
 
         [IgnoreDataMember] public override string InventoryReferenceString => ItemType.ToString();
 
@@ -38,7 +38,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public SpecialItem(SpecificItemTypeSprite itemType, int quantity) : base(quantity, (int)itemType,
+        public SpecialItem(SpecificItemType itemType, int quantity) : base(quantity, (int)itemType,
             InventoryReferences.InventoryReferenceType.Item)
         {
             ItemType = itemType;

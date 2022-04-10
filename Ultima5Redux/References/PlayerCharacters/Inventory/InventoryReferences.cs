@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -37,7 +38,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         /// <summary>
         ///     All inventory references separated by item types
         /// </summary>
-        private readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
+        public readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
 
         /// <summary>
         ///     All keywords that will be highlighted specifically for reagents
@@ -135,6 +136,14 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 throw new Ultima5ReduxException(
                     "You requested an equipment item that doesn't exist in the dictionary: " + (int)equipment);
             return _invRefsByEquipment[equipment];
+        }
+
+        public IEnumerable<InventoryReference> GetInventoryReferences(int nSpriteIndex)
+        {
+            return (from innerInvRefs in _invRefsDictionary.Values.ToList()
+                from invRef in innerInvRefs
+                where invRef.ItemSpriteExposed == nSpriteIndex
+                select invRef);
         }
 
         /// <summary>

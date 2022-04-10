@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -24,9 +25,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [DataMember] public Weapons TheWeapons { get; set; }
         [IgnoreDataMember] public List<InventoryItem> AllItems { get; } = new();
         [IgnoreDataMember] public List<CombatItem> CombatItems { get; } = new();
-        [IgnoreDataMember] public int Food => TheProvisions.Items[Provision.SpecificProvisionType.Food].Quantity;
 
-        [IgnoreDataMember] public int Gold => TheProvisions.Items[Provision.SpecificProvisionType.Gold].Quantity;
+        [IgnoreDataMember]
+        public int Food => TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Food].Quantity;
+
+        [IgnoreDataMember]
+        public int Gold => TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity;
+
         [IgnoreDataMember] public List<CombatItem> ReadyItems { get; } = new();
 
         [IgnoreDataMember] public IEnumerable<InventoryItem> ReadyItemsAsInventoryItem => ReadyItems;
@@ -178,8 +183,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public bool SpendGold(int nGold)
         {
-            if (TheProvisions.Items[Provision.SpecificProvisionType.Gold].Quantity < nGold) return false;
-            TheProvisions.Items[Provision.SpecificProvisionType.Gold].Quantity -= nGold;
+            if (TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity < nGold) return false;
+            TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity -= nGold;
             return true;
         }
     }

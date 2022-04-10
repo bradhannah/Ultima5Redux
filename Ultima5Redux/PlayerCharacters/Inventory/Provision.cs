@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
@@ -10,19 +9,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public sealed class Provision : InventoryItem
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpecificProvisionSpritesType
-        {
-            Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258
-        }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpecificProvisionType
-        {
-            Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
-        }
-
-        [DataMember] public SpecificProvisionType ProvisionType { get; private set; }
+        [DataMember] public ProvisionReferences.SpecificProvisionType ProvisionType { get; private set; }
         [IgnoreDataMember] public override bool HideQuantity => false;
 
         [IgnoreDataMember] public override string InventoryReferenceString => ProvisionType.ToString();
@@ -40,15 +27,17 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
                 return ProvisionType switch
                 {
-                    SpecificProvisionType.Torches =>
+                    ProvisionReferences.SpecificProvisionType.Torches =>
                         getProvStr(DataOvlReference.ThingsIFindStrings.SOME_TORCHES_BANG_N),
-                    SpecificProvisionType.Gems => getProvStr(DataOvlReference.ThingsIFindStrings.A_GEM_BANG_N),
-                    SpecificProvisionType.Keys => getProvStr(DataOvlReference.ThingsIFindStrings.A_RING_OF_KEYS_BANG_N),
-                    SpecificProvisionType.SkullKeys => GameReferences.DataOvlRef.StringReferences
+                    ProvisionReferences.SpecificProvisionType.Gems => getProvStr(DataOvlReference.ThingsIFindStrings
+                        .A_GEM_BANG_N),
+                    ProvisionReferences.SpecificProvisionType.Keys => getProvStr(DataOvlReference.ThingsIFindStrings
+                        .A_RING_OF_KEYS_BANG_N),
+                    ProvisionReferences.SpecificProvisionType.SkullKeys => GameReferences.DataOvlRef.StringReferences
                         .GetString(DataOvlReference.GetThingsStrings.S_ODD_KEY).Trim(),
-                    SpecificProvisionType.Food => GameReferences.DataOvlRef.StringReferences
+                    ProvisionReferences.SpecificProvisionType.Food => GameReferences.DataOvlRef.StringReferences
                         .GetString(DataOvlReference.GetThingsStrings.S_FOOD).Trim(),
-                    SpecificProvisionType.Gold => GameReferences.DataOvlRef.StringReferences
+                    ProvisionReferences.SpecificProvisionType.Gold => GameReferences.DataOvlRef.StringReferences
                         .GetString(DataOvlReference.GetThingsStrings.S_GOLD).Trim(),
                     _ => throw new ArgumentOutOfRangeException()
                 };
@@ -62,9 +51,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Creates a provision
         /// </summary>
-        /// <param name="specificProvisionTypeat kind of provision</param>
+        /// <param name="specificProvisionType"></param>
         /// <param name="spriteNum"></param>
-        public Provision(SpecificProvisionType specificProvisionType, int spriteNum) : base(0, spriteNum,
+        public Provision(ProvisionReferences.SpecificProvisionType specificProvisionType, int spriteNum) : base(0,
+            spriteNum,
             InventoryReferences.InventoryReferenceType.Item)
         {
             ProvisionType = specificProvisionType;

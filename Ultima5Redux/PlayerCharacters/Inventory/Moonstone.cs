@@ -7,11 +7,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public sealed class Moonstone : InventoryItem
     {
-        private const int MOONSTONE_SPRITE = 281;
+        public const int MOONSTONE_SPRITE = 281;
 
         [DataMember] public MoonPhaseReferences.MoonPhases Phase { get; private set; }
 
-        [IgnoreDataMember] public override string FindDescription => GameReferences.DataOvlRef.StringReferences
+        [IgnoreDataMember]
+        public override string FindDescription => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.ThingsIFindStrings.A_STRANGE_ROCK_BANG_N).TrimEnd();
 
         [IgnoreDataMember] public override bool HideQuantity => true;
@@ -28,7 +29,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         ///     If the moonstone is buried, then it's not in your inventory
         ///     otherwise if it is NOT buried, then it has to be in your inventory
         /// </summary>
-        [IgnoreDataMember] public override int Quantity
+        [IgnoreDataMember]
+        public override int Quantity
         {
             get => GameStateReference.State.TheMoongates.IsMoonstoneBuried((int)Phase) ? 0 : 1;
             // filthy hack - if the _moongates is null, then the base constructor has called it and it doesn't matter at that point

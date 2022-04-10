@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ultima5Redux.DayNightMoon;
-using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 {
@@ -52,17 +52,17 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 .Replace("Yes", "").TrimStart();
         }
 
-        public string GetProvisionBuyOutput(Provision.SpecificProvisionType specificProvision, int nGold)
+        public string GetProvisionBuyOutput(ProvisionReferences.SpecificProvisionType specificProvision, int nGold)
         {
             switch (specificProvision)
             {
-                case Provision.SpecificProvisionType.Torches:
+                case ProvisionReferences.SpecificProvisionType.Torches:
                     return ShoppeKeeperDialogueReference.GetMerchantString(162, nGold);
-                case Provision.SpecificProvisionType.Gems:
+                case ProvisionReferences.SpecificProvisionType.Gems:
                     return ShoppeKeeperDialogueReference.GetMerchantString(161, nGold);
-                case Provision.SpecificProvisionType.Keys:
+                case ProvisionReferences.SpecificProvisionType.Keys:
                     return ShoppeKeeperDialogueReference.GetMerchantString(160, nGold);
-                case Provision.SpecificProvisionType.SkullKeys:
+                case ProvisionReferences.SpecificProvisionType.SkullKeys:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(specificProvision), specificProvision, null);
             }

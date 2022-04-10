@@ -39,6 +39,8 @@ namespace Ultima5Redux
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         public const byte N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH = 100;
 
+        public bool MonsterAI { get; set; } = true;
+
         private readonly Dictionary<Potion.PotionColor, MagicReference.SpellWords> _potionColorToSpellMap =
             new()
             {
@@ -348,12 +350,18 @@ namespace Ultima5Redux
                 tryToMoveResult = ProcessDamageOnAdvanceTime();
                 aggressiveMapUnitInfos = State.TheVirtualMap.GetAggressiveMapUnitInfo();
                 State.TheVirtualMap.MoveMapUnitsToNextMove(aggressiveMapUnitInfos);
+                VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo = null;
                 if (!bNoAggression)
                 {
                     // this routine will check to see if a combat map load occured - if so then we only focus on it
                     // and ignore all other work
-                    State.TheVirtualMap.ProcessAggressiveMapUnitAttacks(State.CharacterRecords, aggressiveMapUnitInfos,
-                        out VirtualMap.AggressiveMapUnitInfo aggressiveMapUnitInfo);
+                    if (MonsterAI)
+                    {
+                        State.TheVirtualMap.ProcessAggressiveMapUnitAttacks(State.CharacterRecords,
+                            aggressiveMapUnitInfos,
+                            out aggressiveMapUnitInfo);
+                    }
+
                     // if there is an individual aggressive map unit, then we know that we are going to load a combat map
                     if (aggressiveMapUnitInfo != null)
                     {
@@ -598,7 +606,8 @@ namespace Ultima5Redux
         public void IgniteTorch()
         {
             // if there are no torches then report back and make no change
-            if (State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity <= 0)
+            if (State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity <=
+                0)
             {
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.SleepTransportStrings
@@ -606,7 +615,7 @@ namespace Ultima5Redux
                 return;
             }
 
-            State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity--;
+            State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity--;
             State.TurnsToExtinguish = N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH;
             // this will trigger a re-read of time of day changes
             State.TheTimeOfDay.SetAllChangeTrackers();
@@ -929,7 +938,7 @@ namespace Ultima5Redux
             if (tileReference.Index == GameReferences.SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
                 tileReference.Index == GameReferences.SpriteTileReferences.GetTileNumberByName("RightSconce"))
             {
-                State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Torches].Quantity++;
+                State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity++;
 
                 State.TheVirtualMap.SetOverridingTileReferece(
                     GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
@@ -1002,7 +1011,8 @@ namespace Ultima5Redux
                 if (bIsDoorMagical)
                 {
                     // we use up a key
-                    State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Keys].Quantity--;
+                    State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Keys]
+                        .Quantity--;
 
                     // for now we will also just open the door so we can get around - will address when we have spells
                     State.TheVirtualMap.SetOverridingTileReferece(
@@ -1019,7 +1029,8 @@ namespace Ultima5Redux
                 else if (bIsDoorLocked)
                 {
                     // we use up a key
-                    State.PlayerInventory.TheProvisions.Items[Provision.SpecificProvisionType.Keys].Quantity--;
+                    State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Keys]
+                        .Quantity--;
 
                     // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
 
@@ -1911,38 +1922,38 @@ namespace Ultima5Redux
             bWasUsed = true;
             switch (spcItem.ItemType)
             {
-                case SpecialItem.SpecificItemTypeSprite.Carpet:
+                case SpecialItem.SpecificItemType.Carpet:
                     UseMagicCarpet(out bWasUsed);
                     break;
-                case SpecialItem.SpecificItemTypeSprite.Grapple:
+                case SpecialItem.SpecificItemType.Grapple:
                     StreamingOutput.Instance.PushMessage("Grapple\n\nYou need to K-limb with it!", false);
                     break;
-                case SpecialItem.SpecificItemTypeSprite.Spyglass:
+                case SpecialItem.SpecificItemType.Spyglass:
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WearUseItemStrings
                             .SPYGLASS_N_N), false);
                     break;
-                case SpecialItem.SpecificItemTypeSprite.HMSCape:
+                case SpecialItem.SpecificItemType.HMSCape:
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WearUseItemStrings
                             .PLANS_N_N), false);
                     break;
-                case SpecialItem.SpecificItemTypeSprite.PocketWatch:
+                case SpecialItem.SpecificItemType.PocketWatch:
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WearUseItemStrings
                             .WATCH_N_N_THE_POCKET_W_READS) + " " + State.TheTimeOfDay.FormattedTime, false);
                     break;
-                case SpecialItem.SpecificItemTypeSprite.BlackBadge:
+                case SpecialItem.SpecificItemType.BlackBadge:
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WearUseItemStrings
                             .BADGE_N_N), false);
                     break;
-                case SpecialItem.SpecificItemTypeSprite.WoodenBox:
+                case SpecialItem.SpecificItemType.WoodenBox:
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WearUseItemStrings
                             .BOX_N_HOW_N), false);
                     break;
-                case SpecialItem.SpecificItemTypeSprite.Sextant:
+                case SpecialItem.SpecificItemType.Sextant:
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WearUseItemStrings
                             .SEXTANT_N_N), false);
