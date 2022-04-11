@@ -20,7 +20,7 @@ namespace Ultima5Redux.Maps
         // when computing what should happen when a player hits - these states can be triggered 
         private enum AdditionalHitStateAction { None, EnemyDivided }
 
-        public enum SpecificCombatMapUnit { All, CombatPlayer, Enemy }
+        public enum SpecificCombatMapUnit { All, CombatPlayer, Enemy, NonAttackUnit }
 
         public enum SelectionAction { None, Magic, Attack }
 
@@ -44,6 +44,7 @@ namespace Ultima5Redux.Maps
 
         private IEnumerable<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers;
         private IEnumerable<CombatMapUnit> AllEnemiesGeneric => AllEnemies;
+        private IEnumerable<CombatMapUnit> AllNonAttackGeneric => AllNonAttackUnits;
 
         /// <summary>
         ///     Current combat map units for current combat map
@@ -68,6 +69,7 @@ namespace Ultima5Redux.Maps
 
         public IEnumerable<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
         public IEnumerable<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
+        public IEnumerable<NonAttackingUnit> AllNonAttackUnits => CombatMapUnits.CurrentMapUnits.NonAttackingUnits;
 
         public IEnumerable<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
             CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
@@ -770,6 +772,8 @@ namespace Ultima5Redux.Maps
                     return AllCombatPlayersGeneric.Where(combatPlayer => combatPlayer.IsActive);
                 case SpecificCombatMapUnit.Enemy:
                     return AllEnemiesGeneric.Where(enemy => enemy.IsActive);
+                case SpecificCombatMapUnit.NonAttackUnit:
+                    return AllNonAttackUnits.Where(nau => nau.IsActive);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(specificCombatMapUnit), specificCombatMapUnit, null);
             }

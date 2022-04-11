@@ -1548,7 +1548,8 @@ namespace Ultima5Redux.Maps
             List<Type> visibilePriorityOrder = new()
             {
                 typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar)
+                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(StackableItem), typeof(Chest),
+                typeof(DeadBody), typeof(BloodSpatter)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
 
@@ -1561,7 +1562,10 @@ namespace Ultima5Redux.Maps
                     if (!mapUnit.IsActive) continue;
                     // if it's a combat unit but they dead or gone then we skip
                     if (mapUnit is CombatMapUnit combatMapUnit &&
-                        (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0)) continue;
+                        (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0))
+                    {
+                        if (combatMapUnit is not NonAttackingUnit) continue;
+                    }
 
                     // if we find the first highest priority item, then we simply return it
                     if (mapUnit.GetType() == type) return mapUnit;

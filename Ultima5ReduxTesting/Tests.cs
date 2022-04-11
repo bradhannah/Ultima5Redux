@@ -1743,5 +1743,29 @@ namespace Ultima5ReduxTesting
                 }
             }
         }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_LBChestCheck(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            Trace.Write("Starting ");
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
+
+            // MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(new Point2D(0, 0), true);
+            // Assert.IsNotNull(mapUnit);
+            //
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
+
+            MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(new Point2D(16, 21), true);
+            Assert.IsNotNull(mapUnit);
+
+            TestContext.Out.Write("Ending ");
+
+            Assert.True(true);
+        }
     }
 }

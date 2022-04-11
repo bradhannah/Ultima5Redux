@@ -310,8 +310,19 @@ namespace Ultima5Redux.MapUnits
             }
             else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active)
             {
-                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
-                    mapUnitPosition, npcState);
+                // This is where we will do custom stuff for special NPS
+                // guard or daemon or stone gargoyle or fighter or bard or townesperson or rat or bat or shadowlord
+                if (npcState.NPCRef.NPCKeySprite is 368 or 472 or 440 or 328 or 324 or 336 or 400 or 404 or 508)
+                {
+                    newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
+                        mapUnitPosition, npcState);
+                }
+                else
+                {
+                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite);
+                    newUnit.MapLocation = location;
+                    newUnit.MapUnitPosition = mapUnitPosition;
+                }
             }
             else if (GameReferences.SpriteTileReferences.IsMonster(tileReference.Index))
             {
@@ -500,6 +511,8 @@ namespace Ultima5Redux.MapUnits
                     smallMapCharacterState.TheMapUnitPosition,
                     GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
                     smallMapCharacterState);
+
+                if (mapUnit is EmptyMapUnit) continue;
 
                 SmallMapUnitCollection.Add(mapUnit);
             }

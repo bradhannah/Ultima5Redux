@@ -1,4 +1,5 @@
 ﻿using Ultima5Redux.References;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
@@ -10,5 +11,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
         public override string Name => FriendlyName;
+
+        public override TileReference KeyTileReference =>
+            GameReferences.SpriteTileReferences.GetTileReferenceByName("Chest");
     }
 }

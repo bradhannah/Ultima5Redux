@@ -44,6 +44,13 @@ namespace Ultima5Redux.MapUnits
             set => ReplaceAll(value);
         }
 
+        [DataMember(Name = "NonAttackingUnits")]
+        private NonAttackingUnit[] SaveNonAttackingUnits
+        {
+            get => GetMapUnitByTypeToArray<NonAttackingUnit>();
+            set => ReplaceAll(value);
+        }
+
         [DataMember(Name = "Frigates")]
         private Frigate[] SaveFrigates
         {
@@ -91,6 +98,9 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] public IEnumerable<EmptyMapUnit> EmptyMapUnits => GetMapUnitByType<EmptyMapUnit>();
 
         [IgnoreDataMember] public IEnumerable<Enemy> Enemies => GetMapUnitByType<Enemy>();
+
+        [IgnoreDataMember]
+        public IEnumerable<NonAttackingUnit> NonAttackingUnits => GetMapUnitByType<NonAttackingUnit>();
 
         [IgnoreDataMember] public IEnumerable<Frigate> Frigates => GetMapUnitByType<Frigate>();
 
