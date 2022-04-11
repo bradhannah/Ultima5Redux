@@ -512,7 +512,10 @@ namespace Ultima5Redux.MapUnits
                     GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
                     smallMapCharacterState);
 
-                if (mapUnit is EmptyMapUnit) continue;
+                // I want to be able to do this - but if I do then no new map units are created...
+                // I used the original game logic of limiting to 32 entities, which is probably the correct
+                // thing to do
+                //if (mapUnit is EmptyMapUnit) continue;
 
                 SmallMapUnitCollection.Add(mapUnit);
             }
