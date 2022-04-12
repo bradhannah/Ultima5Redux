@@ -49,7 +49,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 //case (int)SpecialItem.SpecificItemTypeSprite.HMSCape:
                 case (int)SpriteRefs.Scroll:
                     if (itemReference.ItemName == "HMSCape")
-                        return new SpecialItem(GetEnumByInventoryName<SpecialItem.SpecificItemType>(itemReference), 1);
+                        return new SpecialItem(SpecialItem.SpecificItemType.HMSCape,
+                            SpecialItem.SpecificItemTypeSprite.HMSCape, 1);
+
+                    // return new SpecialItem((SpecialItem.SpecificItemType)itemReference), 1);
 
                     MagicReference.SpellWords spellWords =
                         GetEnumByInventoryName<MagicReference.SpellWords>(itemReference);
@@ -63,13 +66,28 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                         GetEnumByInventoryName<LordBritishArtifact.ArtifactType>(itemReference), 1);
                 case (int)SpecialItem.SpecificItemTypeSprite.Carpet:
                 case 283:
+                    return new SpecialItem(SpecialItem.SpecificItemType.Carpet,
+                        SpecialItem.SpecificItemTypeSprite.Carpet, 1);
                 case (int)SpecialItem.SpecificItemTypeSprite.Grapple:
+                    return new SpecialItem(SpecialItem.SpecificItemType.Grapple,
+                        SpecialItem.SpecificItemTypeSprite.Grapple, 1);
                 case (int)SpecialItem.SpecificItemTypeSprite.Sextant:
+                    return new SpecialItem(SpecialItem.SpecificItemType.Sextant,
+                        SpecialItem.SpecificItemTypeSprite.Sextant, 1);
                 case (int)SpecialItem.SpecificItemTypeSprite.Spyglass:
+                    return new SpecialItem(SpecialItem.SpecificItemType.Spyglass,
+                        SpecialItem.SpecificItemTypeSprite.Spyglass, 1);
                 case (int)SpecialItem.SpecificItemTypeSprite.BlackBadge:
+                    return new SpecialItem(SpecialItem.SpecificItemType.BlackBadge,
+                        SpecialItem.SpecificItemTypeSprite.BlackBadge, 1);
                 case (int)SpecialItem.SpecificItemTypeSprite.PocketWatch:
+                    return new SpecialItem(SpecialItem.SpecificItemType.PocketWatch,
+                        SpecialItem.SpecificItemTypeSprite.PocketWatch, 1);
                 case (int)SpecialItem.SpecificItemTypeSprite.WoodenBox:
-                    return new SpecialItem(GetEnumByInventoryName<SpecialItem.SpecificItemType>(itemReference), 1);
+                    return new SpecialItem(SpecialItem.SpecificItemType.WoodenBox,
+                        SpecialItem.SpecificItemTypeSprite.WoodenBox, 1);
+                // return new SpecialItem((SpecialItem.SpecificItemTypeSprite)itemReference.ItemSpriteExposed, 1);
+                // return new SpecialItem(GetEnumByInventoryName<SpecialItem.SpecificItemType>(itemReference), 1);
                 case Moonstone.MOONSTONE_SPRITE:
                     return new Moonstone(GetEnumByInventoryName<MoonPhaseReferences.MoonPhases>(itemReference));
                 default:

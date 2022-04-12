@@ -1767,5 +1767,62 @@ namespace Ultima5ReduxTesting
 
             Assert.True(true);
         }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_BlackthorneThingCheck(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            Trace.Write("Starting ");
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn, 3));
+
+            Point2D thingPosition = new Point2D(15, 13);
+            bool bIsMapUnit = world.State.TheVirtualMap.IsMapUnitOccupiedTile(thingPosition);
+            Assert.IsTrue(bIsMapUnit);
+            MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(thingPosition, true);
+            Assert.IsNotNull(mapUnit);
+
+            TestContext.Out.Write("Ending ");
+
+            Assert.True(true);
+        }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_CheckAndGetAllMapUnitsSmallMap(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+            foreach (SmallMapReferences.SingleMapReference smr in GameReferences.SmallMapRef.MapReferenceList)
+            {
+                SmallMapReferences.SingleMapReference singleMap =
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
+                // we don't test dungeon maps here
+                if (singleMap.MapType == Map.Maps.Dungeon) continue;
+                world.State.TheVirtualMap.LoadSmallMap(singleMap);
+
+                for (int i = 0; i < 32; i++)
+                {
+                    for (int j = 0; j < 32; j++)
+                    {
+                        Point2D thingPosition = new Point2D(i, j);
+
+                        bool bIsMapUnit = world.State.TheVirtualMap.IsMapUnitOccupiedTile(thingPosition);
+                        if (bIsMapUnit)
+                        {
+                            MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(thingPosition, false);
+                            Assert.IsNotNull(mapUnit);
+                            if (mapUnit is ItemStack itemStack)
+                            {
+                                GameReferences.SpriteTileReferences.GetTileReference(itemStack.KeyTileReference.Index);
+                            }
+                        }
+                    }
+                }
+            }
+
+            TestContext.Out.Write("Ending ");
+
+            Assert.True(true);
+        }
     }
 }

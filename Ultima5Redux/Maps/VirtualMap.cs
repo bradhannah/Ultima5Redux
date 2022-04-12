@@ -1548,7 +1548,8 @@ namespace Ultima5Redux.Maps
             List<Type> visibilePriorityOrder = new()
             {
                 typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(StackableItem), typeof(Chest),
+                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
+                typeof(Chest),
                 typeof(DeadBody), typeof(BloodSpatter)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);

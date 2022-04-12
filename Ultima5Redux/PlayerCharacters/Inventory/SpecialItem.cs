@@ -38,8 +38,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        public SpecialItem(SpecificItemType itemType, int quantity) : base(quantity, (int)itemType,
-            InventoryReferences.InventoryReferenceType.Item)
+        public SpecialItem(SpecificItemType itemType, SpecificItemTypeSprite specificItemTypeSprite, int quantity) :
+            base(quantity, (int)specificItemTypeSprite,
+                InventoryReferences.InventoryReferenceType.Item)
         {
             ItemType = itemType;
         }

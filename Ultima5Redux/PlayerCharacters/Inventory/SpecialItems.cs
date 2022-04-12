@@ -20,7 +20,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // WoodenBox = 270, Sextant = 256
             void addLegacyItem(SpecialItem.SpecificItemType specialItem,
                 SpecialItem.SpecificItemTypeSprite specialItemSprite) =>
-                Items[specialItemSprite] = new SpecialItem(specialItem,
+                Items[specialItemSprite] = new SpecialItem(specialItem, specialItemSprite,
                     importedGameState.GetSpecialItemQuantity(specialItem));
 
             addLegacyItem(SpecialItem.SpecificItemType.Carpet, SpecialItem.SpecificItemTypeSprite.Carpet);
@@ -31,7 +31,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             addLegacyItem(SpecialItem.SpecificItemType.BlackBadge, SpecialItem.SpecificItemTypeSprite.BlackBadge);
             addLegacyItem(SpecialItem.SpecificItemType.WoodenBox, SpecialItem.SpecificItemTypeSprite.WoodenBox);
             Items[SpecialItem.SpecificItemTypeSprite.PocketWatch] =
-                new SpecialItem(SpecialItem.SpecificItemType.PocketWatch, 1);
+                new SpecialItem(SpecialItem.SpecificItemType.PocketWatch,
+                    SpecialItem.SpecificItemTypeSprite.PocketWatch, 1);
         }
     }
 }
