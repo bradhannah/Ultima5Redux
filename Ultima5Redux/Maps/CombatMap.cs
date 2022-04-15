@@ -24,7 +24,7 @@ namespace Ultima5Redux.Maps
 
         public enum SelectionAction { None, Magic, Attack }
 
-        public enum TurnResult
+        public enum CombatTurnResult
         {
             RequireCharacterInput, EnemyMoved, EnemyAttacks, EnemyWandered, EnemyEscaped, EnemyMissed, EnemyGrazed,
             EnemyMissedButHit, CombatPlayerMissed, CombatPlayerMissedButHit, CombatPlayerHit, CombatPlayerGrazed,
@@ -463,7 +463,7 @@ namespace Ultima5Redux.Maps
             return additionalHitStateAction;
         }
 
-        private TurnResult HandleRangedMissed(CombatMapUnit attackingCombatMapUnit, Point2D attackPosition,
+        private CombatTurnResult HandleRangedMissed(CombatMapUnit attackingCombatMapUnit, Point2D attackPosition,
             out CombatMapUnit targetedCombatMapUnit, int nAttackMax, out Point2D missedPoint, out string outputStr)
         {
             // they are ranged, and missed which means we need to pick a new tile to attack
@@ -483,14 +483,14 @@ namespace Ultima5Redux.Maps
                 newAttackPosition.IsOutOfRange(NumOfXTiles - 1, NumOfYTiles - 1))
             {
                 AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyMissed;
+                return CombatTurnResult.EnemyMissed;
             }
 
             if (targetedCombatMapUnit == null)
             {
                 missedPoint = newAttackPosition;
                 AdvanceToNextCombatMapUnit();
-                return TurnResult.EnemyMissed;
+                return CombatTurnResult.EnemyMissed;
             }
 
             outputStr += "\nBut they accidentally hit another!";
@@ -501,7 +501,7 @@ namespace Ultima5Redux.Maps
             missedAttackOutputStr += "\n" + debugStr;
             outputStr += "\n" + missedAttackOutputStr;
             AdvanceToNextCombatMapUnit();
-            return TurnResult.EnemyMissedButHit;
+            return CombatTurnResult.EnemyMissedButHit;
         }
 
         private bool IsCombatMapUnitInRange(CombatMapUnit attackingUnit, CombatMapUnit opponentCombatMapUnit,
@@ -956,7 +956,7 @@ namespace Ultima5Redux.Maps
 
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
 
-        public TurnResult ProcessCombatPlayerTurn(SelectionAction selectedAction, Point2D actionPosition,
+        public CombatTurnResult ProcessCombatPlayerTurn(SelectionAction selectedAction, Point2D actionPosition,
             out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit,
             out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint,
             out CombatMapUnit.HitState targetedHitState)
@@ -976,7 +976,7 @@ namespace Ultima5Redux.Maps
             {
                 case SelectionAction.None:
                 case SelectionAction.Magic:
-                    return TurnResult.NoAction;
+                    return CombatTurnResult.NoAction;
                 case SelectionAction.Attack:
                     preAttackOutputStr = "Attack ";
                     MapUnit opponentMapUnit = GetCombatUnit(actionPosition);
@@ -985,7 +985,7 @@ namespace Ultima5Redux.Maps
                     {
                         preAttackOutputStr = preAttackOutputStr.TrimEnd() + "... yourself? ";
                         preAttackOutputStr += "\nYou think better of it and skip your turn.";
-                        return TurnResult.NoAction;
+                        return CombatTurnResult.NoAction;
                     }
 
                     CombatItem weapon;
@@ -1012,7 +1012,7 @@ namespace Ultima5Redux.Maps
 
                         missedPoint = actionPosition;
                         targetedHitState = CombatMapUnit.HitState.Missed;
-                        return TurnResult.CombatPlayerMissed;
+                        return CombatTurnResult.CombatPlayerMissed;
                     }
 
                     // if the top most unit is a combat map unit, then let's fight!
@@ -1042,7 +1042,7 @@ namespace Ultima5Redux.Maps
 
                             AdvanceToNextCombatMapUnit();
                             targetedHitState = CombatMapUnit.HitState.Missed;
-                            return TurnResult.CombatPlayerBlocked;
+                            return CombatTurnResult.CombatPlayerBlocked;
                         }
                     }
 
@@ -1059,12 +1059,12 @@ namespace Ultima5Redux.Maps
                     bool bMissedButHit = false;
                     if (targetedHitState == CombatMapUnit.HitState.Missed && weapon.TheCombatItemReference.Range > 1)
                     {
-                        TurnResult turnResult = HandleRangedMissed(combatPlayer,
+                        CombatTurnResult combatTurnResult = HandleRangedMissed(combatPlayer,
                             opponentCombatMapUnit.MapUnitPosition.XY, out targetedCombatMapUnit,
                             weapon.TheCombatItemReference.AttackStat, out missedPoint, out string addStr);
                         postAttackOutputStr += addStr;
 
-                        if (turnResult == TurnResult.EnemyMissedButHit)
+                        if (combatTurnResult == CombatTurnResult.EnemyMissedButHit)
                         {
                             bMissedButHit = true;
                         }
@@ -1095,13 +1095,13 @@ namespace Ultima5Redux.Maps
                         AdvanceToNextCombatMapUnit();
                     }
 
-                    if (bMissedButHit) return TurnResult.CombatPlayerMissedButHit;
+                    if (bMissedButHit) return CombatTurnResult.CombatPlayerMissedButHit;
 
-                    if (targetedHitState == CombatMapUnit.HitState.Grazed) return TurnResult.CombatPlayerGrazed;
+                    if (targetedHitState == CombatMapUnit.HitState.Grazed) return CombatTurnResult.CombatPlayerGrazed;
 
                     return targetedHitState != CombatMapUnit.HitState.Missed
-                        ? TurnResult.CombatPlayerHit
-                        : TurnResult.CombatPlayerMissed;
+                        ? CombatTurnResult.CombatPlayerHit
+                        : CombatTurnResult.CombatPlayerMissed;
                 default:
                     throw new InvalidEnumArgumentException(((int)selectedAction).ToString());
             }
@@ -1117,7 +1117,7 @@ namespace Ultima5Redux.Maps
         /// <param name="postAttackOutputStr"></param>
         /// <param name="missedPoint">if the target is empty or missed then this gives the point that the attack landed</param>
         /// <returns></returns>
-        public TurnResult ProcessEnemyTurn(out CombatMapUnit activeCombatMapUnit,
+        public CombatTurnResult ProcessEnemyTurn(out CombatMapUnit activeCombatMapUnit,
             out CombatMapUnit targetedCombatMapUnit, out string preAttackOutputStr, out string postAttackOutputStr,
             out Point2D missedPoint)
         {
@@ -1140,13 +1140,13 @@ namespace Ultima5Redux.Maps
                 // the player get's to control the enemy!
                 preAttackOutputStr = enemy.FriendlyName + ":";
 
-                return TurnResult.RequireCharacterInput;
+                return CombatTurnResult.RequireCharacterInput;
             }
 
             if (enemy.IsSleeping)
             {
                 preAttackOutputStr = enemy.FriendlyName + ": Sleeping";
-                return TurnResult.Sleeping;
+                return CombatTurnResult.Sleeping;
             }
 
             bool bAtLeastOnePlayerSeenOnCombatMap = _playerCharacterRecords.AtLeastOnePlayerSeenOnCombatMap;
@@ -1162,7 +1162,7 @@ namespace Ultima5Redux.Maps
                     enemy.Stats.CurrentHp = 0;
                     preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " escaped!";
                     AdvanceToNextCombatMapUnit();
-                    return TurnResult.EnemyEscaped;
+                    return CombatTurnResult.EnemyEscaped;
                 }
 
                 TileReference tileReference = enemy.FleeingPath != null
@@ -1199,7 +1199,7 @@ namespace Ultima5Redux.Maps
                     MoveActiveCombatMapUnit(nextStep);
                     preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " fleeing!";
                     AdvanceToNextCombatMapUnit();
-                    return TurnResult.EnemyMoved;
+                    return CombatTurnResult.EnemyMoved;
                 }
             }
 
@@ -1246,12 +1246,13 @@ namespace Ultima5Redux.Maps
                         Debug.Assert(enemy.EnemyReference.AttackRange > 1,
                             "Cannot have a ranged weapon if no missile type set");
 
-                        TurnResult turnResult = HandleRangedMissed(enemy, bestCombatPlayer.MapUnitPosition.XY,
+                        CombatTurnResult combatTurnResult = HandleRangedMissed(enemy,
+                            bestCombatPlayer.MapUnitPosition.XY,
                             out targetedCombatMapUnit, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
                             out missedPoint, out string addStr);
 
                         postAttackOutputStr += addStr;
-                        return turnResult;
+                        return combatTurnResult;
                     case CombatMapUnit.HitState.Grazed:
                     case CombatMapUnit.HitState.BarelyWounded:
                     case CombatMapUnit.HitState.LightlyWounded:
@@ -1267,7 +1268,9 @@ namespace Ultima5Redux.Maps
                 }
 
                 AdvanceToNextCombatMapUnit();
-                return hitState == CombatMapUnit.HitState.Grazed ? TurnResult.EnemyGrazed : TurnResult.EnemyAttacks;
+                return hitState == CombatMapUnit.HitState.Grazed
+                    ? CombatTurnResult.EnemyGrazed
+                    : CombatTurnResult.EnemyAttacks;
             }
 
             CombatMapUnit pursuedCombatMapUnit = null;
@@ -1292,7 +1295,7 @@ namespace Ultima5Redux.Maps
 
             AdvanceToNextCombatMapUnit();
 
-            return TurnResult.EnemyMoved;
+            return CombatTurnResult.EnemyMoved;
         }
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)

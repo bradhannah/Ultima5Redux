@@ -357,9 +357,8 @@ namespace Ultima5Redux.Maps
             return aggressiveMapUnitInfos;
         }
 
-        internal World.TryToMoveResult DamageShip(Point2D.Direction windDirection)
+        internal void DamageShip(Point2D.Direction windDirection, TurnResults turnResults)
         {
-            World.TryToMoveResult tryToMoveResult;
             Avatar avatar = TheMapUnits.GetAvatarMapUnit();
 
             int nDamage = Utils.Ran.Next(5, 15);
@@ -379,7 +378,7 @@ namespace Ultima5Redux.Maps
             // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
             if (frigate.Hitpoints <= 0)
             {
-                tryToMoveResult = World.TryToMoveResult.ShipDestroyed;
+                turnResults.PushTurnResult(TurnResults.TurnResult.ShipDestroyed);
                 // destroy the ship and leave board the Avatar onto a skiff
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.WorldStrings2
@@ -401,16 +400,14 @@ namespace Ultima5Redux.Maps
                             .HULL_WEAK), false);
                 }
 
-                tryToMoveResult = World.TryToMoveResult.ShipBreakingUp;
+                turnResults.PushTurnResult(TurnResults.TurnResult.ShipBreakingUp);
             }
-
-            return tryToMoveResult;
         }
 
         // Performs all of the aggressive actions and stores results
         internal void ProcessAggressiveMapUnitAttacks(PlayerCharacterRecords records,
             Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos,
-            out AggressiveMapUnitInfo combatMapAggressor)
+            out AggressiveMapUnitInfo combatMapAggressor, TurnResults turnResults)
         {
             combatMapAggressor = null;
 
@@ -462,7 +459,7 @@ namespace Ultima5Redux.Maps
                         if (IsAvatarInFrigate)
                         {
                             // frigate takes damage instead
-                            DamageShip(Point2D.Direction.None);
+                            DamageShip(Point2D.Direction.None, turnResults);
                         }
                         else
                         {
@@ -475,7 +472,7 @@ namespace Ultima5Redux.Maps
                     case CombatItemReference.MissileType.CannonBall:
                         if (IsAvatarInFrigate)
                         {
-                            DamageShip(Point2D.Direction.None);
+                            DamageShip(Point2D.Direction.None, turnResults);
                         }
                         else
                         {
@@ -491,7 +488,7 @@ namespace Ultima5Redux.Maps
                         // if on a frigate then only the frigate takes damage, like a shield!
                         if (IsAvatarInFrigate)
                         {
-                            DamageShip(Point2D.Direction.None);
+                            DamageShip(Point2D.Direction.None, turnResults);
                         }
                         else
                         {

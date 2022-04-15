@@ -316,7 +316,7 @@ namespace Ultima5Redux.MapUnits
 
             if (theWay == null) return;
 
-            int nMoves = theWay?.Count ?? noPath;
+            int nMoves = theWay.Count;
 
             if (nMoves == noPath)
             {

@@ -84,8 +84,8 @@
         <Reference Include="WindowsBase" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Data\DataChunk.cs" />
-        <Compile Include="Data\SomeStrings.cs" />
+        <Compile Include="Data\DataChunk.cs"/>
+        <Compile Include="Data\SomeStrings.cs"/>
         <Compile Include="DayNightMoon\TimeOfDay.cs"/>
         <Compile Include="External\AStarSharp.cs"/>
         <Compile Include="GameSummary.cs"/>
@@ -135,6 +135,7 @@
         <Compile Include="Maps\Look.cs"/>
         <Compile Include="Maps\Signs.cs"/>
         <Compile Include="DayNightMoon\Moongates.cs"/>
+        <Compile Include="MapUnits\TurnResults.cs"/>
         <Compile Include="PlayerCharacters\Inventory\InventoryItemFactory.cs"/>
         <Compile Include="StreamingOutput.cs"/>
         <Compile Include="StreamingOutputItem.cs"/>
@@ -158,16 +159,16 @@
         <Compile Include="PlayerCharacters\Inventory\Moonstones.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Potion.cs"/>
         <Compile Include="PlayerCharacters\Inventory\Potions.cs"/>
-        <Compile Include="PlayerCharacters\Inventory\Provision.cs" />
-        <Compile Include="PlayerCharacters\Inventory\Provisions.cs" />
-        <Compile Include="PlayerCharacters\Inventory\Reagent.cs" />
-        <Compile Include="PlayerCharacters\Inventory\Reagents.cs" />
-        <Compile Include="PlayerCharacters\Inventory\Scroll.cs" />
-        <Compile Include="PlayerCharacters\Inventory\Scrolls.cs" />
-        <Compile Include="PlayerCharacters\Inventory\ShadowlordShard.cs" />
-        <Compile Include="PlayerCharacters\Inventory\ShadowlordShards.cs" />
-        <Compile Include="PlayerCharacters\Inventory\SpecialItem.cs" />
-        <Compile Include="PlayerCharacters\Inventory\SpecialItems.cs" />
+        <Compile Include="PlayerCharacters\Inventory\Provision.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\Provisions.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\Reagent.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\Reagents.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\Scroll.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\Scrolls.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\ShadowlordShard.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\ShadowlordShards.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\SpecialItem.cs"/>
+        <Compile Include="PlayerCharacters\Inventory\SpecialItems.cs"/>
         <Compile Include="PlayerCharacters\CharacterStats.cs" />
         <Compile Include="PlayerCharacters\Inventory\Spell.cs" />
         <Compile Include="PlayerCharacters\Inventory\Spells.cs" />
@@ -186,7 +187,7 @@
             <DesignTime>True</DesignTime>
             <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
-        <Compile Include="Maps\SmallMaps.cs" />
+        <Compile Include="Maps\SmallMaps.cs"/>
         <Compile Include="Properties\Settings.Designer.cs">
             <AutoGen>True</AutoGen>
             <DesignTimeSharedInput>True</DesignTimeSharedInput>

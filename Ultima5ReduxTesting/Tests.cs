@@ -212,7 +212,8 @@ namespace Ultima5ReduxTesting
             int i = (24 * (60 / 2));
             while (i > 0)
             {
-                world.AdvanceTime(2, out _);
+                TurnResults turnResults = new TurnResults();
+                world.AdvanceTime(2, turnResults);
                 i--;
             }
 
@@ -237,7 +238,8 @@ namespace Ultima5ReduxTesting
                 int i = (24 * (60 / 2));
                 while (i > 0)
                 {
-                    world.AdvanceTime(2, out _);
+                    TurnResults turnResults = new TurnResults();
+                    world.AdvanceTime(2, turnResults);
                     i--;
                 }
 
@@ -252,19 +254,20 @@ namespace Ultima5ReduxTesting
             int i = 24 * (60 / 2) / 4;
             while (i > 0)
             {
-                world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult tryToMoveResult,
+                TurnResults turnResults = new TurnResults();
+                world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
-                world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult,
+                world.TryToMove(Point2D.Direction.Left, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
-                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                world.TryToMove(Point2D.Direction.Up, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
-                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                world.TryToMove(Point2D.Direction.Up, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
@@ -284,19 +287,21 @@ namespace Ultima5ReduxTesting
             int i = 24 * (60 / 2) / 4;
             while (i > 0)
             {
-                world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult tryToMoveResult,
+                TurnResults turnResults = new TurnResults();
+
+                world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
-                world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult,
+                world.TryToMove(Point2D.Direction.Left, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
-                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                world.TryToMove(Point2D.Direction.Up, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
-                world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult,
+                world.TryToMove(Point2D.Direction.Up, false, false, turnResults,
                     true);
                 world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition
                     .XY);
@@ -360,15 +365,15 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Britain, 0));
-
-            world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed, out _);
+            TurnResults turnResults = new TurnResults();
+            world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed, turnResults);
             Assert.False(bWasPushed);
 
-            world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed, out _);
+            world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed, turnResults);
             Assert.True(bWasPushed);
             string derp = world.State.Serialize();
 
-            world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed, out _);
+            world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed, turnResults);
             Assert.True(bWasPushed);
         }
 
@@ -382,7 +387,9 @@ namespace Ultima5ReduxTesting
 
             for (int i = 0; i < 256; i++)
             {
-                world.TryToMove(Point2D.Direction.Up, false, true, out World.TryToMoveResult moveResult);
+                TurnResults turnResults = new TurnResults();
+
+                world.TryToMove(Point2D.Direction.Up, false, true, turnResults);
             }
 
             Point2D finalLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
@@ -434,15 +441,17 @@ namespace Ultima5ReduxTesting
             Point2D moongatePosition = new Point2D(166, 19);
             world.State.TheVirtualMap.CurrentPosition.XY = moongatePosition;
             // first search should find moonstone
-            world.TryToSearch(moongatePosition, out bool bWasSuccessful, out _);
+            TurnResults turnResults = new TurnResults();
+
+            world.TryToSearch(moongatePosition, out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
 
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, out _);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, turnResults);
             Assert.True(bWasSuccessful);
             Assert.True(item != null);
             Assert.True(item.GetType() == typeof(Moonstone));
 
-            world.UseMoonstone((Moonstone)item, out bWasSuccessful, out _);
+            world.UseMoonstone((Moonstone)item, out bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
         }
 
@@ -455,10 +464,12 @@ namespace Ultima5ReduxTesting
 
             Point2D moongatePosition = new Point2D(166, 19);
             // first search should find moonstone
-            world.TryToSearch(moongatePosition, out bool bWasSuccessful, out _);
+            TurnResults turnResults = new TurnResults();
+
+            world.TryToSearch(moongatePosition, out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
             // second search should be empty
-            world.TryToSearch(moongatePosition, out bWasSuccessful, out _);
+            world.TryToSearch(moongatePosition, out bWasSuccessful, turnResults);
             Assert.True(!bWasSuccessful);
             string derp = world.State.Serialize();
 
@@ -468,14 +479,14 @@ namespace Ultima5ReduxTesting
             int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
 
             // can't get it twice!
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, out _);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, turnResults);
             Assert.True(bWasSuccessful);
             Assert.True(item != null);
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out item, out _);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out item, turnResults);
             Assert.True(!bWasSuccessful);
             Assert.True(item == null);
 
-            world.TryToSearch(moongatePosition, out bWasSuccessful, out _);
+            world.TryToSearch(moongatePosition, out bWasSuccessful, turnResults);
             Assert.True(!bWasSuccessful);
         }
 
@@ -571,8 +582,9 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
             world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
+            TurnResults turnResults = new TurnResults();
 
-            world.TryToMove(Point2D.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
+            world.TryToMove(Point2D.Direction.Up, false, false, turnResults);
         }
 
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_MoveALittleOverworld(SaveFiles saveFiles)
@@ -581,13 +593,14 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
             world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
+            TurnResults turnResults = new TurnResults();
 
-            world.TryToMove(Point2D.Direction.Up, false, false, out World.TryToMoveResult tryToMoveResult);
-            world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult);
-            world.TryToMove(Point2D.Direction.Down, false, false, out tryToMoveResult);
-            world.TryToMove(Point2D.Direction.Left, false, false, out tryToMoveResult);
-            world.TryToMove(Point2D.Direction.Up, false, false, out tryToMoveResult);
-            world.TryToMove(Point2D.Direction.Right, false, false, out tryToMoveResult);
+            world.TryToMove(Point2D.Direction.Up, false, false, turnResults);
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults);
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
+            world.TryToMove(Point2D.Direction.Up, false, false, turnResults);
+            world.TryToMove(Point2D.Direction.Right, false, false, turnResults);
         }
 
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_TalkToDelwyn(SaveFiles saveFiles)
@@ -900,8 +913,9 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             world.MonsterAI = false;
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+            TurnResults turnResults = new TurnResults();
 
-            world.TryToMove(Point2D.Direction.Down, false, false, out World.TryToMoveResult result,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
             // make sure it is using the extended sprite
             //GetCurrentTileReference
@@ -928,28 +942,29 @@ namespace Ultima5ReduxTesting
             world.Board(out bool bWasSuccessfulBoard);
             Assert.True(bWasSuccessfulBoard);
             world.Xit(out bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
 
             nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity;
             Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
-            world.TryToMove(Point2D.Direction.Left, false, false, out World.TryToMoveResult result);
-            world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet, out _);
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
+            world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet, turnResults);
             Assert.True(bGotACarpet);
             //Assert.True(carpet!=null);
             Assert.True(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems
                 .Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity);
-            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, out _);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults);
             Assert.True(!bGotACarpet);
 
             world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
-                out bool bAbleToUseItem, out _);
+                out bool bAbleToUseItem, turnResults);
             Assert.True(bAbleToUseItem);
             world.Xit(out bWasSuccessful);
             Assert.True(bWasSuccessful);
-            world.TryToMove(Point2D.Direction.Left, false, false, out result);
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
             curPos = world.State.TheVirtualMap.CurrentPosition.XY;
-            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, out _);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults);
             Assert.True(bGotACarpet);
 
             _ = "";
@@ -961,9 +976,11 @@ namespace Ultima5ReduxTesting
 
             int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity;
+            TurnResults turnResults = new TurnResults();
+
             world.UseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
-                out bool bAbleToUseItem, out _);
+                out bool bAbleToUseItem, turnResults);
             Assert.True(bAbleToUseItem);
             Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity == nCarpets - 1);
@@ -1004,8 +1021,9 @@ namespace Ultima5ReduxTesting
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
+            TurnResults turnResults = new TurnResults();
 
-            world.TryToMove(Point2D.Direction.Down, false, true, out World.TryToMoveResult moveResult);
+            world.TryToMove(Point2D.Direction.Down, false, true, turnResults);
             //Assert.True(moveResult == World.TryToMoveResult.Blocked);
             _ = "";
         }
@@ -1079,11 +1097,12 @@ namespace Ultima5ReduxTesting
             CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
 
             Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
-            world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult);
+            TurnResults turnResults = new TurnResults();
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult);
+            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
             // Assert.True(tryToMoveResult == World.TryToMoveResult.Blocked);
 
             _ = "";
@@ -1116,12 +1135,12 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 4),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
-
-            world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult);
+            TurnResults turnResults = new TurnResults();
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult);
+            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
             _ = "";
         }
 
@@ -1133,12 +1152,13 @@ namespace Ultima5ReduxTesting
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     4),
                 SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
+            TurnResults turnResults = new TurnResults();
 
-            world.TryToMoveCombatMap(Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Left, out tryToMoveResult);
+            world.TryToMoveCombatMap(Point2D.Direction.Left, turnResults);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
-            world.TryToMoveCombatMap(Point2D.Direction.Up, out tryToMoveResult);
+            world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
 
             do
             {
@@ -1171,7 +1191,9 @@ namespace Ultima5ReduxTesting
             CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
             {
                 Assert.True(player.Record.Class == PlayerCharacterRecord.CharacterClass.Avatar);
-                world.TryToMoveCombatMap(player, Point2D.Direction.Up, out World.TryToMoveResult tryToMoveResult);
+                TurnResults turnResults = new TurnResults();
+
+                world.TryToMoveCombatMap(player, Point2D.Direction.Up, turnResults);
             }
 
             _ = "";
@@ -1658,22 +1680,23 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.OneInXOddsOfNewMonster = 2;
             Utils.Ran = new Random(1);
+            TurnResults turnResults = new TurnResults();
 
-            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Left, false, false, out _,
+            world.TryToMove(Point2D.Direction.Left, false, false, turnResults,
                 true);
 
-            world.PassTime(out _);
-            world.PassTime(out _);
-            world.PassTime(out _);
-            world.PassTime(out _);
-            world.PassTime(out _);
-            world.PassTime(out _);
+            world.PassTime(turnResults);
+            world.PassTime(turnResults);
+            world.PassTime(turnResults);
+            world.PassTime(turnResults);
+            world.PassTime(turnResults);
+            world.PassTime(turnResults);
         }
 
         [Test] [TestCase(SaveFiles.b_frigat)] public void test_AvatarMoveIntoOcean(SaveFiles saveFiles)
@@ -1690,26 +1713,27 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.OneInXOddsOfNewMonster = 2;
             Utils.Ran = new Random(1);
+            TurnResults turnResults = new TurnResults();
 
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
-            world.TryToMove(Point2D.Direction.Down, false, false, out _,
+            world.TryToMove(Point2D.Direction.Down, false, false, turnResults,
                 true);
         }
 
@@ -1819,6 +1843,25 @@ namespace Ultima5ReduxTesting
                     }
                 }
             }
+
+            TestContext.Out.Write("Ending ");
+
+            Assert.True(true);
+        }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_JimmyDoorLBBasement(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
+
+            Point2D avatarPos = new Point2D(15, 25);
+            TurnResults turnResults = new TurnResults();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToJimmyDoor(avatarPos,
+                world.State.CharacterRecords.AvatarRecord, out bool bWasSuccessful,
+                turnResults);
 
             TestContext.Out.Write("Ending ");
 
