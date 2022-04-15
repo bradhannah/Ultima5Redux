@@ -86,7 +86,7 @@ namespace Ultima5Redux.MapUnits
                     fMaxDiagonalDistance)
                     continue;
 
-                enemiesToClear ??= new();
+                enemiesToClear ??= new List<Enemy>();
                 // delete the mapunit
                 enemiesToClear.Add(enemy);
             }
@@ -582,8 +582,8 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(singleMapReference.MapType);
             if (nIndex == -1) return null;
 
-            MapUnitPosition mapUnitPosition = new MapUnitPosition(xy.X, xy.Y, singleMapReference.Floor);
-            Enemy enemy = new Enemy(new MapUnitMovement(0), enemyReference, singleMapReference.MapLocation, null,
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
+            Enemy enemy = new(new MapUnitMovement(0), enemyReference, singleMapReference.MapLocation, null,
                 mapUnitPosition);
 
             GetMapUnitCollection(singleMapReference.MapType).AddMapUnit(enemy);
@@ -800,7 +800,7 @@ namespace Ultima5Redux.MapUnits
             retStr += " " + unboardedMapUnit.BoardXitName;
 
             // if the Avatar is on a frigate then we will check for Skiffs and exit on a skiff instead
-            if (!(unboardedMapUnit is Frigate avatarFrigate)) return unboardedMapUnit;
+            if (unboardedMapUnit is not Frigate avatarFrigate) return unboardedMapUnit;
 
             Debug.Assert(avatarFrigate != null, nameof(avatarFrigate) + " != null");
 

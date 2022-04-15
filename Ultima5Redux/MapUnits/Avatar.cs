@@ -68,7 +68,7 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember]
         public bool AreSailsHoisted =>
-            IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate frigate && frigate.SailsHoisted;
+            IsAvatarOnBoardedThing && CurrentBoardedMapUnit is Frigate { SailsHoisted: true };
 
         /// <summary>
         ///     Is the Avatar currently boarded onto a thing
@@ -199,7 +199,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        private AvatarState CalculateAvatarState(TileReference tileReference)
+        private static AvatarState CalculateAvatarState(TileReference tileReference)
         {
             if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
             if (tileReference.Name.StartsWith("Ship")) return AvatarState.Frigate;
@@ -208,8 +208,8 @@ namespace Ultima5Redux.MapUnits
                 return AvatarState.Carpet;
             if (tileReference.Name.StartsWith("RidingHorse")) return AvatarState.Horse;
             if (tileReference.Name.StartsWith("Horse")) return AvatarState.Horse;
-            throw new Ultima5ReduxException("Asked to calculate AvatarState of " + tileReference.Name +
-                                            " but you can't do that, it's not a thing!");
+            throw new Ultima5ReduxException(
+                $"Asked to calculate AvatarState of {tileReference.Name} but you can't do that, it's not a thing!");
         }
 
         private TileReference GetCurrentTileReference()

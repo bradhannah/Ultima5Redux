@@ -4,11 +4,11 @@ namespace Ultima5Redux
 {
     public class StreamingOutput
     {
-        private static StreamingOutput instance;
+        private static StreamingOutput _instance;
 
-        public static StreamingOutput Instance => instance ??= new StreamingOutput();
+        public static StreamingOutput Instance => _instance ??= new StreamingOutput();
 
-        private Queue<StreamingOutputItem> OutputItems { get; } = new Queue<StreamingOutputItem>();
+        private Queue<StreamingOutputItem> OutputItems { get; } = new();
 
         public void PushMessage(string message, bool bUseArrow = true, bool bForceNewline = true)
             => PushOutputItem(new StreamingOutputItem(message, bUseArrow, bForceNewline));

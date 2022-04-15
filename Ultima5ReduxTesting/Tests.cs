@@ -253,7 +253,7 @@ namespace Ultima5ReduxTesting
         [Test] [TestCase(SaveFiles.b_carpet)] public void CarpetOverworldDayWandering(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-            world.MonsterAI = false;
+            world.MonsterAi = false;
             int i = 24 * (60 / 2) / 4;
             while (i > 0)
             {
@@ -383,7 +383,7 @@ namespace Ultima5ReduxTesting
         [Test] [TestCase(SaveFiles.Britain2)] public void Test_FreeMoveAcrossWorld(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-            world.MonsterAI = false;
+            world.MonsterAi = false;
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
 
             Point2D startLocation = world.State.TheVirtualMap.CurrentPosition.XY.Copy();
@@ -920,7 +920,7 @@ namespace Ultima5ReduxTesting
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_MoveWithExtendedSprites(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
-            world.MonsterAI = false;
+            world.MonsterAi = false;
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             TurnResults turnResults = new TurnResults();
 

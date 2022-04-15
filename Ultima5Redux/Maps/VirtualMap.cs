@@ -1737,7 +1737,7 @@ namespace Ultima5Redux.Maps
 
                 int x = mapUnit.MapUnitPosition.XY.X;
                 int y = mapUnit.MapUnitPosition.XY.Y;
-                if (!occupiedTiles.ContainsKey(x)) occupiedTiles.Add(x, new());
+                if (!occupiedTiles.ContainsKey(x)) occupiedTiles.Add(x, new Dictionary<int, bool>());
                 if (!occupiedTiles[x].ContainsKey(y)) occupiedTiles[x].Add(y, true);
             }
 

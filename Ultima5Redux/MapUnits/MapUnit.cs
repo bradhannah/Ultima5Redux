@@ -143,6 +143,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="virtualMap"></param>
         /// <param name="fromPosition"></param>
         /// <param name="toPosition">the position they are trying to get to</param>
+        /// <param name="aStar"></param>
         /// <returns></returns>
         private Point2D GetBestNextPositionToMoveTowardsWalkablePointDumb(VirtualMap virtualMap, Point2D fromPosition,
             Point2D toPosition, AStar aStar)
@@ -184,6 +185,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="virtualMap"></param>
         /// <param name="mapUnitPosition">the position they are trying to get to</param>
+        /// <param name="aStar"></param>
         /// <returns>a list of positions that the character can walk to  </returns>
         private List<Point2D> GetValidWanderPointsDumb(VirtualMap virtualMap, Point2D mapUnitPosition, AStar aStar)
         {
@@ -364,11 +366,8 @@ namespace Ultima5Redux.MapUnits
         }
 
         // ReSharper disable once UnusedMember.Global
-        public virtual string GetDebugDescription(TimeOfDay timeOfDay)
-        {
-            return "MapUnit " + KeyTileReference.Description + " " + MapUnitPosition + " Scheduled to be at: " +
-                   " <b>Movement Attempts</b>: " + MovementAttempts + " " + Movement;
-        }
+        public virtual string GetDebugDescription(TimeOfDay timeOfDay) =>
+            $"MapUnit {KeyTileReference.Description} {MapUnitPosition} Scheduled to be at:  <b>Movement Attempts</b>: {MovementAttempts} {Movement}";
 
         /// <summary>
         ///     Builds the actual path for the character to travel based on their current position and their target position
