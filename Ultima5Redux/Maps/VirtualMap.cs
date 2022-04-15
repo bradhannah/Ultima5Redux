@@ -378,7 +378,7 @@ namespace Ultima5Redux.Maps
             // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
             if (frigate.Hitpoints <= 0)
             {
-                turnResults.PushTurnResult(TurnResults.TurnResult.ShipDestroyed);
+                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveShipDestroyed);
                 // destroy the ship and leave board the Avatar onto a skiff
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.WorldStrings2
@@ -400,7 +400,7 @@ namespace Ultima5Redux.Maps
                             .HULL_WEAK), false);
                 }
 
-                turnResults.PushTurnResult(TurnResults.TurnResult.ShipBreakingUp);
+                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveShipBreakingUp);
             }
         }
 

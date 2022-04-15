@@ -147,7 +147,8 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
 
             world.State.TheVirtualMap.MoveAvatar(new Point2D(frigate2.MapUnitPosition.X, frigate2.MapUnitPosition.Y));
-            world.Board(out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToBoard(out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
 
             Assert.True(frigate2 != null);
@@ -181,7 +182,9 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.MoveAvatar(new Point2D(skiff.MapUnitPosition.X,
                 skiff.MapUnitPosition.Y)); //-V3095
-            world.Board(out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+
+            world.TryToBoard(out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
 
             Assert.True(skiff != null);
@@ -366,14 +369,14 @@ namespace Ultima5ReduxTesting
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Britain, 0));
             TurnResults turnResults = new TurnResults();
-            world.PushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed, turnResults);
+            world.TryToPushAThing(new Point2D(5, 7), Point2D.Direction.Down, out bool bWasPushed, turnResults);
             Assert.False(bWasPushed);
 
-            world.PushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed, turnResults);
+            world.TryToPushAThing(new Point2D(22, 2), Point2D.Direction.Left, out bWasPushed, turnResults);
             Assert.True(bWasPushed);
             string derp = world.State.Serialize();
 
-            world.PushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed, turnResults);
+            world.TryToPushAThing(new Point2D(2, 8), Point2D.Direction.Right, out bWasPushed, turnResults);
             Assert.True(bWasPushed);
         }
 
@@ -451,7 +454,7 @@ namespace Ultima5ReduxTesting
             Assert.True(item != null);
             Assert.True(item.GetType() == typeof(Moonstone));
 
-            world.UseMoonstone((Moonstone)item, out bWasSuccessful, turnResults);
+            world.TryToUseMoonstone((Moonstone)item, out bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
         }
 
@@ -572,7 +575,8 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
             world.State.TheVirtualMap.CurrentPosition.XY = new Point2D(166, 21);
-            world.TryToKlimb(out World.KlimbResult klimbResult);
+            TurnResults turnResults = new TurnResults();
+            world.TryToKlimb(out World.KlimbResult klimbResult, turnResults);
             Assert.True(klimbResult == World.KlimbResult.RequiresDirection);
         }
 
@@ -808,8 +812,9 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
+            TurnResults turnResults = new TurnResults();
 
-            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             Assert.True(true);
         }
@@ -820,7 +825,8 @@ namespace Ultima5ReduxTesting
             _ = "";
 
             // yew
-            world.EnterBuilding(new Point2D(58, 43), out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToEnterBuilding(new Point2D(58, 43), out bool bWasSuccessful, turnResults);
 
             foreach (MapUnit mapUnit in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.AllMapUnits)
             {
@@ -836,7 +842,8 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
-            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Buccaneers_Den,
@@ -870,7 +877,8 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
-            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             Innkeeper innKeeper = (Innkeeper)GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Britain,
@@ -902,7 +910,8 @@ namespace Ultima5ReduxTesting
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
 
-            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             Horse horse = world.State.TheVirtualMap.CreateHorseAroundAvatar();
             Assert.True(horse != null);
@@ -935,14 +944,14 @@ namespace Ultima5ReduxTesting
 
             int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity;
-            world.Xit(out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToXit(out bool bWasSuccessful, turnResults);
             Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems
                 .Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity);
             Assert.True(bWasSuccessful);
-            world.Board(out bool bWasSuccessfulBoard);
+            world.TryToBoard(out bool bWasSuccessfulBoard, turnResults);
             Assert.True(bWasSuccessfulBoard);
-            world.Xit(out bWasSuccessful);
-            TurnResults turnResults = new TurnResults();
+            world.TryToXit(out bWasSuccessful, turnResults);
 
             nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
                 .Quantity;
@@ -956,11 +965,11 @@ namespace Ultima5ReduxTesting
             world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults);
             Assert.True(!bGotACarpet);
 
-            world.UseSpecialItem(
+            world.TryToUseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
                 out bool bAbleToUseItem, turnResults);
             Assert.True(bAbleToUseItem);
-            world.Xit(out bWasSuccessful);
+            world.TryToXit(out bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
             world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
             curPos = world.State.TheVirtualMap.CurrentPosition.XY;
@@ -978,7 +987,7 @@ namespace Ultima5ReduxTesting
                 .Quantity;
             TurnResults turnResults = new TurnResults();
 
-            world.UseSpecialItem(
+            world.TryToUseSpecialItem(
                 world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
                 out bool bAbleToUseItem, turnResults);
             Assert.True(bAbleToUseItem);
@@ -994,7 +1003,8 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            world.Xit(out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToXit(out bool bWasSuccessful, turnResults);
 
             _ = "";
         }
@@ -1008,7 +1018,8 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            world.Xit(out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToXit(out bool bWasSuccessful, turnResults);
 
             _ = "";
         }
@@ -1037,7 +1048,9 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            world.Xit(out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+
+            world.TryToXit(out bool bWasSuccessful, turnResults);
 
             _ = "";
         }
@@ -1046,7 +1059,8 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
             Point2D startSpot = new Point2D(159, 20);
-            world.EnterBuilding(startSpot, out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToEnterBuilding(startSpot, out bool bWasSuccessful, turnResults);
 
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
             _ = "";
@@ -1202,8 +1216,9 @@ namespace Ultima5ReduxTesting
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadCombatMapThenBack(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
+            TurnResults turnResults = new TurnResults();
 
-            world.EnterBuilding(new Point2D(159, 20), out bool bWasSuccessful);
+            world.TryToEnterBuilding(new Point2D(159, 20), out bool bWasSuccessful, turnResults);
 
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
@@ -1623,7 +1638,8 @@ namespace Ultima5ReduxTesting
 
             Point2D minocCovetousDungeon = new Point2D(156, 27);
             world.State.TheVirtualMap.MoveAvatar(minocCovetousDungeon);
-            world.EnterBuilding(minocCovetousDungeon, out bool bWasSuccessful);
+            TurnResults turnResults = new TurnResults();
+            world.TryToEnterBuilding(minocCovetousDungeon, out bool bWasSuccessful, turnResults);
             Assert.IsNotNull(world);
         }
 
@@ -1691,12 +1707,12 @@ namespace Ultima5ReduxTesting
             world.TryToMove(Point2D.Direction.Left, false, false, turnResults,
                 true);
 
-            world.PassTime(turnResults);
-            world.PassTime(turnResults);
-            world.PassTime(turnResults);
-            world.PassTime(turnResults);
-            world.PassTime(turnResults);
-            world.PassTime(turnResults);
+            world.TryToPassTime(turnResults);
+            world.TryToPassTime(turnResults);
+            world.TryToPassTime(turnResults);
+            world.TryToPassTime(turnResults);
+            world.TryToPassTime(turnResults);
+            world.TryToPassTime(turnResults);
         }
 
         [Test] [TestCase(SaveFiles.b_frigat)] public void test_AvatarMoveIntoOcean(SaveFiles saveFiles)

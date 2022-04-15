@@ -32,7 +32,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         [IgnoreDataMember] public override bool IsSellable => false;
 
-        [IgnoreDataMember] public bool HasOneOfMore => Quantity > 0;
+        [IgnoreDataMember] public bool HasOneOrMore => Quantity > 0;
 
         [JsonConstructor] private SpecialItem()
         {

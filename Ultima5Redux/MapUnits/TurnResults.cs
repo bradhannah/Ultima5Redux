@@ -8,9 +8,56 @@ namespace Ultima5Redux.MapUnits
 
         public enum TurnResult
         {
-            Moved, ShipChangeDirection, Blocked, OfferToExitScreen, UsedStairs, Fell, ShipBreakingUp, ShipDestroyed,
-            RoughSeas, MovedSelectionCursor, IgnoredMovement, Poisoned, Burning, Ignore, CombatMapLoaded, PassTurn,
-            ActionPerformed, Opened, FireCannon
+            DamageOverTimePoisoned, DamageOverTimeBurning, ActionXitWhat, ActionXitSuccess, ActionYellSailsHoisted,
+            ActionYellSailsFurl, ActionMovedCombatPlayerOnCombatMap, ActionMoveBlocked, OfferToExitScreen,
+            ActionMoveUsedStairs, ActionMoveFell, ActionMoveShipBreakingUp, ActionMoveShipDestroyed,
+            ActionMoveRoughSeas, MovedSelectionCursor, IgnoredMovement, Ignore, CombatMapLoaded, PassTurn, Opened,
+            ActionMoveChangeFrigateDirection, ActionMoveFrigateSailsIgnoreMovement, ActionMoveRegular, ActionMoveCarpet,
+            ActionMoveHorse, ActionMoveFrigateRowing, ActionMoveFrigateWindSails,
+            ActionMoveFrigateWindSailsChangeDirection, ActionMoveSkiffRowing, ActionKlimbWithWhat,
+            ActionKlimbRequiresDirection, ActionKlimbDown, ActionKlimbUp, ActionKlimbDirectionMovedFell,
+            ActionKlimbDirectionImpassable, ActionKlimbDirectionUnKlimable, ActionKlimbWhat,
+            ActionKlimbDirectionSuccess, ActionFireCannon, ActionFireWhat, ActionFireNotHere, ActionFireBroadsideOnly,
+            ActionFireEnemyKilled, ActionFireHitNothing, ActionBoardCarpet, ActionBoardHorse, ActionBoardFrigate,
+            ActionBoardSkiff, ActionBoardWhat, ActionBoardNoOnFoot, ActionEnterDungeon, ActionEnterTowne,
+            ActionEnterWhat, ActionIgniteTorch, ActionIgniteTorchNoTorch, ActionLook, ActionPush, ActionPushWontBudge,
+            ActionOpened, ActionOpenedTrapped, ActionOpenedLocked, ActionTalk, ActionAttackBrokeMirror,
+            ActionAttackNothingToAttack, ActionAttackOnlyOnFoot, ActionAttackMurder, ActionAttackCombatMapNpc,
+            ActionAttackCombatMapEnemy, ActionGetBorrowed, ActionGetMagicCarpet, ActionGetExposedItem,
+            ActionGetNothingToGet, ActionJimmyNoLock, ActionJimmyUnlocked, ActionJimmyKeyBroke
+        }
+
+        public static bool IsNewMapTurnResult(TurnResult turnResult)
+        {
+            switch (turnResult)
+            {
+                case TurnResult.ActionKlimbDown:
+                case TurnResult.ActionKlimbUp:
+                case TurnResult.ActionEnterDungeon:
+                case TurnResult.ActionEnterTowne:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsSuccessfulMovement(TurnResult turnResult)
+        {
+            switch (turnResult)
+            {
+                case TurnResult.ActionMoveRegular:
+                case TurnResult.ActionMoveCarpet:
+                case TurnResult.ActionMoveHorse:
+                case TurnResult.ActionMoveFrigateRowing:
+                case TurnResult.ActionMoveFrigateWindSails:
+                case TurnResult.ActionMoveFrigateWindSailsChangeDirection:
+                case TurnResult.ActionMoveSkiffRowing:
+                case TurnResult.ActionKlimbDirectionMovedFell:
+                case TurnResult.ActionKlimbDirectionSuccess:
+                    return true;
+            }
+
+            return false;
         }
 
         public void PushTurnResult(TurnResult turnResult)
