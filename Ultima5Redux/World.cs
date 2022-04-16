@@ -230,12 +230,6 @@ namespace Ultima5Redux
                 State.TheVirtualMap.NumberOfRowTiles - 1));
         }
 
-        private string ThouDostFind(string thingYouFound)
-        {
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
-                .N_THOU_DOST_FIND_N) + thingYouFound;
-        }
-
         /// <summary>
         ///     Use a magic carpet from your inventory
         /// </summary>
@@ -1004,7 +998,7 @@ namespace Ultima5Redux
                 inventoryItem = invItem;
                 invItem.Quantity++;
 
-                StreamingOutput.Instance.PushMessage(ThouDostFind(invItem.FindDescription), false);
+                StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
                 turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetExposedItem);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
@@ -1759,32 +1753,42 @@ namespace Ultima5Redux
             // if there is something exposed already OR there is nothing found 
             if (State.TheVirtualMap.HasAnyExposedSearchItems(xy) || !State.TheVirtualMap.ContainsSearchableThings(xy))
             {
-                StreamingOutput.Instance.PushMessage(ThouDostFind(
+                StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings
                         .NOTHING_OF_NOTE_DOT_N)), false);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
             // we search the tile and expose any items that may be on it
-            int nItems = State.TheVirtualMap.SearchAndExposeItems(xy);
+            InventoryItem invItem = State.TheVirtualMap.SearchAndExposeInventoryItem(xy);
+            NonAttackingUnit nonAttackingUnit = null;
+            if (invItem == null)
+                nonAttackingUnit =
+                    State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults, State.CharacterRecords.AvatarRecord);
 
-            // it could be a moongate, with a stone, but wrong time of day
-            if (nItems == 0)
+            if (invItem != null)
             {
-                StreamingOutput.Instance.PushMessage(ThouDostFind(
+                // for now this just moonstones - I will eventually convert them to non attacking map units 
+                string searchResultStr = string.Empty;
+                bWasSuccessful = true;
+                foreach (InventoryItem invRef in State.TheVirtualMap.GetExposedSearchItems(xy))
+                {
+                    searchResultStr += invRef.FindDescription + "\n";
+                }
+
+                StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(searchResultStr), false);
+            }
+            else if (nonAttackingUnit != null)
+            {
+            }
+            // it could be a moongate, with a stone, but wrong time of day
+            else
+            {
+                StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings
                         .NOTHING_OF_NOTE_DOT_N)), false);
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            string searchResultStr = string.Empty;
-            bWasSuccessful = true;
-            foreach (InventoryItem invRef in State.TheVirtualMap.GetExposedSearchItems(xy))
-            {
-                searchResultStr += invRef.FindDescription + "\n";
-            }
-
-            StreamingOutput.Instance.PushMessage(ThouDostFind(searchResultStr), false);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 

@@ -293,6 +293,32 @@ namespace Ultima5Redux
             return nextRan % howMany == 0;
         }
 
+        public static bool RandomOdds(float fLikelihoodOfTrue)
+        {
+            return Ran.NextDouble() <= fLikelihoodOfTrue;
+        }
+
+        /// <summary>
+        ///     Dirty little method to create a memory expensive weighted list for simple
+        ///     weighted choices
+        /// </summary>
+        /// <param name="weightedDict"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> MakeWeightedList<T>(Dictionary<T, int> weightedDict)
+        {
+            List<T> thingList = new();
+            foreach (KeyValuePair<T, int> kvp in weightedDict)
+            {
+                for (int i = 0; i < kvp.Value; i++)
+                {
+                    thingList.Add(kvp.Key);
+                }
+            }
+
+            return thingList;
+        }
+
         /// <summary>
         /// </summary>
         /// <remarks>Borrowed from: https://www.developerfusion.com/article/84519/mastering-structs-in-c </remarks>

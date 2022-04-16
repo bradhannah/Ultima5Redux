@@ -12,7 +12,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         // 257 = Chest
         // 271 = ItemFood
-        public static NonAttackingUnit Create(int nSprite)
+        public static NonAttackingUnit Create(int nSprite, MapUnitPosition mapUnitPosition = null)
         {
             switch (nSprite)
             {
@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 case (int)OtherSprites.BloodSpatter:
                     return new BloodSpatter();
                 case (int)OtherSprites.Chest:
-                    return new Chest();
+                    return new Chest(mapUnitPosition);
             }
 
             // we know it's an actual item at this point

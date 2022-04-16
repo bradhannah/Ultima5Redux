@@ -19,6 +19,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public void PushStackableItem(StackableItem item) => _stackableItems.Push(item);
 
+        public enum StackableType { DeadBody, BloodSpatter, }
+
         public StackableItem PopStackableItem()
         {
             if (_stackableItems.Count == 0)

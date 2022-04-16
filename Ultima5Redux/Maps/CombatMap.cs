@@ -81,7 +81,7 @@ namespace Ultima5Redux.Maps
         /// <returns>active player character record OR null if none selected</returns>
         public PlayerCharacterRecord ActivePlayerCharacterRecord => _initiativeQueue.ActivePlayerCharacterRecord;
 
-        public bool AreCombatItemsInQueue => _currentCombatItemQueue != null && _currentCombatItemQueue.Count > 0;
+        public bool AreCombatItemsInQueue => _currentCombatItemQueue is { Count: > 0 };
 
         public bool AreEnemiesLeft => NumberOfEnemies > 0;
 

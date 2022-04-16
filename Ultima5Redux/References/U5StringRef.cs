@@ -240,5 +240,11 @@ namespace Ultima5Redux.References
 
             return _strMap[strObj.GetType()].StringList[(int)strObj];
         }
+
+        public static string ThouDostFind(string thingYouFound)
+        {
+            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                .N_THOU_DOST_FIND_N) + thingYouFound;
+        }
     }
 }

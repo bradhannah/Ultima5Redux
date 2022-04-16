@@ -574,6 +574,11 @@ namespace Ultima5Redux.MapUnits
                 "You provided a MapUnit to clear, but it is not in the active MapUnit list");
         }
 
+        public ItemStack CreateItemStack(Point2D xy, NonAttackingUnit nonAttackingUnit)
+        {
+            return null;
+        }
+
         public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference,
             SmallMapReferences.SingleMapReference singleMapReference, out int nIndex)
         {

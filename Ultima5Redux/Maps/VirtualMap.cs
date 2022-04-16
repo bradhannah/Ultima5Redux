@@ -725,7 +725,120 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        internal int SearchAndExposeItems(in Point2D xy)
+        internal NonAttackingUnit SearchNonAttackingMapUnit(in Point2D xy, TurnResults turnResults,
+            PlayerCharacterRecord record)
+        {
+            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
+                switch (nonAttackingUnit)
+                {
+                    case Chest chest:
+                        if (chest.IsTrapped)
+                        {
+                            // A_SIMPLE_TRAP_BANG_N, A_COMPLEX_TRAP_BANG_N,
+                            // When I open it? A_TRAP_BANG_N
+                            bool bTriggeredTrap =
+                                OddsAndLogic.DoesChestTrapTrigger(record, chest.CurrentChestTrapComplexity);
+
+                            switch (chest.CurrentChestTrapComplexity)
+                            {
+                                case Chest.ChestTrapComplexity.Simple:
+                                    if (bTriggeredTrap)
+                                    {
+                                        StreamingOutput.Instance.PushMessage(
+                                            U5StringRef.ThouDostFind(
+                                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                                    .ThingsIFindStrings.A_SIMPLE_TRAP_BANG_N)));
+                                        turnResults.PushTurnResult(TurnResults.TurnResult
+                                            .ActionSearchChestTriggerSimpleTrap);
+                                    }
+                                    else
+                                    {
+                                        StreamingOutput.Instance.PushMessage(
+                                            U5StringRef.ThouDostFind(
+                                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                                    .ThingsIFindStrings.A_SIMPLE_TRAP_N)));
+                                        turnResults.PushTurnResult(TurnResults.TurnResult
+                                            .ActionSearchChestRemoveSimple);
+                                    }
+
+                                    break;
+                                case Chest.ChestTrapComplexity.Complex:
+                                    if (bTriggeredTrap)
+                                    {
+                                        StreamingOutput.Instance.PushMessage(
+                                            U5StringRef.ThouDostFind(
+                                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                                    .ThingsIFindStrings.A_COMPLEX_TRAP_BANG_N)));
+                                        turnResults.PushTurnResult(TurnResults.TurnResult
+                                            .ActionSearchChestTriggerComplexTrap);
+                                    }
+                                    else
+                                    {
+                                        StreamingOutput.Instance.PushMessage(
+                                            U5StringRef.ThouDostFind(
+                                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
+                                                    .ThingsIFindStrings.A_COMPLEX_TRAP_N)));
+                                        turnResults.PushTurnResult(
+                                            TurnResults.TurnResult.ActionSearchChestRemoveComplex);
+                                    }
+
+                                    break;
+                                case Chest.ChestTrapComplexity.None:
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+
+                            turnResults.PushTurnResult(TurnResults.TurnResult.ActionSearchChestNoTrap);
+                            chest.CurrentChestTrapComplexity = Chest.ChestTrapComplexity.None;
+                        }
+                        else
+                        {
+                            StreamingOutput.Instance.PushMessage(
+                                U5StringRef.ThouDostFind(GameReferences.DataOvlRef.StringReferences.GetString(
+                                    DataOvlReference.ThingsIFindStrings.NO_TRAP_BANG_N)));
+                            turnResults.PushTurnResult(TurnResults.TurnResult.ActionSearchChestNoTrap);
+                        }
+
+                        return chest;
+                    case ItemStack itemStack:
+                        StreamingOutput.Instance.PushMessage(
+                            U5StringRef.ThouDostFind(
+                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                    .NOTHING_OF_NOTE_BANG_N)));
+                        turnResults.PushTurnResult(TurnResults.TurnResult.ActionSearchChestNoTrap);
+                        break;
+                    case DeadBody deadBody:
+                        if (OddsAndLogic.GetIsPoisonFromSearchingBody())
+                            record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+
+                        if (OddsAndLogic.GetIsTreasureInDeadBody())
+                        {
+                            // generate an item stack!
+                        }
+
+                        break;
+                    case BloodSpatter bloodSpatter:
+                        if (OddsAndLogic.GetIsPoisonFromSearchingBloodSpatter())
+                            record.Stats.Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+                        if (OddsAndLogic.GetIsTreasureBloodSpatter())
+                        {
+                            //TheMapUnits.CreateEnemy()
+                        }
+
+                        break;
+                    default:
+                        throw new Ultima5ReduxException(
+                            $@"Did not recognize nonAttackingUnit {nonAttackingUnit.FriendlyName}");
+                }
+            }
+
+            return null;
+        }
+
+        internal InventoryItem SearchAndExposeInventoryItem(in Point2D xy)
         {
             // check for moonstones
             // moonstone check
@@ -739,10 +852,10 @@ namespace Ultima5Redux.Maps
 
                 GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
 
-                return 1;
+                return invItem;
             }
 
-            return 0;
+            return null;
         }
 
         /// <summary>
@@ -978,7 +1091,12 @@ namespace Ultima5Redux.Maps
         public bool ContainsSearchableThings(in Point2D xy)
         {
             // moonstone check
-            return IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
+            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
+
+            bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter);
+
+            return IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder) ||
+                   bIsSearchableMapUnit;
         }
 
         /// <summary>
