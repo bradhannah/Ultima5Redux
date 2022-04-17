@@ -281,7 +281,17 @@ namespace Ultima5Redux.PlayerCharacters
         public void ProcessTurnPoison()
         {
             if (Stats.Status == CharacterStatus.Poisoned)
-                Stats.CurrentHp -= 1;
+                Stats.CurrentHp -= OddsAndLogic.POISON_DAMAGE_MIN;
+        }
+
+        public void ProcessTurnBomb()
+        {
+            Stats.CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
+        }
+
+        public void ProcessTurnAcid()
+        {
+            Stats.CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.ACID_DAMAGE_MIN, OddsAndLogic.ACID_DAMAGE_MAX);
         }
 
         public bool Resurrect()

@@ -942,18 +942,18 @@ namespace Ultima5ReduxTesting
             Assert.True(avatar.IsAvatarOnBoardedThing);
             Assert.True(avatar.CurrentBoardedMapUnit != null);
 
-            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .Quantity;
             TurnResults turnResults = new TurnResults();
             world.TryToXit(out bool bWasSuccessful, turnResults);
             Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems
-                .Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity);
+                .Items[SpecialItem.SpecificItemType.Carpet].Quantity);
             Assert.True(bWasSuccessful);
             world.TryToBoard(out bool bWasSuccessfulBoard, turnResults);
             Assert.True(bWasSuccessfulBoard);
             world.TryToXit(out bWasSuccessful, turnResults);
 
-            nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
+            nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .Quantity;
             Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
             world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
@@ -961,12 +961,12 @@ namespace Ultima5ReduxTesting
             Assert.True(bGotACarpet);
             //Assert.True(carpet!=null);
             Assert.True(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems
-                .Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity);
+                .Items[SpecialItem.SpecificItemType.Carpet].Quantity);
             world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults);
             Assert.True(!bGotACarpet);
 
             world.TryToUseSpecialItem(
-                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
+                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet],
                 out bool bAbleToUseItem, turnResults);
             Assert.True(bAbleToUseItem);
             world.TryToXit(out bWasSuccessful, turnResults);
@@ -983,15 +983,15 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .Quantity;
             TurnResults turnResults = new TurnResults();
 
             world.TryToUseSpecialItem(
-                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet],
+                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet],
                 out bool bAbleToUseItem, turnResults);
             Assert.True(bAbleToUseItem);
-            Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
+            Assert.True(world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .Quantity == nCarpets - 1);
         }
 
@@ -1878,6 +1878,28 @@ namespace Ultima5ReduxTesting
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToJimmyDoor(avatarPos,
                 world.State.CharacterRecords.AvatarRecord, out bool bWasSuccessful,
                 turnResults);
+
+            TestContext.Out.Write("Ending ");
+
+            Assert.True(true);
+        }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void test_SearchLBChest(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
+
+            Point2D avatarPos = new Point2D(14, 23);
+            Point2D chestPos = new Point2D(13, 23);
+            TurnResults turnResults = new TurnResults();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                world.TryToSearch(chestPos, out bool bWasSuccessful, turnResults);
+
+            aggressiveMapUnitInfos =
+                world.TryToGetAThing(chestPos, out bool bGotAThing, out InventoryItem thingIGot, turnResults);
 
             TestContext.Out.Write("Ending ");
 

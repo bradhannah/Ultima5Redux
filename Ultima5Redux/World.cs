@@ -247,7 +247,7 @@ namespace Ultima5Redux
             }
 
             bWasUsed = true;
-            Debug.Assert(State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
+            Debug.Assert(State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                 .HasOneOrMore);
 
             if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().IsAvatarOnBoardedThing)
@@ -259,7 +259,7 @@ namespace Ultima5Redux
                 return;
             }
 
-            State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity--;
+            State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet].Quantity--;
             MagicCarpet carpet = State.TheVirtualMap.TheMapUnits.CreateMagicCarpet(
                 State.TheVirtualMap.CurrentPosition.XY,
                 State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Direction,
@@ -484,7 +484,7 @@ namespace Ultima5Redux
 
                         if (State.TheVirtualMap.IsAvatarRidingCarpet)
                             // we tuck the carpet away
-                            State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet]
+                            State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
                                 .Quantity++;
                         // add a skiff the the frigate
                         if (State.TheVirtualMap.IsAvatarInSkiff) boardableFrigate.SkiffsAboard++;
@@ -980,7 +980,7 @@ namespace Ultima5Redux
             if (magicCarpet != null)
             {
                 // add the carpet to the players inventory and remove it from the map
-                State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Carpet].Quantity++;
+                State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet].Quantity++;
                 State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(magicCarpet);
                 bGotAThing = true;
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
@@ -1001,6 +1001,22 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
                 turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetExposedItem);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
+            {
+                MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
+                if (mapUnit is ItemStack { AreStackableItems: true } itemStack)
+                {
+                    StackableItem stackableItem = itemStack.PopStackableItem();
+                    InventoryItem invItem = stackableItem.InvItem;
+                    inventoryItem = invItem ?? throw new Ultima5ReduxException(
+                        "Tried to get inventory item from StackableItem but it was null");
+                    State.PlayerInventory.AddInventoryItemToInventory(inventoryItem);
+                    StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
+                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetStackableItem);
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
             }
 
             StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
@@ -1107,7 +1123,7 @@ namespace Ultima5Redux
             // if it's a large map, we either klimb with the grapple or don't klimb at all
             if (State.TheVirtualMap.IsLargeMap)
             {
-                if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemTypeSprite.Grapple]
+                if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Grapple]
                     .HasOneOrMore)
                 {
                     klimbResult = KlimbResult.RequiresDirection;
@@ -1761,10 +1777,11 @@ namespace Ultima5Redux
 
             // we search the tile and expose any items that may be on it
             InventoryItem invItem = State.TheVirtualMap.SearchAndExposeInventoryItem(xy);
-            NonAttackingUnit nonAttackingUnit = null;
+            bool bHasInnerNonAttackUnits = false;
             if (invItem == null)
-                nonAttackingUnit =
-                    State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults, State.CharacterRecords.AvatarRecord);
+                bHasInnerNonAttackUnits =
+                    State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults, State.CharacterRecords.AvatarRecord,
+                        State.CharacterRecords);
 
             if (invItem != null)
             {
@@ -1778,8 +1795,9 @@ namespace Ultima5Redux
 
                 StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(searchResultStr), false);
             }
-            else if (nonAttackingUnit != null)
+            else if (bHasInnerNonAttackUnits)
             {
+                // do nothing, I think? The SearchNonAttackingMapUnit method takes care of the chatter
             }
             // it could be a moongate, with a stone, but wrong time of day
             else

@@ -574,9 +574,31 @@ namespace Ultima5Redux.MapUnits
                 "You provided a MapUnit to clear, but it is not in the active MapUnit list");
         }
 
-        public ItemStack CreateItemStack(Point2D xy, NonAttackingUnit nonAttackingUnit)
+        /// <summary>
+        ///     Places an existing non attacking unit on a map
+        ///     This is often used when an item stack exists in a chest OR if an enemy leaves a body or blood spatter
+        /// </summary>
+        /// <param name="nonAttackingUnit"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition,
+            Map.Maps map)
         {
-            return null;
+            int nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
+            if (nIndex == -1) return false;
+
+            // Horse horse = new(_importedMovements.GetMovement(nIndex), CurrentLocation, Point2D.Direction.Right,
+            //     null, mapUnitPosition)
+            // {
+            //     MapUnitPosition = mapUnitPosition
+            // };
+
+            nonAttackingUnit.MapUnitPosition = mapUnitPosition;
+
+            // set position of frigate in the world
+            AddNewMapUnit(map, nonAttackingUnit, nIndex);
+            return true;
         }
 
         public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference,

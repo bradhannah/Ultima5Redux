@@ -24,9 +24,9 @@ namespace Ultima5Redux.MapUnits
             ActionOpened, ActionOpenedTrapped, ActionOpenedLocked, ActionTalk, ActionAttackBrokeMirror,
             ActionAttackNothingToAttack, ActionAttackOnlyOnFoot, ActionAttackMurder, ActionAttackCombatMapNpc,
             ActionAttackCombatMapEnemy, ActionGetBorrowed, ActionGetMagicCarpet, ActionGetExposedItem,
-            ActionGetNothingToGet, ActionJimmyNoLock, ActionJimmyUnlocked, ActionJimmyKeyBroke,
-            ActionSearchChestRemoveComplex, ActionSearchChestRemoveSimple, ActionSearchChestTriggerComplexTrap,
-            ActionSearchChestTriggerSimpleTrap, ActionSearchChestNoTrap
+            ActionGetStackableItem, ActionGetNothingToGet, ActionJimmyNoLock, ActionJimmyUnlocked, ActionJimmyKeyBroke,
+            ActionSearchRemoveComplex, ActionSearchRemoveSimple, ActionSearchTriggerComplexTrap,
+            ActionSearchTriggerSimpleTrap, ActionSearchNoTrap
         }
 
         public static bool IsNewMapTurnResult(TurnResult turnResult)

@@ -8,10 +8,16 @@ namespace Ultima5Redux
 {
     public static class OddsAndLogic
     {
-        private const float ODDS_POISON_FROM_SEARCHING_BODY = 0.5f;
-        private const float ODDS_TREASURE_FROM_SEARCHING_BODY = 0.2f;
+        public const int BOMB_DAMAGE_MIN = 3;
+        public const int BOMB_DAMAGE_MAX = 10;
 
-        private const float ODDS_POISON_FROM_SEARCHING_BLOOD_SPATTER = 0.5f;
+        public const int ACID_DAMAGE_MIN = 3;
+        public const int ACID_DAMAGE_MAX = 10;
+
+        public const int POISON_DAMAGE_MIN = 1;
+        public const int POISON_DAMAGE_MAX = 1;
+
+        private const float ODDS_TREASURE_FROM_SEARCHING_BODY = 0.2f;
         private const float ODDS_TREASURE_FROM_BLOOD_SPATTER = 0.2f;
 
         private const float ODDS_CHEST_LOCKED = 0.2f;
@@ -19,6 +25,12 @@ namespace Ultima5Redux
         private const float ODDS_SIMPLE_TRAP_ON_CHEST = 0.2f;
         private const float ODDS_BASE_COMPLEX_TRAP_EXPLODE_ON_SEARCH = 0.4f;
         private const float ODDS_BASE_SIMPLE_TRAP_EXPLODE_ON_SEARCH = 0.2f;
+
+        private const int WEIGHT_DEADBODY_TRAP_POISON = 1;
+        private const int WEIGHT_DEADBODY_TRAP_NONE = 3;
+
+        private const int WEIGHT_BLOODSPATTER_TRAP_POISON = 1;
+        private const int WEIGHT_BLOODSPATTER_TRAP_NONE = 3;
 
         private const int WEIGHT_CHEST_TRAP_NONE = WEIGHT_CHEST_TRAP_ACID + WEIGHT_CHEST_TRAP_SLEEP +
                                                    WEIGHT_CHEST_TRAP_POISON + WEIGHT_CHEST_TRAP_BOMB;
@@ -28,74 +40,112 @@ namespace Ultima5Redux
         private const int WEIGHT_CHEST_TRAP_POISON = 3;
         private const int WEIGHT_CHEST_TRAP_BOMB = 1;
 
-        private static readonly Dictionary<Chest.ChestTrapType, int> ChestTrapsWeighted = new()
+        private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
         {
-            { Chest.ChestTrapType.ACID, WEIGHT_CHEST_TRAP_ACID },
-            { Chest.ChestTrapType.BOMB, WEIGHT_CHEST_TRAP_BOMB },
-            { Chest.ChestTrapType.POISON, WEIGHT_CHEST_TRAP_POISON },
-            { Chest.ChestTrapType.SLEEP, WEIGHT_CHEST_TRAP_SLEEP },
-            { Chest.ChestTrapType.NONE, WEIGHT_CHEST_TRAP_NONE }
+            { NonAttackingUnit.TrapType.ACID, WEIGHT_CHEST_TRAP_ACID },
+            { NonAttackingUnit.TrapType.BOMB, WEIGHT_CHEST_TRAP_BOMB },
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_CHEST_TRAP_POISON },
+            { NonAttackingUnit.TrapType.SLEEP, WEIGHT_CHEST_TRAP_SLEEP },
+            { NonAttackingUnit.TrapType.NONE, WEIGHT_CHEST_TRAP_NONE }
         };
 
-        private static readonly List<Chest.ChestTrapType> ChestTrapsWeightedList =
+        private static readonly Dictionary<NonAttackingUnit.TrapType, int> DeadBodyTrapsWeighted = new()
+        {
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_DEADBODY_TRAP_POISON },
+            { NonAttackingUnit.TrapType.NONE, WEIGHT_DEADBODY_TRAP_NONE }
+        };
+
+        private static readonly Dictionary<NonAttackingUnit.TrapType, int> BloodSpatterTrapsWeighted = new()
+        {
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_BLOODSPATTER_TRAP_POISON },
+            { NonAttackingUnit.TrapType.NONE, WEIGHT_BLOODSPATTER_TRAP_NONE }
+        };
+
+        private static readonly List<NonAttackingUnit.TrapType> ChestTrapsWeightedList =
             Utils.MakeWeightedList(ChestTrapsWeighted).ToList();
+
+        private static readonly List<NonAttackingUnit.TrapType> DeadBodyTrapsWeightedList =
+            Utils.MakeWeightedList(DeadBodyTrapsWeighted).ToList();
+
+        private static readonly List<NonAttackingUnit.TrapType> BloodSpatterTrapsWeightedList =
+            Utils.MakeWeightedList(BloodSpatterTrapsWeighted).ToList();
 
         /// <summary>
         ///     Improvement to odds of not setting off a trap based on a characters dexterity
         /// </summary>
         private const float ODDS_DEX_ADJUST_TRAP_EXPLODE = 0.01f;
 
-        /// <summary>
-        /// </summary>
+        /// <summary> is there treasure in the new dead body? </summary>
         /// <returns></returns>
         /// <remarks>UNVERIFIED</remarks>
-        public static bool GetIsPoisonFromSearchingBody() => Utils.RandomOdds(ODDS_POISON_FROM_SEARCHING_BODY);
-
+        // public static bool GetIsPoisonFromSearchingBody() => Utils.RandomOdds(ODDS_POISON_FROM_SEARCHING_BODY);
+        //
         public static bool GetIsTreasureInDeadBody() => Utils.RandomOdds(ODDS_TREASURE_FROM_SEARCHING_BODY);
 
         /// <summary>
+        /// Is there treasure in the new dead blood spatter?
         /// </summary>
         /// <returns></returns>
-        /// <remarks>UNVERIFIED</remarks>
-        public static bool GetIsPoisonFromSearchingBloodSpatter() =>
-            Utils.RandomOdds(ODDS_POISON_FROM_SEARCHING_BLOOD_SPATTER);
-
-        public static bool GetIsTreasureBloodSpatter() => Utils.RandomOdds(ODDS_TREASURE_FROM_SEARCHING_BODY);
+        public static bool GetIsTreasureBloodSpatter() => Utils.RandomOdds(ODDS_TREASURE_FROM_BLOOD_SPATTER);
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
         /// <remarks>UNVERIFIED</remarks>
-        public static Chest.ChestTrapComplexity GetNewChestTrappedComplexity()
+        public static NonAttackingUnit.TrapComplexity GetNewChestTrappedComplexity()
         {
-            if (Utils.RandomOdds(ODDS_SIMPLE_TRAP_ON_CHEST)) return Chest.ChestTrapComplexity.Simple;
+            if (Utils.RandomOdds(ODDS_SIMPLE_TRAP_ON_CHEST)) return NonAttackingUnit.TrapComplexity.Simple;
             return Utils.RandomOdds(ODDS_COMPLEX_TRAP_ON_CHEST)
-                ? Chest.ChestTrapComplexity.Complex
-                : Chest.ChestTrapComplexity.Simple;
+                ? NonAttackingUnit.TrapComplexity.Complex
+                : NonAttackingUnit.TrapComplexity.Simple;
         }
 
-        public static bool GetNewChestLocked() => Utils.RandomOdds(ODDS_CHEST_LOCKED);
+        /// <summary>
+        ///     When creating a new chest - is it locked?
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetIsNewChestLocked() => Utils.RandomOdds(ODDS_CHEST_LOCKED);
 
         /// <summary>
         ///     Gets the trap type for a new chest - this includes the NONE type indicating no trap
         /// </summary>
         /// <returns></returns>
-        public static Chest.ChestTrapType GetNewChestTrapType() =>
-            (ChestTrapsWeightedList[Utils.Ran.Next() % ChestTrapsWeighted.Count]);
+        public static NonAttackingUnit.TrapType GetNewChestTrapType() =>
+            (ChestTrapsWeightedList[Utils.Ran.Next() % ChestTrapsWeightedList.Count]);
 
+        /// <summary>
+        ///     Gets the trap type for a new dead body - this includes the NONE type indicating no trap
+        /// </summary>
+        /// <returns></returns>
+        public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
+            (ChestTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count]);
+
+        /// <summary>
+        ///     Gets the trap type for a new blood spatter - this includes the NONE type indicating no trap
+        /// </summary>
+        /// <returns></returns>
+        public static NonAttackingUnit.TrapType GetNewBloodSpatterTrapType() =>
+            (ChestTrapsWeightedList[Utils.Ran.Next() % BloodSpatterTrapsWeightedList.Count]);
+
+        /// <summary>
+        ///     When the given user tries to open the chest - does it explode?
+        /// </summary>
+        /// <param name="record"></param>
+        /// <param name="trapComplexity"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static bool DoesChestTrapTrigger(PlayerCharacterRecord record,
-            Chest.ChestTrapComplexity chestTrapComplexity)
+            NonAttackingUnit.TrapComplexity trapComplexity)
         {
-            return chestTrapComplexity switch
+            return trapComplexity switch
             {
-                Chest.ChestTrapComplexity.None => false,
-                Chest.ChestTrapComplexity.Simple => Utils.RandomOdds(Math.Max(
+                NonAttackingUnit.TrapComplexity.Simple => Utils.RandomOdds(Math.Max(
                     ODDS_BASE_SIMPLE_TRAP_EXPLODE_ON_SEARCH - (record.Stats.Dexterity * ODDS_DEX_ADJUST_TRAP_EXPLODE),
                     0)),
-                Chest.ChestTrapComplexity.Complex => Utils.RandomOdds(Math.Max(
+                NonAttackingUnit.TrapComplexity.Complex => Utils.RandomOdds(Math.Max(
                     ODDS_BASE_COMPLEX_TRAP_EXPLODE_ON_SEARCH - (record.Stats.Dexterity * ODDS_DEX_ADJUST_TRAP_EXPLODE),
                     0)),
-                _ => throw new ArgumentOutOfRangeException(nameof(chestTrapComplexity), chestTrapComplexity, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(trapComplexity), trapComplexity, null)
             };
         }
     }

@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
 {
-    [DataContract] public sealed class SpecialItems : InventoryItems<SpecialItem.SpecificItemTypeSprite, SpecialItem>
+    [DataContract] public sealed class SpecialItems : InventoryItems<SpecialItem.SpecificItemType, SpecialItem>
     {
         [DataMember]
-        public override Dictionary<SpecialItem.SpecificItemTypeSprite, SpecialItem> Items { get; internal set; } =
+        public override Dictionary<SpecialItem.SpecificItemType, SpecialItem> Items { get; internal set; } =
             new();
 
         [JsonConstructor] private SpecialItems()
@@ -20,7 +20,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // WoodenBox = 270, Sextant = 256
             void addLegacyItem(SpecialItem.SpecificItemType specialItem,
                 SpecialItem.SpecificItemTypeSprite specialItemSprite) =>
-                Items[specialItemSprite] = new SpecialItem(specialItem, specialItemSprite,
+                Items[specialItem] = new SpecialItem(specialItem, specialItemSprite,
                     importedGameState.GetSpecialItemQuantity(specialItem));
 
             addLegacyItem(SpecialItem.SpecificItemType.Carpet, SpecialItem.SpecificItemTypeSprite.Carpet);
@@ -30,7 +30,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             addLegacyItem(SpecialItem.SpecificItemType.Sextant, SpecialItem.SpecificItemTypeSprite.Sextant);
             addLegacyItem(SpecialItem.SpecificItemType.BlackBadge, SpecialItem.SpecificItemTypeSprite.BlackBadge);
             addLegacyItem(SpecialItem.SpecificItemType.WoodenBox, SpecialItem.SpecificItemTypeSprite.WoodenBox);
-            Items[SpecialItem.SpecificItemTypeSprite.PocketWatch] =
+            Items[SpecialItem.SpecificItemType.PocketWatch] =
                 new SpecialItem(SpecialItem.SpecificItemType.PocketWatch,
                     SpecialItem.SpecificItemTypeSprite.PocketWatch, 1);
         }

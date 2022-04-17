@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -19,7 +20,21 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public void PushStackableItem(StackableItem item) => _stackableItems.Push(item);
 
-        public enum StackableType { DeadBody, BloodSpatter, }
+        //public enum StackableType { DeadBody, BloodSpatter, }
+
+        public string ThouFindStr
+        {
+            get
+            {
+                string foundStr = "";
+                foreach (StackableItem item in _stackableItems)
+                {
+                    foundStr += item.InvItem.FindDescription + "\n";
+                }
+
+                return U5StringRef.ThouDostFind(foundStr.TrimEnd());
+            }
+        }
 
         public StackableItem PopStackableItem()
         {
@@ -39,5 +54,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
             set => throw new NotImplementedException("Cannot assign KeyTileReference in ItemStack");
         }
+
+        public override bool IsLocked { get; set; } = false;
+        public override bool HasInnerItemStack => false;
+        public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;
     }
 }

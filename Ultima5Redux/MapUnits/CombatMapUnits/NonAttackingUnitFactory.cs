@@ -27,6 +27,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     return new Chest(mapUnitPosition);
             }
 
+            ItemStack itemStack = new();
+
+            itemStack.PushStackableItem(CreateStackableItem(nSprite));
+            return itemStack;
+        }
+
+        public static StackableItem CreateStackableItem(int nSprite)
+        {
             // we know it's an actual item at this point
             List<InventoryReference> invRefs = GameReferences.InvRef.GetInventoryReferences(nSprite).ToList();
 
@@ -36,9 +44,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     $"Got zero InventoryReferences back for {nSprite} with the NonAttackingUnitFactory.");
             }
 
-            ItemStack itemStack = new();
-            StackableItem item;
-
             // at this point we know there are greater than one items in the stack
             // FOR NOW we pick a random choice amongst the returned references and add a single item to the pile
             int nInvRefs = invRefs.Count;
@@ -46,10 +51,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             InventoryItem invItem = InventoryItemFactory.Create(invRefs[nChosenRef]);
             // default to 1 for now, unless I find a circumstance that needs more
             invItem.Quantity = 1;
-            item = new StackableItem(invItem);
+            StackableItem item = new(invItem);
 
-            itemStack.PushStackableItem(item);
-            return itemStack;
+            return item;
         }
     }
 }
