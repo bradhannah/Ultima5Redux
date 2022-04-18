@@ -731,17 +731,18 @@ namespace Ultima5Redux.Maps
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
             foreach (MapUnit mapUnit in mapUnits)
             {
-                if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
+                if (mapUnit is not NonAttackingUnit { IsSearchable: true } nonAttackingUnit) continue;
 
                 ProcessSearchNonAttackUnitTrap(turnResults, record, records, nonAttackingUnit);
-                // only do the topmost one - I guess?
-                return ProcessSearchInnerItems(nonAttackingUnit);
+
+                // we only open the inner items up if it exposes on search like DeadBodies and Spatters
+                if (nonAttackingUnit.ExposeInnerItemsOnSearch) return ProcessSearchInnerItems(nonAttackingUnit);
             }
 
             return false;
         }
 
-        private bool ProcessSearchInnerItems(NonAttackingUnit nonAttackingUnit)
+        public bool ProcessSearchInnerItems(NonAttackingUnit nonAttackingUnit)
         {
             bool bHasInnerItems = nonAttackingUnit.HasInnerItemStack;
             ItemStack itemStack = nonAttackingUnit.InnerItemStack;
@@ -762,8 +763,7 @@ namespace Ultima5Redux.Maps
             if (bHasInnerItems)
             {
                 // there were items inside the thing, so we place them 
-                TheMapUnits.PlaceNonAttackingUnit(itemStack, nonAttackingUnit.MapUnitPosition,
-                    LargeMapOverUnder);
+                TheMapUnits.PlaceNonAttackingUnit(itemStack, nonAttackingUnit.MapUnitPosition, LargeMapOverUnder);
             }
 
             return bHasInnerItems;

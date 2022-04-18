@@ -56,6 +56,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         public override bool IsLocked { get; set; } = false;
+        public override bool IsOpenable => false;
+        public override bool IsSearchable => false;
+        public override bool ExposeInnerItemsOnSearch => true;
+        public override bool ExposeInnerItemsOnOpen => false;
         public override bool HasInnerItemStack => false;
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;
     }

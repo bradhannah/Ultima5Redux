@@ -74,6 +74,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             GenerateItemStack();
         }
 
+        public override bool IsOpenable => true;
+        public override bool IsSearchable => true;
+        public override bool ExposeInnerItemsOnSearch => false;
+        public override bool ExposeInnerItemsOnOpen => true;
+
         public override bool DoesTriggerTrap(PlayerCharacterRecord record)
         {
             return IsTrapped && OddsAndLogic.DoesChestTrapTrigger(record, CurrentTrapComplexity);

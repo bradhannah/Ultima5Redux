@@ -17,6 +17,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override TileReference KeyTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName("Splat");
 
+        public override bool IsOpenable => false;
+        public override bool IsSearchable => true;
+        public override bool ExposeInnerItemsOnSearch => true;
+        public override bool ExposeInnerItemsOnOpen => false;
         public override bool HasInnerItemStack => InnerItemStack is { AreStackableItems: true };
 
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) =>

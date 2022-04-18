@@ -1895,11 +1895,29 @@ namespace Ultima5ReduxTesting
             Point2D avatarPos = new Point2D(14, 23);
             Point2D chestPos = new Point2D(13, 23);
             TurnResults turnResults = new TurnResults();
+
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
                 world.TryToSearch(chestPos, out bool bWasSuccessful, turnResults);
+            Assert.IsFalse(bWasSuccessful);
+
+            aggressiveMapUnitInfos = world.TryToSearch(chestPos, out bWasSuccessful, turnResults);
+            Assert.IsFalse(bWasSuccessful);
 
             aggressiveMapUnitInfos =
                 world.TryToGetAThing(chestPos, out bool bGotAThing, out InventoryItem thingIGot, turnResults);
+            Assert.IsFalse(bWasSuccessful);
+
+            aggressiveMapUnitInfos = world.TryToOpenAThing(chestPos, out bWasSuccessful, turnResults);
+            Assert.IsTrue(bWasSuccessful);
+            aggressiveMapUnitInfos = world.TryToOpenAThing(chestPos, out bWasSuccessful, turnResults);
+            Assert.IsFalse(bWasSuccessful);
+
+            aggressiveMapUnitInfos =
+                world.TryToGetAThing(chestPos, out bGotAThing, out thingIGot, turnResults);
+            Assert.IsNotNull(thingIGot);
+            aggressiveMapUnitInfos =
+                world.TryToGetAThing(chestPos, out bGotAThing, out thingIGot, turnResults);
+            Assert.IsNotNull(thingIGot);
 
             TestContext.Out.Write("Ending ");
 

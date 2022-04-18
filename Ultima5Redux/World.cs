@@ -16,6 +16,9 @@ using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
+// ProcessXXX methods will take a TurnResults and take care of all messages and command pushing
+// TryToXXXX methods directly reflective of the user executing the command and could have complex branching logic 
+
 namespace Ultima5Redux
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -1013,6 +1016,11 @@ namespace Ultima5Redux
                     inventoryItem = invItem ?? throw new Ultima5ReduxException(
                         "Tried to get inventory item from StackableItem but it was null");
                     State.PlayerInventory.AddInventoryItemToInventory(inventoryItem);
+
+                    // if the items are all gone then we delete the stack from the map
+                    if (!itemStack.AreStackableItems)
+                        State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
+
                     StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
                     turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetStackableItem);
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
@@ -1709,7 +1717,7 @@ namespace Ultima5Redux
         /// <param name="turnResults"></param>
         /// <returns>the output string to write to console</returns>
         // ReSharper disable once UnusedMember.Global
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToOpenDoor(Point2D xy, out bool bWasSuccessful,
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToOpenAThing(Point2D xy, out bool bWasSuccessful,
             TurnResults turnResults)
         {
             bWasSuccessful = false;
@@ -1717,17 +1725,27 @@ namespace Ultima5Redux
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
             bool isDoorInDirection = tileReference.IsOpenable;
+            if (isDoorInDirection) return ProcessOpenDoor(xy, ref bWasSuccessful, turnResults, tileReference);
 
-            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = AdvanceTime(2, turnResults);
+            MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
 
-            if (!isDoorInDirection)
+            if (mapUnit is NonAttackingUnit { IsOpenable: true } nonAttackingUnit)
             {
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.OpeningThingsStrings
-                        .NOTHING_TO_OPEN), false);
-                return aggressiveMapUnitInfos;
+                bWasSuccessful = State.TheVirtualMap.ProcessSearchInnerItems(nonAttackingUnit);
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            // if we fell through here then there is nothing open - easy enough
+            StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                DataOvlReference.OpeningThingsStrings
+                    .NOTHING_TO_OPEN), false);
+            turnResults.PushTurnResult(TurnResults.TurnResult.ActionOpenDoorNothingToOpen);
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+        }
+
+        private List<VirtualMap.AggressiveMapUnitInfo> ProcessOpenDoor(Point2D xy, ref bool bWasSuccessful,
+            TurnResults turnResults, TileReference tileReference)
+        {
             bool bIsDoorMagical = GameReferences.SpriteTileReferences.IsDoorMagical(tileReference.Index);
             bool bIsDoorLocked = GameReferences.SpriteTileReferences.IsDoorLocked(tileReference.Index);
 
@@ -1736,7 +1754,8 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.OpeningThingsStrings
                         .LOCKED_N), false);
-                return aggressiveMapUnitInfos;
+                turnResults.PushTurnResult(TurnResults.TurnResult.ActionOpenDoorLocked);
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
             State.TheVirtualMap.SetOverridingTileReferece(
@@ -1749,9 +1768,9 @@ namespace Ultima5Redux
             StreamingOutput.Instance.PushMessage(
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.OPENED),
                 false);
-            turnResults.PushTurnResult(TurnResults.TurnResult.Opened);
+            turnResults.PushTurnResult(TurnResults.TurnResult.ActionOpenDoorOpened);
 
-            return aggressiveMapUnitInfos;
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
         /// <summary>

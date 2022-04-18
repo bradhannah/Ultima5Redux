@@ -33,6 +33,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool IsTrapped => Trap != TrapType.NONE;
         public virtual bool IsLocked { get; set; }
 
+        public abstract bool IsOpenable { get; }
+        public abstract bool IsSearchable { get; }
+        public abstract bool ExposeInnerItemsOnSearch { get; }
+        public abstract bool ExposeInnerItemsOnOpen { get; }
+
         public virtual ItemStack InnerItemStack { get; protected set; } //= new();
         public virtual bool HasInnerItemStack => InnerItemStack is { AreStackableItems: true };
         public abstract bool DoesTriggerTrap(PlayerCharacterRecord record);

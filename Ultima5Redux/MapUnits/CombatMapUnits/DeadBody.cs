@@ -20,6 +20,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         // public ItemStack InnerItemStack { get; } = new();
         public TrapType Trap { get; set; }
+        public override bool IsOpenable => false;
+        public override bool IsSearchable => true;
+        public override bool ExposeInnerItemsOnSearch => true;
+        public override bool ExposeInnerItemsOnOpen => false;
         public override ItemStack InnerItemStack { get; protected set; }
 
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) =>
