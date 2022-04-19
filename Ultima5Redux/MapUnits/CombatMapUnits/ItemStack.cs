@@ -16,11 +16,18 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string SingularName { get; }
         public override string Name { get; }
 
+        public override bool IsActive => HasStackableItems;
+
         private readonly Stack<StackableItem> _stackableItems = new();
 
         public void PushStackableItem(StackableItem item) => _stackableItems.Push(item);
 
         //public enum StackableType { DeadBody, BloodSpatter, }
+
+        public ItemStack(MapUnitPosition mapUnitPosition)
+        {
+            MapUnitPosition = mapUnitPosition;
+        }
 
         public string ThouFindStr
         {
@@ -40,16 +47,17 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             if (_stackableItems.Count == 0)
                 throw new Ultima5ReduxException("Tried to pop a StackableItem but non were left");
+            //if (_stackableItems.Count == 1) 
             return _stackableItems.Pop();
         }
 
-        public bool AreStackableItems => _stackableItems.Count > 0;
+        public bool HasStackableItems => _stackableItems.Count > 0;
 
         public override TileReference KeyTileReference
         {
             get
             {
-                if (!AreStackableItems) return GameReferences.SpriteTileReferences.GetTileReference(256);
+                if (!HasStackableItems) return GameReferences.SpriteTileReferences.GetTileReference(256);
                 return GameReferences.SpriteTileReferences.GetTileReference(_stackableItems.Peek().InvItem.SpriteNum);
             }
             set => throw new NotImplementedException("Cannot assign KeyTileReference in ItemStack");

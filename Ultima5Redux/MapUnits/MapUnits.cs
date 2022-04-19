@@ -634,6 +634,24 @@ namespace Ultima5Redux.MapUnits
             return enemy;
         }
 
+        public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
+        {
+            Debug.Assert(CurrentMapType == Map.Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
+            if (nIndex == -1) return null;
+
+            //Point2D thingPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
+            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite, mapUnitPosition);
+
+            // Enemy enemy = new(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
+            //     new MapUnitPosition(xy.X, xy.Y, 0));
+            //
+            nIndex = AddCombatMapUnit(nonAttackingUnit);
+
+            return nonAttackingUnit;
+        }
+
         /// <summary>
         ///     Creates a new frigate at a dock of a given location
         /// </summary>

@@ -35,6 +35,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public EnemyReference GetEnemyReference(int nSprite)
         {
             if (nSprite is >= 300 and <= 303) return AllEnemyReferences[EnemyReference.PIRATE_SHIP_NUMBER];
+            // hack to put LB in dungeon 111
+            if (nSprite == 316) return AllEnemyReferences[15];
             int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
             return AllEnemyReferences[nIndex];
         }

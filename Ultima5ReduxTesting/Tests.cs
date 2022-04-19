@@ -1085,7 +1085,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     0),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, enemyReference);
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, enemyReference);
 
             EnemyReference secondEnemyReference = GameReferences.EnemyRefs.GetFriendReference(enemyReference);
             //GetEnemyReference(enemyReference.FriendIndex);
@@ -1098,7 +1098,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     0),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords,
                 // orcs
                 GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
                 1,
@@ -1128,7 +1128,7 @@ namespace Ultima5ReduxTesting
 
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 0),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
 
             TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
 
@@ -1148,7 +1148,7 @@ namespace Ultima5ReduxTesting
             // right sided hammer
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 4),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TurnResults turnResults = new TurnResults();
             world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
             world.State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
@@ -1165,7 +1165,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     4),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords);
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
             TurnResults turnResults = new TurnResults();
 
             world.TryToMoveCombatMap(Point2D.Direction.Up, turnResults);
@@ -1193,7 +1193,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     11),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords,
                 // orcs
                 GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
                 5,
@@ -1223,7 +1223,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     2),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords,
                 // orcs
                 GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
                 5,
@@ -1309,7 +1309,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     15),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords,
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords,
                 // orcs
                 GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448)),
                 5,
@@ -1503,7 +1503,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadCombatMap(
                 GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Britannia,
                     0),
-                SingleCombatMapReference.EntryDirection.Direction2, world.State.CharacterRecords, enemyReference);
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords, enemyReference);
 
             world.State.TheVirtualMap.ReturnToPreviousMapAfterCombat();
 
@@ -1922,6 +1922,181 @@ namespace Ultima5ReduxTesting
             TestContext.Out.Write("Ending ");
 
             Assert.True(true);
+        }
+
+        // search all the things
+        // open all the things
+        // look at all the things
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon71WithOpenDoor(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    71),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+
+            //TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+
+            TurnResults turnResults = new TurnResults();
+            // locked door
+            world.TryToOpenAThing(new Point2D(5, 4), out bool bWasSuccessful, turnResults);
+            Assert.IsFalse(bWasSuccessful);
+
+            world.TryToJimmyDoor(new Point2D(5, 4), world.State.CharacterRecords.AvatarRecord, out bWasSuccessful,
+                turnResults);
+            Assert.IsTrue(bWasSuccessful);
+
+            world.TryToOpenAThing(new Point2D(5, 4), out bWasSuccessful, turnResults);
+            Assert.IsTrue(bWasSuccessful);
+
+            CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
+            Assert.NotNull(combatMap);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
+
+            _ = "";
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon93(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    93),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+
+            //TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+
+            TurnResults turnResults = new TurnResults();
+
+            CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
+            Assert.NotNull(combatMap);
+            combatMap.DivideEnemy(combatMap.AllEnemies.ToList()[2]);
+
+            _ = "";
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon93GetStuffAndMove(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 100;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    93),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+
+            //TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            Assert.IsNotNull(player);
+
+            TurnResults turnResults = new TurnResults();
+
+            CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
+            Assert.NotNull(combatMap);
+
+            Point2D chestPosition = new Point2D(8, 9);
+            world.TryToOpenAThing(chestPosition, out bool bWasSuccessful, turnResults);
+            Assert.IsTrue(bWasSuccessful);
+
+            ItemStack itemStack = world.State.TheVirtualMap.GetTopVisibleMapUnit(chestPosition, true) as ItemStack;
+
+            while (itemStack.HasStackableItems)
+            {
+                StackableItem item = itemStack.PopStackableItem();
+            }
+
+            // put the avatar just up from the chest
+            player.MapUnitPosition.XY = new Point2D(8, 8);
+            world.TryToMoveCombatMap(player, Point2D.Direction.Down, turnResults);
+            Assert.IsTrue(turnResults.PeekLastTurnResult != TurnResults.TurnResult.ActionMoveBlocked);
+
+            _ = "";
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon24LotsOfStuff(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 100;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    24),
+                SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+
+            //TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            Assert.IsNotNull(player);
+
+            TurnResults turnResults = new TurnResults();
+
+            CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
+            Assert.NotNull(combatMap);
+
+            Point2D gemPosition = new Point2D(7, 2);
+            MapUnit gemMapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(gemPosition, true);
+            Assert.IsInstanceOf<DeadBody>(gemMapUnit);
+
+            Point2D itemStackPosition = new Point2D(8, 2);
+            MapUnit itemStackMapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(itemStackPosition, true);
+            Assert.IsInstanceOf<ItemStack>(itemStackMapUnit);
+            _ = "";
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon0StartLocation(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 100;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 0),
+                SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
+
+            //TileReference tileReference = world.State.TheVirtualMap.GetTileReference(0, 0);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            Assert.IsNotNull(player);
+
+            //Assert.AreEqual(player.MapUnitPosition.X, 3);
+
+            TurnResults turnResults = new TurnResults();
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAllDungeonCombatMaps(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 100;
+
+            for (int i = 0; i <= 111; i++)
+            {
+                world.State.TheVirtualMap.LoadCombatMap(
+                    GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                        i),
+                    SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
+
+                // CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+                // Assert.IsNotNull(player);
+            }
+
+            //Assert.AreEqual(player.MapUnitPosition.X, 3);
+
+            TurnResults turnResults = new TurnResults();
         }
     }
 }

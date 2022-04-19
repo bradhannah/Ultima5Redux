@@ -151,9 +151,9 @@ namespace Ultima5Redux.Maps
             // dungeons do not have encountered based enemies (but where are the dragons???)
             if (singleCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Dungeon)
             {
-                for (nEnemyIndex = 0; nEnemyIndex < SingleCombatMapReference.NUM_ENEMIES; nEnemyIndex++)
+                for (nEnemyIndex = 0; nEnemyIndex < SingleCombatMapReference.NUM_MAP_UNITS; nEnemyIndex++)
                 {
-                    _ = CreateEnemy(nEnemyIndex, singleCombatMapReference, primaryEnemyReference);
+                    _ = CreateEnemiesAndNonAttackingUnits(nEnemyIndex, singleCombatMapReference, primaryEnemyReference);
                 }
 
                 return;
@@ -164,21 +164,23 @@ namespace Ultima5Redux.Maps
             // if there is only a single enemy then we always give them first position (such as NPC fights)
             if (nPrimaryEnemies == 1 && nSecondaryEnemies == 0)
             {
-                _ = CreateEnemy(0, singleCombatMapReference, primaryEnemyReference);
+                _ = CreateEnemiesAndNonAttackingUnits(0, singleCombatMapReference, primaryEnemyReference);
                 return;
             }
 
             // for regular combat maps, we introduce some randomness 
-            Queue<int> monsterIndex = Utils.CreateRandomizedIntegerQueue(SingleCombatMapReference.NUM_ENEMIES);
+            Queue<int> monsterIndex = Utils.CreateRandomizedIntegerQueue(SingleCombatMapReference.NUM_MAP_UNITS);
 
             for (int nIndex = 0; nIndex < nPrimaryEnemies; nIndex++, nEnemyIndex++)
             {
-                _ = CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, primaryEnemyReference);
+                _ = CreateEnemiesAndNonAttackingUnits(monsterIndex.Dequeue(), singleCombatMapReference,
+                    primaryEnemyReference);
             }
 
             for (int nIndex = 0; nIndex < nSecondaryEnemies; nIndex++, nEnemyIndex++)
             {
-                _ = CreateEnemy(monsterIndex.Dequeue(), singleCombatMapReference, secondaryEnemyReference);
+                _ = CreateEnemiesAndNonAttackingUnits(monsterIndex.Dequeue(), singleCombatMapReference,
+                    secondaryEnemyReference);
             }
         }
 
@@ -232,7 +234,7 @@ namespace Ultima5Redux.Maps
                 _currentCombatItemQueue.Clear();
         }
 
-        private Enemy CreateEnemy(Point2D position, EnemyReference enemyReference)
+        private Enemy CreateEnemiesAndNonAttackingUnits(Point2D position, EnemyReference enemyReference)
         {
             Enemy enemy = CombatMapUnits.CreateEnemyOnCombatMap(position, enemyReference, out int _);
             return enemy;
@@ -246,29 +248,32 @@ namespace Ultima5Redux.Maps
         /// <param name="enemyReference">reference to enemy to be added (ignored for auto selected enemies)</param>
         /// <returns>the enemy that was just created</returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private Enemy CreateEnemy(int nEnemyIndex, SingleCombatMapReference singleCombatMapReference,
+        private CombatMapUnit CreateEnemiesAndNonAttackingUnits(int nEnemyIndex,
+            SingleCombatMapReference singleCombatMapReference,
             EnemyReference enemyReference)
         {
             SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType =
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
             Point2D enemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
 
-            Enemy enemy = null;
+            CombatMapUnit combatMapUnit = null;
             switch (combatMapSpriteType)
             {
                 case SingleCombatMapReference.CombatMapSpriteType.Nothing:
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.Thing:
                     Debug.WriteLine("It's a chest or maybe a dead body!");
+                    combatMapUnit = CombatMapUnits.CreateNonAttackUnitOnCombatMap(enemyPosition,
+                        nEnemySprite, out int nIndex);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
-                    enemy = CombatMapUnits.CreateEnemyOnCombatMap(
+                    combatMapUnit = CombatMapUnits.CreateEnemyOnCombatMap(
                         singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
                     Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
-                    enemy = CombatMapUnits.CreateEnemyOnCombatMap(
+                    combatMapUnit = CombatMapUnits.CreateEnemyOnCombatMap(
                         singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         enemyReference, out int _);
                     break;
@@ -279,7 +284,7 @@ namespace Ultima5Redux.Maps
             // make sure the tile that the enemy occupies is not walkable
             // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
             SetNotWalkableDueToCombatMapUnit(enemyPosition);
-            return enemy;
+            return combatMapUnit;
         }
 
         private T GetClosestCombatMapUnitInRange<T>(CombatMapUnit attackingUnit, int nRange) where T : CombatMapUnit
@@ -752,7 +757,7 @@ namespace Ultima5Redux.Maps
             int nNextCombatMapUnitIndex = GetNextAvailableCombatMapUnitIndex();
             if (nNextCombatMapUnitIndex == -1) return null;
 
-            Enemy newEnemy = CreateEnemy(newEnemyPosition, enemy.EnemyReference);
+            Enemy newEnemy = CreateEnemiesAndNonAttackingUnits(newEnemyPosition, enemy.EnemyReference);
 
             if (newEnemy == null)
                 throw new Ultima5ReduxException("Tried to divide enemy, but they were null: " +

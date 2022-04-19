@@ -29,13 +29,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) =>
             IsTrapped && OddsAndLogic.DoesChestTrapTrigger(record, TrapComplexity.Simple);
 
-        public DeadBody()
+        public DeadBody(MapUnitPosition mapUnitPosition)
         {
             Trap = OddsAndLogic.GetNewDeadBodyTrapType();
             if (OddsAndLogic.GetIsTreasureBloodSpatter())
             {
-                InnerItemStack = new();
+                InnerItemStack = new(mapUnitPosition);
             }
+
+            MapUnitPosition = mapUnitPosition;
         }
     }
 }

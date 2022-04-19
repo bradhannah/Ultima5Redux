@@ -21,18 +21,20 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool IsSearchable => true;
         public override bool ExposeInnerItemsOnSearch => true;
         public override bool ExposeInnerItemsOnOpen => false;
-        public override bool HasInnerItemStack => InnerItemStack is { AreStackableItems: true };
+        public override bool HasInnerItemStack => InnerItemStack is { HasStackableItems: true };
 
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) =>
             IsTrapped && OddsAndLogic.DoesChestTrapTrigger(record, TrapComplexity.Simple);
 
-        public BloodSpatter()
+        public BloodSpatter(MapUnitPosition mapUnitPosition)
         {
             Trap = OddsAndLogic.GetNewBloodSpatterTrapType();
             if (OddsAndLogic.GetIsTreasureBloodSpatter())
             {
-                InnerItemStack = new ItemStack();
+                InnerItemStack = new ItemStack(mapUnitPosition);
             }
+
+            MapUnitPosition = mapUnitPosition;
         }
     }
 }

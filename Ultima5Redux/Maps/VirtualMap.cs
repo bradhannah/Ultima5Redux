@@ -183,8 +183,20 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember]
         public MapUnitPosition CurrentPosition
         {
-            get => TheMapUnits.CurrentAvatarPosition;
-            set => TheMapUnits.CurrentAvatarPosition = value;
+            get => CurrentMap is not CombatMap combatMap
+                ? TheMapUnits.CurrentAvatarPosition
+                : combatMap.CurrentCombatPlayer.MapUnitPosition;
+            set
+            {
+                if (CurrentMap is not CombatMap combatMap)
+                {
+                    TheMapUnits.CurrentAvatarPosition = value;
+                    return;
+                }
+
+                // although this could work - it's really not how we should change the player characters position
+                combatMap.CurrentCombatPlayer.MapUnitPosition = value;
+            }
         }
 
         /// <summary>
@@ -1970,13 +1982,13 @@ namespace Ultima5Redux.Maps
             if (mapUnit is Enemy enemy)
             {
                 LoadCombatMapWithCalculation(singleCombatMapReference,
-                    SingleCombatMapReference.EntryDirection.Direction3, records, enemy.EnemyReference);
+                    SingleCombatMapReference.EntryDirection.North, records, enemy.EnemyReference);
                 return;
             }
 
             if (mapUnit is NonPlayerCharacter npc)
             {
-                LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.Direction3, records,
+                LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.North, records,
                     null, npc.NPCRef);
             }
 

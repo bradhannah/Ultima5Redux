@@ -16,16 +16,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override TileReference KeyTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName("Chest");
 
-        // public ItemStack InnerItemStack { get; }
-        // public bool HasInnerItemStack => InnerItemStack is { AreStackableItems: true }; 
-
         private Chest()
         {
         }
 
-        private void GenerateItemStack()
+        private void GenerateItemStack(MapUnitPosition mapUnitPosition)
         {
-            InnerItemStack = new ItemStack();
+            InnerItemStack = new ItemStack(mapUnitPosition);
             // 258,ItemMoney,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,FALSE,0,TRUE,-3,Item,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,None
             // 259,ItemPotion,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,FALSE,0,TRUE,-3,Item,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,None
             // 260,ItemScroll,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,FALSE,0,TRUE,-3,Item,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,None
@@ -55,23 +52,24 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             CurrentTrapComplexity = OddsAndLogic.GetNewChestTrappedComplexity();
             IsLocked = OddsAndLogic.GetIsNewChestLocked();
             Trap = OddsAndLogic.GetNewChestTrapType();
-            GenerateItemStack();
+            GenerateItemStack(mapUnitPosition);
         }
 
-        public Chest(TrapComplexity trapComplexity, bool bIsLocked, TrapType trap)
+        public Chest(TrapComplexity trapComplexity, bool bIsLocked, TrapType trap, MapUnitPosition mapUnitPosition)
         {
             CurrentTrapComplexity = trapComplexity;
             Trap = trap;
             IsLocked = bIsLocked;
-            GenerateItemStack();
+            GenerateItemStack(mapUnitPosition);
         }
 
-        public Chest(bool bRandomTrapComplexity, bool bRandomLocked, bool bRandomTrapType)
+        public Chest(bool bRandomTrapComplexity, bool bRandomLocked, bool bRandomTrapType,
+            MapUnitPosition mapUnitPosition)
         {
             if (bRandomTrapComplexity) CurrentTrapComplexity = OddsAndLogic.GetNewChestTrappedComplexity();
             if (bRandomLocked) IsLocked = OddsAndLogic.GetIsNewChestLocked();
             if (bRandomTrapType) Trap = OddsAndLogic.GetNewChestTrapType();
-            GenerateItemStack();
+            GenerateItemStack(mapUnitPosition);
         }
 
         public override bool IsOpenable => true;

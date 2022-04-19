@@ -258,11 +258,15 @@ namespace Ultima5Redux.Maps
 
             foreach (CombatMapUnit combatMapUnit in _combatMapUnits.CurrentMapUnits.AllCombatMapUnits)
             {
-                int nDexterity = combatMapUnit.Dexterity;
-
                 // if it's an enemy and they aren't an active attacker such as a POISON FIELD
                 // then we just skip them since they have a DEX of 0
                 if (combatMapUnit is Enemy enemy && !enemy.EnemyReference.ActivelyAttacks) continue;
+                // we definitely do not care about dex values for inanimate objects
+                if (combatMapUnit is NonAttackingUnit) continue;
+
+                int nDexterity = combatMapUnit.Dexterity;
+                if (nDexterity == 0)
+                    throw new Ultima5ReduxException($"Got a 0 dex value for an enemy {combatMapUnit.FriendlyName}");
 
                 // get the highest and lowest dexterity values to be used in ongoing tally
                 if (_nLowestDexterity > nDexterity) _nLowestDexterity = nDexterity;
@@ -335,6 +339,8 @@ namespace Ultima5Redux.Maps
                     return CombatMapUnitIsPresent(playerUnit);
                 case Enemy enemyUnit:
                     return CombatMapUnitIsPresent(enemyUnit);
+                case NonAttackingUnit:
+                    return false;
             }
 
             return false;

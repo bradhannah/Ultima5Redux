@@ -95,6 +95,7 @@
         <Compile Include="Maps\MapOverrides.cs"/>
         <Compile Include="Maps\RegularMap.cs"/>
         <Compile Include="Maps\Sign.cs"/>
+        <Compile Include="Maps\TriggerTiles.cs"/>
         <Compile Include="MapUnits\Avatar.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\BloodSpatter.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\Chest.cs"/>

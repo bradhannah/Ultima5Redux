@@ -20,14 +20,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 //     throw new Ultima5ReduxException(
                 //         $"Cannot create {nSprite} with the NonAttackingUnitFactory. It must be between 257 and 271");
                 case (int)OtherSprites.DeadBody:
-                    return new DeadBody();
+                    return new DeadBody(mapUnitPosition);
                 case (int)OtherSprites.BloodSpatter:
-                    return new BloodSpatter();
+                    return new BloodSpatter(mapUnitPosition);
                 case (int)OtherSprites.Chest:
                     return new Chest(mapUnitPosition);
             }
 
-            ItemStack itemStack = new();
+            ItemStack itemStack = new(mapUnitPosition);
 
             itemStack.PushStackableItem(CreateStackableItem(nSprite));
             return itemStack;

@@ -1009,7 +1009,7 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
             {
                 MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
-                if (mapUnit is ItemStack { AreStackableItems: true } itemStack)
+                if (mapUnit is ItemStack { HasStackableItems: true } itemStack)
                 {
                     StackableItem stackableItem = itemStack.PopStackableItem();
                     InventoryItem invItem = stackableItem.InvItem;
@@ -1018,7 +1018,7 @@ namespace Ultima5Redux
                     State.PlayerInventory.AddInventoryItemToInventory(inventoryItem);
 
                     // if the items are all gone then we delete the stack from the map
-                    if (!itemStack.AreStackableItems)
+                    if (!itemStack.HasStackableItems)
                         State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
 
                     StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);

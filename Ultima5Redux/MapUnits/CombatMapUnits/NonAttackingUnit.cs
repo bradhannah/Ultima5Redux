@@ -39,7 +39,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract bool ExposeInnerItemsOnOpen { get; }
 
         public virtual ItemStack InnerItemStack { get; protected set; } //= new();
-        public virtual bool HasInnerItemStack => InnerItemStack is { AreStackableItems: true };
+        public virtual bool HasInnerItemStack => InnerItemStack is { HasStackableItems: true };
         public abstract bool DoesTriggerTrap(PlayerCharacterRecord record);
 
         public TrapComplexity CurrentTrapComplexity { get; protected set; } = TrapComplexity.Simple;
