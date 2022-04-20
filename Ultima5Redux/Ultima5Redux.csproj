@@ -102,11 +102,13 @@
         <Compile Include="MapUnits\CombatMapUnits\CombatMapUnit.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\CombatPlayer.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\DeadBody.cs"/>
+        <Compile Include="MapUnits\CombatMapUnits\ElementalField.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\StackableItem.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\ItemStack.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\NonAttackingUnit.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\NonAttackingUnitFactory.cs"/>
         <Compile Include="MapUnits\CombatMapUnits\PlayerCombatStats.cs"/>
+        <Compile Include="MapUnits\CombatMapUnits\Whirlpool.cs"/>
         <Compile Include="MapUnits\Horse.cs"/>
         <Compile Include="MapUnits\MagicCarpet.cs"/>
         <Compile Include="MapUnits\MapUnitCollection.cs"/>

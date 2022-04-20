@@ -8,6 +8,9 @@ namespace Ultima5Redux
 {
     public static class OddsAndLogic
     {
+        public const int ELECTRIC_DAMAGE_MIN = 3;
+        public const int ELECTRIC_DAMAGE_MAX = 10;
+
         public const int BOMB_DAMAGE_MIN = 3;
         public const int BOMB_DAMAGE_MAX = 10;
 

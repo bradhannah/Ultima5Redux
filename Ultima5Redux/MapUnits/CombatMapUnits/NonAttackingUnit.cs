@@ -7,7 +7,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public abstract class NonAttackingUnit : CombatMapUnit
     {
-        public enum TrapType { NONE, ACID, SLEEP, POISON, BOMB }
+        public enum TrapType { NONE, ACID, SLEEP, POISON, BOMB, SLEEP_ALL, ELECTRIC_ALL, POISON_ALL }
 
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         [IgnoreDataMember] public override string BoardXitName => "Non Attacking Units don't not like to be boarded!";
@@ -63,6 +63,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     break;
                 case TrapType.BOMB:
                     records.Records.ForEach(r => r.ProcessTurnBomb());
+                    break;
+                case TrapType.SLEEP_ALL:
+                    records.Records.ForEach(r => r.Sleep());
+                    break;
+                case TrapType.ELECTRIC_ALL:
+                    records.Records.ForEach(r => r.ProcessTurnElectric());
+                    break;
+                case TrapType.POISON_ALL:
+                    records.Records.ForEach(r => r.Poison());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

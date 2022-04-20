@@ -1673,8 +1673,7 @@ namespace Ultima5Redux.Maps
             {
                 typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
                 typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
-                typeof(Chest),
-                typeof(DeadBody), typeof(BloodSpatter)
+                typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
             };
             List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
 

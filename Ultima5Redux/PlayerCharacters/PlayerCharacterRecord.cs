@@ -278,6 +278,11 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        public void ProcessTurnElectric()
+        {
+            Stats.CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
+        }
+
         public void ProcessTurnPoison()
         {
             if (Stats.Status == CharacterStatus.Poisoned)

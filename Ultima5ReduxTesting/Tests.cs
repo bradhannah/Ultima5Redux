@@ -2076,6 +2076,47 @@ namespace Ultima5ReduxTesting
             TurnResults turnResults = new TurnResults();
         }
 
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon2HasFields(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 100;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon, 2),
+                SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            Assert.IsNotNull(player);
+
+            MapUnit shouldBeFieldMapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(new Point2D(5, 5), true);
+            Assert.IsInstanceOf<CombatMapUnit>(shouldBeFieldMapUnit);
+
+            TurnResults turnResults = new TurnResults();
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_Dungeon38HasWhirlpools(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 100;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    38),
+                SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
+
+            CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+            Assert.IsNotNull(player);
+
+            //MapUnit shouldBeFieldMapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(new Point2D(5, 5), true);
+            //Assert.IsInstanceOf<CombatMapUnit>(shouldBeFieldMapUnit);
+
+            TurnResults turnResults = new TurnResults();
+        }
+
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadAllDungeonCombatMaps(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
@@ -2089,12 +2130,7 @@ namespace Ultima5ReduxTesting
                     GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
                         i),
                     SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
-
-                // CombatPlayer player = world.State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
-                // Assert.IsNotNull(player);
             }
-
-            //Assert.AreEqual(player.MapUnitPosition.X, 3);
 
             TurnResults turnResults = new TurnResults();
         }

@@ -16,9 +16,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             switch (nSprite)
             {
-                // case < (int)OtherSprites.Chest or > (int)ProvisionReferences.SpecificProvisionSpritesType.Food when (nSprite != (int)OtherSprites.DeadBody && nSprite != (int)OtherSprites.BloodSpatter):
-                //     throw new Ultima5ReduxException(
-                //         $"Cannot create {nSprite} with the NonAttackingUnitFactory. It must be between 257 and 271");
+                case >= 492 and <= 495:
+                    return new Whirlpool(mapUnitPosition);
+                case >= 488 and <= 491:
+                    return new ElementalField((ElementalField.FieldType)nSprite, mapUnitPosition);
                 case (int)OtherSprites.DeadBody:
                     return new DeadBody(mapUnitPosition);
                 case (int)OtherSprites.BloodSpatter:

@@ -261,6 +261,8 @@ namespace Ultima5Redux.Maps
             {
                 case SingleCombatMapReference.CombatMapSpriteType.Nothing:
                     break;
+                case SingleCombatMapReference.CombatMapSpriteType.Whirlpool:
+                case SingleCombatMapReference.CombatMapSpriteType.Field:
                 case SingleCombatMapReference.CombatMapSpriteType.Thing:
                     Debug.WriteLine("It's a chest or maybe a dead body!");
                     combatMapUnit = CombatMapUnits.CreateNonAttackUnitOnCombatMap(enemyPosition,

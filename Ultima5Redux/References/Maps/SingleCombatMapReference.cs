@@ -19,7 +19,7 @@ namespace Ultima5Redux.References.Maps
             BoatSouth = 13, BoatBoat = 14, Bay = 15
         }
 
-        public enum CombatMapSpriteType { Nothing, Thing, AutoSelected, EncounterBased }
+        public enum CombatMapSpriteType { Nothing, Thing, AutoSelected, EncounterBased, Field, Whirlpool }
 
         public enum Dungeon
         {
@@ -280,6 +280,10 @@ namespace Ultima5Redux.References.Maps
                 case 30:
                 case 31:
                     return CombatMapSpriteType.Thing;
+                case >= 232 and <= 235:
+                    return CombatMapSpriteType.Field;
+                case >= 236 and <= 239:
+                    return CombatMapSpriteType.Whirlpool;
                 // it's determined by the encounter 
                 case 112:
                     if (MapTerritory == Territory.Dungeon)
