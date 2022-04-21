@@ -1660,6 +1660,18 @@ namespace Ultima5Redux.Maps
             return GetTileReference(CurrentPosition.XY);
         }
 
+        public IEnumerable<MapUnit> AllVisibleActiveMapUnits
+        {
+            get
+            {
+                IEnumerable<Point2D> allPoints =
+                    TheMapUnits.CurrentMapUnits.AllActiveMapUnits.Select(e => e.MapUnitPosition.XY);
+                IEnumerable<MapUnit> visibleMapUnits =
+                    allPoints.Select(point => GetTopVisibleMapUnit(point, false));
+                return visibleMapUnits;
+            }
+        }
+
         /// <summary>
         ///     Gets the top visible map unit - excluding the Avatar
         /// </summary>

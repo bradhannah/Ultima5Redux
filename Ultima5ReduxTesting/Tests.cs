@@ -2134,5 +2134,50 @@ namespace Ultima5ReduxTesting
 
             TurnResults turnResults = new TurnResults();
         }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadDungeon42CheckBatMovement(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 1;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    42),
+                SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
+
+            TurnResults turnResults = new TurnResults();
+
+            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
+                out CombatMapUnit activeCombatMapUnit,
+                out CombatMapUnit targetedCombatMapUnit, out string preAttackOutputStr, out string postAttackOutputStr,
+                out Point2D missedPoint);
+            Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
+
+            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
+                out activeCombatMapUnit, out targetedCombatMapUnit, out preAttackOutputStr, out postAttackOutputStr,
+                out missedPoint);
+            Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
+
+            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
+                out activeCombatMapUnit, out targetedCombatMapUnit, out preAttackOutputStr, out postAttackOutputStr,
+                out missedPoint);
+            Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadDungeon58EnemyOnNonAttackingUnit(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            // force avatar to go first
+            world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 1;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    58), SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords);
+
+            TurnResults turnResults = new TurnResults();
+        }
     }
 }

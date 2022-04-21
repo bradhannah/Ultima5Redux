@@ -160,6 +160,12 @@ namespace Ultima5Redux.References.Maps
                 justMapRowsAndData.Add(justMapRowChunk);
             }
 
+            byte getCorrectedSprite(byte nSprite)
+            {
+                if (nSprite is >= 217 and <= 219) return 216;
+                return nSprite;
+            }
+
             // get and build the map sprites 
             for (int nRow = 0; nRow < XTILES; nRow++)
             {
@@ -167,7 +173,7 @@ namespace Ultima5Redux.References.Maps
                 for (int nCol = 0; nCol < mapRowByteList.Count; nCol++)
                 {
                     byte sprite = mapRowByteList[nCol];
-                    TheMap[nCol][nRow] = sprite;
+                    TheMap[nCol][nRow] = getCorrectedSprite(sprite);
                 }
             }
 
@@ -205,17 +211,17 @@ namespace Ultima5Redux.References.Maps
                     fullRows[nMapUnitYRow].GetByte(nMapUnitCol));
                 byte enemySprite = fullRows[nMapUnitTileRow].GetByte(nMapUnitCol);
 
-                if (!duplicateMapUnitPositionDictionary.ContainsKey(mapUnitPosition))
-                {
-                    _mapUnitSprites.Add(enemySprite);
-                    duplicateMapUnitPositionDictionary.Add(mapUnitPosition, true);
-                    _mapUnitPositions.Add(mapUnitPosition);
-                }
-                else
+                if (mapUnitPosition.X == 0 && mapUnitPosition.Y == 0)
                 {
                     // it's a duplicate position, so we avoid adding it again, otherwise things get screwy
                     _mapUnitSprites.Add(0);
                     _mapUnitPositions.Add(new Point2D(0, 0));
+                }
+                else
+                {
+                    _mapUnitSprites.Add(enemySprite);
+                    //duplicateMapUnitPositionDictionary.Add(mapUnitPosition, true);
+                    _mapUnitPositions.Add(mapUnitPosition);
                 }
             }
 
@@ -290,23 +296,6 @@ namespace Ultima5Redux.References.Maps
                         return CombatMapSpriteType.AutoSelected;
                     return CombatMapSpriteType.EncounterBased;
             }
-
-            // if the sprite is lower than the crown index, then we add 4
-            // OR
-            // it's a Shadow Lord, but it breaks convention
-            //if (nSpriteIndex is < 436 or >= 504) nSpriteIndex += 4;
-
-            return CombatMapSpriteType.AutoSelected;
-            if (nSpriteIndex is < 316 or > 511)
-            {
-                throw new Ultima5ReduxException(
-                    $"Tried to get adjusted enemy sprite with index={nIndex} and raw sprite={nEnemyRawSprite}");
-            }
-
-            // it lies - water maps seem to pretend they are auto selected
-            if (Index is 11 or 13 or 15) return CombatMapSpriteType.EncounterBased;
-            // pirates
-            if (Index is 12 or 14) return CombatMapSpriteType.AutoSelected;
 
             return CombatMapSpriteType.AutoSelected;
         }

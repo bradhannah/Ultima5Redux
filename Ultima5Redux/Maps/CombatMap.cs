@@ -256,6 +256,10 @@ namespace Ultima5Redux.Maps
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
             Point2D enemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
 
+            // we want to make sure and not spawn an enemy on top of a player character - but like 
+            // dungeon 58 - sometimes enemies spawn on NonAttackingUnits
+            if (GetCombatUnit(enemyPosition) is CombatPlayer) return null;
+
             CombatMapUnit combatMapUnit = null;
             switch (combatMapSpriteType)
             {
