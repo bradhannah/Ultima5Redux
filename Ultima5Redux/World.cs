@@ -1018,8 +1018,9 @@ namespace Ultima5Redux
                     State.PlayerInventory.AddInventoryItemToInventory(inventoryItem);
 
                     // if the items are all gone then we delete the stack from the map
-                    if (!itemStack.HasStackableItems)
-                        State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
+                    // NOTE: lets try not deleting it so the 3d program knows to not draw it
+                    //if (!itemStack.HasStackableItems)
+                    //State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
 
                     StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
                     turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetStackableItem);

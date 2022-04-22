@@ -283,7 +283,10 @@ namespace Ultima5Redux.Maps
                 !_combatMap.VisibleOnMap[combatMapUnit.MapUnitPosition.X][combatMapUnit.MapUnitPosition.Y])
                 return false;
 
-            return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0;
+            // if we have enemies piled on top of each other (like dungeon 60)
+            bool bIsOnTop = _combatMap.GetTopVisibleMapUnit(combatMapUnit.MapUnitPosition.XY, false) == combatMapUnit;
+
+            return !combatMapUnit.HasEscaped && combatMapUnit.IsActive && combatMapUnit.Stats.CurrentHp > 0 && bIsOnTop;
         }
 
         private bool CombatMapUnitIsPresentAndActive(CombatMapUnit combatMapUnit)

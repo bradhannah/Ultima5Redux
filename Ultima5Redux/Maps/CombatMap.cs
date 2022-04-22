@@ -6,6 +6,8 @@ using System.Linq;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
@@ -71,9 +73,15 @@ namespace Ultima5Redux.Maps
         public IEnumerable<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
         public IEnumerable<NonAttackingUnit> AllNonAttackUnits => CombatMapUnits.CurrentMapUnits.NonAttackingUnits;
 
+        public IEnumerable<MapUnit> AllMapUnits => CombatMapUnits.CurrentMapUnits.AllMapUnits;
+
         public IEnumerable<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
             CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
                 combatMapUnit.IsAttackable && combatMapUnit.IsActive);
+
+        public IEnumerable<CombatMapUnit> AllVisibleCombatMapUnits =>
+            CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
+                combatMapUnit.IsActive);
 
         /// <summary>
         ///     The player character who the player has selected to focus on (#1-#6)
@@ -1348,6 +1356,45 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException(
                         "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
             }
+        }
+
+        /// <summary>
+        ///     Gets the top visible map unit - excluding the Avatar
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bExcludeAvatar"></param>
+        /// <returns>MapUnit or null</returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
+        {
+            List<Type> visibilePriorityOrder = new()
+            {
+                typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
+                typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
+            };
+            List<CombatMapUnit> combatMapUnits =
+                AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList();
+
+            // this is inefficient, but the lists are so small it is unlikely to matter
+            foreach (Type type in visibilePriorityOrder)
+            {
+                if (bExcludeAvatar && type == typeof(Avatar)) continue;
+                foreach (CombatMapUnit combatMapUnit in combatMapUnits)
+                {
+                    if (!combatMapUnit.IsActive) continue;
+                    // if it's a combat unit but they dead or gone then we skip
+                    if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0)
+                    {
+                        if (combatMapUnit is not NonAttackingUnit) continue;
+                    }
+
+                    // if we find the first highest priority item, then we simply return it
+                    if (combatMapUnit.GetType() == type) return combatMapUnit;
+                }
+            }
+
+            return null;
         }
     }
 }
