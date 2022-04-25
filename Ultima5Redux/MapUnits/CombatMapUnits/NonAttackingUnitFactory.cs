@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
@@ -12,8 +13,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         // 257 = Chest
         // 271 = ItemFood
-        public static NonAttackingUnit Create(int nSprite, MapUnitPosition mapUnitPosition = null)
+        public static NonAttackingUnit Create(int nSprite, MapUnitPosition mapUnitPosition)
         {
+            if (mapUnitPosition == null) throw new ArgumentNullException(nameof(mapUnitPosition));
+
             switch (nSprite)
             {
                 case >= 492 and <= 495:

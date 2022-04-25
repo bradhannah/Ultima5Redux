@@ -1778,7 +1778,8 @@ namespace Ultima5ReduxTesting
                 if (kvp.Value[0].InvRefType == InventoryReferences.InventoryReferenceType.Reagent) continue;
                 foreach (InventoryReference invRef in kvp.Value)
                 {
-                    NonAttackingUnit nau = NonAttackingUnitFactory.Create(invRef.ItemSpriteExposed);
+                    NonAttackingUnit nau =
+                        NonAttackingUnitFactory.Create(invRef.ItemSpriteExposed, new MapUnitPosition());
                     InventoryItemFactory.Create(invRef);
                 }
             }

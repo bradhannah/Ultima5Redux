@@ -319,9 +319,8 @@ namespace Ultima5Redux.MapUnits
                 }
                 else
                 {
-                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite);
+                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite, mapUnitPosition);
                     newUnit.MapLocation = location;
-                    newUnit.MapUnitPosition = mapUnitPosition;
                 }
             }
             else if (GameReferences.SpriteTileReferences.IsMonster(tileReference.Index))
