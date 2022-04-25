@@ -2179,5 +2179,37 @@ namespace Ultima5ReduxTesting
 
             TurnResults turnResults = new TurnResults();
         }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LoadDungeon110BasicAttack(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            // force avatar to go first
+            //world.State.CharacterRecords.AvatarRecord.Stats.Dexterity = 100;
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    110), SingleCombatMapReference.EntryDirection.South, world.State.CharacterRecords);
+
+            TurnResults turnResults = new TurnResults();
+
+            CombatMap combatMap = world.State.TheVirtualMap.CurrentCombatMap;
+
+            Assert.IsInstanceOf<Enemy>(combatMap.GetAndRefreshCurrentCombatMapUnit());
+
+            return;
+            Enemy enemy = combatMap.GetClosestEnemyInRange(combatMap.CurrentCombatPlayer,
+                combatMap.PeekCurrentCombatItem());
+
+            Assert.NotNull(enemy);
+
+            combatMap.ProcessCombatPlayerTurn(CombatMap.SelectionAction.Attack,
+                enemy.MapUnitPosition.XY, out CombatMapUnit _, out CombatMapUnit targetedCombatMapUnit,
+                out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint,
+                out CombatMapUnit.HitState targetedHitState);
+
+            // List<VirtualMap.AggressiveMapUnitInfo> result = world.TryToAttack(enemy.MapUnitPosition.XY, out MapUnit mapUnit,
+            //     out SingleCombatMapReference singleCombatMapReference, out World.TryToAttackResult tryToAttackResult,
+            //     turnResults);
+        }
     }
 }

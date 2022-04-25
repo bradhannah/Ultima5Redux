@@ -76,7 +76,7 @@ namespace Ultima5Redux.Maps
             if (_initiativeQueue.Count == 0) CalculateNextInitiativeQueue();
 
             Debug.Assert(_initiativeQueue.Count > 0);
-            return GetCurrentCombatUnit();
+            return GetCurrentCombatUnitAndClean();
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Ultima5Redux.Maps
         ///     Gets the active combat unit - either CombatPlayer or Enemy.
         /// </summary>
         /// <returns></returns>
-        internal CombatMapUnit GetCurrentCombatUnit()
+        internal CombatMapUnit GetCurrentCombatUnitAndClean()
         {
             while (_initiativeQueue.Count > 0)
             {
