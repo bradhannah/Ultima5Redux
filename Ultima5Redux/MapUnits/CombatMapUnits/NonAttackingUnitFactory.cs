@@ -9,7 +9,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public static class NonAttackingUnitFactory
     {
-        private enum OtherSprites { Chest = 257, DeadBody = 286, BloodSpatter = 287 }
+        public enum DropSprites { Nothing = 0, Chest = 257, DeadBody = 286, BloodSpatter = 287 }
 
         // 257 = Chest
         // 271 = ItemFood
@@ -19,15 +19,16 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             switch (nSprite)
             {
+                case (int)DropSprites.Nothing: return null;
                 case >= 492 and <= 495:
                     return new Whirlpool(mapUnitPosition);
                 case >= 488 and <= 491:
                     return new ElementalField((ElementalField.FieldType)nSprite, mapUnitPosition);
-                case (int)OtherSprites.DeadBody:
+                case (int)DropSprites.DeadBody:
                     return new DeadBody(mapUnitPosition);
-                case (int)OtherSprites.BloodSpatter:
+                case (int)DropSprites.BloodSpatter:
                     return new BloodSpatter(mapUnitPosition);
-                case (int)OtherSprites.Chest:
+                case (int)DropSprites.Chest:
                     return new Chest(mapUnitPosition);
             }
 

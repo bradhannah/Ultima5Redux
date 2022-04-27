@@ -523,7 +523,12 @@ namespace Ultima5Redux.Maps
             outputStr += "\nBut they accidentally hit another!";
             // we attack the thing we accidentally hit
             _ = attackingCombatMapUnit.Attack(targetedCombatMapUnit, nAttackMax,
-                out string missedAttackOutputStr, out string debugStr, true);
+                out string missedAttackOutputStr, out NonAttackingUnit nonAttackingUnitDrop,
+                out string debugStr, true);
+
+            // if they drop something then we add it to the map
+            if (nonAttackingUnitDrop != null) CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
+
             // temporary for debugging
             missedAttackOutputStr += "\n" + debugStr;
             outputStr += "\n" + missedAttackOutputStr;
@@ -1077,7 +1082,8 @@ namespace Ultima5Redux.Maps
                     if (combatPlayer == null)
                         throw new Ultima5ReduxException("Combat player unexpectedly null");
                     targetedHitState = combatPlayer.Attack(opponentCombatMapUnit, weapon, out string stateOutput,
-                        out string debugStr);
+                        out NonAttackingUnit nonAttackingUnitDrop, out string debugStr);
+                    if (nonAttackingUnitDrop != null) CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
                     stateOutput += "\n" + debugStr;
                     postAttackOutputStr = stateOutput;
 
@@ -1257,7 +1263,8 @@ namespace Ultima5Redux.Maps
             if (bestCombatPlayer != null)
             {
                 CombatMapUnit.HitState hitState = enemy.Attack(bestCombatPlayer,
-                    enemy.EnemyReference.TheDefaultEnemyStats.Damage, out postAttackOutputStr, out string debugStr);
+                    enemy.EnemyReference.TheDefaultEnemyStats.Damage, out postAttackOutputStr, out NonAttackingUnit _,
+                    out string debugStr);
                 // temporary for debugging
                 postAttackOutputStr += "\n" + debugStr;
                 switch (hitState)

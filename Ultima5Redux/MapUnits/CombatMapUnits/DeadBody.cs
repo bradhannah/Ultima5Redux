@@ -19,7 +19,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         //public  bool HasInnerItemStack => InnerItemStack is { AreStackableItems: true }; 
 
         // public ItemStack InnerItemStack { get; } = new();
-        public TrapType Trap { get; set; }
+        //public TrapType Trap { get; set; }
         public override bool IsOpenable => false;
         public override bool IsSearchable => true;
         public override bool ExposeInnerItemsOnSearch => true;

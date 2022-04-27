@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux
 {
@@ -64,6 +66,15 @@ namespace Ultima5Redux
             { NonAttackingUnit.TrapType.NONE, WEIGHT_BLOODSPATTER_TRAP_NONE }
         };
 
+        private static readonly Dictionary<NonAttackingUnitFactory.DropSprites, int> GenericDropAfterKillingEnemy =
+            new()
+            {
+                { NonAttackingUnitFactory.DropSprites.Nothing, 10 },
+                { NonAttackingUnitFactory.DropSprites.Chest, 3 },
+                { NonAttackingUnitFactory.DropSprites.BloodSpatter, 3 },
+                { NonAttackingUnitFactory.DropSprites.DeadBody, 3 }
+            };
+
         private static readonly List<NonAttackingUnit.TrapType> ChestTrapsWeightedList =
             Utils.MakeWeightedList(ChestTrapsWeighted).ToList();
 
@@ -73,10 +84,40 @@ namespace Ultima5Redux
         private static readonly List<NonAttackingUnit.TrapType> BloodSpatterTrapsWeightedList =
             Utils.MakeWeightedList(BloodSpatterTrapsWeighted).ToList();
 
+        private static readonly List<NonAttackingUnitFactory.DropSprites> GenericDropAfterKillingEnemyList =
+            Utils.MakeWeightedList(GenericDropAfterKillingEnemy).ToList();
+
         /// <summary>
         ///     Improvement to odds of not setting off a trap based on a characters dexterity
         /// </summary>
         private const float ODDS_DEX_ADJUST_TRAP_EXPLODE = 0.01f;
+
+        //public enum KilledEnemyDrop { Nothing, Chest, BloodSpatter, DeadBody }
+
+        /// <summary>
+        ///     After killing an enemy, do you get a drop?
+        /// </summary>
+        /// <param name="enemyReference"></param>
+        /// <returns></returns>
+        public static NonAttackingUnitFactory.DropSprites GetIsDropAfterKillingEnemy(EnemyReference enemyReference)
+        {
+            // todo: this is just a temporary method until I have some better drop logic based on the actual enemy
+            return (GenericDropAfterKillingEnemyList[Utils.Ran.Next() % GenericDropAfterKillingEnemyList.Count]);
+        }
+
+        /// <summary>
+        ///     Generates the appropriate drop and inner contents of that drop based on enemy type
+        /// </summary>
+        /// <param name="enemyReference"></param>
+        /// <param name="dropType"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <returns></returns>
+        public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
+            NonAttackingUnitFactory.DropSprites dropType, MapUnitPosition mapUnitPosition)
+        {
+            // todo: need to tailor what is in the drop based on the enemy reference
+            return NonAttackingUnitFactory.Create((int)dropType, mapUnitPosition);
+        }
 
         /// <summary> is there treasure in the new dead body? </summary>
         /// <returns></returns>

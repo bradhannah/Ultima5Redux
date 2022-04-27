@@ -134,9 +134,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
 
         public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput,
-            out string debugStr, bool bForceHit = false)
+            out NonAttackingUnit nonAttackingUnitDrop, out string debugStr, bool bForceHit = false)
         {
             bool bIsHit = IsHit(enemyCombatMapUnit, out debugStr) || bForceHit;
+
+            // drop nothing by default
+            nonAttackingUnitDrop = null;
 
             PreviousAttackTarget = enemyCombatMapUnit;
 
@@ -166,26 +169,35 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             enemyCombatMapUnit.Stats.CurrentHp -= nAttack;
 
             // we only add experience to kills against other enemies
-            if (enemyCombatMapUnit.Stats.CurrentHp <= 0)
+            if (enemyCombatMapUnit.Stats.CurrentHp > 0) return GetState(enemyCombatMapUnit, out stateOutput);
+
+            // check to see if they are an enemy - if you killed your own PC then we don't give you credit
+            if (enemyCombatMapUnit is Enemy enemy)
             {
                 CombatStats.TotalKills++;
                 CombatStats.AdditionalExperience += enemyCombatMapUnit.Experience;
+
+                NonAttackingUnitFactory.DropSprites dropped =
+                    OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
+                nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference, dropped,
+                    enemyCombatMapUnit.MapUnitPosition);
             }
 
             return GetState(enemyCombatMapUnit, out stateOutput);
         }
 
         public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput,
-            out string debugStr)
+            out NonAttackingUnit nonAttackingUnitDrop, out string debugStr)
         {
-            return Attack(enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat, out stateOutput, out debugStr);
+            return Attack(enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat, out stateOutput,
+                out nonAttackingUnitDrop, out debugStr);
         }
 
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange &&
              Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
 
-        public HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
+        private static HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
         {
             stateOutput = enemyCombatMapUnit.FriendlyName;
 

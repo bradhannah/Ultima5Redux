@@ -195,7 +195,7 @@ namespace Ultima5Redux.MapUnits
             };
         }
 
-        private int AddCombatMapUnit(CombatMapUnit mapUnit)
+        internal int AddCombatMapUnit(CombatMapUnit mapUnit)
         {
             int nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
             if (nIndex < 0) return -1;
