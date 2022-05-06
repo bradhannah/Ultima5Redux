@@ -498,8 +498,15 @@ namespace Ultima5Redux.Maps
             outputStr = "";
             missedPoint = null;
 
-            Point2D newAttackPosition = GetRandomSurroundingPointThatIsnt(attackPosition, attackPosition);
+            Point2D newAttackPosition =
+                GetRandomSurroundingPointThatIsnt(attackPosition, attackingCombatMapUnit.MapUnitPosition.XY);
+            //attackPosition);
             Debug.Assert(newAttackPosition != null);
+            if (newAttackPosition == attackPosition)
+            {
+                throw new Ultima5ReduxException(
+                    $"You asked for a surrounding point but it gave your the origin: {newAttackPosition.X}, {newAttackPosition.Y}");
+            }
 
             targetedCombatMapUnit = GetCombatUnit(newAttackPosition);
 
@@ -1023,7 +1030,7 @@ namespace Ultima5Redux.Maps
                     CombatItem weapon;
 
                     // the top most unit is NOT a combat unit, so they hit nothing!
-                    if (!(opponentMapUnit is CombatMapUnit opponentCombatMapUnit))
+                    if (opponentMapUnit is not CombatMapUnit opponentCombatMapUnit)
                     {
                         preAttackOutputStr += "nothing with ";
                         if (_currentCombatItemQueue == null)

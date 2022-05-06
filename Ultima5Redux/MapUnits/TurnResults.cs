@@ -26,7 +26,7 @@ namespace Ultima5Redux.MapUnits
             ActionAttackCombatMapNpc, ActionAttackCombatMapEnemy, ActionGetBorrowed, ActionGetMagicCarpet,
             ActionGetExposedItem, ActionGetStackableItem, ActionGetNothingToGet, ActionJimmyNoLock, ActionJimmyUnlocked,
             ActionJimmyKeyBroke, ActionSearchRemoveComplex, ActionSearchRemoveSimple, ActionSearchTriggerComplexTrap,
-            ActionSearchTriggerSimpleTrap, ActionSearchNoTrap
+            ActionSearchTriggerSimpleTrap, ActionSearchNoTrap, ActionSearchThingDisappears
         }
 
         public static bool IsNewMapTurnResult(TurnResult turnResult)

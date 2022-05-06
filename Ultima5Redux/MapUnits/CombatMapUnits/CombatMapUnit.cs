@@ -172,16 +172,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             if (enemyCombatMapUnit.Stats.CurrentHp > 0) return GetState(enemyCombatMapUnit, out stateOutput);
 
             // check to see if they are an enemy - if you killed your own PC then we don't give you credit
-            if (enemyCombatMapUnit is Enemy enemy)
-            {
-                CombatStats.TotalKills++;
-                CombatStats.AdditionalExperience += enemyCombatMapUnit.Experience;
+            if (enemyCombatMapUnit is not Enemy enemy) return GetState(enemyCombatMapUnit, out stateOutput);
 
-                NonAttackingUnitFactory.DropSprites dropped =
-                    OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
-                nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference, dropped,
-                    enemyCombatMapUnit.MapUnitPosition);
-            }
+            CombatStats.TotalKills++;
+            CombatStats.AdditionalExperience += enemyCombatMapUnit.Experience;
+
+            NonAttackingUnitFactory.DropSprites dropped =
+                OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
+            nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference, dropped,
+                enemyCombatMapUnit.MapUnitPosition);
 
             return GetState(enemyCombatMapUnit, out stateOutput);
         }

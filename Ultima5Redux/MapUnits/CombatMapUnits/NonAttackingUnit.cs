@@ -18,7 +18,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         // public override string PluralName { get; } 
         // public override string SingularName { get; }
         // public override string FriendlyName { get; }
-        public override bool IsActive => true;
+        public override bool IsActive => (!HasBeenSearched && ExposeInnerItemsOnSearch) ||
+                                         (!HasBeenOpened && ExposeInnerItemsOnOpen);
+
         public override bool IsAttackable => false;
 
         public override int ClosestAttackRange => 0;
@@ -28,6 +30,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool IsInvisible => false;
         public override CharacterStats Stats { get; protected set; } = new();
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => false;
+
+        public bool HasBeenSearched { get; set; } = false;
+        public bool HasBeenOpened { get; set; } = false;
 
         public virtual TrapType Trap { get; set; }
         public bool IsTrapped => Trap != TrapType.NONE;

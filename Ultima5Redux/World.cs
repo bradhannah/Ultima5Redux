@@ -1732,7 +1732,8 @@ namespace Ultima5Redux
 
             if (mapUnit is NonAttackingUnit { IsOpenable: true } nonAttackingUnit)
             {
-                bWasSuccessful = State.TheVirtualMap.ProcessSearchInnerItems(nonAttackingUnit);
+                bWasSuccessful =
+                    State.TheVirtualMap.ProcessSearchInnerItems(turnResults, nonAttackingUnit, false, true);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 

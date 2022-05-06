@@ -1294,14 +1294,6 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
-        [Test] public void Test_GetSurroundingPoints()
-        {
-            Point2D p1 = new Point2D(5, 5);
-            List<Point2D> points = p1.GetConstrainedSurroundingPoints(1, 10, 10);
-            List<Point2D> points2 = p1.GetConstrainedSurroundingPoints(4, 6, 6);
-            Debug.WriteLine("DERP");
-        }
-
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_GetEscapablePoints(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
@@ -2211,6 +2203,24 @@ namespace Ultima5ReduxTesting
             // List<VirtualMap.AggressiveMapUnitInfo> result = world.TryToAttack(enemy.MapUnitPosition.XY, out MapUnit mapUnit,
             //     out SingleCombatMapReference singleCombatMapReference, out World.TryToAttackResult tryToAttackResult,
             //     turnResults);
+        }
+
+        [Test] public void Test_SurroundingPoints()
+        {
+            // force avatar to go first
+            Point2D xy = new Point2D(8, 8);
+            //xy.GetRandomSurroundingPointThatIsnt
+            List<Point2D> surroundingCombatPlayerPoints =
+                xy.GetConstrainedSurroundingPoints(1, 16, 16);
+            Assert.IsTrue(surroundingCombatPlayerPoints.Count == 8);
+            foreach (Point2D p in surroundingCombatPlayerPoints)
+            {
+                Assert.AreNotEqual(xy, p);
+            }
+
+            Point2D p1 = new Point2D(5, 5);
+            List<Point2D> points = p1.GetConstrainedSurroundingPoints(1, 10, 10);
+            List<Point2D> points2 = p1.GetConstrainedSurroundingPoints(4, 6, 6);
         }
     }
 }

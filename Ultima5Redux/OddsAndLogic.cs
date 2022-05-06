@@ -10,6 +10,9 @@ namespace Ultima5Redux
 {
     public static class OddsAndLogic
     {
+        public const bool AGGRESSIVE_TRAPS = true;
+        public const int AGGRESSIVE_TRAP_MODIFIER = AGGRESSIVE_TRAPS ? 100 : 0;
+
         public const int ELECTRIC_DAMAGE_MIN = 3;
         public const int ELECTRIC_DAMAGE_MAX = 10;
 
@@ -56,13 +59,13 @@ namespace Ultima5Redux
 
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> DeadBodyTrapsWeighted = new()
         {
-            { NonAttackingUnit.TrapType.POISON, WEIGHT_DEADBODY_TRAP_POISON },
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_DEADBODY_TRAP_POISON + (AGGRESSIVE_TRAP_MODIFIER) },
             { NonAttackingUnit.TrapType.NONE, WEIGHT_DEADBODY_TRAP_NONE }
         };
 
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> BloodSpatterTrapsWeighted = new()
         {
-            { NonAttackingUnit.TrapType.POISON, WEIGHT_BLOODSPATTER_TRAP_POISON },
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_BLOODSPATTER_TRAP_POISON + (AGGRESSIVE_TRAP_MODIFIER) },
             { NonAttackingUnit.TrapType.NONE, WEIGHT_BLOODSPATTER_TRAP_NONE }
         };
 
@@ -162,14 +165,14 @@ namespace Ultima5Redux
         /// </summary>
         /// <returns></returns>
         public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
-            (ChestTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count]);
+            (DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count]);
 
         /// <summary>
         ///     Gets the trap type for a new blood spatter - this includes the NONE type indicating no trap
         /// </summary>
         /// <returns></returns>
         public static NonAttackingUnit.TrapType GetNewBloodSpatterTrapType() =>
-            (ChestTrapsWeightedList[Utils.Ran.Next() % BloodSpatterTrapsWeightedList.Count]);
+            (BloodSpatterTrapsWeightedList[Utils.Ran.Next() % BloodSpatterTrapsWeightedList.Count]);
 
         /// <summary>
         ///     When the given user tries to open the chest - does it explode?
