@@ -53,13 +53,14 @@
             ActionJimmyKeyBroke, ActionSearchRemoveComplex, ActionSearchRemoveSimple, ActionSearchTriggerComplexTrap,
             ActionSearchTriggerSimpleTrap, ActionSearchNoTrap, ActionSearchThingDisappears, PlayerCharacterPoisoned,
             Combat_EnemyEscaped, OutputToConsole, Combat_EnemyToAttackRequiresInput, Combat_EnemyIsSleeping,
-            Combat_EnemyIsFleeing, Combat_EnemyWantsToFleeButNoPath, Combat_EnemyMissedTarget, Combat_EnemyGrazedTarget,
-            Combat_CombatPlayerGrazedTarget, Combat_MissedRangedAttack, Combat_EnemyMissedButHit,
-            Combat_CombatPlayerMissedButHit, Combat_CombatPlayerTriedToAttackSelf,
+            Combat_EnemyIsFleeing, Combat_EnemyWantsToFleeButNoPath, Combat_EnemyMissedTarget,
+            Combat_Result_EnemyGrazedTarget, Combat_Result_CombatPlayerGrazedTarget, Combat_MissedRangedAttack,
+            Combat_EnemyMissedButHit, Combat_CombatPlayerMissedButHit, Combat_CombatPlayerTriedToAttackSelf,
             Combat_CombatPlayerTriedToAttackNothing, Combat_CombatPlayerRangedAttackBlocked, Combat_EnemyMoved,
             Combat_CombatPlayerMoved, Combat_EnemyAttacks, Combat_CombatPlayerAttacks,
-            Combat_CombatPlayerReceivedDamage, Combat_CombatPlayerMissedTarget, Combat_LootDropped,
-            Combat_EnemyReceivedDamage, Combat_CombatPlayerKilled, Combat_EnemyKilled
+            Combat_Result_CombatPlayerReceivedDamage, Combat_CombatPlayerMissedTarget, Combat_LootDropped,
+            Combat_Result_HitAndEnemyReceivedDamage, Combat_Result_CombatPlayerKilled, Combat_Result_EnemyKilled,
+            Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee
         }
 
         public bool IsNewMapTurnResult()

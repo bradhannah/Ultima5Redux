@@ -454,25 +454,28 @@ namespace Ultima5Redux.Maps
             return walkableType;
         }
 
-        private AdditionalHitStateAction HandleHitState(TurnResults turnResults, CombatMapUnit.HitState hitState,
+        /// <summary>
+        ///     Takes care of extra stuff that happens as a result of the hit such as division - or the death of an NPC
+        /// </summary>
+        /// <param name="turnResults"></param>
+        /// <param name="hitState"></param>
+        /// <param name="affectedCombatMapUnit"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void PerformAdditionalHitProcessing(TurnResults turnResults, CombatMapUnit.HitState hitState,
             CombatMapUnit affectedCombatMapUnit)
         {
-            AdditionalHitStateAction additionalHitStateAction = AdditionalHitStateAction.None;
             // some things only occur if they are hit - but not if they are killed or missed
             if (IsHitButNotKilled(hitState) && affectedCombatMapUnit is Enemy enemy &&
                 enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) && Utils.OneInXOdds(2))
             {
                 // do they multiply?
                 Enemy newEnemy = DivideEnemy(enemy);
-                if (newEnemy != null) additionalHitStateAction = AdditionalHitStateAction.EnemyDivided;
 
                 turnResults.PushOutputToConsole("\n" + affectedCombatMapUnit.FriendlyName + GameReferences
-                        .DataOvlRef
-                        .StringReferences.GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N)
-                        .TrimEnd(),
-                    false, false);
-                // postAttackOutputStr += "\n" + targetedCombatMapUnit.FriendlyName + GameReferences.DataOvlRef
-                //     .StringReferences.GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N).TrimEnd();
+                    .DataOvlRef
+                    .StringReferences.GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N)
+                    .TrimEnd(), false, false);
             }
 
             switch (hitState)
@@ -505,21 +508,14 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(hitState), hitState, null);
             }
-
-            return additionalHitStateAction;
         }
 
         private CombatTurnResult HandleRangedMissed(TurnResults turnResults, CombatMapUnit attackingCombatMapUnit,
-                Point2D attackPosition, out CombatMapUnit targetedCombatMapUnit, int nAttackMax,
-                CombatItemReference.MissileType missileType)
-            //, out Point2D missedPoint)
-            //, 
-            //out string outputStr)
+            Point2D attackPosition, out CombatMapUnit targetedCombatMapUnit, int nAttackMax,
+            CombatItemReference.MissileType missileType)
         {
             // they are ranged, and missed which means we need to pick a new tile to attack
             // get a list of all surround tiles surrounding the player that they are attacking
-            //outputStr = "";
-            //missedPoint = null;
 
             Point2D newAttackPosition =
                 GetRandomSurroundingPointThatIsnt(attackPosition, attackingCombatMapUnit.MapUnitPosition.XY);
@@ -1060,19 +1056,13 @@ namespace Ultima5Redux.Maps
         public CombatItem PeekCurrentCombatItem() => _currentCombatItemQueue.Peek();
 
         public CombatTurnResult ProcessCombatPlayerTurn(TurnResults turnResults, SelectionAction selectedAction,
-            Point2D actionPosition,
-            out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit,
-            //out string preAttackOutputStr, out string postAttackOutputStr, 
-            //out Point2D missedPoint,
+            Point2D actionPosition, out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit,
             out CombatMapUnit.HitState targetedHitState)
         {
             targetedCombatMapUnit = null;
-            //missedPoint = null;
 
             CombatPlayer combatPlayer = GetCurrentCombatPlayer();
 
-            // preAttackOutputStr = "";
-            // postAttackOutputStr = "";
             activeCombatMapUnit = null;
 
             targetedHitState = CombatMapUnit.HitState.None;
@@ -1119,7 +1109,6 @@ namespace Ultima5Redux.Maps
                             AdvanceToNextCombatMapUnit();
                         }
 
-                        //missedPoint = actionPosition;
                         turnResults.PushOutputToConsole(attackStr);
                         CombatItemReference.MissileType missileType = weapon?.TheCombatItemReference.Missile ??
                                                                       CombatItemReference.MissileType.None;
@@ -1171,40 +1160,41 @@ namespace Ultima5Redux.Maps
                     // do the attack logic
                     if (combatPlayer == null)
                         throw new Ultima5ReduxException("Combat player unexpectedly null");
+
                     targetedHitState = combatPlayer.Attack(turnResults, opponentCombatMapUnit, weapon,
-                        //out string stateOutput,
                         out NonAttackingUnit nonAttackingUnitDrop, false);
-                    //, out string debugStr);
                     if (nonAttackingUnitDrop != null) CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
-                    //stateOutput += "\n" + debugStr;
-                    //postAttackOutputStr = stateOutput;
 
                     // if the player attacks, but misses with a range weapon the we need see if they
                     // accidentally hit someone else
                     bool bMissedButHit = false;
-                    if (targetedHitState == CombatMapUnit.HitState.Missed && weapon.TheCombatItemReference.Range > 1)
+                    switch (targetedHitState)
                     {
-                        CombatTurnResult combatTurnResult = HandleRangedMissed(turnResults, combatPlayer,
-                            opponentCombatMapUnit.MapUnitPosition.XY, out targetedCombatMapUnit,
-                            weapon.TheCombatItemReference.AttackStat, weapon.TheCombatItemReference.Missile);
-                        //, out missedPoint);
-                        //, out string addStr);
-                        //string postAttackOutputStr = addStr;
-
-                        if (combatTurnResult == CombatTurnResult.EnemyMissedButHit)
+                        // we missed - BUT - we have a range weapon so we may have hit someone/something else
+                        case CombatMapUnit.HitState.Missed when weapon.TheCombatItemReference.Range > 1:
                         {
-                            bMissedButHit = true;
+                            CombatTurnResult combatTurnResult = HandleRangedMissed(turnResults, combatPlayer,
+                                opponentCombatMapUnit.MapUnitPosition.XY, out targetedCombatMapUnit,
+                                weapon.TheCombatItemReference.AttackStat, weapon.TheCombatItemReference.Missile);
+
+                            bMissedButHit = combatTurnResult == CombatTurnResult.EnemyMissedButHit;
+                            break;
                         }
-                    }
-                    else
-                    {
-                        // we know they attacked this particular opponent at this point
-                        targetedCombatMapUnit = opponentCombatMapUnit;
-                        //missedPoint = targetedCombatMapUnit.MapUnitPosition.XY;
+                        case CombatMapUnit.HitState.Missed:
+                            // we missed but are not using a ranged weapon
+                            turnResults.PushTurnResult(new AttackerAndOpponent(
+                                TurnResult.TurnResultType.Combat_Result_Missed_CombatPlayerMelee,
+                                combatPlayer, opponentCombatMapUnit));
+                            break;
+                        default:
+                            // we know they attacked this particular opponent at this point, we definitely didn't miss
+                            // The Attack() call should have already taken care of putting the right stuff in
+                            targetedCombatMapUnit = opponentCombatMapUnit;
+                            break;
                     }
 
-                    AdditionalHitStateAction additionalHitStateAction =
-                        HandleHitState(turnResults, targetedHitState, targetedCombatMapUnit);
+                    // must check to see if any special 
+                    PerformAdditionalHitProcessing(turnResults, targetedHitState, targetedCombatMapUnit);
 
                     if (_currentCombatItemQueue == null || _currentCombatItemQueue.Count == 0)
                     {
@@ -1372,36 +1362,31 @@ namespace Ultima5Redux.Maps
             {
                 CombatMapUnit.HitState hitState = enemy.Attack(turnResults, bestCombatPlayer,
                     enemy.EnemyReference.TheDefaultEnemyStats.Damage, enemy.EnemyReference.TheMissileType,
-                    //out string postAttackOutputStr, 
                     out NonAttackingUnit _, true);
-                //out string debugStr);
-                // temporary for debugging
-                //postAttackOutputStr += "\n" + debugStr;
+
                 switch (hitState)
                 {
                     case CombatMapUnit.HitState.Missed:
                         // oh oh - the enemy missed
                         if (enemy.EnemyReference.TheMissileType == CombatItemReference.MissileType.None)
                         {
+                            // it's a melee attack
                             targetedCombatMapUnit = bestCombatPlayer;
+                            AttackerAndOpponent attackerAndOpponent = new AttackerAndOpponent(
+                                TurnResult.TurnResultType.Combat_Result_Missed_EnemyMelee,
+                                activeCombatMapUnit, targetedCombatMapUnit);
+                            turnResults.PushTurnResult(attackerAndOpponent);
                             break;
                         }
 
                         Debug.Assert(enemy.EnemyReference.AttackRange > 1,
                             "Cannot have a ranged weapon if no missile type set");
 
-                        CombatTurnResult combatTurnResult = HandleRangedMissed(turnResults, enemy,
+                        HandleRangedMissed(turnResults, enemy,
                             bestCombatPlayer.MapUnitPosition.XY,
                             out targetedCombatMapUnit, enemy.EnemyReference.TheDefaultEnemyStats.Damage,
                             enemy.EnemyReference.TheMissileType);
-                        //,
-                        //out missedPoint);
-                        //, out string addStr);
-
-                        //postAttackOutputStr += addStr;
-                        //turnResults.PushOutputToConsole(postAttackOutputStr);
                         return;
-                    //combatTurnResult;
                     case CombatMapUnit.HitState.Grazed:
                     case CombatMapUnit.HitState.BarelyWounded:
                     case CombatMapUnit.HitState.LightlyWounded:

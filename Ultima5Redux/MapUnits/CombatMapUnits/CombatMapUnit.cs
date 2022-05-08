@@ -136,10 +136,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
 
         public HitState Attack(TurnResults.TurnResults turnResults, CombatMapUnit opposingCombatMapUnit, int nAttackMax,
-            CombatItemReference.MissileType missileType,
-            //out string stateOutput,
-            out NonAttackingUnit nonAttackingUnitDrop, bool bIsEnemyAttacking,
-            //out string debugStr, 
+            CombatItemReference.MissileType missileType, out NonAttackingUnit nonAttackingUnitDrop,
+            bool bIsEnemyAttacking,
             bool bForceHit = false)
         {
             bool bIsHit = IsHit(opposingCombatMapUnit, out string debugStr) || bForceHit;
@@ -150,6 +148,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             PreviousAttackTarget = opposingCombatMapUnit;
 
             int nAttack = GetAttackDamage(opposingCombatMapUnit, nAttackMax);
+            // this just says that an attack is being attempted - it is not the result of the attack
             turnResults.PushTurnResult(new CombatMapUnitAttacks(
                 bIsEnemyAttacking
                     ? TurnResult.TurnResultType.Combat_EnemyAttacks
@@ -188,13 +187,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 if (bIsEnemyAttacking)
                 {
                     turnResults.PushTurnResult(new CombatMapUnitAttacks(
-                        TurnResult.TurnResultType.Combat_EnemyGrazedTarget,
+                        TurnResult.TurnResultType.Combat_Result_EnemyGrazedTarget,
                         this, opposingCombatMapUnit, missileType));
                 }
                 else
                 {
                     turnResults.PushTurnResult(new CombatMapUnitAttacks(
-                        TurnResult.TurnResultType.Combat_CombatPlayerGrazedTarget,
+                        TurnResult.TurnResultType.Combat_Result_CombatPlayerGrazedTarget,
                         this, opposingCombatMapUnit, missileType));
                 }
 
@@ -220,13 +219,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 if (bOpposingUnitIsEnemy)
                 {
                     turnResults.PushTurnResult(new CombatMapUnitAttacks(
-                        TurnResult.TurnResultType.Combat_EnemyReceivedDamage,
+                        TurnResult.TurnResultType.Combat_Result_HitAndEnemyReceivedDamage,
                         this, opposingCombatMapUnit, missileType));
                 }
                 else
                 {
                     turnResults.PushTurnResult(new CombatMapUnitAttacks(
-                        TurnResult.TurnResultType.Combat_CombatPlayerReceivedDamage,
+                        TurnResult.TurnResultType.Combat_Result_CombatPlayerReceivedDamage,
                         this, opposingCombatMapUnit, missileType));
                 }
 
@@ -276,20 +275,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             turnResults.PushOutputToConsole(opposingEnemyKilledOutput);
             return hitState;
-
-            //turnResults.PushTurnResult(new );
         }
 
         public HitState Attack(TurnResults.TurnResults turnResults, CombatMapUnit enemyCombatMapUnit, CombatItem weapon,
-                //out string stateOutput,
-                out NonAttackingUnit nonAttackingUnitDrop, bool bIsEnemy)
-            //, out string debugStr)
+            out NonAttackingUnit nonAttackingUnitDrop, bool bIsEnemy)
         {
             return Attack(turnResults, enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat,
-                weapon.TheCombatItemReference.Missile,
-                //, out stateOutput,
-                out nonAttackingUnitDrop, bIsEnemy);
-            //, out debugStr);
+                weapon.TheCombatItemReference.Missile, out nonAttackingUnitDrop, bIsEnemy);
         }
 
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>

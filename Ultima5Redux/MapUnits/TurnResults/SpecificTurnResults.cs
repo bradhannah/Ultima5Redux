@@ -35,7 +35,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
     public sealed class CombatPlayerKilled : TurnResult, IAttacker, IOpponent
     {
         public CombatPlayerKilled(CombatMapUnit attacker, CombatMapUnit opponent) : base(TurnResultType
-            .Combat_CombatPlayerKilled)
+            .Combat_Result_CombatPlayerKilled)
         {
             Debug.Assert(attacker != null, nameof(attacker) + " != null");
             Attacker = attacker;
@@ -49,7 +49,8 @@ namespace Ultima5Redux.MapUnits.TurnResults
 
     public sealed class EnemyKilled : TurnResult, IAttacker, IOpponent
     {
-        public EnemyKilled(CombatMapUnit attacker, CombatMapUnit opponent) : base(TurnResultType.Combat_EnemyKilled)
+        public EnemyKilled(CombatMapUnit attacker, CombatMapUnit opponent) : base(TurnResultType
+            .Combat_Result_EnemyKilled)
         {
             Debug.Assert(attacker != null, nameof(attacker) + " != null");
             Attacker = attacker;
