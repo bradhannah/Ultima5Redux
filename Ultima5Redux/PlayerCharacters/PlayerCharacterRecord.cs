@@ -263,50 +263,6 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public int Heal()
-        {
-            int nCurrentHp = Stats.CurrentHp;
-            Stats.CurrentHp = Stats.MaximumHp;
-            return Stats.MaximumHp - nCurrentHp;
-        }
-
-        public bool Poison()
-        {
-            if (Stats.Status == CharacterStatus.Dead) return false;
-            Debug.Assert(Stats.Status is CharacterStatus.Good or CharacterStatus.Poisoned);
-            Stats.Status = CharacterStatus.Poisoned;
-            return true;
-        }
-
-        public void ProcessTurnElectric()
-        {
-            Stats.CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
-        }
-
-        public void ProcessTurnPoison()
-        {
-            if (Stats.Status == CharacterStatus.Poisoned)
-                Stats.CurrentHp -= OddsAndLogic.POISON_DAMAGE_MIN;
-        }
-
-        public void ProcessTurnBomb()
-        {
-            Stats.CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
-        }
-
-        public void ProcessTurnAcid()
-        {
-            Stats.CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.ACID_DAMAGE_MIN, OddsAndLogic.ACID_DAMAGE_MAX);
-        }
-
-        public bool Resurrect()
-        {
-            if (Stats.Status != CharacterStatus.Dead) return false;
-            Stats.Status = CharacterStatus.Good;
-            Stats.CurrentHp = Stats.MaximumHp;
-            return true;
-        }
-
         public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
         {
             InnOrParty = (byte)location;
@@ -317,13 +273,6 @@ namespace Ultima5Redux.PlayerCharacters
                 Stats.CurrentHp = 0;
                 Stats.Status = CharacterStatus.Dead;
             }
-        }
-
-        public bool Sleep()
-        {
-            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Poisoned) return false;
-            Stats.Status = CharacterStatus.Asleep;
-            return true;
         }
 
         public void TurnIntoNotARat()

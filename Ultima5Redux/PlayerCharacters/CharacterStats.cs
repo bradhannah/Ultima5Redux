@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace Ultima5Redux.PlayerCharacters
 {
     [DataContract] public class CharacterStats
     {
-
-        [DataMember] public int CurrentHp
+        [DataMember]
+        public int CurrentHp
         {
             get => Status == PlayerCharacterRecord.CharacterStatus.Dead ? 0 : _currentHp;
             set => _currentHp = Math.Max(0, value);
@@ -36,7 +37,8 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        [DataMember] public PlayerCharacterRecord.CharacterStatus Status
+        [DataMember]
+        public PlayerCharacterRecord.CharacterStatus Status
         {
             get => _currentHp <= 0 ? PlayerCharacterRecord.CharacterStatus.Dead : _status;
             set => _status = value;
@@ -45,5 +47,60 @@ namespace Ultima5Redux.PlayerCharacters
         [DataMember] public int Strength { get; set; }
         [IgnoreDataMember] private int _currentHp;
         [IgnoreDataMember] private PlayerCharacterRecord.CharacterStatus _status;
+
+        public int Heal()
+        {
+            int nCurrentHp = CurrentHp;
+            CurrentHp = MaximumHp;
+            return MaximumHp - nCurrentHp;
+        }
+
+        public bool Poison()
+        {
+            if (Status == PlayerCharacterRecord.CharacterStatus.Dead) return false;
+            Debug.Assert(Status is PlayerCharacterRecord.CharacterStatus.Good
+                or PlayerCharacterRecord.CharacterStatus.Poisoned);
+            Status = PlayerCharacterRecord.CharacterStatus.Poisoned;
+            return true;
+        }
+
+        public void ProcessTurnElectric()
+        {
+            CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
+        }
+
+        public void ProcessTurnPoison()
+        {
+            if (Status == PlayerCharacterRecord.CharacterStatus.Poisoned)
+                CurrentHp -= OddsAndLogic.POISON_DAMAGE_MIN;
+        }
+
+        public void ProcessTurnBomb()
+        {
+            CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
+        }
+
+        public int ProcessTurnAcid()
+        {
+            int nDamageAmount = Utils.GetNumberFromAndTo(OddsAndLogic.ACID_DAMAGE_MIN, OddsAndLogic.ACID_DAMAGE_MAX);
+            CurrentHp -= nDamageAmount;
+            return nDamageAmount;
+        }
+
+        public bool Resurrect()
+        {
+            if (Status != PlayerCharacterRecord.CharacterStatus.Dead) return false;
+            Status = PlayerCharacterRecord.CharacterStatus.Good;
+            CurrentHp = MaximumHp;
+            return true;
+        }
+
+        public bool Sleep()
+        {
+            if (Status == PlayerCharacterRecord.CharacterStatus.Dead ||
+                Status == PlayerCharacterRecord.CharacterStatus.Poisoned) return false;
+            Status = PlayerCharacterRecord.CharacterStatus.Asleep;
+            return true;
+        }
     }
 }

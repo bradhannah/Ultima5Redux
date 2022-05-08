@@ -3,10 +3,12 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
@@ -133,63 +135,161 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public abstract bool IsMyEnemy(CombatMapUnit combatMapUnit);
 
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, int nAttackMax, out string stateOutput,
-            out NonAttackingUnit nonAttackingUnitDrop, out string debugStr, bool bForceHit = false)
+        public HitState Attack(TurnResults.TurnResults turnResults, CombatMapUnit opposingCombatMapUnit, int nAttackMax,
+            CombatItemReference.MissileType missileType,
+            //out string stateOutput,
+            out NonAttackingUnit nonAttackingUnitDrop, bool bIsEnemyAttacking,
+            //out string debugStr, 
+            bool bForceHit = false)
         {
-            bool bIsHit = IsHit(enemyCombatMapUnit, out debugStr) || bForceHit;
+            bool bIsHit = IsHit(opposingCombatMapUnit, out string debugStr) || bForceHit;
 
             // drop nothing by default
             nonAttackingUnitDrop = null;
 
-            PreviousAttackTarget = enemyCombatMapUnit;
+            PreviousAttackTarget = opposingCombatMapUnit;
 
-            int nAttack = GetAttackDamage(enemyCombatMapUnit, nAttackMax);
+            int nAttack = GetAttackDamage(opposingCombatMapUnit, nAttackMax);
+            turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                bIsEnemyAttacking
+                    ? TurnResult.TurnResultType.Combat_EnemyAttacks
+                    : TurnResult.TurnResultType.Combat_CombatPlayerAttacks,
+                this, opposingCombatMapUnit, missileType));
             if (!bIsHit)
             {
-                stateOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
-                                  .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd()
-                                  .Replace("!", " ") +
-                              enemyCombatMapUnit.FriendlyName + "!";
+                string missedOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
+                                          .GetString(DataOvlReference.BattleStrings._MISSED_BANG_N).TrimEnd()
+                                          .Replace("!", " ") +
+                                      opposingCombatMapUnit.FriendlyName + "!" + "\n" + debugStr;
+                turnResults.PushOutputToConsole(missedOutput);
+                if (bIsEnemyAttacking)
+                {
+                    turnResults.PushTurnResult(new CombatMapUnitMissed(
+                        TurnResult.TurnResultType.Combat_EnemyMissedTarget,
+                        this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
+                }
+                else
+                {
+                    turnResults.PushTurnResult(new CombatMapUnitMissed(
+                        TurnResult.TurnResultType.Combat_CombatPlayerMissedTarget,
+                        this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
+                }
+
                 return HitState.Missed;
             }
 
             if (nAttack == 0)
             {
-                stateOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
-                                  .GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd()
-                                  .Replace("!", " ") +
-                              enemyCombatMapUnit.FriendlyName + "!";
+                string grazedOutput = FriendlyName + GameReferences.DataOvlRef.StringReferences
+                                          .GetString(DataOvlReference.BattleStrings._GRAZED_BANG_N).TrimEnd()
+                                          .Replace("!", " ") +
+                                      opposingCombatMapUnit.FriendlyName + "!" + "\n" + debugStr;
+                turnResults.PushOutputToConsole(grazedOutput);
+                if (bIsEnemyAttacking)
+                {
+                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                        TurnResult.TurnResultType.Combat_EnemyGrazedTarget,
+                        this, opposingCombatMapUnit, missileType));
+                }
+                else
+                {
+                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                        TurnResult.TurnResultType.Combat_CombatPlayerGrazedTarget,
+                        this, opposingCombatMapUnit, missileType));
+                }
+
                 return HitState.Grazed;
             }
 
             // we track extra stats
-            enemyCombatMapUnit.CombatStats.TotalDamageTaken += Math.Min(nAttack, enemyCombatMapUnit.Stats.CurrentHp);
-            CombatStats.TotalDamageGiven += Math.Min(nAttack, enemyCombatMapUnit.Stats.CurrentHp);
+            opposingCombatMapUnit.CombatStats.TotalDamageTaken +=
+                Math.Min(nAttack, opposingCombatMapUnit.Stats.CurrentHp);
+            CombatStats.TotalDamageGiven += Math.Min(nAttack, opposingCombatMapUnit.Stats.CurrentHp);
 
-            enemyCombatMapUnit.Stats.CurrentHp -= nAttack;
+            opposingCombatMapUnit.Stats.CurrentHp -= nAttack;
 
+            HitState hitState;
+            bool bOpposingUnitIsEnemy = opposingCombatMapUnit is Enemy;
             // we only add experience to kills against other enemies
-            if (enemyCombatMapUnit.Stats.CurrentHp > 0) return GetState(enemyCombatMapUnit, out stateOutput);
-
+            // OR
             // check to see if they are an enemy - if you killed your own PC then we don't give you credit
-            if (enemyCombatMapUnit is not Enemy enemy) return GetState(enemyCombatMapUnit, out stateOutput);
+            if (opposingCombatMapUnit.Stats.CurrentHp > 0) // || opposingCombatMapUnit is not Enemy enemy)
+            {
+                hitState = GetState(opposingCombatMapUnit, out string stateOutput);
 
-            CombatStats.TotalKills++;
-            CombatStats.AdditionalExperience += enemyCombatMapUnit.Experience;
+                if (bOpposingUnitIsEnemy)
+                {
+                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                        TurnResult.TurnResultType.Combat_EnemyReceivedDamage,
+                        this, opposingCombatMapUnit, missileType));
+                }
+                else
+                {
+                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                        TurnResult.TurnResultType.Combat_CombatPlayerReceivedDamage,
+                        this, opposingCombatMapUnit, missileType));
+                }
 
-            NonAttackingUnitFactory.DropSprites dropped =
-                OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
-            nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference, dropped,
-                enemyCombatMapUnit.MapUnitPosition);
+                turnResults.PushOutputToConsole(stateOutput);
+                return hitState;
+            }
 
-            return GetState(enemyCombatMapUnit, out stateOutput);
+            // if (opposingCombatMapUnit is not Enemy enemy)
+            // {
+            //     return GetState(opposingCombatMapUnit, out stateOutput);
+            // }
+            hitState = GetState(opposingCombatMapUnit, out string opposingEnemyKilledOutput);
+
+            // we know the combat player was attacking and the other guy is dead
+            if (bIsEnemyAttacking)
+            {
+                turnResults.PushTurnResult(new CombatPlayerKilled(this, opposingCombatMapUnit));
+                turnResults.PushOutputToConsole(opposingEnemyKilledOutput);
+
+                return hitState;
+            }
+
+            // was the opponent we killed an enemy?
+            // if they are then we get XP and a chance to drop loot
+            if (opposingCombatMapUnit is Enemy enemy)
+            {
+                CombatStats.TotalKills++;
+                CombatStats.AdditionalExperience += opposingCombatMapUnit.Experience;
+
+                NonAttackingUnitFactory.DropSprites dropped =
+                    OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
+                nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference, dropped,
+                    opposingCombatMapUnit.MapUnitPosition);
+
+                if (nonAttackingUnitDrop != null)
+                    turnResults.PushTurnResult(new LootDropped(nonAttackingUnitDrop));
+            }
+
+            if (bOpposingUnitIsEnemy)
+            {
+                turnResults.PushTurnResult(new EnemyKilled(this, opposingCombatMapUnit));
+            }
+            else
+            {
+                turnResults.PushTurnResult(new CombatPlayerKilled(this, opposingCombatMapUnit));
+            }
+
+            turnResults.PushOutputToConsole(opposingEnemyKilledOutput);
+            return hitState;
+
+            //turnResults.PushTurnResult(new );
         }
 
-        public HitState Attack(CombatMapUnit enemyCombatMapUnit, CombatItem weapon, out string stateOutput,
-            out NonAttackingUnit nonAttackingUnitDrop, out string debugStr)
+        public HitState Attack(TurnResults.TurnResults turnResults, CombatMapUnit enemyCombatMapUnit, CombatItem weapon,
+                //out string stateOutput,
+                out NonAttackingUnit nonAttackingUnitDrop, bool bIsEnemy)
+            //, out string debugStr)
         {
-            return Attack(enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat, out stateOutput,
-                out nonAttackingUnitDrop, out debugStr);
+            return Attack(turnResults, enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat,
+                weapon.TheCombatItemReference.Missile,
+                //, out stateOutput,
+                out nonAttackingUnitDrop, bIsEnemy);
+            //, out debugStr);
         }
 
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>

@@ -98,6 +98,8 @@ namespace Ultima5Redux
             Y = y;
         }
 
+        public static Point2D Zero => new Point2D(0, 0);
+
         public static bool operator ==(in Point2D point1, in Point2D point2)
         {
             return point1?.Equals(point2) ?? ReferenceEquals(point2, null);

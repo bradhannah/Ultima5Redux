@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -112,6 +113,11 @@ namespace Ultima5Redux.Maps
         protected override float GetAStarWeight(in Point2D xy)
         {
             return 1;
+        }
+
+        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
+        {
+            // TBD
         }
 
         protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
@@ -51,32 +52,40 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public enum TrapComplexity { Simple, Complex }
 
-        public void TriggerTrap(PlayerCharacterRecord record, PlayerCharacterRecords records)
+        public void TriggerTrap(TurnResults.TurnResults turnResults, CharacterStats stats,
+            PlayerCharacterRecords records)
         {
+            TurnResult turnResult;
             switch (Trap)
             {
                 case TrapType.NONE:
                     return;
                 case TrapType.ACID:
-                    record.ProcessTurnAcid();
+                    int nDamageAmount = stats.ProcessTurnAcid();
+                    turnResult =
+                        new CombatMapUnitTakesDamage(TurnResult.TurnResultType.DamageFromAcid, stats, nDamageAmount);
+                    turnResults.PushTurnResult(turnResult);
                     break;
                 case TrapType.SLEEP:
-                    record.Sleep();
+                    stats.Sleep();
                     break;
                 case TrapType.POISON:
-                    record.Poison();
+                    turnResult =
+                        new SinglePlayerCharacterAffected(TurnResult.TurnResultType.PlayerCharacterPoisoned, stats);
+                    turnResults.PushTurnResult(turnResult);
+                    stats.Poison();
                     break;
                 case TrapType.BOMB:
-                    records.Records.ForEach(r => r.ProcessTurnBomb());
+                    records.Records.ForEach(r => r.Stats.ProcessTurnBomb());
                     break;
                 case TrapType.SLEEP_ALL:
-                    records.Records.ForEach(r => r.Sleep());
+                    records.Records.ForEach(r => r.Stats.Sleep());
                     break;
                 case TrapType.ELECTRIC_ALL:
-                    records.Records.ForEach(r => r.ProcessTurnElectric());
+                    records.Records.ForEach(r => r.Stats.ProcessTurnElectric());
                     break;
                 case TrapType.POISON_ALL:
-                    records.Records.ForEach(r => r.Poison());
+                    records.Records.ForEach(r => r.Stats.Poison());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

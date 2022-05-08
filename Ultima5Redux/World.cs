@@ -10,6 +10,7 @@ using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
@@ -150,7 +151,7 @@ namespace Ultima5Redux
 
         private void CastSleep(PlayerCharacterRecord record, out bool bWasPutToSleep)
         {
-            bWasPutToSleep = record.Sleep();
+            bWasPutToSleep = record.Stats.Sleep();
             StreamingOutput.Instance.PushMessage(
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.SLEPT_BANG_N),
                 false);
@@ -297,7 +298,7 @@ namespace Ultima5Redux
                 }
                 else
                 {
-                    turnResults.PushTurnResult(TurnResults.TurnResult.DamageOverTimePoisoned);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.DamageOverTimePoisoned);
                     StreamingOutput.Instance.PushMessage(
                         GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
                             .POISONED_BANG_N), false);
@@ -307,7 +308,7 @@ namespace Ultima5Redux
             else if (currentTileReference.Index == 143)
             {
                 State.CharacterRecords.SteppedOnLava();
-                turnResults.PushTurnResult(TurnResults.TurnResult.DamageOverTimeBurning);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.DamageOverTimeBurning);
                 StreamingOutput.Instance.PushMessage("Burning!", false);
             }
 
@@ -338,7 +339,7 @@ namespace Ultima5Redux
 
             if (IsCombatMap)
             {
-                turnResults.PushTurnResult(TurnResults.TurnResult.Ignore);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.Ignore);
             }
             else
             {
@@ -389,7 +390,7 @@ namespace Ultima5Redux
                             State.TheVirtualMap.LoadCombatMapWithCalculation(aggressiveMapUnitInfo.CombatMapReference,
                                 State.CharacterRecords, aggressiveMapUnitInfo.AttackingMapUnit);
 
-                            turnResults.PushTurnResult(TurnResults.TurnResult.CombatMapLoaded);
+                            turnResults.PushTurnResultType(TurnResult.TurnResultType.CombatMapLoaded);
                         }
                     }
                     else
@@ -429,7 +430,7 @@ namespace Ultima5Redux
                                                          .Trim() + " " +
                                                      GameReferences.DataOvlRef.StringReferences.GetString(
                                                          DataOvlReference.TravelStrings.WHAT));
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionBoardWhat);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionBoardWhat);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -458,20 +459,20 @@ namespace Ultima5Redux
                 case Skiff _ when bAvatarIsBoarded:
                     bWasSuccessful = false;
                     StreamingOutput.Instance.PushMessage(getOnFootResponse(), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionBoardNoOnFoot);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionBoardNoOnFoot);
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                 case MagicCarpet _:
                     BoardAndCleanFromWorld(boardableMapUnit);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionBoardCarpet);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionBoardCarpet);
                     break;
                 case Horse _:
                     // delete or deactivate the horse we just mounted
                     BoardAndCleanFromWorld(boardableMapUnit);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionBoardHorse);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionBoardHorse);
                     break;
                 case Skiff _:
                     BoardAndCleanFromWorld(boardableMapUnit);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionBoardSkiff);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionBoardSkiff);
                     break;
                 case Frigate boardableFrigate:
                 {
@@ -481,7 +482,7 @@ namespace Ultima5Redux
                         {
                             bWasSuccessful = false;
                             StreamingOutput.Instance.PushMessage(getOnFootResponse());
-                            turnResults.PushTurnResult(TurnResults.TurnResult.ActionBoardNoOnFoot);
+                            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionBoardNoOnFoot);
                             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                         }
 
@@ -497,7 +498,7 @@ namespace Ultima5Redux
                         retStr += GameReferences.DataOvlRef.StringReferences
                             .GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
                     BoardAndCleanFromWorld(boardableFrigate);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionBoardFrigate);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionBoardFrigate);
                     break;
                 }
             }
@@ -555,7 +556,7 @@ namespace Ultima5Redux
                         "\nUnable to enter the dungeons at this time!";
                     bWasSuccessful = false;
                     StreamingOutput.Instance.PushMessage(retStr, false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionEnterDungeon);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionEnterDungeon);
                     return new List<VirtualMap.AggressiveMapUnitInfo>();
                 }
 
@@ -567,7 +568,7 @@ namespace Ultima5Redux
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
                     GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
                     GameReferences.SmallMapRef.GetLocationName(location), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionEnterTowne);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionEnterTowne);
                 bWasSuccessful = true;
                 AdvanceClockNoComputation(N_DEFAULT_ADVANCE_TIME);
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
@@ -577,7 +578,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionEnterWhat);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionEnterWhat);
                 bWasSuccessful = false;
             }
 
@@ -621,7 +622,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.SleepTransportStrings
                         .NONE_OWNED_BANG_N), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionIgniteTorchNoTorch);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionIgniteTorchNoTorch);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -632,7 +633,7 @@ namespace Ultima5Redux
 
             StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.KeypressCommandsStrings.IGNITE_TORCH), false);
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionIgniteTorch);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionIgniteTorch);
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
@@ -696,7 +697,7 @@ namespace Ultima5Redux
 
             // pass time at the end to make sure moving characters are accounted for
             StreamingOutput.Instance.PushMessage(lookStr, false);
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionLook);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionLook);
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
@@ -711,7 +712,7 @@ namespace Ultima5Redux
 
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
                 AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            turnResults.PushTurnResult(TurnResults.TurnResult.PassTurn);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.PassTurn);
 
             return aggressiveMapUnitInfos;
         }
@@ -738,7 +739,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.ExclaimStrings
                         .WONT_BUDGE_BANG_N), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionPushWontBudge);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionPushWontBudge);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -752,7 +753,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.ExclaimStrings
                         .WONT_BUDGE_BANG_N), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionPushWontBudge);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionPushWontBudge);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -782,7 +783,7 @@ namespace Ultima5Redux
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N),
                 false);
 
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionPush);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionPush);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -837,7 +838,7 @@ namespace Ultima5Redux
                     attackTargetPosition);
 
                 tryToAttackResult = TryToAttackResult.BrokenMirror;
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionAttackBrokeMirror);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionAttackBrokeMirror);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -848,7 +849,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.TravelStrings.NOTHING_TO_ATTACK), false);
                 tryToAttackResult = TryToAttackResult.NothingToAttack;
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionAttackNothingToAttack);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionAttackNothingToAttack);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -882,7 +883,7 @@ namespace Ultima5Redux
                         .ON_FOOT), false);
                 tryToAttackResult = TryToAttackResult.OnlyOnFoot;
 
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionAttackOnlyOnFoot);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionAttackOnlyOnFoot);
 
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
 
@@ -901,7 +902,7 @@ namespace Ultima5Redux
                 case Enemy:
                     State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
                     tryToAttackResult = TryToAttackResult.CombatMapEnemy;
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionAttackCombatMapEnemy);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionAttackCombatMapEnemy);
                     break;
                 case NonPlayerCharacter npc:
                     if (GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
@@ -911,14 +912,14 @@ namespace Ultima5Redux
                             GameReferences.DataOvlRef.StringReferences.GetString(
                                 DataOvlReference.TravelStrings.MURDERED), false);
                         tryToAttackResult = TryToAttackResult.NpcMurder;
-                        turnResults.PushTurnResult(TurnResults.TurnResult.ActionAttackMurder);
+                        turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionAttackMurder);
                         MurderNpc(npc);
                         break;
                     }
 
                     State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
 
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionAttackCombatMapNpc);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionAttackCombatMapNpc);
                     tryToAttackResult = TryToAttackResult.CombatMapNpc;
 
                     break;
@@ -976,7 +977,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED),
                     false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetBorrowed);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionGetBorrowed);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -989,7 +990,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.GetThingsStrings
                         .A_MAGIC_CARPET), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetMagicCarpet);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionGetMagicCarpet);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -1002,7 +1003,7 @@ namespace Ultima5Redux
                 invItem.Quantity++;
 
                 StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetExposedItem);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionGetExposedItem);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -1023,14 +1024,14 @@ namespace Ultima5Redux
                     //State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
 
                     StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetStackableItem);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionGetStackableItem);
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                 }
             }
 
             StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.GetThingsStrings.NOTHING_TO_GET), false);
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionGetNothingToGet);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionGetNothingToGet);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -1057,7 +1058,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.OpeningThingsStrings
                         .NO_LOCK), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionJimmyNoLock);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionJimmyNoLock);
             }
             else
             {
@@ -1081,7 +1082,7 @@ namespace Ultima5Redux
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.OpeningThingsStrings
                             .KEY_BROKE), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionJimmyKeyBroke);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionJimmyKeyBroke);
                 }
                 else if (bIsDoorLocked)
                 {
@@ -1100,14 +1101,14 @@ namespace Ultima5Redux
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.OpeningThingsStrings
                             .UNLOCKED), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionJimmyUnlocked);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionJimmyUnlocked);
                 }
                 else
                 {
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.OpeningThingsStrings
                             .NO_LOCK), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionJimmyNoLock);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionJimmyNoLock);
                 }
             }
 
@@ -1137,7 +1138,7 @@ namespace Ultima5Redux
                 {
                     klimbResult = KlimbResult.RequiresDirection;
                     StreamingOutput.Instance.PushMessage(getKlimbOutput(), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbRequiresDirection);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbRequiresDirection);
                     return new List<VirtualMap.AggressiveMapUnitInfo>();
                 }
 
@@ -1146,7 +1147,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(getKlimbOutput(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KlimbingStrings
                         .WITH_WHAT)), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbWithWhat);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbWithWhat);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -1156,7 +1157,7 @@ namespace Ultima5Redux
             {
                 klimbResult = KlimbResult.RequiresDirection;
                 StreamingOutput.Instance.PushMessage(getKlimbOutput(), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbRequiresDirection);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbRequiresDirection);
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
 
@@ -1183,7 +1184,7 @@ namespace Ultima5Redux
                     StreamingOutput.Instance.PushMessage(getKlimbOutput(
                             GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN)),
                         false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbDown);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbDown);
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                 }
             }
@@ -1197,13 +1198,13 @@ namespace Ultima5Redux
                 klimbResult = KlimbResult.Success;
                 StreamingOutput.Instance.PushMessage(getKlimbOutput(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP)), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbUp);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbUp);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
             klimbResult = KlimbResult.RequiresDirection;
             StreamingOutput.Instance.PushMessage(getKlimbOutput(), false);
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbRequiresDirection);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbRequiresDirection);
             return new List<VirtualMap.AggressiveMapUnitInfo>();
         }
 
@@ -1233,7 +1234,7 @@ namespace Ultima5Redux
                     klimbResult = KlimbResult.SuccessFell;
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.KlimbingStrings.FELL), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbDirectionMovedFell);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbDirectionMovedFell);
                 }
                 // is it tall mountains? we can't klimb those
                 else if (tileReference.Index ==
@@ -1242,7 +1243,7 @@ namespace Ultima5Redux
                     klimbResult = KlimbResult.CantKlimb;
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.KlimbingStrings.IMPASSABLE), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbDirectionImpassable);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbDirectionImpassable);
                 }
                 // there is no chance of klimbing the thing
                 else
@@ -1250,7 +1251,7 @@ namespace Ultima5Redux
                     klimbResult = KlimbResult.CantKlimb;
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.KlimbingStrings.NOT_CLIMABLE), false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbDirectionUnKlimable);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbDirectionUnKlimable);
                 }
             }
             else // it's a small map
@@ -1260,7 +1261,7 @@ namespace Ultima5Redux
                     // ie. a fence
                     klimbResult = KlimbResult.Success;
 
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbDirectionSuccess);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbDirectionSuccess);
                 }
                 else
                 {
@@ -1268,7 +1269,7 @@ namespace Ultima5Redux
                     StreamingOutput.Instance.PushMessage(
                         GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.WHAT),
                         false);
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionKlimbWhat);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionKlimbWhat);
                 }
             }
 
@@ -1294,7 +1295,7 @@ namespace Ultima5Redux
                         .FIRE) +
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                         .D_WHAT));
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionFireWhat);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionFireWhat);
                 return false;
             }
 
@@ -1305,7 +1306,7 @@ namespace Ultima5Redux
                         .FIRE) +
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
                         .DASH_NOT_HERE_BANG_N));
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionFireNotHere);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionFireNotHere);
                 return false;
             }
 
@@ -1327,7 +1328,7 @@ namespace Ultima5Redux
                     .FIRE) +
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                     .D_WHAT));
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionFireWhat);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionFireWhat);
             return false;
         }
 
@@ -1350,7 +1351,7 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionFireCannon);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionFireCannon);
 
             Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
             cannonBallDestination = null;
@@ -1382,7 +1383,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.SleepTransportStrings
                         .FIRE_BROADSIDE_ONLY_BANG_N), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionFireBroadsideOnly);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionFireBroadsideOnly);
 
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
@@ -1405,13 +1406,13 @@ namespace Ultima5Redux
                     "Killed " + targetedMapUnit.FriendlyName, false);
                 State.TheVirtualMap.TheMapUnits.ClearMapUnit(targetedMapUnit);
                 cannonBallDestination = adjustedPosition;
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionFireEnemyKilled);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionFireEnemyKilled);
 
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
             cannonBallDestination = adjustedPosition;
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionFireHitNothing);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionFireHitNothing);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -1437,7 +1438,7 @@ namespace Ultima5Redux
             if (!State.TheVirtualMap.IsLargeMap && IsLeavingMap(new Point2D(
                     State.TheVirtualMap.CurrentPosition.X + xAdjust, State.TheVirtualMap.CurrentPosition.Y + yAdjust)))
             {
-                turnResults.PushTurnResult(TurnResults.TurnResult.OfferToExitScreen);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.OfferToExitScreen);
                 // it is expected that the called will offer an exit option, but we won't move the avatar because the space
                 // is empty
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
@@ -1459,7 +1460,7 @@ namespace Ultima5Redux
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.HEAD).TrimEnd() +
                     " " + GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction));
 
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveChangeFrigateDirection);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveChangeFrigateDirection);
 
                 List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
                     AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
@@ -1474,7 +1475,7 @@ namespace Ultima5Redux
             if (avatar.AreSailsHoisted &&
                 State.WindDirection != Point2D.Direction.None && bManualMovement)
             {
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveFrigateSailsIgnoreMovement);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveFrigateSailsIgnoreMovement);
                 //tryToMoveResult = TurnResults.TryToMoveResult.IgnoredMovement;
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
@@ -1511,7 +1512,7 @@ namespace Ultima5Redux
 
                 // todo: get string from data file
                 StreamingOutput.Instance.PushMessage("A TRAPDOOR!");
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveFell);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveFell);
             }
 
             // we have evaluated and now know there is not a further fall (think Blackthorne's palace)
@@ -1537,7 +1538,7 @@ namespace Ultima5Redux
                 {
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.TravelStrings.BLOCKED));
-                    turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveBlocked);
+                    turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveBlocked);
                 }
 
                 // if it's not passable then we have no more business here
@@ -1558,7 +1559,7 @@ namespace Ultima5Redux
                         ? GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.DOWN)
                         : GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.UP));
 
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveUsedStairs);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveUsedStairs);
             }
 
             Avatar.AvatarState currentAvatarState =
@@ -1581,38 +1582,38 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
                         .ROUGH_SEAS), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveRoughSeas);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveRoughSeas);
             }
             else
             {
-                turnResults.PushTurnResult(GetTurnResultMovedByAvatarState(avatar, bManualMovement));
+                turnResults.PushTurnResultType(GetTurnResultMovedByAvatarState(avatar, bManualMovement));
             }
 
             // if we are indoors then all walking takes 2 minutes
             return AdvanceTime(nMinutesToAdvance, turnResults);
         }
 
-        private static TurnResults.TurnResult GetTurnResultMovedByAvatarState(Avatar avatar, bool bManualMovement)
+        private static TurnResult.TurnResultType GetTurnResultMovedByAvatarState(Avatar avatar, bool bManualMovement)
         {
             switch (avatar.CurrentAvatarState)
             {
                 case Avatar.AvatarState.Regular:
-                    return TurnResults.TurnResult.ActionMoveRegular;
+                    return TurnResult.TurnResultType.ActionMoveRegular;
                 case Avatar.AvatarState.Carpet:
-                    return TurnResults.TurnResult.ActionMoveCarpet;
+                    return TurnResult.TurnResultType.ActionMoveCarpet;
                 case Avatar.AvatarState.Horse:
-                    return TurnResults.TurnResult.ActionMoveHorse;
+                    return TurnResult.TurnResultType.ActionMoveHorse;
                 case Avatar.AvatarState.Frigate:
                     if (avatar.AreSailsHoisted)
                     {
                         return bManualMovement
-                            ? TurnResults.TurnResult.ActionMoveFrigateWindSailsChangeDirection
-                            : TurnResults.TurnResult.ActionMoveFrigateWindSails;
+                            ? TurnResult.TurnResultType.ActionMoveFrigateWindSailsChangeDirection
+                            : TurnResult.TurnResultType.ActionMoveFrigateWindSails;
                     }
 
-                    return TurnResults.TurnResult.ActionMoveFrigateRowing;
+                    return TurnResult.TurnResultType.ActionMoveFrigateRowing;
                 case Avatar.AvatarState.Skiff:
-                    return TurnResults.TurnResult.ActionMoveSkiffRowing;
+                    return TurnResult.TurnResultType.ActionMoveSkiffRowing;
                 case Avatar.AvatarState.Hidden:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(avatar),
@@ -1689,7 +1690,7 @@ namespace Ultima5Redux
 
                 currentCombatMap.MakePlayerEscape(combatPlayer);
 
-                turnResults.PushTurnResult(TurnResults.TurnResult.OfferToExitScreen);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.OfferToExitScreen);
                 return;
             }
 
@@ -1699,13 +1700,13 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(" - " +
                                                      GameReferences.DataOvlRef.StringReferences.GetString(
                                                          DataOvlReference.TravelStrings.BLOCKED), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionMoveBlocked);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveBlocked);
                 return;
             }
 
-            currentCombatMap.MoveActiveCombatMapUnit(newPosition);
+            currentCombatMap.MoveActiveCombatMapUnit(turnResults, newPosition);
 
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionMovedCombatPlayerOnCombatMap);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMovedCombatPlayerOnCombatMap);
 
             currentCombatMap.AdvanceToNextCombatMapUnit();
         }
@@ -1741,7 +1742,7 @@ namespace Ultima5Redux
             StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.OpeningThingsStrings
                     .NOTHING_TO_OPEN), false);
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionOpenDoorNothingToOpen);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionOpenDoorNothingToOpen);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -1756,7 +1757,7 @@ namespace Ultima5Redux
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.OpeningThingsStrings
                         .LOCKED_N), false);
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionOpenDoorLocked);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionOpenDoorLocked);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -1770,7 +1771,7 @@ namespace Ultima5Redux
             StreamingOutput.Instance.PushMessage(
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.OPENED),
                 false);
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionOpenDoorOpened);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionOpenDoorOpened);
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
@@ -1873,7 +1874,7 @@ namespace Ultima5Redux
                     break;
                 case Potion.PotionColor.Green:
                     // poison user
-                    bool bWasPoisoned = record.Poison();
+                    bool bWasPoisoned = record.Stats.Poison();
                     if (bWasPoisoned)
                         StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                             DataOvlReference.ExclaimStrings
@@ -2102,9 +2103,9 @@ namespace Ultima5Redux
 
             StreamingOutput.Instance.PushMessage(retStr);
 
-            turnResults.PushTurnResult(bWasSuccessful
-                ? TurnResults.TurnResult.ActionXitSuccess
-                : TurnResults.TurnResult.ActionXitWhat);
+            turnResults.PushTurnResultType(bWasSuccessful
+                ? TurnResult.TurnResultType.ActionXitSuccess
+                : TurnResult.TurnResultType.ActionXitWhat);
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
@@ -2130,7 +2131,7 @@ namespace Ultima5Redux
                     DataOvlReference.KeypressCommandsStrings
                         .YELL) + GameReferences.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.YellingStrings.HOIST_BANG_N).Trim());
-                turnResults.PushTurnResult(TurnResults.TurnResult.ActionYellSailsHoisted);
+                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionYellSailsHoisted);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -2138,7 +2139,7 @@ namespace Ultima5Redux
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.YELL) +
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.YellingStrings.FURL_BANG_N)
                     .Trim());
-            turnResults.PushTurnResult(TurnResults.TurnResult.ActionYellSailsFurl);
+            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionYellSailsFurl);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 

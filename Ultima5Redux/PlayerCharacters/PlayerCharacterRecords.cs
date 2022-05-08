@@ -267,7 +267,8 @@ namespace Ultima5Redux.PlayerCharacters
         {
             foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
             {
-                if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned) record.ProcessTurnPoison();
+                if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned)
+                    record.Stats.ProcessTurnPoison();
             }
         }
 

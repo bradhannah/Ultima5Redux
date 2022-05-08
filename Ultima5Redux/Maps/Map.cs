@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.External;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -134,6 +135,8 @@ namespace Ultima5Redux.Maps
 
             return _aStarDictionary[walkableType];
         }
+
+        internal abstract void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit);
 
         public TileOverrideReference GetTileOverride(in Point2D xy)
         {

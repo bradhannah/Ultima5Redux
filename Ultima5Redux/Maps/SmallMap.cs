@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -72,6 +73,11 @@ namespace Ultima5Redux.Maps
                 fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
 
             return fCost;
+        }
+
+        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
+        {
+            // TBD
         }
 
         protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)

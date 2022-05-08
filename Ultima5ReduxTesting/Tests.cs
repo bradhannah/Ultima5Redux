@@ -14,6 +14,7 @@ using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -2011,7 +2012,8 @@ namespace Ultima5ReduxTesting
             // put the avatar just up from the chest
             player.MapUnitPosition.XY = new Point2D(8, 8);
             world.TryToMoveCombatMap(player, Point2D.Direction.Down, turnResults);
-            Assert.IsTrue(turnResults.PeekLastTurnResult != TurnResults.TurnResult.ActionMoveBlocked);
+            Assert.IsTrue(turnResults.PeekLastTurnResult.TheTurnResultType !=
+                          TurnResult.TurnResultType.ActionMoveBlocked);
 
             _ = "";
         }
@@ -2142,19 +2144,22 @@ namespace Ultima5ReduxTesting
 
             TurnResults turnResults = new TurnResults();
 
-            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
+            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(turnResults,
                 out CombatMapUnit activeCombatMapUnit,
-                out CombatMapUnit targetedCombatMapUnit, out string preAttackOutputStr, out string postAttackOutputStr,
+                out CombatMapUnit targetedCombatMapUnit,
+                //out string preAttackOutputStr, out string postAttackOutputStr,
                 out Point2D missedPoint);
             Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
 
-            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
-                out activeCombatMapUnit, out targetedCombatMapUnit, out preAttackOutputStr, out postAttackOutputStr,
+            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(turnResults,
+                out activeCombatMapUnit, out targetedCombatMapUnit,
+                //out preAttackOutputStr, out postAttackOutputStr,
                 out missedPoint);
             Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
 
-            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(
-                out activeCombatMapUnit, out targetedCombatMapUnit, out preAttackOutputStr, out postAttackOutputStr,
+            world.State.TheVirtualMap.CurrentCombatMap.ProcessEnemyTurn(turnResults,
+                out activeCombatMapUnit, out targetedCombatMapUnit,
+                //out preAttackOutputStr, out postAttackOutputStr,
                 out missedPoint);
             Assert.IsInstanceOf<Enemy>(activeCombatMapUnit);
         }
@@ -2190,19 +2195,6 @@ namespace Ultima5ReduxTesting
             Assert.IsInstanceOf<Enemy>(combatMap.GetAndRefreshCurrentCombatMapUnit());
 
             return;
-            Enemy enemy = combatMap.GetClosestEnemyInRange(combatMap.CurrentCombatPlayer,
-                combatMap.PeekCurrentCombatItem());
-
-            Assert.NotNull(enemy);
-
-            combatMap.ProcessCombatPlayerTurn(CombatMap.SelectionAction.Attack,
-                enemy.MapUnitPosition.XY, out CombatMapUnit _, out CombatMapUnit targetedCombatMapUnit,
-                out string preAttackOutputStr, out string postAttackOutputStr, out Point2D missedPoint,
-                out CombatMapUnit.HitState targetedHitState);
-
-            // List<VirtualMap.AggressiveMapUnitInfo> result = world.TryToAttack(enemy.MapUnitPosition.XY, out MapUnit mapUnit,
-            //     out SingleCombatMapReference singleCombatMapReference, out World.TryToAttackResult tryToAttackResult,
-            //     turnResults);
         }
 
         [Test] public void Test_SurroundingPoints()
