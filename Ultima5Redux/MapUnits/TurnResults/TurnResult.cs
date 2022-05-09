@@ -33,11 +33,12 @@
 
         public enum TurnResultType
         {
-            DamageOverTimePoisoned, DamageOverTimeBurning, DamageFromAcid, ActionXitWhat, ActionXitSuccess,
-            ActionYellSailsHoisted, ActionYellSailsFurl, ActionMovedCombatPlayerOnCombatMap, ActionMoveBlocked,
-            OfferToExitScreen, ActionMoveUsedStairs, ActionMoveFell, ActionMoveShipBreakingUp, ActionMoveShipDestroyed,
-            ActionMoveRoughSeas, MovedSelectionCursor, IgnoredMovement, Ignore, CombatMapLoaded, PassTurn,
-            ActionOpenDoorOpened, ActionOpenDoorLocked, ActionOpenDoorNothingToOpen, ActionMoveChangeFrigateDirection,
+            OverworldAvatarAttacking, EnemyAttacksOverworldOrSmallMap, DamageOverTimePoisoned, DamageOverTimeBurning,
+            DamageFromAcid, ActionXitWhat, ActionXitSuccess, ActionYellSailsHoisted, ActionYellSailsFurl,
+            ActionMovedCombatPlayerOnCombatMap, ActionMoveBlocked, OfferToExitScreen, ActionMoveUsedStairs,
+            ActionMoveFell, ActionMoveShipBreakingUp, ActionMoveShipDestroyed, ActionMoveRoughSeas,
+            MovedSelectionCursor, IgnoredMovement, Ignore, CombatMapLoaded, PassTurn, ActionOpenDoorOpened,
+            ActionOpenDoorLocked, ActionOpenDoorNothingToOpen, ActionMoveChangeFrigateDirection,
             ActionMoveFrigateSailsIgnoreMovement, ActionMoveRegular, ActionMoveCarpet, ActionMoveHorse,
             ActionMoveFrigateRowing, ActionMoveFrigateWindSails, ActionMoveFrigateWindSailsChangeDirection,
             ActionMoveSkiffRowing, ActionKlimbWithWhat, ActionKlimbRequiresDirection, ActionKlimbDown, ActionKlimbUp,
@@ -62,9 +63,10 @@
             Combat_CombatPlayerTriedToAttackSelf, Combat_CombatPlayerTriedToAttackNothing,
             Combat_CombatPlayerRangedAttackBlocked, Combat_EnemyMoved, Combat_CombatPlayerMoved,
             Combat_EnemyBeginsAttack, Combat_CombatPlayerBeginsAttack, Combat_Result_CombatPlayerReceivedDamage,
-            Combat_CombatPlayerMissedTarget, Combat_LootDropped, Combat_Result_HitAndEnemyReceivedDamage,
-            Combat_Result_CombatPlayerKilled, Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee,
-            Combat_Result_Missed_EnemyMelee
+
+            //Combat_CombatPlayerMissedTarget, 
+            Combat_LootDropped, Combat_Result_HitAndEnemyReceivedDamage, Combat_Result_CombatPlayerKilled,
+            Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee
         }
         // Combat_Category_Action_Who_Details
 

@@ -27,13 +27,6 @@ namespace Ultima5Redux.Maps
 
         public enum SelectionAction { None, Magic, Attack }
 
-        public enum CombatTurnResult
-        {
-            RequireCharacterInput, EnemyMoved, EnemyAttacks, EnemyWandered, EnemyEscaped, EnemyMissed, EnemyGrazed,
-            EnemyMissedButHit, CombatPlayerMissed, CombatPlayerMissedButHit, CombatPlayerHit, CombatPlayerGrazed,
-            CombatPlayerRangedAttackBlocked, NoAction, Sleeping, OverworldAvatarAttacking
-        }
-
         private bool _bPlayerHasChanged = true;
 
         private Queue<CombatItem> _currentCombatItemQueue;
