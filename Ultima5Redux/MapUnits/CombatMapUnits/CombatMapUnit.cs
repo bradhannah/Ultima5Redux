@@ -137,8 +137,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public HitState Attack(TurnResults.TurnResults turnResults, CombatMapUnit opposingCombatMapUnit, int nAttackMax,
             CombatItemReference.MissileType missileType, out NonAttackingUnit nonAttackingUnitDrop,
-            bool bIsEnemyAttacking,
-            bool bForceHit = false)
+            bool bIsEnemyAttacking, bool bForceHit = false)
         {
             bool bIsHit = IsHit(opposingCombatMapUnit, out string debugStr) || bForceHit;
 
@@ -149,10 +148,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             int nAttack = GetAttackDamage(opposingCombatMapUnit, nAttackMax);
             // this just says that an attack is being attempted - it is not the result of the attack
-            turnResults.PushTurnResult(new CombatMapUnitAttacks(
+            turnResults.PushTurnResult(new CombatMapUnitBeginsAttack(
                 bIsEnemyAttacking
-                    ? TurnResult.TurnResultType.Combat_EnemyAttacks
-                    : TurnResult.TurnResultType.Combat_CombatPlayerAttacks,
+                    ? TurnResult.TurnResultType.Combat_EnemyBeginsAttack
+                    : TurnResult.TurnResultType.Combat_CombatPlayerBeginsAttack,
                 this, opposingCombatMapUnit, missileType));
             if (!bIsHit)
             {
@@ -161,18 +160,20 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                                           .Replace("!", " ") +
                                       opposingCombatMapUnit.FriendlyName + "!" + "\n" + debugStr;
                 turnResults.PushOutputToConsole(missedOutput);
-                if (bIsEnemyAttacking)
-                {
-                    turnResults.PushTurnResult(new CombatMapUnitMissed(
-                        TurnResult.TurnResultType.Combat_EnemyMissedTarget,
-                        this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
-                }
-                else
-                {
-                    turnResults.PushTurnResult(new CombatMapUnitMissed(
-                        TurnResult.TurnResultType.Combat_CombatPlayerMissedTarget,
-                        this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
-                }
+                // bajh: I wonder if this is unimportant information since it has a more specific turn result later
+                // for ranged or melee
+                // if (bIsEnemyAttacking)
+                // {
+                //     turnResults.PushTurnResult(new CombatMapUnitMissed(
+                //         TurnResult.TurnResultType.Combat_EnemyMissedTarget,
+                //         this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
+                // }
+                // else
+                // {
+                //     turnResults.PushTurnResult(new CombatMapUnitMissed(
+                //         TurnResult.TurnResultType.Combat_CombatPlayerMissedTarget,
+                //         this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
+                // }
 
                 return HitState.Missed;
             }
@@ -186,15 +187,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 turnResults.PushOutputToConsole(grazedOutput);
                 if (bIsEnemyAttacking)
                 {
-                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                    turnResults.PushTurnResult(new AttackerTurnResult(
                         TurnResult.TurnResultType.Combat_Result_EnemyGrazedTarget,
-                        this, opposingCombatMapUnit, missileType));
+                        this, opposingCombatMapUnit, missileType, HitState.Grazed));
                 }
                 else
                 {
-                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                    turnResults.PushTurnResult(new AttackerTurnResult(
                         TurnResult.TurnResultType.Combat_Result_CombatPlayerGrazedTarget,
-                        this, opposingCombatMapUnit, missileType));
+                        this, opposingCombatMapUnit, missileType, HitState.Grazed));
                 }
 
                 return HitState.Grazed;
@@ -218,15 +219,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
                 if (bOpposingUnitIsEnemy)
                 {
-                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                    turnResults.PushTurnResult(new AttackerTurnResult(
                         TurnResult.TurnResultType.Combat_Result_HitAndEnemyReceivedDamage,
-                        this, opposingCombatMapUnit, missileType));
+                        this, opposingCombatMapUnit, missileType, hitState));
                 }
                 else
                 {
-                    turnResults.PushTurnResult(new CombatMapUnitAttacks(
+                    turnResults.PushTurnResult(new AttackerTurnResult(
                         TurnResult.TurnResultType.Combat_Result_CombatPlayerReceivedDamage,
-                        this, opposingCombatMapUnit, missileType));
+                        this, opposingCombatMapUnit, missileType, hitState));
                 }
 
                 turnResults.PushOutputToConsole(stateOutput);
@@ -242,8 +243,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             // we know the combat player was attacking and the other guy is dead
             if (bIsEnemyAttacking)
             {
-                turnResults.PushTurnResult(new CombatPlayerKilled(this, opposingCombatMapUnit));
                 turnResults.PushOutputToConsole(opposingEnemyKilledOutput);
+                turnResults.PushTurnResult(new AttackerTurnResult(
+                    TurnResult.TurnResultType.Combat_Result_CombatPlayerKilled,
+                    this, opposingCombatMapUnit, missileType, hitState));
 
                 return hitState;
             }
@@ -264,16 +267,22 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     turnResults.PushTurnResult(new LootDropped(nonAttackingUnitDrop));
             }
 
+            turnResults.PushOutputToConsole(opposingEnemyKilledOutput);
+
             if (bOpposingUnitIsEnemy)
             {
-                turnResults.PushTurnResult(new EnemyKilled(this, opposingCombatMapUnit));
+                //turnResults.PushTurnResult(new EnemyKilled(this, opposingCombatMapUnit));
+                turnResults.PushTurnResult(new AttackerTurnResult(TurnResult.TurnResultType.Combat_Result_EnemyKilled,
+                    this, opposingCombatMapUnit, missileType, hitState));
             }
             else
             {
-                turnResults.PushTurnResult(new CombatPlayerKilled(this, opposingCombatMapUnit));
+                turnResults.PushTurnResult(new AttackerTurnResult(
+                    TurnResult.TurnResultType.Combat_Result_CombatPlayerKilled,
+                    this, opposingCombatMapUnit, missileType, hitState));
+                //turnResults.PushTurnResult(new CombatPlayerKilled(this, opposingCombatMapUnit));
             }
 
-            turnResults.PushOutputToConsole(opposingEnemyKilledOutput);
             return hitState;
         }
 

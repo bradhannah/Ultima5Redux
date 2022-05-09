@@ -15,57 +15,11 @@ namespace Ultima5Redux.MapUnits.TurnResults
         public NonAttackingUnit Loot { get; }
     }
 
-    public sealed class AttackerMissed : TurnResult, IMissedPoint, IAttacker, IMissile
+    public sealed class AttackerTurnResult : TurnResult, IAttacker, IOpponent, IMissile, IHitState, IMissedPoint
     {
-        public AttackerMissed(TurnResultType theTurnResultType, CombatMapUnit attacker, Point2D missedPoint,
-            CombatItemReference.MissileType missileType) : base(theTurnResultType)
-        {
-            Debug.Assert(attacker != null, nameof(attacker) + " != null");
-            Attacker = attacker;
-            Debug.Assert(missedPoint != null, nameof(missedPoint) + " != null");
-            MissedPoint = missedPoint;
-            MissileType = missileType;
-        }
-
-        public Point2D MissedPoint { get; }
-        public CombatMapUnit Attacker { get; }
-        public CombatItemReference.MissileType MissileType { get; }
-    }
-
-    public sealed class CombatPlayerKilled : TurnResult, IAttacker, IOpponent
-    {
-        public CombatPlayerKilled(CombatMapUnit attacker, CombatMapUnit opponent) : base(TurnResultType
-            .Combat_Result_CombatPlayerKilled)
-        {
-            Debug.Assert(attacker != null, nameof(attacker) + " != null");
-            Attacker = attacker;
-            Debug.Assert(opponent != null, nameof(opponent) + " != null");
-            Opponent = opponent;
-        }
-
-        public CombatMapUnit Attacker { get; }
-        public CombatMapUnit Opponent { get; }
-    }
-
-    public sealed class EnemyKilled : TurnResult, IAttacker, IOpponent
-    {
-        public EnemyKilled(CombatMapUnit attacker, CombatMapUnit opponent) : base(TurnResultType
-            .Combat_Result_EnemyKilled)
-        {
-            Debug.Assert(attacker != null, nameof(attacker) + " != null");
-            Attacker = attacker;
-            Debug.Assert(opponent != null, nameof(opponent) + " != null");
-            Opponent = opponent;
-        }
-
-        public CombatMapUnit Attacker { get; }
-        public CombatMapUnit Opponent { get; }
-    }
-
-    public sealed class AttackerHit : TurnResult, IAttacker, IOpponent, IMissile, IHitState
-    {
-        public AttackerHit(TurnResultType theTurnResultType, CombatMapUnit attacker, CombatMapUnit opponent,
-            CombatItemReference.MissileType missileType, CombatMapUnit.HitState hitState) : base(theTurnResultType)
+        public AttackerTurnResult(TurnResultType theTurnResultType, CombatMapUnit attacker, CombatMapUnit opponent,
+            CombatItemReference.MissileType missileType, CombatMapUnit.HitState hitState, Point2D missedPoint = null) :
+            base(theTurnResultType)
         {
             Debug.Assert(attacker != null, nameof(attacker) + " != null");
             Attacker = attacker;
@@ -73,79 +27,33 @@ namespace Ultima5Redux.MapUnits.TurnResults
             Opponent = opponent;
             MissileType = missileType;
             HitState = hitState;
+            MissedPoint = missedPoint;
+            // one must be true
+            Debug.Assert(opponent != null || missedPoint != null);
         }
 
         public CombatMapUnit Attacker { get; }
         public CombatMapUnit Opponent { get; }
         public CombatItemReference.MissileType MissileType { get; }
         public CombatMapUnit.HitState HitState { get; }
-    }
-
-    public sealed class MissedButHit : TurnResult, IAttacker, IOpponent, IMissile
-    {
-        public MissedButHit(TurnResultType theTurnResultType, CombatMapUnit attacker, CombatMapUnit opponent,
-            CombatItemReference.MissileType missileType) : base(theTurnResultType)
-        {
-            Debug.Assert(attacker != null, nameof(attacker) + " != null");
-            Attacker = attacker;
-            Debug.Assert(opponent != null, nameof(opponent) + " != null");
-            Opponent = opponent;
-            MissileType = missileType;
-        }
-
-        public CombatMapUnit Attacker { get; }
-        public CombatMapUnit Opponent { get; }
-        public CombatItemReference.MissileType MissileType { get; }
-    }
-
-    public sealed class CombatMapUnitAttacks : TurnResult, IAttacker, IOpponent, IMissile
-    {
-        public CombatMapUnitAttacks(TurnResultType theTurnResultType, CombatMapUnit attacker, CombatMapUnit opponent,
-            CombatItemReference.MissileType missileType) : base(theTurnResultType)
-        {
-            Debug.Assert(attacker != null, nameof(attacker) + " != null");
-            Attacker = attacker;
-            if (opponent != null) Opponent = opponent;
-            MissileType = missileType;
-        }
-
-        public CombatMapUnit Attacker { get; }
-        public CombatMapUnit Opponent { get; }
-        public CombatItemReference.MissileType MissileType { get; }
-    }
-
-    public sealed class CombatMapUnitMissed : TurnResult, IAttacker, IOpponent, IMissile, IMissedPoint
-    {
-        public CombatMapUnitMissed(TurnResultType theTurnResultType, CombatMapUnit attacker, CombatMapUnit opponent,
-            CombatItemReference.MissileType missileType, Point2D missedPoint) : base(theTurnResultType)
-        {
-            Debug.Assert(attacker != null, nameof(attacker) + " != null");
-            Attacker = attacker;
-            if (opponent != null) Opponent = opponent;
-            MissileType = missileType;
-            Debug.Assert(missedPoint != null, nameof(missedPoint) + " != null");
-            MissedPoint = missedPoint;
-        }
-
-        public CombatMapUnit Attacker { get; }
-        public CombatMapUnit Opponent { get; }
-        public CombatItemReference.MissileType MissileType { get; }
         public Point2D MissedPoint { get; }
     }
 
-    public sealed class AttackerAndOpponent : TurnResult, IAttacker, IOpponent
+    public sealed class CombatMapUnitBeginsAttack : TurnResult, IAttacker, IOpponent, IMissile
     {
-        public AttackerAndOpponent(TurnResultType theTurnResultType, CombatMapUnit attacker, CombatMapUnit opponent) :
-            base(theTurnResultType)
+        public CombatMapUnitBeginsAttack(TurnResultType theTurnResultType, CombatMapUnit attacker,
+            CombatMapUnit opponent,
+            CombatItemReference.MissileType missileType) : base(theTurnResultType)
         {
             Debug.Assert(attacker != null, nameof(attacker) + " != null");
             Attacker = attacker;
-            Debug.Assert(opponent != null, nameof(opponent) + " != null");
-            Opponent = opponent;
+            if (opponent != null) Opponent = opponent;
+            MissileType = missileType;
         }
 
         public CombatMapUnit Attacker { get; }
         public CombatMapUnit Opponent { get; }
+        public CombatItemReference.MissileType MissileType { get; }
     }
 
     public sealed class OutputToConsole : TurnResult, IOutputString
