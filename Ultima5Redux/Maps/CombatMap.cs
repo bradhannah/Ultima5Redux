@@ -514,7 +514,7 @@ namespace Ultima5Redux.Maps
                 GetRandomSurroundingPointThatIsnt(attackPosition, attackingCombatMapUnit.MapUnitPosition.XY);
             //attackPosition);
             Debug.Assert(newAttackPosition != null);
-            if (newAttackPosition == attackPosition)
+            if (newAttackPosition == attackingCombatMapUnit.MapUnitPosition.XY)
             {
                 throw new Ultima5ReduxException(
                     $"You asked for a surrounding point but it gave your the origin: {newAttackPosition.X}, {newAttackPosition.Y}");

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
@@ -263,12 +264,17 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public void ProcessTurn()
+        public void ProcessTurn(TurnResults turnResults)
         {
             foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
             {
                 if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned)
-                    record.Stats.ProcessTurnPoison();
+                {
+                    int nDamage = record.Stats.ProcessTurnPoison();
+                    CombatMapUnitTakesDamage combatMapUnitTakesDamage = new(
+                        TurnResult.TurnResultType.DamageOverTimePoisoned,
+                        record.Stats, nDamage);
+                }
             }
         }
 

@@ -21,7 +21,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
             if (_expectedTurnResults.ContainsKey(turnResultType))
                 throw new Ultima5ReduxException(
                     $"{turnResultType} requires additional data of type: {_expectedTurnResults[turnResultType]}");
-            TurnResult turnResult = new TurnResult(turnResultType);
+            TurnResult turnResult = new(turnResultType);
             PeekLastTurnResult = turnResult;
             _turnResults.Enqueue(turnResult);
         }

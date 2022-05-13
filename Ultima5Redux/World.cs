@@ -291,17 +291,13 @@ namespace Ultima5Redux
             if (currentAvatarState != Avatar.AvatarState.Carpet && currentTileReference.Index == 4)
             {
                 bool bWasPoisoned = State.CharacterRecords.SteppedOnSwamp();
-                if (!bWasPoisoned)
+                if (bWasPoisoned)
                 {
-                    // the movement will come elsewhere from the parent caller
-                    //turnResults.PushTurnResult(TurnResults.TurnResult.Moved);
-                }
-                else
-                {
-                    turnResults.PushTurnResultType(TurnResult.TurnResultType.DamageOverTimePoisoned);
-                    StreamingOutput.Instance.PushMessage(
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.ExclaimStrings
                             .POISONED_BANG_N), false);
+                    // StreamingOutput.Instance.PushMessage(
+                    //     );
                 }
             }
             // if on lava
@@ -309,11 +305,12 @@ namespace Ultima5Redux
             {
                 State.CharacterRecords.SteppedOnLava();
                 turnResults.PushTurnResultType(TurnResult.TurnResultType.DamageOverTimeBurning);
-                StreamingOutput.Instance.PushMessage("Burning!", false);
+                turnResults.PushOutputToConsole("Burning!", false);
+                //StreamingOutput.Instance.PushMessage();
             }
 
             // if already poisoned
-            State.CharacterRecords.ProcessTurn();
+            State.CharacterRecords.ProcessTurn(turnResults);
         }
 
         public void AdvanceClockNoComputation(int nMinutes)

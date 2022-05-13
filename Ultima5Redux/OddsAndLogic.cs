@@ -75,7 +75,7 @@ namespace Ultima5Redux
                 { NonAttackingUnitFactory.DropSprites.Nothing, 10 },
                 { NonAttackingUnitFactory.DropSprites.Chest, 3 },
                 { NonAttackingUnitFactory.DropSprites.BloodSpatter, 3 },
-                { NonAttackingUnitFactory.DropSprites.DeadBody, 3 }
+                //{ NonAttackingUnitFactory.DropSprites.DeadBody, 3 }
             };
 
         private static readonly List<NonAttackingUnit.TrapType> ChestTrapsWeightedList =
@@ -104,8 +104,15 @@ namespace Ultima5Redux
         /// <returns></returns>
         public static NonAttackingUnitFactory.DropSprites GetIsDropAfterKillingEnemy(EnemyReference enemyReference)
         {
+            if (enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.NoCorpse)
+                || enemyReference.IsWaterEnemy
+                || enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DisappearsOnDeath))
+                return NonAttackingUnitFactory.DropSprites.Nothing;
+
             // todo: this is just a temporary method until I have some better drop logic based on the actual enemy
-            return (GenericDropAfterKillingEnemyList[Utils.Ran.Next() % GenericDropAfterKillingEnemyList.Count]);
+            NonAttackingUnitFactory.DropSprites dropSprite =
+                GenericDropAfterKillingEnemyList[Utils.Ran.Next() % GenericDropAfterKillingEnemyList.Count];
+            return (dropSprite);
         }
 
         /// <summary>
