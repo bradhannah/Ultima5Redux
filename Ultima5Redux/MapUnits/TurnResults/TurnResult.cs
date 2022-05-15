@@ -1,6 +1,6 @@
 ﻿namespace Ultima5Redux.MapUnits.TurnResults
 {
-    public class TurnResult
+    public abstract class TurnResult
     {
         public TurnResultType TheTurnResultType { get; set; }
 

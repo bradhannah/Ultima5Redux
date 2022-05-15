@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.TurnResults
@@ -106,19 +107,44 @@ namespace Ultima5Redux.MapUnits.TurnResults
         public Enemy TheEnemy { get; }
     }
 
-    public sealed class CombatPlayerMoved : TurnResult, ICombatPlayerFocus, IMovedPosition
+    public sealed class BasicResult : TurnResult
+    {
+        public BasicResult(TurnResultType theTurnResultType) : base(theTurnResultType)
+        {
+        }
+    }
+
+    public sealed class PlayerMoved : TurnResult, IMovedPosition, IMovedToTileReference
+    {
+        public PlayerMoved(TurnResultType theTurnResultType, Point2D movedFromPosition, Point2D moveToPosition,
+            TileReference movedToTileReference) : base(theTurnResultType)
+        {
+            MovedFromPosition = movedFromPosition;
+            MoveToPosition = moveToPosition;
+            MovedToTileReference = movedToTileReference;
+        }
+
+        public Point2D MovedFromPosition { get; }
+        public Point2D MoveToPosition { get; }
+        public TileReference MovedToTileReference { get; }
+    }
+
+    public sealed class CombatPlayerMoved : TurnResult, ICombatPlayerFocus, IMovedPosition, IMovedToTileReference
     {
         public CombatPlayerMoved(TurnResultType theTurnResultType, CombatPlayer theCombatPlayer,
-            Point2D movedFromPosition, Point2D moveToPosition) : base(theTurnResultType)
+            Point2D movedFromPosition, Point2D moveToPosition, TileReference movedToTileReference) : base(
+            theTurnResultType)
         {
             TheCombatPlayer = theCombatPlayer;
             MovedFromPosition = movedFromPosition;
             MoveToPosition = moveToPosition;
+            MovedToTileReference = movedToTileReference;
         }
 
         public CombatPlayer TheCombatPlayer { get; }
         public Point2D MovedFromPosition { get; }
         public Point2D MoveToPosition { get; }
+        public TileReference MovedToTileReference { get; }
     }
 
     public sealed class EnemyMoved : TurnResult, IEnemyFocus, IMovedPosition

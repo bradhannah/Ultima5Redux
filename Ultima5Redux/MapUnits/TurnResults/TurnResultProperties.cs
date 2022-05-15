@@ -1,5 +1,6 @@
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.TurnResults
@@ -65,5 +66,10 @@ namespace Ultima5Redux.MapUnits.TurnResults
     {
         public Point2D MovedFromPosition { get; }
         public Point2D MoveToPosition { get; }
+    }
+
+    public interface IMovedToTileReference
+    {
+        public TileReference MovedToTileReference { get; }
     }
 }

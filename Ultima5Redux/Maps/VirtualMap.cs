@@ -391,7 +391,7 @@ namespace Ultima5Redux.Maps
             // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
             if (frigate.Hitpoints <= 0)
             {
-                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveShipDestroyed);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveShipDestroyed));
                 // destroy the ship and leave board the Avatar onto a skiff
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.WorldStrings2
@@ -413,7 +413,7 @@ namespace Ultima5Redux.Maps
                             .HULL_WEAK), false);
                 }
 
-                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionMoveShipBreakingUp);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveShipBreakingUp));
             }
         }
 
@@ -777,7 +777,7 @@ namespace Ultima5Redux.Maps
             //TheMapUnits.ClearAndSetEmptyMapUnits(nonAttackingUnit);
             nonAttackingUnit.HasBeenSearched = bSearched;
             nonAttackingUnit.HasBeenOpened = bOpened;
-            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionSearchThingDisappears);
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchThingDisappears));
 
             if (bHasInnerItems)
             {
@@ -796,7 +796,7 @@ namespace Ultima5Redux.Maps
                 StreamingOutput.Instance.PushMessage(
                     U5StringRef.ThouDostFind(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.ThingsIFindStrings.NO_TRAP_BANG_N)));
-                turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionSearchNoTrap);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchNoTrap));
                 return;
             }
 
@@ -814,7 +814,8 @@ namespace Ultima5Redux.Maps
                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_SIMPLE_TRAP_BANG_N)));
                         nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
-                        turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionSearchTriggerSimpleTrap);
+                        turnResults.PushTurnResult(
+                            new BasicResult(TurnResult.TurnResultType.ActionSearchTriggerSimpleTrap));
                     }
                     else
                     {
@@ -822,7 +823,7 @@ namespace Ultima5Redux.Maps
                             U5StringRef.ThouDostFind(
                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_SIMPLE_TRAP_N)));
-                        turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionSearchRemoveSimple);
+                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveSimple));
                     }
 
                     break;
@@ -834,7 +835,8 @@ namespace Ultima5Redux.Maps
                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_BANG_N)));
                         nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
-                        turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionSearchTriggerComplexTrap);
+                        turnResults.PushTurnResult(
+                            new BasicResult(TurnResult.TurnResultType.ActionSearchTriggerComplexTrap));
                     }
                     else
                     {
@@ -842,7 +844,8 @@ namespace Ultima5Redux.Maps
                             U5StringRef.ThouDostFind(
                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_N)));
-                        turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionSearchRemoveComplex);
+                        turnResults.PushTurnResult(
+                            new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveComplex));
                     }
 
                     break;
@@ -850,7 +853,7 @@ namespace Ultima5Redux.Maps
                     throw new ArgumentOutOfRangeException();
             }
 
-            turnResults.PushTurnResultType(TurnResult.TurnResultType.ActionSearchNoTrap);
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchNoTrap));
             // HURT THE PLAYER IF THEY ARE AFFECTED BY TRAP
         }
 

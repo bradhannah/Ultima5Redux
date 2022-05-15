@@ -1023,7 +1023,8 @@ namespace Ultima5Redux.Maps
                     break;
                 case CombatPlayer combatPlayer:
                     turnResults.PushTurnResult(new CombatPlayerMoved(TurnResult.TurnResultType.Combat_CombatPlayerMoved,
-                        combatPlayer, originalPosition, combatPlayer.MapUnitPosition.XY));
+                        combatPlayer, originalPosition, combatPlayer.MapUnitPosition.XY,
+                        GetTileReference(combatPlayer.MapUnitPosition.XY)));
                     break;
                 default:
                     throw new Ultima5ReduxException(
