@@ -294,6 +294,18 @@ namespace Ultima5Redux.References.Maps
                    GetTileReference(nSprite).Name.StartsWith("Pirate");
         }
 
+        public bool IsBurningThing(int nSprite)
+        {
+            return GetTileReferenceByName("Brazier").Index == nSprite ||
+                   GetTileReferenceByName("LeftSconce").Index == nSprite ||
+                   GetTileReferenceByName("RightSconce").Index == nSprite ||
+                   GetTileReferenceByName("CampFire").Index == nSprite ||
+                   GetTileReferenceByName("LampPost").Index == nSprite ||
+                   GetTileReferenceByName("CandleOnTable").Index == nSprite ||
+                   GetTileReferenceByName("CookStove").Index == nSprite ||
+                   GetTileReferenceByName("BlueFlame").Index == nSprite;
+        }
+
         /// <summary>
         ///     Is the sprite a klimbable grate?
         /// </summary>
