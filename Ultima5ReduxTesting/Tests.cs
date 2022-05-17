@@ -2214,5 +2214,55 @@ namespace Ultima5ReduxTesting
             List<Point2D> points = p1.GetConstrainedSurroundingPoints(1, 10, 10);
             List<Point2D> points2 = p1.GetConstrainedSurroundingPoints(4, 6, 6);
         }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_ClosestTileReferenceAround(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            int nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                GameReferences.SpriteTileReferences.GetTileReference(5), new Point2D(0, 0), 16);
+            Assert.AreEqual(nClosest, 255);
+
+            Point2D aroundBritain = new Point2D(82, 106);
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                GameReferences.SpriteTileReferences.GetTileReference(5), aroundBritain, 16);
+            Assert.Less(nClosest, 255);
+
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                GameReferences.SpriteTileReferences.GetTileReference(6), aroundBritain, 2);
+            Assert.AreEqual(nClosest, 255);
+
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                GameReferences.SpriteTileReferences.GetTileReference(6), aroundBritain, 8);
+            Assert.Less(nClosest, 255);
+
+            Point2D minoc = new Point2D(157, 20);
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                minoc, 8, GameReferences.SpriteTileReferences.IsFrigate);
+            Assert.Less(nClosest, 255);
+
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                minoc, 2, GameReferences.SpriteTileReferences.IsFrigate);
+            Assert.AreEqual(nClosest, 255);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 0));
+
+            // fountain
+            Point2D courtYard = new Point2D(15, 19);
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                GameReferences.SpriteTileReferences.GetTileReference(216), courtYard, 8);
+            Assert.Less(nClosest, 255);
+
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                GameReferences.SpriteTileReferences.GetTileReference(216), courtYard, 2);
+            Assert.AreEqual(nClosest, 255);
+
+            // brick in the corner
+            nClosest = world.State.TheVirtualMap.ClosestTileReferenceAround(
+                GameReferences.SpriteTileReferences.GetTileReference(68), Point2D.Zero, 8);
+            Assert.Less(nClosest, 255);
+        }
     }
 }

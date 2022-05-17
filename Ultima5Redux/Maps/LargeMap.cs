@@ -25,7 +25,7 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
-        [IgnoreDataMember] protected override bool IsRepeatingMap => true;
+        [IgnoreDataMember] public override bool IsRepeatingMap => true;
 
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             _currentSingleMapReference ??= SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(_mapChoice);

@@ -139,7 +139,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        protected override bool IsRepeatingMap => false;
+        public override bool IsRepeatingMap => false;
 
         /// <summary>
         ///     Creates CombatMap.

@@ -268,7 +268,7 @@ namespace Ultima5Redux.Maps
         protected Point2D AvatarXyPos;
         public bool TouchedOuterBorder { get; protected set; }
 
-        protected abstract bool IsRepeatingMap { get; }
+        public abstract bool IsRepeatingMap { get; }
 
         internal void ClearOpenDoors()
         {

@@ -20,7 +20,7 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
-        [IgnoreDataMember] protected override bool IsRepeatingMap => false;
+        [IgnoreDataMember] public override bool IsRepeatingMap => false;
 
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             GameReferences.SmallMapRef.GetSingleMapByLocation(MapLocation, MapFloor);
