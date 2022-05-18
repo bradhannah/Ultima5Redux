@@ -184,9 +184,15 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember]
         public MapUnitPosition CurrentPosition
         {
-            get => CurrentMap is not CombatMap combatMap
-                ? TheMapUnits.CurrentAvatarPosition
-                : combatMap.CurrentCombatPlayer.MapUnitPosition;
+            get
+            {
+                if (CurrentMap is CombatMap combatMap)
+                {
+                    return combatMap?.CurrentCombatPlayer?.MapUnitPosition;
+                }
+
+                return TheMapUnits?.CurrentAvatarPosition;
+            }
             set
             {
                 if (CurrentMap is not CombatMap combatMap)
@@ -2000,17 +2006,16 @@ namespace Ultima5Redux.Maps
         public void LoadCombatMapWithCalculation(SingleCombatMapReference singleCombatMapReference,
             PlayerCharacterRecords records, MapUnit mapUnit)
         {
-            if (mapUnit is Enemy enemy)
+            switch (mapUnit)
             {
-                LoadCombatMapWithCalculation(singleCombatMapReference,
-                    SingleCombatMapReference.EntryDirection.North, records, enemy.EnemyReference);
-                return;
-            }
-
-            if (mapUnit is NonPlayerCharacter npc)
-            {
-                LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.North, records,
-                    null, npc.NPCRef);
+                case Enemy enemy:
+                    LoadCombatMapWithCalculation(singleCombatMapReference,
+                        SingleCombatMapReference.EntryDirection.South, records, enemy.EnemyReference);
+                    return;
+                case NonPlayerCharacter npc:
+                    LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
+                        null, npc.NPCRef);
+                    break;
             }
 
             throw new Ultima5ReduxException("You can only calculate combat map loading with Enemies and NPCs");
