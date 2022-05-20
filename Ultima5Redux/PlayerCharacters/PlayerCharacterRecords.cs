@@ -135,13 +135,8 @@ namespace Ultima5Redux.PlayerCharacters
         /// <returns></returns>
         public List<PlayerCharacterRecord> GetActiveCharacterRecords()
         {
-            List<PlayerCharacterRecord> activeCharacterRecords = new();
-
-            foreach (PlayerCharacterRecord characterRecord in Records)
-            {
-                if (characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty)
-                    activeCharacterRecords.Add(characterRecord);
-            }
+            List<PlayerCharacterRecord> activeCharacterRecords = Records.Where(characterRecord =>
+                characterRecord.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty).ToList();
 
             if (activeCharacterRecords.Count == 0)
                 throw new Ultima5ReduxException("Even the Avatar is dead, no records returned in active party");
@@ -156,13 +151,16 @@ namespace Ultima5Redux.PlayerCharacters
         ///     Throws an exception if you asked for a member who isn't there - so check first
         /// </summary>
         /// <param name="nPosition"></param>
-        /// <returns></returns>
+        /// <returns>PlayerCharacterRecord or null if there is not one at that position</returns>
         public PlayerCharacterRecord GetCharacterFromParty(int nPosition)
         {
-            Debug.Assert(nPosition >= 0 && nPosition < MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
-            Debug.Assert(nPosition < TotalPartyMembers(), "You cannot request a character that isn't on the roster");
+            Debug.Assert(nPosition is >= 0 and < MAX_PARTY_MEMBERS, "There are a maximum of 6 characters");
+            // Debug.Assert(nPosition < TotalPartyMembers(), "You cannot request a character that isn't on the roster");
 
-            return GetActiveCharacterRecords()[nPosition];
+            // if (nPosition >= TotalPartyMembers())
+            //     throw new Ultima5ReduxException("You cannot request a character that isn't on the roster");
+            List<PlayerCharacterRecord> activeRecords = GetActiveCharacterRecords();
+            return nPosition >= activeRecords.Count ? null : activeRecords[nPosition];
         }
 
         public int GetCharacterIndexByNPC(NonPlayerCharacterReference npc)
@@ -334,7 +332,7 @@ namespace Ultima5Redux.PlayerCharacters
             int nPartyMembers = Records.Count(characterRecord => characterRecord.PartyStatus ==
                                                                  PlayerCharacterRecord.CharacterPartyStatus.InTheParty);
 
-            Debug.Assert(nPartyMembers > 0 && nPartyMembers <= 6);
+            Debug.Assert(nPartyMembers is > 0 and <= 6);
             return nPartyMembers;
         }
     }
