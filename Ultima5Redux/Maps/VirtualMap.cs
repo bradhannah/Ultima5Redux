@@ -181,6 +181,16 @@ namespace Ultima5Redux.Maps
         [IgnoreDataMember]
         public LargeMap CurrentLargeMap => _largeMaps[LargeMapOverUnder];
 
+        public Point2D GetCameraCenter()
+        {
+            if (IsCombatMap)
+            {
+                return new Point2D(CurrentMap.NumOfXTiles / 2, CurrentMap.NumOfYTiles / 2);
+            }
+
+            return CurrentPosition.XY;
+        }
+
         [IgnoreDataMember]
         public MapUnitPosition CurrentPosition
         {

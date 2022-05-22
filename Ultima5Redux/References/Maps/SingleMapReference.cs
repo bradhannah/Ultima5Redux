@@ -72,7 +72,8 @@ namespace Ultima5Redux.References.Maps
             /// </summary>
             // ReSharper disable once UnusedMember.Global
             [IgnoreDataMember]
-            public byte Id => (byte)(MapLocation - 1);
+            public byte Id => (byte)MapLocation;
+            //(byte)(MapLocation - 1);
 
             [IgnoreDataMember]
             public Map.Maps MapType
