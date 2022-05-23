@@ -37,6 +37,12 @@ namespace Ultima5Redux.References.Maps
             [JsonConverter(typeof(StringEnumConverter))]
             public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon, None }
 
+            public override int GetHashCode()
+            {
+                return Utils.Ran.Next(Id) + Utils.Ran.Next(Floor);
+                //return base.GetHashCode();
+            }
+
             /// <summary>
             ///     Total number of small map locations
             /// </summary>
