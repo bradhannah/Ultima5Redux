@@ -1876,7 +1876,7 @@ namespace Ultima5Redux.Maps
         public bool IsMapUnitOccupiedTile(in Point2D xy)
         {
             IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            int nFloor = CurrentPosition.Floor;
+            int nFloor = _currentSingleMapReference.Floor;
 
             foreach (MapUnit mapUnit in mapUnits)
             {
