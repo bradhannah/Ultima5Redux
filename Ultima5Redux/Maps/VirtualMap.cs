@@ -1723,8 +1723,8 @@ namespace Ultima5Redux.Maps
                 {
                     if (!mapUnit.IsActive) continue;
                     // if it's a combat unit but they dead or gone then we skip
-                    if (mapUnit is CombatMapUnit combatMapUnit &&
-                        (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0))
+                    if (mapUnit is CombatMapUnit { HasEscaped: true } combatMapUnit)
+                        //|| (combatMapUnit.Stats.CurrentHp <= 0 && !bIncludeDeadPlayers)))
                     {
                         if (combatMapUnit is not NonAttackingUnit) continue;
                     }
@@ -1868,14 +1868,9 @@ namespace Ultima5Redux.Maps
             return IsMapUnitOccupiedTile(CurrentPosition.XY);
         }
 
-        /// <summary>
-        ///     Is there an NPC on the tile specified?
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <returns></returns>
-        public bool IsMapUnitOccupiedTile(in Point2D xy)
+        private bool IsMapUnitOccupiedFromList(in Point2D xy, IEnumerable<MapUnit> mapUnits)
         {
-            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            //IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
             int nFloor = _currentSingleMapReference.Floor;
 
             foreach (MapUnit mapUnit in mapUnits)
@@ -1886,6 +1881,21 @@ namespace Ultima5Redux.Maps
             }
 
             return false;
+        }
+
+        public bool IsCombatMapUnitOccupiedTile(in Point2D xy)
+        {
+            return IsMapUnitOccupiedFromList(xy, TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllCombatMapUnits);
+        }
+
+        /// <summary>
+        ///     Is there an NPC on the tile specified?
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <returns></returns>
+        public bool IsMapUnitOccupiedTile(in Point2D xy)
+        {
+            return IsMapUnitOccupiedFromList(xy, TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits);
         }
 
         public Dictionary<int, Dictionary<int, bool>> GetAllMapOccupiedTilesFast()

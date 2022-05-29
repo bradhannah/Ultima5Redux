@@ -327,10 +327,11 @@ namespace Ultima5Redux.Maps
 
             foreach (CombatMapUnit combatMapUnit in CombatMapUnits.CombatMapMapUnitCollection.AllCombatMapUnits)
             {
-                if (!(combatMapUnit is T enemy)) continue;
+                if (combatMapUnit is not T enemy) continue;
                 if (!IsCombatMapUnitInRange(attackingUnit, enemy, nRange)) continue;
                 // if the enemy unit is invisible or charmed then they should not be targeted
                 if (enemy.IsInvisible || enemy.IsCharmed) continue;
+                if (enemy.Stats.Status == PlayerCharacterRecord.CharacterStatus.Dead) continue;
 
                 double dDistance = enemy.MapUnitPosition.XY.DistanceBetween(attackingUnit.MapUnitPosition.XY);
                 if (dDistance < dBestDistanceToAttack)

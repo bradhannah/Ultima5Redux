@@ -21,7 +21,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override int Dexterity => (byte)Record.Stats.Dexterity;
         public override int Experience => 0;
         public override string FriendlyName => Record.Name;
-        public override bool IsActive => !HasEscaped && Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
+
+        public override bool IsActive => !HasEscaped;
+        //&& Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
 
         public override bool IsAttackable => true;
 
