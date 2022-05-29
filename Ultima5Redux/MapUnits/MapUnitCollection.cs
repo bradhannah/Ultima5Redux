@@ -10,7 +10,7 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public class MapUnitCollection
     {
-        private bool bForceNewAvatar;
+        private bool _bForceNewAvatar;
 
         [DataMember(Name = "Avatars")]
         private Avatar[] SaveAvatars
@@ -19,7 +19,7 @@ namespace Ultima5Redux.MapUnits
             set
             {
                 ReplaceAll(value);
-                bForceNewAvatar = true;
+                _bForceNewAvatar = true;
             }
         }
 
@@ -121,8 +121,8 @@ namespace Ultima5Redux.MapUnits
         {
             get
             {
-                if (_avatar != null && !bForceNewAvatar) return _avatar;
-                bForceNewAvatar = false;
+                if (_avatar != null && !_bForceNewAvatar) return _avatar;
+                _bForceNewAvatar = false;
                 _avatar = Avatars.Any() ? Avatars.First() : null;
                 return _avatar;
             }
@@ -130,7 +130,7 @@ namespace Ultima5Redux.MapUnits
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            bForceNewAvatar = true;
+            _bForceNewAvatar = true;
         }
 
         public void AddMapUnit(MapUnit mapUnit)
@@ -156,11 +156,13 @@ namespace Ultima5Redux.MapUnits
         {
             AllMapUnits.RemoveAll(item => item is T);
             AllMapUnits.AddRange(newMapUnits);
+            _bForceNewAvatar = true;
         }
 
         public void Add(MapUnit mapUnit)
         {
             AllMapUnits.Add(mapUnit);
+            if (mapUnit is Avatar) _bForceNewAvatar = true;
         }
 
         public void Clear() => AllMapUnits.Clear();
