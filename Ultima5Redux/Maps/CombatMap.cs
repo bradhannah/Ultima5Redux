@@ -786,6 +786,7 @@ namespace Ultima5Redux.Maps
             if (TheCombatMapReference.MapTerritory == SingleCombatMapReference.Territory.Britannia || XRayMode)
             {
                 VisibleOnMap = Utils.Init2DBoolArray(NumOfXTiles, NumOfYTiles, true);
+                RecalculatedHash = Utils.Ran.Next();
                 return;
             }
 
@@ -803,6 +804,7 @@ namespace Ultima5Redux.Maps
             }
 
             TouchedOuterBorder = false;
+            RecalculatedHash = Utils.Ran.Next();
         }
 
         public CombatMapUnit AdvanceToNextCombatMapUnit()

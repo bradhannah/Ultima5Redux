@@ -43,6 +43,8 @@ namespace Ultima5Redux.Maps
 
         protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
 
+        public int RecalculatedHash { get; protected set; }
+
         [JsonConstructor] protected Map()
         {
         }
@@ -456,6 +458,7 @@ namespace Ultima5Redux.Maps
             RefreshTestForVisibility(1);
             SetMaxVisibleArea(AvatarXyPos, TOTAL_VISIBLE_TILES);
             FloodFillMap(initialFloodFillPosition.X, initialFloodFillPosition.Y, true);
+            RecalculatedHash = Utils.Ran.Next();
         }
 
         public void SetOpenDoor(in Point2D xy)

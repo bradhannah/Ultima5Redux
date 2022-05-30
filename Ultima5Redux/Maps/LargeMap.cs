@@ -102,6 +102,7 @@ namespace Ultima5Redux.Maps
             RefreshTestForVisibility(1);
             SetMaxVisibleArea(AvatarXyPos, TOTAL_VISIBLE_TILES);
             FloodFillMap(AvatarXyPos.X, AvatarXyPos.Y, true);
+            RecalculatedHash = Utils.Ran.Next();
         }
 
         // ReSharper disable once UnusedMember.Global
