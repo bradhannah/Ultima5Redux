@@ -165,6 +165,10 @@ namespace Ultima5Redux
             return hashCode;
         }
 
+        /// <summary>
+        ///     Magic function that takes care of IsRepeatable maps by wrapping them around
+        /// </summary>
+        /// <param name="nMax"></param>
         public void AdjustXAndYToMax(int nMax)
         {
             if (X < 0) X += nMax;
@@ -173,6 +177,13 @@ namespace Ultima5Redux
             if (Y < 0) Y += nMax;
             if (Y >= nMax) Y -= nMax;
             Y %= nMax;
+        }
+
+        public Point2D GetAdjustXAndYToMax(int nMax)
+        {
+            Point2D position = this;
+            position.AdjustXAndYToMax(nMax);
+            return position;
         }
 
         public static int AdjustToMax(int nNum, int nMax)

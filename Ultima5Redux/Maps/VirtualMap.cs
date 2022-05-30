@@ -2225,47 +2225,6 @@ namespace Ultima5Redux.Maps
         public int ClosestTileReferenceAround(TileReference tileReference, int nRadius) =>
             ClosestTileReferenceAround(CurrentPosition.XY, nRadius, i => tileReference.Index == i);
 
-        // public int ClosestTileReferenceAround(TileReference tileReference, Point2D midPosition, int nRadius)
-        // {
-        //     int nSearchedTileIndex = tileReference.Index;
-        //
-        //     int nShortestRadius = 255;
-        //     
-        //     for (int nRow = midPosition.X - nRadius; nRow < midPosition.X + nRadius; nRow++)
-        //     {
-        //         for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
-        //         {
-        //             Point2D adjustedPos;
-        //             if (CurrentMap.IsRepeatingMap)
-        //             {
-        //                 adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, CurrentMap.NumOfXTiles),
-        //                     Point2D.AdjustToMax(nCol, CurrentMap.NumOfYTiles));
-        //             }
-        //             else
-        //             {
-        //                 if (nRow < 0 || nRow >= CurrentMap.NumOfXTiles || nCol < 0 || nCol >= CurrentMap.NumOfYTiles)
-        //                     continue;
-        //                 
-        //                 adjustedPos = new Point2D(nRow, nCol);
-        //             }
-        //             
-        //             int nTileIndex = GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
-        //             MapUnit mapUnit = GetTopVisibleMapUnit(adjustedPos, true);
-        //
-        //             bool bMapUnitMatches = mapUnit != null && mapUnit.KeyTileReference.Index == nSearchedTileIndex;
-        //             
-        //             if (nTileIndex != nSearchedTileIndex && !bMapUnitMatches) continue;
-        //             if (nRadius >= nShortestRadius) continue;
-        //             
-        //             // shortcut in case we hit it
-        //             if (nRadius == 1) return 1;
-        //             nShortestRadius = nRadius;
-        //         }
-        //     }
-        //
-        //     return nShortestRadius;
-        // }
-
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheMapOverrides.TheMap = CurrentMap;

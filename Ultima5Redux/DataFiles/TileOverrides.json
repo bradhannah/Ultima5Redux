@@ -154,13 +154,31 @@
       "Comment": "Britain signs"
     },
     {
-      "MapNumber": 2,
-      "X": 17,
-      "Y": 8,
+      "MapNumber": 13,
+      "X": 14,
+      "Y": 31,
       "Z": 0,
-      "SpriteNum": 51,
-      "SpriteName": "OutsidePath4",
-      "Comment": "Britain signs"
+      "SpriteNum": 9,
+      "SpriteName": "Forest3",
+      "Comment": "Iolos hut - Extra trees at exit"
+    },
+    {
+      "MapNumber": 13,
+      "X": 15,
+      "Y": 31,
+      "Z": 0,
+      "SpriteNum": 9,
+      "SpriteName": "Forest3",
+      "Comment": "Iolos hut - Extra trees at exit"
+    },
+    {
+      "MapNumber": 13,
+      "X": 16,
+      "Y": 31,
+      "Z": 0,
+      "SpriteNum": 9,
+      "SpriteName": "Forest3",
+      "Comment": "Iolos hut - Extra trees at exit"
     }
   ],
   "CombatBritannia": [

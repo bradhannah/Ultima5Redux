@@ -335,12 +335,13 @@ namespace Ultima5Redux.Maps
                 if (nAdjustedX > NumOfXTiles - 1 || nAdjustedY > NumOfYTiles - 1) return;
             }
 
+            Point2D adjustedPosition = new(nAdjustedX, nAdjustedY);
+
             if (_testForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY]) return; // already did it
             _testForVisibility[nCharacterIndex][nAdjustedX][nAdjustedY] = true;
 
             // if it blocks light then we make it visible but do not make subsequent tiles visible
-            TileReference tileReference =
-                GameReferences.SpriteTileReferences.GetTileReference(TheMap[nAdjustedX][nAdjustedY]);
+            TileReference tileReference = GetTileReference(adjustedPosition);
 
             bool bBlocksLight = tileReference.BlocksLight // if it says it blocks light AND 
                                 && !bFirst // it is not the first tile (aka the one you are on) AND
