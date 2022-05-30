@@ -91,5 +91,30 @@ namespace Ultima5Redux.Maps
                 _ => WalkableType.StandardWalking
             };
         }
+
+        /// <summary>
+        ///     Gets the appropriate out of bounds sprite based on the map
+        /// </summary>
+        /// <returns></returns>
+        public int GetOutOfBoundsSprite(Point2D position)
+        {
+            return 5;
+        }
+
+        /// <summary>
+        ///     Checks if a tile is in bounds of the actual map and not a border tile
+        /// </summary>
+        /// <param name="position">position within the virtual map</param>
+        /// <returns></returns>
+        public bool IsInBounds(Point2D position)
+        {
+            // determine if the x or y coordinates are in bounds, if they are out of bounds and the map does not repeat
+            // then we are going to draw a default texture on the outside areas.
+            bool xInBounds = position.X is >= 0 and < X_TILES;
+            bool yInBounds = position.Y is >= 0 and < Y_TILES;
+
+            // fill outside of the bounds with a default tile
+            return (xInBounds && yInBounds);
+        }
     }
 }
