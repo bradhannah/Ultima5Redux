@@ -28,6 +28,7 @@ namespace Ultima5Redux.References.Maps
         [DataMember] public bool IsNPC { get; private set; }
         [DataMember] public bool IsOpenable { get; private set; }
         [DataMember] public bool IsPartOfAnimation { get; private set; }
+        [DataMember] public int TotalAnimationFrames { get; private set; }
         [DataMember] public bool IsPushable { get; private set; }
         [DataMember] public bool IsSkiff_Passable { get; private set; }
         [DataMember] public bool IsTalkOverable { get; private set; }
