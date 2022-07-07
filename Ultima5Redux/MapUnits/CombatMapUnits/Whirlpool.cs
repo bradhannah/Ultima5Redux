@@ -1,4 +1,5 @@
 ﻿using System;
+using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -32,6 +33,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             get => GameReferences.SpriteTileReferences.GetTileReference(492);
             set => throw new NotImplementedException();
+        }
+
+        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
+        {
+            return base.CanMoveToDumb(virtualMap, mapUnitPosition);
         }
     }
 }

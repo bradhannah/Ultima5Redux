@@ -268,12 +268,6 @@ namespace Ultima5Redux.MapUnits
         /// <returns>true if Avatar moved, false if they only changed direction</returns>
         public bool Move(Point2D.Direction direction)
         {
-            //bool bUseFourDirections = CurrentBoardedMapUnit?.UseFourDirections ?? false;
-
-            // bool bChangeTile = !(_onlyLeftRight[CurrentAvatarState] &&
-            //                      !UseFourDirections &&
-            //                      direction != Point2D.Direction.Left &&
-            //                      direction != Point2D.Direction.Right);
             bool bChangeTile = UseFourDirections ||
                                (direction is Point2D.Direction.Left or Point2D.Direction.Right);
             // if there are only left and right sprites then we don't switch directions unless they actually

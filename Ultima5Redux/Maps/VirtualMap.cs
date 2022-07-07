@@ -683,7 +683,7 @@ namespace Ultima5Redux.Maps
 
         internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
         {
-            return IsTileFreeToTravel(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
+            return IsTileFreeToTravelForAvatar(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
         }
 
         /// <summary>
@@ -694,7 +694,7 @@ namespace Ultima5Redux.Maps
         /// <param name="bNoStaircases"></param>
         /// <param name="forcedAvatarState"></param>
         /// <returns>true if you can move onto the tile</returns>
-        internal bool IsTileFreeToTravel(in Point2D currentPosition, in Point2D newPosition, bool bNoStaircases,
+        internal bool IsTileFreeToTravelForAvatar(in Point2D currentPosition, in Point2D newPosition, bool bNoStaircases,
             Avatar.AvatarState forcedAvatarState)
         {
             if (newPosition.X < 0 || newPosition.Y < 0) return false;
@@ -1214,6 +1214,9 @@ namespace Ultima5Redux.Maps
             bDrawCharacterOnTile = (!bIsChair && !bIsLadder && !bIsHeadOfBed && !bIsStocks && !bIsManacles) &&
                                    bIsMapUnitOccupiedTile;
 
+            // quick hack to reassign non animated avatar to animated version
+            if (bDrawCharacterOnTile && nNewSpriteIndex == 284) nNewSpriteIndex = 332;
+            
             return nNewSpriteIndex;
         }
 

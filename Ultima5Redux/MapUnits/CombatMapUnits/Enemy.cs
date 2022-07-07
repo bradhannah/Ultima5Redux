@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
@@ -109,6 +110,47 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             ProcessNextMoveTowardsAvatarAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
                 aStar);
+        }
+
+        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
+        {
+            if (EnemyReference.DoesNotMove) return false;
+
+            bool bCanMove = false;
+            TileReference tileReference = virtualMap.GetTileReference(mapUnitPosition);
+            
+            bool bIsMapUnitOnTile = virtualMap.IsMapUnitOccupiedTile(mapUnitPosition);
+            if (bIsMapUnitOnTile) return false;
+            
+            if (EnemyReference.IsSandEnemy)
+            {
+                // if tile is sand
+                bCanMove |= tileReference.Name.IndexOf("sand", 0, StringComparison.CurrentCultureIgnoreCase) >= 0;
+            } 
+            else if (EnemyReference.IsWaterEnemy)
+            {
+                // if tile is water
+                bCanMove |= tileReference.IsWaterEnemyPassable;
+            }
+            else
+            {
+                // the enemy is a land monster by process of elimination
+                bCanMove |= tileReference.IsWalking_Passable;
+            }
+            
+            
+            if (EnemyReference.CanFlyOverWater)
+            {
+                // if tile is water
+                bCanMove |= tileReference.IsWaterTile;
+            }
+            if (EnemyReference.CanPassThroughWalls)
+            {
+                // if tile is wall
+                bCanMove |= bCanMove |= tileReference.Name.IndexOf("wall", 0, StringComparison.CurrentCultureIgnoreCase) >= 0;
+            }
+            
+            return bCanMove;
         }
     }
 }

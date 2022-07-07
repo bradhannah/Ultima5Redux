@@ -1462,8 +1462,6 @@ namespace Ultima5Redux
                 return aggressiveMapUnitInfos;
             }
 
-            //if (bAvatarActuallyMoved) turnResults.PushTurnResult(TurnResults.TurnResult.Moved);
-
             // we know that if the avatar is on a frigate, then he hasn't just changed direction
             // so, if sails are hoisted and they are heading in a specific direction, then we will ignore
             // any additional keystrokes
@@ -1472,7 +1470,6 @@ namespace Ultima5Redux
             {
                 turnResults.PushTurnResult(
                     new BasicResult(TurnResult.TurnResultType.ActionMoveFrigateSailsIgnoreMovement));
-                //tryToMoveResult = TurnResults.TryToMoveResult.IgnoredMovement;
                 return new List<VirtualMap.AggressiveMapUnitInfo>();
             }
 
@@ -1702,7 +1699,7 @@ namespace Ultima5Redux
                 return;
             }
 
-            if (!State.TheVirtualMap.IsTileFreeToTravel(combatPlayer.MapUnitPosition.XY, newPosition, false,
+            if (!State.TheVirtualMap.IsTileFreeToTravelForAvatar(combatPlayer.MapUnitPosition.XY, newPosition, false,
                     Avatar.AvatarState.Regular))
             {
                 StreamingOutput.Instance.PushMessage(" - " +

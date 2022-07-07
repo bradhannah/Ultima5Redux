@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters;
 
@@ -94,5 +95,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             // the trap is triggered and is therefor gone!
             Trap = TrapType.NONE;
         }
+
+        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
+        {
+            return false;
+        }
+        
     }
 }

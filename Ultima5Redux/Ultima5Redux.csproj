@@ -345,4 +345,10 @@
             set errorlevel=0
         </PostBuildEvent>
     </PropertyGroup>
+    <PropertyGroup>
+        <PostBuildEvent>cp $(TargetPath) "/Users/bradhannah/Documents/GitHub/Ultima5Redux3D/Assets/ClassLibraries"
+            cp $(TargetDir)\*.pdb "/Users/bradhannah/Documents/GitHub/Ultima5Redux3D/Assets/ClassLibraries"
+            set errorlevel=0
+        </PostBuildEvent>
+    </PropertyGroup>
 </Project>

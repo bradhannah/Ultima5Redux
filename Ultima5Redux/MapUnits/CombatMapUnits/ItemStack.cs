@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -61,6 +62,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 return GameReferences.SpriteTileReferences.GetTileReference(_stackableItems.Peek().InvItem.SpriteNum);
             }
             set => throw new NotImplementedException("Cannot assign KeyTileReference in ItemStack");
+        }
+
+        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
+        {
+            throw new NotImplementedException();
         }
 
         public override bool IsLocked { get; set; } = false;

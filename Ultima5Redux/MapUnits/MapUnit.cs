@@ -152,7 +152,7 @@ namespace Ultima5Redux.MapUnits
             Point2D bestMovePoint = null;
 
             // you want the valid wander points from the current position
-            List<Point2D> wanderPoints = GetValidWanderPointsDumb(virtualMap, fromPosition, aStar);
+            List<Point2D> wanderPoints = GetValidWanderPointsDumb(virtualMap, fromPosition);
 
             foreach (Point2D point in wanderPoints)
             {
@@ -168,9 +168,9 @@ namespace Ultima5Redux.MapUnits
             return bestMovePoint;
         }
 
-        private Point2D GetValidRandomWanderPointDumb(VirtualMap virtualMap, Point2D toPosition, AStar aStar)
+        private Point2D GetValidRandomWanderPointDumb(VirtualMap virtualMap, Point2D toPosition)
         {
-            List<Point2D> wanderablePoints = GetValidWanderPointsDumb(virtualMap, toPosition, aStar);
+            List<Point2D> wanderablePoints = GetValidWanderPointsDumb(virtualMap, toPosition);
 
             if (wanderablePoints.Count == 0) return null;
 
@@ -185,9 +185,8 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="virtualMap"></param>
         /// <param name="mapUnitPosition">the position they are trying to get to</param>
-        /// <param name="aStar"></param>
         /// <returns>a list of positions that the character can walk to  </returns>
-        private List<Point2D> GetValidWanderPointsDumb(VirtualMap virtualMap, Point2D mapUnitPosition, AStar aStar)
+        private List<Point2D> GetValidWanderPointsDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
         {
             // get the surrounding points around current active unit
             List<Point2D> surroundingPoints =
@@ -201,11 +200,17 @@ namespace Ultima5Redux.MapUnits
                 // if it isn't walkable then we skip it
                 bool bIsMapUnitOnTile = virtualMap.IsMapUnitOccupiedTile(point);
                 // virtualMap.IsTileFreeToTravel(point) is for walking and stuff, not great for water creatures apparently
-                if (!bIsMapUnitOnTile && aStar.GetWalkable(point))
+                if (!bIsMapUnitOnTile && CanMoveToDumb(virtualMap, point))
+                    //aStar.GetWalkable(point))
                     wanderablePoints.Add(point);
             }
 
             return wanderablePoints;
+        }
+
+        protected virtual bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
+        {
+            return false;
         }
 
         protected void ProcessNextMoveTowardsMapUnitDumb(VirtualMap virtualMap, Point2D fromPosition,
@@ -222,7 +227,7 @@ namespace Ultima5Redux.MapUnits
                 // only a 50% chance they will wander
                 if (Utils.Ran.Next() % 2 == 0) return;
 
-                positionToMoveTo = GetValidRandomWanderPointDumb(virtualMap, toPosition, aStar);
+                positionToMoveTo = GetValidRandomWanderPointDumb(virtualMap, toPosition);
                 if (positionToMoveTo == null) return;
             }
 
@@ -438,5 +443,7 @@ namespace Ultima5Redux.MapUnits
         {
             MapUnitPosition = mapUnitPosition;
         }
+        
+        
     }
 }
