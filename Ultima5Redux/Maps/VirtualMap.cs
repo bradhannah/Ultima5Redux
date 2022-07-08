@@ -286,6 +286,7 @@ namespace Ultima5Redux.Maps
                 Point2D tilePosition = new((CurrentPosition.X + dX) % NumberOfColumnTiles,
                     (CurrentPosition.Y + dY) % NumberOfRowTiles);
                 tilePosition.AdjustXAndYToMax(CurrentMap.NumOfXTiles);
+                
                 if (TheMapUnits.IsTileOccupied(tilePosition)) continue;
 
                 // it's not occupied so we can create a monster

@@ -135,7 +135,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             else
             {
                 // the enemy is a land monster by process of elimination
-                bCanMove |= tileReference.IsWalking_Passable;
+                bCanMove |= tileReference.IsLandEnemyPassable;
             }
             
             

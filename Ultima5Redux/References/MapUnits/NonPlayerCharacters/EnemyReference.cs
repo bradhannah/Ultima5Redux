@@ -83,7 +83,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 case SingleCombatMapReference.BritanniaCombatMaps.Treed:
                 case SingleCombatMapReference.BritanniaCombatMaps.CleanTree:
                 case SingleCombatMapReference.BritanniaCombatMaps.Mountains:
-                    return !IsWaterEnemy && !IsSandEnemy;
+                    return !IsWaterEnemy && !IsSandEnemy && tileReference.IsLandEnemyPassable;
                 default:
                     throw new InvalidEnumArgumentException();
             }
