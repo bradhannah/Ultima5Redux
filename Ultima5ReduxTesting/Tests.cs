@@ -36,7 +36,7 @@ namespace Ultima5ReduxTesting
     {
         public enum SaveFiles
         {
-            Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave, fresh
+            Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave, fresh, blackt
         }
 
         [SetUp] public void Setup()
@@ -68,13 +68,15 @@ namespace Ultima5ReduxTesting
 
         private string DataDirectory => TestContext.Parameters.Get("DataDirectory",
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? @"/Users/bradhannah/games/u5tests/Britain2"
+                ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves/Britain2" 
+                //@"/Users/bradhannah/games/u5tests/Britain2"
                 : @"C:\games\ultima5tests\Britain2");
 
         private string SaveRootDirectory =>
             TestContext.Parameters.Get("SaveRootDirectory",
                 RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                    ? @"/Users/bradhannah/games/u5tests"
+                    ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves" 
+                    //@"/Users/bradhannah/games/u5tests"
                     : @"C:\games\ultima5tests");
 
         private string NewSaveRootDirectory => TestContext.Parameters.Get("NewSaveRootDirectory",
@@ -2285,5 +2287,13 @@ namespace Ultima5ReduxTesting
                 world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY,
                 $"CurrPos = {world.State.TheVirtualMap.CurrentPosition.X}, {world.State.TheVirtualMap.CurrentPosition.Y} but AvatarUnit = {world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY.X}, {world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY.Y}");
         }
+        
+        [Test] [TestCase(SaveFiles.blackt)] public void Test_BlacktLargeMapCheck(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world = CreateWorldFromLegacy(saveFiles);
+        }
+
     }
 }
