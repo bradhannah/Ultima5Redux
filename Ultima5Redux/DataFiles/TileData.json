@@ -682,7 +682,7 @@
     "IsHorse_Passable": true,
     "IsKlimable": false,
     "IsOpenable": false,
-    "IsLandEnemyPassable": false,
+    "IsLandEnemyPassable": true,
     "IsWaterEnemyPassable": false,
     "SpeedFactor": 2,
     "IsPartOfAnimation": false,
@@ -701,7 +701,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "None"
+    "CombatMapIndex": "CleanTree"
   },
   "22": {
     "Name": "CaveEntrance",

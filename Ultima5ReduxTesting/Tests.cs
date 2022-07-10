@@ -1525,7 +1525,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
             CombatItemReference itemRef =
                 GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(DataOvlReference.Equipment.LongSword);
             Assert.True(itemRef.Sprite == 261);
@@ -1537,7 +1537,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             SpellCastingDetails details = new SpellCastingDetails();
             Spell spell = world.State.PlayerInventory.MagicSpells.Items[MagicReference.SpellWords.In_Lor];
@@ -1552,7 +1552,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             MagicReference magReg = GameReferences.MagicRefs.GetMagicReference("In_Lor");
             // world.State.PlayerInventory.Mag 
@@ -1566,7 +1566,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
@@ -1580,7 +1580,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
@@ -1599,7 +1599,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
@@ -1618,7 +1618,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             Assert.True(world.State.TheVirtualMap.IsMapUnitOccupiedTile(new Point2D(15, 15)));
         }
@@ -1629,7 +1629,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             Point2D minocCovetousDungeon = new Point2D(156, 27);
             world.State.TheVirtualMap.MoveAvatar(minocCovetousDungeon);
@@ -1644,7 +1644,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
@@ -1657,7 +1657,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
@@ -1683,7 +1683,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
@@ -1716,7 +1716,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             world.ReLoadFromJson();
 
@@ -1756,7 +1756,7 @@ namespace Ultima5ReduxTesting
 
         [Test] [TestCase(SaveFiles.b_frigat)] public void test_EnumCalcsWithInventory(SaveFiles saveFiles)
         {
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             LordBritishArtifact.ArtifactType artifact = GetEnumByName<LordBritishArtifact.ArtifactType>(
                 GameReferences.InvRef.GetInventoryReference(
@@ -1766,7 +1766,7 @@ namespace Ultima5ReduxTesting
 
         [Test] [TestCase(SaveFiles.b_frigat)] public void test_CheckAllNonAttackingUnits(SaveFiles saveFiles)
         {
-            GameReferences.Initialize();
+            GameReferences.Initialize(DataDirectory);
 
             foreach (KeyValuePair<string, List<InventoryReference>> kvp in GameReferences.InvRef._invRefsDictionary)
             {

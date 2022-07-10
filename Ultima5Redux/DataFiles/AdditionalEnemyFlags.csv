@@ -30,7 +30,7 @@ Reaper1/REAPERS          ,                  ,11        ,FALSE       ,FALSE      
 Gazer1/GAZERS            ,                  ,6         ,FALSE       ,FALSE      ,FALSE    ,TRUE           ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,10
 Shard/x                  ,                  ,0         ,FALSE       ,FALSE      ,TRUE     ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,0
 StoneGargoyle1/GARGOYLE  ,                  ,11        ,FALSE       ,FALSE      ,FALSE    ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,0         ,0         ,0
-InsectSwarm1/INSECTS     ,                  ,2         ,FALSE       ,FALSE      ,FALSE    ,TRUE           ,FALSE              ,TRUE           ,None           ,0                   ,10        ,10        ,10
+InsectSwarm1/INSECTS     ,                  ,2         ,FALSE       ,FALSE      ,FALSE    ,FALSE,FALSE              ,TRUE           ,None           ,0                   ,10        ,10        ,10
 Orc1/ORCS                ,                  ,3         ,FALSE       ,FALSE      ,FALSE    ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,10        ,10        ,10
 Skeleton1/SKELETONS      ,                  ,6         ,FALSE       ,FALSE      ,FALSE    ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,10        ,10        ,10
 Snake1/SNAKES            ,                  ,3         ,FALSE       ,FALSE      ,FALSE    ,FALSE          ,FALSE              ,TRUE           ,None           ,0                   ,10        ,10        ,10

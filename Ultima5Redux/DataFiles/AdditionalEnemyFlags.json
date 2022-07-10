@@ -470,7 +470,7 @@
     "IsWaterEnemy": false,
     "IsSandEnemy": false,
     "DoNotMove": false,
-    "CanFlyOverWater": true,
+    "CanFlyOverWater": false,
     "CanPassThroughWalls": false,
     "ActivelyAttacks": true,
     "LargeMapMissile": "None",
