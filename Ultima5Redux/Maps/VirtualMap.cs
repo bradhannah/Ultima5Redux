@@ -1178,7 +1178,6 @@ namespace Ultima5Redux.Maps
                 }
             }
 
-            //bool bIsDoorTile = GameReferences.SpriteTileReferences.IsDoor(nSprite); // is it a door?
             // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
             bool bIsChair = GameReferences.SpriteTileReferences.IsChair(nSprite);
             // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite

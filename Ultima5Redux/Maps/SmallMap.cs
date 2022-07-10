@@ -98,6 +98,10 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public int GetOutOfBoundsSprite(Point2D position)
         {
+            // sin vraal - desert
+            if (CurrentSingleMapReference.Id == 0x0f) return 7;
+            // sutek or grendal
+            if (CurrentSingleMapReference.Id is 0x0e or 0x10) return 4; 
             return 5;
         }
 
