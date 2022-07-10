@@ -2292,7 +2292,7 @@ namespace Ultima5ReduxTesting
         {
             World world = CreateWorldFromLegacy(saveFiles);
 
-            world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
         }
 
     }

@@ -392,13 +392,18 @@ namespace Ultima5Redux.MapUnits
         {
             MapUnitCollection mapUnitCollection;
             // the over and underworld animation states are already loaded and can stick around
+            MapUnitStates currentMapUnitStates;
             switch (map)
             {
                 case Map.Maps.Overworld:
                     mapUnitCollection = OverworldMapMapUnitCollection;
+                    currentMapUnitStates = bInitialLoad ? _importedGameState.OverworldMapUnitStates
+                        : new MapUnitStates();
                     break;
                 case Map.Maps.Underworld:
                     mapUnitCollection = UnderworldMapUnitCollection;
+                    currentMapUnitStates = bInitialLoad ? _importedGameState.UnderworldMapUnitStates
+                        : new MapUnitStates();
                     break;
                 case Map.Maps.Combat:
                 case Map.Maps.Small:
@@ -421,9 +426,9 @@ namespace Ultima5Redux.MapUnits
                 mapUnitMovement.ClearMovements();
 
                 // if you are initial load, then grab from disk, otherwise create an empty collection
-                MapUnitStates currentMapUnitStates = bInitialLoad
-                    ? _importedGameState.MapUnitStatesByInitialMap
-                    : new MapUnitStates();
+                // MapUnitStates currentMapUnitStates = bInitialLoad
+                //     ? _importedGameState.MapUnitStatesByInitialMap
+                //     : new MapUnitStates();
 
                 // we have retrieved the _currentMapUnitStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
@@ -525,22 +530,9 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         private void SetAllExtendedSprites()
         {
-            foreach (MapUnit mapUnit in OverworldMapMapUnitCollection.AllMapUnits)
-            {
-                mapUnit.UseFourDirections = _bUseExtendedSprites;
-            }
-
-            foreach (MapUnit mapUnit in UnderworldMapUnitCollection.AllMapUnits)
-            {
-                mapUnit.UseFourDirections = _bUseExtendedSprites;
-            }
-
-            if (SmallMapUnitCollection == null) return;
-
-            foreach (MapUnit mapUnit in SmallMapUnitCollection.AllMapUnits)
-            {
-                mapUnit.UseFourDirections = _bUseExtendedSprites;
-            }
+            OverworldMapMapUnitCollection.AllMapUnits.ForEach(m => m.UseFourDirections = _bUseExtendedSprites);
+            UnderworldMapUnitCollection.AllMapUnits.ForEach(m => m.UseFourDirections = _bUseExtendedSprites);
+            SmallMapUnitCollection?.AllMapUnits.ForEach(m => m.UseFourDirections = _bUseExtendedSprites);
         }
 
         internal void ClearMapUnit(MapUnit mapUnit)

@@ -147,14 +147,14 @@ namespace Ultima5Redux
         private DataChunk NonPlayerCharacterMovementOffsets =>
             DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
 
-        private MapUnitStates OverworldMapUnitStates { get; set; }
+        internal MapUnitStates OverworldMapUnitStates { get; set; }
 
         private DataChunk OverworldOverlayDataChunks =>
             _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
         private MapUnitStates SmallMapUnitStates { get; set; }
 
-        private MapUnitStates UnderworldMapUnitStates { get; set; }
+        internal MapUnitStates UnderworldMapUnitStates { get; set; }
 
         private DataChunk UnderworldOverlayDataChunks =>
             _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
