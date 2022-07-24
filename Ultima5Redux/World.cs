@@ -285,7 +285,6 @@ namespace Ultima5Redux
             Avatar.AvatarState currentAvatarState =
                 State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState;
             TileReference currentTileReference = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
-            //TurnResults.TryToMoveResult tryToMoveResult = TurnResults.TryToMoveResult.Ignore;
 
             // swamp - we poison them, but the actual damage occurs further down in case they were already poisoned
             if (currentAvatarState != Avatar.AvatarState.Carpet && currentTileReference.Index == 4)
@@ -294,10 +293,7 @@ namespace Ultima5Redux
                 if (bWasPoisoned)
                 {
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.ExclaimStrings
-                            .POISONED_BANG_N), false);
-                    // StreamingOutput.Instance.PushMessage(
-                    //     );
+                        DataOvlReference.ExclaimStrings .POISONED_BANG_N), false);
                 }
             }
             // if on lava

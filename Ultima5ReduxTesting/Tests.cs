@@ -2295,5 +2295,23 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
+        [Test] [TestCase(SaveFiles.blackt)] public void Test_AnimationFramesSane(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            TileReference water1 = GameReferences.SpriteTileReferences.GetTileReference(1);
+            TileReference water2 = GameReferences.SpriteTileReferences.GetTileReference(2);
+
+            Debug.Assert(water1.KeyTileTileReferenceIndex == 1);
+            Debug.Assert(water2.KeyTileTileReferenceIndex == 1);
+
+            for (int i = 0; i < 50; i++)
+            {
+                Debug.Assert(water1.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
+                Debug.Assert(water2.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
+            }
+
+        }
+
     }
 }

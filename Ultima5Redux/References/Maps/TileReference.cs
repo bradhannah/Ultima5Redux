@@ -52,6 +52,46 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsWaterTile => Name.ToLower().Contains("water");
 
+        public int KeyTileTileReferenceIndex => Index - AnimationIndex;
+        
+        public bool IsIndexWithinAnimationFrames(int nIndex)
+        {
+            if (TotalAnimationFrames <= 1) return nIndex == Index;
+            int nOffset = Index - KeyTileTileReferenceIndex;
+            return nOffset > 0 && nOffset > TotalAnimationFrames;
+        }
+
+        public int GetRandomAnimationFrameIndex(out bool bNonRandomTime)
+        {
+            int nNewTileIndex = 0;
+            
+            switch (TotalAnimationFrames)
+            {
+                case -1:
+                    // this means there is a custom animation we will need to account for
+                    nNewTileIndex = 0;
+                    bNonRandomTime = true;
+                    break;
+                case 2:
+                    // we will simply toggle between the two, perhaps we don't do random intervals either?
+                    nNewTileIndex = AnimationIndex == 0 ? Index + 1 : Index; 
+                        //KeyTileTileReferenceIndex != AnimationIndex ? 0 : 1;
+                    bNonRandomTime = false;
+                    break;
+                default:
+                    // make sure it's greater than zero
+                    if (TotalAnimationFrames <= 1)
+                        throw new Ultima5ReduxException(
+                            $"asked for an animation frame with invalid frame total: {TotalAnimationFrames}");
+                    // find a new frame that isn't the current one - or do we even care?
+                    nNewTileIndex = KeyTileTileReferenceIndex + Utils.GetNumberFromAndTo(0, TotalAnimationFrames);
+                    bNonRandomTime = true;
+                    break;
+            }
+
+            return nNewTileIndex;
+        }
+
         [IgnoreDataMember]
         public bool IsMonsterSpawnable =>
             IsBoat_Passable || IsCarpet_Passable || IsHorse_Passable || IsWalking_Passable || IsWaterEnemyPassable ||

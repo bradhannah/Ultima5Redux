@@ -738,15 +738,12 @@ namespace Ultima5Redux.Maps
         internal void MoveMapUnitsToNextMove(Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos)
         {
             // go through each of the NPCs on the map
-            foreach //(AggressiveMapUnitInfo aggressiveMapUnitInfo in aggressiveMapUnitInfos.Values)
-                (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
+            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
                 AggressiveMapUnitInfo aggressiveMapUnitInfo =
                     aggressiveMapUnitInfos.ContainsKey(mapUnit) ? aggressiveMapUnitInfos[mapUnit] : null;
                 // if we don't match the aggressive map unit then it means the map unit is not mobile
                 if (aggressiveMapUnitInfo == null) continue;
-                // throw new Ultima5ReduxException(
-                //     $"Missing {mapUnit.FriendlyName} when looking to move units");
 
                 // if the map unit doesn't haven't a particular aggression then it moves 
                 if (aggressiveMapUnitInfo.GetDecidedAction() == AggressiveMapUnitInfo.DecidedAction.MoveUnit)
