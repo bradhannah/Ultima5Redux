@@ -58,7 +58,8 @@ namespace Ultima5Redux.References.Maps
         {
             if (TotalAnimationFrames <= 1) return nIndex == Index;
             int nOffset = Index - KeyTileTileReferenceIndex;
-            return nOffset > 0 && nOffset > TotalAnimationFrames;
+            return nOffset >= 0 && nOffset < TotalAnimationFrames;
+            // return nOffset > 0 && nOffset > TotalAnimationFrames;
         }
 
         public int GetRandomAnimationFrameIndex(out bool bNonRandomTime)

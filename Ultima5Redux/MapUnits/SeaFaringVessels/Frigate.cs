@@ -59,7 +59,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName => _sailsFurledTiles;
 
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
             SailsHoisted ? _sailsHoistedTiles : _sailsFurledTiles;
 
         [JsonConstructor] private Frigate()

@@ -102,11 +102,11 @@ namespace Ultima5Redux.MapUnits
         private Dictionary<Point2D.Direction, string> DirectionToTileNameBasicAvatar { get; } =
             new()
             {
-                { Point2D.Direction.None, "BasicAvatar" },
-                { Point2D.Direction.Left, "BasicAvatar" },
-                { Point2D.Direction.Down, "BasicAvatar" },
-                { Point2D.Direction.Right, "BasicAvatar" },
-                { Point2D.Direction.Up, "BasicAvatar" }
+                { Point2D.Direction.None, "Avatar1" },
+                { Point2D.Direction.Left, "Avatar1" },
+                { Point2D.Direction.Down, "Avatar1" },
+                { Point2D.Direction.Right, "Avatar1" },
+                { Point2D.Direction.Up, "Avatar1" }
             };
 
         [IgnoreDataMember]
@@ -114,12 +114,13 @@ namespace Ultima5Redux.MapUnits
             DirectionToTileNameBasicAvatar;
 
         [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded
         {
             get
             {
                 if (!IsAvatarOnBoardedThing) return DirectionToTileNameBasicAvatar;
-                return CurrentBoardedMapUnit.DirectionToTileName;
+                return UseFourDirections ? CurrentBoardedMapUnit.FourDirectionToTileNameBoarded : 
+                    CurrentBoardedMapUnit.DirectionToTileNameBoarded;
             }
         }
 
@@ -201,7 +202,7 @@ namespace Ultima5Redux.MapUnits
 
         private static AvatarState CalculateAvatarState(TileReference tileReference)
         {
-            if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
+            if (tileReference.Name == "Avatar1") return AvatarState.Regular;
             if (tileReference.Name.StartsWith("Ship")) return AvatarState.Frigate;
             if (tileReference.Name.StartsWith("Skiff")) return AvatarState.Skiff;
             if (tileReference.Name.StartsWith("RidingMagicCarpet") || tileReference.Name.StartsWith("Carpet"))

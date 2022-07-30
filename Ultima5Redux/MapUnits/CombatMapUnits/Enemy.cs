@@ -56,7 +56,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
         [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new();
 
         [DataMember] public sealed override CharacterStats Stats { get; protected set; } = new();

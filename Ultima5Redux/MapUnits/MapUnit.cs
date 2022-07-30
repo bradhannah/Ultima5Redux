@@ -68,12 +68,30 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember]
         protected internal abstract Dictionary<Point2D.Direction, string> DirectionToTileName { get; }
 
-        [IgnoreDataMember] protected abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
+        [IgnoreDataMember] protected internal abstract Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; }
 
         [IgnoreDataMember]
-        protected virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+        protected internal virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
+        public int CurrentAnimationIndex { get; set; } = 0;
+        public double TimeOfLastUpdate { get; set; } = 0;
+        public double TimeBetweenAnimation { get; set; } = 0;
+
+        public void NewFrameUpdate(double currentTime, double minAnimationTime,
+            double maxAnimationTime, bool bNonRandomTime = false)
+        {
+            TimeBetweenAnimation =
+                bNonRandomTime ? minAnimationTime : GetRandomNumber(minAnimationTime, maxAnimationTime);
+
+            TimeOfLastUpdate = currentTime; //Time.time;
+        }
+        
+        private static double GetRandomNumber(double minimum, double maximum)
+        {
+            return Utils.Ran.NextDouble() * (maximum - minimum) + minimum;
+        }
+        
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
         /// </summary>

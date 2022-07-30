@@ -23,10 +23,10 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName => null;
 
-        [IgnoreDataMember] protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => null;
+        [IgnoreDataMember] protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => null;
 
         [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+        protected internal override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             null;
     }
 }

@@ -85,7 +85,7 @@ namespace Ultima5Redux.PlayerCharacters
         public int PrimarySpriteIndex =>
             Class switch
             {
-                CharacterClass.Avatar => 284,
+                CharacterClass.Avatar => 332,
                 CharacterClass.Bard => 324,
                 CharacterClass.Fighter => 328,
                 CharacterClass.Mage => 320,

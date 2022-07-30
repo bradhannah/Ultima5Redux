@@ -43,7 +43,7 @@ namespace Ultima5Redux.MapUnits
             };
 
         [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new()
             {
                 { Point2D.Direction.None, "RidingHorseLeft" },
@@ -54,7 +54,7 @@ namespace Ultima5Redux.MapUnits
             };
 
         [IgnoreDataMember]
-        protected override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
+        protected internal override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             new()
             {
                 { Point2D.Direction.None, "RidingHorseLeft" },

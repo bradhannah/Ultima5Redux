@@ -14,7 +14,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         [IgnoreDataMember] public override string BoardXitName => "Non Attacking Units don't not like to be boarded!";
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
-        protected override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = new();
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } = new();
 
         // public override string Name { get; }
         // public override string PluralName { get; } 
