@@ -830,7 +830,7 @@ namespace Ultima5Redux.MapUnits
             unboardedMapUnit.MapLocation = CurrentLocation;
             unboardedMapUnit.MapUnitPosition = CurrentAvatarPosition;
             unboardedMapUnit.Direction = GetAvatarMapUnit().Direction;
-            unboardedMapUnit.KeyTileReference = unboardedMapUnit.NonBoardedTileReference;
+            unboardedMapUnit.KeyTileReference = unboardedMapUnit.GetNonBoardedTileReference();
 
             AddNewMapUnit(CurrentMapType, unboardedMapUnit);
             retStr += " " + unboardedMapUnit.BoardXitName;

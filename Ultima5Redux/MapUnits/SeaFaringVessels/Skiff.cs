@@ -49,7 +49,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,
             mapUnitMovement, location, direction, npcState, mapUnitPosition)
         {
-            KeyTileReference = NonBoardedTileReference;
+            KeyTileReference = GetNonBoardedTileReference();
         }
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,

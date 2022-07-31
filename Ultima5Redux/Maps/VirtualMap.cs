@@ -1295,8 +1295,31 @@ namespace Ultima5Redux.Maps
 
             // we need to determine WHICH MapUnit to draw at this point
             // it could be the original, or boarded or even a different one all together?
-            TileReference mapUnitTileReference = topMostMapUnit.NonBoardedTileReference;
-            tileStack.PushTileReference(mapUnitTileReference, true);
+            TileReference mapUnitTileReference = topMostMapUnit.GetAnimatedTileReference();
+            Avatar avatarMapUnit = null;
+            if (bIsAvatarTile)
+            {
+                avatarMapUnit = TheMapUnits.GetAvatarMapUnit();
+            }
+
+            switch (topMostMapUnit)
+            {
+                case Horse when bIsAvatarTile: // if we are on a horse, let's show the mounted tile
+                case Avatar { IsAvatarOnBoardedThing: true }: // we always show the Avatar on the thing he is boarded on
+                    tileStack.PushTileReference(topMostMapUnit.GetBoardedTileReference(), true);
+                    break;
+                case MagicCarpet when bIsAvatarTile:
+                {
+                    tileStack.PushTileReference(mapUnitTileReference, true);
+                    if (avatarMapUnit == null)
+                        throw new Ultima5ReduxException("Avatar map unit was null, when expected on top of magic carpet");
+                    tileStack.PushTileReference(avatarMapUnit.GetAnimatedTileReference(), true);
+                    break;
+                }
+                default:
+                    tileStack.PushTileReference(mapUnitTileReference, true);
+                    break;
+            }
 
             return tileStack;
         }

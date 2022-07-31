@@ -36,7 +36,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [IgnoreDataMember] public override bool IsInvisible => false;
         [IgnoreDataMember] public override string Name => EnemyReference.MixedCaseSingularName.Trim();
-        [IgnoreDataMember] public override TileReference NonBoardedTileReference => KeyTileReference;
+        public override TileReference GetNonBoardedTileReference() => KeyTileReference;
         [IgnoreDataMember] public override string PluralName => EnemyReference.AllCapsPluralName;
         [IgnoreDataMember] public override string SingularName => EnemyReference.MixedCaseSingularName;
         [IgnoreDataMember] public override TileReference KeyTileReference => EnemyReference.KeyTileReference;

@@ -153,7 +153,7 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         internal MapUnit UnboardedAvatar()
         {
-            KeyTileReference = NonBoardedTileReference;
+            KeyTileReference = GetNonBoardedTileReference();
             CurrentAvatarState = AvatarState.Regular;
             MapUnit previouslyBoardedMapUnit = CurrentBoardedMapUnit;
             CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
@@ -216,9 +216,9 @@ namespace Ultima5Redux.MapUnits
         private TileReference GetCurrentTileReference()
         {
             if (CurrentAvatarState is AvatarState.Regular or AvatarState.Hidden)
-                return NonBoardedTileReference;
+                return GetNonBoardedTileReference();
 
-            return CurrentBoardedMapUnit.BoardedTileReference;
+            return CurrentBoardedMapUnit.GetBoardedTileReference();
         }
 
         /// <summary>

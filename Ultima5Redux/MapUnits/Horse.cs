@@ -73,7 +73,7 @@ namespace Ultima5Redux.MapUnits
             mapUnitMovement, location, direction, npcState,
             GameReferences.SpriteTileReferences.GetTileReferenceByName("HorseLeft"), mapUnitPosition)
         {
-            KeyTileReference = NonBoardedTileReference;
+            KeyTileReference = GetNonBoardedTileReference();
         }
 
         private static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)

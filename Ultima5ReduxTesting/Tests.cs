@@ -833,7 +833,7 @@ namespace Ultima5ReduxTesting
 
             foreach (MapUnit mapUnit in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.AllMapUnits)
             {
-                _ = mapUnit.NonBoardedTileReference;
+                _ = mapUnit.GetNonBoardedTileReference();
             }
 
             Assert.True(true);
@@ -932,8 +932,7 @@ namespace Ultima5ReduxTesting
             // make sure it is using the extended sprite
             //GetCurrentTileReference
 
-            Assert.True(world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit
-                .BoardedTileReference
+            Assert.True(world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit.GetBoardedTileReference()
                 .Index == 515);
         }
 

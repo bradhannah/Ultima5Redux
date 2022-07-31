@@ -1356,7 +1356,7 @@ namespace Ultima5Redux
 
             // make sure the boat is facing the correct direction given the direction of the cannon
             TileReference currentAvatarTileReference = avatar.IsAvatarOnBoardedThing
-                ? avatar.BoardedTileReference
+                ? avatar.GetBoardedTileReference()
                 : avatar.KeyTileReference;
 
             bool bShipFacingUpDown = currentAvatarTileReference.Name.EndsWith("Up") ||

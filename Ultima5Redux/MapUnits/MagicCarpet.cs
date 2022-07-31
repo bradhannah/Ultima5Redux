@@ -66,7 +66,7 @@ namespace Ultima5Redux.MapUnits
             location, direction, npcState,
             GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition)
         {
-            KeyTileReference = NonBoardedTileReference;
+            KeyTileReference = GetNonBoardedTileReference();
         }
 
         public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby());

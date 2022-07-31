@@ -53,7 +53,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         [IgnoreDataMember] public override bool IsAttackable => true;
 
-        [IgnoreDataMember] public override TileReference NonBoardedTileReference => KeyTileReference;
+        public override TileReference GetNonBoardedTileReference() => KeyTileReference;
 
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();

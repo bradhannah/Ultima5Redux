@@ -44,31 +44,25 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new();
 
         // ReSharper disable once MemberCanBeProtected.Global
-        [IgnoreDataMember]
-        public virtual TileReference NonBoardedTileReference
+
+        public virtual TileReference GetNonBoardedTileReference()
         {
-            get
-            {
-                if (DirectionToTileName == null) return KeyTileReference;
-                if (!DirectionToTileName.ContainsKey(Direction))
-                    throw new Ultima5ReduxException(
-                        $"Tried to get NonBoardedTileReference with direction {Direction} on tile {this.KeyTileReference.Description}");
-                return GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
-            }
+            if (DirectionToTileName == null) return KeyTileReference;
+
+            UpdateAnimationIndex();
+            if (!DirectionToTileName.ContainsKey(Direction))
+                throw new Ultima5ReduxException(
+                    $"Tried to get NonBoardedTileReference with direction {Direction} on tile {this.KeyTileReference.Description}");
+            return GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
         }
-            
 
-        [IgnoreDataMember]
-        public TileReference BoardedTileReference
+
+        public TileReference GetBoardedTileReference()
         {
-            get
-            {
-
-                Dictionary<Point2D.Direction, string> tileNameDictionary =
-                    (UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded);
-                if (tileNameDictionary == null) return KeyTileReference;
-                return GameReferences.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
-            }
+            Dictionary<Point2D.Direction, string> tileNameDictionary =
+                (UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded);
+            if (tileNameDictionary == null) return KeyTileReference;
+            return GameReferences.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
         }
 
         [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
@@ -90,29 +84,53 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember]
         protected internal virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
-
-        public int CurrentAnimationIndex { get; set; } = 0;
-        public double TimeOfLastUpdate { get; set; }
-        public double TimeBetweenAnimation { get; set; }
         
-        public void NewFrameUpdate(double currentTime, double minAnimationTime,
-            double maxAnimationTime, bool bNonRandomTime = false)
-        {
-            TimeBetweenAnimation =
-                bNonRandomTime ? minAnimationTime : GetRandomNumber(minAnimationTime, maxAnimationTime);
+        private int _nCurrentAnimationIndex = 0;
+        // public double TimeOfLastUpdate { get; set; }
+        private DateTime _lastAnimationUpdate;
+        private double _dTimeBetweenAnimation = 0.5f;
 
-            TimeOfLastUpdate = currentTime; //Time.time;
+        public TileReference GetAnimatedTileReference()
+        {
+            // some things are not animated, so we just use the KeyTileReference every time
+            if (!KeyTileReference.IsPartOfAnimation) return KeyTileReference;
+            if (KeyTileReference.TotalAnimationFrames < 2) return KeyTileReference;
+            
+            UpdateAnimationIndex();
+            return GameReferences.SpriteTileReferences.GetTileReference(
+                KeyTileReference.Index + _nCurrentAnimationIndex);
         }
         
-        private static double GetRandomNumber(double minimum, double maximum)
+        private void UpdateAnimationIndex()
         {
-            return Utils.Ran.NextDouble() * (maximum - minimum) + minimum;
+            if (KeyTileReference.TotalAnimationFrames <= 1) return;
+            
+            TimeSpan ts = DateTime.Now.Subtract(_lastAnimationUpdate);
+            if (ts.TotalSeconds > _dTimeBetweenAnimation)
+            {
+                _lastAnimationUpdate = DateTime.Now;
+                _nCurrentAnimationIndex = Utils.Ran.Next() % KeyTileReference.TotalAnimationFrames;
+            }
         }
+        
+        // public void NewFrameUpdate(double currentTime, double minAnimationTime,
+        //     double maxAnimationTime, bool bNonRandomTime = false)
+        // {
+        //     _dTimeBetweenAnimation =
+        //         bNonRandomTime ? minAnimationTime : GetRandomNumber(minAnimationTime, maxAnimationTime);
+        //
+        //     TimeOfLastUpdate = currentTime; //Time.time;
+        // }
+        
+        // private static double GetRandomNumber(double minimum, double maximum)
+        // {
+        //     return Utils.Ran.NextDouble() * (maximum - minimum) + minimum;
+        // }
         
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
         /// </summary>
-        [JsonConstructor] protected MapUnit()
+        [JsonConstructor] protected MapUnit() 
         {
             TheSmallMapCharacterState = null;
             Movement = null;

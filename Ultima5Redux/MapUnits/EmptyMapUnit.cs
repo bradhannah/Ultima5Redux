@@ -16,7 +16,7 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public override bool IsAttackable => false;
 
-        [IgnoreDataMember] public override TileReference NonBoardedTileReference => null;
+        public override TileReference GetNonBoardedTileReference() => null;
 
         [IgnoreDataMember] public override TileReference KeyTileReference { get; set; } = null;
 
