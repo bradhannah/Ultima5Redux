@@ -1274,8 +1274,8 @@ namespace Ultima5Redux.Maps
             int nCalculatedIndex = GetCalculatedSpriteIndexByTile(origTileReference, xy, bIsAvatarTile,
                 bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile);
             TileReference calculatedTileReference =
-                GameReferences.SpriteTileReferences.GetTileReference(nCalculatedIndex);
-
+                GameReferences.SpriteTileReferences.GetAnimatedTileReference(nCalculatedIndex);
+           
             // there are times we will not draw a calculated reference - such as when an NPC is on a door 
             // which indicates it is open, and therefor hidden
             bool bSkipCalculatedTileReference =

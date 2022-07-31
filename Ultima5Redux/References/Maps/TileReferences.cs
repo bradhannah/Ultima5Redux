@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Ultima5Redux.Properties;
@@ -210,6 +211,25 @@ namespace Ultima5Redux.References.Maps
             return TileReferenceByStringDictionary[name];
         }
 
+        private double _dLastTime;
+
+        private int _nTick = 0;
+        //private double _
+        
+        public TileReference GetAnimatedTileReference(int nSprite)
+        {
+            TileReference keyTileReference = GetTileReferenceOfKeyIndex(nSprite);
+            if (keyTileReference.TotalAnimationFrames < 2) return keyTileReference;
+
+            if (DateTime.Now.TimeOfDay.TotalMilliseconds - _dLastTime > 350)
+            {
+                _nTick = (_nTick + 1) % int.MaxValue;
+                _dLastTime = DateTime.Now.TimeOfDay.TotalMilliseconds;
+            }
+            
+            return GetTileReference(keyTileReference.Index + (_nTick % keyTileReference.TotalAnimationFrames));
+        }
+        
         public TileReference GetTileReferenceOfKeyIndex(int nSprite)
         {
             TileReference tileReference = GetTileReference(nSprite);
