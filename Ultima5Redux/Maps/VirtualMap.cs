@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -286,7 +287,7 @@ namespace Ultima5Redux.Maps
                 Point2D tilePosition = new((CurrentPosition.X + dX) % NumberOfColumnTiles,
                     (CurrentPosition.Y + dY) % NumberOfRowTiles);
                 tilePosition.AdjustXAndYToMax(CurrentMap.NumOfXTiles);
-                
+
                 if (TheMapUnits.IsTileOccupied(tilePosition)) continue;
 
                 // it's not occupied so we can create a monster
@@ -695,7 +696,8 @@ namespace Ultima5Redux.Maps
         /// <param name="bNoStaircases"></param>
         /// <param name="forcedAvatarState"></param>
         /// <returns>true if you can move onto the tile</returns>
-        internal bool IsTileFreeToTravelForAvatar(in Point2D currentPosition, in Point2D newPosition, bool bNoStaircases,
+        internal bool IsTileFreeToTravelForAvatar(in Point2D currentPosition, in Point2D newPosition,
+            bool bNoStaircases,
             Avatar.AvatarState forcedAvatarState)
         {
             if (newPosition.X < 0 || newPosition.Y < 0) return false;
@@ -1158,8 +1160,7 @@ namespace Ultima5Redux.Maps
         }
 
         public int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
-            bool bIsAvatarTile,
-            bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
+            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
             bool bIsMirror = GameReferences.SpriteTileReferences.IsUnbrokenMirror(nSprite);
@@ -1212,9 +1213,92 @@ namespace Ultima5Redux.Maps
                                    bIsMapUnitOccupiedTile;
 
             // quick hack to reassign non animated avatar to animated version
-            if (bDrawCharacterOnTile && nNewSpriteIndex == 284) nNewSpriteIndex = 332;
-            
+            //if (bDrawCharacterOnTile && nNewSpriteIndex == 284) nNewSpriteIndex = 332;
+
             return nNewSpriteIndex;
+        }
+
+
+        public int GetAlternateFlatSprite(Point2D xy)
+        {
+            int nSprite = GetTileReference(xy).FlatTileSubstitutionIndex;
+
+            return nSprite is -2 or -3 ? GuessTile(xy) : nSprite;
+        }
+
+
+        private bool IsInsideBounds(in Point2D xy) => !(xy.X >= CurrentMap.VisibleOnMap.Length || xy.X < 0 ||
+                                                        xy.Y >= CurrentMap.VisibleOnMap[xy.X].Length || xy.Y < 0);
+
+        public TileStack GetTileStack(Point2D xy)
+        {
+            TileStack tileStack = new TileStack(xy);
+
+            // this checks to see if you are on the outer bounds of a small map, and if the flood fill touched it
+            // if it has touched it then we draw the outer tiles
+            if (CurrentMap is SmallMap smallMap && !smallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
+            {
+                TileReference outerTileReference = GameReferences.SpriteTileReferences.GetTileReference(
+                    smallMap.GetOutOfBoundsSprite(xy));
+                tileStack.PushTileReference(outerTileReference);
+                return tileStack;
+            }
+
+            // if the position of the tile is no longer inside the bounds of the visibility
+            // or has become invisible, then destroy the voxels and return right away
+            bool bOutsideOfVisibilityArray = !IsInsideBounds(xy);
+            if (bOutsideOfVisibilityArray || !CurrentMap.VisibleOnMap[xy.X][xy.Y])
+            {
+                return tileStack;
+            }
+
+            // get the reference as per the original game data
+            TileReference origTileReference = GetTileReference(xy);
+            // get ALL active map units on the tile
+            IEnumerable mapUnits =
+                TheMapUnits.CurrentMapUnits.AllActiveMapUnits.Where(m => m.MapUnitPosition.XY == xy);
+            MapUnit topMostMapUnit = GetTopVisibleMapUnit(xy, false);
+
+            bool bIsAvatarTile = !IsCombatMap && xy == CurrentPosition?.XY;
+            bool bIsMapUnitOccupiedTile = topMostMapUnit != null;
+
+            // if there is an alternate flat sprite (for example, trees have grass)
+            if (origTileReference.HasAlternateFlatSprite)
+            {
+                TileReference flatTileReference =
+                    GameReferences.SpriteTileReferences.GetTileReference(GetAlternateFlatSprite(xy));
+                tileStack.PushTileReference(flatTileReference);
+            }
+
+            // we always push the original tile reference 
+            int nCalculatedIndex = GetCalculatedSpriteIndexByTile(origTileReference, xy, bIsAvatarTile,
+                bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile);
+            TileReference calculatedTileReference =
+                GameReferences.SpriteTileReferences.GetTileReference(nCalculatedIndex);
+
+            // there are times we will not draw a calculated reference - such as when an NPC is on a door 
+            // which indicates it is open, and therefor hidden
+            bool bSkipCalculatedTileReference =
+                GameReferences.SpriteTileReferences.IsDoor(calculatedTileReference.Index) && bIsMapUnitOccupiedTile;
+            
+            if (!bSkipCalculatedTileReference) tileStack.PushTileReference(calculatedTileReference);
+
+            // next we have a more complicated operation. We need to figure out which mapunits are on the map
+            // and which ones we should show. There are often cases where we need to combine them such
+            // as walking on top of a horse
+
+            // if the GetCalculatedSpriteIndexByTile routine has told us not to draw the map unit,
+            // then we skip it all together
+            if (!bDrawCharacterOnTile) return tileStack;
+            // if there are no map units, then we skip this bit all together
+            if (topMostMapUnit == null) return tileStack;
+
+            // we need to determine WHICH MapUnit to draw at this point
+            // it could be the original, or boarded or even a different one all together?
+            TileReference mapUnitTileReference = topMostMapUnit.NonBoardedTileReference;
+            tileStack.PushTileReference(mapUnitTileReference, true);
+
+            return tileStack;
         }
 
         public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,

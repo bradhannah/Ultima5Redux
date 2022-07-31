@@ -45,14 +45,31 @@ namespace Ultima5Redux.MapUnits
 
         // ReSharper disable once MemberCanBeProtected.Global
         [IgnoreDataMember]
-        public virtual TileReference NonBoardedTileReference =>
-            GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+        public virtual TileReference NonBoardedTileReference
+        {
+            get
+            {
+                if (DirectionToTileName == null) return KeyTileReference;
+                if (!DirectionToTileName.ContainsKey(Direction))
+                    throw new Ultima5ReduxException(
+                        $"Tried to get NonBoardedTileReference with direction {Direction} on tile {this.KeyTileReference.Description}");
+                return GameReferences.SpriteTileReferences.GetTileReferenceByName(DirectionToTileName[Direction]);
+            }
+        }
+            
 
         [IgnoreDataMember]
-        public TileReference BoardedTileReference =>
-            GameReferences.SpriteTileReferences.GetTileReferenceByName(UseFourDirections
-                ? FourDirectionToTileNameBoarded[Direction]
-                : DirectionToTileNameBoarded[Direction]);
+        public TileReference BoardedTileReference
+        {
+            get
+            {
+
+                Dictionary<Point2D.Direction, string> tileNameDictionary =
+                    (UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded);
+                if (tileNameDictionary == null) return KeyTileReference;
+                return GameReferences.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
+            }
+        }
 
         [IgnoreDataMember] public NonPlayerCharacterReference NPCRef => NPCState?.NPCRef;
 
@@ -75,9 +92,9 @@ namespace Ultima5Redux.MapUnits
             DirectionToTileNameBoarded;
 
         public int CurrentAnimationIndex { get; set; } = 0;
-        public double TimeOfLastUpdate { get; set; } = 0;
-        public double TimeBetweenAnimation { get; set; } = 0;
-
+        public double TimeOfLastUpdate { get; set; }
+        public double TimeBetweenAnimation { get; set; }
+        
         public void NewFrameUpdate(double currentTime, double minAnimationTime,
             double maxAnimationTime, bool bNonRandomTime = false)
         {

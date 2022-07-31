@@ -115,7 +115,10 @@ namespace Ultima5Redux.References.Maps
             if (Name.Contains("Up")) return Point2D.Direction.Up;
             return Point2D.Direction.None;
         }
-
+        
+        public bool HasAlternateFlatSprite => GameReferences.SpriteTileReferences.GetTileReference(Index).FlatTileSubstitutionIndex != -1;
+        
+        
         public bool IsPassable(Avatar.AvatarState avatarState)
         {
             switch (avatarState)
