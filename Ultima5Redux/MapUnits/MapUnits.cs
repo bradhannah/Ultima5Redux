@@ -687,16 +687,18 @@ namespace Ultima5Redux.MapUnits
         /// <param name="xy"></param>
         /// <param name="nFloor"></param>
         /// <returns>MapUnit or null if non exist at location</returns>
-        public List<MapUnit> GetMapUnitsByPosition(Map.Maps map, Point2D xy, int nFloor)
+        public List<MapUnit> GetMapUnitsByPosition(Map.Maps map, in Point2D xy, int nFloor)
         {
             List<MapUnit> mapUnits = new();
 
-            foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllActiveMapUnits)
+            foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllMapUnits) 
+                     //GetMapUnitCollection(map).AllActiveMapUnits)
             {
+                if (!mapUnit.IsActive) continue;
                 // sometimes characters are null because they don't exist - and that is OK
-                Debug.Assert(mapUnit.IsActive);
+                //Debug.Assert(mapUnit.IsActive);
 
-                if (mapUnit.MapUnitPosition.XY == xy && mapUnit.MapUnitPosition.Floor == nFloor)
+                if (mapUnit.MapUnitPosition.X == xy.X && mapUnit.MapUnitPosition.Y == xy.Y && mapUnit.MapUnitPosition.Floor == nFloor)
                     mapUnits.Add(mapUnit);
             }
 
