@@ -101,15 +101,16 @@ namespace Ultima5Redux.Maps
         {
             get
             {
-                if (CurrentSingleMapReference == null)
+                SmallMapReferences.SingleMapReference currentMap = CurrentSingleMapReference;
+                if (currentMap == null)
                     return null;
 
-                switch (CurrentSingleMapReference.MapLocation)
+                switch (currentMap.MapLocation)
                 {
                     case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
                         return CurrentCombatMap;
                     case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
-                        return CurrentSingleMapReference.Floor == 0 ? OverworldMap : UnderworldMap;
+                        return currentMap.Floor == 0 ? OverworldMap : UnderworldMap;
                     default:
                         return CurrentSmallMap;
                 }
@@ -192,6 +193,18 @@ namespace Ultima5Redux.Maps
             return CurrentPosition.XY;
         }
 
+        internal void SavePreviousPosition(MapUnitPosition mapUnitPosition)
+        {
+            PreviousPosition.X = mapUnitPosition.X;
+            PreviousPosition.Y = mapUnitPosition.Y;
+            PreviousPosition.Floor = mapUnitPosition.Floor;
+        }
+
+        public MapUnitPosition PreviousPosition
+        {
+            get;
+        } = new();
+        
         [IgnoreDataMember]
         public MapUnitPosition CurrentPosition
         {
@@ -757,7 +770,7 @@ namespace Ultima5Redux.Maps
         internal bool SearchNonAttackingMapUnit(in Point2D xy, TurnResults turnResults,
             PlayerCharacterRecord record, PlayerCharacterRecords records)
         {
-            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
+            List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
             foreach (MapUnit mapUnit in mapUnits)
             {
                 if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
@@ -1126,7 +1139,7 @@ namespace Ultima5Redux.Maps
         public bool ContainsSearchableThings(in Point2D xy)
         {
             // moonstone check
-            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
+            List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
 
             bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter);
 
@@ -1227,10 +1240,14 @@ namespace Ultima5Redux.Maps
         }
 
 
-        private bool IsInsideBounds(in Point2D xy) => !(xy.X >= CurrentMap.VisibleOnMap.Length || xy.X < 0 ||
-                                                        xy.Y >= CurrentMap.VisibleOnMap[xy.X].Length || xy.Y < 0);
+        private bool IsInsideBounds(in Point2D xy)
+        {
+            Map currentMap = CurrentMap;
+            return !(xy.X >= currentMap.VisibleOnMap.Length || xy.X < 0 ||
+              xy.Y >= currentMap.VisibleOnMap[xy.X].Length || xy.Y < 0);
+        }
 
-        public TileStack GetTileStack(Point2D xy)
+        public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
         {
             TileStack tileStack = new TileStack(xy);
 
@@ -1255,9 +1272,9 @@ namespace Ultima5Redux.Maps
             // get the reference as per the original game data
             TileReference origTileReference = GetTileReference(xy);
             // get ALL active map units on the tile
-            IEnumerable mapUnits =
-                TheMapUnits.CurrentMapUnits.AllActiveMapUnits.Where(m => m.MapUnitPosition.XY == xy);
-            MapUnit topMostMapUnit = GetTopVisibleMapUnit(xy, false);
+            // IEnumerable mapUnits =
+            //     TheMapUnits.CurrentMapUnits.AllMapUnits.Where(m => m.MapUnitPosition.XY == xy);
+            MapUnit topMostMapUnit = bSkipMapUnit ? null : GetTopVisibleMapUnit(xy, false);
 
             bool bIsAvatarTile = !IsCombatMap && xy == CurrentPosition?.XY;
             bool bIsMapUnitOccupiedTile = topMostMapUnit != null;
@@ -1616,13 +1633,15 @@ namespace Ultima5Redux.Maps
             return GetTopVisibleMapUnit(CurrentPosition.XY, true);
         }
 
+        
+        
         /// <summary>
         ///     If an NPC is on a tile, then it will get them
         ///     assumes it's on the same floor
         /// </summary>
         /// <param name="xy"></param>
         /// <returns>the NPC or null if one does not exist</returns>
-        public List<MapUnit> GetMapUnitOnTile(in Point2D xy)
+        public List<MapUnit> GetMapUnitsOnTile(in Point2D xy)
         {
             if (CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
@@ -1805,6 +1824,13 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        private readonly List<Type> _visibilePriorityOrder = new()
+        {
+            typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
+            typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
+        };
+        
         /// <summary>
         ///     Gets the top visible map unit - excluding the Avatar
         /// </summary>
@@ -1814,16 +1840,10 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public MapUnit GetTopVisibleMapUnit(in Point2D xy, bool bExcludeAvatar)
         {
-            List<Type> visibilePriorityOrder = new()
-            {
-                typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
-                typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
-            };
-            List<MapUnit> mapUnits = GetMapUnitOnTile(xy);
+            List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
 
             // this is inefficient, but the lists are so small it is unlikely to matter
-            foreach (Type type in visibilePriorityOrder)
+            foreach (Type type in _visibilePriorityOrder)
             {
                 if (bExcludeAvatar && type == typeof(Avatar)) continue;
                 foreach (MapUnit mapUnit in mapUnits)
@@ -2287,29 +2307,35 @@ namespace Ultima5Redux.Maps
         public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
         {
             double nShortestRadius = 255;
+            Map currentMap = CurrentMap;
+            bool bIsRepeatingMap = CurrentMap.IsRepeatingMap;
+            TheMapUnits.CurrentMapUnits.RefreshActiveDictionaryCache();
+            // an optimization to speed up checking of map units
+            Dictionary<Point2D, List<MapUnit>> cachedActive = TheMapUnits.CurrentMapUnits.CachedActiveDictionary;
 
             for (int nRow = midPosition.X - nRadius; nRow < midPosition.X + nRadius; nRow++)
             {
                 for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
                 {
                     Point2D adjustedPos;
-                    if (CurrentMap.IsRepeatingMap)
+                    if (bIsRepeatingMap)
                     {
-                        adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, CurrentMap.NumOfXTiles),
-                            Point2D.AdjustToMax(nCol, CurrentMap.NumOfYTiles));
+                        adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, currentMap.NumOfXTiles),
+                            Point2D.AdjustToMax(nCol, currentMap.NumOfYTiles));
                     }
                     else
                     {
-                        if (nRow < 0 || nRow >= CurrentMap.NumOfXTiles || nCol < 0 || nCol >= CurrentMap.NumOfYTiles)
+                        if (nRow < 0 || nRow >= currentMap.NumOfXTiles || nCol < 0 || nCol >= currentMap.NumOfYTiles)
                             continue;
 
                         adjustedPos = new Point2D(nRow, nCol);
                     }
 
                     int nTileIndex = GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
-                    MapUnit mapUnit = GetTopVisibleMapUnit(adjustedPos, true);
+                    bool bHasMapUnits = cachedActive.ContainsKey(adjustedPos);
+                    MapUnit mapUnit = bHasMapUnits ? GetTopVisibleMapUnit(adjustedPos, true) : null;
 
-                    if (mapUnit != null) _ = "";
+                    //if (mapUnit != null) _ = "";
                     bool bMapUnitMatches = mapUnit != null && checkTile(mapUnit.KeyTileReference.Index);
 
                     if (!checkTile(nTileIndex) && !bMapUnitMatches) continue;

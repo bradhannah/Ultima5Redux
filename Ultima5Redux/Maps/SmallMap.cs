@@ -96,13 +96,17 @@ namespace Ultima5Redux.Maps
         ///     Gets the appropriate out of bounds sprite based on the map
         /// </summary>
         /// <returns></returns>
-        public int GetOutOfBoundsSprite(Point2D position)
+        public int GetOutOfBoundsSprite(in Point2D position)
         {
-            // sin vraal - desert
-            if (CurrentSingleMapReference.Id == 0x0f) return 7;
-            // sutek or grendal
-            if (CurrentSingleMapReference.Id is 0x0e or 0x10) return 4; 
-            return 5;
+            byte currentSingleMapReferenceId = CurrentSingleMapReference.Id;
+            return currentSingleMapReferenceId switch
+            {
+                // sin vraal - desert
+                0x0f => 7,
+                // sutek or grendal
+                0x0e or 0x10 => 4,
+                _ => 5
+            };
         }
 
         /// <summary>

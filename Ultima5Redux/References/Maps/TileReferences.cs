@@ -222,11 +222,11 @@ namespace Ultima5Redux.References.Maps
         {
             TileReference keyTileReference = GetTileReferenceOfKeyIndex(nSprite);
             if (keyTileReference.TotalAnimationFrames < 2) return keyTileReference;
-
-            if (DateTime.Now.TimeOfDay.TotalMilliseconds - _dLastTime > MillisecondsBetweenFrames)
+            double dTotalMilli = DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
+            if (dTotalMilli - _dLastTime > MillisecondsBetweenFrames)
             {
                 _nTick = (_nTick + 1) % int.MaxValue;
-                _dLastTime = DateTime.Now.TimeOfDay.TotalMilliseconds;
+                _dLastTime = dTotalMilli;
             }
             
             return GetTileReference(keyTileReference.Index + (_nTick % keyTileReference.TotalAnimationFrames));
@@ -321,14 +321,17 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsBurningThing(int nSprite)
         {
-            return GetTileReferenceByName("Brazier").Index == nSprite ||
-                   GetTileReferenceByName("LeftSconce").Index == nSprite ||
-                   GetTileReferenceByName("RightSconce").Index == nSprite ||
-                   GetTileReferenceByName("CampFire").Index == nSprite ||
-                   GetTileReferenceByName("LampPost").Index == nSprite ||
-                   GetTileReferenceByName("CandleOnTable").Index == nSprite ||
-                   GetTileReferenceByName("CookStove").Index == nSprite ||
-                   GetTileReferenceByName("BlueFlame").Index == nSprite;
+            // yucky but optimized for speed because it's called a lot
+            return nSprite is 176 or 177 or 178 or 179 or 189 or 190 or 191 or 222;  
+                //178 176 177 179 189 190 191 222
+                // GetTileReferenceByName("Brazier").Index == nSprite ||
+                //    GetTileReferenceByName("LeftSconce").Index == nSprite ||
+                //    GetTileReferenceByName("RightSconce").Index == nSprite ||
+                //    GetTileReferenceByName("CampFire").Index == nSprite ||
+                //    GetTileReferenceByName("LampPost").Index == nSprite ||
+                //    GetTileReferenceByName("CandleOnTable").Index == nSprite ||
+                //    GetTileReferenceByName("CookStove").Index == nSprite ||
+                //    GetTileReferenceByName("BlueFlame").Index == nSprite;
         }
 
         /// <summary>

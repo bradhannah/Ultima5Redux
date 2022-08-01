@@ -661,7 +661,7 @@ namespace Ultima5Redux
             // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
             if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
             {
-                List<MapUnit> mapUnits = State.TheVirtualMap.GetMapUnitOnTile(xy);
+                List<MapUnit> mapUnits = State.TheVirtualMap.GetMapUnitsOnTile(xy);
                 if (mapUnits.Count <= 0)
                     throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
                 lookStr = GameReferences.DataOvlRef.StringReferences
@@ -1390,7 +1390,7 @@ namespace Ultima5Redux
                 if (!State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPosition)) continue;
 
                 // kill them
-                MapUnit targetedMapUnit = State.TheVirtualMap.GetMapUnitOnTile(adjustedPosition)[0];
+                MapUnit targetedMapUnit = State.TheVirtualMap.GetMapUnitsOnTile(adjustedPosition)[0];
                 StreamingOutput.Instance.PushMessage(
                     "Killed " + targetedMapUnit.FriendlyName, false);
                 State.TheVirtualMap.TheMapUnits.ClearMapUnit(targetedMapUnit);
@@ -1538,6 +1538,7 @@ namespace Ultima5Redux
             // this will prevent a never ending growth or shrinking of character position in case the travel the world only moving right a bagillion times
             State.TheVirtualMap.CurrentPosition.X %= nTilesPerMapCol;
             State.TheVirtualMap.CurrentPosition.Y %= nTilesPerMapRow;
+            State.TheVirtualMap.SavePreviousPosition(State.TheVirtualMap.CurrentPosition);
 
             // if you walk on top of a staircase then we will immediately jump to the next floor
             if (GameReferences.SpriteTileReferences.IsStaircase(newTileReference.Index))

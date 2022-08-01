@@ -12,6 +12,8 @@ namespace Ultima5Redux.MapUnits
     {
         private bool _bForceNewAvatar;
 
+        public Dictionary<Point2D, List<MapUnit>> CachedActiveDictionary { get; private set; }
+
         [DataMember(Name = "Avatars")]
         private Avatar[] SaveAvatars
         {
@@ -131,6 +133,7 @@ namespace Ultima5Redux.MapUnits
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             _bForceNewAvatar = true;
+            RefreshActiveDictionaryCache();
         }
 
         public void AddMapUnit(MapUnit mapUnit)
@@ -166,5 +169,29 @@ namespace Ultima5Redux.MapUnits
         }
 
         public void Clear() => AllMapUnits.Clear();
+
+        public void RefreshActiveDictionaryCache()
+        {
+            CachedActiveDictionary = CreateMapUnitByPositionDictionary();
+        }
+        
+        private Dictionary<Point2D, List<MapUnit>> CreateMapUnitByPositionDictionary()
+        {
+            Dictionary<Point2D, List<MapUnit>> mapUnitDictionary = new();
+
+            foreach (MapUnit mapUnit in AllActiveMapUnits)
+            {
+                if (mapUnit is EmptyMapUnit) continue;
+
+                Point2D xy = mapUnit.MapUnitPosition.XY;
+                if (!mapUnitDictionary.ContainsKey(xy))
+                {
+                    mapUnitDictionary.Add(xy, new List<MapUnit>());
+                }
+                mapUnitDictionary[xy].Add(mapUnit);
+            }
+
+            return mapUnitDictionary;
+        }
     }
 }
