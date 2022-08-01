@@ -88,7 +88,7 @@ namespace Ultima5Redux.MapUnits
         private int _nCurrentAnimationIndex = 0;
         // public double TimeOfLastUpdate { get; set; }
         private DateTime _lastAnimationUpdate;
-        private double _dTimeBetweenAnimation = 0.5f;
+        private double _dTimeBetweenAnimation = 0.25f;
 
         public TileReference GetAnimatedTileReference()
         {
