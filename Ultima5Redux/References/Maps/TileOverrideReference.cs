@@ -28,5 +28,10 @@ namespace Ultima5Redux.References.Maps
         [DataMember] public int Y { get; set; }
 
         [DataMember] public int Z { get; set; }
+        
+        public enum TileType {Flat = 1, Primary = 2}
+        
+        [DataMember] public TileType TheTileType { get; set; }
+        
     }
 }

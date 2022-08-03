@@ -663,7 +663,9 @@ namespace Ultima5Redux
             {
                 List<MapUnit> mapUnits = State.TheVirtualMap.GetMapUnitsOnTile(xy);
                 if (mapUnits.Count <= 0)
+                {
                     throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
+                }
                 lookStr = GameReferences.DataOvlRef.StringReferences
                               .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
                           GameReferences.LookRef.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();

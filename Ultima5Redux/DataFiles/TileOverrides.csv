@@ -1,25 +1,29 @@
-Territory,MapNumber,X,Y,Z,SpriteNum,SpriteName,Comment
-Britannia,30,13,25,0,5,Grass,Lycaeum
-Britannia,30,17,25,0,5,Grass,Lycaeum
-Britannia,30,23,13,0,68,BrickFloor,Lycaeum
-Britannia,30,23,15,0,68,BrickFloor,Lycaeum
-Britannia,30,14,7,1,68,BrickFloor,Lycaeum
-Britannia,30,16,7,1,68,BrickFloor,Lycaeum
-Britannia,30,20,15,2,68,BrickFloor,Lycaeum
-Britannia      ,30       ,23,15,2,68       ,BrickFloor  ,Lycaeum
-Britannia      ,3        ,13,12,0,5        ,Grass       ,Jhelom
-Britannia      ,3        ,17,12,0,5        ,Grass       ,Jhelom
-Britannia      ,3        ,17,12,1,5        ,Grass       ,Jhelom
-Britannia      ,0        ,45,62,0,5        ,Grass       ,Iolos hut
-Britannia      ,2        ,13,19,0,48       ,OutsidePath1,Britain lamps
-Britannia      ,2        ,17,19,0,48       ,OutsidePath1,Britain lamps
-Britannia      ,2        ,17,11,0,50       ,OutsidePath3,Britain lamps
-Britannia      ,2        ,13,11,0,50       ,OutsidePath3,Britain lamps
-Britannia      ,2        ,13,8 ,0,49       ,OutsidePath2,Britain signs
-Britannia      ,13       ,14,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit
-Britannia      ,13       ,15,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit
-Britannia      ,13       ,16,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit
-CombatBritannia,11       ,3 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats
-CombatBritannia,11       ,3 ,6 ,0,197      ,StairsEast  ,Downward stairs on boats
-CombatBritannia,11       ,8 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats
-CombatBritannia,11       ,8 ,6 ,0,197      ,StairsEast  ,Downward stairs on boats
+Territory,MapNumber,X,Y,Z,SpriteNum,SpriteName,Comment,TheTileType
+Britannia,30,13,25,0,5,Grass,Lycaeum,1
+Britannia,30,17,25,0,5,Grass,Lycaeum,1
+Britannia,30,23,13,0,68,BrickFloor,Lycaeum,1
+Britannia,30,23,15,0,68,BrickFloor,Lycaeum,1
+Britannia,30,14,7,1,68,BrickFloor,Lycaeum,1
+Britannia,30,16,7,1,68,BrickFloor,Lycaeum,1
+Britannia,30,20,15,2,68,BrickFloor,Lycaeum,1
+Britannia      ,30       ,23,15,2,68       ,BrickFloor  ,Lycaeum,1
+Britannia      ,3        ,13,12,0,5        ,Grass       ,Jhelom,1
+Britannia      ,3        ,17,12,0,5        ,Grass       ,Jhelom,1
+Britannia      ,3        ,17,12,1,5        ,Grass       ,Jhelom,1
+Britannia      ,0        ,45,62,0,5        ,Grass       ,Iolos hut,1
+Britannia      ,2        ,13,19,0,48       ,OutsidePath1,Britain lamps,1
+Britannia      ,2        ,17,19,0,48       ,OutsidePath1,Britain lamps,1
+Britannia      ,2        ,17,11,0,50       ,OutsidePath3,Britain lamps,1
+Britannia      ,2        ,13,11,0,50       ,OutsidePath3,Britain lamps,1
+Britannia      ,2        ,13,8 ,0,49       ,OutsidePath2,Britain signs,1
+Britannia      ,2        ,17,8 ,0,51       ,OutsidePath4,Britain signs,1
+Britannia      ,2        ,8,20 ,0,50       ,OutsidePath3,Britain signs,1
+Britannia      ,2        ,9,20 ,0,50       ,OutsidePath3,Britain signs,1
+Britannia      ,2        ,10,20 ,0,50       ,OutsidePath3,Britain signs,1
+Britannia      ,13       ,14,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit,2
+Britannia      ,13       ,15,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit,2
+Britannia      ,13       ,16,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit,2
+CombatBritannia,11       ,3 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2
+CombatBritannia,11       ,3 ,6 ,0,197      ,StairsEast  ,Downward stairs on boats,2
+CombatBritannia,11       ,8 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2
+CombatBritannia,11       ,8 ,6 ,0,197      ,StairsEast  ,Downward stairs on boats,2

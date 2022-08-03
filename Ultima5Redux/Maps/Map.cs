@@ -147,7 +147,7 @@ namespace Ultima5Redux.Maps
 
         public TileReference GetTileReference(in Point2D xy)
         {
-            if (IsXYOverride(xy))
+            if (IsXYOverride(xy, TileOverrideReference.TileType.Primary))
                 return GameReferences.SpriteTileReferences.GetTileReference(GetTileOverride(xy).SpriteNum);
 
             return GameReferences.SpriteTileReferences.GetTileReference(TheMap[xy.X][xy.Y]);
@@ -155,9 +155,12 @@ namespace Ultima5Redux.Maps
 
         public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
 
-        public bool IsXYOverride(in Point2D xy)
+        public bool IsXYOverride(in Point2D xy, TileOverrideReference.TileType tileType)
         {
-            return XYOverrides != null && XYOverrides.ContainsKey(xy);
+            // this is kind of hacky - but the map is only aware of the primary tile, so if the override is 
+            // FLAT then we ignore it and find it later with VirtualMap
+            return XYOverrides != null && XYOverrides.ContainsKey(xy) && 
+                   XYOverrides[xy].TheTileType == tileType;
         }
 
         public void SetWalkableTile(in Point2D xy, bool bWalkable, WalkableType walkableType)

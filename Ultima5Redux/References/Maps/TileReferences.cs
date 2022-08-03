@@ -56,8 +56,8 @@ namespace Ultima5Redux.References.Maps
 
             _npcOnTopMapWithFood = new Dictionary<int, int>
             {
-                [GetTileNumberByName("ChairBackForward")] = GetTileNumberByName("SitChairDown1"),
-                [GetTileNumberByName("ChairBackBack")] = GetTileNumberByName("SitChairUp1")
+                [GetTileNumberByName("ChairBackForward")] = GetTileNumberByName("SitChairDownEat1"),
+                [GetTileNumberByName("ChairBackBack")] = GetTileNumberByName("SitChairUpEat1")
             };
             _npcOnTopMap = new Dictionary<int, int>
             {

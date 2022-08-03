@@ -1232,8 +1232,12 @@ namespace Ultima5Redux.Maps
         }
 
 
-        public int GetAlternateFlatSprite(Point2D xy)
+        public int GetAlternateFlatSprite(in Point2D xy)
         {
+            if (CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
+            {
+                return CurrentMap.GetTileOverride(xy).SpriteNum;
+            }
             int nSprite = GetTileReference(xy).FlatTileSubstitutionIndex;
 
             return nSprite is -2 or -3 ? GuessTile(xy) : nSprite;
@@ -1876,9 +1880,10 @@ namespace Ultima5Redux.Maps
 
             // we check our high level tile override
             // this method is much quicker because we only load the data once in the maps 
-            if (!IsLargeMap && CurrentMap.IsXYOverride(xy))
+            if (!IsLargeMap && CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
-            if (IsLargeMap && CurrentMap.IsXYOverride(xy)) return CurrentMap.GetTileOverride(xy).SpriteNum;
+            if (IsLargeMap && CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat)) 
+                return CurrentMap.GetTileOverride(xy).SpriteNum;
 
             // if has exposed search then we evaluate and see if it is actually a normal tile underneath
             if (TheMapOverrides.HasExposedSearchItems(xy))
@@ -2004,7 +2009,14 @@ namespace Ultima5Redux.Maps
             {
                 // sometimes characters are null because they don't exist - and that is OK
                 if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor))
+                {
+                    // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
+                    // for example it looks for crown, sceptre and amulet
+                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(mapUnit.KeyTileReference
+                            .Index))
+                        return false;
                     return true;
+                }
             }
 
             return false;

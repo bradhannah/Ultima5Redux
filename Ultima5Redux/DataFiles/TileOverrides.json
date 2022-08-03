@@ -7,7 +7,8 @@
       "Z": 0,
       "SpriteNum": 5,
       "SpriteName": "Grass",
-      "Comment": "Lycaeum"
+      "Comment": "Lycaeum",
+      "TheTileType": 1
     },
     {
       "MapNumber": 30,
@@ -16,7 +17,8 @@
       "Z": 0,
       "SpriteNum": 5,
       "SpriteName": "Grass",
-      "Comment": "Lycaeum"
+      "Comment": "Lycaeum",
+      "TheTileType": 1
     },
     {
       "MapNumber": 30,
@@ -25,7 +27,8 @@
       "Z": 0,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum"
+      "Comment": "Lycaeum",
+      "TheTileType": 1
     },
     {
       "MapNumber": 30,
@@ -34,7 +37,8 @@
       "Z": 0,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum"
+      "Comment": "Lycaeum",
+      "TheTileType": 1
     },
     {
       "MapNumber": 30,
@@ -43,7 +47,8 @@
       "Z": 1,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum"
+      "Comment": "Lycaeum",
+      "TheTileType": 1
     },
     {
       "MapNumber": 30,
@@ -52,7 +57,8 @@
       "Z": 1,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum"
+      "Comment": "Lycaeum",
+      "TheTileType": 1
     },
     {
       "MapNumber": 30,
@@ -61,16 +67,20 @@
       "Z": 2,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum"
-    },
+      "Comment": "Lycaeum",
+      "TheTileType": 1
+    }
+  ],
+  "Britannia      ": [
     {
       "MapNumber": 30,
       "X": 23,
       "Y": 15,
       "Z": 2,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum"
+      "SpriteName": "BrickFloor  ",
+      "Comment": "Lycaeum",
+      "TheTileType": 1
     },
     {
       "MapNumber": 3,
@@ -78,8 +88,9 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Jhelom"
+      "SpriteName": "Grass       ",
+      "Comment": "Jhelom",
+      "TheTileType": 1
     },
     {
       "MapNumber": 3,
@@ -87,8 +98,9 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Jhelom"
+      "SpriteName": "Grass       ",
+      "Comment": "Jhelom",
+      "TheTileType": 1
     },
     {
       "MapNumber": 3,
@@ -96,8 +108,9 @@
       "Y": 12,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Jhelom"
+      "SpriteName": "Grass       ",
+      "Comment": "Jhelom",
+      "TheTileType": 1
     },
     {
       "MapNumber": 0,
@@ -105,8 +118,9 @@
       "Y": 62,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Iolos hut"
+      "SpriteName": "Grass       ",
+      "Comment": "Iolos hut",
+      "TheTileType": 1
     },
     {
       "MapNumber": 2,
@@ -115,7 +129,8 @@
       "Z": 0,
       "SpriteNum": 48,
       "SpriteName": "OutsidePath1",
-      "Comment": "Britain lamps"
+      "Comment": "Britain lamps",
+      "TheTileType": 1
     },
     {
       "MapNumber": 2,
@@ -124,7 +139,8 @@
       "Z": 0,
       "SpriteNum": 48,
       "SpriteName": "OutsidePath1",
-      "Comment": "Britain lamps"
+      "Comment": "Britain lamps",
+      "TheTileType": 1
     },
     {
       "MapNumber": 2,
@@ -133,7 +149,8 @@
       "Z": 0,
       "SpriteNum": 50,
       "SpriteName": "OutsidePath3",
-      "Comment": "Britain lamps"
+      "Comment": "Britain lamps",
+      "TheTileType": 1
     },
     {
       "MapNumber": 2,
@@ -142,7 +159,8 @@
       "Z": 0,
       "SpriteNum": 50,
       "SpriteName": "OutsidePath3",
-      "Comment": "Britain lamps"
+      "Comment": "Britain lamps",
+      "TheTileType": 1
     },
     {
       "MapNumber": 2,
@@ -151,7 +169,48 @@
       "Z": 0,
       "SpriteNum": 49,
       "SpriteName": "OutsidePath2",
-      "Comment": "Britain signs"
+      "Comment": "Britain signs",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 2,
+      "X": 17,
+      "Y": 8,
+      "Z": 0,
+      "SpriteNum": 51,
+      "SpriteName": "OutsidePath4",
+      "Comment": "Britain signs",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 2,
+      "X": 8,
+      "Y": 20,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3",
+      "Comment": "Britain signs",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 2,
+      "X": 9,
+      "Y": 20,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3",
+      "Comment": "Britain signs",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 2,
+      "X": 10,
+      "Y": 20,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3",
+      "Comment": "Britain signs",
+      "TheTileType": 1
     },
     {
       "MapNumber": 13,
@@ -159,8 +218,9 @@
       "Y": 31,
       "Z": 0,
       "SpriteNum": 9,
-      "SpriteName": "Forest3",
-      "Comment": "Iolos hut - Extra trees at exit"
+      "SpriteName": "Forest3     ",
+      "Comment": "Iolos hut - Extra trees at exit",
+      "TheTileType": 2
     },
     {
       "MapNumber": 13,
@@ -168,8 +228,9 @@
       "Y": 31,
       "Z": 0,
       "SpriteNum": 9,
-      "SpriteName": "Forest3",
-      "Comment": "Iolos hut - Extra trees at exit"
+      "SpriteName": "Forest3     ",
+      "Comment": "Iolos hut - Extra trees at exit",
+      "TheTileType": 2
     },
     {
       "MapNumber": 13,
@@ -177,8 +238,9 @@
       "Y": 31,
       "Z": 0,
       "SpriteNum": 9,
-      "SpriteName": "Forest3",
-      "Comment": "Iolos hut - Extra trees at exit"
+      "SpriteName": "Forest3     ",
+      "Comment": "Iolos hut - Extra trees at exit",
+      "TheTileType": 2
     }
   ],
   "CombatBritannia": [
@@ -188,8 +250,9 @@
       "Y": 4,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast",
-      "Comment": "Downward stairs on boats"
+      "SpriteName": "StairsEast  ",
+      "Comment": "Downward stairs on boats",
+      "TheTileType": 2
     },
     {
       "MapNumber": 11,
@@ -197,8 +260,9 @@
       "Y": 6,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast",
-      "Comment": "Downward stairs on boats"
+      "SpriteName": "StairsEast  ",
+      "Comment": "Downward stairs on boats",
+      "TheTileType": 2
     },
     {
       "MapNumber": 11,
@@ -206,8 +270,9 @@
       "Y": 4,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast",
-      "Comment": "Downward stairs on boats"
+      "SpriteName": "StairsEast  ",
+      "Comment": "Downward stairs on boats",
+      "TheTileType": 2
     },
     {
       "MapNumber": 11,
@@ -215,8 +280,9 @@
       "Y": 6,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast",
-      "Comment": "Downward stairs on boats"
+      "SpriteName": "StairsEast  ",
+      "Comment": "Downward stairs on boats",
+      "TheTileType": 2
     }
   ]
 }

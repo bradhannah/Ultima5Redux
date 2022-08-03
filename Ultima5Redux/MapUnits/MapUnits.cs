@@ -579,12 +579,6 @@ namespace Ultima5Redux.MapUnits
             int nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
             if (nIndex == -1) return false;
 
-            // Horse horse = new(_importedMovements.GetMovement(nIndex), CurrentLocation, Point2D.Direction.Right,
-            //     null, mapUnitPosition)
-            // {
-            //     MapUnitPosition = mapUnitPosition
-            // };
-
             nonAttackingUnit.MapUnitPosition = mapUnitPosition;
 
             // set position of frigate in the world
@@ -631,13 +625,9 @@ namespace Ultima5Redux.MapUnits
             nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
             if (nIndex == -1) return null;
 
-            //Point2D thingPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
             MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
             NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite, mapUnitPosition);
 
-            // Enemy enemy = new(_importedMovements.GetMovement(nIndex), enemyReference, CurrentLocation, null,
-            //     new MapUnitPosition(xy.X, xy.Y, 0));
-            //
             nIndex = AddCombatMapUnit(nonAttackingUnit);
 
             return nonAttackingUnit;
@@ -692,14 +682,17 @@ namespace Ultima5Redux.MapUnits
             List<MapUnit> mapUnits = new();
 
             foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllMapUnits) 
-                     //GetMapUnitCollection(map).AllActiveMapUnits)
             {
                 if (!mapUnit.IsActive) continue;
                 // sometimes characters are null because they don't exist - and that is OK
                 //Debug.Assert(mapUnit.IsActive);
-
-                if (mapUnit.MapUnitPosition.X == xy.X && mapUnit.MapUnitPosition.Y == xy.Y && mapUnit.MapUnitPosition.Floor == nFloor)
+                if (mapUnit.MapUnitPosition.X == xy.X && mapUnit.MapUnitPosition.Y == xy.Y &&
+                    mapUnit.MapUnitPosition.Floor == nFloor)
+                {
+                    int nTileIndex = mapUnit.KeyTileReference.Index;
+                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(nTileIndex)) continue;
                     mapUnits.Add(mapUnit);
+                }
             }
 
             return mapUnits;

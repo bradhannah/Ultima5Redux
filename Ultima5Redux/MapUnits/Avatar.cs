@@ -202,6 +202,7 @@ namespace Ultima5Redux.MapUnits
 
         private static AvatarState CalculateAvatarState(TileReference tileReference)
         {
+            if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
             if (tileReference.Name == "Avatar1") return AvatarState.Regular;
             if (tileReference.Name.StartsWith("Ship")) return AvatarState.Frigate;
             if (tileReference.Name.StartsWith("Skiff")) return AvatarState.Skiff;

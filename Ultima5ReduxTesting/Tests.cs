@@ -2312,5 +2312,27 @@ namespace Ultima5ReduxTesting
 
         }
 
+        [Test] [TestCase(SaveFiles.Britain3)] public void Test_FoodSignInBritain(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            Point2D foodSignPos = new Point2D(13, 8);
+            TileReference tileReference = world.State.TheVirtualMap.GetTileReference(foodSignPos);
+            Assert.True(tileReference.Index == 240);
+            int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
+            Assert.True(nGuessIndex == 49);
+            int nNextGuess = world.State.TheVirtualMap.GuessTile(new Point2D(17,19));
+            Assert.True(nNextGuess == 48);
+
+            nNextGuess = world.State.TheVirtualMap.GetAlternateFlatSprite(new Point2D(17, 19));
+            Assert.True(nNextGuess == 48);
+
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(new Point2D(16, 9));
+            
+            TileStack ts = world.State.TheVirtualMap.GetTileStack(new Point2D(17, 19), true);
+            _ = "";
+
+
+        }
     }
 }

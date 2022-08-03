@@ -190,6 +190,28 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return true;
         }
 
+        public bool DoIHaveSpecialTileReferenceIndex(int nIndex)
+        {
+            switch (nIndex)
+            {
+                // it's a crown, sceptre or amulet
+                // we need to check against our inventory because the map doesn't know if we have it or not
+                case >= 437 and <= 439:
+                    LordBritishArtifact lordBritishArtifact = 
+                        Artifacts.Items[(LordBritishArtifact.ArtifactType)nIndex];
+                    if (lordBritishArtifact.Quantity > 0) return true;
+                    break;
+                // it's a shard
+                case 270:
+                    if (SpecializedItems.Items[SpecialItem.SpecificItemType.WoodenBox].Quantity > 0) return true;
+                    break;
+                case 436:
+                    break;
+            }
+
+            return false;
+        }
+
         /// <summary>
         ///     Finds a corresponding inventoryItem and adds the quantity, or just plain ole adds it to the
         ///     the inventory if didn't already exist
@@ -245,17 +267,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 default:
                     throw new ArgumentOutOfRangeException(nameof(inventoryItem));
             }
-            //     [DataMember] public LordBritishArtifacts Artifacts { get; set; }
-            // [DataMember] public Potions MagicPotions { get; set; }
-            // [DataMember] public Scrolls MagicScrolls { get; set; }
-            // [DataMember] public Spells MagicSpells { get; set; }
-            // [DataMember] public Armours ProtectiveArmour { get; set; }
-            // [DataMember] public ShadowlordShards Shards { get; set; }
-            // [DataMember] public SpecialItems SpecializedItems { get; set; }
-            // [DataMember] public Reagents SpellReagents { get; set; }
-            // [DataMember] public Moonstones TheMoonstones { get; set; }
-            // [DataMember] public Provisions TheProvisions { get; set; }
-            // [DataMember] public Weapons TheWeapons { get; set; }           
+            
         }
     }
 }
