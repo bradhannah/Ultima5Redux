@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -86,11 +85,18 @@ namespace Ultima5Redux.Maps
         [DataMember]
         public Map.Maps LargeMapOverUnder { get; private set; } = (Map.Maps)(-1);
 
-        [DataMember] public MapUnits.MapUnits TheMapUnits { get; private set; }
-
         [DataMember] public int OneInXOddsOfNewMonster { get; set; } = 16;
 
+        [DataMember] public MapUnits.MapUnits TheMapUnits { get; private set; }
+
         [IgnoreDataMember] private SmallMapReferences.SingleMapReference _currentSingleMapReference;
+
+        /// <summary>
+        ///     Current large map (null if on small map)
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        [IgnoreDataMember]
+        public LargeMap CurrentLargeMap => _largeMaps[LargeMapOverUnder];
 
         /// <summary>
         ///     The abstracted Map object for the current map
@@ -176,35 +182,6 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] public CombatMap CurrentCombatMap { get; private set; }
 
-        /// <summary>
-        ///     Current large map (null if on small map)
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        [IgnoreDataMember]
-        public LargeMap CurrentLargeMap => _largeMaps[LargeMapOverUnder];
-
-        public Point2D GetCameraCenter()
-        {
-            if (IsCombatMap)
-            {
-                return new Point2D(CurrentMap.NumOfXTiles / 2, CurrentMap.NumOfYTiles / 2);
-            }
-
-            return CurrentPosition.XY;
-        }
-
-        internal void SavePreviousPosition(MapUnitPosition mapUnitPosition)
-        {
-            PreviousPosition.X = mapUnitPosition.X;
-            PreviousPosition.Y = mapUnitPosition.Y;
-            PreviousPosition.Floor = mapUnitPosition.Floor;
-        }
-
-        public MapUnitPosition PreviousPosition
-        {
-            get;
-        } = new();
-        
         [IgnoreDataMember]
         public MapUnitPosition CurrentPosition
         {
@@ -229,6 +206,27 @@ namespace Ultima5Redux.Maps
                 combatMap.CurrentCombatPlayer.MapUnitPosition = value;
             }
         }
+
+        private readonly List<Type> _visibilePriorityOrder = new()
+        {
+            typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
+            typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
+        };
+
+        public IEnumerable<MapUnit> AllVisibleActiveMapUnits
+        {
+            get
+            {
+                IEnumerable<Point2D> allPoints =
+                    TheMapUnits.CurrentMapUnits.AllActiveMapUnits.Select(e => e.MapUnitPosition.XY);
+                IEnumerable<MapUnit> visibleMapUnits =
+                    allPoints.Select(point => GetTopVisibleMapUnit(point, false));
+                return visibleMapUnits;
+            }
+        }
+
+        public MapUnitPosition PreviousPosition { get; } = new();
 
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
@@ -276,129 +274,9 @@ namespace Ultima5Redux.Maps
         {
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns>true if a monster was created</returns>
-        /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
-        private bool CreateRandomMonster(int nTurn)
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            const int maxTries = 10;
-            const int nDistanceAway = 7;
-
-            // find a position or give up
-            int dX = nDistanceAway;
-            int dY;
-            for (int i = 0; i < maxTries; i++)
-            {
-                dY = Utils.Ran.Next() % nDistanceAway;
-
-                // this logic borrowed from Xu4 to create some randomness
-                if (Utils.OneInXOdds(2)) dX = -dX;
-                if (Utils.OneInXOdds(2)) dY = -dY;
-                if (Utils.OneInXOdds(2)) Utils.SwapInts(ref dX, ref dY);
-
-                Point2D tilePosition = new((CurrentPosition.X + dX) % NumberOfColumnTiles,
-                    (CurrentPosition.Y + dY) % NumberOfRowTiles);
-                tilePosition.AdjustXAndYToMax(CurrentMap.NumOfXTiles);
-
-                if (TheMapUnits.IsTileOccupied(tilePosition)) continue;
-
-                // it's not occupied so we can create a monster
-                EnemyReference enemyRef =
-                    GameReferences.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn, GetTileReference(tilePosition));
-                if (enemyRef == null) continue;
-
-                // add the new character to our list of characters currently on the map
-                Enemy enemy = TheMapUnits.CreateEnemy(tilePosition, enemyRef, CurrentLargeMap.CurrentSingleMapReference,
-                    out int _);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public class AggressiveMapUnitInfo
-        {
-            public MapUnit AttackingMapUnit { get; }
-            public CombatItemReference.MissileType AttackingMissileType { get; internal set; }
-            public SingleCombatMapReference CombatMapReference { get; internal set; }
-
-            public enum DecidedAction
-            {
-                Unset = -1, MoveUnit = 0, RangedAttack, MeleeOverworldAttack, Stay, EnemyAttackCombatMap
-            }
-
-            private DecidedAction _decidedAction = DecidedAction.Unset;
-
-            public DecidedAction GetDecidedAction()
-            {
-                if (_decidedAction != DecidedAction.Unset) return _decidedAction;
-                // if they have a combat map - then they are next to them and could go into combat
-                // if they have a missile type then they are within range and will attack with that
-                // if they have a Arrow missile type, then they will attack them melee in the overworld
-                if (CombatMapReference != null)
-                {
-                    _decidedAction = DecidedAction.EnemyAttackCombatMap;
-                }
-                else if (AttackingMissileType == CombatItemReference.MissileType.Arrow)
-                {
-                    _decidedAction = DecidedAction.MeleeOverworldAttack;
-                }
-                else if (AttackingMissileType != CombatItemReference.MissileType.None)
-                {
-                    // we will not ALWAYS range attack, sometimes they will try to get closer to the avatar
-                    _decidedAction = Utils.OneInXOdds(2) ? DecidedAction.RangedAttack : DecidedAction.MoveUnit;
-                }
-                else
-                {
-                    _decidedAction = DecidedAction.MoveUnit;
-                }
-
-                return _decidedAction;
-            }
-
-            public AggressiveMapUnitInfo(MapUnit attackingMapUnit,
-                CombatItemReference.MissileType attackingMissileType = CombatItemReference.MissileType.None,
-                SingleCombatMapReference combatMapReference = null)
-            {
-                AttackingMapUnit = attackingMapUnit;
-                AttackingMissileType = attackingMissileType;
-                CombatMapReference = combatMapReference;
-            }
-        }
-
-        /// <summary>
-        ///     Gathers the details of what if any aggressive action the mapunits would do this turn
-        /// </summary>
-        /// <returns></returns>
-        internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetAggressiveMapUnitInfo()
-        {
-            Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
-
-            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
-            {
-                // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
-                // in the list of aggressors
-                if (mapUnit is not Enemy && mapUnit is not NonPlayerCharacter)
-                {
-                    continue;
-                }
-
-                AggressiveMapUnitInfo mapUnitInfo =
-                    GetAggressiveMapUnitInfo(
-                        mapUnit.MapUnitPosition.XY,
-                        TheMapUnits.CurrentAvatarPosition.XY,
-                        SingleCombatMapReference.Territory.Britannia, mapUnit);
-
-                if (mapUnitInfo.CombatMapReference != null)
-                    StreamingOutput.Instance.PushMessage(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
-                                                         mapUnitInfo.CombatMapReference.Description);
-                // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
-                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
-            }
-
-            return aggressiveMapUnitInfos;
+            TheMapOverrides.TheMap = CurrentMap;
         }
 
         internal void DamageShip(Point2D.Direction windDirection, TurnResults turnResults)
@@ -448,108 +326,6 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        // Performs all of the aggressive actions and stores results
-        internal void ProcessAggressiveMapUnitAttacks(PlayerCharacterRecords records,
-            Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos,
-            out AggressiveMapUnitInfo combatMapAggressor, TurnResults turnResults)
-        {
-            combatMapAggressor = null;
-
-            // if there are monsters with combat maps attached to them - then we look at them first
-            // if you are going to a combat map then we will never process overworld ranged and melee attacks
-            List<AggressiveMapUnitInfo> aggressiveMapUnitInfosWithCombatMaps =
-                aggressiveMapUnitInfos.Values.Where(ag => ag.CombatMapReference != null).ToList();
-
-            if (aggressiveMapUnitInfosWithCombatMaps.Count > 0)
-            {
-                // there is at least one combat map reference
-                int nCombatMapEnemies = aggressiveMapUnitInfosWithCombatMaps.Count;
-
-                int nChoice = Utils.GetNumberFromAndTo(0, nCombatMapEnemies - 1);
-
-                combatMapAggressor = aggressiveMapUnitInfosWithCombatMaps[nChoice];
-                aggressiveMapUnitInfos.Clear();
-                aggressiveMapUnitInfos[combatMapAggressor.AttackingMapUnit] = combatMapAggressor;
-                return;
-            }
-
-            //IsAvatarInFrigate
-            //IsAvatarInSkiff
-
-            // we are certain at this point that there is no combat map, so it's all ranged if anything at all
-            foreach (KeyValuePair<MapUnit, AggressiveMapUnitInfo> kvp in aggressiveMapUnitInfos)
-            {
-                AggressiveMapUnitInfo aggressiveMapUnitInfo = kvp.Value;
-                MapUnit mapUnit = kvp.Key;
-
-                Debug.Assert(aggressiveMapUnitInfo.CombatMapReference == null);
-
-                // bajh: I know all the conditions look identical now - but I suspect they have different attack
-                // powers I will tweak later
-
-                // it's possible that the aggressor may not actually be attacking even if they can
-                if (aggressiveMapUnitInfo.GetDecidedAction() !=
-                    AggressiveMapUnitInfo.DecidedAction.RangedAttack) continue;
-
-                switch (aggressiveMapUnitInfo.AttackingMissileType)
-                {
-                    case CombatItemReference.MissileType.None:
-                        break;
-
-                    case CombatItemReference.MissileType.Arrow:
-                        // do they have any melee attacks? Melee attacks are noted with .Arrow for now
-                        // if on skiff then party takes damage
-                        // if on frigate then frigate takes damage
-                        if (IsAvatarInFrigate)
-                        {
-                            // frigate takes damage instead
-                            DamageShip(Point2D.Direction.None, turnResults);
-                        }
-                        else
-                        {
-                            records.DamageEachCharacter(1, 9);
-                        }
-
-                        StreamingOutput.Instance.PushMessage(
-                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
-                        continue;
-                    case CombatItemReference.MissileType.CannonBall:
-                        if (IsAvatarInFrigate)
-                        {
-                            DamageShip(Point2D.Direction.None, turnResults);
-                        }
-                        else
-                        {
-                            records.DamageEachCharacter(1, 9);
-                        }
-
-                        StreamingOutput.Instance.PushMessage(
-                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (cannonball)",
-                            false);
-
-                        continue;
-                    case CombatItemReference.MissileType.Red:
-                        // if on a frigate then only the frigate takes damage, like a shield!
-                        if (IsAvatarInFrigate)
-                        {
-                            DamageShip(Point2D.Direction.None, turnResults);
-                        }
-                        else
-                        {
-                            records.DamageEachCharacter(1, 9);
-                        }
-
-                        StreamingOutput.Instance.PushMessage(
-                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (ranged)", false);
-
-                        continue;
-                    default:
-                        throw new Ultima5ReduxException(
-                            "Only \"Red\" and CannonBall ranged attacks have been configured");
-                }
-            }
-        }
-
         /// <summary>
         ///     Decides if any enemies needed to be spawned or despawned
         /// </summary>
@@ -582,6 +358,39 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new InvalidEnumArgumentException();
             }
+        }
+
+        /// <summary>
+        ///     Gathers the details of what if any aggressive action the mapunits would do this turn
+        /// </summary>
+        /// <returns></returns>
+        internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetAggressiveMapUnitInfo()
+        {
+            Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
+
+            foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
+            {
+                // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
+                // in the list of aggressors
+                if (mapUnit is not Enemy && mapUnit is not NonPlayerCharacter)
+                {
+                    continue;
+                }
+
+                AggressiveMapUnitInfo mapUnitInfo =
+                    GetAggressiveMapUnitInfo(
+                        mapUnit.MapUnitPosition.XY,
+                        TheMapUnits.CurrentAvatarPosition.XY,
+                        SingleCombatMapReference.Territory.Britannia, mapUnit);
+
+                if (mapUnitInfo.CombatMapReference != null)
+                    StreamingOutput.Instance.PushMessage(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
+                                                         mapUnitInfo.CombatMapReference.Description);
+                // it's not an aggressive Npc or Enemy so skip on past - nothing to see here
+                aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
+            }
+
+            return aggressiveMapUnitInfos;
         }
 
         /// <summary>
@@ -767,6 +576,135 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        // Performs all of the aggressive actions and stores results
+        internal void ProcessAggressiveMapUnitAttacks(PlayerCharacterRecords records,
+            Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos,
+            out AggressiveMapUnitInfo combatMapAggressor, TurnResults turnResults)
+        {
+            combatMapAggressor = null;
+
+            // if there are monsters with combat maps attached to them - then we look at them first
+            // if you are going to a combat map then we will never process overworld ranged and melee attacks
+            List<AggressiveMapUnitInfo> aggressiveMapUnitInfosWithCombatMaps =
+                aggressiveMapUnitInfos.Values.Where(ag => ag.CombatMapReference != null).ToList();
+
+            if (aggressiveMapUnitInfosWithCombatMaps.Count > 0)
+            {
+                // there is at least one combat map reference
+                int nCombatMapEnemies = aggressiveMapUnitInfosWithCombatMaps.Count;
+
+                int nChoice = Utils.GetNumberFromAndTo(0, nCombatMapEnemies - 1);
+
+                combatMapAggressor = aggressiveMapUnitInfosWithCombatMaps[nChoice];
+                aggressiveMapUnitInfos.Clear();
+                aggressiveMapUnitInfos[combatMapAggressor.AttackingMapUnit] = combatMapAggressor;
+                return;
+            }
+
+            //IsAvatarInFrigate
+            //IsAvatarInSkiff
+
+            // we are certain at this point that there is no combat map, so it's all ranged if anything at all
+            foreach (KeyValuePair<MapUnit, AggressiveMapUnitInfo> kvp in aggressiveMapUnitInfos)
+            {
+                AggressiveMapUnitInfo aggressiveMapUnitInfo = kvp.Value;
+                MapUnit mapUnit = kvp.Key;
+
+                Debug.Assert(aggressiveMapUnitInfo.CombatMapReference == null);
+
+                // bajh: I know all the conditions look identical now - but I suspect they have different attack
+                // powers I will tweak later
+
+                // it's possible that the aggressor may not actually be attacking even if they can
+                if (aggressiveMapUnitInfo.GetDecidedAction() !=
+                    AggressiveMapUnitInfo.DecidedAction.RangedAttack) continue;
+
+                switch (aggressiveMapUnitInfo.AttackingMissileType)
+                {
+                    case CombatItemReference.MissileType.None:
+                        break;
+
+                    case CombatItemReference.MissileType.Arrow:
+                        // do they have any melee attacks? Melee attacks are noted with .Arrow for now
+                        // if on skiff then party takes damage
+                        // if on frigate then frigate takes damage
+                        if (IsAvatarInFrigate)
+                        {
+                            // frigate takes damage instead
+                            DamageShip(Point2D.Direction.None, turnResults);
+                        }
+                        else
+                        {
+                            records.DamageEachCharacter(1, 9);
+                        }
+
+                        StreamingOutput.Instance.PushMessage(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
+                        continue;
+                    case CombatItemReference.MissileType.CannonBall:
+                        if (IsAvatarInFrigate)
+                        {
+                            DamageShip(Point2D.Direction.None, turnResults);
+                        }
+                        else
+                        {
+                            records.DamageEachCharacter(1, 9);
+                        }
+
+                        StreamingOutput.Instance.PushMessage(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (cannonball)",
+                            false);
+
+                        continue;
+                    case CombatItemReference.MissileType.Red:
+                        // if on a frigate then only the frigate takes damage, like a shield!
+                        if (IsAvatarInFrigate)
+                        {
+                            DamageShip(Point2D.Direction.None, turnResults);
+                        }
+                        else
+                        {
+                            records.DamageEachCharacter(1, 9);
+                        }
+
+                        StreamingOutput.Instance.PushMessage(
+                            $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (ranged)", false);
+
+                        continue;
+                    default:
+                        throw new Ultima5ReduxException(
+                            "Only \"Red\" and CannonBall ranged attacks have been configured");
+                }
+            }
+        }
+
+        internal void SavePreviousPosition(MapUnitPosition mapUnitPosition)
+        {
+            PreviousPosition.X = mapUnitPosition.X;
+            PreviousPosition.Y = mapUnitPosition.Y;
+            PreviousPosition.Floor = mapUnitPosition.Floor;
+        }
+
+        internal InventoryItem SearchAndExposeInventoryItem(in Point2D xy)
+        {
+            // check for moonstones
+            // moonstone check
+            if (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder) &&
+                GameStateReference.State.TheTimeOfDay.IsDayLight)
+            {
+                MoonPhaseReferences.MoonPhases moonPhase =
+                    GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
+                InventoryItem invItem = GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
+                TheMapOverrides.EnqueueSearchItem(xy, invItem);
+
+                GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
+
+                return invItem;
+            }
+
+            return null;
+        }
+
         internal bool SearchNonAttackingMapUnit(in Point2D xy, TurnResults turnResults,
             PlayerCharacterRecord record, PlayerCharacterRecords records)
         {
@@ -784,37 +722,6 @@ namespace Ultima5Redux.Maps
             }
 
             return false;
-        }
-
-        public bool ProcessSearchInnerItems(TurnResults turnResults, NonAttackingUnit nonAttackingUnit, bool bSearched,
-            bool bOpened)
-        {
-            bool bHasInnerItems = nonAttackingUnit.HasInnerItemStack;
-            ItemStack itemStack = nonAttackingUnit.InnerItemStack;
-            if (bHasInnerItems)
-            {
-                StreamingOutput.Instance.PushMessage(nonAttackingUnit.InnerItemStack.ThouFindStr);
-            }
-            else
-            {
-                StreamingOutput.Instance.PushMessage(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
-                        .NOTHING_OF_NOTE_BANG_N));
-            }
-
-            // delete the deadbody and add stuff
-            //TheMapUnits.ClearAndSetEmptyMapUnits(nonAttackingUnit);
-            nonAttackingUnit.HasBeenSearched = bSearched;
-            nonAttackingUnit.HasBeenOpened = bOpened;
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchThingDisappears));
-
-            if (bHasInnerItems)
-            {
-                // there were items inside the thing, so we place them 
-                TheMapUnits.PlaceNonAttackingUnit(itemStack, nonAttackingUnit.MapUnitPosition, LargeMapOverUnder);
-            }
-
-            return bHasInnerItems;
         }
 
         private static void ProcessSearchNonAttackUnitTrap(TurnResults turnResults, PlayerCharacterRecord record,
@@ -886,24 +793,46 @@ namespace Ultima5Redux.Maps
             // HURT THE PLAYER IF THEY ARE AFFECTED BY TRAP
         }
 
-        internal InventoryItem SearchAndExposeInventoryItem(in Point2D xy)
+        /// <summary>
+        /// </summary>
+        /// <returns>true if a monster was created</returns>
+        /// <remarks>see gameSpawnCreature in xu4 for similar method</remarks>
+        private bool CreateRandomMonster(int nTurn)
         {
-            // check for moonstones
-            // moonstone check
-            if (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder) &&
-                GameStateReference.State.TheTimeOfDay.IsDayLight)
+            const int maxTries = 10;
+            const int nDistanceAway = 7;
+
+            // find a position or give up
+            int dX = nDistanceAway;
+            int dY;
+            for (int i = 0; i < maxTries; i++)
             {
-                MoonPhaseReferences.MoonPhases moonPhase =
-                    GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
-                InventoryItem invItem = GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
-                TheMapOverrides.EnqueueSearchItem(xy, invItem);
+                dY = Utils.Ran.Next() % nDistanceAway;
 
-                GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
+                // this logic borrowed from Xu4 to create some randomness
+                if (Utils.OneInXOdds(2)) dX = -dX;
+                if (Utils.OneInXOdds(2)) dY = -dY;
+                if (Utils.OneInXOdds(2)) Utils.SwapInts(ref dX, ref dY);
 
-                return invItem;
+                Point2D tilePosition = new((CurrentPosition.X + dX) % NumberOfColumnTiles,
+                    (CurrentPosition.Y + dY) % NumberOfRowTiles);
+                tilePosition.AdjustXAndYToMax(CurrentMap.NumOfXTiles);
+
+                if (TheMapUnits.IsTileOccupied(tilePosition)) continue;
+
+                // it's not occupied so we can create a monster
+                EnemyReference enemyRef =
+                    GameReferences.EnemyRefs.GetRandomEnemyReferenceByEraAndTile(nTurn, GetTileReference(tilePosition));
+                if (enemyRef == null) continue;
+
+                // add the new character to our list of characters currently on the map
+                Enemy enemy = TheMapUnits.CreateEnemy(tilePosition, enemyRef, CurrentLargeMap.CurrentSingleMapReference,
+                    out int _);
+
+                return true;
             }
 
-            return null;
+            return false;
         }
 
         /// <summary>
@@ -1041,6 +970,37 @@ namespace Ultima5Redux.Maps
             return sortedPoints;
         }
 
+
+        private bool IsInsideBounds(in Point2D xy)
+        {
+            Map currentMap = CurrentMap;
+            return !(xy.X >= currentMap.VisibleOnMap.Length || xy.X < 0 ||
+                     xy.Y >= currentMap.VisibleOnMap[xy.X].Length || xy.Y < 0);
+        }
+
+        private bool IsMapUnitOccupiedFromList(in Point2D xy, IEnumerable<MapUnit> mapUnits)
+        {
+            //IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            int nFloor = _currentSingleMapReference.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                // sometimes characters are null because they don't exist - and that is OK
+                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor))
+                {
+                    // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
+                    // for example it looks for crown, sceptre and amulet
+                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(mapUnit
+                            .KeyTileReference
+                            .Index))
+                        return false;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private bool IsTileFreeToTravelLocal(in Point2D.Direction direction, Avatar.AvatarState avatarState)
         {
             return IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
@@ -1136,6 +1096,66 @@ namespace Ultima5Redux.Maps
             return docks[location];
         }
 
+        public bool AreAnyTilesWithinFourDirections(Point2D position, IEnumerable<TileReference> tileReferences) =>
+            tileReferences.Any(tileReference => IsTileWithinFourDirections(position, tileReference));
+
+        public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
+            ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
+
+        public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
+        {
+            double nShortestRadius = 255;
+            Map currentMap = CurrentMap;
+            bool bIsRepeatingMap = CurrentMap.IsRepeatingMap;
+            TheMapUnits.CurrentMapUnits.RefreshActiveDictionaryCache();
+            // an optimization to speed up checking of map units
+            Dictionary<Point2D, List<MapUnit>> cachedActive = TheMapUnits.CurrentMapUnits.CachedActiveDictionary;
+
+            for (int nRow = midPosition.X - nRadius; nRow < midPosition.X + nRadius; nRow++)
+            {
+                for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
+                {
+                    Point2D adjustedPos;
+                    if (bIsRepeatingMap)
+                    {
+                        adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, currentMap.NumOfXTiles),
+                            Point2D.AdjustToMax(nCol, currentMap.NumOfYTiles));
+                    }
+                    else
+                    {
+                        if (nRow < 0 || nRow >= currentMap.NumOfXTiles || nCol < 0 || nCol >= currentMap.NumOfYTiles)
+                            continue;
+
+                        adjustedPos = new Point2D(nRow, nCol);
+                    }
+
+                    int nTileIndex = GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
+                    bool bHasMapUnits = cachedActive.ContainsKey(adjustedPos);
+                    MapUnit mapUnit = bHasMapUnits ? GetTopVisibleMapUnit(adjustedPos, true) : null;
+
+                    //if (mapUnit != null) _ = "";
+                    bool bMapUnitMatches = mapUnit != null && checkTile(mapUnit.KeyTileReference.Index);
+
+                    if (!checkTile(nTileIndex) && !bMapUnitMatches) continue;
+                    double fDistance = Point2D.DistanceBetween(midPosition.X, midPosition.Y, nRow, nCol);
+                    if (nShortestRadius < fDistance) continue;
+
+                    // shortcut in case we hit it
+                    if (nRadius == 1) return 1;
+                    nShortestRadius = fDistance;
+                }
+            }
+
+            if (Math.Abs(nShortestRadius - 255) < 0.05f) return 255;
+            return (int)Math.Round(nShortestRadius);
+        }
+
+        public int ClosestTileReferenceAround(TileReference tileReference, Point2D midPosition, int nRadius) =>
+            ClosestTileReferenceAround(midPosition, nRadius, i => tileReference.Index == i);
+
+        public int ClosestTileReferenceAround(TileReference tileReference, int nRadius) =>
+            ClosestTileReferenceAround(CurrentPosition.XY, nRadius, i => tileReference.Index == i);
+
         public bool ContainsSearchableThings(in Point2D xy)
         {
             // moonstone check
@@ -1170,294 +1190,6 @@ namespace Ultima5Redux.Maps
         public InventoryItem DequeuExposedSearchItems(in Point2D xy)
         {
             return TheMapOverrides.DequeueSearchItem(xy);
-        }
-
-        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
-            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
-        {
-            int nSprite = tileReference.Index;
-            bool bIsMirror = GameReferences.SpriteTileReferences.IsUnbrokenMirror(nSprite);
-            bDrawCharacterOnTile = false;
-
-            if (bIsMirror)
-            {
-                // if the avatar is south of the mirror then show his image
-                Point2D expectedAvatarPos = new(tilePosInMap.X, tilePosInMap.Y + 1);
-                if (expectedAvatarPos == CurrentPosition.XY)
-                {
-                    return GameReferences.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
-                }
-            }
-
-            // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
-            bool bIsChair = GameReferences.SpriteTileReferences.IsChair(nSprite);
-            // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
-            bool bIsLadder = GameReferences.SpriteTileReferences.IsLadder(nSprite);
-            // is it the human sleeping side of the bed?
-            bool bIsHeadOfBed = GameReferences.SpriteTileReferences.IsHeadOfBed(nSprite);
-            // we need to check these before they get "corrected"
-            // is it the stocks
-            bool bIsStocks = GameReferences.SpriteTileReferences.IsStocks(nSprite);
-            bool bIsManacles = GameReferences.SpriteTileReferences.IsManacles(nSprite); // is it shackles/manacles
-
-            // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
-            bool bIsFoodNearby = GameReferences.SpriteTileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
-
-            bool bIsStaircase = GameReferences.SpriteTileReferences.IsStaircase(nSprite); // is it a staircase
-
-            int nNewSpriteIndex;
-
-            if (bIsStaircase)
-            {
-                nNewSpriteIndex = GetStairsSprite(tilePosInMap);
-            }
-            else
-            {
-                nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite, bIsMapUnitOccupiedTile,
-                    bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
-            }
-
-            if (nNewSpriteIndex == -2)
-            {
-                nNewSpriteIndex = GuessTile(tilePosInMap);
-            }
-
-            bDrawCharacterOnTile = (!bIsChair && !bIsLadder && !bIsHeadOfBed && !bIsStocks && !bIsManacles) &&
-                                   bIsMapUnitOccupiedTile;
-
-            // quick hack to reassign non animated avatar to animated version
-            //if (bDrawCharacterOnTile && nNewSpriteIndex == 284) nNewSpriteIndex = 332;
-
-            return nNewSpriteIndex;
-        }
-
-
-        public int GetAlternateFlatSprite(in Point2D xy)
-        {
-            if (CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
-            {
-                return CurrentMap.GetTileOverride(xy).SpriteNum;
-            }
-            int nSprite = GetTileReference(xy).FlatTileSubstitutionIndex;
-
-            return nSprite is -2 or -3 ? GuessTile(xy) : nSprite;
-        }
-
-
-        private bool IsInsideBounds(in Point2D xy)
-        {
-            Map currentMap = CurrentMap;
-            return !(xy.X >= currentMap.VisibleOnMap.Length || xy.X < 0 ||
-              xy.Y >= currentMap.VisibleOnMap[xy.X].Length || xy.Y < 0);
-        }
-
-        public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
-        {
-            TileStack tileStack = new TileStack(xy);
-
-            // this checks to see if you are on the outer bounds of a small map, and if the flood fill touched it
-            // if it has touched it then we draw the outer tiles
-            if (CurrentMap is SmallMap smallMap && !smallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
-            {
-                TileReference outerTileReference = GameReferences.SpriteTileReferences.GetTileReference(
-                    smallMap.GetOutOfBoundsSprite(xy));
-                tileStack.PushTileReference(outerTileReference);
-                return tileStack;
-            }
-
-            // if the position of the tile is no longer inside the bounds of the visibility
-            // or has become invisible, then destroy the voxels and return right away
-            bool bOutsideOfVisibilityArray = !IsInsideBounds(xy);
-            if (bOutsideOfVisibilityArray || !CurrentMap.VisibleOnMap[xy.X][xy.Y])
-            {
-                return tileStack;
-            }
-
-            // get the reference as per the original game data
-            TileReference origTileReference = GetTileReference(xy);
-            // get ALL active map units on the tile
-            // IEnumerable mapUnits =
-            //     TheMapUnits.CurrentMapUnits.AllMapUnits.Where(m => m.MapUnitPosition.XY == xy);
-            MapUnit topMostMapUnit = bSkipMapUnit ? null : GetTopVisibleMapUnit(xy, false);
-
-            bool bIsAvatarTile = !IsCombatMap && xy == CurrentPosition?.XY;
-            bool bIsMapUnitOccupiedTile = topMostMapUnit != null;
-
-            // if there is an alternate flat sprite (for example, trees have grass)
-            if (origTileReference.HasAlternateFlatSprite)
-            {
-                TileReference flatTileReference =
-                    GameReferences.SpriteTileReferences.GetTileReference(GetAlternateFlatSprite(xy));
-                tileStack.PushTileReference(flatTileReference);
-            }
-
-            // we always push the original tile reference 
-            int nCalculatedIndex = GetCalculatedSpriteIndexByTile(origTileReference, xy, bIsAvatarTile,
-                bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile);
-            TileReference calculatedTileReference =
-                GameReferences.SpriteTileReferences.GetAnimatedTileReference(nCalculatedIndex);
-           
-            // there are times we will not draw a calculated reference - such as when an NPC is on a door 
-            // which indicates it is open, and therefor hidden
-            bool bSkipCalculatedTileReference =
-                GameReferences.SpriteTileReferences.IsDoor(calculatedTileReference.Index) && bIsMapUnitOccupiedTile;
-            
-            if (!bSkipCalculatedTileReference) tileStack.PushTileReference(calculatedTileReference);
-
-            // next we have a more complicated operation. We need to figure out which mapunits are on the map
-            // and which ones we should show. There are often cases where we need to combine them such
-            // as walking on top of a horse
-
-            // if the GetCalculatedSpriteIndexByTile routine has told us not to draw the map unit,
-            // then we skip it all together
-            if (!bDrawCharacterOnTile) return tileStack;
-            // if there are no map units, then we skip this bit all together
-            if (topMostMapUnit == null) return tileStack;
-
-            // we need to determine WHICH MapUnit to draw at this point
-            // it could be the original, or boarded or even a different one all together?
-            TileReference mapUnitTileReference = topMostMapUnit.GetAnimatedTileReference();
-            Avatar avatarMapUnit = null;
-            if (bIsAvatarTile)
-            {
-                avatarMapUnit = TheMapUnits.GetAvatarMapUnit();
-            }
-
-            switch (topMostMapUnit)
-            {
-                case Horse when bIsAvatarTile: // if we are on a horse, let's show the mounted tile
-                case Avatar { IsAvatarOnBoardedThing: true }: // we always show the Avatar on the thing he is boarded on
-                    tileStack.PushTileReference(topMostMapUnit.GetBoardedTileReference(), true);
-                    break;
-                case MagicCarpet when bIsAvatarTile:
-                {
-                    tileStack.PushTileReference(mapUnitTileReference, true);
-                    if (avatarMapUnit == null)
-                        throw new Ultima5ReduxException("Avatar map unit was null, when expected on top of magic carpet");
-                    tileStack.PushTileReference(avatarMapUnit.GetAnimatedTileReference(), true);
-                    break;
-                }
-                default:
-                    tileStack.PushTileReference(mapUnitTileReference, true);
-                    break;
-            }
-
-            return tileStack;
-        }
-
-        public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
-            Point2D attackToPosition, SingleCombatMapReference.Territory territory)
-        {
-            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map)
-                => GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
-
-            // note - attacking from a skiff OR carpet is NOT permitted unless touching a piece of land 
-            // otherwise is twill say Attack-On foot!
-            // note - cannot exit a skiff unless land is nearby
-
-            // let's use this method to also determine if an enemy CAN attack the avatar from afar
-
-            TileReference attackToTileReference = GetTileReference(attackToPosition);
-            TileReference attackFromTileReference = GetTileReference(attackFromPosition);
-
-            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, attackToPosition,
-                CurrentSingleMapReference.Floor);
-
-            MapUnit targettedMapUnit = null;
-            TileReference targettedMapUniTileReference = null;
-
-            switch (mapUnits.Count)
-            {
-                case 0:
-                    // the avatar is attacking, but actually doesn't have anyone directly in their sights
-                    // nothing to do
-                    return null;
-                case >= 1:
-                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
-                    if (mapUnits.Any(m => m is Avatar))
-                    {
-                        throw new Ultima5ReduxException(
-                            "Did not expect Avatar mapunit on targeted tile when Avatar is attacking");
-                    }
-
-                    // a little lazy for now
-                    targettedMapUnit = mapUnits[0];
-                    targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
-                    break;
-            }
-
-            // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
-            if ((IsAvatarInSkiff || IsAvatarRidingCarpet))
-            {
-                bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
-
-                if (bAvatarOnWaterTile)
-                {
-                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
-                    {
-                        // if no surrounding tiles are water tile then we skip the attack
-                        return null;
-                    }
-                }
-            }
-
-            // there is someone to target
-            if (!IsAvatarInFrigate)
-            {
-                // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
-                // so we take the chance to force a Bay map just in case
-                if (targettedMapUnit is Enemy waterCheckEnemy)
-                {
-                    if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
-                        return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
-                    // if the enemy is on bay but is not a water creature then we cannot attack them
-                    if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
-                    {
-                        return null;
-                    }
-                }
-
-                return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
-            }
-
-            // BoatCalc indicates it is a water tile and requires special consideration
-            if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
-            {
-                if (attackToTileReference.IsWaterEnemyPassable)
-                    return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
-
-                // BoatSouth indicates the avatar is on the frigate, and the enemy on land
-                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
-            }
-
-            // if attacking another frigate, then it's boat to boat
-            if (GameReferences.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
-            {
-                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat);
-            }
-
-            // otherwise it's boat (ours) to ocean
-            return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
-            // it is not boat calc, but there is an enemy, so refer to our default combat map
-        }
-
-        public bool AreAnyTilesWithinFourDirections(Point2D position, IEnumerable<TileReference> tileReferences) =>
-            tileReferences.Any(tileReference => IsTileWithinFourDirections(position, tileReference));
-
-        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference)
-        {
-            List<Point2D> positions;
-            if (IsLargeMap)
-                positions = position.GetConstrainedFourDirectionSurroundingPointsWrapAround(
-                    LargeMapLocationReferences.XTiles,
-                    LargeMapLocationReferences.YTiles);
-            else
-            {
-                positions = position.GetConstrainedFourDirectionSurroundingPoints(CurrentSmallMap.NumOfXTiles,
-                    CurrentSmallMap.NumOfYTiles);
-            }
-
-            return positions.Any(testTosition => GetTileReference(testTosition).Index == tileReference.Index);
         }
 
         /// <summary>
@@ -1610,6 +1342,221 @@ namespace Ultima5Redux.Maps
             return mapUnitInfo;
         }
 
+        public Dictionary<Point2D, bool> GetAllMapOccupiedTiles()
+        {
+            Dictionary<Point2D, bool> occupiedDictionary = new();
+
+            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            int nFloor = CurrentPosition.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
+                if (!occupiedDictionary.ContainsKey(mapUnit.MapUnitPosition.XY))
+                    occupiedDictionary.Add(mapUnit.MapUnitPosition.XY, true);
+            }
+
+            return occupiedDictionary;
+        }
+
+        public Dictionary<int, Dictionary<int, bool>> GetAllMapOccupiedTilesFast()
+        {
+            Dictionary<int, Dictionary<int, bool>> occupiedTiles = new();
+
+            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
+            int nFloor = CurrentPosition.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+            {
+                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
+
+                int x = mapUnit.MapUnitPosition.XY.X;
+                int y = mapUnit.MapUnitPosition.XY.Y;
+                if (!occupiedTiles.ContainsKey(x)) occupiedTiles.Add(x, new Dictionary<int, bool>());
+                if (!occupiedTiles[x].ContainsKey(y)) occupiedTiles[x].Add(y, true);
+            }
+
+            return occupiedTiles;
+        }
+
+
+        public int GetAlternateFlatSprite(in Point2D xy)
+        {
+            if (CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
+            {
+                return CurrentMap.GetTileOverride(xy).SpriteNum;
+            }
+
+            int nSprite = GetTileReference(xy).FlatTileSubstitutionIndex;
+
+            return nSprite is -2 or -3 ? GuessTile(xy) : nSprite;
+        }
+
+        public int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
+            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
+        {
+            int nSprite = tileReference.Index;
+            bool bIsMirror = GameReferences.SpriteTileReferences.IsUnbrokenMirror(nSprite);
+            bDrawCharacterOnTile = false;
+
+            if (bIsMirror)
+            {
+                // if the avatar is south of the mirror then show his image
+                Point2D expectedAvatarPos = new(tilePosInMap.X, tilePosInMap.Y + 1);
+                if (expectedAvatarPos == CurrentPosition.XY)
+                {
+                    return GameReferences.SpriteTileReferences.GetTileNumberByName("MirrorAvatar");
+                }
+            }
+
+            // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
+            bool bIsChair = GameReferences.SpriteTileReferences.IsChair(nSprite);
+            // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
+            bool bIsLadder = GameReferences.SpriteTileReferences.IsLadder(nSprite);
+            // is it the human sleeping side of the bed?
+            bool bIsHeadOfBed = GameReferences.SpriteTileReferences.IsHeadOfBed(nSprite);
+            // we need to check these before they get "corrected"
+            // is it the stocks
+            bool bIsStocks = GameReferences.SpriteTileReferences.IsStocks(nSprite);
+            bool bIsManacles = GameReferences.SpriteTileReferences.IsManacles(nSprite); // is it shackles/manacles
+
+            // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
+            bool bIsFoodNearby = GameReferences.SpriteTileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
+
+            bool bIsStaircase = GameReferences.SpriteTileReferences.IsStaircase(nSprite); // is it a staircase
+
+            int nNewSpriteIndex;
+
+            if (bIsStaircase)
+            {
+                nNewSpriteIndex = GetStairsSprite(tilePosInMap);
+            }
+            else
+            {
+                nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite, bIsMapUnitOccupiedTile,
+                    bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
+            }
+
+            if (nNewSpriteIndex == -2)
+            {
+                nNewSpriteIndex = GuessTile(tilePosInMap);
+            }
+
+            bDrawCharacterOnTile = (!bIsChair && !bIsLadder && !bIsHeadOfBed && !bIsStocks && !bIsManacles) &&
+                                   bIsMapUnitOccupiedTile;
+
+            // quick hack to reassign non animated avatar to animated version
+            //if (bDrawCharacterOnTile && nNewSpriteIndex == 284) nNewSpriteIndex = 332;
+
+            return nNewSpriteIndex;
+        }
+
+        public Point2D GetCameraCenter()
+        {
+            if (IsCombatMap)
+            {
+                return new Point2D(CurrentMap.NumOfXTiles / 2, CurrentMap.NumOfYTiles / 2);
+            }
+
+            return CurrentPosition.XY;
+        }
+
+        public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
+            Point2D attackToPosition, SingleCombatMapReference.Territory territory)
+        {
+            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map)
+                => GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
+
+            // note - attacking from a skiff OR carpet is NOT permitted unless touching a piece of land 
+            // otherwise is twill say Attack-On foot!
+            // note - cannot exit a skiff unless land is nearby
+
+            // let's use this method to also determine if an enemy CAN attack the avatar from afar
+
+            TileReference attackToTileReference = GetTileReference(attackToPosition);
+            TileReference attackFromTileReference = GetTileReference(attackFromPosition);
+
+            List<MapUnit> mapUnits = TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, attackToPosition,
+                CurrentSingleMapReference.Floor);
+
+            MapUnit targettedMapUnit = null;
+            TileReference targettedMapUniTileReference = null;
+
+            switch (mapUnits.Count)
+            {
+                case 0:
+                    // the avatar is attacking, but actually doesn't have anyone directly in their sights
+                    // nothing to do
+                    return null;
+                case >= 1:
+                    // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
+                    if (mapUnits.Any(m => m is Avatar))
+                    {
+                        throw new Ultima5ReduxException(
+                            "Did not expect Avatar mapunit on targeted tile when Avatar is attacking");
+                    }
+
+                    // a little lazy for now
+                    targettedMapUnit = mapUnits[0];
+                    targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
+                    break;
+            }
+
+            // if the avatar is in a skiff of on a carpet, but is in the ocean then they aren't allowed to attack
+            if ((IsAvatarInSkiff || IsAvatarRidingCarpet))
+            {
+                bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
+
+                if (bAvatarOnWaterTile)
+                {
+                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
+                    {
+                        // if no surrounding tiles are water tile then we skip the attack
+                        return null;
+                    }
+                }
+            }
+
+            // there is someone to target
+            if (!IsAvatarInFrigate)
+            {
+                // last second check for water enemy - they can occasionally appear on a "land" tile like bridges
+                // so we take the chance to force a Bay map just in case
+                if (targettedMapUnit is Enemy waterCheckEnemy)
+                {
+                    if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
+                        return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                    // if the enemy is on bay but is not a water creature then we cannot attack them
+                    if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
+                    {
+                        return null;
+                    }
+                }
+
+                return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+            }
+
+            // BoatCalc indicates it is a water tile and requires special consideration
+            if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
+            {
+                if (attackToTileReference.IsWaterEnemyPassable)
+                    return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+
+                // BoatSouth indicates the avatar is on the frigate, and the enemy on land
+                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
+            }
+
+            // if attacking another frigate, then it's boat to boat
+            if (GameReferences.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
+            {
+                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat);
+            }
+
+            // otherwise it's boat (ours) to ocean
+            return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+            // it is not boat calc, but there is an enemy, so refer to our default combat map
+        }
+
         /// <summary>
         ///     Gets the Avatar's current position in 3D spaces
         /// </summary>
@@ -1637,8 +1584,7 @@ namespace Ultima5Redux.Maps
             return GetTopVisibleMapUnit(CurrentPosition.XY, true);
         }
 
-        
-        
+
         /// <summary>
         ///     If an NPC is on a tile, then it will get them
         ///     assumes it's on the same floor
@@ -1816,25 +1762,102 @@ namespace Ultima5Redux.Maps
             return GetTileReference(CurrentPosition.XY);
         }
 
-        public IEnumerable<MapUnit> AllVisibleActiveMapUnits
+        public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
         {
-            get
+            TileStack tileStack = new TileStack(xy);
+
+            // this checks to see if you are on the outer bounds of a small map, and if the flood fill touched it
+            // if it has touched it then we draw the outer tiles
+            if (CurrentMap is SmallMap smallMap && !smallMap.IsInBounds(xy) && smallMap.TouchedOuterBorder)
             {
-                IEnumerable<Point2D> allPoints =
-                    TheMapUnits.CurrentMapUnits.AllActiveMapUnits.Select(e => e.MapUnitPosition.XY);
-                IEnumerable<MapUnit> visibleMapUnits =
-                    allPoints.Select(point => GetTopVisibleMapUnit(point, false));
-                return visibleMapUnits;
+                TileReference outerTileReference = GameReferences.SpriteTileReferences.GetTileReference(
+                    smallMap.GetOutOfBoundsSprite(xy));
+                tileStack.PushTileReference(outerTileReference);
+                return tileStack;
             }
+
+            // if the position of the tile is no longer inside the bounds of the visibility
+            // or has become invisible, then destroy the voxels and return right away
+            bool bOutsideOfVisibilityArray = !IsInsideBounds(xy);
+            if (bOutsideOfVisibilityArray || !CurrentMap.VisibleOnMap[xy.X][xy.Y])
+            {
+                return tileStack;
+            }
+
+            // get the reference as per the original game data
+            TileReference origTileReference = GetTileReference(xy);
+            // get ALL active map units on the tile
+            // IEnumerable mapUnits =
+            //     TheMapUnits.CurrentMapUnits.AllMapUnits.Where(m => m.MapUnitPosition.XY == xy);
+            MapUnit topMostMapUnit = bSkipMapUnit ? null : GetTopVisibleMapUnit(xy, false);
+
+            bool bIsAvatarTile = !IsCombatMap && xy == CurrentPosition?.XY;
+            bool bIsMapUnitOccupiedTile = topMostMapUnit != null;
+
+            // if there is an alternate flat sprite (for example, trees have grass)
+            if (origTileReference.HasAlternateFlatSprite)
+            {
+                TileReference flatTileReference =
+                    GameReferences.SpriteTileReferences.GetTileReference(GetAlternateFlatSprite(xy));
+                tileStack.PushTileReference(flatTileReference);
+            }
+
+            // we always push the original tile reference 
+            int nCalculatedIndex = GetCalculatedSpriteIndexByTile(origTileReference, xy, bIsAvatarTile,
+                bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile);
+            TileReference calculatedTileReference =
+                GameReferences.SpriteTileReferences.GetAnimatedTileReference(nCalculatedIndex);
+
+            // there are times we will not draw a calculated reference - such as when an NPC is on a door 
+            // which indicates it is open, and therefor hidden
+            bool bSkipCalculatedTileReference =
+                (GameReferences.SpriteTileReferences.IsDoor(calculatedTileReference.Index) && bIsMapUnitOccupiedTile)
+                || calculatedTileReference.DontDraw;
+
+            if (!bSkipCalculatedTileReference) tileStack.PushTileReference(calculatedTileReference);
+
+            // next we have a more complicated operation. We need to figure out which mapunits are on the map
+            // and which ones we should show. There are often cases where we need to combine them such
+            // as walking on top of a horse
+
+            // if the GetCalculatedSpriteIndexByTile routine has told us not to draw the map unit,
+            // then we skip it all together
+            if (!bDrawCharacterOnTile) return tileStack;
+            // if there are no map units, then we skip this bit all together
+            if (topMostMapUnit == null) return tileStack;
+
+            // we need to determine WHICH MapUnit to draw at this point
+            // it could be the original, or boarded or even a different one all together?
+            TileReference mapUnitTileReference = topMostMapUnit.GetAnimatedTileReference();
+            Avatar avatarMapUnit = null;
+            if (bIsAvatarTile)
+            {
+                avatarMapUnit = TheMapUnits.GetAvatarMapUnit();
+            }
+
+            switch (topMostMapUnit)
+            {
+                case Horse when bIsAvatarTile: // if we are on a horse, let's show the mounted tile
+                case Avatar { IsAvatarOnBoardedThing: true }: // we always show the Avatar on the thing he is boarded on
+                    tileStack.PushTileReference(topMostMapUnit.GetBoardedTileReference(), true);
+                    break;
+                case MagicCarpet when bIsAvatarTile:
+                {
+                    tileStack.PushTileReference(mapUnitTileReference, true);
+                    if (avatarMapUnit == null)
+                        throw new Ultima5ReduxException(
+                            "Avatar map unit was null, when expected on top of magic carpet");
+                    tileStack.PushTileReference(avatarMapUnit.GetAnimatedTileReference(), true);
+                    break;
+                }
+                default:
+                    tileStack.PushTileReference(mapUnitTileReference, true);
+                    break;
+            }
+
+            return tileStack;
         }
 
-        private readonly List<Type> _visibilePriorityOrder = new()
-        {
-            typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
-            typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
-        };
-        
         /// <summary>
         ///     Gets the top visible map unit - excluding the Avatar
         /// </summary>
@@ -1882,7 +1905,7 @@ namespace Ultima5Redux.Maps
             // this method is much quicker because we only load the data once in the maps 
             if (!IsLargeMap && CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
-            if (IsLargeMap && CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat)) 
+            if (IsLargeMap && CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
 
             // if has exposed search then we evaluate and see if it is actually a normal tile underneath
@@ -1935,6 +1958,11 @@ namespace Ultima5Redux.Maps
         public bool IsAvatarSitting()
         {
             return GameReferences.SpriteTileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+        }
+
+        public bool IsCombatMapUnitOccupiedTile(in Point2D xy)
+        {
+            return IsMapUnitOccupiedFromList(xy, TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllCombatMapUnits);
         }
 
         /// <summary>
@@ -2000,33 +2028,6 @@ namespace Ultima5Redux.Maps
             return IsMapUnitOccupiedTile(CurrentPosition.XY);
         }
 
-        private bool IsMapUnitOccupiedFromList(in Point2D xy, IEnumerable<MapUnit> mapUnits)
-        {
-            //IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            int nFloor = _currentSingleMapReference.Floor;
-
-            foreach (MapUnit mapUnit in mapUnits)
-            {
-                // sometimes characters are null because they don't exist - and that is OK
-                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor))
-                {
-                    // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
-                    // for example it looks for crown, sceptre and amulet
-                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(mapUnit.KeyTileReference
-                            .Index))
-                        return false;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public bool IsCombatMapUnitOccupiedTile(in Point2D xy)
-        {
-            return IsMapUnitOccupiedFromList(xy, TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllCombatMapUnits);
-        }
-
         /// <summary>
         ///     Is there an NPC on the tile specified?
         /// </summary>
@@ -2035,43 +2036,6 @@ namespace Ultima5Redux.Maps
         public bool IsMapUnitOccupiedTile(in Point2D xy)
         {
             return IsMapUnitOccupiedFromList(xy, TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits);
-        }
-
-        public Dictionary<int, Dictionary<int, bool>> GetAllMapOccupiedTilesFast()
-        {
-            Dictionary<int, Dictionary<int, bool>> occupiedTiles = new();
-
-            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            int nFloor = CurrentPosition.Floor;
-
-            foreach (MapUnit mapUnit in mapUnits)
-            {
-                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
-
-                int x = mapUnit.MapUnitPosition.XY.X;
-                int y = mapUnit.MapUnitPosition.XY.Y;
-                if (!occupiedTiles.ContainsKey(x)) occupiedTiles.Add(x, new Dictionary<int, bool>());
-                if (!occupiedTiles[x].ContainsKey(y)) occupiedTiles[x].Add(y, true);
-            }
-
-            return occupiedTiles;
-        }
-
-        public Dictionary<Point2D, bool> GetAllMapOccupiedTiles()
-        {
-            Dictionary<Point2D, bool> occupiedDictionary = new();
-
-            IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            int nFloor = CurrentPosition.Floor;
-
-            foreach (MapUnit mapUnit in mapUnits)
-            {
-                if (mapUnit.MapUnitPosition.Floor != nFloor) continue;
-                if (!occupiedDictionary.ContainsKey(mapUnit.MapUnitPosition.XY))
-                    occupiedDictionary.Add(mapUnit.MapUnitPosition.XY, true);
-            }
-
-            return occupiedDictionary;
         }
 
         public bool IsNPCInBed(NonPlayerCharacter npc)
@@ -2136,6 +2100,22 @@ namespace Ultima5Redux.Maps
         public bool IsStairsGoingDown()
         {
             return IsStairGoingDown(CurrentPosition.XY);
+        }
+
+        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference)
+        {
+            List<Point2D> positions;
+            if (IsLargeMap)
+                positions = position.GetConstrainedFourDirectionSurroundingPointsWrapAround(
+                    LargeMapLocationReferences.XTiles,
+                    LargeMapLocationReferences.YTiles);
+            else
+            {
+                positions = position.GetConstrainedFourDirectionSurroundingPoints(CurrentSmallMap.NumOfXTiles,
+                    CurrentSmallMap.NumOfYTiles);
+            }
+
+            return positions.Any(testTosition => GetTileReference(testTosition).Index == tileReference.Index);
         }
 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
@@ -2256,6 +2236,37 @@ namespace Ultima5Redux.Maps
                 new MapUnitPosition(newPosition.X, newPosition.Y, TheMapUnits.CurrentAvatarPosition.Floor);
         }
 
+        public bool ProcessSearchInnerItems(TurnResults turnResults, NonAttackingUnit nonAttackingUnit, bool bSearched,
+            bool bOpened)
+        {
+            bool bHasInnerItems = nonAttackingUnit.HasInnerItemStack;
+            ItemStack itemStack = nonAttackingUnit.InnerItemStack;
+            if (bHasInnerItems)
+            {
+                StreamingOutput.Instance.PushMessage(nonAttackingUnit.InnerItemStack.ThouFindStr);
+            }
+            else
+            {
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                        .NOTHING_OF_NOTE_BANG_N));
+            }
+
+            // delete the deadbody and add stuff
+            //TheMapUnits.ClearAndSetEmptyMapUnits(nonAttackingUnit);
+            nonAttackingUnit.HasBeenSearched = bSearched;
+            nonAttackingUnit.HasBeenOpened = bOpened;
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchThingDisappears));
+
+            if (bHasInnerItems)
+            {
+                // there were items inside the thing, so we place them 
+                TheMapUnits.PlaceNonAttackingUnit(itemStack, nonAttackingUnit.MapUnitPosition, LargeMapOverUnder);
+            }
+
+            return bHasInnerItems;
+        }
+
         public void ReturnToPreviousMapAfterCombat()
         {
             switch (PreCombatMap)
@@ -2313,66 +2324,53 @@ namespace Ultima5Redux.Maps
                 CurrentSmallMap.MapFloor + (bStairGoUp ? 1 : -1)), xy.Copy());
         }
 
-        public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
-            ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
-
-        public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
+        public class AggressiveMapUnitInfo
         {
-            double nShortestRadius = 255;
-            Map currentMap = CurrentMap;
-            bool bIsRepeatingMap = CurrentMap.IsRepeatingMap;
-            TheMapUnits.CurrentMapUnits.RefreshActiveDictionaryCache();
-            // an optimization to speed up checking of map units
-            Dictionary<Point2D, List<MapUnit>> cachedActive = TheMapUnits.CurrentMapUnits.CachedActiveDictionary;
-
-            for (int nRow = midPosition.X - nRadius; nRow < midPosition.X + nRadius; nRow++)
+            public enum DecidedAction
             {
-                for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
-                {
-                    Point2D adjustedPos;
-                    if (bIsRepeatingMap)
-                    {
-                        adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, currentMap.NumOfXTiles),
-                            Point2D.AdjustToMax(nCol, currentMap.NumOfYTiles));
-                    }
-                    else
-                    {
-                        if (nRow < 0 || nRow >= currentMap.NumOfXTiles || nCol < 0 || nCol >= currentMap.NumOfYTiles)
-                            continue;
-
-                        adjustedPos = new Point2D(nRow, nCol);
-                    }
-
-                    int nTileIndex = GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
-                    bool bHasMapUnits = cachedActive.ContainsKey(adjustedPos);
-                    MapUnit mapUnit = bHasMapUnits ? GetTopVisibleMapUnit(adjustedPos, true) : null;
-
-                    //if (mapUnit != null) _ = "";
-                    bool bMapUnitMatches = mapUnit != null && checkTile(mapUnit.KeyTileReference.Index);
-
-                    if (!checkTile(nTileIndex) && !bMapUnitMatches) continue;
-                    double fDistance = Point2D.DistanceBetween(midPosition.X, midPosition.Y, nRow, nCol);
-                    if (nShortestRadius < fDistance) continue;
-
-                    // shortcut in case we hit it
-                    if (nRadius == 1) return 1;
-                    nShortestRadius = fDistance;
-                }
+                Unset = -1, MoveUnit = 0, RangedAttack, MeleeOverworldAttack, Stay, EnemyAttackCombatMap
             }
 
-            if (Math.Abs(nShortestRadius - 255) < 0.05f) return 255;
-            return (int)Math.Round(nShortestRadius);
-        }
+            private DecidedAction _decidedAction = DecidedAction.Unset;
+            public MapUnit AttackingMapUnit { get; }
+            public CombatItemReference.MissileType AttackingMissileType { get; internal set; }
+            public SingleCombatMapReference CombatMapReference { get; internal set; }
 
-        public int ClosestTileReferenceAround(TileReference tileReference, Point2D midPosition, int nRadius) =>
-            ClosestTileReferenceAround(midPosition, nRadius, i => tileReference.Index == i);
+            public AggressiveMapUnitInfo(MapUnit attackingMapUnit,
+                CombatItemReference.MissileType attackingMissileType = CombatItemReference.MissileType.None,
+                SingleCombatMapReference combatMapReference = null)
+            {
+                AttackingMapUnit = attackingMapUnit;
+                AttackingMissileType = attackingMissileType;
+                CombatMapReference = combatMapReference;
+            }
 
-        public int ClosestTileReferenceAround(TileReference tileReference, int nRadius) =>
-            ClosestTileReferenceAround(CurrentPosition.XY, nRadius, i => tileReference.Index == i);
+            public DecidedAction GetDecidedAction()
+            {
+                if (_decidedAction != DecidedAction.Unset) return _decidedAction;
+                // if they have a combat map - then they are next to them and could go into combat
+                // if they have a missile type then they are within range and will attack with that
+                // if they have a Arrow missile type, then they will attack them melee in the overworld
+                if (CombatMapReference != null)
+                {
+                    _decidedAction = DecidedAction.EnemyAttackCombatMap;
+                }
+                else if (AttackingMissileType == CombatItemReference.MissileType.Arrow)
+                {
+                    _decidedAction = DecidedAction.MeleeOverworldAttack;
+                }
+                else if (AttackingMissileType != CombatItemReference.MissileType.None)
+                {
+                    // we will not ALWAYS range attack, sometimes they will try to get closer to the avatar
+                    _decidedAction = Utils.OneInXOdds(2) ? DecidedAction.RangedAttack : DecidedAction.MoveUnit;
+                }
+                else
+                {
+                    _decidedAction = DecidedAction.MoveUnit;
+                }
 
-        [OnDeserialized] private void PostDeserialize(StreamingContext context)
-        {
-            TheMapOverrides.TheMap = CurrentMap;
+                return _decidedAction;
+            }
         }
     }
 }

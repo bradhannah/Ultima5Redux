@@ -241,6 +241,26 @@
       "SpriteName": "Forest3     ",
       "Comment": "Iolos hut - Extra trees at exit",
       "TheTileType": 2
+    },
+    {
+      "MapNumber": 12,
+      "X": 17,
+      "Y": 25,
+      "Z": 0,
+      "SpriteNum": 51,
+      "SpriteName": "OutsidePath4     ",
+      "Comment": "Waveguide lamps",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 12,
+      "X": 13,
+      "Y": 25,
+      "Z": 0,
+      "SpriteNum": 49,
+      "SpriteName": "OutsidePath2     ",
+      "Comment": "Waveguide lamps",
+      "TheTileType": 1
     }
   ],
   "CombatBritannia": [

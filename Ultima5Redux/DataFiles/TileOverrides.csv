@@ -23,6 +23,8 @@ Britannia      ,2        ,10,20 ,0,50       ,OutsidePath3,Britain signs,1
 Britannia      ,13       ,14,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit,2
 Britannia      ,13       ,15,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit,2
 Britannia      ,13       ,16,31,0,9        ,Forest3     ,Iolos hut - Extra trees at exit,2
+Britannia      ,12       ,17,25,0,51        ,OutsidePath4     ,Waveguide lamps,1
+Britannia      ,12       ,13,25,0,49        ,OutsidePath2     ,Waveguide lamps,1
 CombatBritannia,11       ,3 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2
 CombatBritannia,11       ,3 ,6 ,0,197      ,StairsEast  ,Downward stairs on boats,2
 CombatBritannia,11       ,8 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2
