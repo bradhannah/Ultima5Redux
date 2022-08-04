@@ -34,16 +34,21 @@ namespace Ultima5ReduxTesting
 {
     [TestFixture] public class Tests
     {
-        public enum SaveFiles
-        {
-            Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave, fresh, blackt
-        }
-
         [SetUp] public void Setup()
         {
             // TestContext.Out.WriteLine("CWD: " + Directory.GetCurrentDirectory());
             // TestContext.Out.WriteLine("CWD Dump: " + Directory.EnumerateDirectories(Directory.GetCurrentDirectory()));
             // OutputDirectories(Directory.GetCurrentDirectory());
+        }
+
+        [TearDown] public void TearDown()
+        {
+        }
+
+        public enum SaveFiles
+        {
+            Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave, fresh,
+            blackt
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -55,10 +60,6 @@ namespace Ultima5ReduxTesting
             }
         }
 
-        [TearDown] public void TearDown()
-        {
-        }
-
         private string GetSaveDirectory(SaveFiles saveFiles)
         {
             if (!Enum.IsDefined(typeof(SaveFiles), saveFiles))
@@ -68,14 +69,14 @@ namespace Ultima5ReduxTesting
 
         private string DataDirectory => TestContext.Parameters.Get("DataDirectory",
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves/Britain2" 
+                ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves/Britain2"
                 //@"/Users/bradhannah/games/u5tests/Britain2"
                 : @"C:\games\ultima5tests\Britain2");
 
         private string SaveRootDirectory =>
             TestContext.Parameters.Get("SaveRootDirectory",
                 RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                    ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves" 
+                    ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves"
                     //@"/Users/bradhannah/games/u5tests"
                     : @"C:\games\ultima5tests");
 
@@ -932,7 +933,8 @@ namespace Ultima5ReduxTesting
             // make sure it is using the extended sprite
             //GetCurrentTileReference
 
-            Assert.True(world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit.GetBoardedTileReference()
+            Assert.True(world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit
+                .GetBoardedTileReference()
                 .Index == 515);
         }
 
@@ -2286,7 +2288,7 @@ namespace Ultima5ReduxTesting
                 world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY,
                 $"CurrPos = {world.State.TheVirtualMap.CurrentPosition.X}, {world.State.TheVirtualMap.CurrentPosition.Y} but AvatarUnit = {world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY.X}, {world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().MapUnitPosition.XY.Y}");
         }
-        
+
         [Test] [TestCase(SaveFiles.blackt)] public void Test_BlacktLargeMapCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
@@ -2309,7 +2311,6 @@ namespace Ultima5ReduxTesting
                 Debug.Assert(water1.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
                 Debug.Assert(water2.GetRandomAnimationFrameIndex(out bool _) is 1 or 2);
             }
-
         }
 
         [Test] [TestCase(SaveFiles.Britain3)] public void Test_FoodSignInBritain(SaveFiles saveFiles)
@@ -2321,18 +2322,34 @@ namespace Ultima5ReduxTesting
             Assert.True(tileReference.Index == 240);
             int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
             Assert.True(nGuessIndex == 49);
-            int nNextGuess = world.State.TheVirtualMap.GuessTile(new Point2D(17,19));
+            int nNextGuess = world.State.TheVirtualMap.GuessTile(new Point2D(17, 19));
             Assert.True(nNextGuess == 48);
 
             nNextGuess = world.State.TheVirtualMap.GetAlternateFlatSprite(new Point2D(17, 19));
             Assert.True(nNextGuess == 48);
 
             world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(new Point2D(16, 9));
-            
+
             TileStack ts = world.State.TheVirtualMap.GetTileStack(new Point2D(17, 19), true);
             _ = "";
+        }
 
 
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LBCastleTileOverride(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 3));
+
+            Point2D flagPolePos = new Point2D(13, 15);
+            TileReference tileReference = world.State.TheVirtualMap.GetTileReference(flagPolePos);
+            Assert.True(tileReference.Index == 5);
+
+            //int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
+            //Assert.True(nGuessIndex == 49);
+            _ = "";
         }
     }
 }

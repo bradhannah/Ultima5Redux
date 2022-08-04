@@ -62,8 +62,13 @@ namespace Ultima5Redux.References.Maps
                 ? AllTerritories.CombatBritannia
                 : AllTerritories.CombatDungeon;
 
-        private static AllTerritories GetOverrideTerritory(SmallMapReferences.SingleMapReference singleMapReference) =>
-            singleMapReference.Floor == 0 ? AllTerritories.Britannia : AllTerritories.Underworld;
+        private static AllTerritories GetOverrideTerritory(SmallMapReferences.SingleMapReference singleMapReference)
+        {
+            if (singleMapReference.Floor == -1 && singleMapReference.MapLocation ==
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                return AllTerritories.Underworld;
+            return AllTerritories.Britannia;
+        }
 
         private List<TileOverrideReference> GetTileOverrides(AllTerritories territory, int nMapNumber, int nFloor)
         {

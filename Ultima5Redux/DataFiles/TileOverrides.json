@@ -261,6 +261,66 @@
       "SpriteName": "OutsidePath2     ",
       "Comment": "Waveguide lamps",
       "TheTileType": 1
+    },
+    {
+      "MapNumber": 14,
+      "X": 13,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor     ",
+      "Comment": "Suteks Bookscases",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 14,
+      "X": 14,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor     ",
+      "Comment": "Suteks Bookscases",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 17,
+      "X": 13,
+      "Y": 15,
+      "Z": 3,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "LB Castle Flagpoles",
+      "TheTileType": 2
+    },
+    {
+      "MapNumber": 17,
+      "X": 13,
+      "Y": 16,
+      "Z": 3,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "LB Castle Flagpoles",
+      "TheTileType": 2
+    },
+    {
+      "MapNumber": 17,
+      "X": 13,
+      "Y": 14,
+      "Z": 3,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "LB Castle Flagpoles",
+      "TheTileType": 2
+    },
+    {
+      "MapNumber": 17,
+      "X": 14,
+      "Y": 14,
+      "Z": 3,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "LB Castle Flagpoles",
+      "TheTileType": 1
     }
   ],
   "CombatBritannia": [
