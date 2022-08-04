@@ -31,6 +31,14 @@ Britannia      ,17       ,13,15,3,5        ,Grass     ,LB Castle Flagpoles,2
 Britannia      ,17       ,13,16,3,5        ,Grass     ,LB Castle Flagpoles,2
 Britannia      ,17       ,13,14,3,5        ,Grass     ,LB Castle Flagpoles,2
 Britannia      ,17       ,14,14,3,5        ,Grass     ,LB Castle Flagpoles,1
+Britannia      ,18       ,8,12,-1,68        ,BrickFloor     ,BT Castle Torture,1
+Britannia      ,18       ,8,10,-1,68        ,BrickFloor     ,BT Castle Torture,1
+Britannia      ,18       ,22,10,-1,68        ,BrickFloor     ,BT Castle Torture,1
+Britannia      ,18       ,15,16,0,68        ,BrickFloor     ,BT Castle Torture,1
+Britannia      ,21       ,13,19,0,49        ,OutsidePath2     ,East Britanny Paths,1
+Britannia      ,21       ,2,12,0,49        ,OutsidePath2     ,East Britanny Paths,1
+Britannia      ,21       ,6,15,0,50        ,OutsidePath3     ,East Britanny Paths,1
+Britannia      ,21       ,6,12,0,51        ,OutsidePath4     ,East Britanny Paths,1
 CombatBritannia,11       ,3 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2
 CombatBritannia,11       ,3 ,6 ,0,197      ,StairsEast  ,Downward stairs on boats,2
 CombatBritannia,11       ,8 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2

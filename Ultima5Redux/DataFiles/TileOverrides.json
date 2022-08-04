@@ -321,6 +321,86 @@
       "SpriteName": "Grass     ",
       "Comment": "LB Castle Flagpoles",
       "TheTileType": 1
+    },
+    {
+      "MapNumber": 18,
+      "X": 8,
+      "Y": 12,
+      "Z": -1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor     ",
+      "Comment": "BT Castle Torture",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 18,
+      "X": 8,
+      "Y": 10,
+      "Z": -1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor     ",
+      "Comment": "BT Castle Torture",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 18,
+      "X": 22,
+      "Y": 10,
+      "Z": -1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor     ",
+      "Comment": "BT Castle Torture",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 18,
+      "X": 15,
+      "Y": 16,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor     ",
+      "Comment": "BT Castle Torture",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 21,
+      "X": 13,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 49,
+      "SpriteName": "OutsidePath2     ",
+      "Comment": "East Britanny Paths",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 21,
+      "X": 2,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 49,
+      "SpriteName": "OutsidePath2     ",
+      "Comment": "East Britanny Paths",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 21,
+      "X": 6,
+      "Y": 15,
+      "Z": 0,
+      "SpriteNum": 50,
+      "SpriteName": "OutsidePath3     ",
+      "Comment": "East Britanny Paths",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 21,
+      "X": 6,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 51,
+      "SpriteName": "OutsidePath4     ",
+      "Comment": "East Britanny Paths",
+      "TheTileType": 1
     }
   ],
   "CombatBritannia": [
