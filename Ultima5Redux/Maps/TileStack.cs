@@ -8,6 +8,9 @@ namespace Ultima5Redux.Maps
     public class TileStack : IEnumerable<TileReference>
     {
         private readonly Dictionary<int, TileReference> _tileReferencesDictionary;
+        public TileReference MapUnitTileReference { get; private set; }
+
+        public ReadOnlyDictionary<int, TileReference> TileReferencesDictionary => new(_tileReferencesDictionary);
         public Point2D XY { get; private set; }
 
         public TileStack(in Point2D xy)
@@ -17,13 +20,16 @@ namespace Ultima5Redux.Maps
             MapUnitTileReference = null;
         }
 
-        public ReadOnlyDictionary<int, TileReference> TileReferencesDictionary => new(_tileReferencesDictionary);
-        public TileReference MapUnitTileReference { get; private set; }
-
         public void PushTileReference(TileReference tileReference, bool bMapUnit = false)
         {
+            if (_tileReferencesDictionary.ContainsKey(tileReference.Index))
+            {
+                throw new Ultima5ReduxException(
+                    $"Tried to push tile index: {tileReference.Index} onto {this.XY.X}, {this.XY.Y} but it already existed.");
+            }
+
             _tileReferencesDictionary.Add(tileReference.Index, tileReference);
-            
+
             // we keep track of the map unit in particular
             if (bMapUnit) MapUnitTileReference = tileReference;
         }

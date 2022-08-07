@@ -51,6 +51,13 @@ namespace Ultima5Redux.References.Maps
                             new Dictionary<Point2D, TileOverrideReference>());
 
                     Point2D position = new(tileOverrideReference.X, tileOverrideReference.Y);
+                    if (_tileOverrideMap[territory][tileOverrideReference.MapNumber][tileOverrideReference.Z]
+                        .ContainsKey(position))
+                    {
+                        throw new Ultima5ReduxException(
+                            $"Tried to add override to {position.X}, {position.Y} on floor {tileOverrideReference.Z}");
+                    }
+
                     _tileOverrideMap[territory][tileOverrideReference.MapNumber][tileOverrideReference.Z]
                         .Add(position, tileOverrideReference);
                 }

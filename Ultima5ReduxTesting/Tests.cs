@@ -2374,5 +2374,29 @@ namespace Ultima5ReduxTesting
             //Assert.True(nGuessIndex == 49);
             _ = "";
         }
+
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_LycaeumOverrides(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lycaeum, 0));
+
+            Point2D cornerPosition = new Point2D(23, 15);
+            // TileReference tileReference = world.State.TheVirtualMap.GetTileReference(flagPolePos);
+            // Assert.True(tileReference.Index == 5);
+
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(cornerPosition);
+            TileStack tileStack = world.State.TheVirtualMap.GetTileStack(cornerPosition, true);
+            Assert.True(tileStack.TileReferencesDictionary.ContainsKey(68));
+
+            int nNextGuess = world.State.TheVirtualMap.GetAlternateFlatSprite(cornerPosition);
+            Assert.True(nNextGuess == 68);
+            //int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
+            //Assert.True(nGuessIndex == 49);
+            _ = "";
+        }
     }
 }

@@ -7,7 +7,7 @@
       "Z": 0,
       "SpriteNum": 5,
       "SpriteName": "Grass",
-      "Comment": "Lycaeum",
+      "Comment": "Lycaeum Lamps",
       "TheTileType": 1
     },
     {
@@ -17,7 +17,7 @@
       "Z": 0,
       "SpriteNum": 5,
       "SpriteName": "Grass",
-      "Comment": "Lycaeum",
+      "Comment": "Lycaeum Lamps",
       "TheTileType": 1
     },
     {
@@ -27,7 +27,7 @@
       "Z": 0,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum",
+      "Comment": "Magic Sign Lycaeum",
       "TheTileType": 1
     },
     {
@@ -37,7 +37,7 @@
       "Z": 0,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum",
+      "Comment": "Magic Sign Lycaeum",
       "TheTileType": 1
     },
     {
@@ -47,7 +47,7 @@
       "Z": 1,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum",
+      "Comment": "Sign Lycaeum",
       "TheTileType": 1
     },
     {
@@ -57,7 +57,7 @@
       "Z": 1,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum",
+      "Comment": "Sign Lycaeum",
       "TheTileType": 1
     },
     {
@@ -67,19 +67,17 @@
       "Z": 2,
       "SpriteNum": 68,
       "SpriteName": "BrickFloor",
-      "Comment": "Lycaeum",
+      "Comment": "Magic Sign Lycaeum",
       "TheTileType": 1
-    }
-  ],
-  "Britannia      ": [
+    },
     {
       "MapNumber": 30,
       "X": 23,
       "Y": 15,
       "Z": 2,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor  ",
-      "Comment": "Lycaeum",
+      "SpriteName": "BrickFloor",
+      "Comment": "Magic Sign Lycaeum",
       "TheTileType": 1
     },
     {
@@ -88,7 +86,7 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass       ",
+      "SpriteName": "Grass",
       "Comment": "Jhelom",
       "TheTileType": 1
     },
@@ -98,7 +96,7 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass       ",
+      "SpriteName": "Grass",
       "Comment": "Jhelom",
       "TheTileType": 1
     },
@@ -108,7 +106,7 @@
       "Y": 12,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass       ",
+      "SpriteName": "Grass",
       "Comment": "Jhelom",
       "TheTileType": 1
     },
@@ -118,7 +116,7 @@
       "Y": 62,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass       ",
+      "SpriteName": "Grass",
       "Comment": "Iolos hut",
       "TheTileType": 1
     },
@@ -218,7 +216,7 @@
       "Y": 31,
       "Z": 0,
       "SpriteNum": 9,
-      "SpriteName": "Forest3     ",
+      "SpriteName": "Forest3",
       "Comment": "Iolos hut - Extra trees at exit",
       "TheTileType": 2
     },
@@ -228,7 +226,7 @@
       "Y": 31,
       "Z": 0,
       "SpriteNum": 9,
-      "SpriteName": "Forest3     ",
+      "SpriteName": "Forest3",
       "Comment": "Iolos hut - Extra trees at exit",
       "TheTileType": 2
     },
@@ -238,7 +236,7 @@
       "Y": 31,
       "Z": 0,
       "SpriteNum": 9,
-      "SpriteName": "Forest3     ",
+      "SpriteName": "Forest3",
       "Comment": "Iolos hut - Extra trees at exit",
       "TheTileType": 2
     },
@@ -248,7 +246,7 @@
       "Y": 25,
       "Z": 0,
       "SpriteNum": 51,
-      "SpriteName": "OutsidePath4     ",
+      "SpriteName": "OutsidePath4",
       "Comment": "Waveguide lamps",
       "TheTileType": 1
     },
@@ -258,7 +256,7 @@
       "Y": 25,
       "Z": 0,
       "SpriteNum": 49,
-      "SpriteName": "OutsidePath2     ",
+      "SpriteName": "OutsidePath2",
       "Comment": "Waveguide lamps",
       "TheTileType": 1
     },
@@ -268,7 +266,7 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor     ",
+      "SpriteName": "BrickFloor",
       "Comment": "Suteks Bookscases",
       "TheTileType": 1
     },
@@ -278,7 +276,7 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor     ",
+      "SpriteName": "BrickFloor",
       "Comment": "Suteks Bookscases",
       "TheTileType": 1
     },
@@ -288,7 +286,7 @@
       "Y": 15,
       "Z": 3,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "LB Castle Flagpoles",
       "TheTileType": 2
     },
@@ -298,7 +296,7 @@
       "Y": 16,
       "Z": 3,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "LB Castle Flagpoles",
       "TheTileType": 2
     },
@@ -308,7 +306,7 @@
       "Y": 14,
       "Z": 3,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "LB Castle Flagpoles",
       "TheTileType": 2
     },
@@ -318,7 +316,7 @@
       "Y": 14,
       "Z": 3,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "LB Castle Flagpoles",
       "TheTileType": 1
     },
@@ -328,7 +326,7 @@
       "Y": 12,
       "Z": -1,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor     ",
+      "SpriteName": "BrickFloor",
       "Comment": "BT Castle Torture",
       "TheTileType": 1
     },
@@ -338,7 +336,7 @@
       "Y": 10,
       "Z": -1,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor     ",
+      "SpriteName": "BrickFloor",
       "Comment": "BT Castle Torture",
       "TheTileType": 1
     },
@@ -348,7 +346,7 @@
       "Y": 10,
       "Z": -1,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor     ",
+      "SpriteName": "BrickFloor",
       "Comment": "BT Castle Torture",
       "TheTileType": 1
     },
@@ -358,7 +356,7 @@
       "Y": 16,
       "Z": 0,
       "SpriteNum": 68,
-      "SpriteName": "BrickFloor     ",
+      "SpriteName": "BrickFloor",
       "Comment": "BT Castle Torture",
       "TheTileType": 1
     },
@@ -368,7 +366,7 @@
       "Y": 19,
       "Z": 0,
       "SpriteNum": 49,
-      "SpriteName": "OutsidePath2     ",
+      "SpriteName": "OutsidePath2",
       "Comment": "East Britanny Paths",
       "TheTileType": 1
     },
@@ -378,7 +376,7 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 49,
-      "SpriteName": "OutsidePath2     ",
+      "SpriteName": "OutsidePath2",
       "Comment": "East Britanny Paths",
       "TheTileType": 1
     },
@@ -388,7 +386,7 @@
       "Y": 15,
       "Z": 0,
       "SpriteNum": 50,
-      "SpriteName": "OutsidePath3     ",
+      "SpriteName": "OutsidePath3",
       "Comment": "East Britanny Paths",
       "TheTileType": 1
     },
@@ -398,7 +396,7 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 51,
-      "SpriteName": "OutsidePath4     ",
+      "SpriteName": "OutsidePath4",
       "Comment": "East Britanny Paths",
       "TheTileType": 1
     },
@@ -408,7 +406,7 @@
       "Y": 19,
       "Z": 0,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -418,7 +416,7 @@
       "Y": 19,
       "Z": 0,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -428,7 +426,7 @@
       "Y": 11,
       "Z": 0,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -438,7 +436,7 @@
       "Y": 11,
       "Z": 0,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -448,7 +446,7 @@
       "Y": 19,
       "Z": 1,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -458,7 +456,7 @@
       "Y": 19,
       "Z": 1,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -468,7 +466,7 @@
       "Y": 11,
       "Z": 1,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -478,7 +476,7 @@
       "Y": 11,
       "Z": 1,
       "SpriteNum": 64,
-      "SpriteName": "WoodFloor     ",
+      "SpriteName": "WoodFloor",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -488,7 +486,7 @@
       "Y": 19,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -498,7 +496,7 @@
       "Y": 11,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -508,7 +506,7 @@
       "Y": 18,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -518,7 +516,7 @@
       "Y": 12,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -528,7 +526,7 @@
       "Y": 17,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -538,7 +536,7 @@
       "Y": 13,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -548,7 +546,7 @@
       "Y": 16,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -558,7 +556,7 @@
       "Y": 14,
       "Z": 1,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -568,7 +566,7 @@
       "Y": 19,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -578,7 +576,7 @@
       "Y": 11,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -588,7 +586,7 @@
       "Y": 18,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -598,7 +596,7 @@
       "Y": 12,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -608,7 +606,7 @@
       "Y": 17,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -618,7 +616,7 @@
       "Y": 13,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -628,7 +626,7 @@
       "Y": 16,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     },
@@ -638,7 +636,7 @@
       "Y": 14,
       "Z": 0,
       "SpriteNum": 5,
-      "SpriteName": "Grass     ",
+      "SpriteName": "Grass",
       "Comment": "Ararat Boat",
       "TheTileType": 1
     }
@@ -650,7 +648,7 @@
       "Y": 4,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast  ",
+      "SpriteName": "StairsEast",
       "Comment": "Downward stairs on boats",
       "TheTileType": 2
     },
@@ -660,7 +658,7 @@
       "Y": 6,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast  ",
+      "SpriteName": "StairsEast",
       "Comment": "Downward stairs on boats",
       "TheTileType": 2
     },
@@ -670,7 +668,7 @@
       "Y": 4,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast  ",
+      "SpriteName": "StairsEast",
       "Comment": "Downward stairs on boats",
       "TheTileType": 2
     },
@@ -680,7 +678,7 @@
       "Y": 6,
       "Z": 0,
       "SpriteNum": 197,
-      "SpriteName": "StairsEast  ",
+      "SpriteName": "StairsEast",
       "Comment": "Downward stairs on boats",
       "TheTileType": 2
     }
