@@ -1795,7 +1795,8 @@ namespace Ultima5Redux.Maps
             bool bIsMapUnitOccupiedTile = topMostMapUnit != null;
 
             // if there is an alternate flat sprite (for example, trees have grass)
-            if (origTileReference.HasAlternateFlatSprite)
+            if (origTileReference.HasAlternateFlatSprite ||
+                CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
             {
                 TileReference flatTileReference =
                     GameReferences.SpriteTileReferences.GetTileReference(GetAlternateFlatSprite(xy));

@@ -2351,5 +2351,28 @@ namespace Ultima5ReduxTesting
             //Assert.True(nGuessIndex == 49);
             _ = "";
         }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_AraratTileOverrides(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Ararat, 1));
+
+            Point2D cornerPosition = new Point2D(6, 19);
+            // TileReference tileReference = world.State.TheVirtualMap.GetTileReference(flagPolePos);
+            // Assert.True(tileReference.Index == 5);
+
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(cornerPosition);
+            TileStack tileStack = world.State.TheVirtualMap.GetTileStack(cornerPosition, true);
+            Assert.True(tileStack.TileReferencesDictionary.ContainsKey(5));
+
+            int nNextGuess = world.State.TheVirtualMap.GetAlternateFlatSprite(cornerPosition);
+            Assert.True(nNextGuess == 5);
+            //int nGuessIndex = world.State.TheVirtualMap.GuessTile(foodSignPos);
+            //Assert.True(nGuessIndex == 49);
+            _ = "";
+        }
     }
 }

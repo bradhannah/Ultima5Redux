@@ -39,6 +39,30 @@ Britannia      ,21       ,13,19,0,49        ,OutsidePath2     ,East Britanny Pat
 Britannia      ,21       ,2,12,0,49        ,OutsidePath2     ,East Britanny Paths,1
 Britannia      ,21       ,6,15,0,50        ,OutsidePath3     ,East Britanny Paths,1
 Britannia      ,21       ,6,12,0,51        ,OutsidePath4     ,East Britanny Paths,1
+Britannia      ,25       ,18,19,0,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,12,19,0,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,12,11,0,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,18,11,0,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,18,19,1,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,12,19,1,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,12,11,1,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,18,11,1,64        ,WoodFloor     ,Ararat Boat,1
+Britannia      ,25       ,6,19,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,6,11,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,5,18,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,5,12,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,4,17,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,4,13,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,3,16,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,3,14,1,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,6,19,0,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,6,11,0,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,5,18,0,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,5,12,0,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,4,17,0,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,4,13,0,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,3,16,0,5        ,Grass     ,Ararat Boat,1
+Britannia      ,25       ,3,14,0,5        ,Grass     ,Ararat Boat,1
 CombatBritannia,11       ,3 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2
 CombatBritannia,11       ,3 ,6 ,0,197      ,StairsEast  ,Downward stairs on boats,2
 CombatBritannia,11       ,8 ,4 ,0,197      ,StairsEast  ,Downward stairs on boats,2

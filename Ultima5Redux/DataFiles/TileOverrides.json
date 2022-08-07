@@ -401,6 +401,246 @@
       "SpriteName": "OutsidePath4     ",
       "Comment": "East Britanny Paths",
       "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 18,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 12,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 12,
+      "Y": 11,
+      "Z": 0,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 18,
+      "Y": 11,
+      "Z": 0,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 18,
+      "Y": 19,
+      "Z": 1,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 12,
+      "Y": 19,
+      "Z": 1,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 12,
+      "Y": 11,
+      "Z": 1,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 18,
+      "Y": 11,
+      "Z": 1,
+      "SpriteNum": 64,
+      "SpriteName": "WoodFloor     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 6,
+      "Y": 19,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 6,
+      "Y": 11,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 5,
+      "Y": 18,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 5,
+      "Y": 12,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 4,
+      "Y": 17,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 4,
+      "Y": 13,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 3,
+      "Y": 16,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 3,
+      "Y": 14,
+      "Z": 1,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 6,
+      "Y": 19,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 6,
+      "Y": 11,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 5,
+      "Y": 18,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 5,
+      "Y": 12,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 4,
+      "Y": 17,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 4,
+      "Y": 13,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 3,
+      "Y": 16,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 25,
+      "X": 3,
+      "Y": 14,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass     ",
+      "Comment": "Ararat Boat",
+      "TheTileType": 1
     }
   ],
   "CombatBritannia": [
