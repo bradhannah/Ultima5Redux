@@ -1,12 +1,4 @@
 Territory,MapNumber,X,Y,Z,SpriteNum,SpriteName,Comment,TheTileType
-Britannia,30,13,25,0,5,Grass,Lycaeum Lamps,1
-Britannia,30,17,25,0,5,Grass,Lycaeum Lamps,1
-Britannia,30,23,13,0,68,BrickFloor,Magic Sign Lycaeum,1
-Britannia,30,23,15,0,68,BrickFloor,Magic Sign Lycaeum,1
-Britannia,30,14,7,1,68,BrickFloor,Sign Lycaeum,1
-Britannia,30,16,7,1,68,BrickFloor,Sign Lycaeum,1
-Britannia,30,20,15,2,68,BrickFloor,Magic Sign Lycaeum,1
-Britannia,30,23,15,2,68,BrickFloor,Magic Sign Lycaeum,1
 Britannia,3,13,12,0,5,Grass,Jhelom,1
 Britannia,3,17,12,0,5,Grass,Jhelom,1
 Britannia,3,17,12,1,5,Grass,Jhelom,1
@@ -63,6 +55,17 @@ Britannia,25,4,17,0,5,Grass,Ararat Boat,1
 Britannia,25,4,13,0,5,Grass,Ararat Boat,1
 Britannia,25,3,16,0,5,Grass,Ararat Boat,1
 Britannia,25,3,14,0,5,Grass,Ararat Boat,1
+Britannia,30,13,25,0,5,Grass,Lycaeum Lamps,1
+Britannia,30,17,25,0,5,Grass,Lycaeum Lamps,1
+Britannia,30,23,13,0,68,BrickFloor,Magic Sign Lycaeum,1
+Britannia,30,23,15,0,68,BrickFloor,Magic Sign Lycaeum,1
+Britannia,30,14,7,1,68,BrickFloor,Sign Lycaeum,1
+Britannia,30,16,7,1,68,BrickFloor,Sign Lycaeum,1
+Britannia,30,20,15,2,68,BrickFloor,Magic Sign Lycaeum,1
+Britannia,30,23,15,2,68,BrickFloor,Magic Sign Lycaeum,1
+Britannia,31,15,15,0,68,BrickFloor,Empath Abbey Well,1
+Britannia,31,15,15,1,68,BrickFloor,Empath Abbey Well,1
+Britannia,31,15,15,2,68,BrickFloor,Empath Abbey Well,1
 CombatBritannia,11,3,4,0,197,StairsEast,Downward stairs on boats,2
 CombatBritannia,11,3,6,0,197,StairsEast,Downward stairs on boats,2
 CombatBritannia,11,8,4,0,197,StairsEast,Downward stairs on boats,2

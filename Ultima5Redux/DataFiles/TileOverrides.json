@@ -1,86 +1,6 @@
 ﻿{
   "Britannia": [
     {
-      "MapNumber": 30,
-      "X": 13,
-      "Y": 25,
-      "Z": 0,
-      "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Lycaeum Lamps",
-      "TheTileType": 1
-    },
-    {
-      "MapNumber": 30,
-      "X": 17,
-      "Y": 25,
-      "Z": 0,
-      "SpriteNum": 5,
-      "SpriteName": "Grass",
-      "Comment": "Lycaeum Lamps",
-      "TheTileType": 1
-    },
-    {
-      "MapNumber": 30,
-      "X": 23,
-      "Y": 13,
-      "Z": 0,
-      "SpriteNum": 68,
-      "SpriteName": "BrickFloor",
-      "Comment": "Magic Sign Lycaeum",
-      "TheTileType": 1
-    },
-    {
-      "MapNumber": 30,
-      "X": 23,
-      "Y": 15,
-      "Z": 0,
-      "SpriteNum": 68,
-      "SpriteName": "BrickFloor",
-      "Comment": "Magic Sign Lycaeum",
-      "TheTileType": 1
-    },
-    {
-      "MapNumber": 30,
-      "X": 14,
-      "Y": 7,
-      "Z": 1,
-      "SpriteNum": 68,
-      "SpriteName": "BrickFloor",
-      "Comment": "Sign Lycaeum",
-      "TheTileType": 1
-    },
-    {
-      "MapNumber": 30,
-      "X": 16,
-      "Y": 7,
-      "Z": 1,
-      "SpriteNum": 68,
-      "SpriteName": "BrickFloor",
-      "Comment": "Sign Lycaeum",
-      "TheTileType": 1
-    },
-    {
-      "MapNumber": 30,
-      "X": 20,
-      "Y": 15,
-      "Z": 2,
-      "SpriteNum": 68,
-      "SpriteName": "BrickFloor",
-      "Comment": "Magic Sign Lycaeum",
-      "TheTileType": 1
-    },
-    {
-      "MapNumber": 30,
-      "X": 23,
-      "Y": 15,
-      "Z": 2,
-      "SpriteNum": 68,
-      "SpriteName": "BrickFloor",
-      "Comment": "Magic Sign Lycaeum",
-      "TheTileType": 1
-    },
-    {
       "MapNumber": 3,
       "X": 13,
       "Y": 12,
@@ -638,6 +558,116 @@
       "SpriteNum": 5,
       "SpriteName": "Grass",
       "Comment": "Ararat Boat",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 13,
+      "Y": 25,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Lycaeum Lamps",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 17,
+      "Y": 25,
+      "Z": 0,
+      "SpriteNum": 5,
+      "SpriteName": "Grass",
+      "Comment": "Lycaeum Lamps",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 23,
+      "Y": 13,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Magic Sign Lycaeum",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 23,
+      "Y": 15,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Magic Sign Lycaeum",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 14,
+      "Y": 7,
+      "Z": 1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Sign Lycaeum",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 16,
+      "Y": 7,
+      "Z": 1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Sign Lycaeum",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 20,
+      "Y": 15,
+      "Z": 2,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Magic Sign Lycaeum",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 30,
+      "X": 23,
+      "Y": 15,
+      "Z": 2,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Magic Sign Lycaeum",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 31,
+      "X": 15,
+      "Y": 15,
+      "Z": 0,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Empath Abbey Well",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 31,
+      "X": 15,
+      "Y": 15,
+      "Z": 1,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Empath Abbey Well",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 31,
+      "X": 15,
+      "Y": 15,
+      "Z": 2,
+      "SpriteNum": 68,
+      "SpriteName": "BrickFloor",
+      "Comment": "Empath Abbey Well",
       "TheTileType": 1
     }
   ],
