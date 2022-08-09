@@ -23,9 +23,9 @@ namespace Ultima5Redux.Maps
         // when computing what should happen when a player hits - these states can be triggered 
         private enum AdditionalHitStateAction { None, EnemyDivided }
 
-        public enum SpecificCombatMapUnit { All, CombatPlayer, Enemy, NonAttackUnit }
-
         public enum SelectionAction { None, Magic, Attack }
+
+        public enum SpecificCombatMapUnit { All, CombatPlayer, Enemy, NonAttackUnit }
 
         private bool _bPlayerHasChanged = true;
 
@@ -47,6 +47,8 @@ namespace Ultima5Redux.Maps
         /// </summary>
         private MapUnits.MapUnits CombatMapUnits { get; }
 
+        public override bool IsRepeatingMap => false;
+
         public override int NumOfXTiles => SingleCombatMapReference.XTILES;
         public override int NumOfYTiles => SingleCombatMapReference.YTILES;
 
@@ -63,11 +65,17 @@ namespace Ultima5Redux.Maps
 
         public Enemy ActiveEnemy => _initiativeQueue.GetCurrentCombatUnitAndClean() is Enemy enemy ? enemy : null;
 
+        /// <summary>
+        ///     The player character who the player has selected to focus on (#1-#6)
+        /// </summary>
+        /// <returns>active player character record OR null if none selected</returns>
+        public PlayerCharacterRecord ActivePlayerCharacterRecord => _initiativeQueue.ActivePlayerCharacterRecord;
+
         public IEnumerable<CombatPlayer> AllCombatPlayers => CombatMapUnits.CurrentMapUnits.CombatPlayers;
         public IEnumerable<Enemy> AllEnemies => CombatMapUnits.CurrentMapUnits.Enemies;
-        public IEnumerable<NonAttackingUnit> AllNonAttackUnits => CombatMapUnits.CurrentMapUnits.NonAttackingUnits;
 
         public IEnumerable<MapUnit> AllMapUnits => CombatMapUnits.CurrentMapUnits.AllMapUnits;
+        public IEnumerable<NonAttackingUnit> AllNonAttackUnits => CombatMapUnits.CurrentMapUnits.NonAttackingUnits;
 
         public IEnumerable<CombatMapUnit> AllVisibleAttackableCombatMapUnits =>
             CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
@@ -77,24 +85,9 @@ namespace Ultima5Redux.Maps
             CombatMapUnits.CurrentMapUnits.AllCombatMapUnits.Where(combatMapUnit =>
                 combatMapUnit.IsActive);
 
-        /// <summary>
-        ///     The player character who the player has selected to focus on (#1-#6)
-        /// </summary>
-        /// <returns>active player character record OR null if none selected</returns>
-        public PlayerCharacterRecord ActivePlayerCharacterRecord => _initiativeQueue.ActivePlayerCharacterRecord;
-
         public bool AreCombatItemsInQueue => _currentCombatItemQueue is { Count: > 0 };
 
         public bool AreEnemiesLeft => NumberOfEnemies > 0;
-
-        public CombatMapUnit GetAndRefreshCurrentCombatMapUnit()
-        {
-            CombatMapUnit combatUnit = _initiativeQueue.GetCurrentCombatUnitAndClean();
-            // we need to refresh current combat player in case the preceding method rips out some old
-            // or hidden enemies - this way we know that the CombatItem queue is up to date
-            RefreshCurrentCombatPlayer();
-            return combatUnit;
-        }
 
         public CombatPlayer CurrentCombatPlayer =>
             _initiativeQueue.GetCurrentCombatUnitAndClean() is CombatPlayer player ? player : null;
@@ -122,25 +115,6 @@ namespace Ultima5Redux.Maps
 
         protected sealed override Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
 
-        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
-        {
-            // we need to check for elemental fields for the current map unit and apply traps
-            List<CombatMapUnit> combatMapUnits =
-                AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == mapUnit.MapUnitPosition.XY).ToList();
-            foreach (CombatMapUnit combatMapUnit in combatMapUnits)
-            {
-                switch (combatMapUnit)
-                {
-                    case ElementalField elementalField:
-                        //elementalField.TriggerTrap(turnResults, );
-                        break;
-                    // no default action
-                }
-            }
-        }
-
-        public override bool IsRepeatingMap => false;
-
         /// <summary>
         ///     Creates CombatMap.
         ///     Note: Does not initialize the combat map units.
@@ -156,6 +130,23 @@ namespace Ultima5Redux.Maps
             InitializeAStarMap(WalkableType.CombatWater);
             InitializeAStarMap(WalkableType.CombatFlyThroughWalls);
             InitializeAStarMap(WalkableType.CombatLandAndWater);
+        }
+
+        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
+        {
+            // we need to check for elemental fields for the current map unit and apply traps
+            List<CombatMapUnit> combatMapUnits =
+                AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == mapUnit.MapUnitPosition.XY).ToList();
+            foreach (CombatMapUnit combatMapUnit in combatMapUnits)
+            {
+                switch (combatMapUnit)
+                {
+                    case ElementalField elementalField:
+                        //elementalField.TriggerTrap(turnResults, );
+                        break;
+                    // no default action
+                }
+            }
         }
 
         /// <summary>
@@ -186,6 +177,14 @@ namespace Ultima5Redux.Maps
             }
 
             if (npcRef != null) Debug.Assert(nPrimaryEnemies == 1 && nSecondaryEnemies == 0);
+
+            // special logic that ensures when fighting guards in the overworld
+            // we actually fight more than one at a time!
+            bool bIsGuard = primaryEnemyReference.KeyTileReference.Index is >= 368 and <= 371;
+            if (bIsGuard && singleCombatMapReference.MapTerritory != SingleCombatMapReference.Territory.Dungeon)
+            {
+                nPrimaryEnemies = Utils.GetNumberFromAndTo(4, 5);
+            }
 
             // if there is only a single enemy then we always give them first position (such as NPC fights)
             if (nPrimaryEnemies == 1 && nSecondaryEnemies == 0)
@@ -253,18 +252,22 @@ namespace Ultima5Redux.Maps
                 or CombatMapUnit.HitState.HeavilyWounded or CombatMapUnit.HitState.CriticallyWounded
                 or CombatMapUnit.HitState.Fleeing;
 
+        private static bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
+                                                                              tileReference.Index == GameReferences
+                                                                                  .SpriteTileReferences
+                                                                                  .GetTileReferenceByName("RegularDoor")
+                                                                                  .Index || tileReference.Index ==
+                                                                              GameReferences.SpriteTileReferences
+                                                                                  .GetTileReferenceByName(
+                                                                                      "RegularDoorView")
+                                                                                  .Index;
+
         private void ClearCurrentCombatItemQueue()
         {
             if (_currentCombatItemQueue == null)
                 _currentCombatItemQueue = new Queue<CombatItem>();
             else
                 _currentCombatItemQueue.Clear();
-        }
-
-        private Enemy CreateEnemiesAndNonAttackingUnits(Point2D position, EnemyReference enemyReference)
-        {
-            Enemy enemy = CombatMapUnits.CreateEnemyOnCombatMap(position, enemyReference, out int _);
-            return enemy;
         }
 
         /// <summary>
@@ -318,6 +321,12 @@ namespace Ultima5Redux.Maps
             // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
             SetNotWalkableDueToCombatMapUnit(enemyPosition);
             return combatMapUnit;
+        }
+
+        private Enemy CreateEnemiesAndNonAttackingUnits(Point2D position, EnemyReference enemyReference)
+        {
+            Enemy enemy = CombatMapUnits.CreateEnemyOnCombatMap(position, enemyReference, out int _);
+            return enemy;
         }
 
         private T GetClosestCombatMapUnitInRange<T>(CombatMapUnit attackingUnit, int nRange) where T : CombatMapUnit
@@ -448,62 +457,6 @@ namespace Ultima5Redux.Maps
             return walkableType;
         }
 
-        /// <summary>
-        ///     Takes care of extra stuff that happens as a result of the hit such as division - or the death of an NPC
-        /// </summary>
-        /// <param name="turnResults"></param>
-        /// <param name="hitState"></param>
-        /// <param name="affectedCombatMapUnit"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void PerformAdditionalHitProcessing(TurnResults turnResults, CombatMapUnit.HitState hitState,
-            CombatMapUnit affectedCombatMapUnit)
-        {
-            // some things only occur if they are hit - but not if they are killed or missed
-            if (IsHitButNotKilled(hitState) && affectedCombatMapUnit is Enemy enemy &&
-                enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) && Utils.OneInXOdds(2))
-            {
-                // do they multiply?
-                Enemy newEnemy = DivideEnemy(enemy);
-
-                turnResults.PushOutputToConsole("\n" + affectedCombatMapUnit.FriendlyName + GameReferences
-                    .DataOvlRef
-                    .StringReferences.GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N)
-                    .TrimEnd(), false, false);
-            }
-
-            switch (hitState)
-            {
-                case CombatMapUnit.HitState.Grazed:
-                case CombatMapUnit.HitState.Missed:
-                case CombatMapUnit.HitState.BarelyWounded:
-                case CombatMapUnit.HitState.LightlyWounded:
-                case CombatMapUnit.HitState.HeavilyWounded:
-                case CombatMapUnit.HitState.CriticallyWounded:
-                case CombatMapUnit.HitState.Fleeing:
-                case CombatMapUnit.HitState.Dead:
-                    if (affectedCombatMapUnit is Enemy deadEnemy)
-                    {
-                        // if the enemy was an NPC then we kill them!
-                        if (deadEnemy.NPCRef != null)
-                        {
-                            deadEnemy.NPCState.IsDead = true;
-                        }
-
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater);
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                            WalkableType.CombatFlyThroughWalls);
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                            WalkableType.CombatLandAndWater);
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(hitState), hitState, null);
-            }
-        }
-
         private void HandleRangedMissed(TurnResults turnResults, CombatMapUnit attackingCombatMapUnit,
             Point2D attackPosition, out CombatMapUnit targetedCombatMapUnit, int nAttackMax,
             CombatItemReference.MissileType missileType)
@@ -620,16 +573,6 @@ namespace Ultima5Redux.Maps
             TileReference tileReference = GetTileReference(xy);
             return !tileReference.RangeWeapon_Passable;
         }
-
-        private static bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
-                                                                              tileReference.Index == GameReferences
-                                                                                  .SpriteTileReferences
-                                                                                  .GetTileReferenceByName("RegularDoor")
-                                                                                  .Index || tileReference.Index ==
-                                                                              GameReferences.SpriteTileReferences
-                                                                                  .GetTileReferenceByName(
-                                                                                      "RegularDoorView")
-                                                                                  .Index;
 
         /// <summary>
         ///     Moves the combat map unit to the CombatPlayer for whom they can reach in the fewest number of steps
@@ -756,6 +699,62 @@ namespace Ultima5Redux.Maps
             return enemy;
         }
 
+        /// <summary>
+        ///     Takes care of extra stuff that happens as a result of the hit such as division - or the death of an NPC
+        /// </summary>
+        /// <param name="turnResults"></param>
+        /// <param name="hitState"></param>
+        /// <param name="affectedCombatMapUnit"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void PerformAdditionalHitProcessing(TurnResults turnResults, CombatMapUnit.HitState hitState,
+            CombatMapUnit affectedCombatMapUnit)
+        {
+            // some things only occur if they are hit - but not if they are killed or missed
+            if (IsHitButNotKilled(hitState) && affectedCombatMapUnit is Enemy enemy &&
+                enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) && Utils.OneInXOdds(2))
+            {
+                // do they multiply?
+                Enemy newEnemy = DivideEnemy(enemy);
+
+                turnResults.PushOutputToConsole("\n" + affectedCombatMapUnit.FriendlyName + GameReferences
+                    .DataOvlRef
+                    .StringReferences.GetString(DataOvlReference.Battle2Strings._DIVIDES_BANG_N)
+                    .TrimEnd(), false, false);
+            }
+
+            switch (hitState)
+            {
+                case CombatMapUnit.HitState.Grazed:
+                case CombatMapUnit.HitState.Missed:
+                case CombatMapUnit.HitState.BarelyWounded:
+                case CombatMapUnit.HitState.LightlyWounded:
+                case CombatMapUnit.HitState.HeavilyWounded:
+                case CombatMapUnit.HitState.CriticallyWounded:
+                case CombatMapUnit.HitState.Fleeing:
+                case CombatMapUnit.HitState.Dead:
+                    if (affectedCombatMapUnit is Enemy deadEnemy)
+                    {
+                        // if the enemy was an NPC then we kill them!
+                        if (deadEnemy.NPCRef != null)
+                        {
+                            deadEnemy.NPCState.IsDead = true;
+                        }
+
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
+                            WalkableType.CombatFlyThroughWalls);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
+                            WalkableType.CombatLandAndWater);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(hitState), hitState, null);
+            }
+        }
+
         private void RefreshCurrentCombatPlayer()
         {
             if (CurrentCombatPlayer is null)
@@ -863,6 +862,15 @@ namespace Ultima5Redux.Maps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(specificCombatMapUnit), specificCombatMapUnit, null);
             }
+        }
+
+        public CombatMapUnit GetAndRefreshCurrentCombatMapUnit()
+        {
+            CombatMapUnit combatUnit = _initiativeQueue.GetCurrentCombatUnitAndClean();
+            // we need to refresh current combat player in case the preceding method rips out some old
+            // or hidden enemies - this way we know that the CombatItem queue is up to date
+            RefreshCurrentCombatPlayer();
+            return combatUnit;
         }
 
         public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem)
@@ -985,6 +993,45 @@ namespace Ultima5Redux.Maps
                 _initiativeQueue.CalculateNextInitiativeQueue();
 
             return _initiativeQueue.GetTopNCombatMapUnits(nUnits);
+        }
+
+        /// <summary>
+        ///     Gets the top visible map unit - excluding the Avatar
+        /// </summary>
+        /// <param name="xy"></param>
+        /// <param name="bExcludeAvatar"></param>
+        /// <returns>MapUnit or null</returns>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
+        {
+            List<Type> visibilePriorityOrder = new()
+            {
+                typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
+                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
+                typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
+            };
+            List<CombatMapUnit> combatMapUnits =
+                AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList();
+
+            // this is inefficient, but the lists are so small it is unlikely to matter
+            foreach (Type type in visibilePriorityOrder)
+            {
+                if (bExcludeAvatar && type == typeof(Avatar)) continue;
+                foreach (CombatMapUnit combatMapUnit in combatMapUnits)
+                {
+                    if (!combatMapUnit.IsActive) continue;
+                    // if it's a combat unit but they dead or gone then we skip
+                    if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0)
+                    {
+                        if (combatMapUnit is not NonAttackingUnit) continue;
+                    }
+
+                    // if we find the first highest priority item, then we simply return it
+                    if (combatMapUnit.GetType() == type) return combatMapUnit;
+                }
+            }
+
+            return null;
         }
 
         public void MakePlayerEscape(CombatPlayer combatPlayer)
@@ -1445,11 +1492,6 @@ namespace Ultima5Redux.Maps
             RefreshCurrentCombatPlayer();
         }
 
-        protected override float GetAStarWeight(in Point2D xy)
-        {
-            return 1.0f;
-        }
-
         protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             return mapUnit switch
@@ -1458,6 +1500,11 @@ namespace Ultima5Redux.Maps
                 CombatPlayer _ => WalkableType.CombatLand,
                 _ => WalkableType.StandardWalking
             };
+        }
+
+        protected override float GetAStarWeight(in Point2D xy)
+        {
+            return 1.0f;
         }
 
         protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
@@ -1477,45 +1524,6 @@ namespace Ultima5Redux.Maps
                     throw new Ultima5ReduxException(
                         "Someone is trying to walk to determine they can walk on an unfamiliar WalkableType");
             }
-        }
-
-        /// <summary>
-        ///     Gets the top visible map unit - excluding the Avatar
-        /// </summary>
-        /// <param name="xy"></param>
-        /// <param name="bExcludeAvatar"></param>
-        /// <returns>MapUnit or null</returns>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
-        {
-            List<Type> visibilePriorityOrder = new()
-            {
-                typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
-                typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
-            };
-            List<CombatMapUnit> combatMapUnits =
-                AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList();
-
-            // this is inefficient, but the lists are so small it is unlikely to matter
-            foreach (Type type in visibilePriorityOrder)
-            {
-                if (bExcludeAvatar && type == typeof(Avatar)) continue;
-                foreach (CombatMapUnit combatMapUnit in combatMapUnits)
-                {
-                    if (!combatMapUnit.IsActive) continue;
-                    // if it's a combat unit but they dead or gone then we skip
-                    if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0)
-                    {
-                        if (combatMapUnit is not NonAttackingUnit) continue;
-                    }
-
-                    // if we find the first highest priority item, then we simply return it
-                    if (combatMapUnit.GetType() == type) return combatMapUnit;
-                }
-            }
-
-            return null;
         }
     }
 }

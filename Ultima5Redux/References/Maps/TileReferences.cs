@@ -17,6 +17,12 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         private readonly U5StringRef _u5StringRef;
 
+        private double _dLastTime;
+
+        private int _nTick = 0;
+
+        public int MillisecondsBetweenFrames = 350;
+
         /// <summary>
         ///     Tile reference dictionary referenced by tile string value
         /// </summary>
@@ -33,8 +39,6 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         // ReSharper disable once UnusedMember.Global
         public int Count => TileReferenceByStringDictionary.Count;
-
-        public int MillisecondsBetweenFrames = 350;
 
         /// <summary>
         ///     Constructor
@@ -78,6 +82,21 @@ namespace Ultima5Redux.References.Maps
                 JsonConvert.DeserializeObject<Dictionary<int, TileReference>>(Resources.TileData);
 
             return result;
+        }
+        //private double _
+
+        public TileReference GetAnimatedTileReference(int nSprite)
+        {
+            TileReference keyTileReference = GetTileReferenceOfKeyIndex(nSprite);
+            if (keyTileReference.TotalAnimationFrames < 2) return keyTileReference;
+            double dTotalMilli = DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
+            if (dTotalMilli - _dLastTime > MillisecondsBetweenFrames)
+            {
+                _nTick = (_nTick + 1) % int.MaxValue;
+                _dLastTime = dTotalMilli;
+            }
+
+            return GetTileReference(keyTileReference.Index + (_nTick % keyTileReference.TotalAnimationFrames));
         }
 
         /// <summary>
@@ -213,25 +232,6 @@ namespace Ultima5Redux.References.Maps
             return TileReferenceByStringDictionary[name];
         }
 
-        private double _dLastTime;
-
-        private int _nTick = 0;
-        //private double _
-        
-        public TileReference GetAnimatedTileReference(int nSprite)
-        {
-            TileReference keyTileReference = GetTileReferenceOfKeyIndex(nSprite);
-            if (keyTileReference.TotalAnimationFrames < 2) return keyTileReference;
-            double dTotalMilli = DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
-            if (dTotalMilli - _dLastTime > MillisecondsBetweenFrames)
-            {
-                _nTick = (_nTick + 1) % int.MaxValue;
-                _dLastTime = dTotalMilli;
-            }
-            
-            return GetTileReference(keyTileReference.Index + (_nTick % keyTileReference.TotalAnimationFrames));
-        }
-        
         public TileReference GetTileReferenceOfKeyIndex(int nSprite)
         {
             TileReference tileReference = GetTileReference(nSprite);
@@ -246,6 +246,21 @@ namespace Ultima5Redux.References.Maps
             return GetTileReference(tileReference.Index - tileReference.AnimationIndex);
         }
 
+        public bool IsBurningThing(int nSprite)
+        {
+            // yucky but optimized for speed because it's called a lot
+            return nSprite is 176 or 177 or 178 or 179 or 189 or 190 or 191 or 222;
+            //178 176 177 179 189 190 191 222
+            // GetTileReferenceByName("Brazier").Index == nSprite ||
+            //    GetTileReferenceByName("LeftSconce").Index == nSprite ||
+            //    GetTileReferenceByName("RightSconce").Index == nSprite ||
+            //    GetTileReferenceByName("CampFire").Index == nSprite ||
+            //    GetTileReferenceByName("LampPost").Index == nSprite ||
+            //    GetTileReferenceByName("CandleOnTable").Index == nSprite ||
+            //    GetTileReferenceByName("CookStove").Index == nSprite ||
+            //    GetTileReferenceByName("BlueFlame").Index == nSprite;
+        }
+
         /// <summary>
         ///     Is it an unoccupied chair?
         /// </summary>
@@ -255,11 +270,11 @@ namespace Ultima5Redux.References.Maps
         {
             // optimization
             // 144 - 147
-            bool bIsChair = nSprite >= 144 && nSprite <= 147; 
-                            // nSprite == GetTileNumberByName("ChairBackForward") ||
-                            // nSprite == GetTileNumberByName("ChairBackLeft") ||
-                            // nSprite == GetTileNumberByName("ChairBackBack") ||
-                            // nSprite == GetTileNumberByName("ChairBackRight");
+            bool bIsChair = nSprite >= 144 && nSprite <= 147;
+            // nSprite == GetTileNumberByName("ChairBackForward") ||
+            // nSprite == GetTileNumberByName("ChairBackLeft") ||
+            // nSprite == GetTileNumberByName("ChairBackBack") ||
+            // nSprite == GetTileNumberByName("ChairBackRight");
             return bIsChair;
         }
 
@@ -319,21 +334,6 @@ namespace Ultima5Redux.References.Maps
                    GetTileReference(nSprite).Name.StartsWith("Pirate");
         }
 
-        public bool IsBurningThing(int nSprite)
-        {
-            // yucky but optimized for speed because it's called a lot
-            return nSprite is 176 or 177 or 178 or 179 or 189 or 190 or 191 or 222;  
-                //178 176 177 179 189 190 191 222
-                // GetTileReferenceByName("Brazier").Index == nSprite ||
-                //    GetTileReferenceByName("LeftSconce").Index == nSprite ||
-                //    GetTileReferenceByName("RightSconce").Index == nSprite ||
-                //    GetTileReferenceByName("CampFire").Index == nSprite ||
-                //    GetTileReferenceByName("LampPost").Index == nSprite ||
-                //    GetTileReferenceByName("CandleOnTable").Index == nSprite ||
-                //    GetTileReferenceByName("CookStove").Index == nSprite ||
-                //    GetTileReferenceByName("BlueFlame").Index == nSprite;
-        }
-
         /// <summary>
         ///     Is the sprite a klimbable grate?
         /// </summary>
@@ -342,7 +342,7 @@ namespace Ultima5Redux.References.Maps
         public bool IsGrate(int nSprite)
         {
             bool bIsGrate = nSprite == 134;
-                            //GetTileNumberByName("Grate");
+            //GetTileNumberByName("Grate");
             return bIsGrate;
         }
 
@@ -355,8 +355,13 @@ namespace Ultima5Redux.References.Maps
         public bool IsHeadOfBed(int nSprite)
         {
             bool bIsHeadOfBed = nSprite == 171;
-                                //GetTileNumberByName("LeftBed"); // is it the human sleeping side of the bed?
+            //GetTileNumberByName("LeftBed"); // is it the human sleeping side of the bed?
             return bIsHeadOfBed;
+        }
+
+        public bool IsHeadstone(int nSprite)
+        {
+            return nSprite is 137 or 138;
         }
 
         public bool IsHorse(int nSprite)
@@ -423,10 +428,10 @@ namespace Ultima5Redux.References.Maps
         // ReSharper disable once UnusedMember.Global
         public bool IsMirror(int nSprite)
         {
-            bool bIsMirror = nSprite is >= 157 and <= 159; 
-                // nSprite == GetTileNumberByName("Mirror") ||
-                //              nSprite == GetTileNumberByName("MirrorAvatar") ||
-                //              nSprite == GetTileNumberByName("MirrorBroken");
+            bool bIsMirror = nSprite is >= 157 and <= 159;
+            // nSprite == GetTileNumberByName("Mirror") ||
+            //              nSprite == GetTileNumberByName("MirrorAvatar") ||
+            //              nSprite == GetTileNumberByName("MirrorBroken");
             return bIsMirror;
         }
 
@@ -482,11 +487,11 @@ namespace Ultima5Redux.References.Maps
         /// <returns></returns>
         public bool IsStaircase(int nSprite)
         {
-            bool bIsLadder = nSprite is >= 196 and <= 199; 
-                // nSprite == GetTileNumberByName("StairsWest") ||
-                //              nSprite == GetTileNumberByName("StairsEast") ||
-                //              nSprite == GetTileNumberByName("StairsNorth") ||
-                //              nSprite == GetTileNumberByName("StairsSouth"); // is it a ladder
+            bool bIsLadder = nSprite is >= 196 and <= 199;
+            // nSprite == GetTileNumberByName("StairsWest") ||
+            //              nSprite == GetTileNumberByName("StairsEast") ||
+            //              nSprite == GetTileNumberByName("StairsNorth") ||
+            //              nSprite == GetTileNumberByName("StairsSouth"); // is it a ladder
             return bIsLadder;
         }
 
@@ -498,8 +503,8 @@ namespace Ultima5Redux.References.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public bool IsStocks(int nSprite)
         {
-            bool bIsStocks = nSprite == 132; 
-                             //GetTileNumberByName("Stocks"); // is it the stocks
+            bool bIsStocks = nSprite == 132;
+            //GetTileNumberByName("Stocks"); // is it the stocks
             return bIsStocks;
         }
 
@@ -511,8 +516,8 @@ namespace Ultima5Redux.References.Maps
         // ReSharper disable once UnusedMember.Global
         public bool IsUnbrokenMirror(int nSprite)
         {
-            bool bIsMirror = nSprite is 157 or 158; 
-                //GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar");
+            bool bIsMirror = nSprite is 157 or 158;
+            //GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar");
             return bIsMirror;
         }
 

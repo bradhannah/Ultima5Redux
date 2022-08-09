@@ -34,10 +34,14 @@ namespace Ultima5Redux
         // ReSharper disable once UnusedMember.Global
         public enum SpecialLookCommand { None, Sign, GemCrystal }
 
+        public enum TryToAttackResult
+        {
+            Uninitialized, NothingToAttack, BrokenMirror, CombatMapEnemy, CombatMapNpc, NpcMurder, OnlyOnFoot,
+            ShootAProjectile
+        }
+
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         public const byte N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH = 100;
-
-        public bool MonsterAi { get; set; } = true;
 
         private readonly Dictionary<Potion.PotionColor, MagicReference.SpellWords> _potionColorToSpellMap =
             new()
@@ -86,6 +90,8 @@ namespace Ultima5Redux
         /// </summary>
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool IsPendingFall { get; private set; }
+
+        public bool MonsterAi { get; set; } = true;
 
         /// <summary>
         ///     Ultima 5 data and save files directory
@@ -138,6 +144,58 @@ namespace Ultima5Redux
         }
 
         /// <summary>
+        ///     Gets the tile reference for a chair when pushed in a given direction
+        /// </summary>
+        /// <param name="chairDirection"></param>
+        /// <returns></returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        private static TileReference GetChairNewDirection(Point2D.Direction chairDirection)
+        {
+            switch (chairDirection)
+            {
+                case Point2D.Direction.Up:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackForward");
+                case Point2D.Direction.Down:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackBack");
+                case Point2D.Direction.Left:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackRight");
+                case Point2D.Direction.Right:
+                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackLeft");
+                case Point2D.Direction.None:
+                default:
+                    throw new Ultima5ReduxException("Asked for a chair direction that I don't recognize");
+            }
+        }
+
+        private static TurnResult.TurnResultType GetTurnResultMovedByAvatarState(Avatar avatar, bool bManualMovement)
+        {
+            switch (avatar.CurrentAvatarState)
+            {
+                case Avatar.AvatarState.Regular:
+                    return TurnResult.TurnResultType.ActionMoveRegular;
+                case Avatar.AvatarState.Carpet:
+                    return TurnResult.TurnResultType.ActionMoveCarpet;
+                case Avatar.AvatarState.Horse:
+                    return TurnResult.TurnResultType.ActionMoveHorse;
+                case Avatar.AvatarState.Frigate:
+                    if (avatar.AreSailsHoisted)
+                    {
+                        return bManualMovement
+                            ? TurnResult.TurnResultType.ActionMoveFrigateWindSailsChangeDirection
+                            : TurnResult.TurnResultType.ActionMoveFrigateWindSails;
+                    }
+
+                    return TurnResult.TurnResultType.ActionMoveFrigateRowing;
+                case Avatar.AvatarState.Skiff:
+                    return TurnResult.TurnResultType.ActionMoveSkiffRowing;
+                case Avatar.AvatarState.Hidden:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(avatar),
+                        @"Tried to move in an unknown avatar boarding state");
+            }
+        }
+
+        /// <summary>
         ///     Safe method to board a MapUnit and removing it from the world
         /// </summary>
         /// <param name="mapUnit"></param>
@@ -147,6 +205,62 @@ namespace Ultima5Redux
             State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().BoardMapUnit(mapUnit);
             // clean it from the world so it no longer appears
             State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(mapUnit);
+        }
+
+        /// <summary>
+        ///     Checks if you can fire
+        /// </summary>
+        /// <returns></returns>
+        private bool CanFireInPlace(TurnResults turnResults, bool bSendOutput = true)
+        {
+            if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
+            if (State.TheVirtualMap.IsLargeMap)
+            {
+                if (State.TheVirtualMap.IsAvatarInFrigate)
+                {
+                    return true;
+                }
+
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .FIRE) +
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .D_WHAT));
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
+                return false;
+            }
+
+            if (IsCombatMap)
+            {
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .FIRE) +
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
+                        .DASH_NOT_HERE_BANG_N));
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireNotHere));
+                return false;
+            }
+
+            List<TileReference> cannonReferences = new()
+            {
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonUp"),
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonLeft"),
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonRight"),
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonDown"),
+            };
+            // small map
+            // if a cannon is any of the four directions
+            // 180 - 183
+            if (State.TheVirtualMap.AreAnyTilesWithinFourDirections(State.TheVirtualMap.CurrentPosition.XY,
+                    cannonReferences)) return true;
+
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                    .FIRE) +
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                    .D_WHAT));
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
+            return false;
         }
 
         private void CastSleep(PlayerCharacterRecord record, out bool bWasPutToSleep)
@@ -193,27 +307,46 @@ namespace Ultima5Redux
             }
         }
 
-        /// <summary>
-        ///     Gets the tile reference for a chair when pushed in a given direction
-        /// </summary>
-        /// <param name="chairDirection"></param>
-        /// <returns></returns>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        private static TileReference GetChairNewDirection(Point2D.Direction chairDirection)
+        private string GetMovementVerb(Avatar avatar, Point2D.Direction direction, bool bManualMovement)
         {
-            switch (chairDirection)
+            switch (avatar.CurrentAvatarState)
             {
-                case Point2D.Direction.Up:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackForward");
-                case Point2D.Direction.Down:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackBack");
-                case Point2D.Direction.Left:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackRight");
-                case Point2D.Direction.Right:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackLeft");
-                case Point2D.Direction.None:
+                case Avatar.AvatarState.Regular:
+                    return GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Carpet:
+                    return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.FLY) +
+                           GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Horse:
+                    return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                               .RIDE) +
+                           GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Frigate:
+                    if (avatar.AreSailsHoisted)
+                    {
+                        if (bManualMovement)
+                        {
+                            return GameReferences.DataOvlRef.StringReferences.GetString(
+                                DataOvlReference.WorldStrings
+                                    .HEAD) + GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
+                        }
+
+                        return GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
+                    }
+                    else
+                    {
+                        return
+                            GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction) +
+                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                                .ROWING);
+                    }
+
+                case Avatar.AvatarState.Skiff:
+                    return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) +
+                           GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
+                case Avatar.AvatarState.Hidden:
                 default:
-                    throw new Ultima5ReduxException("Asked for a chair direction that I don't recognize");
+                    throw new ArgumentOutOfRangeException(nameof(avatar.CurrentAvatarState), avatar.CurrentAvatarState,
+                        null);
             }
         }
 
@@ -232,6 +365,77 @@ namespace Ultima5Redux
         {
             return (xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
                 State.TheVirtualMap.NumberOfRowTiles - 1));
+        }
+
+        private void MurderNpc(NonPlayerCharacter npc)
+        {
+            npc.NPCState.IsDead = true;
+            State.Karma -= 10;
+        }
+
+        /// <summary>
+        ///     Processes any damage effects as you advance time, this can include getting
+        /// </summary>
+        /// <returns></returns>
+        private void ProcessDamageOnAdvanceTime(TurnResults turnResults)
+        {
+            if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
+
+            Avatar.AvatarState currentAvatarState =
+                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState;
+            TileReference currentTileReference = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
+
+            // swamp - we poison them, but the actual damage occurs further down in case they were already poisoned
+            if (currentAvatarState != Avatar.AvatarState.Carpet && currentTileReference.Index == 4)
+            {
+                bool bWasPoisoned = State.CharacterRecords.SteppedOnSwamp();
+                if (bWasPoisoned)
+                {
+                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.ExclaimStrings.POISONED_BANG_N), false);
+                }
+            }
+            // if on lava
+            else if (currentTileReference.Index == 143)
+            {
+                State.CharacterRecords.SteppedOnLava();
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.DamageOverTimeBurning));
+                turnResults.PushOutputToConsole("Burning!", false);
+                //StreamingOutput.Instance.PushMessage();
+            }
+
+            // if already poisoned
+            State.CharacterRecords.ProcessTurn(turnResults);
+        }
+
+        private List<VirtualMap.AggressiveMapUnitInfo> ProcessOpenDoor(Point2D xy, ref bool bWasSuccessful,
+            TurnResults turnResults, TileReference tileReference)
+        {
+            bool bIsDoorMagical = GameReferences.SpriteTileReferences.IsDoorMagical(tileReference.Index);
+            bool bIsDoorLocked = GameReferences.SpriteTileReferences.IsDoorLocked(tileReference.Index);
+
+            if (bIsDoorMagical || bIsDoorLocked)
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.OpeningThingsStrings
+                        .LOCKED_N), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionOpenDoorLocked));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            State.TheVirtualMap.SetOverridingTileReferece(
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
+
+            Map currentMap = State.TheVirtualMap.CurrentMap;
+            currentMap.SetOpenDoor(xy);
+
+            bWasSuccessful = true;
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.OPENED),
+                false);
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionOpenDoorOpened));
+
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
         /// <summary>
@@ -272,41 +476,6 @@ namespace Ultima5Redux
             StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
                 .WearUseItemStrings
                 .CARPET_BANG), false);
-        }
-
-        /// <summary>
-        ///     Processes any damage effects as you advance time, this can include getting
-        /// </summary>
-        /// <returns></returns>
-        private void ProcessDamageOnAdvanceTime(TurnResults turnResults)
-        {
-            if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
-
-            Avatar.AvatarState currentAvatarState =
-                State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState;
-            TileReference currentTileReference = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
-
-            // swamp - we poison them, but the actual damage occurs further down in case they were already poisoned
-            if (currentAvatarState != Avatar.AvatarState.Carpet && currentTileReference.Index == 4)
-            {
-                bool bWasPoisoned = State.CharacterRecords.SteppedOnSwamp();
-                if (bWasPoisoned)
-                {
-                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.ExclaimStrings .POISONED_BANG_N), false);
-                }
-            }
-            // if on lava
-            else if (currentTileReference.Index == 143)
-            {
-                State.CharacterRecords.SteppedOnLava();
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.DamageOverTimeBurning));
-                turnResults.PushOutputToConsole("Burning!", false);
-                //StreamingOutput.Instance.PushMessage();
-            }
-
-            // if already poisoned
-            State.CharacterRecords.ProcessTurn(turnResults);
         }
 
         public void AdvanceClockNoComputation(int nMinutes)
@@ -399,6 +568,196 @@ namespace Ultima5Redux
 
             State.TurnsSinceStart++;
             return aggressiveMapUnitInfos.Values.ToList();
+        }
+
+        /// <summary>
+        ///     Begins the conversation with a particular NPC
+        /// </summary>
+        /// <param name="npcState">the NPC to have a conversation with</param>
+        /// <param name="enqueuedScriptItem">a handler to be called when script items are enqueued</param>
+        /// <returns>A conversation object to be used to follow along with the conversation</returns>
+        public Conversation CreateConversationAndBegin(NonPlayerCharacterState npcState,
+            Conversation.EnqueuedScriptItem enqueuedScriptItem)
+        {
+            CurrentConversation = new Conversation(State, npcState);
+
+            CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
+
+            AdvanceClockNoComputation(N_DEFAULT_ADVANCE_TIME);
+
+            return CurrentConversation;
+        }
+
+        /// <summary>
+        ///     Gets the angle of the 360 rotation of all moons where Sun is 0degrees (straight up) at 12pm Noon
+        /// </summary>
+        /// <returns>0-359 degrees</returns>
+        // ReSharper disable once UnusedMember.Global
+        public float GetMoonAngle()
+        {
+            return MoonPhaseReferences.GetMoonAngle(State.TheTimeOfDay);
+        }
+
+        /// <summary>
+        ///     Gets the teleport location of the moongate the avatar is presently on
+        ///     Avatar MUST be on a moongate teleport location
+        /// </summary>
+        /// <returns>the coordinates</returns>
+        public Point3D GetMoongateTeleportLocation()
+        {
+            Debug.Assert(State.TheVirtualMap.IsLargeMap);
+
+            return State.TheMoongates.GetMoongatePosition(
+                (int)GameReferences.MoonPhaseRefs.GetMoonGateMoonPhase(State.TheTimeOfDay));
+        }
+
+        /// <summary>
+        ///     Determines if the current tile the Avatar is on, is an ACTIVE moongate
+        /// </summary>
+        /// <returns>true if the Avatar is on an active moongate</returns>
+        public bool IsAvatarOnActiveMoongate()
+        {
+            if (!State.TheVirtualMap.IsLargeMap || State.TheTimeOfDay.IsDayLight) return false;
+
+            return State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.GetCurrent3DPosition());
+        }
+
+        public void ReLoadFromJson()
+        {
+            string stateJsonOrig = State.Serialize();
+            GameState newState = GameState.Deserialize(stateJsonOrig);
+            State = newState;
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        // ReSharper disable once UnusedParameter.Global
+        public void SetAggressiveGuards(bool bAggressiveGuards)
+        {
+            // empty because it's not implemented yet
+        }
+
+        /// <summary>
+        ///     Called when the avatar is attempting to attack a particular target
+        /// </summary>
+        /// <param name="attackTargetPosition">where is the target</param>
+        /// <param name="mapUnit">the mapunit (if any) that is the target</param>
+        /// <param name="singleCombatMapReference">the combat map reference (if any) that should be loaded</param>
+        /// <param name="tryToAttackResult"></param>
+        /// <param name="turnResults"></param>
+        /// <returns>the final decision on how to handle the attack</returns>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToAttack(Point2D attackTargetPosition, out MapUnit mapUnit,
+            out SingleCombatMapReference singleCombatMapReference, out TryToAttackResult tryToAttackResult,
+            TurnResults turnResults)
+        {
+            singleCombatMapReference = null;
+            mapUnit = null;
+
+            TileReference tileReference = State.TheVirtualMap.GetTileReference(attackTargetPosition);
+
+            // if you are attacking an unbroken mirror - then we break it and override the tile
+            if (GameReferences.SpriteTileReferences.IsUnbrokenMirror(tileReference.Index))
+            {
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BROKEN),
+                    false);
+                TileReference brokenMirrorTileReference =
+                    GameReferences.SpriteTileReferences.GetTileReferenceByName("MirrorBroken");
+                State.TheVirtualMap.SetOverridingTileReferece(brokenMirrorTileReference,
+                    attackTargetPosition);
+
+                tryToAttackResult = TryToAttackResult.BrokenMirror;
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackBrokeMirror));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(attackTargetPosition, true);
+
+            if (mapUnit is not { IsAttackable: true })
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.TravelStrings.NOTHING_TO_ATTACK), false);
+                tryToAttackResult = TryToAttackResult.NothingToAttack;
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackNothingToAttack));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            // we know there is a mapunit to attack at this point
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.ATTACK) +
+                mapUnit.FriendlyName, false);
+
+            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+
+            // we get the combat map reference, if any - it also tells us if there should be a ranged attack in the overworld
+            // instead of a combat map
+            singleCombatMapReference =
+                State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(
+                    avatar.MapUnitPosition.XY,
+                    attackTargetPosition,
+                    SingleCombatMapReference.Territory.Britannia);
+
+            // if there is a mapunit - BUT - no 
+            ////// NOTE - this doesn't make sense for the Avatar to attack like this
+            if (singleCombatMapReference == null)
+            {
+                // we were not able to attack, likely on a carpet or skiff and on the water
+                // but may be other edge cases
+                // if (missileType != CombatItemReference.MissileType.None)
+                //     throw new Ultima5ReduxException(
+                //         "Single combat map reference was null, but missile type wasn't null when avatar attacks");
+
+                StreamingOutput.Instance.PushMessage(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .ON_FOOT), false);
+                tryToAttackResult = TryToAttackResult.OnlyOnFoot;
+
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackOnlyOnFoot));
+
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            tryToAttackResult = TryToAttackResult.Uninitialized;
+
+            switch (mapUnit)
+            {
+                case Enemy:
+                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
+                    tryToAttackResult = TryToAttackResult.CombatMapEnemy;
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapEnemy));
+                    break;
+                case NonPlayerCharacter npc:
+                    // if they are in bed or in the stocks then it's instadeath and you are a bad person!
+                    if (GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
+                        GameReferences.SpriteTileReferences.IsStocks(tileReference.Index))
+                    {
+                        StreamingOutput.Instance.PushMessage(
+                            GameReferences.DataOvlRef.StringReferences.GetString(
+                                DataOvlReference.TravelStrings.MURDERED), false);
+                        tryToAttackResult = TryToAttackResult.NpcMurder;
+                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackMurder));
+                        MurderNpc(npc);
+                        break;
+                    }
+
+                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
+                    npc.NPCState.IsDead = true;
+
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapNpc));
+                    tryToAttackResult = TryToAttackResult.CombatMapNpc;
+
+                    break;
+            }
+
+            if (tryToAttackResult is TryToAttackResult.CombatMapEnemy or TryToAttackResult.CombatMapNpc)
+            {
+                StreamingOutput.Instance.PushMessage(mapUnit.FriendlyName + "\n" +
+                                                     GameReferences.DataOvlRef.StringReferences.GetString(
+                                                         DataOvlReference.AdditionalStrings
+                                                             .STARS_CONFLICT_STARS_N_N), false);
+            }
+
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
         /// <summary>
@@ -501,24 +860,6 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        ///     Begins the conversation with a particular NPC
-        /// </summary>
-        /// <param name="npcState">the NPC to have a conversation with</param>
-        /// <param name="enqueuedScriptItem">a handler to be called when script items are enqueued</param>
-        /// <returns>A conversation object to be used to follow along with the conversation</returns>
-        public Conversation CreateConversationAndBegin(NonPlayerCharacterState npcState,
-            Conversation.EnqueuedScriptItem enqueuedScriptItem)
-        {
-            CurrentConversation = new Conversation(State, npcState);
-
-            CurrentConversation.EnqueuedScriptItemCallback += enqueuedScriptItem;
-
-            AdvanceClockNoComputation(N_DEFAULT_ADVANCE_TIME);
-
-            return CurrentConversation;
-        }
-
-        /// <summary>
         ///     Attempt to enter a building at a coordinate
         ///     Will load new map if successful
         /// </summary>
@@ -579,355 +920,87 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        ///     Gets the angle of the 360 rotation of all moons where Sun is 0degrees (straight up) at 12pm Noon
+        ///     Try to fire from where ever you are
         /// </summary>
-        /// <returns>0-359 degrees</returns>
-        // ReSharper disable once UnusedMember.Global
-        public float GetMoonAngle()
+        /// <param name="direction"></param>
+        /// <param name="turnResults"></param>
+        /// <param name="cannonBallDestination"></param>
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToFire(Point2D.Direction direction,
+            TurnResults turnResults, out Point2D cannonBallDestination)
         {
-            return MoonPhaseReferences.GetMoonAngle(State.TheTimeOfDay);
-        }
+            // if (!CanFireInPlace(turnResults))
+            //     throw new Ultima5ReduxException("Tried to fire, but are not able to - use CheckIfCanFire first");
+            bool bCanFire = CanFireInPlace(turnResults);
 
-        /// <summary>
-        ///     Gets the teleport location of the moongate the avatar is presently on
-        ///     Avatar MUST be on a moongate teleport location
-        /// </summary>
-        /// <returns>the coordinates</returns>
-        public Point3D GetMoongateTeleportLocation()
-        {
-            Debug.Assert(State.TheVirtualMap.IsLargeMap);
+            if (!bCanFire)
+            {
+                cannonBallDestination = null;
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
 
-            return State.TheMoongates.GetMoongatePosition(
-                (int)GameReferences.MoonPhaseRefs.GetMoonGateMoonPhase(State.TheTimeOfDay));
-        }
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireCannon));
 
-        /// <summary>
-        ///     Ignites a torch, if available and set the number of turns for the torch to be burnt out
-        /// </summary>
-        /// <returns></returns>
-        // ReSharper disable once UnusedMember.Global
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToIgniteTorch(TurnResults turnResults)
-        {
-            // if there are no torches then report back and make no change
-            if (State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity <=
-                0)
+            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
+            cannonBallDestination = null;
+
+            // TODO: need small map code for cannons like in LBs castle
+
+            // if overworld
+            if (!State.TheVirtualMap.IsLargeMap) return null;
+
+            // we assume they are in a frigate
+            if (!State.TheVirtualMap.IsAvatarInFrigate)
+                throw new Ultima5ReduxException("can't fire on large map unless you're on a frigate");
+
+            // make sure the boat is facing the correct direction given the direction of the cannon
+            TileReference currentAvatarTileReference = avatar.IsAvatarOnBoardedThing
+                ? avatar.GetBoardedTileReference()
+                : avatar.KeyTileReference;
+
+            bool bShipFacingUpDown = currentAvatarTileReference.Name.EndsWith("Up") ||
+                                     currentAvatarTileReference.Name.EndsWith("Down");
+
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                    .FIRE) + direction);
+            // are we pointing the right direction to fire the cannons?
+            if (((direction is Point2D.Direction.Down or Point2D.Direction.Up) && bShipFacingUpDown)
+                || ((direction is Point2D.Direction.Left or Point2D.Direction.Right) && !bShipFacingUpDown))
             {
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.SleepTransportStrings
-                        .NONE_OWNED_BANG_N), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionIgniteTorchNoTorch));
+                        .FIRE_BROADSIDE_ONLY_BANG_N), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireBroadsideOnly));
+
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity--;
-            State.TurnsToExtinguish = N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH;
-            // this will trigger a re-read of time of day changes
-            State.TheTimeOfDay.SetAllChangeTrackers();
+            // time to fire that cannon!
+            const int frigateCannonFiresTiles = 3;
 
-            StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                DataOvlReference.KeypressCommandsStrings.IGNITE_TORCH), false);
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionIgniteTorch));
-
-            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-        /// <summary>
-        ///     Determines if the current tile the Avatar is on, is an ACTIVE moongate
-        /// </summary>
-        /// <returns>true if the Avatar is on an active moongate</returns>
-        public bool IsAvatarOnActiveMoongate()
-        {
-            if (!State.TheVirtualMap.IsLargeMap || State.TheTimeOfDay.IsDayLight) return false;
-
-            return State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.GetCurrent3DPosition());
-        }
-
-        /// <summary>
-        ///     Looks at a particular tile, detecting if NPCs are present as well
-        ///     Provides string output or special instructions if it is "special"B
-        /// </summary>
-        /// <param name="xy">position of tile to look at</param>
-        /// <param name="specialLookCommand">Special command such as look at gem or sign</param>
-        /// <param name="turnResults"></param>
-        /// <returns>String to output to user</returns>
-        // ReSharper disable once UnusedMember.Global
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToLook(Point2D xy, out SpecialLookCommand specialLookCommand,
-            TurnResults turnResults)
-        {
-            specialLookCommand = SpecialLookCommand.None;
-            string lookStr;
-
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
-            // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
-            if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
+            GetAdjustments(direction, out int nXOffset, out int nYOffset);
+            Point2D adjustedPosition = new(avatar.MapUnitPosition.X, avatar.MapUnitPosition.Y);
+            // if 
+            for (int i = 0; i < frigateCannonFiresTiles; i++)
             {
-                List<MapUnit> mapUnits = State.TheVirtualMap.GetMapUnitsOnTile(xy);
-                if (mapUnits.Count <= 0)
-                {
-                    throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
-                }
-                lookStr = GameReferences.DataOvlRef.StringReferences
-                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                          GameReferences.LookRef.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
-            }
-            // if we are any one of these signs then we superimpose it on the screen
-            else if (GameReferences.SpriteTileReferences.IsSign(tileReference.Index))
-            {
-                specialLookCommand = SpecialLookCommand.Sign;
-                lookStr = string.Empty;
-            }
-            else if (GameReferences.SpriteTileReferences.GetTileNumberByName("Clock1") == tileReference.Index)
-            {
-                lookStr = GameReferences.DataOvlRef.StringReferences
-                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                          GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart() +
-                          State.TheTimeOfDay.FormattedTime;
-            }
-            else // lets see what we've got here!
-            {
-                lookStr = GameReferences.DataOvlRef.StringReferences
-                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
-                          GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart();
-            }
+                adjustedPosition = new Point2D(adjustedPosition.X + nXOffset, adjustedPosition.Y + nYOffset);
 
-            // pass time at the end to make sure moving characters are accounted for
-            StreamingOutput.Instance.PushMessage(lookStr, false);
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionLook));
+                if (!State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPosition)) continue;
 
-            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-        /// <summary>
-        ///     Standard way of passing time, makes sure it passes the default amount of time (2 minutes)
-        /// </summary>
-        /// <returns>"" or a string that describes what happened when passing time</returns>
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToPassTime(TurnResults turnResults)
-        {
-            if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
-
-            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
-                AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.PassTurn));
-
-            return aggressiveMapUnitInfos;
-        }
-
-        /// <summary>
-        ///     Attempts to push (or pull!) a map item
-        /// </summary>
-        /// <param name="avatarXy">the avatar's current map position</param>
-        /// <param name="direction">the direction of the thing the avatar wants to push</param>
-        /// <param name="bPushedAThing">was a thing actually pushed?</param>
-        /// <param name="turnResults"></param>
-        /// <returns>the string to output to the user</returns>
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
-            out bool bPushedAThing, TurnResults turnResults)
-        {
-            bPushedAThing = false;
-            Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
-
-            TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
-
-            // it's not pushable OR if an NPC occupies the tile -so let's bail
-            if (!adjustedTileReference.IsPushable || State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPos))
-            {
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.ExclaimStrings
-                        .WONT_BUDGE_BANG_N), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionPushWontBudge));
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            // we get the thing one tile further than the thing to see if we have room to push it forward
-            Point2D oneMoreTileAdjusted = adjustedPos.GetAdjustedPosition(direction);
-            TileReference oneMoreTileReference = State.TheVirtualMap.GetTileReference(oneMoreTileAdjusted);
-
-            // if I'm sitting and the proceeding tile is an upright tile then I can't swap things 
-            if (State.TheVirtualMap.IsAvatarSitting() && oneMoreTileReference.IsUpright)
-            {
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.ExclaimStrings
-                        .WONT_BUDGE_BANG_N), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionPushWontBudge));
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            bPushedAThing = true;
-
-            // if you are pushing a chair then change the direction of chair when it's pushed
-            if (GameReferences.SpriteTileReferences.IsChair(adjustedTileReference.Index))
-            {
-                adjustedTileReference = GetChairNewDirection(direction);
-                State.TheVirtualMap.SetOverridingTileReferece(adjustedTileReference, adjustedPos);
-            }
-
-            // is there an NPC on the tile? if so, we won't move anything into them
-            bool bIsNpcOneMoreTile = State.TheVirtualMap.IsMapUnitOccupiedTile(oneMoreTileAdjusted);
-
-            // is the next tile walkable and is there NOT an NPC on it
-            if (oneMoreTileReference.IsWalking_Passable && !bIsNpcOneMoreTile)
-                State.TheVirtualMap.SwapTiles(adjustedPos, oneMoreTileAdjusted);
-            else // the next tile isn't walkable so we just swap the avatar and the push tile
-                // we will pull (swap) the thing
-                State.TheVirtualMap.SwapTiles(avatarXy, adjustedPos);
-
-            // move the avatar to the new spot
-            State.TheVirtualMap.CurrentPosition.XY = adjustedPos.Copy();
-
-            StreamingOutput.Instance.PushMessage(
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N),
-                false);
-
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionPush));
-            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-        public void ReLoadFromJson()
-        {
-            string stateJsonOrig = State.Serialize();
-            GameState newState = GameState.Deserialize(stateJsonOrig);
-            State = newState;
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        // ReSharper disable once UnusedParameter.Global
-        public void SetAggressiveGuards(bool bAggressiveGuards)
-        {
-            // empty because it's not implemented yet
-        }
-
-        public enum TryToAttackResult
-        {
-            Uninitialized, NothingToAttack, BrokenMirror, CombatMapEnemy, CombatMapNpc, NpcMurder, OnlyOnFoot,
-            ShootAProjectile
-        }
-
-        /// <summary>
-        ///     Called when the avatar is attempting to attack a particular target
-        /// </summary>
-        /// <param name="attackTargetPosition">where is the target</param>
-        /// <param name="mapUnit">the mapunit (if any) that is the target</param>
-        /// <param name="singleCombatMapReference">the combat map reference (if any) that should be loaded</param>
-        /// <param name="tryToAttackResult"></param>
-        /// <param name="turnResults"></param>
-        /// <returns>the final decision on how to handle the attack</returns>
-        /// <exception cref="Ultima5ReduxException"></exception>
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToAttack(Point2D attackTargetPosition, out MapUnit mapUnit,
-            out SingleCombatMapReference singleCombatMapReference, out TryToAttackResult tryToAttackResult,
-            TurnResults turnResults)
-        {
-            singleCombatMapReference = null;
-            mapUnit = null;
-
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(attackTargetPosition);
-
-            // if you are attacking an unbroken mirror - then we break it and override the tile
-            if (GameReferences.SpriteTileReferences.IsUnbrokenMirror(tileReference.Index))
-            {
+                // kill them
+                MapUnit targetedMapUnit = State.TheVirtualMap.GetMapUnitsOnTile(adjustedPosition)[0];
                 StreamingOutput.Instance.PushMessage(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BROKEN),
-                    false);
-                TileReference brokenMirrorTileReference =
-                    GameReferences.SpriteTileReferences.GetTileReferenceByName("MirrorBroken");
-                State.TheVirtualMap.SetOverridingTileReferece(brokenMirrorTileReference,
-                    attackTargetPosition);
-
-                tryToAttackResult = TryToAttackResult.BrokenMirror;
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackBrokeMirror));
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(attackTargetPosition, true);
-
-            if (mapUnit is not { IsAttackable: true })
-            {
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.TravelStrings.NOTHING_TO_ATTACK), false);
-                tryToAttackResult = TryToAttackResult.NothingToAttack;
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackNothingToAttack));
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            // we know there is a mapunit to attack at this point
-            StreamingOutput.Instance.PushMessage(
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.ATTACK) +
-                mapUnit.FriendlyName, false);
-
-            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
-
-            // we get the combat map reference, if any - it also tells us if there should be a ranged attack in the overworld
-            // instead of a combat map
-            singleCombatMapReference =
-                State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(
-                    avatar.MapUnitPosition.XY,
-                    attackTargetPosition,
-                    SingleCombatMapReference.Territory.Britannia);
-
-            // if there is a mapunit - BUT - no 
-            ////// NOTE - this doesn't make sense for the Avatar to attack like this
-            if (singleCombatMapReference == null)
-            {
-                // we were not able to attack, likely on a carpet or skiff and on the water
-                // but may be other edge cases
-                // if (missileType != CombatItemReference.MissileType.None)
-                //     throw new Ultima5ReduxException(
-                //         "Single combat map reference was null, but missile type wasn't null when avatar attacks");
-
-                StreamingOutput.Instance.PushMessage(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                        .ON_FOOT), false);
-                tryToAttackResult = TryToAttackResult.OnlyOnFoot;
-
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackOnlyOnFoot));
+                    "Killed " + targetedMapUnit.FriendlyName, false);
+                State.TheVirtualMap.TheMapUnits.ClearMapUnit(targetedMapUnit);
+                cannonBallDestination = adjustedPosition;
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireEnemyKilled));
 
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            tryToAttackResult = TryToAttackResult.Uninitialized;
-
-            switch (mapUnit)
-            {
-                case Enemy:
-                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
-                    tryToAttackResult = TryToAttackResult.CombatMapEnemy;
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapEnemy));
-                    break;
-                case NonPlayerCharacter npc:
-                    if (GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
-                        GameReferences.SpriteTileReferences.IsStocks(tileReference.Index))
-                    {
-                        StreamingOutput.Instance.PushMessage(
-                            GameReferences.DataOvlRef.StringReferences.GetString(
-                                DataOvlReference.TravelStrings.MURDERED), false);
-                        tryToAttackResult = TryToAttackResult.NpcMurder;
-                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackMurder));
-                        MurderNpc(npc);
-                        break;
-                    }
-
-                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
-
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapNpc));
-                    tryToAttackResult = TryToAttackResult.CombatMapNpc;
-
-                    break;
-            }
-
-            if (tryToAttackResult is TryToAttackResult.CombatMapEnemy or TryToAttackResult.CombatMapNpc)
-            {
-                StreamingOutput.Instance.PushMessage(mapUnit.FriendlyName + "\n" +
-                                                     GameReferences.DataOvlRef.StringReferences.GetString(
-                                                         DataOvlReference.AdditionalStrings
-                                                             .STARS_CONFLICT_STARS_N_N), false);
-            }
-
+            cannonBallDestination = adjustedPosition;
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireHitNothing));
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-        private void MurderNpc(NonPlayerCharacter npc)
-        {
-            npc.NPCState.IsDead = true;
-            State.Karma -= 10;
         }
 
         /// <summary>
@@ -1020,6 +1093,36 @@ namespace Ultima5Redux
             StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.GetThingsStrings.NOTHING_TO_GET), false);
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetNothingToGet));
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+        }
+
+        /// <summary>
+        ///     Ignites a torch, if available and set the number of turns for the torch to be burnt out
+        /// </summary>
+        /// <returns></returns>
+        // ReSharper disable once UnusedMember.Global
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToIgniteTorch(TurnResults turnResults)
+        {
+            // if there are no torches then report back and make no change
+            if (State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity <=
+                0)
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.SleepTransportStrings
+                        .NONE_OWNED_BANG_N), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionIgniteTorchNoTorch));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity--;
+            State.TurnsToExtinguish = N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH;
+            // this will trigger a re-read of time of day changes
+            State.TheTimeOfDay.SetAllChangeTrackers();
+
+            StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                DataOvlReference.KeypressCommandsStrings.IGNITE_TORCH), false);
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionIgniteTorch));
+
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -1268,142 +1371,58 @@ namespace Ultima5Redux
         }
 
         /// <summary>
-        ///     Checks if you can fire
+        ///     Looks at a particular tile, detecting if NPCs are present as well
+        ///     Provides string output or special instructions if it is "special"B
         /// </summary>
-        /// <returns></returns>
-        private bool CanFireInPlace(TurnResults turnResults, bool bSendOutput = true)
+        /// <param name="xy">position of tile to look at</param>
+        /// <param name="specialLookCommand">Special command such as look at gem or sign</param>
+        /// <param name="turnResults"></param>
+        /// <returns>String to output to user</returns>
+        // ReSharper disable once UnusedMember.Global
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToLook(Point2D xy, out SpecialLookCommand specialLookCommand,
+            TurnResults turnResults)
         {
-            if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
-            if (State.TheVirtualMap.IsLargeMap)
+            specialLookCommand = SpecialLookCommand.None;
+            string lookStr;
+
+            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+            // if there is an NPC on the tile, then we assume they want to look at the NPC, not whatever else may be on the tiles
+            if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
             {
-                if (State.TheVirtualMap.IsAvatarInFrigate)
+                List<MapUnit> mapUnits = State.TheVirtualMap.GetMapUnitsOnTile(xy);
+                if (mapUnits.Count <= 0)
                 {
-                    return true;
+                    throw new Ultima5ReduxException("Tried to look up Map Unit, but couldn't find the map character");
                 }
 
-                StreamingOutput.Instance.PushMessage(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                        .FIRE) +
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                        .D_WHAT));
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
-                return false;
+                lookStr = GameReferences.DataOvlRef.StringReferences
+                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                          GameReferences.LookRef.GetLookDescription(mapUnits[0].KeyTileReference.Index).Trim();
+            }
+            // if we are any one of these signs then we superimpose it on the screen
+            else if (GameReferences.SpriteTileReferences.IsSign(tileReference.Index))
+            {
+                specialLookCommand = SpecialLookCommand.Sign;
+                lookStr = string.Empty;
+            }
+            else if (GameReferences.SpriteTileReferences.GetTileNumberByName("Clock1") == tileReference.Index)
+            {
+                lookStr = GameReferences.DataOvlRef.StringReferences
+                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                          GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart() +
+                          State.TheTimeOfDay.FormattedTime;
+            }
+            else // lets see what we've got here!
+            {
+                lookStr = GameReferences.DataOvlRef.StringReferences
+                              .GetString(DataOvlReference.Vision2Strings.THOU_DOST_SEE).Trim() + " " +
+                          GameReferences.LookRef.GetLookDescription(tileReference.Index).TrimStart();
             }
 
-            if (IsCombatMap)
-            {
-                StreamingOutput.Instance.PushMessage(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                        .FIRE) +
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings
-                        .DASH_NOT_HERE_BANG_N));
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireNotHere));
-                return false;
-            }
+            // pass time at the end to make sure moving characters are accounted for
+            StreamingOutput.Instance.PushMessage(lookStr, false);
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionLook));
 
-            List<TileReference> cannonReferences = new()
-            {
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonUp"),
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonLeft"),
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonRight"),
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonDown"),
-            };
-            // small map
-            // if a cannon is any of the four directions
-            // 180 - 183
-            if (State.TheVirtualMap.AreAnyTilesWithinFourDirections(State.TheVirtualMap.CurrentPosition.XY,
-                    cannonReferences)) return true;
-
-            StreamingOutput.Instance.PushMessage(
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                    .FIRE) +
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                    .D_WHAT));
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireWhat));
-            return false;
-        }
-
-        /// <summary>
-        ///     Try to fire from where ever you are
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="turnResults"></param>
-        /// <param name="cannonBallDestination"></param>
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToFire(Point2D.Direction direction,
-            TurnResults turnResults, out Point2D cannonBallDestination)
-        {
-            // if (!CanFireInPlace(turnResults))
-            //     throw new Ultima5ReduxException("Tried to fire, but are not able to - use CheckIfCanFire first");
-            bool bCanFire = CanFireInPlace(turnResults);
-
-            if (!bCanFire)
-            {
-                cannonBallDestination = null;
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireCannon));
-
-            Avatar avatar = State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
-            cannonBallDestination = null;
-
-            // TODO: need small map code for cannons like in LBs castle
-
-            // if overworld
-            if (!State.TheVirtualMap.IsLargeMap) return null;
-
-            // we assume they are in a frigate
-            if (!State.TheVirtualMap.IsAvatarInFrigate)
-                throw new Ultima5ReduxException("can't fire on large map unless you're on a frigate");
-
-            // make sure the boat is facing the correct direction given the direction of the cannon
-            TileReference currentAvatarTileReference = avatar.IsAvatarOnBoardedThing
-                ? avatar.GetBoardedTileReference()
-                : avatar.KeyTileReference;
-
-            bool bShipFacingUpDown = currentAvatarTileReference.Name.EndsWith("Up") ||
-                                     currentAvatarTileReference.Name.EndsWith("Down");
-
-            StreamingOutput.Instance.PushMessage(
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
-                    .FIRE) + direction);
-            // are we pointing the right direction to fire the cannons?
-            if (((direction is Point2D.Direction.Down or Point2D.Direction.Up) && bShipFacingUpDown)
-                || ((direction is Point2D.Direction.Left or Point2D.Direction.Right) && !bShipFacingUpDown))
-            {
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.SleepTransportStrings
-                        .FIRE_BROADSIDE_ONLY_BANG_N), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireBroadsideOnly));
-
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            // time to fire that cannon!
-            const int frigateCannonFiresTiles = 3;
-
-            GetAdjustments(direction, out int nXOffset, out int nYOffset);
-            Point2D adjustedPosition = new(avatar.MapUnitPosition.X, avatar.MapUnitPosition.Y);
-            // if 
-            for (int i = 0; i < frigateCannonFiresTiles; i++)
-            {
-                adjustedPosition = new Point2D(adjustedPosition.X + nXOffset, adjustedPosition.Y + nYOffset);
-
-                if (!State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPosition)) continue;
-
-                // kill them
-                MapUnit targetedMapUnit = State.TheVirtualMap.GetMapUnitsOnTile(adjustedPosition)[0];
-                StreamingOutput.Instance.PushMessage(
-                    "Killed " + targetedMapUnit.FriendlyName, false);
-                State.TheVirtualMap.TheMapUnits.ClearMapUnit(targetedMapUnit);
-                cannonBallDestination = adjustedPosition;
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireEnemyKilled));
-
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            cannonBallDestination = adjustedPosition;
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionFireHitNothing));
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -1597,77 +1616,6 @@ namespace Ultima5Redux
             return AdvanceTime(nMinutesToAdvance, turnResults);
         }
 
-        private static TurnResult.TurnResultType GetTurnResultMovedByAvatarState(Avatar avatar, bool bManualMovement)
-        {
-            switch (avatar.CurrentAvatarState)
-            {
-                case Avatar.AvatarState.Regular:
-                    return TurnResult.TurnResultType.ActionMoveRegular;
-                case Avatar.AvatarState.Carpet:
-                    return TurnResult.TurnResultType.ActionMoveCarpet;
-                case Avatar.AvatarState.Horse:
-                    return TurnResult.TurnResultType.ActionMoveHorse;
-                case Avatar.AvatarState.Frigate:
-                    if (avatar.AreSailsHoisted)
-                    {
-                        return bManualMovement
-                            ? TurnResult.TurnResultType.ActionMoveFrigateWindSailsChangeDirection
-                            : TurnResult.TurnResultType.ActionMoveFrigateWindSails;
-                    }
-
-                    return TurnResult.TurnResultType.ActionMoveFrigateRowing;
-                case Avatar.AvatarState.Skiff:
-                    return TurnResult.TurnResultType.ActionMoveSkiffRowing;
-                case Avatar.AvatarState.Hidden:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(avatar),
-                        @"Tried to move in an unknown avatar boarding state");
-            }
-        }
-
-        private string GetMovementVerb(Avatar avatar, Point2D.Direction direction, bool bManualMovement)
-        {
-            switch (avatar.CurrentAvatarState)
-            {
-                case Avatar.AvatarState.Regular:
-                    return GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Carpet:
-                    return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.FLY) +
-                           GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Horse:
-                    return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                               .RIDE) +
-                           GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Frigate:
-                    if (avatar.AreSailsHoisted)
-                    {
-                        if (bManualMovement)
-                        {
-                            return GameReferences.DataOvlRef.StringReferences.GetString(
-                                DataOvlReference.WorldStrings
-                                    .HEAD) + GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
-                        }
-
-                        return GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
-                    }
-                    else
-                    {
-                        return
-                            GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction) +
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                                .ROWING);
-                    }
-
-                case Avatar.AvatarState.Skiff:
-                    return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) +
-                           GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
-                case Avatar.AvatarState.Hidden:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(avatar.CurrentAvatarState), avatar.CurrentAvatarState,
-                        null);
-            }
-        }
-
         public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults) =>
             TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer, direction, turnResults);
 
@@ -1750,33 +1698,88 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
-        private List<VirtualMap.AggressiveMapUnitInfo> ProcessOpenDoor(Point2D xy, ref bool bWasSuccessful,
-            TurnResults turnResults, TileReference tileReference)
+        /// <summary>
+        ///     Standard way of passing time, makes sure it passes the default amount of time (2 minutes)
+        /// </summary>
+        /// <returns>"" or a string that describes what happened when passing time</returns>
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToPassTime(TurnResults turnResults)
         {
-            bool bIsDoorMagical = GameReferences.SpriteTileReferences.IsDoorMagical(tileReference.Index);
-            bool bIsDoorLocked = GameReferences.SpriteTileReferences.IsDoorLocked(tileReference.Index);
+            if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
 
-            if (bIsDoorMagical || bIsDoorLocked)
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.PassTurn));
+
+            return aggressiveMapUnitInfos;
+        }
+
+        /// <summary>
+        ///     Attempts to push (or pull!) a map item
+        /// </summary>
+        /// <param name="avatarXy">the avatar's current map position</param>
+        /// <param name="direction">the direction of the thing the avatar wants to push</param>
+        /// <param name="bPushedAThing">was a thing actually pushed?</param>
+        /// <param name="turnResults"></param>
+        /// <returns>the string to output to the user</returns>
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToPushAThing(Point2D avatarXy, Point2D.Direction direction,
+            out bool bPushedAThing, TurnResults turnResults)
+        {
+            bPushedAThing = false;
+            Point2D adjustedPos = avatarXy.GetAdjustedPosition(direction);
+
+            TileReference adjustedTileReference = State.TheVirtualMap.GetTileReference(adjustedPos);
+
+            // it's not pushable OR if an NPC occupies the tile -so let's bail
+            if (!adjustedTileReference.IsPushable || State.TheVirtualMap.IsMapUnitOccupiedTile(adjustedPos))
             {
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.OpeningThingsStrings
-                        .LOCKED_N), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionOpenDoorLocked));
+                    DataOvlReference.ExclaimStrings
+                        .WONT_BUDGE_BANG_N), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionPushWontBudge));
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            State.TheVirtualMap.SetOverridingTileReferece(
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
+            // we get the thing one tile further than the thing to see if we have room to push it forward
+            Point2D oneMoreTileAdjusted = adjustedPos.GetAdjustedPosition(direction);
+            TileReference oneMoreTileReference = State.TheVirtualMap.GetTileReference(oneMoreTileAdjusted);
 
-            Map currentMap = State.TheVirtualMap.CurrentMap;
-            currentMap.SetOpenDoor(xy);
+            // if I'm sitting and the proceeding tile is an upright tile then I can't swap things 
+            if (State.TheVirtualMap.IsAvatarSitting() && oneMoreTileReference.IsUpright)
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.ExclaimStrings
+                        .WONT_BUDGE_BANG_N), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionPushWontBudge));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
 
-            bWasSuccessful = true;
+            bPushedAThing = true;
+
+            // if you are pushing a chair then change the direction of chair when it's pushed
+            if (GameReferences.SpriteTileReferences.IsChair(adjustedTileReference.Index))
+            {
+                adjustedTileReference = GetChairNewDirection(direction);
+                State.TheVirtualMap.SetOverridingTileReferece(adjustedTileReference, adjustedPos);
+            }
+
+            // is there an NPC on the tile? if so, we won't move anything into them
+            bool bIsNpcOneMoreTile = State.TheVirtualMap.IsMapUnitOccupiedTile(oneMoreTileAdjusted);
+
+            // is the next tile walkable and is there NOT an NPC on it
+            if (oneMoreTileReference.IsWalking_Passable && !bIsNpcOneMoreTile)
+                State.TheVirtualMap.SwapTiles(adjustedPos, oneMoreTileAdjusted);
+            else // the next tile isn't walkable so we just swap the avatar and the push tile
+                // we will pull (swap) the thing
+                State.TheVirtualMap.SwapTiles(avatarXy, adjustedPos);
+
+            // move the avatar to the new spot
+            State.TheVirtualMap.CurrentPosition.XY = adjustedPos.Copy();
+
             StreamingOutput.Instance.PushMessage(
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.OPENED),
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.PUSHED_BANG_N),
                 false);
-            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionOpenDoorOpened));
 
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionPush));
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -1833,6 +1836,79 @@ namespace Ultima5Redux
                         .NOTHING_OF_NOTE_DOT_N)), false);
             }
 
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+        }
+
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToUseLordBritishArtifactItem(
+            LordBritishArtifact lordBritishArtifact, TurnResults turnResults)
+        {
+            switch (lordBritishArtifact.Artifact)
+            {
+                case LordBritishArtifact.ArtifactType.Amulet:
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                                                             DataOvlReference.WearUseItemStrings
+                                                                 .AMULET_N_N) + "\n" +
+                                                         GameReferences.DataOvlRef.StringReferences.GetString(
+                                                             DataOvlReference.WearUseItemStrings
+                                                                 .WEARING_AMULET) + "\n" +
+                                                         GameReferences.DataOvlRef.StringReferences.GetString(
+                                                             DataOvlReference.WearUseItemStrings
+                                                                 .SPACE_OF_LORD_BRITISH_DOT_N), false);
+                    break;
+                case LordBritishArtifact.ArtifactType.Crown:
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                                                             DataOvlReference.WearUseItemStrings
+                                                                 .CROWN_N_N) + "\n" +
+                                                         GameReferences.DataOvlRef.StringReferences.GetString(
+                                                             DataOvlReference.WearUseItemStrings
+                                                                 .DON_THE_CROWN) + "\n" + GameReferences.DataOvlRef
+                                                             .StringReferences.GetString(
+                                                                 DataOvlReference.WearUseItemStrings
+                                                                     .SPACE_OF_LORD_BRITISH_DOT_N), false);
+                    break;
+                case LordBritishArtifact.ArtifactType.Sceptre:
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                                                             DataOvlReference.WearUseItemStrings
+                                                                 .SCEPTRE_N_N) + "\n" +
+                                                         GameReferences.DataOvlRef.StringReferences.GetString(
+                                                             DataOvlReference.WearUseItemStrings
+                                                                 .WIELD_SCEPTRE) + "\n" + GameReferences.DataOvlRef
+                                                             .StringReferences.GetString(
+                                                                 DataOvlReference.WearUseItemStrings
+                                                                     .SPACE_OF_LORD_BRITISH_DOT_N), false);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(lordBritishArtifact),
+                        @"Tried to use an undefined lordBritishArtifact");
+            }
+
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+        }
+
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToUseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried,
+            TurnResults turnResults)
+        {
+            bMoonstoneBuried = false;
+
+            if (!IsAllowedToBuryMoongate())
+            {
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                                                         DataOvlReference.ExclaimStrings
+                                                             .MOONSTONE_SPACE) +
+                                                     GameReferences.DataOvlRef.StringReferences.GetString(
+                                                         DataOvlReference.ExclaimStrings
+                                                             .CANNOT_BE_BURIED_HERE_BANG_N), false);
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            State.TheMoongates.SetMoonstoneBuried(moonstone.MoongateIndex, true,
+                State.TheVirtualMap.GetCurrent3DPosition());
+            bMoonstoneBuried = true;
+
+            StreamingOutput.Instance.PushMessage(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.MOONSTONE_SPACE) +
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.BURIED_BANG_N),
+                false);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
@@ -1930,79 +2006,6 @@ namespace Ultima5Redux
         {
             StreamingOutput.Instance.PushMessage($"Scroll: {scroll.ScrollSpell}\n\nA-la-Kazam!", false);
 
-            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToUseLordBritishArtifactItem(
-            LordBritishArtifact lordBritishArtifact, TurnResults turnResults)
-        {
-            switch (lordBritishArtifact.Artifact)
-            {
-                case LordBritishArtifact.ArtifactType.Amulet:
-                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                                                             DataOvlReference.WearUseItemStrings
-                                                                 .AMULET_N_N) + "\n" +
-                                                         GameReferences.DataOvlRef.StringReferences.GetString(
-                                                             DataOvlReference.WearUseItemStrings
-                                                                 .WEARING_AMULET) + "\n" +
-                                                         GameReferences.DataOvlRef.StringReferences.GetString(
-                                                             DataOvlReference.WearUseItemStrings
-                                                                 .SPACE_OF_LORD_BRITISH_DOT_N), false);
-                    break;
-                case LordBritishArtifact.ArtifactType.Crown:
-                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                                                             DataOvlReference.WearUseItemStrings
-                                                                 .CROWN_N_N) + "\n" +
-                                                         GameReferences.DataOvlRef.StringReferences.GetString(
-                                                             DataOvlReference.WearUseItemStrings
-                                                                 .DON_THE_CROWN) + "\n" + GameReferences.DataOvlRef
-                                                             .StringReferences.GetString(
-                                                                 DataOvlReference.WearUseItemStrings
-                                                                     .SPACE_OF_LORD_BRITISH_DOT_N), false);
-                    break;
-                case LordBritishArtifact.ArtifactType.Sceptre:
-                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                                                             DataOvlReference.WearUseItemStrings
-                                                                 .SCEPTRE_N_N) + "\n" +
-                                                         GameReferences.DataOvlRef.StringReferences.GetString(
-                                                             DataOvlReference.WearUseItemStrings
-                                                                 .WIELD_SCEPTRE) + "\n" + GameReferences.DataOvlRef
-                                                             .StringReferences.GetString(
-                                                                 DataOvlReference.WearUseItemStrings
-                                                                     .SPACE_OF_LORD_BRITISH_DOT_N), false);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(lordBritishArtifact),
-                        @"Tried to use an undefined lordBritishArtifact");
-            }
-
-            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-        }
-
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToUseMoonstone(Moonstone moonstone, out bool bMoonstoneBuried,
-            TurnResults turnResults)
-        {
-            bMoonstoneBuried = false;
-
-            if (!IsAllowedToBuryMoongate())
-            {
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
-                                                         DataOvlReference.ExclaimStrings
-                                                             .MOONSTONE_SPACE) +
-                                                     GameReferences.DataOvlRef.StringReferences.GetString(
-                                                         DataOvlReference.ExclaimStrings
-                                                             .CANNOT_BE_BURIED_HERE_BANG_N), false);
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
-            State.TheMoongates.SetMoonstoneBuried(moonstone.MoongateIndex, true,
-                State.TheVirtualMap.GetCurrent3DPosition());
-            bMoonstoneBuried = true;
-
-            StreamingOutput.Instance.PushMessage(
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.MOONSTONE_SPACE) +
-                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ExclaimStrings.BURIED_BANG_N),
-                false);
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 

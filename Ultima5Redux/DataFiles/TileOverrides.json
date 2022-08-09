@@ -669,6 +669,26 @@
       "SpriteName": "BrickFloor",
       "Comment": "Empath Abbey Well",
       "TheTileType": 1
+    },
+    {
+      "MapNumber": 32,
+      "X": 15,
+      "Y": 15,
+      "Z": 0,
+      "SpriteNum": 3,
+      "SpriteName": "WaterCoast",
+      "Comment": "Serpents Hold Fountain",
+      "TheTileType": 1
+    },
+    {
+      "MapNumber": 32,
+      "X": 15,
+      "Y": 15,
+      "Z": 1,
+      "SpriteNum": 3,
+      "SpriteName": "WaterCoast",
+      "Comment": "Serpents Hold Fountain",
+      "TheTileType": 1
     }
   ],
   "CombatBritannia": [

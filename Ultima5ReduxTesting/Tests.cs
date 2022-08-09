@@ -2398,5 +2398,29 @@ namespace Ultima5ReduxTesting
             //Assert.True(nGuessIndex == 49);
             _ = "";
         }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_HorizTombstoneCheck(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            EnemyReference enemyReference =
+                GameReferences.EnemyRefs.GetEnemyReference(GameReferences.SpriteTileReferences.GetTileReference(448));
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    58),
+                SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords, enemyReference);
+
+            bool bIsHoriz = world.State.TheVirtualMap.IsHorizTombstone(new Point2D(5, 3));
+            Assert.True(bIsHoriz);
+
+            world.State.TheVirtualMap.LoadCombatMap(
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(SingleCombatMapReference.Territory.Dungeon,
+                    53),
+                SingleCombatMapReference.EntryDirection.East, world.State.CharacterRecords, enemyReference);
+
+            bIsHoriz = world.State.TheVirtualMap.IsHorizTombstone(new Point2D(4, 5));
+            Assert.False(bIsHoriz);
+        }
     }
 }

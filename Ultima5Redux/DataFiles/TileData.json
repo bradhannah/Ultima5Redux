@@ -4443,7 +4443,7 @@
     "IsTalkOverable": false,
     "IsBoardable": false,
     "IsGuessableFloor": false,
-    "BlocksLight": false,
+    "BlocksLight": true,
     "IsWindow": false,
     "CombatMapIndex": "None"
   },

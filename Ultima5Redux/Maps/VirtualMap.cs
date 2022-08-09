@@ -2001,6 +2001,20 @@ namespace Ultima5Redux.Maps
                    (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC);
         }
 
+        public bool IsHorizTombstone(in Point2D xy)
+        {
+            if (xy.X - 1 < 0 || xy.X + 1 >= NumberOfColumnTiles) return false;
+            if (xy.Y - 1 < 0 || xy.Y + 1 >= NumberOfRowTiles) return true;
+
+            bool bHasHorizBlock = (GetTileReference(xy.X - 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC) ||
+                                  (GetTileReference(xy.X + 1, xy.Y).IsSolidSpriteButNotDoorAndNotNPC);
+            if (bHasHorizBlock) return bHasHorizBlock;
+            bool bHasVertBlock = (GetTileReference(xy.X, xy.Y - 1).IsSolidSpriteButNotDoorAndNotNPC) ||
+                                 (GetTileReference(xy.X, xy.Y + 1).IsSolidSpriteButNotDoorAndNotNPC);
+            return !bHasVertBlock;
+        }
+
+
         public bool IsLandNearby() =>
             IsLandNearby(CurrentPosition.XY, false, TheMapUnits.GetAvatarMapUnit().CurrentAvatarState);
 
