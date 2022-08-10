@@ -2399,6 +2399,27 @@ namespace Ultima5ReduxTesting
             _ = "";
         }
 
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_AttackManacles(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Palace_of_Blackthorn, 1));
+
+            Point2D avatarPosition = new Point2D(10, 1);
+            world.State.TheVirtualMap.MoveAvatar(avatarPosition);
+            //world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(avatarPosition);
+            TurnResults turnResults = new TurnResults();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                world.TryToAttack(new Point2D(10, 10),
+                    out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
+                    out World.TryToAttackResult tryToAttackResult, turnResults);
+            Assert.True(tryToAttackResult == World.TryToAttackResult.NpcMurder);
+            _ = "";
+        }
+
+
         [Test] [TestCase(SaveFiles.b_carpet)] public void Test_HorizTombstoneCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);

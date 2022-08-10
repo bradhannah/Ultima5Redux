@@ -692,14 +692,16 @@ namespace Ultima5Redux
             // we get the combat map reference, if any - it also tells us if there should be a ranged attack in the overworld
             // instead of a combat map
             singleCombatMapReference =
-                State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(
-                    avatar.MapUnitPosition.XY,
-                    attackTargetPosition,
-                    SingleCombatMapReference.Territory.Britannia);
+                State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(avatar.MapUnitPosition.XY,
+                    attackTargetPosition, SingleCombatMapReference.Territory.Britannia);
+
+            bool bIsMurderable = GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
+                                 GameReferences.SpriteTileReferences.IsStocks(tileReference.Index) ||
+                                 GameReferences.SpriteTileReferences.IsManacles(tileReference.Index);
 
             // if there is a mapunit - BUT - no 
             ////// NOTE - this doesn't make sense for the Avatar to attack like this
-            if (singleCombatMapReference == null)
+            if (singleCombatMapReference == null && !bIsMurderable)
             {
                 // we were not able to attack, likely on a carpet or skiff and on the water
                 // but may be other edge cases
@@ -728,8 +730,7 @@ namespace Ultima5Redux
                     break;
                 case NonPlayerCharacter npc:
                     // if they are in bed or in the stocks then it's instadeath and you are a bad person!
-                    if (GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
-                        GameReferences.SpriteTileReferences.IsStocks(tileReference.Index))
+                    if (bIsMurderable)
                     {
                         StreamingOutput.Instance.PushMessage(
                             GameReferences.DataOvlRef.StringReferences.GetString(

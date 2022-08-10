@@ -1474,6 +1474,8 @@ namespace Ultima5Redux.Maps
             // let's use this method to also determine if an enemy CAN attack the avatar from afar
 
             TileReference attackToTileReference = GetTileReference(attackToPosition);
+            if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.None) return null;
+
             TileReference attackFromTileReference = GetTileReference(attackFromPosition);
 
             List<MapUnit> mapUnits = TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, attackToPosition,
