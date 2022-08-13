@@ -180,7 +180,7 @@ namespace Ultima5Redux.Maps
 
             // special logic that ensures when fighting guards in the overworld
             // we actually fight more than one at a time!
-            bool bIsGuard = primaryEnemyReference.KeyTileReference.Index is >= 368 and <= 371;
+            bool bIsGuard = primaryEnemyReference?.KeyTileReference.Index is >= 368 and <= 371;
             if (bIsGuard && singleCombatMapReference.MapTerritory != SingleCombatMapReference.Territory.Dungeon)
             {
                 nPrimaryEnemies = Utils.GetNumberFromAndTo(4, 5);
