@@ -129,6 +129,14 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        public void DamageEachCharacter(int nMin, int nMax)
+        {
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
+            {
+                record.Stats.CurrentHp -= Utils.GetNumberFromAndTo(nMin, nMax);
+            }
+        }
+
         /// <summary>
         ///     Gets all active character records for members in the Avatars party
         /// </summary>
@@ -240,6 +248,14 @@ namespace Ultima5Redux.PlayerCharacters
             record.PartyStatus = PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
         }
 
+        public void ProcessTurn(TurnResults turnResults)
+        {
+            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
+            {
+                record.ProcessPlayerTurn(turnResults);
+            }
+        }
+
         /// <summary>
         ///     Injures all party members due to rough sea
         /// </summary>
@@ -248,32 +264,16 @@ namespace Ultima5Redux.PlayerCharacters
             DamageEachCharacter(1, 9);
         }
 
+        public void SendCharacterToInn(PlayerCharacterRecord record,
+            SmallMapReferences.SingleMapReference.Location location)
+        {
+            record.SendCharacterToInn(location);
+        }
+
         public void SteppedOnLava()
         {
             // injure players!
             DamageEachCharacter(1, 5);
-        }
-
-        public void DamageEachCharacter(int nMin, int nMax)
-        {
-            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
-            {
-                record.Stats.CurrentHp -= Utils.GetNumberFromAndTo(nMin, nMax);
-            }
-        }
-
-        public void ProcessTurn(TurnResults turnResults)
-        {
-            foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
-            {
-                if (record.Stats.Status == PlayerCharacterRecord.CharacterStatus.Poisoned)
-                {
-                    int nDamage = record.Stats.ProcessTurnPoison();
-                    CombatMapUnitTakesDamage combatMapUnitTakesDamage = new(
-                        TurnResult.TurnResultType.DamageOverTimePoisoned,
-                        record.Stats, nDamage);
-                }
-            }
         }
 
         public bool SteppedOnSwamp()
@@ -290,12 +290,6 @@ namespace Ultima5Redux.PlayerCharacters
             }
 
             return bWasPoisoned;
-        }
-
-        public void SendCharacterToInn(PlayerCharacterRecord record,
-            SmallMapReferences.SingleMapReference.Location location)
-        {
-            record.SendCharacterToInn(location);
         }
 
         public void SwapPositions(PlayerCharacterRecord record1, PlayerCharacterRecord record2)

@@ -377,7 +377,7 @@ namespace Ultima5Redux
         ///     Processes any damage effects as you advance time, this can include getting
         /// </summary>
         /// <returns></returns>
-        private void ProcessDamageOnAdvanceTime(TurnResults turnResults)
+        private void ProcessDamageOnAdvanceTimeNonCombat(TurnResults turnResults)
         {
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
 
@@ -401,7 +401,6 @@ namespace Ultima5Redux
                 State.CharacterRecords.SteppedOnLava();
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.DamageOverTimeBurning));
                 turnResults.PushOutputToConsole("Burning!", false);
-                //StreamingOutput.Instance.PushMessage();
             }
 
             // if already poisoned
@@ -502,10 +501,11 @@ namespace Ultima5Redux
             if (IsCombatMap)
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.Ignore));
+                ProcessDamageOnAdvanceTimeInCombat(turnResults);
             }
             else
             {
-                ProcessDamageOnAdvanceTime(turnResults);
+                ProcessDamageOnAdvanceTimeNonCombat(turnResults);
 
                 aggressiveMapUnitInfos = State.TheVirtualMap.GetAggressiveMapUnitInfo();
                 State.TheVirtualMap.MoveMapUnitsToNextMove(aggressiveMapUnitInfos);
@@ -622,6 +622,13 @@ namespace Ultima5Redux
             return State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.GetCurrent3DPosition());
         }
 
+        public void ProcessDamageOnAdvanceTimeInCombat(TurnResults turnResults)
+        {
+            CombatPlayer combatPlayer = State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer;
+
+            combatPlayer?.Record.ProcessPlayerTurn(turnResults);
+        }
+
         public void ReLoadFromJson()
         {
             string stateJsonOrig = State.Serialize();
@@ -646,7 +653,8 @@ namespace Ultima5Redux
         /// <param name="turnResults"></param>
         /// <returns>the final decision on how to handle the attack</returns>
         /// <exception cref="Ultima5ReduxException"></exception>
-        public List<VirtualMap.AggressiveMapUnitInfo> TryToAttack(Point2D attackTargetPosition, out MapUnit mapUnit,
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToAttackNonCombatMap(Point2D attackTargetPosition,
+            out MapUnit mapUnit,
             out SingleCombatMapReference singleCombatMapReference, out TryToAttackResult tryToAttackResult,
             TurnResults turnResults)
         {
@@ -1657,6 +1665,7 @@ namespace Ultima5Redux
                 return;
             }
 
+            ProcessDamageOnAdvanceTimeInCombat(turnResults);
             currentCombatMap.MoveActiveCombatMapUnit(turnResults, newPosition);
 
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMovedCombatPlayerOnCombatMap));

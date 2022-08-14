@@ -2412,7 +2412,7 @@ namespace Ultima5ReduxTesting
             //world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(avatarPosition);
             TurnResults turnResults = new TurnResults();
             List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
-                world.TryToAttack(new Point2D(10, 10),
+                world.TryToAttackNonCombatMap(new Point2D(10, 10),
                     out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
                     out World.TryToAttackResult tryToAttackResult, turnResults);
             Assert.True(tryToAttackResult == World.TryToAttackResult.NpcMurder);

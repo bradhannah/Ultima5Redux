@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ultima5Redux.Data;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -263,6 +264,18 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        public void ProcessPlayerTurn(TurnResults turnResults)
+        {
+            if (Stats.Status == CharacterStatus.Poisoned)
+            {
+                int nDamage = Stats.ProcessTurnPoison();
+                CombatMapUnitTakesDamage combatMapUnitTakesDamage =
+                    new(TurnResult.TurnResultType.DamageOverTimePoisoned, Stats, nDamage);
+                turnResults.PushTurnResult(combatMapUnitTakesDamage);
+                Stats.ProcessTurnPoison();
+            }
+        }
+
         public void SendCharacterToInn(SmallMapReferences.SingleMapReference.Location location)
         {
             InnOrParty = (byte)location;
@@ -320,7 +333,7 @@ namespace Ultima5Redux.PlayerCharacters
 
         public bool WakeUp()
         {
-            if (Stats.Status == CharacterStatus.Dead || Stats.Status == CharacterStatus.Poisoned) return false;
+            if (Stats.Status is CharacterStatus.Dead or CharacterStatus.Poisoned) return false;
             Stats.Status = CharacterStatus.Good;
             return true;
         }

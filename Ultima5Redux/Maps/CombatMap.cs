@@ -1113,9 +1113,12 @@ namespace Ultima5Redux.Maps
         public void ProcessCombatPlayerTurn(TurnResults turnResults, SelectionAction selectedAction,
             Point2D actionPosition, out CombatMapUnit activeCombatMapUnit, out CombatMapUnit targetedCombatMapUnit)
         {
-            void advanceIfSafe()
+            void advanceIfSafe(CombatPlayer theCombatPlayer)
             {
-                if (_currentCombatItemQueue == null || _currentCombatItemQueue.Count == 0) AdvanceToNextCombatMapUnit();
+                if (_currentCombatItemQueue != null && _currentCombatItemQueue.Count != 0) return;
+
+                theCombatPlayer?.Record.ProcessPlayerTurn(turnResults);
+                AdvanceToNextCombatMapUnit();
             }
 
             targetedCombatMapUnit = null;
@@ -1124,14 +1127,11 @@ namespace Ultima5Redux.Maps
 
             activeCombatMapUnit = null;
 
-            //targetedHitState = CombatMapUnit.HitState.None;
-
             switch (selectedAction)
             {
                 case SelectionAction.None:
                 case SelectionAction.Magic:
                     return;
-                //CombatTurnResult.NoAction;
                 case SelectionAction.Attack:
                     string attackStr = "Attack ";
                     MapUnit opponentMapUnit = GetCombatUnit(actionPosition);
@@ -1142,11 +1142,9 @@ namespace Ultima5Redux.Maps
                         attackStr += "\nYou think better of it and skip your turn.";
                         turnResults.PushOutputToConsole(attackStr);
                         turnResults.PushTurnResult(new SinglePlayerCharacterAffected(
-                            TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf,
-                            combatPlayer.Stats));
-                        advanceIfSafe();
+                            TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackSelf, combatPlayer.Stats));
+                        advanceIfSafe(combatPlayer);
                         return;
-                        //CombatTurnResult.NoAction;
                     }
 
                     CombatItem weapon = null;
@@ -1166,7 +1164,7 @@ namespace Ultima5Redux.Maps
                             attackStr += weapon.LongName + "!";
                         }
 
-                        advanceIfSafe();
+                        advanceIfSafe(combatPlayer);
 
                         turnResults.PushOutputToConsole(attackStr);
                         CombatItemReference.MissileType missileType = weapon?.TheCombatItemReference.Missile ??
@@ -1174,9 +1172,7 @@ namespace Ultima5Redux.Maps
                         turnResults.PushTurnResult(new AttackerTurnResult(
                             TurnResult.TurnResultType.Combat_CombatPlayerTriedToAttackNothing,
                             combatPlayer, null, missileType, CombatMapUnit.HitState.Missed, actionPosition));
-                        //targetedHitState = CombatMapUnit.HitState.Missed;
                         return;
-                        //CombatTurnResult.CombatPlayerMissed;
                     }
 
                     // if the top most unit is a combat map unit, then let's fight!
@@ -1210,12 +1206,9 @@ namespace Ultima5Redux.Maps
                                 combatPlayer, null, weapon.TheCombatItemReference.Missile,
                                 CombatMapUnit.HitState.Missed, firstBlockPoint));
 
-                            advanceIfSafe();
-
-                            //targetedHitState = CombatMapUnit.HitState.Missed;
+                            advanceIfSafe(combatPlayer);
 
                             return;
-                            //CombatTurnResult.CombatPlayerRangedAttackBlocked;
                         }
                     }
 
@@ -1257,20 +1250,9 @@ namespace Ultima5Redux.Maps
                     // must check to see if any special 
                     PerformAdditionalHitProcessing(turnResults, targetedHitState, targetedCombatMapUnit);
 
-                    advanceIfSafe();
+                    advanceIfSafe(combatPlayer);
 
                     return;
-
-                // if (bMissedButHit)
-                // {
-                //     return CombatTurnResult.CombatPlayerMissedButHit;
-                // }
-                //
-                // if (targetedHitState == CombatMapUnit.HitState.Grazed) return CombatTurnResult.CombatPlayerGrazed;
-                //
-                // return targetedHitState != CombatMapUnit.HitState.Missed
-                //     ? CombatTurnResult.CombatPlayerHit
-                //     : CombatTurnResult.CombatPlayerMissed;
                 default:
                     throw new InvalidEnumArgumentException(((int)selectedAction).ToString());
             }
