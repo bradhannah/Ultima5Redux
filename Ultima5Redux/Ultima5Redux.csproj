@@ -341,14 +341,14 @@
         </PostBuildEvent>
     </PropertyGroup>
     <PropertyGroup>
-        <PostBuildEvent>copy $(TargetPath) "C:\Users\hannahb\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
-            copy $(TargetDir)\*.pdb "C:\Users\hannahb\Documents\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+        <PostBuildEvent>copy $(TargetPath) "C:\Users\hannahb\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
+            copy $(TargetDir)\*.pdb "C:\Users\hannahb\GitHub\Ultima5Redux3D\Assets\ClassLibraries"
             set errorlevel=0
         </PostBuildEvent>
     </PropertyGroup>
     <PropertyGroup>
-        <PostBuildEvent>cp $(TargetPath) "/Users/bradhannah/Documents/GitHub/Ultima5Redux3D/Assets/ClassLibraries"
-            cp $(TargetDir)\*.pdb "/Users/bradhannah/Documents/GitHub/Ultima5Redux3D/Assets/ClassLibraries"
+        <PostBuildEvent>cp $(TargetPath) "/Users/bradhannah/GitHub/Ultima5Redux3D/Assets/ClassLibraries"
+            cp $(TargetDir)\*.pdb "/Users/bradhannah/GitHub/Ultima5Redux3D/Assets/ClassLibraries"
             set errorlevel=0
         </PostBuildEvent>
     </PropertyGroup>

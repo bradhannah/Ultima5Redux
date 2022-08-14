@@ -124,9 +124,25 @@ namespace Ultima5Redux.Maps
         }
 
         [IgnoreDataMember]
-        public bool IsAvatarInFrigate => TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Frigate;
+        public bool IsAvatarInFrigate
+        {
+            get
+            {
+                if (TheMapUnits.CurrentMapUnits.TheAvatar == null) return false;
+                return TheMapUnits.GetAvatarMapUnit()?.CurrentBoardedMapUnit is Frigate;
+            }
+        }
 
-        [IgnoreDataMember] public bool IsAvatarInSkiff => TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Skiff;
+        [IgnoreDataMember]
+        public bool IsAvatarInSkiff
+        {
+            get
+            {
+                if (TheMapUnits.CurrentMapUnits.TheAvatar == null) return false;
+
+                return TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is Skiff;
+            }
+        }
 
         [IgnoreDataMember]
         public bool IsAvatarRidingCarpet =>
