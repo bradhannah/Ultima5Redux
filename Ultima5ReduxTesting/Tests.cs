@@ -453,7 +453,8 @@ namespace Ultima5ReduxTesting
             world.TryToSearch(moongatePosition, out bool bWasSuccessful, turnResults);
             Assert.True(bWasSuccessful);
 
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, turnResults);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, turnResults,
+                Point2D.Direction.Down);
             Assert.True(bWasSuccessful);
             Assert.True(item != null);
             Assert.True(item.GetType() == typeof(Moonstone));
@@ -486,10 +487,11 @@ namespace Ultima5ReduxTesting
             int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
 
             // can't get it twice!
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, turnResults);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out InventoryItem item, turnResults,
+                Point2D.Direction.Down);
             Assert.True(bWasSuccessful);
             Assert.True(item != null);
-            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out item, turnResults);
+            world.TryToGetAThing(moongatePosition, out bWasSuccessful, out item, turnResults, Point2D.Direction.Down);
             Assert.True(!bWasSuccessful);
             Assert.True(item == null);
 
@@ -961,12 +963,13 @@ namespace Ultima5ReduxTesting
                 .Quantity;
             Point2D curPos = world.State.TheVirtualMap.CurrentPosition.XY;
             world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
-            world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet, turnResults);
+            world.TryToGetAThing(curPos, out bool bGotACarpet, out InventoryItem carpet, turnResults,
+                Point2D.Direction.Down);
             Assert.True(bGotACarpet);
             //Assert.True(carpet!=null);
             Assert.True(nCarpets + 1 == world.State.PlayerInventory.SpecializedItems
                 .Items[SpecialItem.SpecificItemType.Carpet].Quantity);
-            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults, Point2D.Direction.Down);
             Assert.True(!bGotACarpet);
 
             world.TryToUseSpecialItem(
@@ -977,7 +980,7 @@ namespace Ultima5ReduxTesting
             Assert.True(bWasSuccessful);
             world.TryToMove(Point2D.Direction.Left, false, false, turnResults);
             curPos = world.State.TheVirtualMap.CurrentPosition.XY;
-            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults);
+            world.TryToGetAThing(curPos, out bGotACarpet, out carpet, turnResults, Point2D.Direction.Down);
             Assert.True(bGotACarpet);
 
             _ = "";
@@ -1901,7 +1904,8 @@ namespace Ultima5ReduxTesting
             Assert.IsFalse(bWasSuccessful);
 
             aggressiveMapUnitInfos =
-                world.TryToGetAThing(chestPos, out bool bGotAThing, out InventoryItem thingIGot, turnResults);
+                world.TryToGetAThing(chestPos, out bool bGotAThing, out InventoryItem thingIGot, turnResults,
+                    Point2D.Direction.Down);
             Assert.IsFalse(bWasSuccessful);
 
             aggressiveMapUnitInfos = world.TryToOpenAThing(chestPos, out bWasSuccessful, turnResults);

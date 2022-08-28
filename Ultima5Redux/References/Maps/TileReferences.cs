@@ -222,6 +222,9 @@ namespace Ultima5Redux.References.Maps
                    throw new Ultima5ReduxException("Null tile reference: " + nSprite);
         }
 
+        public TileReference GetTileReference(TileReference.SpriteIndex spriteIndex) =>
+            GetTileReference((int)spriteIndex);
+
         /// <summary>
         ///     Gets a tile reference by the tiles string name (defined in JSON)
         /// </summary>

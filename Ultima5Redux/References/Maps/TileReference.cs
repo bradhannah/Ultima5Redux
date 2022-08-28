@@ -8,6 +8,11 @@ namespace Ultima5Redux.References.Maps
     [DataContract] [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class TileReference
     {
+        /// <summary>
+        /// This is not ideal but leaving unlabelled integers all over the code is a worse offense
+        /// </summary>
+        public enum SpriteIndex { TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149 }
+
         [DataMember] public int AnimationIndex { get; private set; }
         [DataMember] public bool BlocksLight { get; private set; }
         [DataMember] public SingleCombatMapReference.BritanniaCombatMaps CombatMapIndex { get; private set; }
@@ -59,6 +64,10 @@ namespace Ultima5Redux.References.Maps
 
         // Exclude the black square from this, it messes up door and tombstone horizontal checks
         public bool IsSolidSpriteButNotDoorAndNotNPC => IsSolidSpriteButNotDoor && !IsNPC && Index != 255;
+
+        public bool IsTableWithFood =>
+            Index is (int)SpriteIndex.TableFoodBoth or (int)SpriteIndex.TableFoodBottom
+                or (int)SpriteIndex.TableFoodTop;
 
         public bool IsWaterTile => Name.ToLower().Contains("water");
 

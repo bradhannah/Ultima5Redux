@@ -1022,7 +1022,7 @@ namespace Ultima5Redux
         /// <returns>the output string</returns>
         // ReSharper disable once UnusedMethodReturnValue.Global
         public List<VirtualMap.AggressiveMapUnitInfo> TryToGetAThing(Point2D xy, out bool bGotAThing,
-            out InventoryItem inventoryItem, TurnResults turnResults)
+            out InventoryItem inventoryItem, TurnResults turnResults, Point2D.Direction direction)
         {
             bGotAThing = false;
             inventoryItem = null;
@@ -1031,9 +1031,6 @@ namespace Ultima5Redux
 
             if (State.TheVirtualMap.CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
-
-            MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
-                State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
 
             // wall sconces - BORROWED!
             if (tileReference.Index == GameReferences.SpriteTileReferences.GetTileNumberByName("LeftSconce") ||
@@ -1051,6 +1048,8 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
+                State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
             if (magicCarpet != null)
             {
                 // add the carpet to the players inventory and remove it from the map
@@ -1062,6 +1061,65 @@ namespace Ultima5Redux
                         .A_MAGIC_CARPET), false);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMagicCarpet));
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            // are you trying to get food from a table
+            if (tileReference.IsTableWithFood)
+            {
+                bool bAte = false;
+                if (direction == Point2D.Direction.Down)
+                {
+                    switch (tileReference.Index)
+                    {
+                        case (int)TileReference.SpriteIndex.TableFoodBottom:
+                            // do nothing
+                            break;
+                        case (int)TileReference.SpriteIndex.TableFoodBoth:
+                            State.TheVirtualMap.SetOverridingTileReferece(
+                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    .TableFoodBottom), xy);
+                            bAte = true;
+                            break;
+                        case (int)TileReference.SpriteIndex.TableFoodTop:
+                            State.TheVirtualMap.SetOverridingTileReferece(
+                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    .TableMiddle), xy);
+                            bAte = true;
+                            break;
+                    }
+                }
+                else if (direction == Point2D.Direction.Up)
+                {
+                    switch (tileReference.Index)
+                    {
+                        case (int)TileReference.SpriteIndex.TableFoodBottom:
+                            State.TheVirtualMap.SetOverridingTileReferece(
+                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    .TableMiddle), xy);
+                            bAte = true;
+                            // do nothing
+                            break;
+                        case (int)TileReference.SpriteIndex.TableFoodBoth:
+                            State.TheVirtualMap.SetOverridingTileReferece(
+                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                    .TableFoodTop), xy);
+                            bAte = true;
+                            break;
+                        case (int)TileReference.SpriteIndex.TableFoodTop:
+                            break;
+                    }
+                }
+
+                // else pass on by - something isn't quite right
+                if (bAte)
+                {
+                    State.PlayerInventory.TheProvisions.Food++;
+                    State.Karma--;
+                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                        DataOvlReference.GetThingsStrings.MMM_DOT3), false);
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
+                // we just fall through for the default handling if there is no food directly in front of us
             }
 
             // are there any exposed items (generic call)

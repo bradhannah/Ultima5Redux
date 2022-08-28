@@ -256,6 +256,12 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
+        public void RanIntoCactus()
+        {
+            // injure players!
+            DamageEachCharacter(1, 5);
+        }
+
         /// <summary>
         ///     Injures all party members due to rough sea
         /// </summary>
