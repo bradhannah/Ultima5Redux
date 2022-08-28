@@ -1557,7 +1557,14 @@ namespace Ultima5Redux
                 {
                     StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.TravelStrings.BLOCKED));
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveBlocked));
+                    if (newTileReference.Index == 47)
+                    {
+                        StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                            DataOvlReference.WorldStrings.OUCH));
+                        turnResults.PushTurnResult(
+                            new BasicResult(TurnResult.TurnResultType.ActionBlockedRanIntoCactus));
+                        State.CharacterRecords.RanIntoCactus();
+                    }
                 }
 
                 // if it's not passable then we have no more business here

@@ -1437,7 +1437,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "None"
+    "CombatMapIndex": "Treed"
   },
   "45": {
     "Name": "WheatInField",
@@ -1457,7 +1457,7 @@
     "TotalAnimationFrames": 0,
     "AnimationIndex": 0,
     "IsUpright": false,
-    "FlatTileSubstitutionIndex": -1,
+    "FlatTileSubstitutionIndex": 44,
     "FlatTileSubstitutionName": "None",
     "IsEnemy": false,
     "IsNPC": false,
@@ -1469,7 +1469,7 @@
     "IsGuessableFloor": false,
     "BlocksLight": false,
     "IsWindow": false,
-    "CombatMapIndex": "None"
+    "CombatMapIndex": "Treed"
   },
   "46": {
     "Name": "Tree",

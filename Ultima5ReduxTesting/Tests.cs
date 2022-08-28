@@ -69,14 +69,14 @@ namespace Ultima5ReduxTesting
 
         private string DataDirectory => TestContext.Parameters.Get("DataDirectory",
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves/Britain2"
+                ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/Saves/Britain2"
                 //@"/Users/bradhannah/games/u5tests/Britain2"
                 : @"C:\games\ultima5tests\Britain2");
 
         private string SaveRootDirectory =>
             TestContext.Parameters.Get("SaveRootDirectory",
                 RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                    ? @"/Users/bradhannah/Documents/GitHub/Ultima5ReduxTestDependancies/Saves"
+                    ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/Saves"
                     //@"/Users/bradhannah/games/u5tests"
                     : @"C:\games\ultima5tests");
 
@@ -1908,18 +1908,6 @@ namespace Ultima5ReduxTesting
             Assert.IsTrue(bWasSuccessful);
             aggressiveMapUnitInfos = world.TryToOpenAThing(chestPos, out bWasSuccessful, turnResults);
             Assert.IsFalse(bWasSuccessful);
-
-            return;
-            aggressiveMapUnitInfos =
-                world.TryToGetAThing(chestPos, out bGotAThing, out thingIGot, turnResults);
-            Assert.IsNotNull(thingIGot);
-            aggressiveMapUnitInfos =
-                world.TryToGetAThing(chestPos, out bGotAThing, out thingIGot, turnResults);
-            Assert.IsNotNull(thingIGot);
-
-            TestContext.Out.Write("Ending ");
-
-            Assert.True(true);
         }
 
         // search all the things
@@ -2442,6 +2430,39 @@ namespace Ultima5ReduxTesting
 
             bIsHoriz = world.State.TheVirtualMap.IsHorizTombstone(new Point2D(4, 5));
             Assert.False(bIsHoriz);
+        }
+
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void Test_AttackSinVraal(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            SmallMapReferences.SingleMapReference sinVraalHut = GameReferences.SmallMapRef.GetSingleMapByLocation(
+                SmallMapReferences.SingleMapReference.Location.SinVraals_Hut, 0);
+            world.State.TheVirtualMap.LoadSmallMap(sinVraalHut);
+            //world.TryToEnterBuilding(
+
+            world.State.TheVirtualMap.MoveAvatar(new(15, 15));
+            //Point2D avatarPosition = new Point2D(10, 1);
+            //world.State.TheVirtualMap.MoveAvatar(avatarPosition);
+            //world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(avatarPosition);
+            MapUnit sinVraal =
+                world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters.FirstOrDefault(npc =>
+                    npc.NPCRef.NPCKeySprite is >= 472 and <= 475);
+
+            Assert.NotNull(sinVraal);
+
+            TurnResults turnResults = new TurnResults();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                world.TryToAttackNonCombatMap(sinVraal.MapUnitPosition.XY,
+                    //new Point2D(10, 10),
+                    out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
+                    out World.TryToAttackResult tryToAttackResult, turnResults);
+
+            Assert.True(tryToAttackResult == World.TryToAttackResult.CombatMapNpc,
+                $"Expected CombatMapEnemy but got: {tryToAttackResult}");
+            //Assert.True(tryToAttackResult == World.TryToAttackResult.NpcMurder);
+            _ = "";
         }
     }
 }

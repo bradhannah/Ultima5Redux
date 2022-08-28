@@ -2,35 +2,6 @@
 {
     public abstract class TurnResult
     {
-        public TurnResultType TheTurnResultType { get; set; }
-
-        public TurnResult(TurnResultType theTurnResultType)
-        {
-            TheTurnResultType = theTurnResultType;
-        }
-
-        public bool IsSuccessfulMovement
-        {
-            get
-            {
-                switch (TheTurnResultType)
-                {
-                    case TurnResultType.ActionMoveRegular:
-                    case TurnResultType.ActionMoveCarpet:
-                    case TurnResultType.ActionMoveHorse:
-                    case TurnResultType.ActionMoveFrigateRowing:
-                    case TurnResultType.ActionMoveFrigateWindSails:
-                    case TurnResultType.ActionMoveFrigateWindSailsChangeDirection:
-                    case TurnResultType.ActionMoveSkiffRowing:
-                    case TurnResultType.ActionKlimbDirectionMovedFell:
-                    case TurnResultType.ActionKlimbDirectionSuccess:
-                        return true;
-                }
-
-                return false;
-            }
-        }
-
         public enum TurnResultType
         {
             OverworldAvatarAttacking, EnemyAttacksOverworldOrSmallMap, DamageOverTimePoisoned, DamageOverTimeBurning,
@@ -56,17 +27,43 @@
             Combat_EnemyEscaped, OutputToConsole, Combat_EnemyToAttackRequiresInput, Combat_EnemyIsSleeping,
             Combat_EnemyIsFleeing, Combat_EnemyWantsToFleeButNoPath, Combat_EnemyMissedTarget,
             Combat_Result_EnemyGrazedTarget, Combat_Result_CombatPlayerGrazedTarget,
-
-            //Combat_MissedRangedAttack,
             Combat_Result_CombatPlayerMissedRangedAttack, Combat_Result_EnemyMissedRangedAttack,
             Combat_Result_EnemyMissedButHit, Combat_Result_CombatPlayerMissedButHit,
             Combat_CombatPlayerTriedToAttackSelf, Combat_CombatPlayerTriedToAttackNothing,
             Combat_CombatPlayerRangedAttackBlocked, Combat_EnemyMoved, Combat_CombatPlayerMoved,
             Combat_EnemyBeginsAttack, Combat_CombatPlayerBeginsAttack, Combat_Result_CombatPlayerReceivedDamage,
-
-            //Combat_CombatPlayerMissedTarget, 
             Combat_LootDropped, Combat_Result_HitAndEnemyReceivedDamage, Combat_Result_CombatPlayerKilled,
-            Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee
+            Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee,
+            ActionBlockedRanIntoCactus,
+        }
+
+        public bool IsSuccessfulMovement
+        {
+            get
+            {
+                switch (TheTurnResultType)
+                {
+                    case TurnResultType.ActionMoveRegular:
+                    case TurnResultType.ActionMoveCarpet:
+                    case TurnResultType.ActionMoveHorse:
+                    case TurnResultType.ActionMoveFrigateRowing:
+                    case TurnResultType.ActionMoveFrigateWindSails:
+                    case TurnResultType.ActionMoveFrigateWindSailsChangeDirection:
+                    case TurnResultType.ActionMoveSkiffRowing:
+                    case TurnResultType.ActionKlimbDirectionMovedFell:
+                    case TurnResultType.ActionKlimbDirectionSuccess:
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
+        public TurnResultType TheTurnResultType { get; set; }
+
+        public TurnResult(TurnResultType theTurnResultType)
+        {
+            TheTurnResultType = theTurnResultType;
         }
         // Combat_Category_Action_Who_Details
 
