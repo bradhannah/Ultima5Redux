@@ -1063,51 +1063,67 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            if (tileReference.Index == (int)TileReference.SpriteIndex.WheatInField)
+            {
+                State.TheVirtualMap.SetOverridingTileReferece(
+                    GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                        .PlowedField), xy);
+                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.GetThingsStrings.CROPS_PICKED), false);
+                State.PlayerInventory.TheProvisions.Food++;
+                State.Karma--;
+
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
             // are you trying to get food from a table
             if (tileReference.IsTableWithFood)
             {
                 bool bAte = false;
-                if (direction == Point2D.Direction.Down)
+                switch (direction)
                 {
-                    switch (tileReference.Index)
-                    {
-                        case (int)TileReference.SpriteIndex.TableFoodBottom:
-                            // do nothing
-                            break;
-                        case (int)TileReference.SpriteIndex.TableFoodBoth:
-                            State.TheVirtualMap.SetOverridingTileReferece(
-                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                                    .TableFoodBottom), xy);
-                            bAte = true;
-                            break;
-                        case (int)TileReference.SpriteIndex.TableFoodTop:
-                            State.TheVirtualMap.SetOverridingTileReferece(
-                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                                    .TableMiddle), xy);
-                            bAte = true;
-                            break;
-                    }
-                }
-                else if (direction == Point2D.Direction.Up)
-                {
-                    switch (tileReference.Index)
-                    {
-                        case (int)TileReference.SpriteIndex.TableFoodBottom:
-                            State.TheVirtualMap.SetOverridingTileReferece(
-                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                                    .TableMiddle), xy);
-                            bAte = true;
-                            // do nothing
-                            break;
-                        case (int)TileReference.SpriteIndex.TableFoodBoth:
-                            State.TheVirtualMap.SetOverridingTileReferece(
-                                GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
-                                    .TableFoodTop), xy);
-                            bAte = true;
-                            break;
-                        case (int)TileReference.SpriteIndex.TableFoodTop:
-                            break;
-                    }
+                    case Point2D.Direction.Down:
+                        switch (tileReference.Index)
+                        {
+                            case (int)TileReference.SpriteIndex.TableFoodBottom:
+                                // do nothing
+                                break;
+                            case (int)TileReference.SpriteIndex.TableFoodBoth:
+                                State.TheVirtualMap.SetOverridingTileReferece(
+                                    GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                        .TableFoodBottom), xy);
+                                bAte = true;
+                                break;
+                            case (int)TileReference.SpriteIndex.TableFoodTop:
+                                State.TheVirtualMap.SetOverridingTileReferece(
+                                    GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                        .TableMiddle), xy);
+                                bAte = true;
+                                break;
+                        }
+
+                        break;
+                    case Point2D.Direction.Up:
+                        switch (tileReference.Index)
+                        {
+                            case (int)TileReference.SpriteIndex.TableFoodBottom:
+                                State.TheVirtualMap.SetOverridingTileReferece(
+                                    GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                        .TableMiddle), xy);
+                                bAte = true;
+                                // do nothing
+                                break;
+                            case (int)TileReference.SpriteIndex.TableFoodBoth:
+                                State.TheVirtualMap.SetOverridingTileReferece(
+                                    GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                                        .TableFoodTop), xy);
+                                bAte = true;
+                                break;
+                            case (int)TileReference.SpriteIndex.TableFoodTop:
+                                break;
+                        }
+
+                        break;
                 }
 
                 // else pass on by - something isn't quite right

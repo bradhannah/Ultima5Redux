@@ -11,7 +11,11 @@ namespace Ultima5Redux.References.Maps
         /// <summary>
         /// This is not ideal but leaving unlabelled integers all over the code is a worse offense
         /// </summary>
-        public enum SpriteIndex { TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149 }
+        public enum SpriteIndex
+        {
+            TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149, PlowedField = 44,
+            WheatInField = 45
+        }
 
         [DataMember] public int AnimationIndex { get; private set; }
         [DataMember] public bool BlocksLight { get; private set; }
