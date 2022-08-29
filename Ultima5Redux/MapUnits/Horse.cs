@@ -5,6 +5,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits
 {
@@ -63,6 +64,11 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Right, "RidingHorseRight" },
                 { Point2D.Direction.Up, "RidingHorseUp" }
             };
+
+        protected override bool OverrideAiType { get; } = true;
+
+        protected override NonPlayerCharacterSchedule.AiType OverridenAiType { get; } =
+            NonPlayerCharacterSchedule.AiType.BigWander;
 
         [JsonConstructor] private Horse()
         {

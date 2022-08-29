@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
 using Ultima5Redux;
+using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Dialogue;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
@@ -2467,6 +2468,28 @@ namespace Ultima5ReduxTesting
                 $"Expected CombatMapEnemy but got: {tryToAttackResult}");
             //Assert.True(tryToAttackResult == World.TryToAttackResult.NpcMurder);
             _ = "";
+        }
+
+        [Test] [TestCase(SaveFiles.Britain)] public void test_LoadTrinsicHorseAI(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+            world.State.TheVirtualMap.MoveAvatar(new(15, 15));
+
+            Assert.True(true);
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> thing = world.TryToPassTime(turnResults);
+
+            TimeOfDay tod = new TimeOfDay(0, 0, 0, 0, 0);
+            foreach (Horse horse in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.Horses)
+            {
+                //horse.CompleteNextMove(world.State.TheVirtualMap, world.State.TheTimeOfDay, );
+            }
         }
     }
 }

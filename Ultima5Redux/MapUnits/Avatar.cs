@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.External;
+using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -21,7 +24,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] private Point2D.Direction PreviousDirection { get; set; } = Point2D.Direction.None;
 
-        private Point2D.Direction _currentDirection;
+        [DataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
         [DataMember]
         public override Point2D.Direction Direction
@@ -55,8 +58,6 @@ namespace Ultima5Redux.MapUnits
             { AvatarState.Skiff, false },
             { AvatarState.Regular, false }
         };
-
-        [DataMember] public override AvatarState BoardedAvatarState => AvatarState.Regular;
 
         [IgnoreDataMember] public override string BoardXitName => "You can't board the Avatar you silly goose!";
 
@@ -99,16 +100,6 @@ namespace Ultima5Redux.MapUnits
         [IgnoreDataMember]
         public MapUnit CurrentBoardedMapUnit { get; private set; }
 
-        private Dictionary<Point2D.Direction, string> DirectionToTileNameBasicAvatar { get; } =
-            new()
-            {
-                { Point2D.Direction.None, "Avatar1" },
-                { Point2D.Direction.Left, "Avatar1" },
-                { Point2D.Direction.Down, "Avatar1" },
-                { Point2D.Direction.Right, "Avatar1" },
-                { Point2D.Direction.Up, "Avatar1" }
-            };
-
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName =>
             DirectionToTileNameBasicAvatar;
@@ -119,8 +110,30 @@ namespace Ultima5Redux.MapUnits
             get
             {
                 if (!IsAvatarOnBoardedThing) return DirectionToTileNameBasicAvatar;
-                return UseFourDirections ? CurrentBoardedMapUnit.FourDirectionToTileNameBoarded : 
-                    CurrentBoardedMapUnit.DirectionToTileNameBoarded;
+                return UseFourDirections
+                    ? CurrentBoardedMapUnit.FourDirectionToTileNameBoarded
+                    : CurrentBoardedMapUnit.DirectionToTileNameBoarded;
+            }
+        }
+
+        private Point2D.Direction _currentDirection;
+
+        private Dictionary<Point2D.Direction, string> DirectionToTileNameBasicAvatar { get; } =
+            new()
+            {
+                { Point2D.Direction.None, "Avatar1" },
+                { Point2D.Direction.Left, "Avatar1" },
+                { Point2D.Direction.Down, "Avatar1" },
+                { Point2D.Direction.Right, "Avatar1" },
+                { Point2D.Direction.Up, "Avatar1" }
+            };
+
+        public override bool UseFourDirections
+        {
+            get => !_onlyLeftRight[CurrentAvatarState];
+            set
+            {
+                // generally ignored for now - don't love this 
             }
         }
 
@@ -148,6 +161,11 @@ namespace Ultima5Redux.MapUnits
             BoardMapUnitFromAvatarState(CurrentAvatarState);
         }
 
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        {
+            // by default the thing doesn't move on it's own
+        }
+
         /// <summary>
         ///     Show the Avatar that isn't boarded on top of anything
         /// </summary>
@@ -159,6 +177,20 @@ namespace Ultima5Redux.MapUnits
             CurrentBoardedMapUnit.IsOccupiedByAvatar = false;
             CurrentBoardedMapUnit = null;
             return previouslyBoardedMapUnit;
+        }
+
+        private static AvatarState CalculateAvatarState(TileReference tileReference)
+        {
+            if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
+            if (tileReference.Name == "Avatar1") return AvatarState.Regular;
+            if (tileReference.Name.StartsWith("Ship")) return AvatarState.Frigate;
+            if (tileReference.Name.StartsWith("Skiff")) return AvatarState.Skiff;
+            if (tileReference.Name.StartsWith("RidingMagicCarpet") || tileReference.Name.StartsWith("Carpet"))
+                return AvatarState.Carpet;
+            if (tileReference.Name.StartsWith("RidingHorse")) return AvatarState.Horse;
+            if (tileReference.Name.StartsWith("Horse")) return AvatarState.Horse;
+            throw new Ultima5ReduxException(
+                $"Asked to calculate AvatarState of {tileReference.Name} but you can't do that, it's not a thing!");
         }
 
         private void BoardMapUnitFromAvatarState(AvatarState avatarState)
@@ -198,20 +230,6 @@ namespace Ultima5Redux.MapUnits
                 default:
                     throw new ArgumentOutOfRangeException(nameof(avatarState), avatarState, null);
             }
-        }
-
-        private static AvatarState CalculateAvatarState(TileReference tileReference)
-        {
-            if (tileReference.Name == "BasicAvatar") return AvatarState.Regular;
-            if (tileReference.Name == "Avatar1") return AvatarState.Regular;
-            if (tileReference.Name.StartsWith("Ship")) return AvatarState.Frigate;
-            if (tileReference.Name.StartsWith("Skiff")) return AvatarState.Skiff;
-            if (tileReference.Name.StartsWith("RidingMagicCarpet") || tileReference.Name.StartsWith("Carpet"))
-                return AvatarState.Carpet;
-            if (tileReference.Name.StartsWith("RidingHorse")) return AvatarState.Horse;
-            if (tileReference.Name.StartsWith("Horse")) return AvatarState.Horse;
-            throw new Ultima5ReduxException(
-                $"Asked to calculate AvatarState of {tileReference.Name} but you can't do that, it's not a thing!");
         }
 
         private TileReference GetCurrentTileReference()
@@ -296,15 +314,6 @@ namespace Ultima5Redux.MapUnits
             // return false if the direction changed AND your on a Frigate
             // because you will just change direction
             return !(bDirectionChanged && CurrentAvatarState == AvatarState.Frigate);
-        }
-
-        public override bool UseFourDirections
-        {
-            get => !_onlyLeftRight[CurrentAvatarState];
-            set
-            {
-                // generally ignored for now - don't love this 
-            }
         }
     }
 }

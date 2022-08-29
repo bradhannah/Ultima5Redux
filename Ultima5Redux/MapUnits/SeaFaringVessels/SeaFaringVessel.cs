@@ -1,4 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.External;
+using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
@@ -20,6 +23,11 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             smallMapTheSmallMapCharacterState, mapUnitMovement, location, direction, npcState,
             GameReferences.SpriteTileReferences.GetTileReferenceByName("ShipSailsDown"), mapUnitPosition)
         {
+        }
+
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        {
+            // by default the thing doesn't move on it's own
         }
 
         protected static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)

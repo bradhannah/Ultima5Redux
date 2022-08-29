@@ -388,9 +388,14 @@ namespace Ultima5Redux.Maps
             {
                 // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
                 // in the list of aggressors
-                if (mapUnit is not Enemy && mapUnit is not NonPlayerCharacter)
+                switch (mapUnit)
                 {
-                    continue;
+                    case Horse:
+                    case Enemy:
+                    case NonPlayerCharacter:
+                        break;
+                    default:
+                        continue;
                 }
 
                 AggressiveMapUnitInfo mapUnitInfo =

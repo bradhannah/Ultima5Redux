@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Ultima5Redux.DayNightMoon;
+using Ultima5Redux.External;
+using Ultima5Redux.Maps;
 using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits
@@ -16,17 +19,23 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] public override bool IsAttackable => false;
 
-        public override TileReference GetNonBoardedTileReference() => null;
-
         [IgnoreDataMember] public override TileReference KeyTileReference { get; set; } = null;
 
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName => null;
 
-        [IgnoreDataMember] protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => null;
+        [IgnoreDataMember]
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => null;
 
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             null;
+
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        {
+            // by default the thing doesn't move on it's own
+        }
+
+        public override TileReference GetNonBoardedTileReference() => null;
     }
 }

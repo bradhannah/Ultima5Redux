@@ -18,6 +18,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [DataMember(Name = "EnemyReferenceIndex")]
         private int _enemyReferenceIndex = -1;
 
+        [DataMember] public sealed override CharacterStats Stats { get; protected set; } = new();
+
         [IgnoreDataMember] public override Avatar.AvatarState BoardedAvatarState => Avatar.AvatarState.Hidden;
         [IgnoreDataMember] public override string BoardXitName => "Hostile creates don't not like to be boarded!";
 
@@ -36,7 +38,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [IgnoreDataMember] public override bool IsInvisible => false;
         [IgnoreDataMember] public override string Name => EnemyReference.MixedCaseSingularName.Trim();
-        public override TileReference GetNonBoardedTileReference() => KeyTileReference;
         [IgnoreDataMember] public override string PluralName => EnemyReference.AllCapsPluralName;
         [IgnoreDataMember] public override string SingularName => EnemyReference.MixedCaseSingularName;
         [IgnoreDataMember] public override TileReference KeyTileReference => EnemyReference.KeyTileReference;
@@ -58,8 +59,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded { get; } =
             new();
-
-        [DataMember] public sealed override CharacterStats Stats { get; protected set; } = new();
 
         [JsonConstructor] private Enemy()
         {
@@ -85,19 +84,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Stats.CurrentMp = 0;
         }
 
-        public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
-
-        public override string ToString()
-        {
-            return KeyTileReference.Name;
-        }
-
-        public bool CanReachForMeleeAttack(CombatMapUnit combatMapUnit)
-        {
-            return CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
-        }
-
-        public override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
+        internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
         {
             if (EnemyReference.DoesNotMove) return;
             // are we water, sand or land?
@@ -112,21 +99,35 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 aStar);
         }
 
+        public override TileReference GetNonBoardedTileReference() => KeyTileReference;
+
+        public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is CombatPlayer;
+
+        public override string ToString()
+        {
+            return KeyTileReference.Name;
+        }
+
+        public bool CanReachForMeleeAttack(CombatMapUnit combatMapUnit)
+        {
+            return CanReachForMeleeAttack(combatMapUnit, EnemyReference.AttackRange);
+        }
+
         protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
         {
             if (EnemyReference.DoesNotMove) return false;
 
             bool bCanMove = false;
             TileReference tileReference = virtualMap.GetTileReference(mapUnitPosition);
-            
+
             bool bIsMapUnitOnTile = virtualMap.IsMapUnitOccupiedTile(mapUnitPosition);
             if (bIsMapUnitOnTile) return false;
-            
+
             if (EnemyReference.IsSandEnemy)
             {
                 // if tile is sand
                 bCanMove |= tileReference.Name.IndexOf("sand", 0, StringComparison.CurrentCultureIgnoreCase) >= 0;
-            } 
+            }
             else if (EnemyReference.IsWaterEnemy)
             {
                 // if tile is water
@@ -137,19 +138,20 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 // the enemy is a land monster by process of elimination
                 bCanMove |= tileReference.IsLandEnemyPassable;
             }
-            
-            
+
             if (EnemyReference.CanFlyOverWater)
             {
                 // if tile is water
                 bCanMove |= tileReference.IsWaterTile;
             }
+
             if (EnemyReference.CanPassThroughWalls)
             {
                 // if tile is wall
-                bCanMove |= bCanMove |= tileReference.Name.IndexOf("wall", 0, StringComparison.CurrentCultureIgnoreCase) >= 0;
+                bCanMove |= bCanMove |=
+                    tileReference.Name.IndexOf("wall", 0, StringComparison.CurrentCultureIgnoreCase) >= 0;
             }
-            
+
             return bCanMove;
         }
     }

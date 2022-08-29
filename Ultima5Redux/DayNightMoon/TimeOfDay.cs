@@ -9,6 +9,9 @@ namespace Ultima5Redux.DayNightMoon
 {
     public class TimeOfDay
     {
+        public const int N_DAYS_IN_MONTH = 28;
+        public const int N_MONTHS_PER_YEAR = 13;
+
         /// <summary>
         ///     Dictionary of all change trackers and if time has changed since last check
         /// </summary>
@@ -52,14 +55,6 @@ namespace Ultima5Redux.DayNightMoon
         [IgnoreDataMember] private byte _nHour;
         [IgnoreDataMember] private byte _nMinute;
 
-        const int N_DAYS_IN_MONTH = 28;
-        private const int N_MONTHS_PER_YEAR = 13;
-
-        [IgnoreDataMember]
-        public int MinutesSinceBeginning => Minute + (Hour * 60) + (Day * N_DAYS_IN_MONTH) +
-                                            (Month * N_DAYS_IN_MONTH * 24 * 60)
-                                            + (Year * N_MONTHS_PER_YEAR * N_DAYS_IN_MONTH * 24 * 60);
-
         // ReSharper disable once UnusedMember.Global
         [IgnoreDataMember] public string FormattedDate => $"{Month} - {Day} - {Year}";
 
@@ -76,6 +71,11 @@ namespace Ultima5Redux.DayNightMoon
 
         [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
 
+        [IgnoreDataMember]
+        public int MinutesSinceBeginning => Minute + (Hour * 60) + (Day * N_DAYS_IN_MONTH) +
+                                            (Month * N_DAYS_IN_MONTH * 24 * 60)
+                                            + (Year * N_MONTHS_PER_YEAR * N_DAYS_IN_MONTH * 24 * 60);
+
         /// <summary>
         ///     Gets a string describing the current time of day
         /// </summary>
@@ -85,8 +85,8 @@ namespace Ultima5Redux.DayNightMoon
         {
             get
             {
-                if (Hour > 5 && Hour < 12) return "morning";
-                if (Hour >= 12 && Hour < 17) return "afternoon";
+                if (Hour is > 5 and < 12) return "morning";
+                if (Hour is >= 12 and < 17) return "afternoon";
                 return "evening";
             }
         }
@@ -104,13 +104,31 @@ namespace Ultima5Redux.DayNightMoon
         /// <param name="currentHourDataChunk"></param>
         /// <param name="currentMinuteDataChunk"></param>
         public TimeOfDay(DataChunk currentYearDataChunk, DataChunk currentMonthDataChunk, DataChunk currentDayDataChunk,
-            DataChunk currentHourDataChunk, DataChunk currentMinuteDataChunk)
+            DataChunk currentHourDataChunk, DataChunk currentMinuteDataChunk) : this(
+            currentYearDataChunk.GetChunkAsUint16(),
+            currentMonthDataChunk.GetChunkAsByte(),
+            currentDayDataChunk.GetChunkAsByte(),
+            currentHourDataChunk.GetChunkAsByte(),
+            currentMinuteDataChunk.GetChunkAsByte())
         {
-            Year = currentYearDataChunk.GetChunkAsUint16();
-            Month = currentMonthDataChunk.GetChunkAsByte();
-            Day = currentDayDataChunk.GetChunkAsByte();
-            Hour = currentHourDataChunk.GetChunkAsByte();
-            Minute = currentMinuteDataChunk.GetChunkAsByte();
+        }
+
+        public TimeOfDay(ushort year, ushort month, ushort day, ushort hour, ushort minute)
+        {
+            if (month > N_MONTHS_PER_YEAR)
+                throw new Ultima5ReduxException($"Month value: {month} higher than {N_MONTHS_PER_YEAR}");
+            if (day > N_DAYS_IN_MONTH)
+                throw new Ultima5ReduxException($"Day value: {day} higher than {N_DAYS_IN_MONTH}");
+            if (hour > 23)
+                throw new Ultima5ReduxException($"Hour value: {hour} higher than 23");
+            if (minute > 59)
+                throw new Ultima5ReduxException($"Minute value: {hour} higher than 59");
+
+            Year = year;
+            Month = (byte)month;
+            Day = (byte)day;
+            Hour = (byte)hour;
+            Minute = (byte)minute;
         }
 
         /// <summary>
@@ -171,6 +189,14 @@ namespace Ultima5Redux.DayNightMoon
             SetAllChangeTrackers();
         }
 
+        public void DeRegisterChangeTracker(Guid changeTrackerId)
+        {
+            if (!IsTimeChangeTrackerIdValid(changeTrackerId)) return;
+
+            _timeHasChangedDictionary.Remove(changeTrackerId);
+            _nTotalChangeTrackers--;
+        }
+
         /// <summary>
         ///     Has the time changed since the last time we checked with the given change tracker id
         /// </summary>
@@ -203,14 +229,6 @@ namespace Ultima5Redux.DayNightMoon
             Guid changeTrackerId = Guid.NewGuid();
             _timeHasChangedDictionary[changeTrackerId] = true;
             return changeTrackerId;
-        }
-
-        public void DeRegisterChangeTracker(Guid changeTrackerId)
-        {
-            if (!IsTimeChangeTrackerIdValid(changeTrackerId)) return;
-
-            _timeHasChangedDictionary.Remove(changeTrackerId);
-            _nTotalChangeTrackers--;
         }
 
         /// <summary>
