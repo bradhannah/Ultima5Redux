@@ -2140,7 +2140,7 @@ namespace Ultima5Redux.Maps
             return IsStairGoingDown(CurrentPosition.XY);
         }
 
-        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference)
+        public bool IsTileWithinFourDirections(Point2D position, int nTileIndex)
         {
             List<Point2D> positions;
             if (IsLargeMap)
@@ -2153,8 +2153,11 @@ namespace Ultima5Redux.Maps
                     CurrentSmallMap.NumOfYTiles);
             }
 
-            return positions.Any(testTosition => GetTileReference(testTosition).Index == tileReference.Index);
+            return positions.Any(testTosition => GetTileReference(testTosition).Index == nTileIndex);
         }
+
+        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference) =>
+            IsTileWithinFourDirections(position, tileReference.Index);
 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,

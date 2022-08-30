@@ -5184,7 +5184,7 @@
     "CombatMapIndex": "None"
   },
   "162": {
-    "Name": "Fence1",
+    "Name": "HitchingPost",
     "Description": "",
     "IsWalking_Passable": false,
     "RangeWeapon_Passable": false,

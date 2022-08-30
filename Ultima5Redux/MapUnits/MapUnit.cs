@@ -140,6 +140,17 @@ namespace Ultima5Redux.MapUnits
             if (virtualMap.CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException("No single map is set in virtual map");
 
+            // if you are doing the horse wander and are next to a hitching post then we clear
+            // the movement queue so it doesn't keep wandering
+            if (OverrideAiType && OverridenAiType == NonPlayerCharacterSchedule.AiType.HorseWander)
+            {
+                if (virtualMap.IsTileWithinFourDirections(MapUnitPosition.XY,
+                        (int)TileReference.SpriteIndex.HitchingPost))
+                {
+                    Movement.ClearMovements();
+                }
+            }
+
             // if there is no next available movement then we gotta recalculate and see if they should move
             if (!Movement.IsNextCommandAvailable())
                 CalculateNextPath(virtualMap, timeOfDay, virtualMap.CurrentSingleMapReference.Floor, aStar);
@@ -634,6 +645,9 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
                         break;
+                    case NonPlayerCharacterSchedule.AiType.HorseWander:
+                        WanderWithinN(virtualMap, timeOfDay, 4);
+                        break;
                     default:
                         throw new Ultima5ReduxException(
                             $"An unexpected movement AI was encountered: {aiType} for NPC: {NPCRef.Name}");
@@ -641,6 +655,19 @@ namespace Ultima5Redux.MapUnits
             else // character not in correct position
                 switch (aiType)
                 {
+                    // Horses don't move if they are touching a hitching post
+                    case NonPlayerCharacterSchedule.AiType.HorseWander:
+                        if (!virtualMap.IsTileWithinFourDirections(npcXy.XY,
+                                (int)TileReference.SpriteIndex.HitchingPost))
+                        {
+                            WanderWithinN(virtualMap, timeOfDay, 4);
+                        }
+                        else
+                        {
+                            _ = "";
+                        }
+
+                        break;
                     case NonPlayerCharacterSchedule.AiType.MerchantThing:
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
