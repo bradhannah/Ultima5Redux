@@ -57,44 +57,10 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] private Avatar MasterAvatarMapUnit { get; set; }
 
+        [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
+
         [IgnoreDataMember]
         public int TotalMapUnitsOnMap => CurrentMapUnits.AllMapUnits.Count(m => m is not EmptyMapUnit);
-
-        public Avatar GetAvatarMapUnit()
-        {
-            if (CurrentMapUnits == null)
-                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits is null");
-            if (CurrentMapUnits.TheAvatar == null)
-                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits.TheAvatar is null");
-
-            return CurrentMapUnits.TheAvatar;
-        }
-
-        public void ClearEnemiesIfFarAway()
-        {
-            const float fMaxDiagonalDistance = 22;
-            MapUnitPosition avatarPosition = CurrentAvatarPosition;
-
-            int nMaxXY = CurrentMapType is Map.Maps.Overworld or Map.Maps.Underworld
-                ? LargeMapLocationReferences.XTiles
-                : 32;
-
-            List<Enemy> enemiesToClear = null;
-            foreach (Enemy enemy in CurrentMapUnits.Enemies)
-            {
-                if (enemy.MapUnitPosition.XY.DistanceBetweenWithWrapAround(avatarPosition.XY, nMaxXY) <=
-                    fMaxDiagonalDistance)
-                    continue;
-
-                enemiesToClear ??= new List<Enemy>();
-                // delete the mapunit
-                enemiesToClear.Add(enemy);
-            }
-
-            enemiesToClear?.ForEach(ClearMapUnit);
-        }
-
-        [IgnoreDataMember] public MapUnitCollection CurrentMapUnits => GetMapUnitCollection(CurrentMapType);
 
         /// <summary>
         ///     Constructs the collection of all Map CurrentMapUnits in overworld, underworld and current towne
@@ -161,6 +127,28 @@ namespace Ultima5Redux.MapUnits
         [OnDeserialized] private void PostDeserialized(StreamingContext context)
         {
             MasterAvatarMapUnit = GetAvatarMapUnit();
+            // we do this because we need to load the NPC information from the main state - not a copy in  
+            // the JSON. If we don't do this then it creates two sets of NPCs
+            // ALSO - I am super unhappy that I have to do this since there is technically duplicate 
+            // data in the save file - and the serialized Collection will essentially be ignored
+            // TODO: optimize so it just uses one of the save states
+            if (CurrentMapType == Map.Maps.Small) LoadSmallMap(CurrentLocation, false);
+        }
+
+        internal int AddCombatMapUnit(CombatMapUnit mapUnit)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
+            if (nIndex < 0) return -1;
+
+            AddNewMapUnit(Map.Maps.Combat, mapUnit);
+
+            return nIndex;
+        }
+
+        internal void ClearMapUnit(MapUnit mapUnit)
+        {
+            int nIndex = CurrentMapUnits.AllMapUnits.IndexOf(mapUnit);
+            CurrentMapUnits.AllMapUnits[nIndex] = new EmptyMapUnit();
         }
 
         /// <summary>
@@ -193,16 +181,6 @@ namespace Ultima5Redux.MapUnits
                 Map.Maps.Combat => CombatMapMapUnitCollection,
                 _ => throw new InvalidEnumArgumentException(((int)map).ToString())
             };
-        }
-
-        internal int AddCombatMapUnit(CombatMapUnit mapUnit)
-        {
-            int nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
-            if (nIndex < 0) return -1;
-
-            AddNewMapUnit(Map.Maps.Combat, mapUnit);
-
-            return nIndex;
         }
 
         /// <summary>
@@ -397,12 +375,14 @@ namespace Ultima5Redux.MapUnits
             {
                 case Map.Maps.Overworld:
                     mapUnitCollection = OverworldMapMapUnitCollection;
-                    currentMapUnitStates = bInitialLoad ? _importedGameState.OverworldMapUnitStates
+                    currentMapUnitStates = bInitialLoad
+                        ? _importedGameState.OverworldMapUnitStates
                         : new MapUnitStates();
                     break;
                 case Map.Maps.Underworld:
                     mapUnitCollection = UnderworldMapUnitCollection;
-                    currentMapUnitStates = bInitialLoad ? _importedGameState.UnderworldMapUnitStates
+                    currentMapUnitStates = bInitialLoad
+                        ? _importedGameState.UnderworldMapUnitStates
                         : new MapUnitStates();
                     break;
                 case Map.Maps.Combat:
@@ -467,6 +447,7 @@ namespace Ultima5Redux.MapUnits
 
             // wipe all existing characters since they cannot exist beyond the load
             SmallMapUnitCollection.Clear();
+            CombatMapMapUnitCollection.Clear();
 
             // populate each of the map characters individually
             for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
@@ -535,12 +516,6 @@ namespace Ultima5Redux.MapUnits
             SmallMapUnitCollection?.AllMapUnits.ForEach(m => m.UseFourDirections = _bUseExtendedSprites);
         }
 
-        internal void ClearMapUnit(MapUnit mapUnit)
-        {
-            int nIndex = CurrentMapUnits.AllMapUnits.IndexOf(mapUnit);
-            CurrentMapUnits.AllMapUnits[nIndex] = new EmptyMapUnit();
-        }
-
         /// <summary>
         ///     Clear a current map unit, essentially removing it from the world
         ///     Commonly used when something is boarded, and collapses into the Avatar himself
@@ -565,25 +540,28 @@ namespace Ultima5Redux.MapUnits
                 "You provided a MapUnit to clear, but it is not in the active MapUnit list");
         }
 
-        /// <summary>
-        ///     Places an existing non attacking unit on a map
-        ///     This is often used when an item stack exists in a chest OR if an enemy leaves a body or blood spatter
-        /// </summary>
-        /// <param name="nonAttackingUnit"></param>
-        /// <param name="mapUnitPosition"></param>
-        /// <param name="map"></param>
-        /// <returns></returns>
-        public bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition,
-            Map.Maps map)
+        public void ClearEnemiesIfFarAway()
         {
-            int nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
-            if (nIndex == -1) return false;
+            const float fMaxDiagonalDistance = 22;
+            MapUnitPosition avatarPosition = CurrentAvatarPosition;
 
-            nonAttackingUnit.MapUnitPosition = mapUnitPosition;
+            int nMaxXY = CurrentMapType is Map.Maps.Overworld or Map.Maps.Underworld
+                ? LargeMapLocationReferences.XTiles
+                : 32;
 
-            // set position of frigate in the world
-            AddNewMapUnit(map, nonAttackingUnit, nIndex);
-            return true;
+            List<Enemy> enemiesToClear = null;
+            foreach (Enemy enemy in CurrentMapUnits.Enemies)
+            {
+                if (enemy.MapUnitPosition.XY.DistanceBetweenWithWrapAround(avatarPosition.XY, nMaxXY) <=
+                    fMaxDiagonalDistance)
+                    continue;
+
+                enemiesToClear ??= new List<Enemy>();
+                // delete the mapunit
+                enemiesToClear.Add(enemy);
+            }
+
+            enemiesToClear?.ForEach(ClearMapUnit);
         }
 
         public Enemy CreateEnemy(Point2D xy, EnemyReference enemyReference,
@@ -619,20 +597,6 @@ namespace Ultima5Redux.MapUnits
             return enemy;
         }
 
-        public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
-        {
-            Debug.Assert(CurrentMapType == Map.Maps.Combat);
-            nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
-            if (nIndex == -1) return null;
-
-            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
-            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite, mapUnitPosition);
-
-            nIndex = AddCombatMapUnit(nonAttackingUnit);
-
-            return nonAttackingUnit;
-        }
-
         /// <summary>
         ///     Creates a new frigate at a dock of a given location
         /// </summary>
@@ -659,6 +623,20 @@ namespace Ultima5Redux.MapUnits
             return horse;
         }
 
+        public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)
+        {
+            Debug.Assert(CurrentMapType == Map.Maps.Combat);
+            nIndex = FindNextFreeMapUnitIndex(Map.Maps.Combat);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
+            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite, mapUnitPosition);
+
+            nIndex = AddCombatMapUnit(nonAttackingUnit);
+
+            return nonAttackingUnit;
+        }
+
         /// <summary>
         ///     Creates a new skiff and places it at a given location
         /// </summary>
@@ -668,6 +646,16 @@ namespace Ultima5Redux.MapUnits
         public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location)
         {
             return CreateSkiff(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _);
+        }
+
+        public Avatar GetAvatarMapUnit()
+        {
+            if (CurrentMapUnits == null)
+                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits is null");
+            if (CurrentMapUnits.TheAvatar == null)
+                throw new Ultima5ReduxException("Tried to get Avatar but CurrentMapUnits.TheAvatar is null");
+
+            return CurrentMapUnits.TheAvatar;
         }
 
         /// <summary>
@@ -681,7 +669,7 @@ namespace Ultima5Redux.MapUnits
         {
             List<MapUnit> mapUnits = new();
 
-            foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllMapUnits) 
+            foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllMapUnits)
             {
                 if (!mapUnit.IsActive) continue;
                 // sometimes characters are null because they don't exist - and that is OK
@@ -696,11 +684,6 @@ namespace Ultima5Redux.MapUnits
             }
 
             return mapUnits;
-        }
-
-        public bool IsTileOccupied(Point2D xy)
-        {
-            return CurrentMapUnits.AllActiveMapUnits.Any(m => m.MapUnitPosition.XY == xy);
         }
 
         public T GetSpecificMapUnitByLocation<T>(Map.Maps map, Point2D xy, int nFloor, bool bCheckBaseToo = false)
@@ -736,6 +719,11 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        public bool IsTileOccupied(Point2D xy)
+        {
+            return CurrentMapUnits.AllActiveMapUnits.Any(m => m.MapUnitPosition.XY == xy);
+        }
+
         public Skiff MakeAndBoardSkiff()
         {
             Skiff skiff = CreateSkiff(GetAvatarMapUnit().MapUnitPosition.XY, GetAvatarMapUnit().Direction,
@@ -743,6 +731,27 @@ namespace Ultima5Redux.MapUnits
             GetAvatarMapUnit().BoardMapUnit(skiff);
             ClearAndSetEmptyMapUnits(skiff);
             return skiff;
+        }
+
+        /// <summary>
+        ///     Places an existing non attacking unit on a map
+        ///     This is often used when an item stack exists in a chest OR if an enemy leaves a body or blood spatter
+        /// </summary>
+        /// <param name="nonAttackingUnit"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public bool PlaceNonAttackingUnit(NonAttackingUnit nonAttackingUnit, MapUnitPosition mapUnitPosition,
+            Map.Maps map)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
+            if (nIndex == -1) return false;
+
+            nonAttackingUnit.MapUnitPosition = mapUnitPosition;
+
+            // set position of frigate in the world
+            AddNewMapUnit(map, nonAttackingUnit, nIndex);
+            return true;
         }
 
         /// <summary>
@@ -754,7 +763,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="bLoadFromDisk"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
-            bool bLoadFromDisk)
+            bool bLoadFromDisk = false)
         {
             CurrentMapType = mapType;
 
@@ -775,6 +784,7 @@ namespace Ultima5Redux.MapUnits
                     return;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
+                    CombatMapMapUnitCollection.Clear();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
@@ -782,17 +792,6 @@ namespace Ultima5Redux.MapUnits
 
             GetAvatarMapUnit().MapLocation = mapRef.MapLocation;
             GetAvatarMapUnit().MapUnitPosition.Floor = mapRef.Floor;
-        }
-
-        /// <summary>
-        ///     Sets the current map that the MapUnits represents
-        /// </summary>
-        /// <param name="mapRef"></param>
-        /// <param name="mapType">Is it a small map, overworld or underworld</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType)
-        {
-            SetCurrentMapType(mapRef, mapType, false);
         }
 
         /// <summary>

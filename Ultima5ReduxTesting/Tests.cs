@@ -49,7 +49,7 @@ namespace Ultima5ReduxTesting
         public enum SaveFiles
         {
             Britain, Britain2, Britain3, BucDen1, BucDen3, b_carpet, b_frigat, b_horse, b_skiff, quicksave, fresh,
-            blackt
+            blackt, BucDenEntrance
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -82,7 +82,11 @@ namespace Ultima5ReduxTesting
                     : @"C:\games\ultima5tests");
 
         private string NewSaveRootDirectory => TestContext.Parameters.Get("NewSaveRootDirectory",
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "UltimaVRedux"));
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? @"/Users/bradhannah/GitHub/Ultima5ReduxTestDependancies/NewSaves"
+                //@"/Users/bradhannah/games/u5tests"
+                : @"C:\games\ultima5tests");
+        //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "UltimaVRedux"));
 
         private string GetNewSaveDirectory(SaveFiles saveFiles) =>
             Path.Combine(NewSaveRootDirectory, saveFiles.ToString());
@@ -2490,6 +2494,77 @@ namespace Ultima5ReduxTesting
             {
                 //horse.CompleteNextMove(world.State.TheVirtualMap, world.State.TheTimeOfDay, );
             }
+        }
+
+        [Test] [TestCase(SaveFiles.BucDen1)] public void test_BucdenKillInnkeeperStillDead(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(SaveFiles.BucDenEntrance, true, false);
+            //CreateWorldFromLegacy(saveFiles);
+            _ = "";
+
+            Assert.True(world.State.TheVirtualMap.CurrentSingleMapReference.MapLocation ==
+                        SmallMapReferences.SingleMapReference.Location.Buccaneers_Den);
+
+            // world.State.TheVirtualMap.LoadSmallMap(
+            //     GameReferences.SmallMapRef.GetSingleMapByLocation(
+            //         SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 0));
+            // world.State.TheVirtualMap.MoveAvatar(new(15, 15));
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> thing = world.TryToPassTime(turnResults);
+
+            TimeOfDay tod = new TimeOfDay(0, 0, 0, 0, 0);
+
+            //ReturnToPreviousMapAfterCombat
+
+            bool bFoundInnkeeper = false;
+            NonPlayerCharacter preNpc = null;
+            MapUnits preMapUnits = world.State.TheVirtualMap.TheMapUnits;
+            MapUnitCollection preMapUnitCollection = preMapUnits.CurrentMapUnits;
+            foreach (NonPlayerCharacter npc in preMapUnitCollection.NonPlayerCharacters)
+            {
+                if (npc.FriendlyName == "InnKeeper")
+                {
+                    Assert.False(npc.NPCState.IsDead);
+                    npc.NPCState.IsDead = true;
+                    Assert.True(npc.NPCState.IsDead);
+                    bFoundInnkeeper = true;
+                    preNpc = npc;
+                    break;
+                }
+            }
+
+            Assert.True(bFoundInnkeeper);
+            Assert.NotNull(preNpc);
+
+            world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 0));
+            world.State.TheVirtualMap.MoveAvatar(new(15, 15));
+            bFoundInnkeeper = false;
+
+            MapUnits postMapUnits = world.State.TheVirtualMap.TheMapUnits;
+            MapUnitCollection postMapUnitCollection = postMapUnits.CurrentMapUnits;
+
+            Assert.AreSame(preMapUnits, postMapUnits);
+            Assert.AreSame(preMapUnitCollection, postMapUnitCollection);
+
+            foreach (NonPlayerCharacter npc in
+                     world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
+            {
+                if (npc.FriendlyName == "InnKeeper")
+                {
+                    Assert.True(preNpc.NPCRef == npc.NPCRef);
+                    Assert.True(preNpc.NPCState == npc.NPCState);
+                    //Assert.True(preNpc == npc);
+                    Assert.True(npc.NPCState.IsDead);
+                    bFoundInnkeeper = true;
+                }
+            }
+
+            Assert.True(bFoundInnkeeper);
         }
     }
 }

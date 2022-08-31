@@ -654,9 +654,8 @@ namespace Ultima5Redux
         /// <returns>the final decision on how to handle the attack</returns>
         /// <exception cref="Ultima5ReduxException"></exception>
         public List<VirtualMap.AggressiveMapUnitInfo> TryToAttackNonCombatMap(Point2D attackTargetPosition,
-            out MapUnit mapUnit,
-            out SingleCombatMapReference singleCombatMapReference, out TryToAttackResult tryToAttackResult,
-            TurnResults turnResults)
+            out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
+            out TryToAttackResult tryToAttackResult, TurnResults turnResults)
         {
             singleCombatMapReference = null;
             mapUnit = null;
@@ -749,7 +748,7 @@ namespace Ultima5Redux
                         break;
                     }
 
-                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
+                    //State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
                     npc.NPCState.IsDead = true;
 
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapNpc));
