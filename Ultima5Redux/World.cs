@@ -11,6 +11,7 @@ using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
@@ -371,6 +372,7 @@ namespace Ultima5Redux
         {
             npc.NPCState.IsDead = true;
             State.Karma -= 10;
+            State.TheVirtualMap.IsWantedManByThePoPo = true;
         }
 
         /// <summary>

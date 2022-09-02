@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 
 namespace Ultima5Redux.MapUnits.TurnResults
 {
     public class TurnResults
     {
-        private readonly Queue<TurnResult> _turnResults = new();
-
         private readonly Dictionary<TurnResult.TurnResultType, Type> _expectedTurnResults = new()
         {
             { TurnResult.TurnResultType.DamageOverTimePoisoned, typeof(CombatMapUnitTakesDamage) },
@@ -15,6 +14,17 @@ namespace Ultima5Redux.MapUnits.TurnResults
             { TurnResult.TurnResultType.OutputToConsole, typeof(OutputToConsole) },
             { TurnResult.TurnResultType.Combat_EnemyMoved, typeof(EnemyMoved) }
         };
+
+        private readonly Queue<TurnResult> _turnResults = new();
+
+        public bool HasTurnResult => _turnResults.Count > 0;
+        public TurnResult PeekLastTurnResult { get; } = new BasicResult(TurnResult.TurnResultType.Ignore);
+        public TurnResult PeekTurnResultType => _turnResults.Peek();
+
+        public TurnResult PopTurnResult() => _turnResults.Dequeue();
+
+        public void PushOutputToConsole(string str, bool bUseArrow = true, bool bForceNewLine = true)
+            => PushTurnResult(new OutputToConsole(str));
 
         public void PushTurnResult(TurnResult turnResult)
         {
@@ -28,14 +38,5 @@ namespace Ultima5Redux.MapUnits.TurnResults
             // at this point we know it's valid
             _turnResults.Enqueue(turnResult);
         }
-
-        public TurnResult PopTurnResult() => _turnResults.Dequeue();
-
-        public bool HasTurnResult => _turnResults.Count > 0;
-        public TurnResult PeekTurnResultType => _turnResults.Peek();
-        public TurnResult PeekLastTurnResult { get; } = new BasicResult(TurnResult.TurnResultType.Ignore);
-
-        public void PushOutputToConsole(string str, bool bUseArrow = true, bool bForceNewLine = true)
-            => PushTurnResult(new OutputToConsole(str));
     }
 }

@@ -46,6 +46,14 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         [IgnoreDataMember] public override bool IsAttackable => true;
 
+        /// <summary>
+        ///     If the Avatar is wanted by the PoPo, then are they compelled to get close to him?
+        /// </summary>
+        [IgnoreDataMember]
+        public bool AttractedToAvatarIfWantedByPoPo =>
+            KeyTileReference.Index is >= (int)TileReference.SpriteIndex.Guard_KeyIndex
+                and <= (int)TileReference.SpriteIndex.Guard_KeyIndex + TileReference.N_TYPICAL_ANIMATION_FRAMES;
+
         [IgnoreDataMember]
         protected internal override Dictionary<Point2D.Direction, string> DirectionToTileName { get; } = new();
 
@@ -113,6 +121,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                    " <b>Movement Attempts</b>: " + MovementAttempts + " " + Movement;
         }
 
-        public override TileReference GetNonBoardedTileReference() => KeyTileReference;
+        public override TileReference GetNonBoardedTileReference()
+        {
+            return KeyTileReference;
+        }
     }
 }

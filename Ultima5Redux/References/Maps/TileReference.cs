@@ -14,8 +14,10 @@ namespace Ultima5Redux.References.Maps
         public enum SpriteIndex
         {
             TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149, PlowedField = 44,
-            WheatInField = 45, HitchingPost = 162
+            WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368
         }
+
+        public const int N_TYPICAL_ANIMATION_FRAMES = 4;
 
         [DataMember] public int AnimationIndex { get; private set; }
         [DataMember] public bool BlocksLight { get; private set; }

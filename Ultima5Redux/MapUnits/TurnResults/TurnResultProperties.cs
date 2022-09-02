@@ -1,10 +1,16 @@
 using Ultima5Redux.MapUnits.CombatMapUnits;
+using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.MapUnits.TurnResults
 {
+    public interface INonPlayerCharacterInteraction
+    {
+        public NonPlayerCharacter NPC { get; }
+    }
+
     public interface IHitState
     {
         public CombatMapUnit.HitState HitState { get; }
@@ -32,9 +38,9 @@ namespace Ultima5Redux.MapUnits.TurnResults
 
     public interface IOutputString
     {
+        public bool ForceNewLine { get; }
         public string OutputString { get; }
         public bool UseArrow { get; }
-        public bool ForceNewLine { get; }
     }
 
     public interface IDamageAmount

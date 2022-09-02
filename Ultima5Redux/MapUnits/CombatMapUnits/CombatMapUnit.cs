@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.References;
@@ -93,6 +94,65 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             NonPlayerCharacterState npcState, TileReference tileReference) : base(smallMapTheSmallMapCharacterState,
             mapUnitMovement, location, Point2D.Direction.None, npcState, tileReference, new MapUnitPosition())
         {
+        }
+
+        private static HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
+        {
+            stateOutput = enemyCombatMapUnit.FriendlyName;
+
+            HitState enemyHitState = enemyCombatMapUnit.CurrentHitState;
+            switch (enemyHitState)
+            {
+                case HitState.Grazed:
+                    stateOutput += " grazed!";
+                    break;
+                case HitState.Missed:
+                    stateOutput += " missed!";
+                    break;
+                case HitState.BarelyWounded:
+                    stateOutput +=
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                            ._BARELY_WOUNDED_BANG_N);
+                    break;
+                case HitState.LightlyWounded:
+                    stateOutput +=
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                            ._LIGHTLY_WOUNDED_BANG_N);
+                    break;
+                case HitState.HeavilyWounded:
+                    stateOutput +=
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                            .HEAVILY_WOUNDED_BANG_N);
+                    break;
+                case HitState.CriticallyWounded:
+                    stateOutput +=
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                            ._CRITICAL_BANG_N);
+                    break;
+                case HitState.Fleeing:
+                    if (enemyCombatMapUnit is Enemy enemy)
+                    {
+                        stateOutput += " fleeing!";
+                        enemy.IsFleeing = true;
+                    }
+                    else
+                    {
+                        stateOutput +=
+                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                                ._CRITICAL_BANG_N);
+                    }
+
+                    break;
+                case HitState.Dead:
+                    stateOutput +=
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
+                            ._KILLED_BANG_N);
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException(((int)enemyHitState).ToString());
+            }
+
+            return enemyHitState;
         }
 
         // bool Creature::isHit(int hit_offset) {
@@ -296,65 +356,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
             (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange &&
              Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
-
-        private static HitState GetState(CombatMapUnit enemyCombatMapUnit, out string stateOutput)
-        {
-            stateOutput = enemyCombatMapUnit.FriendlyName;
-
-            HitState enemyHitState = enemyCombatMapUnit.CurrentHitState;
-            switch (enemyHitState)
-            {
-                case HitState.Grazed:
-                    stateOutput += " grazed!";
-                    break;
-                case HitState.Missed:
-                    stateOutput += " missed!";
-                    break;
-                case HitState.BarelyWounded:
-                    stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
-                            ._BARELY_WOUNDED_BANG_N);
-                    break;
-                case HitState.LightlyWounded:
-                    stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
-                            ._LIGHTLY_WOUNDED_BANG_N);
-                    break;
-                case HitState.HeavilyWounded:
-                    stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
-                            .HEAVILY_WOUNDED_BANG_N);
-                    break;
-                case HitState.CriticallyWounded:
-                    stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
-                            ._CRITICAL_BANG_N);
-                    break;
-                case HitState.Fleeing:
-                    if (enemyCombatMapUnit is Enemy enemy)
-                    {
-                        stateOutput += " fleeing!";
-                        enemy.IsFleeing = true;
-                    }
-                    else
-                    {
-                        stateOutput +=
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
-                                ._CRITICAL_BANG_N);
-                    }
-
-                    break;
-                case HitState.Dead:
-                    stateOutput +=
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.BattleStrings
-                            ._KILLED_BANG_N);
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException(((int)enemyHitState).ToString());
-            }
-
-            return enemyHitState;
-        }
 
         //        /**
         // * Calculate damage for an attack.

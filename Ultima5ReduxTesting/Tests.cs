@@ -16,6 +16,7 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
@@ -2565,6 +2566,38 @@ namespace Ultima5ReduxTesting
             }
 
             Assert.True(bFoundInnkeeper);
+        }
+
+
+        [Test] [TestCase(SaveFiles.Britain)] public void test_LoadTrinsicGuardAngry(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+
+            /// this should put the guard at position 15,22
+            world.State.TheTimeOfDay.Hour = 16;
+            world.State.TheTimeOfDay.Minute = 16;
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+            // directly in front of the guard
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(15, 23));
+
+            world.State.TheVirtualMap.IsWantedManByThePoPo = true;
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> thing = world.TryToPassTime(turnResults);
+
+            TurnResult turnResult;
+            bool bWasAttemptedArrest = false;
+            while (turnResults.HasTurnResult)
+            {
+                turnResult = turnResults.PopTurnResult();
+                if (turnResult is AttemptToArrest attemptToArrest) bWasAttemptedArrest = true;
+            }
+
+            Assert.True(bWasAttemptedArrest, "The guard did not attempt arrest");
         }
     }
 }
