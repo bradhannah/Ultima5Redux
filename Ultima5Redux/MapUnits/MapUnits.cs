@@ -765,15 +765,17 @@ namespace Ultima5Redux.MapUnits
         public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
             bool bLoadFromDisk = false)
         {
-            CurrentMapType = mapType;
+            // CurrentMapType = mapType;
+            //
+            // if (mapRef == null)
+            //     throw new Ultima5ReduxException("Passed a null map ref to SetCurrentMapType");
+            //
+            // CurrentLocation = mapRef.MapLocation;
+            //
+            // // I may need make an additional save of state before wiping these MapUnits out
+            // GameStateReference.State.CharacterRecords.ClearCombatStatuses();
 
-            if (mapRef == null)
-                throw new Ultima5ReduxException("Passed a null map ref to SetCurrentMapType");
-
-            CurrentLocation = mapRef.MapLocation;
-
-            // I may need make an additional save of state before wiping these MapUnits out
-            GameStateReference.State.CharacterRecords.ClearCombatStatuses();
+            SetCurrentMapTypeNoLoad(mapRef, mapType, false);
 
             switch (mapType)
             {
@@ -792,6 +794,32 @@ namespace Ultima5Redux.MapUnits
 
             GetAvatarMapUnit().MapLocation = mapRef.MapLocation;
             GetAvatarMapUnit().MapUnitPosition.Floor = mapRef.Floor;
+        }
+
+        /// <summary>
+        ///     UNSAFE - this assumes the small map is already loaded into memory - it instead just switches the
+        ///     current map units back over to it.
+        /// </summary>
+        /// <param name="mapRef"></param>
+        /// <param name="mapType"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
+        public void SetCurrentMapTypeNoLoad(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
+            bool bSetAvatar = true)
+        {
+            CurrentMapType = mapType;
+            if (mapRef == null)
+                throw new Ultima5ReduxException("Passed a null map ref to SetCurrentMapType");
+
+            CurrentLocation = mapRef.MapLocation;
+
+            // I may need make an additional save of state before wiping these MapUnits out
+            GameStateReference.State.CharacterRecords.ClearCombatStatuses();
+
+            if (bSetAvatar)
+            {
+                GetAvatarMapUnit().MapLocation = mapRef.MapLocation;
+                GetAvatarMapUnit().MapUnitPosition.Floor = mapRef.Floor;
+            }
         }
 
         /// <summary>

@@ -148,71 +148,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         /// <summary>
-        ///     Gets the characters total attack if left and right hand both attacked successfully
-        /// </summary>
-        /// <param name="record">Character record</param>
-        /// <returns>amount of total damage</returns>
-        public int GetCharacterTotalAttack(PlayerCharacterRecord record)
-        {
-            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
-                   GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
-                   GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
-        }
-
-        /// <summary>
-        ///     Gets the players total defense of all items equipped
-        /// </summary>
-        /// <param name="record">character record</param>
-        /// <returns>the players total defense</returns>
-        public int GetCharacterTotalDefense(PlayerCharacterRecord record)
-        {
-            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
-                   GetDefense(record.Equipped.Helmet) + GetDefense(record.Equipped.LeftHand) +
-                   GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
-        }
-
-        /// <summary>
-        ///     Gets the Combat Item (inventory item) based on the equipped item
-        /// </summary>
-        /// <param name="equipment">type of combat equipment</param>
-        /// <returns>combat item object</returns>
-        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment)
-        {
-            if (equipment == DataOvlReference.Equipment.Nothing) return null;
-            return ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ??
-                   throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
-        }
-
-        public bool SpendGold(int nGold)
-        {
-            if (TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity < nGold) return false;
-            TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity -= nGold;
-            return true;
-        }
-
-        public bool DoIHaveSpecialTileReferenceIndex(int nIndex)
-        {
-            switch (nIndex)
-            {
-                // it's a crown, sceptre or amulet
-                // we need to check against our inventory because the map doesn't know if we have it or not
-                case >= 437 and <= 439:
-                    LordBritishArtifact lordBritishArtifact = 
-                        Artifacts.Items[(LordBritishArtifact.ArtifactType)nIndex];
-                    if (lordBritishArtifact.Quantity > 0) return true;
-                    break;
-                // it's a shard
-                case 270:
-                    if (SpecializedItems.Items[SpecialItem.SpecificItemType.WoodenBox].Quantity > 0) return true;
-                    break;
-                case 436:
-                    break;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         ///     Finds a corresponding inventoryItem and adds the quantity, or just plain ole adds it to the
         ///     the inventory if didn't already exist
         /// </summary>
@@ -267,7 +202,77 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 default:
                     throw new ArgumentOutOfRangeException(nameof(inventoryItem));
             }
-            
+        }
+
+        public bool DoIHaveSpecialTileReferenceIndex(int nIndex)
+        {
+            switch (nIndex)
+            {
+                // it's a crown, sceptre or amulet
+                // we need to check against our inventory because the map doesn't know if we have it or not
+                case >= 437 and <= 439:
+                    LordBritishArtifact lordBritishArtifact =
+                        Artifacts.Items[(LordBritishArtifact.ArtifactType)nIndex];
+                    if (lordBritishArtifact.Quantity > 0) return true;
+                    break;
+                // it's a shard
+                case 270:
+                    if (SpecializedItems.Items[SpecialItem.SpecificItemType.WoodenBox].Quantity > 0) return true;
+                    break;
+                case 436:
+                    break;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Gets the characters total attack if left and right hand both attacked successfully
+        /// </summary>
+        /// <param name="record">Character record</param>
+        /// <returns>amount of total damage</returns>
+        public int GetCharacterTotalAttack(PlayerCharacterRecord record)
+        {
+            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
+                   GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
+                   GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
+        }
+
+        /// <summary>
+        ///     Gets the players total defense of all items equipped
+        /// </summary>
+        /// <param name="record">character record</param>
+        /// <returns>the players total defense</returns>
+        public int GetCharacterTotalDefense(PlayerCharacterRecord record)
+        {
+            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
+                   GetDefense(record.Equipped.Helmet) + GetDefense(record.Equipped.LeftHand) +
+                   GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
+        }
+
+        /// <summary>
+        ///     Gets the Combat Item (inventory item) based on the equipped item
+        /// </summary>
+        /// <param name="equipment">type of combat equipment</param>
+        /// <returns>combat item object</returns>
+        public CombatItem GetItemFromEquipment(DataOvlReference.Equipment equipment)
+        {
+            if (equipment == DataOvlReference.Equipment.Nothing) return null;
+            return ReadyItems.FirstOrDefault(item => item.SpecificEquipment == equipment) ??
+                   throw new Ultima5ReduxException("Tried to get " + equipment + " but wasn't in my ReadyItems");
+        }
+
+        public void GoToJail()
+        {
+            // if you go to jail then you have to be creative because you have no keys left!
+            TheProvisions.Keys = 0;
+        }
+
+        public bool SpendGold(int nGold)
+        {
+            if (TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity < nGold) return false;
+            TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity -= nGold;
+            return true;
         }
     }
 }

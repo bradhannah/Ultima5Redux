@@ -917,8 +917,6 @@ namespace Ultima5Redux.Maps
 
             if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;
 
-            bool bIsPirate = enemy.EnemyReference.LargeMapMissileType == CombatItemReference.MissileType.CannonBall;
-
             if (!bNextToEachOther)
             {
                 switch (enemy.EnemyReference.LargeMapMissileType)
@@ -945,6 +943,7 @@ namespace Ultima5Redux.Maps
                 return mapUnitInfo;
             }
 
+            bool bIsPirate = enemy.EnemyReference.LargeMapMissileType == CombatItemReference.MissileType.CannonBall;
             // if avatar on skiff or carpet and avatar is on water then it's immediate ouch, no map
             if ((IsAvatarInSkiff || IsAvatarRidingCarpet) &&
                 attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
@@ -2282,7 +2281,13 @@ namespace Ultima5Redux.Maps
 
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
-                    TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder);
+                    // this is reloading the entire map....
+                    // TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder);
+
+                    // this ensure the old small map is not reloaded entirely
+                    // it is a dirty function, but any "cleared" units before the combat will stay cleared
+                    TheMapUnits.SetCurrentMapTypeNoLoad(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder);
+
                     TheMapUnits.GetAvatarMapUnit().MapUnitPosition = PreMapUnitPosition;
                     PreCombatMap = null;
                     break;
