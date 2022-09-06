@@ -11,6 +11,12 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             DamageAmount = damageAmount;
         }
 
+        public override string GetDebugString()
+        {
+            return $@"Damage: {DamageAmount}
+CharacterStats Status: {CombatMapUnitStats.Status}";
+        }
+
         public int DamageAmount { get; }
         public CharacterStats CombatMapUnitStats { get; }
     }

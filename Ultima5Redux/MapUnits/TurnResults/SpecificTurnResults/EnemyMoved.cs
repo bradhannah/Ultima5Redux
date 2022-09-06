@@ -12,6 +12,14 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             MoveToPosition = moveToPosition;
         }
 
+        public override string GetDebugString()
+        {
+            return $@"Enemy: {TheEnemy.FriendlyName}
+EnemyFromPosition: {MovedFromPosition.GetFriendlyString()}
+EnemyToPosition: {MoveToPosition.GetFriendlyString()}
+";
+        }
+
         public Enemy TheEnemy { get; }
 
         public Point2D MovedFromPosition { get; }

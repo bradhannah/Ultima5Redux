@@ -16,6 +16,15 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             MissileType = missileType;
         }
 
+        public override string GetDebugString()
+        {
+            return $@"Attacker: {Attacker.FriendlyName}
+AttackerXY: {Attacker.MapUnitPosition.XY.GetFriendlyString()}
+MissileType: {MissileType}
+Opponent: {Opponent.FriendlyName}
+OpponentXY: {Opponent.MapUnitPosition.XY.GetFriendlyString()}";
+        }
+
         public CombatMapUnit Attacker { get; }
         public CombatItemReference.MissileType MissileType { get; }
         public CombatMapUnit Opponent { get; }
