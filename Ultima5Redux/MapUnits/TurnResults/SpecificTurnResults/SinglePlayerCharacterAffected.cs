@@ -12,6 +12,11 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             CombatMapUnitStats = stats;
         }
 
+        public override string GetDebugString()
+        {
+            return $@"PlayerRecord: {PlayerRecord?.Name}";
+        }
+
         public CharacterStats CombatMapUnitStats { get; }
     }
 }

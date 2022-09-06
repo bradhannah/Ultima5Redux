@@ -65,6 +65,12 @@
         {
             TheTurnResultType = theTurnResultType;
         }
+
+        public virtual string GetDebugString()
+        {
+            return $@"IsSuccessfulMovement: {IsSuccessfulMovement}
+IsNewMapTurnResult: {IsNewMapTurnResult()}";
+        }
         // Combat_Category_Action_Who_Details
 
         public bool IsNewMapTurnResult()

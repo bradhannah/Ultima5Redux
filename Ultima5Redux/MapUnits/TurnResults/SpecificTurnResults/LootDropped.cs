@@ -9,6 +9,12 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             Loot = loot;
         }
 
+        public override string GetDebugString()
+        {
+            return $@"LootDropped: {Loot.FriendlyName}
+LootPosition: {Loot.MapUnitPosition.XY.GetFriendlyString()}";
+        }
+
         public NonAttackingUnit Loot { get; }
     }
 }

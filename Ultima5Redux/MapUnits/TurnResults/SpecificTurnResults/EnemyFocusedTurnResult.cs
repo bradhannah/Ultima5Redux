@@ -9,6 +9,12 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             TheEnemy = theEnemy;
         }
 
+        public override string GetDebugString()
+        {
+            return $@"Enemy: {TheEnemy.FriendlyName}
+EnemyXY: {TheEnemy.MapUnitPosition.XY.GetFriendlyString()}";
+        }
+
         public Enemy TheEnemy { get; }
     }
 }

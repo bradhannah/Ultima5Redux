@@ -47,7 +47,7 @@ namespace Ultima5Redux
 
         public override string ToString()
         {
-            return "X=" + X + ",Y=" + Y;
+            return GetFriendlyString();
         }
 
         public Point2DFloat Copy()
@@ -69,6 +69,11 @@ namespace Ultima5Redux
             return Math.Abs(Y - other.Y) < 0.0000001f;
         }
 
+        public string GetFriendlyString()
+        {
+            return "X=" + X + ",Y=" + Y;
+        }
+
         public bool WithinN(Point2DFloat xy, float nWithin)
         {
             bool bWithinX = Math.Abs(xy.X - X) <= nWithin;
@@ -88,6 +93,8 @@ namespace Ultima5Redux
         [DataMember] public int X { get; set; }
         [DataMember] public int Y { get; set; }
 
+        public static Point2D Zero => new Point2D(0, 0);
+
         public Point2D()
         {
         }
@@ -98,7 +105,28 @@ namespace Ultima5Redux
             Y = y;
         }
 
-        public static Point2D Zero => new Point2D(0, 0);
+        public static int AdjustToMax(int nNum, int nMax)
+        {
+            if (nNum < 0) nNum += nMax;
+            if (nNum >= nMax) nNum -= nMax;
+            nNum %= nMax;
+            return nNum;
+        }
+
+        public static double DistanceBetween(int x1, int y1, int x2, int y2)
+        {
+            return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
+        }
+
+        public static bool IsOutOfRangeStatic(int nX, int nY, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
+        {
+            return (nX < nMinX || nX > nMaxX || nY < nMinY || nY > nMaxY);
+        }
+
+        public static bool IsWithinNFourDirections(int x1, int y1, int x2, int y2)
+        {
+            return Math.Abs(DistanceBetween(x1, y1, x2, y2) - 1) < 0.01;
+        }
 
         public static bool operator ==(in Point2D point1, in Point2D point2)
         {
@@ -179,24 +207,14 @@ namespace Ultima5Redux
             Y %= nMax;
         }
 
-        public Point2D GetAdjustXAndYToMax(int nMax)
-        {
-            Point2D position = this;
-            position.AdjustXAndYToMax(nMax);
-            return position;
-        }
-
-        public static int AdjustToMax(int nNum, int nMax)
-        {
-            if (nNum < 0) nNum += nMax;
-            if (nNum >= nMax) nNum -= nMax;
-            nNum %= nMax;
-            return nNum;
-        }
-
         public Point2D Copy()
         {
             return new Point2D(X, Y);
+        }
+
+        public double DistanceBetween(Point2D xy)
+        {
+            return Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));
         }
 
         [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
@@ -209,16 +227,6 @@ namespace Ultima5Redux
             if (dY > nMax / 2) dY = nMax - dY;
 
             return Math.Sqrt(dX * dX + dY * dY);
-        }
-
-        public double DistanceBetween(Point2D xy)
-        {
-            return Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));
-        }
-
-        public static double DistanceBetween(int x1, int y1, int x2, int y2)
-        {
-            return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
@@ -265,6 +273,13 @@ namespace Ultima5Redux
             }
 
             return adjustedPos;
+        }
+
+        public Point2D GetAdjustXAndYToMax(int nMax)
+        {
+            Point2D position = this;
+            position.AdjustXAndYToMax(nMax);
+            return position;
         }
 
         /// <summary>
@@ -338,6 +353,11 @@ namespace Ultima5Redux
             return points;
         }
 
+        public string GetFriendlyString()
+        {
+            return "X=" + X + ",Y=" + Y;
+        }
+
         public Point2D GetPoint2DOrNullOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
         {
             return IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
@@ -357,11 +377,6 @@ namespace Ultima5Redux
             return (X < nMinX || X > nMaxX || Y < nMinY || Y > nMaxY);
         }
 
-        public static bool IsOutOfRangeStatic(int nX, int nY, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
-        {
-            return (nX < nMinX || nX > nMaxX || nY < nMinY || nY > nMaxY);
-        }
-
         public bool IsWithinN(Point2D xy, int nWithin)
         {
             bool bWithinX = Math.Abs(xy.X - X) <= nWithin;
@@ -378,11 +393,6 @@ namespace Ultima5Redux
         public bool IsWithinNFourDirections(int x, int y)
         {
             return Math.Abs(DistanceBetween(x, y, X, Y) - 1) < 0.01;
-        }
-
-        public static bool IsWithinNFourDirections(int x1, int y1, int x2, int y2)
-        {
-            return Math.Abs(DistanceBetween(x1, y1, x2, y2) - 1) < 0.01;
         }
 
         /// <summary>

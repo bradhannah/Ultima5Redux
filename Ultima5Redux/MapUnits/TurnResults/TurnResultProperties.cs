@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.PlayerCharacters;
@@ -77,5 +78,10 @@ namespace Ultima5Redux.MapUnits.TurnResults
     public interface IMovedToTileReference
     {
         public TileReference MovedToTileReference { get; }
+    }
+
+    public interface IStackTrace
+    {
+        public StackTrace TheStacktrace { get; }
     }
 }

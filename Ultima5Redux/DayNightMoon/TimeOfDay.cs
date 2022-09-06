@@ -189,6 +189,19 @@ namespace Ultima5Redux.DayNightMoon
             SetAllChangeTrackers();
         }
 
+        public TimeOfDay Copy()
+        {
+            var tod = new TimeOfDay
+            {
+                Year = Year,
+                Month = Month,
+                Day = Day,
+                Hour = Hour,
+                Minute = Minute
+            };
+            return tod;
+        }
+
         public void DeRegisterChangeTracker(Guid changeTrackerId)
         {
             if (!IsTimeChangeTrackerIdValid(changeTrackerId)) return;
@@ -212,6 +225,13 @@ namespace Ultima5Redux.DayNightMoon
             // we reset it to false to say we saw it until the next change
             _timeHasChangedDictionary[changeTrackerId] = false;
             return bTimeChangeOccured;
+        }
+
+        public bool IsSameTime(TimeOfDay tod)
+        {
+            if (tod == null) return false;
+            return Year == tod.Year && Month == tod.Month && Day == tod.Day && Hour == tod.Hour &&
+                   Minute == tod.Minute;
         }
 
         public bool IsTimeChangeTrackerIdValid(Guid changeTrackerId)

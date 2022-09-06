@@ -10,6 +10,13 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             ForceNewLine = bForceNewLine;
         }
 
+        public override string GetDebugString()
+        {
+            return $@"OutputString: {OutputString}
+UseArrow: {UseArrow}
+ForceNewLine: {ForceNewLine}";
+        }
+
         public string OutputString { get; }
         public bool UseArrow { get; }
         public bool ForceNewLine { get; }
