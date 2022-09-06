@@ -1319,8 +1319,10 @@ namespace Ultima5Redux.Maps
         {
             // moonstone check
             List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
+            TileReference tileReference = GetTileReference(xy);
 
-            bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter);
+            bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter
+            ) || tileReference.HasSearchReplacement;
 
             return (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder)) ||
                    bIsSearchableMapUnit;

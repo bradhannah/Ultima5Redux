@@ -1904,6 +1904,8 @@ namespace Ultima5Redux
                     State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults, State.CharacterRecords.AvatarRecord,
                         State.CharacterRecords);
 
+            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+
             if (invItem != null)
             {
                 // for now this just moonstones - I will eventually convert them to non attacking map units 
@@ -1919,6 +1921,15 @@ namespace Ultima5Redux
             else if (bHasInnerNonAttackUnits)
             {
                 // do nothing, I think? The SearchNonAttackingMapUnit method takes care of the chatter
+            }
+            else if (tileReference.HasSearchReplacement)
+            {
+                TileReference replacementTile =
+                    GameReferences.SpriteTileReferences.GetTileReference(tileReference.SearchReplacementIndex);
+                State.TheVirtualMap.SetOverridingTileReferece(replacementTile, xy);
+                turnResults.PushTurnResult(new OutputToConsole(U5StringRef.ThouDostFind(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                        .A_HIDDEN_DOOR_BANG_N)), false));
             }
             // it could be a moongate, with a stone, but wrong time of day
             else

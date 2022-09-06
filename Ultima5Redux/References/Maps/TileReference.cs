@@ -14,7 +14,7 @@ namespace Ultima5Redux.References.Maps
         public enum SpriteIndex
         {
             TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149, PlowedField = 44,
-            WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368
+            WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368, StoneBrickWallSecret = 78, LockedDoor = 185
         }
 
         public const int N_TYPICAL_ANIMATION_FRAMES = 4;
@@ -59,6 +59,8 @@ namespace Ultima5Redux.References.Maps
         public bool HasAlternateFlatSprite =>
             GameReferences.SpriteTileReferences.GetTileReference(Index).FlatTileSubstitutionIndex != -1;
 
+        public bool HasSearchReplacement => Index == (int)SpriteIndex.StoneBrickWallSecret;
+
         public bool IsNPCCapableSpace => IsWalking_Passable || IsOpenable;
 
         public bool IsRangeWeaponPassable => RangeWeapon_Passable;
@@ -78,6 +80,22 @@ namespace Ultima5Redux.References.Maps
         public bool IsWaterTile => Name.ToLower().Contains("water");
 
         public int KeyTileTileReferenceIndex => Index - AnimationIndex;
+
+        public int SearchReplacementIndex
+        {
+            get
+            {
+                if (!HasSearchReplacement) return Index;
+
+                switch ((SpriteIndex)Index)
+                {
+                    case SpriteIndex.StoneBrickWallSecret:
+                        return (int)SpriteIndex.LockedDoor;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public override string ToString()
         {
