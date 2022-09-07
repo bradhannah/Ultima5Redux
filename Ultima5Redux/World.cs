@@ -356,9 +356,12 @@ namespace Ultima5Redux
             if (State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Overworld &&
                 State.TheVirtualMap.LargeMapOverUnder != Map.Maps.Underworld)
                 return false;
-            if (State.TheVirtualMap.HasAnyExposedSearchItems(State.TheVirtualMap.CurrentPosition.XY)) return false;
-            TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
 
+            // don't bury one on top of the other
+            if (State.TheMoongates.IsMoonstoneBuried(State.TheVirtualMap.CurrentPosition.XYZ)) return false;
+
+            // we check the current terrain and make sure it's buriable
+            TileReference tileRef = State.TheVirtualMap.GetTileReferenceOnCurrentTile();
             return GameReferences.SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
         }
 
@@ -1139,19 +1142,6 @@ namespace Ultima5Redux
                 // we just fall through for the default handling if there is no food directly in front of us
             }
 
-            // are there any exposed items (generic call)
-            if (State.TheVirtualMap.HasAnyExposedSearchItems(xy))
-            {
-                bGotAThing = true;
-                InventoryItem invItem = State.TheVirtualMap.DequeuExposedSearchItems(xy);
-                inventoryItem = invItem;
-                invItem.Quantity++;
-
-                StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetExposedItem));
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-
             if (State.TheVirtualMap.IsMapUnitOccupiedTile(xy))
             {
                 MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
@@ -1168,13 +1158,25 @@ namespace Ultima5Redux
                     //if (!itemStack.HasStackableItems)
                     //State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
 
-                    StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(invItem.FindDescription), false);
+                    turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(invItem.FindDescription), false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetStackableItem));
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
+
+                if (mapUnit is MoonstoneNonAttackingUnit moonstoneNonAttackingUnit)
+                {
+                    // get the Moonstone!
+                    State.PlayerInventory.AddInventoryItemToInventory(moonstoneNonAttackingUnit.TheMoonstone);
+                    StreamingOutput.Instance.PushMessage(
+                        U5StringRef.ThouDostFind(moonstoneNonAttackingUnit.TheMoonstone.FindDescription), false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMoonstone));
+                    // get rid of it from the map
+                    State.TheVirtualMap.TheMapUnits.ClearMapUnit(moonstoneNonAttackingUnit);
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
                 }
             }
 
-            StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+            turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.GetThingsStrings.NOTHING_TO_GET), false);
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetNothingToGet));
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
@@ -1888,35 +1890,29 @@ namespace Ultima5Redux
             bWasSuccessful = false;
 
             // if there is something exposed already OR there is nothing found 
-            if (State.TheVirtualMap.HasAnyExposedSearchItems(xy) || !State.TheVirtualMap.ContainsSearchableThings(xy))
+            if (!State.TheVirtualMap.ContainsSearchableThings(xy))
             {
-                StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(
+                turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings
                         .NOTHING_OF_NOTE_DOT_N)), false);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            // we search the tile and expose any items that may be on it
-            InventoryItem invItem = State.TheVirtualMap.SearchAndExposeInventoryItem(xy);
             bool bHasInnerNonAttackUnits = false;
-            if (invItem == null)
+            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
+
+            // we search the tile and expose any items that may be on it
+            Moonstone moonstone = State.TheVirtualMap.SearchAndExposeMoonstone(xy);
+            if (moonstone == null)
                 bHasInnerNonAttackUnits =
                     State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults, State.CharacterRecords.AvatarRecord,
                         State.CharacterRecords);
 
-            TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
-
-            if (invItem != null)
+            if (moonstone != null)
             {
-                // for now this just moonstones - I will eventually convert them to non attacking map units 
-                string searchResultStr = string.Empty;
                 bWasSuccessful = true;
-                foreach (InventoryItem invRef in State.TheVirtualMap.GetExposedSearchItems(xy))
-                {
-                    searchResultStr += invRef.FindDescription + "\n";
-                }
-
-                StreamingOutput.Instance.PushMessage(U5StringRef.ThouDostFind(searchResultStr), false);
+                turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(moonstone.FindDescription), false);
+                //StreamingOutput.Instance.PushMessage(, false);
             }
             else if (bHasInnerNonAttackUnits)
             {
@@ -1924,6 +1920,8 @@ namespace Ultima5Redux
             }
             else if (tileReference.HasSearchReplacement)
             {
+                // this occurs when you search something - and once searched it turns into something else
+                // like searching a wall that turns into a door
                 TileReference replacementTile =
                     GameReferences.SpriteTileReferences.GetTileReference(tileReference.SearchReplacementIndex);
                 State.TheVirtualMap.SetOverridingTileReferece(replacementTile, xy);

@@ -38,6 +38,18 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return itemStack;
         }
 
+        // public static MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Moonstone moonstone, MapUnitPosition mapUnitPosition)
+        // {
+        //     // MoonPhaseReferences.MoonPhases moonPhase =
+        //     //     GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
+        //     //InventoryItem invItem = GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
+        //     //NonAttackingUnit moonstone = new 
+        //     //phaseReferences.
+        //
+        //     MoonstoneNonAttackingUnit moonstoneNonAttackingUnit = new(moonstone, mapUnitPosition);
+        //     return moonstoneNonAttackingUnit;
+        // }
+
         public static StackableItem CreateStackableItem(int nSprite)
         {
             // we know it's an actual item at this point

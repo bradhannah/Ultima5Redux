@@ -24,7 +24,9 @@ namespace Ultima5Redux.MapUnits.TurnResults
         public TurnResult PopTurnResult() => _turnResults.Dequeue();
 
         public void PushOutputToConsole(string str, bool bUseArrow = true, bool bForceNewLine = true)
-            => PushTurnResult(new OutputToConsole(str));
+        {
+            PushTurnResult(new OutputToConsole(str, bUseArrow, bForceNewLine));
+        }
 
         public void PushTurnResult(TurnResult turnResult)
         {

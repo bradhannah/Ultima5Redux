@@ -22,6 +22,8 @@ namespace Ultima5Redux.MapUnits
 
         [IgnoreDataMember] private int _floor;
 
+        [IgnoreDataMember] public Point3D XYZ => new(X, Y, Floor);
+
         [IgnoreDataMember]
         public Point2D XY
         {
@@ -33,6 +35,8 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        public string FriendlyString => $"{X},{Y} ({GetFriendlyFloorString(Floor)})";
+
         [JsonConstructor] public MapUnitPosition()
         {
         }
@@ -42,11 +46,6 @@ namespace Ultima5Redux.MapUnits
             X = x;
             Y = y;
             Floor = floor;
-        }
-
-        public bool IsSameAs(int x, int y, int nFloor)
-        {
-            return x == X && y == Y && _floor == nFloor;
         }
 
         public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2)
@@ -82,8 +81,6 @@ namespace Ultima5Redux.MapUnits
             return "X=" + X + ",Y=" + Y + ", Floor=" + Floor;
         }
 
-        public string FriendlyString => $"{X},{Y} ({GetFriendlyFloorString(Floor)})";
-
         public string GetFriendlyFloorString(int nFloor) => nFloor switch
         {
             -1 => "Basement",
@@ -93,5 +90,10 @@ namespace Ultima5Redux.MapUnits
             3 => "Third Floor",
             _ => "Unknown Floor"
         };
+
+        public bool IsSameAs(int x, int y, int nFloor)
+        {
+            return x == X && y == Y && _floor == nFloor;
+        }
     }
 }

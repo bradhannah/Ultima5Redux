@@ -229,8 +229,9 @@ namespace Ultima5Redux.Maps
         private readonly List<Type> _visibilePriorityOrder = new()
         {
             typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
-            typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
+            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(MoonstoneNonAttackingUnit), typeof(ItemStack),
+            typeof(StackableItem), typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField),
+            typeof(Whirlpool)
         };
 
         public IEnumerable<MapUnit> AllVisibleActiveMapUnits
@@ -697,21 +698,26 @@ namespace Ultima5Redux.Maps
             PreviousPosition.Floor = mapUnitPosition.Floor;
         }
 
-        internal InventoryItem SearchAndExposeInventoryItem(in Point2D xy)
+        internal Moonstone SearchAndExposeMoonstone(in Point2D xy)
         {
             // check for moonstones
             // moonstone check
-            if (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder) &&
-                GameStateReference.State.TheTimeOfDay.IsDayLight)
+            if (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder))
+                //&&
+                //GameStateReference.State.TheTimeOfDay.IsDayLight)
             {
                 MoonPhaseReferences.MoonPhases moonPhase =
                     GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
-                InventoryItem invItem = GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
-                TheMapOverrides.EnqueueSearchItem(xy, invItem);
+                Moonstone moonstone =
+                    GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
+
+                TheMapUnits.CreateMoonstoneNonAttackingUnit(xy, moonstone, _currentSingleMapReference);
+
+                //TheMapOverrides.EnqueueSearchItem(xy, invItem);
 
                 GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
 
-                return invItem;
+                return moonstone;
             }
 
             return null;
@@ -1348,11 +1354,6 @@ namespace Ultima5Redux.Maps
             return horse;
         }
 
-        public InventoryItem DequeuExposedSearchItems(in Point2D xy)
-        {
-            return TheMapOverrides.DequeueSearchItem(xy);
-        }
-
         public Dictionary<Point2D, bool> GetAllMapOccupiedTiles()
         {
             Dictionary<Point2D, bool> occupiedDictionary = new();
@@ -1561,11 +1562,6 @@ namespace Ultima5Redux.Maps
                 LargeMapOverUnder == Map.Maps.Overworld ? 0 : 0xFF);
         }
 
-        public IEnumerable<InventoryItem> GetExposedSearchItems(in Point2D xy)
-        {
-            return TheMapOverrides.GetExposedSearchItems(xy);
-        }
-
         /// <summary>
         ///     Gets a map unit on the current tile (that ISN'T the Avatar)
         /// </summary>
@@ -1711,20 +1707,10 @@ namespace Ultima5Redux.Maps
         ///     Gets a tile reference from the given coordinate
         /// </summary>
         /// <param name="xy"></param>
-        /// <param name="bIgnoreExposed"></param>
         /// <param name="bIgnoreMoongate"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(in Point2D xy, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
+        public TileReference GetTileReference(in Point2D xy, bool bIgnoreMoongate = false)
         {
-            // we FIRST check if there is an exposed item to show - this takes precedence over an overriden tile
-            if (!bIgnoreExposed && TheMapOverrides.HasExposedSearchItems(xy.X, xy.Y))
-            {
-                Queue<InventoryItem> searchItems = TheMapOverrides.GetExposedSearchItems(xy.X, xy.Y);
-                if (searchItems.Count > 0)
-                    // we get the top most exposed item and only show it
-                    return GameReferences.SpriteTileReferences.GetTileReference(searchItems.Peek().SpriteNum);
-            }
-
             // if it's a large map and there should be a moongate and it's nighttime then it's a moongate!
             // bajh: March 22, 2020 - we are going to try to always include the Moongate, and let the game decide what it wants to do with it
             if (!bIgnoreMoongate && IsLargeMap &&
@@ -1891,15 +1877,6 @@ namespace Ultima5Redux.Maps
             if (IsLargeMap && CurrentMap.IsXYOverride(xy, TileOverrideReference.TileType.Flat))
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
 
-            // if has exposed search then we evaluate and see if it is actually a normal tile underneath
-            if (TheMapOverrides.HasExposedSearchItems(xy))
-            {
-                // there are exposed items on this tile
-                TileReference tileRef = GetTileReference(xy.X, xy.Y, true, true);
-                if (tileRef.FlatTileSubstitutionIndex != -2)
-                    return tileRef.Index;
-            }
-
             for (int i = -1; i <= 1; i++)
             for (int j = -1; j <= 1; j++)
             {
@@ -1932,11 +1909,6 @@ namespace Ultima5Redux.Maps
 
             // just in case we didn't find a match - just use grass for now
             return nMostTile == -1 ? 5 : nMostTile;
-        }
-
-        public bool HasAnyExposedSearchItems(Point2D xy)
-        {
-            return TheMapOverrides.HasExposedSearchItems(xy);
         }
 
         public bool IsAvatarSitting()

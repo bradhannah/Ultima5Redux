@@ -9,6 +9,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
+using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
@@ -621,6 +622,21 @@ namespace Ultima5Redux.MapUnits
             // set position of frigate in the world
             AddNewMapUnit(map, horse, nIndex);
             return horse;
+        }
+
+        public MoonstoneNonAttackingUnit CreateMoonstoneNonAttackingUnit(Point2D xy, Moonstone moonstone,
+            SmallMapReferences.SingleMapReference singleMapReference)
+        {
+            int nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
+            if (nIndex == -1) return null;
+
+            MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, singleMapReference.Floor);
+            var moonstoneNonAttackingUnit =
+                new MoonstoneNonAttackingUnit(moonstone, mapUnitPosition);
+
+            // set position of frigate in the world
+            GetMapUnitCollection(singleMapReference.MapType).AddMapUnit(moonstoneNonAttackingUnit);
+            return moonstoneNonAttackingUnit;
         }
 
         public NonAttackingUnit CreateNonAttackUnitOnCombatMap(Point2D xy, int nSprite, out int nIndex)

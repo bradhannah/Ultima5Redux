@@ -4,12 +4,12 @@
     {
         public enum TurnResultType
         {
-            OverworldAvatarAttacking, EnemyAttacksOverworldOrSmallMap, DamageOverTimePoisoned, DamageOverTimeBurning,
-            DamageFromAcid, ActionXitWhat, ActionXitSuccess, ActionYellSailsHoisted, ActionYellSailsFurl,
-            ActionMovedCombatPlayerOnCombatMap, ActionMoveBlocked, OfferToExitScreen, ActionMoveUsedStairs,
-            ActionMoveFell, ActionMoveShipBreakingUp, ActionMoveShipDestroyed, ActionMoveRoughSeas,
-            MovedSelectionCursor, IgnoredMovement, Ignore, CombatMapLoaded, PassTurn, ActionOpenDoorOpened,
-            ActionOpenDoorLocked, ActionOpenDoorNothingToOpen, ActionMoveChangeFrigateDirection,
+            ActionGetMoonstone, OverworldAvatarAttacking, EnemyAttacksOverworldOrSmallMap, DamageOverTimePoisoned,
+            DamageOverTimeBurning, DamageFromAcid, ActionXitWhat, ActionXitSuccess, ActionYellSailsHoisted,
+            ActionYellSailsFurl, ActionMovedCombatPlayerOnCombatMap, ActionMoveBlocked, OfferToExitScreen,
+            ActionMoveUsedStairs, ActionMoveFell, ActionMoveShipBreakingUp, ActionMoveShipDestroyed,
+            ActionMoveRoughSeas, MovedSelectionCursor, IgnoredMovement, Ignore, CombatMapLoaded, PassTurn,
+            ActionOpenDoorOpened, ActionOpenDoorLocked, ActionOpenDoorNothingToOpen, ActionMoveChangeFrigateDirection,
             ActionMoveFrigateSailsIgnoreMovement, ActionMoveRegular, ActionMoveCarpet, ActionMoveHorse,
             ActionMoveFrigateRowing, ActionMoveFrigateWindSails, ActionMoveFrigateWindSailsChangeDirection,
             ActionMoveSkiffRowing, ActionKlimbWithWhat, ActionKlimbRequiresDirection, ActionKlimbDown, ActionKlimbUp,
