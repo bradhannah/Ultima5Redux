@@ -520,11 +520,17 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         protected void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor, AStar aStar)
         {
-            MapUnitPosition npcXy = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+            // added some safety to save potential exceptions
+            // if there is no NPC reference (currently only horses) then we just assign their intended position
+            // as their current position 
+            MapUnitPosition npcXy = NPCRef == null
+                ? MapUnitPosition
+                : NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
 
+            bool bIsDead = NPCState?.IsDead ?? false;
             // a little hacky - if they are dead then we just place them at 0,0 which is understood to be the 
             // location for NPCs that aren't present on the map
-            if (NPCState.IsDead && (npcXy.X != 0 || npcXy.Y != 0))
+            if (bIsDead && (npcXy.X != 0 || npcXy.Y != 0))
             {
                 npcXy.X = 0;
                 npcXy.Y = 0;
@@ -538,7 +544,12 @@ namespace Ultima5Redux.MapUnits
 
             // if the NPC is destined for a different floor then we watch to see if they are on stairs on a ladder
             bool bDifferentFloor = npcXy.Floor != MapUnitPosition.Floor;
-            if (bDifferentFloor)
+
+            NonPlayerCharacterSchedule.AiType aiType =
+                OverrideAiType ? OverridenAiType : NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay);
+
+            // if it's a different floor - but NOT for horses
+            if (bDifferentFloor && aiType != NonPlayerCharacterSchedule.AiType.HorseWander)
             {
                 // if the NPC is supposed to be on a different floor then the floor we are currently on
                 // and we they are already on that other floor - AND they are supposed be on our current floor
@@ -619,10 +630,6 @@ namespace Ultima5Redux.MapUnits
                 }
             }
 
-            NonPlayerCharacterSchedule.AiType aiType =
-                OverrideAiType ? OverridenAiType : NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay);
-            // if (NPCRef.NPCKeySprite is 272 or 273) aiType = NonPlayerCharacterSchedule.AiType.Wander;
-
             // is the character is in their prescribed location?
             if (MapUnitPosition == npcXy)
                 // test all the possibilities, special calculations for all of them
@@ -664,10 +671,6 @@ namespace Ultima5Redux.MapUnits
                                 (int)TileReference.SpriteIndex.HitchingPost))
                         {
                             WanderWithinN(virtualMap, timeOfDay, 4);
-                        }
-                        else
-                        {
-                            _ = "";
                         }
 
                         break;
