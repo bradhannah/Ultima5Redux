@@ -128,12 +128,6 @@ namespace Ultima5Redux.MapUnits
         [OnDeserialized] private void PostDeserialized(StreamingContext context)
         {
             MasterAvatarMapUnit = GetAvatarMapUnit();
-            // we do this because we need to load the NPC information from the main state - not a copy in  
-            // the JSON. If we don't do this then it creates two sets of NPCs
-            // ALSO - I am super unhappy that I have to do this since there is technically duplicate 
-            // data in the save file - and the serialized Collection will essentially be ignored
-            // TODO: optimize so it just uses one of the save states
-            if (CurrentMapType == Map.Maps.Small) LoadSmallMap(CurrentLocation, false);
         }
 
         internal int AddCombatMapUnit(CombatMapUnit mapUnit)
@@ -182,6 +176,76 @@ namespace Ultima5Redux.MapUnits
                 Map.Maps.Combat => CombatMapMapUnitCollection,
                 _ => throw new InvalidEnumArgumentException(((int)map).ToString())
             };
+        }
+
+        /// <summary>
+        ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
+        /// </summary>
+        internal void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
+        {
+            if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
+                or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
+                throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
+
+            // wipe all existing characters since they cannot exist beyond the load
+            SmallMapUnitCollection.Clear();
+            CombatMapMapUnitCollection.Clear();
+
+            // populate each of the map characters individually
+            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
+            {
+                MapUnitMovement mapUnitMovement = _importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
+
+                // if it is the first index, then it's the Avatar - but if it's the initial load
+                // then it will just load from disk, otherwise we need to create a stub
+                if (i == 0 && !bInitialLoad)
+                {
+                    mapUnitMovement.ClearMovements();
+                    // load the existing AvatarMapUnit with boarded MapUnits
+
+                    SmallMapUnitCollection.Add(MasterAvatarMapUnit);
+                    GetAvatarMapUnit().MapLocation = location;
+                    continue;
+                }
+
+                if (i == 0 && bInitialLoad)
+                {
+                    MapUnitState theAvatarMapState =
+                        _importedGameState.GetMapUnitStatesByMap(Map.Maps.Small).GetCharacterState(0);
+                    MapUnit theAvatar = Avatar.CreateAvatar(location, mapUnitMovement,
+                        new MapUnitPosition(theAvatarMapState.X, theAvatarMapState.Y, theAvatarMapState.Floor),
+                        theAvatarMapState.Tile1Ref, _bUseExtendedSprites);
+                    SmallMapUnitCollection.Add(theAvatar);
+                    continue;
+                }
+
+                // get the specific NPC reference 
+                NonPlayerCharacterState npcState =
+                    GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, i);
+
+                // we keep the object because we may be required to save this to disk - but since we are
+                // leaving the map there is no need to save their movements
+                mapUnitMovement.ClearMovements();
+
+                // set a default SmallMapCharacterState based on the given NPC
+                bool bInitialMapAndSmall = bInitialLoad && _importedGameState.InitialMap == Map.Maps.Small;
+                // if it's an initial load we use the imported state, otherwise we assume it's fresh and new
+                SmallMapCharacterState smallMapCharacterState = bInitialMapAndSmall
+                    ? _importedGameState.SmallMapCharacterStates.GetCharacterState(i)
+                    : new SmallMapCharacterState(npcState.NPCRef, i);
+
+                MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState,
+                    smallMapCharacterState.TheMapUnitPosition,
+                    GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
+                    smallMapCharacterState);
+
+                // I want to be able to do this - but if I do then no new map units are created...
+                // I used the original game logic of limiting to 32 entities, which is probably the correct
+                // thing to do
+                //if (mapUnit is EmptyMapUnit) continue;
+
+                SmallMapUnitCollection.Add(mapUnit);
+            }
         }
 
         /// <summary>
@@ -434,76 +498,6 @@ namespace Ultima5Redux.MapUnits
                     tileReference);
                 // add the new character to our list of characters currently on the map
                 mapUnitCollection.AddMapUnit(newUnit);
-            }
-        }
-
-        /// <summary>
-        ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
-        /// </summary>
-        private void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
-        {
-            if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
-                or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
-                throw new Ultima5ReduxException("Tried to load " + location + " into a small map");
-
-            // wipe all existing characters since they cannot exist beyond the load
-            SmallMapUnitCollection.Clear();
-            CombatMapMapUnitCollection.Clear();
-
-            // populate each of the map characters individually
-            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
-            {
-                MapUnitMovement mapUnitMovement = _importedMovements.GetMovement(i) ?? new MapUnitMovement(i);
-
-                // if it is the first index, then it's the Avatar - but if it's the initial load
-                // then it will just load from disk, otherwise we need to create a stub
-                if (i == 0 && !bInitialLoad)
-                {
-                    mapUnitMovement.ClearMovements();
-                    // load the existing AvatarMapUnit with boarded MapUnits
-
-                    SmallMapUnitCollection.Add(MasterAvatarMapUnit);
-                    GetAvatarMapUnit().MapLocation = location;
-                    continue;
-                }
-
-                if (i == 0 && bInitialLoad)
-                {
-                    MapUnitState theAvatarMapState =
-                        _importedGameState.GetMapUnitStatesByMap(Map.Maps.Small).GetCharacterState(0);
-                    MapUnit theAvatar = Avatar.CreateAvatar(location, mapUnitMovement,
-                        new MapUnitPosition(theAvatarMapState.X, theAvatarMapState.Y, theAvatarMapState.Floor),
-                        theAvatarMapState.Tile1Ref, _bUseExtendedSprites);
-                    SmallMapUnitCollection.Add(theAvatar);
-                    continue;
-                }
-
-                // get the specific NPC reference 
-                NonPlayerCharacterState npcState =
-                    GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, i);
-
-                // we keep the object because we may be required to save this to disk - but since we are
-                // leaving the map there is no need to save their movements
-                mapUnitMovement.ClearMovements();
-
-                // set a default SmallMapCharacterState based on the given NPC
-                bool bInitialMapAndSmall = bInitialLoad && _importedGameState.InitialMap == Map.Maps.Small;
-                // if it's an initial load we use the imported state, otherwise we assume it's fresh and new
-                SmallMapCharacterState smallMapCharacterState = bInitialMapAndSmall
-                    ? _importedGameState.SmallMapCharacterStates.GetCharacterState(i)
-                    : new SmallMapCharacterState(npcState.NPCRef, i);
-
-                MapUnit mapUnit = CreateNewMapUnit(mapUnitMovement, false, location, npcState,
-                    smallMapCharacterState.TheMapUnitPosition,
-                    GameReferences.SpriteTileReferences.GetTileReference(npcState.NPCRef.NPCKeySprite),
-                    smallMapCharacterState);
-
-                // I want to be able to do this - but if I do then no new map units are created...
-                // I used the original game logic of limiting to 32 entities, which is probably the correct
-                // thing to do
-                //if (mapUnit is EmptyMapUnit) continue;
-
-                SmallMapUnitCollection.Add(mapUnit);
             }
         }
 

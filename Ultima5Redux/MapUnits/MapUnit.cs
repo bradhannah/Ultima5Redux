@@ -149,6 +149,9 @@ namespace Ultima5Redux.MapUnits
                 {
                     Movement.ClearMovements();
                 }
+
+                // the horse doesn't wander in the overworld (yet?!)
+                if (virtualMap.IsLargeMap) return;
             }
 
             // if there is no next available movement then we gotta recalculate and see if they should move

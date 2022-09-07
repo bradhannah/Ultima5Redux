@@ -22,40 +22,17 @@ namespace Ultima5Redux
     {
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
 
-        public GameSummary CreateGameSummary(string saveGamePath)
-        {
-            GameSummary gameSummary = new()
-            {
-                CharacterRecords = CharacterRecords,
-                TheTimeOfDay = TheTimeOfDay,
-                TheExtraSaveData = new GameSummary.ExtraSaveData
-                {
-                    CurrentMapPosition = TheVirtualMap.CurrentPosition,
-                    FriendlyLocationName = FriendlyLocationName,
-                    SavedDirectory = saveGamePath,
-                    LastWrite = Directory.GetLastWriteTime(saveGamePath)
-                }
-            };
-            return gameSummary;
-        }
+        /// <summary>
+        ///     What is the index of the currently active player?
+        /// </summary>
+        [DataMember]
+        public int ActivePlayerNumber { get; set; }
 
         /// <summary>
         ///     All player character records
         /// </summary>
         [DataMember]
         public PlayerCharacterRecords CharacterRecords { get; protected set; }
-
-        /// <summary>
-        ///     The current time of day
-        /// </summary>
-        [DataMember]
-        public TimeOfDay TheTimeOfDay { get; protected set; }
-
-        /// <summary>
-        ///     What is the index of the currently active player?
-        /// </summary>
-        [DataMember]
-        public int ActivePlayerNumber { get; set; }
 
         /// <summary>
         ///     Users Karma
@@ -82,10 +59,18 @@ namespace Ultima5Redux
         public NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
 
         /// <summary>
+        ///     The current time of day
+        /// </summary>
+        [DataMember]
+        public TimeOfDay TheTimeOfDay { get; protected set; }
+
+        /// <summary>
         ///     The virtual map which includes the static map plus all things overlaid on it including NPCs
         /// </summary>
         [DataMember]
         public VirtualMap TheVirtualMap { get; private set; }
+
+        [DataMember] public int TurnsSinceStart { get; set; }
 
         /// <summary>
         ///     How many turns until the Avatar's torch is extinguished
@@ -95,7 +80,8 @@ namespace Ultima5Redux
 
         [DataMember] public Point2D.Direction WindDirection { get; set; } = Point2D.Direction.None;
 
-        [DataMember] public int TurnsSinceStart { get; set; }
+        /// Legacy save game state
+        [IgnoreDataMember] internal readonly ImportedGameState ImportedGameState;
 
         /// <summary>
         ///     The name of the Avatar
@@ -124,9 +110,6 @@ namespace Ultima5Redux
                 return TheVirtualMap.CurrentSingleMapReference.Floor == -1 ? "Underworld" : "Overworld";
             }
         }
-
-        /// Legacy save game state
-        [IgnoreDataMember] internal readonly ImportedGameState ImportedGameState;
 
         /// <summary>
         ///     Does the Avatar have a torch lit?
@@ -178,24 +161,18 @@ namespace Ultima5Redux
                 ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor);
         }
 
-        public static GameState Deserialize(string stateJson)
+        [OnDeserialized] private void PostDeserialized(StreamingContext context)
         {
-            return JsonConvert.DeserializeObject<GameState>(stateJson);
-        }
-
-        public static GameState DeserializeFromFile(string filePathAndName)
-        {
-            FileStream fs = new(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            StreamReader sr = new(fs);
-            JsonReader js = new JsonTextReader(sr);
-            JsonSerializer jser = new();
-
-            GameState state = jser.Deserialize<GameState>(js);
-
-            Debug.Assert(state != null, nameof(state) + " != null");
-
-            fs.Close();
-            return state;
+            // we do this because we need to load the NPC information from the main state - not a copy in  
+            // the JSON. If we don't do this then it creates two sets of NPCs
+            // ALSO - I am super unhappy that I have to do this since there is technically duplicate 
+            // data in the save file - and the serialized Collection will essentially be ignored
+            // TODO: optimize so it just uses one of the save states
+            // bajh: had to move this to this out constructor due to a dependency on inside the load map
+            // that could only be grabbed after the whole state was loaded in
+            if (TheVirtualMap.LargeMapOverUnder == Map.Maps.Small)
+                TheVirtualMap.TheMapUnits.LoadSmallMap(
+                    TheVirtualMap.CurrentSingleMapReference.MapLocation, false);
         }
 
         /// <summary>
@@ -226,20 +203,6 @@ namespace Ultima5Redux
             TheVirtualMap.CurrentPosition.XY = new Point2D(nInitialX, nInitialY);
         }
 
-        /// <summary>
-        ///     Take fall damage from klimbing mountains
-        /// </summary>
-        public void GrapplingFall()
-        {
-            // called when falling from a Klimb on a mountain
-        }
-
-        public string Serialize()
-        {
-            string stateJson = JsonConvert.SerializeObject(this, Formatting.Indented);
-            return stateJson;
-        }
-
         private void MoveFileAsBackup(string currentSaveGamePathAndFile)
         {
             string currentSaveGamePathAndFileBackup = currentSaveGamePathAndFile + ".bak";
@@ -252,6 +215,52 @@ namespace Ultima5Redux
             }
 
             File.Move(currentSaveGamePathAndFile, currentSaveGamePathAndFileBackup);
+        }
+
+
+        public static GameState Deserialize(string stateJson)
+        {
+            return JsonConvert.DeserializeObject<GameState>(stateJson);
+        }
+
+        public static GameState DeserializeFromFile(string filePathAndName)
+        {
+            FileStream fs = new(filePathAndName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            StreamReader sr = new(fs);
+            JsonReader js = new JsonTextReader(sr);
+            JsonSerializer jser = new();
+
+            GameState state = jser.Deserialize<GameState>(js);
+
+            Debug.Assert(state != null, nameof(state) + " != null");
+
+            fs.Close();
+            return state;
+        }
+
+        public GameSummary CreateGameSummary(string saveGamePath)
+        {
+            GameSummary gameSummary = new()
+            {
+                CharacterRecords = CharacterRecords,
+                TheTimeOfDay = TheTimeOfDay,
+                TheExtraSaveData = new GameSummary.ExtraSaveData
+                {
+                    CurrentMapPosition = TheVirtualMap.CurrentPosition,
+                    FriendlyLocationName = FriendlyLocationName,
+                    SavedDirectory = saveGamePath,
+                    LastWrite = Directory.GetLastWriteTime(saveGamePath)
+                }
+            };
+            return gameSummary;
+        }
+
+        /// <summary>
+        ///     Take fall damage from klimbing mountains
+        /// </summary>
+        public void GrapplingFall()
+        {
+            // called when falling from a Klimb on a mountain
         }
 
         public bool SaveGame(out string errorStr, string currentSaveGamePath)
@@ -282,6 +291,12 @@ namespace Ultima5Redux
             }
 
             return true;
+        }
+
+        public string Serialize()
+        {
+            string stateJson = JsonConvert.SerializeObject(this, Formatting.Indented);
+            return stateJson;
         }
     }
 }

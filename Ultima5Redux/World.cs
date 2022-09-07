@@ -1028,7 +1028,7 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToGetAThing(Point2D xy, out bool bGotAThing,
             out InventoryItem inventoryItem, TurnResults turnResults, Point2D.Direction direction)
         {
-            bGotAThing = false;
+            bGotAThing = true;
             inventoryItem = null;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
@@ -1044,7 +1044,6 @@ namespace Ultima5Redux
 
                 State.TheVirtualMap.SetOverridingTileReferece(
                     GameReferences.SpriteTileReferences.GetTileReferenceByName("BrickFloor"), xy);
-                bGotAThing = true;
                 StreamingOutput.Instance.PushMessage(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.GetThingsStrings.BORROWED),
                     false);
@@ -1059,7 +1058,6 @@ namespace Ultima5Redux
                 // add the carpet to the players inventory and remove it from the map
                 State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet].Quantity++;
                 State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(magicCarpet);
-                bGotAThing = true;
                 StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.GetThingsStrings
                         .A_MAGIC_CARPET), false);
@@ -1076,7 +1074,6 @@ namespace Ultima5Redux
                     DataOvlReference.GetThingsStrings.CROPS_PICKED), false);
                 State.PlayerInventory.TheProvisions.Food++;
                 State.Karma--;
-
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -1167,6 +1164,7 @@ namespace Ultima5Redux
                 {
                     // get the Moonstone!
                     State.PlayerInventory.AddInventoryItemToInventory(moonstoneNonAttackingUnit.TheMoonstone);
+                    inventoryItem = moonstoneNonAttackingUnit.TheMoonstone;
                     StreamingOutput.Instance.PushMessage(
                         U5StringRef.ThouDostFind(moonstoneNonAttackingUnit.TheMoonstone.FindDescription), false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMoonstone));
@@ -1176,6 +1174,7 @@ namespace Ultima5Redux
                 }
             }
 
+            bGotAThing = false;
             turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                 DataOvlReference.GetThingsStrings.NOTHING_TO_GET), false);
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetNothingToGet));

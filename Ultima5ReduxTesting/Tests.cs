@@ -488,7 +488,8 @@ namespace Ultima5ReduxTesting
             string derp = world.State.Serialize();
 
             TileReference tileRef = world.State.TheVirtualMap.GetTileReference(moongatePosition);
-            Assert.True(tileRef.Index == 281);
+            MapUnit moonstoneMapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(moongatePosition, true);
+            Assert.True(moonstoneMapUnit is MoonstoneNonAttackingUnit);
 
             int nSprite = world.State.TheVirtualMap.GuessTile(moongatePosition);
 
