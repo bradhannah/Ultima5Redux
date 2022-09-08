@@ -866,11 +866,17 @@ namespace Ultima5Redux.MapUnits
             if (nRan == 0 && !bForceWander) return;
 
             MapUnitPosition mapUnitPosition = MapUnitPosition;
-            MapUnitPosition scheduledPosition = NPCRef != null
-                ? NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay)
-                :
-                // if there is no NPCRef, we may still wander - such as a horse 
-                TheSmallMapCharacterState.TheMapUnitPosition;
+            MapUnitPosition scheduledPosition;
+            if (NPCRef != null)
+                scheduledPosition = NPCRef.Schedule.GetCharacterDefaultPositionByTime(timeOfDay);
+            else if (TheSmallMapCharacterState != null)
+                scheduledPosition = TheSmallMapCharacterState.TheMapUnitPosition;
+            else
+                // just in case neither of those exist, then they can just wander from where ever they
+                // silly behaviour is better than a crash
+                scheduledPosition = MapUnitPosition;
+
+            // if there is no NPCRef, we may still wander - such as a horse 
 
             // i could get the size dynamically, but that's a waste of CPU cycles
             Point2D adjustedPosition = virtualMap.GetWanderCharacterPosition(mapUnitPosition.XY, scheduledPosition.XY,

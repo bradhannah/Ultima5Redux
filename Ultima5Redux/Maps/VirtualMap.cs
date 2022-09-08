@@ -314,7 +314,7 @@ namespace Ultima5Redux.Maps
             // decrement the damage from the frigate
             frigate.Hitpoints -= nDamage;
 
-            StreamingOutput.Instance.PushMessage(
+            turnResults.PushOutputToConsole(
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
                     .BREAKING_UP), false);
             // if we hit zero hitpoints then the ship is destroyed and a skiff is boarded
@@ -322,10 +322,10 @@ namespace Ultima5Redux.Maps
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionMoveShipDestroyed));
                 // destroy the ship and leave board the Avatar onto a skiff
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.WorldStrings2
                         .SHIP_SUNK_BANG_N), false);
-                StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences
+                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.WorldStrings2.ABANDON_SHIP_BANG_N).TrimEnd(), false);
 
                 MapUnit newFrigate =
@@ -336,7 +336,7 @@ namespace Ultima5Redux.Maps
             else
             {
                 if (frigate.Hitpoints <= 10)
-                    StreamingOutput.Instance.PushMessage(GameReferences.DataOvlRef.StringReferences.GetString(
+                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.WorldStrings
                             .HULL_WEAK), false);
 
@@ -380,7 +380,7 @@ namespace Ultima5Redux.Maps
         ///     Gathers the details of what if any aggressive action the mapunits would do this turn
         /// </summary>
         /// <returns></returns>
-        internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetAggressiveMapUnitInfo()
+        internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetAggressiveMapUnitInfo(TurnResults turnResults)
         {
             Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
 
@@ -404,8 +404,8 @@ namespace Ultima5Redux.Maps
                         SingleCombatMapReference.Territory.Britannia, mapUnit);
 
                 if (mapUnitInfo.CombatMapReference != null)
-                    StreamingOutput.Instance.PushMessage(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
-                                                         mapUnitInfo.CombatMapReference.Description);
+                    turnResults.PushOutputToConsole(mapUnitInfo.AttackingMapUnit.FriendlyName + " fight me in " +
+                                                    mapUnitInfo.CombatMapReference.Description);
                 aggressiveMapUnitInfos.Add(mapUnit, mapUnitInfo);
             }
 
@@ -659,7 +659,7 @@ namespace Ultima5Redux.Maps
                         else
                             records.DamageEachCharacter(1, 9);
 
-                        StreamingOutput.Instance.PushMessage(
+                        turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
                         continue;
                     case CombatItemReference.MissileType.CannonBall:
@@ -668,7 +668,7 @@ namespace Ultima5Redux.Maps
                         else
                             records.DamageEachCharacter(1, 9);
 
-                        StreamingOutput.Instance.PushMessage(
+                        turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (cannonball)",
                             false);
 
@@ -680,7 +680,7 @@ namespace Ultima5Redux.Maps
                         else
                             records.DamageEachCharacter(1, 9);
 
-                        StreamingOutput.Instance.PushMessage(
+                        turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (ranged)", false);
 
                         continue;
@@ -747,7 +747,7 @@ namespace Ultima5Redux.Maps
         {
             if (!nonAttackingUnit.IsTrapped)
             {
-                StreamingOutput.Instance.PushMessage(
+                turnResults.PushOutputToConsole(
                     U5StringRef.ThouDostFind(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.ThingsIFindStrings.NO_TRAP_BANG_N)));
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchNoTrap));
@@ -763,20 +763,18 @@ namespace Ultima5Redux.Maps
                 case NonAttackingUnit.TrapComplexity.Simple:
                     if (bTriggeredTrap)
                     {
-                        StreamingOutput.Instance.PushMessage(
-                            U5StringRef.ThouDostFind(
-                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
-                                    .A_SIMPLE_TRAP_BANG_N)));
+                        turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
+                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                .A_SIMPLE_TRAP_BANG_N)));
                         nonAttackingUnit.TriggerTrap(turnResults, record.Stats, records);
                         turnResults.PushTurnResult(
                             new BasicResult(TurnResult.TurnResultType.ActionSearchTriggerSimpleTrap));
                     }
                     else
                     {
-                        StreamingOutput.Instance.PushMessage(
-                            U5StringRef.ThouDostFind(
-                                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
-                                    .A_SIMPLE_TRAP_N)));
+                        turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
+                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                .A_SIMPLE_TRAP_N)));
                         turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchRemoveSimple));
                     }
 
@@ -784,7 +782,7 @@ namespace Ultima5Redux.Maps
                 case NonAttackingUnit.TrapComplexity.Complex:
                     if (bTriggeredTrap)
                     {
-                        StreamingOutput.Instance.PushMessage(
+                        turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_BANG_N)));
@@ -794,7 +792,7 @@ namespace Ultima5Redux.Maps
                     }
                     else
                     {
-                        StreamingOutput.Instance.PushMessage(
+                        turnResults.PushOutputToConsole(
                             U5StringRef.ThouDostFind(
                                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                                     .A_COMPLEX_TRAP_N)));
@@ -2225,9 +2223,9 @@ namespace Ultima5Redux.Maps
             bool bHasInnerItems = nonAttackingUnit.HasInnerItemStack;
             ItemStack itemStack = nonAttackingUnit.InnerItemStack;
             if (bHasInnerItems)
-                StreamingOutput.Instance.PushMessage(nonAttackingUnit.InnerItemStack.ThouFindStr);
+                turnResults.PushOutputToConsole(nonAttackingUnit.InnerItemStack.ThouFindStr);
             else
-                StreamingOutput.Instance.PushMessage(
+                turnResults.PushOutputToConsole(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                         .NOTHING_OF_NOTE_BANG_N));
 

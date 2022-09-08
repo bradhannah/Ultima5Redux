@@ -1011,6 +1011,7 @@ namespace Ultima5ReduxTesting
 
         [Test] [TestCase(SaveFiles.b_horse)] public void Test_CheckedBoardedTileHorse(SaveFiles saveFiles)
         {
+            Utils.Ran = new Random(4);
             World world = CreateWorldFromLegacy(saveFiles);
 
             Avatar avatar = world.State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit();
