@@ -2012,12 +2012,21 @@ namespace Ultima5Redux
         }
 
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUsePotion(Potion potion, PlayerCharacterRecord record,
-            out bool bSucceeded,
-            out MagicReference.SpellWords spell, TurnResults turnResults)
+            out bool bSucceeded, out MagicReference.SpellWords spell, TurnResults turnResults)
         {
             bSucceeded = true;
 
             Debug.Assert(potion.Quantity > 0, $"Can't use potion {potion} because you have quantity {potion.Quantity}");
+            if (potion.Quantity <= 0)
+            {
+                // this is a soft fail in case you try to use a potion but don't have any... 
+                // I want to control the number of hard failures
+                bSucceeded = false;
+                turnResults.PushOutputToConsole(
+                    $"Can't use potion {potion} because you have quantity {potion.Quantity}\n", false);
+                spell = MagicReference.SpellWords.Mani;
+                return new List<VirtualMap.AggressiveMapUnitInfo>();
+            }
 
             spell = _potionColorToSpellMap[potion.Color];
             if (IsCombatMap) State.TheVirtualMap.CurrentCombatMap.AdvanceToNextCombatMapUnit();
@@ -2025,6 +2034,8 @@ namespace Ultima5Redux
             potion.Quantity--;
 
             turnResults.PushOutputToConsole($"{potion.Color} Potion\n", false);
+            //ActionUseDrankPotion
+            turnResults.PushTurnResult(new DrankPotion(potion.Color, _potionColorToSpellMap[potion.Color]));
 
             switch (potion.Color)
             {
@@ -2103,6 +2114,8 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseScroll(Scroll scroll, PlayerCharacterRecord record,
             TurnResults turnResults)
         {
+            turnResults.PushTurnResult(new ReadScroll(scroll.ScrollSpell, record, record));
+
             turnResults.PushOutputToConsole($"Scroll: {scroll.ScrollSpell}\n\nA-la-Kazam!", false);
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);

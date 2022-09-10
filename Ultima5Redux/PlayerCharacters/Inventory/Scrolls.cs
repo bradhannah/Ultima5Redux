@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.References;
@@ -11,6 +10,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
     {
         [DataMember]
         public override Dictionary<MagicReference.SpellWords, Scroll> Items { get; internal set; } = new(8);
+
+        // [IgnoreDataMember] private Dictionary<Scroll.ScrollSpell, Scroll> ScrollSpells { get; } = new();
 
         [JsonConstructor] private Scrolls()
         {
@@ -33,8 +34,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         private void AddScroll(MagicReference.SpellWords spellWord, int nQuantity)
         {
-            Scroll.ScrollSpells scrollSpell =
-                (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
+            // Scroll.ScrollSpell scrollSpell =
+            //     (Scroll.ScrollSpell)Enum.Parse(typeof(Scroll.ScrollSpell), spellWord.ToString());
 
             Items[spellWord] = new Scroll(spellWord, nQuantity,
                 GameReferences.MagicRefs.GetMagicReference(spellWord));

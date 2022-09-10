@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 
 namespace Ultima5Redux.MapUnits.TurnResults
@@ -20,6 +21,21 @@ namespace Ultima5Redux.MapUnits.TurnResults
         public bool HasTurnResult => _turnResults.Count > 0;
         public TurnResult PeekLastTurnResult { get; } = new BasicResult(TurnResult.TurnResultType.Ignore);
         public TurnResult PeekTurnResultType => _turnResults.Peek();
+
+        public bool ContainsResultType(Type type)
+        {
+            return _turnResults.Any(t => t.GetType() == type);
+        }
+
+        public bool ContainsTurnResultType(TurnResult.TurnResultType turnResultType)
+        {
+            return _turnResults.Any(t => t.TheTurnResultType == turnResultType);
+        }
+
+        public T GetFirstTurnResult<T>() where T : TurnResult
+        {
+            return _turnResults.OfType<T>().FirstOrDefault();
+        }
 
         public TurnResult PopTurnResult() => _turnResults.Dequeue();
 

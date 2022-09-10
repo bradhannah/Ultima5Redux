@@ -2601,5 +2601,122 @@ namespace Ultima5ReduxTesting
 
             Assert.True(bWasAttemptedArrest, "The guard did not attempt arrest");
         }
+
+        [Test] [TestCase(SaveFiles.Britain)] public void test_YellForSails(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    0));
+            world.State.TheVirtualMap.TheMapUnits.CreateFrigateAtDock(
+                SmallMapReferences.SingleMapReference.Location.Minoc);
+            Point2D dockLocation =
+                VirtualMap.GetLocationOfDock(SmallMapReferences.SingleMapReference.Location.Minoc);
+            List<MapUnit> mapUnits = world.State.TheVirtualMap.TheMapUnits.GetMapUnitsByPosition(
+                Map.Maps.Overworld,
+                dockLocation, 0);
+
+            var frigate2 = world.State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<Frigate>(
+                Map.Maps.Overworld,
+                dockLocation, 0);
+            Assert.True(frigate2 != null);
+
+            Assert.True(
+                world.State.TheVirtualMap.IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location.Minoc));
+
+            world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
+
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(frigate2.MapUnitPosition.X, frigate2.MapUnitPosition.Y));
+            var turnResults = new TurnResults();
+            world.TryToBoard(out bool bWasSuccessful, turnResults);
+            Assert.True(bWasSuccessful);
+
+            Assert.True(frigate2 != null);
+            Assert.True(mapUnits[0] is Frigate);
+            Assert.True(true);
+
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                world.TryToYellForSails(out bool bSailsHoisted, turnResults);
+            Assert.True(bSailsHoisted);
+        }
+
+        [Test] [TestCase(SaveFiles.Britain)] public void test_TryToIgniteTorch(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    0));
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(15, 23));
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToIgniteTorch(turnResults);
+            bool bHasBasicType = turnResults.ContainsResultType(typeof(BasicResult));
+            Assert.True(bHasBasicType);
+            bool bHasTurnResult = turnResults.ContainsTurnResultType(TurnResult.TurnResultType.ActionIgniteTorch);
+            Assert.True(bHasTurnResult);
+        }
+
+        [Test] [TestCase(SaveFiles.Britain)] public void test_TryToUsePotion(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(SmallMapReferences.SingleMapReference.Location.Minoc,
+                    0));
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(15, 23));
+
+            TurnResults turnResults = new();
+            var greenPotion = new Potion(Potion.PotionColor.Green, 1);
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToUsePotion(greenPotion,
+                world.State.CharacterRecords.AvatarRecord, out bool bSucceeded, out MagicReference.SpellWords spell,
+                turnResults);
+
+            bool bHasBasicType = turnResults.ContainsResultType(typeof(DrankPotion));
+            Assert.True(bHasBasicType);
+            bool bHasTurnResult = turnResults.ContainsTurnResultType(TurnResult.TurnResultType.ActionUseDrankPotion);
+            Assert.True(bHasTurnResult);
+            var drankPotion = turnResults.GetFirstTurnResult<DrankPotion>();
+            Assert.NotNull(drankPotion);
+            Assert.AreEqual(drankPotion.PotionColor, Potion.PotionColor.Green);
+        }
+
+        [Test] [TestCase(SaveFiles.Britain)] public void test_TryToUseScrolls(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Skara_Brae,
+                    0));
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(15, 23));
+
+            foreach (Scroll scroll in world.State.PlayerInventory.MagicScrolls.Items.Values)
+            {
+                scroll.Quantity++;
+                TestScroll(world, scroll);
+            }
+        }
+
+        private void TestScroll(World world, Scroll scroll)
+        {
+            TurnResults turnResults = new();
+
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                world.TryToUseScroll(scroll, world.State.CharacterRecords.AvatarRecord, turnResults);
+
+            bool bHasBasicType = turnResults.ContainsResultType(typeof(ReadScroll));
+            Assert.True(bHasBasicType);
+            bool bHasTurnResult = turnResults.ContainsTurnResultType(TurnResult.TurnResultType.ActionUseReadScroll);
+            Assert.True(bHasTurnResult);
+            var readScroll = turnResults.GetFirstTurnResult<ReadScroll>();
+            Assert.NotNull(readScroll);
+            Assert.AreEqual(readScroll.ReadByWho, world.State.CharacterRecords.AvatarRecord);
+        }
     }
 }

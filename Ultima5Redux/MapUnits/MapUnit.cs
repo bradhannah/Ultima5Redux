@@ -832,6 +832,8 @@ namespace Ultima5Redux.MapUnits
 
         protected void UpdateScheduleTracking(TimeOfDay tod)
         {
+            // sometime there is no NPCRef so lets just return (like purchased horses)
+            if (NPCRef == null) return;
             if (MapUnitPosition == NPCRef.Schedule.GetCharacterDefaultPositionByTime(tod)) ArrivedAtLocation = true;
 
             int nCurrentScheduleIndex = NPCRef.Schedule.GetScheduleIndex(tod);
