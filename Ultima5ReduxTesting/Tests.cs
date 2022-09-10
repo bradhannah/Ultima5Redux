@@ -2670,9 +2670,13 @@ namespace Ultima5ReduxTesting
                     0));
             world.State.TheVirtualMap.MoveAvatar(new Point2D(15, 23));
 
+            foreach (Potion potion in world.State.PlayerInventory.MagicPotions.Items.Values) TestPotion(world, potion);
+        }
+
+        private void TestPotion(World world, Potion potion)
+        {
             TurnResults turnResults = new();
-            var greenPotion = new Potion(Potion.PotionColor.Green, 1);
-            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToUsePotion(greenPotion,
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToUsePotion(potion,
                 world.State.CharacterRecords.AvatarRecord, out bool bSucceeded, out MagicReference.SpellWords spell,
                 turnResults);
 
@@ -2684,6 +2688,7 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(drankPotion);
             Assert.AreEqual(drankPotion.PotionColor, Potion.PotionColor.Green);
         }
+
 
         [Test] [TestCase(SaveFiles.Britain)] public void test_TryToUseScrolls(SaveFiles saveFiles)
         {
