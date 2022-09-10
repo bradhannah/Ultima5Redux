@@ -16,7 +16,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public enum SpecificNpcDialogType
         {
             Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87, InnKeeper = 0x88,
-            MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF
+            MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF, Guard = 0x00
             // unknowns may be crown and sandlewood box
         }
 
@@ -39,6 +39,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         ///     friendlier version of name in case they are a profession and not named
         /// </summary>
         public string FriendlyName => Name == "" ? NpcType.ToString() : Name;
+
+        public bool IsGuard => NpcType == SpecificNpcDialogType.Guard;
 
         public bool IsShoppeKeeper => NpcType != SpecificNpcDialogType.None;
 
@@ -73,6 +75,11 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         {
             get
             {
+                if (NPCKeySprite is (int)TileReference.SpriteIndex.Guard_KeyIndex
+                    and <= (int)TileReference.SpriteIndex.Guard_KeyIndex + TileReference.N_TYPICAL_ANIMATION_FRAMES)
+                    return SpecificNpcDialogType.Guard;
+
+                //if (NPCKeySprite is >= 368 and <= 371) return SpecificNpcDialogType.Guard;
                 // it's the Avatar
                 if (NPCKeySprite == 256) return SpecificNpcDialogType.None;
 

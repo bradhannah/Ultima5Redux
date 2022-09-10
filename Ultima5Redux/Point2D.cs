@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -298,6 +299,26 @@ namespace Ultima5Redux
             if (Y + 1 <= nYExtent) points.Add(new Point2D(X, Y + 1));
 
             return points;
+        }
+
+        /// <summary>
+        ///     This will get any point surrounding a single point that is further away from a destination point
+        ///     For example - if you had a character who was trying to get further away from another character
+        ///     this would give you the potential points that are technically further away
+        /// </summary>
+        /// <param name="furtherAwayFromPosition"></param>
+        /// <param name="nXExtent"></param>
+        /// <param name="nYExtent"></param>
+        /// <returns></returns>
+        public IEnumerable<Point2D> GetConstrainedFourDirectionSurroundingPointsFurtherAway(
+            Point2D furtherAwayFromPosition,
+            int nXExtent, int nYExtent)
+        {
+            List<Point2D> fourPointList = GetConstrainedFourDirectionSurroundingPoints(nXExtent, nYExtent);
+            double dCurrentDistanceBetween = DistanceBetween(furtherAwayFromPosition);
+
+            return fourPointList.Where(
+                point => point.DistanceBetween(furtherAwayFromPosition) > dCurrentDistanceBetween);
         }
 
         public List<Point2D> GetConstrainedFourDirectionSurroundingPointsWrapAround(int nXExtent, int nYExtent)

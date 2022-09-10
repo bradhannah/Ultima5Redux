@@ -386,6 +386,10 @@ namespace Ultima5Redux.Maps
 
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
+                // we don't calculate any special movement or events for map units on different floors
+                if (mapUnit.MapUnitPosition.Floor != CurrentSingleMapReference.Floor)
+                    continue;
+
                 // we don't want to add anything that can never attack, so we keep only enemies and NPCs 
                 // in the list of aggressors
                 switch (mapUnit)
@@ -904,20 +908,21 @@ namespace Ultima5Redux.Maps
 
             AggressiveMapUnitInfo mapUnitInfo = new(aggressorMapUnit);
 
-            // if avatar is being attacked..
-            // we get to assume that the avatar is not necessarily next to the enemy
-            bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
-
             // if they are not Enemy type (probably NPC) then we are certain they don't have a range attack
             // UNLESS you are a wanted man - then the guards will try to attack you!
-            bool bIsMadGuard = IsWantedManByThePoPo && aggressorMapUnit is NonPlayerCharacter
-            {
-                AttractedToAvatarIfWantedByPoPo: true
-            };
+            bool bIsMadGuard = false;
+            if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = IsWantedManByThePoPo && npc.NPCRef.IsGuard;
 
             // if the guard is next to you, then they will ask you to come queitly
+            bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
             if (bIsMadGuard && bNextToEachOther)
-                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+                // if they are at the head of the bed then we don't try to arrest, this keeps guards who are "injured" 
+                // at the healers from trying to arrest
+                if (!GameReferences.SpriteTileReferences.IsHeadOfBed(
+                        GetTileReference(aggressorMapUnit.MapUnitPosition.XY).Index))
+                    // if avatar is being attacked..
+                    // we get to assume that the avatar is not necessarily next to the enemy
+                    mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
 
             if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;
 
@@ -935,7 +940,6 @@ namespace Ultima5Redux.Maps
                              attackFromPosition.Y == attackToPosition.Y) &&
                             attackFromPosition.IsWithinN(attackToPosition, 3))
                             mapUnitInfo.AttackingMissileType = CombatItemReference.MissileType.CannonBall;
-
                         break;
                     default:
                         // it's not a cannon ball but it is a missile

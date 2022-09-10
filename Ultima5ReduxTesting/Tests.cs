@@ -2723,5 +2723,22 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(readScroll);
             Assert.AreEqual(readScroll.ReadByWho, world.State.CharacterRecords.AvatarRecord);
         }
+
+        [Test] [TestCase(SaveFiles.quicksave)] public void test_YewGuardsAreMad(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize(DataDirectory);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Yew, 0));
+
+            world.State.TheVirtualMap.CurrentMap.RecalculateVisibleTiles(world.State.TheVirtualMap.CurrentPosition.XY);
+
+            //Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
+        }
     }
 }
