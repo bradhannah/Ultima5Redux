@@ -2686,7 +2686,7 @@ namespace Ultima5ReduxTesting
             Assert.True(bHasTurnResult);
             var drankPotion = turnResults.GetFirstTurnResult<DrankPotion>();
             Assert.NotNull(drankPotion);
-            Assert.AreEqual(drankPotion.PotionColor, Potion.PotionColor.Green);
+            Assert.AreEqual(drankPotion.PotionColor, potion.Color);
         }
 
 
