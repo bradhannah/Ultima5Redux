@@ -205,8 +205,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <exception cref="ArgumentOutOfRangeException">couldn't find the shoppe keeper at that particular location</exception>
         public ShoppeKeeper GetShoppeKeeper(SmallMapReferences.SingleMapReference.Location location,
             NonPlayerCharacterReference.SpecificNpcDialogType specificNpcType,
-            PlayerCharacterRecords playerCharacterRecords,
-            Inventory inventory)
+            PlayerCharacterRecords playerCharacterRecords, Inventory inventory)
         {
             switch (specificNpcType)
             {

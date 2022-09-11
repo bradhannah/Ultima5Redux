@@ -9,6 +9,7 @@ using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers;
 using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
@@ -592,6 +593,7 @@ namespace Ultima5Redux
 
             return CurrentConversation;
         }
+
 
         /// <summary>
         ///     Gets the angle of the 360 rotation of all moons where Sun is 0degrees (straight up) at 12pm Noon
@@ -1933,6 +1935,70 @@ namespace Ultima5Redux
                 turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings
                         .NOTHING_OF_NOTE_DOT_N)), false);
+            }
+
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+        }
+
+        public List<VirtualMap.AggressiveMapUnitInfo> TryToTalk(MapUnitMovement.MovementCommandDirection direction,
+            TurnResults turnResults)
+        {
+            NonPlayerCharacter npc = State.TheVirtualMap.GetNpcToTalkTo(direction);
+
+            if (npc == null)
+            {
+                turnResults.PushOutputToConsole(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
+                        .FUNNY_NO_RESPONSE), false,
+                    false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NoOneToTalkTo));
+
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            bool bIsNpc = npc.NPCRef != null;
+            bool bIsShoppeKeeper = bIsNpc && npc.NPCRef.IsShoppeKeeper;
+
+            if (State.TheVirtualMap.IsNPCInBed(npc))
+            {
+                turnResults.PushOutputToConsole(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings.ZZZ), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.CantTalkSleeping));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            if (bIsShoppeKeeper)
+            {
+                ShoppeKeeper shoppeKeeper = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                    State.TheVirtualMap.CurrentSmallMap.MapLocation, npc.NPCRef.NpcType,
+                    State.CharacterRecords, State.PlayerInventory);
+
+                if (npc.ArrivedAtLocation && shoppeKeeper.IsOnDuty(State.TheTimeOfDay))
+                {
+                    turnResults.PushTurnResult(new ShoppeKeeperInteraction(shoppeKeeper));
+                }
+                else
+                {
+                    turnResults.PushOutputToConsole(shoppeKeeper.GetComeLaterResponse(), false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ComeBackLater));
+                }
+            }
+            else if (bIsNpc)
+            {
+                if (npc.NPCRef.Script == null)
+                {
+                    turnResults.PushOutputToConsole("They are not talkative...", false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NotTalkative));
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
+
+                turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+            }
+            else
+            {
+                turnResults.PushOutputToConsole(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings.NOBODY_HERE));
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NoOneToTalkTo));
             }
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);

@@ -34,7 +34,9 @@
             Combat_EnemyBeginsAttack, Combat_CombatPlayerBeginsAttack, Combat_Result_CombatPlayerReceivedDamage,
             Combat_LootDropped, Combat_Result_HitAndEnemyReceivedDamage, Combat_Result_CombatPlayerKilled,
             Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee,
-            ActionBlockedRanIntoCactus, NPCAttemptingToArrest, ActionUseDrankPotion, ActionUseReadScroll
+            ActionBlockedRanIntoCactus, NPCAttemptingToArrest, ActionUseDrankPotion, ActionUseReadScroll,
+            ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping, ComeBackLater, NotTalkative,
+            NpcTalkInteraction
         }
 
         public bool IsSuccessfulMovement
