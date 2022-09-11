@@ -1967,6 +1967,15 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            if (State.TheVirtualMap.IsWantedManByThePoPo)
+            {
+                turnResults.PushOutputToConsole(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings.DONT_HURT_ME),
+                    false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.DontHurtMeAfraid));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
             if (bIsShoppeKeeper)
             {
                 ShoppeKeeper shoppeKeeper = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
