@@ -111,9 +111,7 @@ namespace Ultima5Redux.MapUnits
 
             // We will reassign each AvatarMapUnit to the active one. This will ensure that when the Avatar
             // has boarded something, it should carry between maps
-            MasterAvatarMapUnit = GetAvatarMapUnit();
-            GetMapUnitCollection(Map.Maps.Overworld).AllMapUnits[0] = GetAvatarMapUnit();
-            GetMapUnitCollection(Map.Maps.Underworld).AllMapUnits[0] = GetAvatarMapUnit();
+            SetCommonAvatarMapUnit();
 
             SetAllExtendedSprites();
 
@@ -127,7 +125,7 @@ namespace Ultima5Redux.MapUnits
 
         [OnDeserialized] private void PostDeserialized(StreamingContext context)
         {
-            MasterAvatarMapUnit = GetAvatarMapUnit();
+            SetCommonAvatarMapUnit();
         }
 
         internal int AddCombatMapUnit(CombatMapUnit mapUnit)
@@ -509,6 +507,13 @@ namespace Ultima5Redux.MapUnits
             OverworldMapMapUnitCollection.AllMapUnits.ForEach(m => m.UseFourDirections = _bUseExtendedSprites);
             UnderworldMapUnitCollection.AllMapUnits.ForEach(m => m.UseFourDirections = _bUseExtendedSprites);
             SmallMapUnitCollection?.AllMapUnits.ForEach(m => m.UseFourDirections = _bUseExtendedSprites);
+        }
+
+        private void SetCommonAvatarMapUnit()
+        {
+            MasterAvatarMapUnit = GetAvatarMapUnit();
+            GetMapUnitCollection(Map.Maps.Overworld).AllMapUnits[0] = MasterAvatarMapUnit;
+            GetMapUnitCollection(Map.Maps.Underworld).AllMapUnits[0] = MasterAvatarMapUnit;
         }
 
         /// <summary>

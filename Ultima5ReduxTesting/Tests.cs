@@ -2740,5 +2740,37 @@ namespace Ultima5ReduxTesting
 
             //Assert.True(world.State.TheVirtualMap.CurrentMap.TouchedOuterBorder);
         }
+
+        [Test] [TestCase(SaveFiles.BucDenEntrance)]
+        public void Test_BoardCarpetAndGoFromLargeToSmall(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromNewSave(saveFiles, true, false);
+            // World world = CreateWorldFromLegacy(saveFiles);
+            _ = "";
+            var turnResults = new TurnResults();
+
+            world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Overworld);
+
+            var grendelsHutPosition = new Point2D(153, 91);
+
+            world.State.TheVirtualMap.MoveAvatar(grendelsHutPosition);
+
+            int nCarpets = world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet]
+                .Quantity;
+            Assert.True(nCarpets == world.State.PlayerInventory.SpecializedItems
+                .Items[SpecialItem.SpecificItemType.Carpet].Quantity);
+
+            Assert.IsFalse(world.State.TheVirtualMap.IsAvatarRidingCarpet);
+
+            world.TryToUseSpecialItem(
+                world.State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet],
+                out bool bAbleToUseItem, turnResults);
+            Assert.True(bAbleToUseItem);
+            Assert.IsTrue(world.State.TheVirtualMap.IsAvatarRidingCarpet);
+
+            world.TryToEnterBuilding(grendelsHutPosition, out bool bWasSuccessful, turnResults);
+
+            Assert.IsTrue(world.State.TheVirtualMap.IsAvatarRidingCarpet);
+        }
     }
 }

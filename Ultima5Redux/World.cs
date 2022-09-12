@@ -888,50 +888,47 @@ namespace Ultima5Redux
             if (turnResults == null) throw new ArgumentNullException(nameof(turnResults));
 
             bool isOnBuilding = GameReferences.LargeMapRef.IsMapXYEnterable(xy);
-            if (isOnBuilding)
-            {
-                SmallMapReferences.SingleMapReference.Location location =
-                    GameReferences.LargeMapRef.GetLocationByMapXY(xy);
-                SmallMapReferences.SingleMapReference singleMap =
-                    GameReferences.SmallMapRef.GetSingleMapByLocation(location, 0);
 
-                if (singleMap.MapType == Map.Maps.Dungeon)
-                {
-                    string retStr =
-                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                            .ENTER_SPACE) +
-                        GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
-                        GameReferences.SmallMapRef.GetLocationName(location) +
-                        "\nUnable to enter the dungeons at this time!";
-                    bWasSuccessful = false;
-                    turnResults.PushOutputToConsole(retStr, false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionEnterDungeon));
-                    return new List<VirtualMap.AggressiveMapUnitInfo>();
-                }
-
-                State.TheVirtualMap.LoadSmallMap(singleMap);
-                // set us to the front of the building
-                State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
-
-                turnResults.PushOutputToConsole(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
-                    GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
-                    GameReferences.SmallMapRef.GetLocationName(location), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionEnterTowne));
-                bWasSuccessful = true;
-                AdvanceClockNoComputation(N_DEFAULT_ADVANCE_TIME);
-                return new List<VirtualMap.AggressiveMapUnitInfo>();
-            }
-            else
+            if (!isOnBuilding)
             {
                 turnResults.PushOutputToConsole(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.WHAT), false);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionEnterWhat));
                 bWasSuccessful = false;
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            SmallMapReferences.SingleMapReference.Location location = GameReferences.LargeMapRef.GetLocationByMapXY(xy);
+            SmallMapReferences.SingleMapReference singleMap =
+                GameReferences.SmallMapRef.GetSingleMapByLocation(location, 0);
+
+            if (singleMap.MapType == Map.Maps.Dungeon)
+            {
+                string retStr =
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
+                    GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
+                    GameReferences.SmallMapRef.GetLocationName(location) +
+                    "\nUnable to enter the dungeons at this time!";
+                bWasSuccessful = false;
+                turnResults.PushOutputToConsole(retStr, false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionEnterDungeon));
+                return new List<VirtualMap.AggressiveMapUnitInfo>();
+            }
+
+            State.TheVirtualMap.LoadSmallMap(singleMap);
+            // set us to the front of the building
+            State.TheVirtualMap.CurrentPosition.XY = SmallMapReferences.GetStartingXYByLocation();
+
+            turnResults.PushOutputToConsole(
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ENTER_SPACE) +
+                GameReferences.SmallMapRef.GetLocationTypeStr(location) + "\n" +
+                GameReferences.SmallMapRef.GetLocationName(location), false);
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionEnterTowne));
+            bWasSuccessful = true;
+
+            AdvanceClockNoComputation(N_DEFAULT_ADVANCE_TIME);
+            return new List<VirtualMap.AggressiveMapUnitInfo>();
         }
 
         /// <summary>
