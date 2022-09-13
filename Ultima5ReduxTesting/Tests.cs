@@ -1808,8 +1808,17 @@ namespace Ultima5ReduxTesting
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
 
-            MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(new Point2D(16, 21), true);
+            var chestPosition = new Point2D(16, 21);
+            MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(chestPosition, true);
             Assert.IsNotNull(mapUnit);
+            Assert.IsTrue(mapUnit is Chest);
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                world.TryToOpenAThing(chestPosition, out bool bWasChestOpened, turnResults);
+            Assert.IsTrue(bWasChestOpened);
+            MapUnit shouldBeAStack = world.State.TheVirtualMap.GetTopVisibleMapUnit(chestPosition, true);
+            Assert.IsNotNull(shouldBeAStack);
 
             TestContext.Out.Write("Ending ");
 
@@ -1920,6 +1929,9 @@ namespace Ultima5ReduxTesting
             Assert.IsTrue(bWasSuccessful);
             aggressiveMapUnitInfos = world.TryToOpenAThing(chestPos, out bWasSuccessful, turnResults);
             Assert.IsFalse(bWasSuccessful);
+            aggressiveMapUnitInfos =
+                world.TryToLook(chestPos, out World.SpecialLookCommand specialLookCommand, turnResults);
+            Assert.IsTrue(turnResults.HasTurnResult);
         }
 
         // search all the things

@@ -18,7 +18,8 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public class MapUnits
     {
-        public const int MAX_MAP_CHARACTERS = 0x20;
+        public const int MAX_LEGACY_MAP_CHARACTERS = 32;
+        public const int MAX_MAP_CHARACTERS = 64;
 
         [DataMember(Name = "UseExtendedSprites")]
         private readonly bool _bUseExtendedSprites;
@@ -179,7 +180,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        internal void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLoad)
+        internal void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLegacyLoad)
         {
             if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
                 or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
@@ -196,7 +197,7 @@ namespace Ultima5Redux.MapUnits
 
                 // if it is the first index, then it's the Avatar - but if it's the initial load
                 // then it will just load from disk, otherwise we need to create a stub
-                if (i == 0 && !bInitialLoad)
+                if (i == 0 && !bInitialLegacyLoad)
                 {
                     mapUnitMovement.ClearMovements();
                     // load the existing AvatarMapUnit with boarded MapUnits
@@ -206,7 +207,8 @@ namespace Ultima5Redux.MapUnits
                     continue;
                 }
 
-                if (i == 0 && bInitialLoad)
+                // The zero position is always Avatar, this grabs them from the legacy save file 
+                if (i == 0 && bInitialLegacyLoad)
                 {
                     MapUnitState theAvatarMapState =
                         _importedGameState.GetMapUnitStatesByMap(Map.Maps.Small).GetCharacterState(0);
@@ -214,6 +216,17 @@ namespace Ultima5Redux.MapUnits
                         new MapUnitPosition(theAvatarMapState.X, theAvatarMapState.Y, theAvatarMapState.Floor),
                         theAvatarMapState.Tile1Ref, _bUseExtendedSprites);
                     SmallMapUnitCollection.Add(theAvatar);
+                    continue;
+                }
+
+                // we have extended the max characters from 32 to 64 - BUT - we have to make sure we don't
+                // try to index into the legacy array if we are index 32+
+                bool bIsInExtendedNpcArea = i >= MAX_LEGACY_MAP_CHARACTERS;
+
+                if (bIsInExtendedNpcArea)
+                {
+                    var emptyUnit = new EmptyMapUnit();
+                    SmallMapUnitCollection.Add(emptyUnit);
                     continue;
                 }
 
@@ -226,7 +239,8 @@ namespace Ultima5Redux.MapUnits
                 mapUnitMovement.ClearMovements();
 
                 // set a default SmallMapCharacterState based on the given NPC
-                bool bInitialMapAndSmall = bInitialLoad && _importedGameState.InitialMap == Map.Maps.Small;
+                bool bInitialMapAndSmall = bInitialLegacyLoad && _importedGameState.InitialMap == Map.Maps.Small;
+
                 // if it's an initial load we use the imported state, otherwise we assume it's fresh and new
                 SmallMapCharacterState smallMapCharacterState = bInitialMapAndSmall
                     ? _importedGameState.SmallMapCharacterStates.GetCharacterState(i)
@@ -456,7 +470,7 @@ namespace Ultima5Redux.MapUnits
             }
 
             // populate each of the map characters individually
-            for (int i = 0; i < MAX_MAP_CHARACTERS; i++)
+            for (int i = 0; i < MAX_LEGACY_MAP_CHARACTERS; i++)
             {
                 // if this is not the initial load of the map then we can trust character states and
                 // movements that are already loaded into memory

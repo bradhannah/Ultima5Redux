@@ -16,7 +16,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public enum SpecificNpcDialogType
         {
             Blacksmith = 0x81, Barkeeper = 0x82, HorseSeller = 0x83, Shipwright = 0x84, Healer = 0x87, InnKeeper = 0x88,
-            MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF, Guard = 0x00
+            MagicSeller = 0x85, GuildMaster = 0x86, None = 0xFF, Guard = 0xFE
             // unknowns may be crown and sandlewood box
         }
 
@@ -75,6 +75,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         {
             get
             {
+                // special override in case it's a guard
                 if (NPCKeySprite is (int)TileReference.SpriteIndex.Guard_KeyIndex
                     and <= (int)TileReference.SpriteIndex.Guard_KeyIndex + TileReference.N_TYPICAL_ANIMATION_FRAMES)
                     return SpecificNpcDialogType.Guard;
