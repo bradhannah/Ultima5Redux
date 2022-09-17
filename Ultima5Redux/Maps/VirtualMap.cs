@@ -1144,28 +1144,7 @@ namespace Ultima5Redux.Maps
                      xy.Y >= currentMap.VisibleOnMap[xy.X].Length || xy.Y < 0);
         }
 
-        private bool IsMapUnitOccupiedFromList(in Point2D xy, IEnumerable<MapUnit> mapUnits)
-        {
-            //IEnumerable<MapUnit> mapUnits = TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits;
-            int nFloor = _currentSingleMapReference.Floor;
-
-            foreach (MapUnit mapUnit in mapUnits)
-                // sometimes characters are null because they don't exist - and that is OK
-                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor))
-                {
-                    // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
-                    // for example it looks for crown, sceptre and amulet
-                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(mapUnit
-                            .KeyTileReference
-                            .Index))
-                        return false;
-                    return true;
-                }
-
-            return false;
-        }
-
-        private bool IsTileFreeToTravelLocal(in Point2D.Direction direction, Avatar.AvatarState avatarState)
+        private bool IsTileFreeForAvatarToTravelLocal(in Point2D.Direction direction, Avatar.AvatarState avatarState)
         {
             return IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
         }
@@ -1920,7 +1899,8 @@ namespace Ultima5Redux.Maps
 
         public bool IsCombatMapUnitOccupiedTile(in Point2D xy)
         {
-            return IsMapUnitOccupiedFromList(xy, TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllCombatMapUnits);
+            return Map.IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
+                TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllCombatMapUnits);
         }
 
         /// <summary>
@@ -1987,10 +1967,10 @@ namespace Ultima5Redux.Maps
 
         public bool IsLandNearby(in Avatar.AvatarState avatarState)
         {
-            return IsTileFreeToTravelLocal(Point2D.Direction.Down, avatarState) ||
-                   IsTileFreeToTravelLocal(Point2D.Direction.Up, avatarState) ||
-                   IsTileFreeToTravelLocal(Point2D.Direction.Left, avatarState) ||
-                   IsTileFreeToTravelLocal(Point2D.Direction.Right, avatarState);
+            return IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Down, avatarState) ||
+                   IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Up, avatarState) ||
+                   IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Left, avatarState) ||
+                   IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Right, avatarState);
         }
 
         /// <summary>
@@ -2009,7 +1989,8 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         public bool IsMapUnitOccupiedTile(in Point2D xy)
         {
-            return IsMapUnitOccupiedFromList(xy, TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits);
+            return Map.IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
+                TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits);
         }
 
         public bool IsNPCInBed(NonPlayerCharacter npc)

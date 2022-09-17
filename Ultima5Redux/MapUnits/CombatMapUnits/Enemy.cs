@@ -95,7 +95,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 return;
             }
 
-            ProcessNextMoveTowardsAvatarAStar(virtualMap.CurrentMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+            ProcessNextMoveTowardsAvatarAStar(virtualMap, virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
                 aStar);
         }
 

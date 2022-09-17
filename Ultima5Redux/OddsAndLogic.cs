@@ -10,43 +10,36 @@ namespace Ultima5Redux
 {
     public static class OddsAndLogic
     {
-        public const bool AGGRESSIVE_TRAPS = true;
-        public const int AGGRESSIVE_TRAP_MODIFIER = AGGRESSIVE_TRAPS ? 100 : 0;
-
-        public const int ELECTRIC_DAMAGE_MIN = 3;
-        public const int ELECTRIC_DAMAGE_MAX = 10;
-
-        public const int BOMB_DAMAGE_MIN = 3;
-        public const int BOMB_DAMAGE_MAX = 10;
-
-        public const int ACID_DAMAGE_MIN = 3;
-        public const int ACID_DAMAGE_MAX = 10;
-
-        public const int POISON_DAMAGE_MIN = 1;
-        public const int POISON_DAMAGE_MAX = 1;
-
-        private const float ODDS_TREASURE_FROM_SEARCHING_BODY = 0.2f;
-        private const float ODDS_TREASURE_FROM_BLOOD_SPATTER = 0.2f;
-
-        private const float ODDS_CHEST_LOCKED = 0.2f;
-        private const float ODDS_COMPLEX_TRAP_ON_CHEST = 0.2f;
-        private const float ODDS_SIMPLE_TRAP_ON_CHEST = 0.2f;
         private const float ODDS_BASE_COMPLEX_TRAP_EXPLODE_ON_SEARCH = 0.4f;
         private const float ODDS_BASE_SIMPLE_TRAP_EXPLODE_ON_SEARCH = 0.2f;
 
-        private const int WEIGHT_DEADBODY_TRAP_POISON = 1;
-        private const int WEIGHT_DEADBODY_TRAP_NONE = 3;
+        private const float ODDS_CHEST_LOCKED = 0.2f;
+        private const float ODDS_COMPLEX_TRAP_ON_CHEST = 0.2f;
+
+        /// <summary>
+        ///     Improvement to odds of not setting off a trap based on a characters dexterity
+        /// </summary>
+        private const float ODDS_DEX_ADJUST_TRAP_EXPLODE = 0.01f;
+
+        private const float ODDS_SIMPLE_TRAP_ON_CHEST = 0.2f;
+        private const float ODDS_TREASURE_FROM_BLOOD_SPATTER = 0.2f;
+
+        private const float ODDS_TREASURE_FROM_SEARCHING_BODY = 0.2f;
+        private const int WEIGHT_BLOODSPATTER_TRAP_NONE = 3;
 
         private const int WEIGHT_BLOODSPATTER_TRAP_POISON = 1;
-        private const int WEIGHT_BLOODSPATTER_TRAP_NONE = 3;
+
+        private const int WEIGHT_CHEST_TRAP_ACID = 9;
+        private const int WEIGHT_CHEST_TRAP_BOMB = 1;
 
         private const int WEIGHT_CHEST_TRAP_NONE = WEIGHT_CHEST_TRAP_ACID + WEIGHT_CHEST_TRAP_SLEEP +
                                                    WEIGHT_CHEST_TRAP_POISON + WEIGHT_CHEST_TRAP_BOMB;
 
-        private const int WEIGHT_CHEST_TRAP_ACID = 9;
-        private const int WEIGHT_CHEST_TRAP_SLEEP = 3;
         private const int WEIGHT_CHEST_TRAP_POISON = 3;
-        private const int WEIGHT_CHEST_TRAP_BOMB = 1;
+        private const int WEIGHT_CHEST_TRAP_SLEEP = 3;
+        private const int WEIGHT_DEADBODY_TRAP_NONE = 3;
+
+        private const int WEIGHT_DEADBODY_TRAP_POISON = 1;
 
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> ChestTrapsWeighted = new()
         {
@@ -69,6 +62,17 @@ namespace Ultima5Redux
             { NonAttackingUnit.TrapType.NONE, WEIGHT_BLOODSPATTER_TRAP_NONE }
         };
 
+        private static readonly List<NonAttackingUnit.TrapType> BloodSpatterTrapsWeightedList =
+            Utils.MakeWeightedList(BloodSpatterTrapsWeighted).ToList();
+
+
+        private static readonly List<NonAttackingUnit.TrapType> ChestTrapsWeightedList =
+            Utils.MakeWeightedList(ChestTrapsWeighted).ToList();
+
+
+        private static readonly List<NonAttackingUnit.TrapType> DeadBodyTrapsWeightedList =
+            Utils.MakeWeightedList(DeadBodyTrapsWeighted).ToList();
+
         private static readonly Dictionary<NonAttackingUnitFactory.DropSprites, int> GenericDropAfterKillingEnemy =
             new()
             {
@@ -78,108 +82,23 @@ namespace Ultima5Redux
                 //{ NonAttackingUnitFactory.DropSprites.DeadBody, 3 }
             };
 
-        private static readonly List<NonAttackingUnit.TrapType> ChestTrapsWeightedList =
-            Utils.MakeWeightedList(ChestTrapsWeighted).ToList();
-
-        private static readonly List<NonAttackingUnit.TrapType> DeadBodyTrapsWeightedList =
-            Utils.MakeWeightedList(DeadBodyTrapsWeighted).ToList();
-
-        private static readonly List<NonAttackingUnit.TrapType> BloodSpatterTrapsWeightedList =
-            Utils.MakeWeightedList(BloodSpatterTrapsWeighted).ToList();
-
         private static readonly List<NonAttackingUnitFactory.DropSprites> GenericDropAfterKillingEnemyList =
             Utils.MakeWeightedList(GenericDropAfterKillingEnemy).ToList();
 
-        /// <summary>
-        ///     Improvement to odds of not setting off a trap based on a characters dexterity
-        /// </summary>
-        private const float ODDS_DEX_ADJUST_TRAP_EXPLODE = 0.01f;
+        public const int ACID_DAMAGE_MAX = 10;
 
-        //public enum KilledEnemyDrop { Nothing, Chest, BloodSpatter, DeadBody }
+        public const int ACID_DAMAGE_MIN = 3;
+        public const int AGGRESSIVE_TRAP_MODIFIER = AGGRESSIVE_TRAPS ? 100 : 0;
+        public const bool AGGRESSIVE_TRAPS = true;
+        public const int BOMB_DAMAGE_MAX = 10;
 
-        /// <summary>
-        ///     After killing an enemy, do you get a drop?
-        /// </summary>
-        /// <param name="enemyReference"></param>
-        /// <returns></returns>
-        public static NonAttackingUnitFactory.DropSprites GetIsDropAfterKillingEnemy(EnemyReference enemyReference)
-        {
-            if (enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.NoCorpse)
-                || enemyReference.IsWaterEnemy
-                || enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DisappearsOnDeath))
-                return NonAttackingUnitFactory.DropSprites.Nothing;
+        public const int BOMB_DAMAGE_MIN = 3;
+        public const int ELECTRIC_DAMAGE_MAX = 10;
 
-            // todo: this is just a temporary method until I have some better drop logic based on the actual enemy
-            NonAttackingUnitFactory.DropSprites dropSprite =
-                GenericDropAfterKillingEnemyList[Utils.Ran.Next() % GenericDropAfterKillingEnemyList.Count];
-            return (dropSprite);
-        }
+        public const int ELECTRIC_DAMAGE_MIN = 3;
+        public const int POISON_DAMAGE_MAX = 1;
 
-        /// <summary>
-        ///     Generates the appropriate drop and inner contents of that drop based on enemy type
-        /// </summary>
-        /// <param name="enemyReference"></param>
-        /// <param name="dropType"></param>
-        /// <param name="mapUnitPosition"></param>
-        /// <returns></returns>
-        public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
-            NonAttackingUnitFactory.DropSprites dropType, MapUnitPosition mapUnitPosition)
-        {
-            // todo: need to tailor what is in the drop based on the enemy reference
-            return NonAttackingUnitFactory.Create((int)dropType, mapUnitPosition);
-        }
-
-        /// <summary> is there treasure in the new dead body? </summary>
-        /// <returns></returns>
-        /// <remarks>UNVERIFIED</remarks>
-        // public static bool GetIsPoisonFromSearchingBody() => Utils.RandomOdds(ODDS_POISON_FROM_SEARCHING_BODY);
-        //
-        public static bool GetIsTreasureInDeadBody() => Utils.RandomOdds(ODDS_TREASURE_FROM_SEARCHING_BODY);
-
-        /// <summary>
-        /// Is there treasure in the new dead blood spatter?
-        /// </summary>
-        /// <returns></returns>
-        public static bool GetIsTreasureBloodSpatter() => Utils.RandomOdds(ODDS_TREASURE_FROM_BLOOD_SPATTER);
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>UNVERIFIED</remarks>
-        public static NonAttackingUnit.TrapComplexity GetNewChestTrappedComplexity()
-        {
-            if (Utils.RandomOdds(ODDS_SIMPLE_TRAP_ON_CHEST)) return NonAttackingUnit.TrapComplexity.Simple;
-            return Utils.RandomOdds(ODDS_COMPLEX_TRAP_ON_CHEST)
-                ? NonAttackingUnit.TrapComplexity.Complex
-                : NonAttackingUnit.TrapComplexity.Simple;
-        }
-
-        /// <summary>
-        ///     When creating a new chest - is it locked?
-        /// </summary>
-        /// <returns></returns>
-        public static bool GetIsNewChestLocked() => Utils.RandomOdds(ODDS_CHEST_LOCKED);
-
-        /// <summary>
-        ///     Gets the trap type for a new chest - this includes the NONE type indicating no trap
-        /// </summary>
-        /// <returns></returns>
-        public static NonAttackingUnit.TrapType GetNewChestTrapType() =>
-            (ChestTrapsWeightedList[Utils.Ran.Next() % ChestTrapsWeightedList.Count]);
-
-        /// <summary>
-        ///     Gets the trap type for a new dead body - this includes the NONE type indicating no trap
-        /// </summary>
-        /// <returns></returns>
-        public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
-            (DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count]);
-
-        /// <summary>
-        ///     Gets the trap type for a new blood spatter - this includes the NONE type indicating no trap
-        /// </summary>
-        /// <returns></returns>
-        public static NonAttackingUnit.TrapType GetNewBloodSpatterTrapType() =>
-            (BloodSpatterTrapsWeightedList[Utils.Ran.Next() % BloodSpatterTrapsWeightedList.Count]);
+        public const int POISON_DAMAGE_MIN = 1;
 
         /// <summary>
         ///     When the given user tries to open the chest - does it explode?
@@ -202,6 +121,90 @@ namespace Ultima5Redux
                 _ => throw new ArgumentOutOfRangeException(nameof(trapComplexity), trapComplexity, null)
             };
         }
+
+        /// <summary>
+        ///     Generates the appropriate drop and inner contents of that drop based on enemy type
+        /// </summary>
+        /// <param name="enemyReference"></param>
+        /// <param name="dropType"></param>
+        /// <param name="mapUnitPosition"></param>
+        /// <returns></returns>
+        public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
+            NonAttackingUnitFactory.DropSprites dropType, MapUnitPosition mapUnitPosition)
+        {
+            // todo: need to tailor what is in the drop based on the enemy reference
+            return NonAttackingUnitFactory.Create((int)dropType, mapUnitPosition);
+        }
+
+        /// <summary>
+        ///     After killing an enemy, do you get a drop?
+        /// </summary>
+        /// <param name="enemyReference"></param>
+        /// <returns></returns>
+        public static NonAttackingUnitFactory.DropSprites GetIsDropAfterKillingEnemy(EnemyReference enemyReference)
+        {
+            if (enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.NoCorpse)
+                || enemyReference.IsWaterEnemy
+                || enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DisappearsOnDeath))
+                return NonAttackingUnitFactory.DropSprites.Nothing;
+
+            // todo: this is just a temporary method until I have some better drop logic based on the actual enemy
+            NonAttackingUnitFactory.DropSprites dropSprite =
+                GenericDropAfterKillingEnemyList[Utils.Ran.Next() % GenericDropAfterKillingEnemyList.Count];
+            return (dropSprite);
+        }
+
+        /// <summary>
+        ///     When creating a new chest - is it locked?
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetIsNewChestLocked() => Utils.RandomOdds(ODDS_CHEST_LOCKED);
+
+        /// <summary>
+        /// Is there treasure in the new dead blood spatter?
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetIsTreasureBloodSpatter() => Utils.RandomOdds(ODDS_TREASURE_FROM_BLOOD_SPATTER);
+
+        /// <summary> is there treasure in the new dead body? </summary>
+        /// <returns></returns>
+        /// <remarks>UNVERIFIED</remarks>
+        // public static bool GetIsPoisonFromSearchingBody() => Utils.RandomOdds(ODDS_POISON_FROM_SEARCHING_BODY);
+        //
+        public static bool GetIsTreasureInDeadBody() => Utils.RandomOdds(ODDS_TREASURE_FROM_SEARCHING_BODY);
+
+        /// <summary>
+        ///     Gets the trap type for a new blood spatter - this includes the NONE type indicating no trap
+        /// </summary>
+        /// <returns></returns>
+        public static NonAttackingUnit.TrapType GetNewBloodSpatterTrapType() =>
+            (BloodSpatterTrapsWeightedList[Utils.Ran.Next() % BloodSpatterTrapsWeightedList.Count]);
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>UNVERIFIED</remarks>
+        public static NonAttackingUnit.TrapComplexity GetNewChestTrappedComplexity()
+        {
+            if (Utils.RandomOdds(ODDS_SIMPLE_TRAP_ON_CHEST)) return NonAttackingUnit.TrapComplexity.Simple;
+            return Utils.RandomOdds(ODDS_COMPLEX_TRAP_ON_CHEST)
+                ? NonAttackingUnit.TrapComplexity.Complex
+                : NonAttackingUnit.TrapComplexity.Simple;
+        }
+
+        /// <summary>
+        ///     Gets the trap type for a new chest - this includes the NONE type indicating no trap
+        /// </summary>
+        /// <returns></returns>
+        public static NonAttackingUnit.TrapType GetNewChestTrapType() =>
+            (ChestTrapsWeightedList[Utils.Ran.Next() % ChestTrapsWeightedList.Count]);
+
+        /// <summary>
+        ///     Gets the trap type for a new dead body - this includes the NONE type indicating no trap
+        /// </summary>
+        /// <returns></returns>
+        public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
+            (DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count]);
     }
 }
 

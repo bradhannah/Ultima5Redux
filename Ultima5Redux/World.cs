@@ -1022,6 +1022,7 @@ namespace Ultima5Redux
         /// <param name="bGotAThing">did I get a thing?</param>
         /// <param name="inventoryItem"></param>
         /// <param name="turnResults"></param>
+        /// <param name="direction"></param>
         /// <returns>the output string</returns>
         // ReSharper disable once UnusedMethodReturnValue.Global
         public List<VirtualMap.AggressiveMapUnitInfo> TryToGetAThing(Point2D xy, out bool bGotAThing,
@@ -1058,8 +1059,7 @@ namespace Ultima5Redux
                 State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Carpet].Quantity++;
                 State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(magicCarpet);
                 turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.GetThingsStrings
-                        .A_MAGIC_CARPET), false);
+                    DataOvlReference.GetThingsStrings.A_MAGIC_CARPET), false);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetMagicCarpet));
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
@@ -1151,8 +1151,15 @@ namespace Ultima5Redux
 
                     // if the items are all gone then we delete the stack from the map
                     // NOTE: lets try not deleting it so the 3d program knows to not draw it
-                    //if (!itemStack.HasStackableItems)
-                    //State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
+                    if (!itemStack.HasStackableItems)
+                    {
+                        State.TheVirtualMap.TheMapUnits.ClearAndSetEmptyMapUnits(itemStack);
+                        State.TheVirtualMap.CurrentMap.RecalculateWalkableTileForAllAstarsWithMapUnits(
+                            itemStack.MapUnitPosition.XY,
+                            State.TheVirtualMap.AllVisibleActiveMapUnits.ToList());
+                        // State.TheVirtualMap.CurrentMap.GetAStarByMapUnit(itemStack)
+                        //     .SetWalkable(itemStack.MapUnitPosition.XY, true);
+                    }
 
                     turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(invItem.FindDescription), false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionGetStackableItem));

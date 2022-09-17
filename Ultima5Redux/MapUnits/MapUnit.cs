@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
@@ -785,11 +786,13 @@ namespace Ultima5Redux.MapUnits
         /// <param name="map"></param>
         /// <param name="avatarPosition"></param>
         /// <param name="aStar"></param>
-        protected void ProcessNextMoveTowardsAvatarAStar(Map map, Point2D avatarPosition, AStar aStar)
+        protected void ProcessNextMoveTowardsAvatarAStar(VirtualMap virtualMap, Point2D avatarPosition, AStar aStar)
         {
             const int noPath = 0xFFFF;
 
-            Map.WalkableType walkableType = map.GetWalkableTypeByMapUnit(this);
+            Map map = virtualMap.CurrentMap;
+
+            //Map.WalkableType walkableType = map.GetWalkableTypeByMapUnit(this);
 
             Point2D positionToMoveTo = null;
             if (map is not LargeMap) throw new Ultima5ReduxException("Cannot do aStar move towards Avatar on LargeMap");
@@ -832,18 +835,21 @@ namespace Ultima5Redux.MapUnits
 
             // move to the new point
             MapUnitPosition.XY = positionToMoveTo;
-            map.SetWalkableTile(positionToMoveTo, false, walkableType);
+            //map.SetWalkableTile(positionToMoveTo, false, walkableType);
+            List<MapUnit> mapUnits = virtualMap.TheMapUnits.CurrentMapUnits.AllActiveMapUnits.ToList();
+            map.RecalculateWalkableTileForAllAstarsWithMapUnits(positionToMoveTo, mapUnits);
+            map.RecalculateWalkableTileForAllAstarsWithMapUnits(oldPosition, mapUnits);
 
-            if (map.IsAStarMap(Map.WalkableType.StandardWalking))
-                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.StandardWalking);
-            if (map.IsAStarMap(Map.WalkableType.CombatLand))
-                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand);
-            if (map.IsAStarMap(Map.WalkableType.CombatWater))
-                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatWater);
-            if (map.IsAStarMap(Map.WalkableType.CombatFlyThroughWalls))
-                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatFlyThroughWalls);
-            if (map.IsAStarMap(Map.WalkableType.CombatLandAndWater))
-                map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLandAndWater);
+            // if (map.IsAStarMap(Map.WalkableType.StandardWalking))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.StandardWalking, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatLand))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatWater))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatWater, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatFlyThroughWalls))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatFlyThroughWalls, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatLandAndWater))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLandAndWater, mapUnits);
         }
 
         protected void ProcessNextMoveTowardsMapUnitDumb(VirtualMap virtualMap, Point2D fromPosition,

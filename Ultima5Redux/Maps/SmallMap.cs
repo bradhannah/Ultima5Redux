@@ -98,18 +98,6 @@ namespace Ultima5Redux.Maps
             return (xInBounds && yInBounds);
         }
 
-        protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
-        {
-            return mapUnit switch
-            {
-                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
-                    ? WalkableType.CombatWater
-                    : WalkableType.StandardWalking,
-                CombatPlayer _ => WalkableType.StandardWalking,
-                _ => WalkableType.StandardWalking
-            };
-        }
-
         /// <summary>
         ///     Calculates an appropriate A* weight based on the current tile as well as the surrounding tiles
         /// </summary>
@@ -134,6 +122,18 @@ namespace Ultima5Redux.Maps
                 fCost -= isPreferredIndex(TheMap[xy.X][xy.Y + 1]) ? fDefaultDeduction : 0;
 
             return fCost;
+        }
+
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        {
+            return mapUnit switch
+            {
+                Enemy enemy => enemy.EnemyReference.IsWaterEnemy
+                    ? WalkableType.CombatWater
+                    : WalkableType.StandardWalking,
+                CombatPlayer _ => WalkableType.StandardWalking,
+                _ => WalkableType.StandardWalking
+            };
         }
     }
 }

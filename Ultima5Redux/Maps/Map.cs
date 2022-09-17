@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -41,13 +42,15 @@ namespace Ultima5Redux.Maps
 
         public abstract byte[][] TheMap { get; protected set; }
 
-        protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
-
         public int RecalculatedHash { get; protected set; }
+
+        protected abstract Dictionary<Point2D, TileOverrideReference> XYOverrides { get; }
 
         [JsonConstructor] protected Map()
         {
         }
+
+        internal abstract void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit);
 
         /// <summary>
         ///     Filthy little map to assign single letter to map elements
@@ -120,6 +123,25 @@ namespace Ultima5Redux.Maps
             return 'L';
         }
 
+        public static bool IsMapUnitOccupiedFromList(in Point2D xy, int nFloor, IEnumerable<MapUnit> mapUnits)
+        {
+            //int nFloor = singleMapReference.Floor;
+            //_currentSingleMapReference.Floor;
+
+            foreach (MapUnit mapUnit in mapUnits)
+                // sometimes characters are null because they don't exist - and that is OK
+                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor))
+                {
+                    // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
+                    // for example it looks for crown, sceptre and amulet
+                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(
+                            mapUnit.KeyTileReference.Index)) return false;
+                    return true;
+                }
+
+            return false;
+        }
+
         public AStar GetAStarByMapUnit(MapUnit mapUnit)
         {
             WalkableType walkableType = GetWalkableTypeByMapUnit(mapUnit);
@@ -137,8 +159,6 @@ namespace Ultima5Redux.Maps
 
             return _aStarDictionary[walkableType];
         }
-
-        internal abstract void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit);
 
         public TileOverrideReference GetTileOverride(in Point2D xy)
         {
@@ -159,21 +179,8 @@ namespace Ultima5Redux.Maps
         {
             // this is kind of hacky - but the map is only aware of the primary tile, so if the override is 
             // FLAT then we ignore it and find it later with VirtualMap
-            return XYOverrides != null && XYOverrides.ContainsKey(xy) && 
+            return XYOverrides != null && XYOverrides.ContainsKey(xy) &&
                    XYOverrides[xy].TheTileType == tileType;
-        }
-
-        public void SetWalkableTile(in Point2D xy, bool bWalkable, WalkableType walkableType)
-        {
-            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
-            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
-        }
-
-        protected internal abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
-
-        protected internal void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType)
-        {
-            SetWalkableTile(xy, IsTileWalkable(xy, walkableType), walkableType);
         }
 
         /// <summary>
@@ -205,6 +212,9 @@ namespace Ultima5Redux.Maps
         /// <returns></returns>
         protected abstract float GetAStarWeight(in Point2D xy);
 
+
+        protected abstract WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit);
+
         protected virtual bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)
         {
             if (walkableType == WalkableType.CombatWater)
@@ -216,11 +226,11 @@ namespace Ultima5Redux.Maps
                                tileReference.Index == GameReferences.SpriteTileReferences
                                    .GetTileReferenceByName("RegularDoor").Index ||
                                tileReference.Index == GameReferences.SpriteTileReferences
-                                   .GetTileReferenceByName("RegularDoorView").Index ||
-                               tileReference.Index == GameReferences.SpriteTileReferences
-                                   .GetTileReferenceByName("LockedDoor").Index || tileReference.Index ==
-                               GameReferences.SpriteTileReferences.GetTileReferenceByName("LockedDoorView").Index;
-
+                                   .GetTileReferenceByName("RegularDoorView").Index;
+            //||
+            // tileReference.Index == GameReferences.SpriteTileReferences
+            //     .GetTileReferenceByName("LockedDoor").Index || tileReference.Index ==
+            // GameReferences.SpriteTileReferences.GetTileReferenceByName("LockedDoorView").Index;
             return bIsWalkable;
         }
 
@@ -261,6 +271,20 @@ namespace Ultima5Redux.Maps
             if (IsOpenDoor(xy)) return true;
             TileReference tileReference = GetTileReference(xy);
             return (IsTileWalkable(tileReference, walkableType));
+        }
+
+        protected void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType,
+            List<MapUnit> mapUnits)
+        {
+            bool bIsMapUnitOccupyingNextTile = false;
+            if (mapUnits != null) bIsMapUnitOccupyingNextTile = IsMapUnitOccupiedFromList(xy, 0, mapUnits);
+            SetWalkableTile(xy, IsTileWalkable(xy, walkableType) && !bIsMapUnitOccupyingNextTile, walkableType);
+        }
+
+        protected void SetWalkableTile(in Point2D xy, bool bWalkable, WalkableType walkableType)
+        {
+            Debug.Assert(xy.X < _aStarNodes[walkableType].Count && xy.Y < _aStarNodes[walkableType][0].Count);
+            _aStarNodes[walkableType][xy.X][xy.Y].Walkable = bWalkable;
         }
 
         #region FLOOD FILL
@@ -396,6 +420,38 @@ namespace Ultima5Redux.Maps
                 floodFillIfInside(-1, +1);
                 floodFillIfInside(1, -1);
             }
+        }
+
+        private readonly List<WalkableType> _allAStars = new()
+        {
+            WalkableType.StandardWalking,
+            WalkableType.CombatLand,
+            WalkableType.CombatLand,
+            WalkableType.CombatWater,
+            WalkableType.CombatFlyThroughWalls,
+            WalkableType.CombatLandAndWater
+        };
+
+        public void RecalculateWalkableTileForAllAstarsWithMapUnits(Point2D xy, List<MapUnit> mapUnits)
+        {
+            foreach (WalkableType walkableType in _allAStars.Where(IsAStarMap))
+                RecalculateWalkableTile(xy, walkableType, mapUnits);
+
+            // RecalculateWalkableTile(xy, WalkableType.CombatLand, mapUnits);
+            // RecalculateWalkableTile(xy, WalkableType.CombatWater, mapUnits);
+            // RecalculateWalkableTile(xy, WalkableType.CombatFlyThroughWalls, mapUnits);
+            // RecalculateWalkableTile(xy, WalkableType.CombatLandAndWater, mapUnits);
+
+            // if (map.IsAStarMap(Map.WalkableType.StandardWalking))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.StandardWalking, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatLand))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatWater))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatWater, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatFlyThroughWalls))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatFlyThroughWalls, mapUnits);
+            // if (map.IsAStarMap(Map.WalkableType.CombatLandAndWater))
+            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLandAndWater, mapUnits);
         }
 
         protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)

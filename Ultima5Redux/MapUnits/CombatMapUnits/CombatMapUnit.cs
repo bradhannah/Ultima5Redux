@@ -273,7 +273,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             // we only add experience to kills against other enemies
             // OR
             // check to see if they are an enemy - if you killed your own PC then we don't give you credit
-            if (opposingCombatMapUnit.Stats.CurrentHp > 0) // || opposingCombatMapUnit is not Enemy enemy)
+            if (opposingCombatMapUnit.Stats.CurrentHp > 0)
             {
                 hitState = GetState(opposingCombatMapUnit, out string stateOutput);
 
@@ -294,10 +294,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 return hitState;
             }
 
-            // if (opposingCombatMapUnit is not Enemy enemy)
-            // {
-            //     return GetState(opposingCombatMapUnit, out stateOutput);
-            // }
             hitState = GetState(opposingCombatMapUnit, out string opposingEnemyKilledOutput);
 
             // we know the combat player was attacking and the other guy is dead
@@ -320,18 +316,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
                 NonAttackingUnitFactory.DropSprites dropped =
                     OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
-                nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference, dropped,
-                    opposingCombatMapUnit.MapUnitPosition);
 
-                if (nonAttackingUnitDrop != null)
-                    turnResults.PushTurnResult(new LootDropped(nonAttackingUnitDrop));
+                nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference,
+                    /// TEMP force to generate chests
+                    //NonAttackingUnitFactory.DropSprites.Chest,
+                    dropped, opposingCombatMapUnit.MapUnitPosition);
+
+                if (nonAttackingUnitDrop != null) turnResults.PushTurnResult(new LootDropped(nonAttackingUnitDrop));
             }
 
             turnResults.PushOutputToConsole(opposingEnemyKilledOutput);
 
             if (bOpposingUnitIsEnemy)
             {
-                //turnResults.PushTurnResult(new EnemyKilled(this, opposingCombatMapUnit));
                 turnResults.PushTurnResult(new AttackerTurnResult(TurnResult.TurnResultType.Combat_Result_EnemyKilled,
                     this, opposingCombatMapUnit, missileType, hitState));
             }
@@ -340,7 +337,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 turnResults.PushTurnResult(new AttackerTurnResult(
                     TurnResult.TurnResultType.Combat_Result_CombatPlayerKilled,
                     this, opposingCombatMapUnit, missileType, hitState));
-                //turnResults.PushTurnResult(new CombatPlayerKilled(this, opposingCombatMapUnit));
             }
 
             return hitState;

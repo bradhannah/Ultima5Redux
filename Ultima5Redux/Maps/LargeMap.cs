@@ -18,6 +18,8 @@ namespace Ultima5Redux.Maps
 
         [DataMember(Name = "TopLeftExtent")] private Point2D _topLeftExtent;
 
+        [IgnoreDataMember] public override bool IsRepeatingMap => true;
+
         [IgnoreDataMember] public override int NumOfXTiles => LargeMapLocationReferences.XTiles;
         [IgnoreDataMember] public override int NumOfYTiles => LargeMapLocationReferences.YTiles;
 
@@ -25,12 +27,10 @@ namespace Ultima5Redux.Maps
 
         [IgnoreDataMember] public override byte[][] TheMap { get; protected set; }
 
-        [IgnoreDataMember] public override bool IsRepeatingMap => true;
+        private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         public override SmallMapReferences.SingleMapReference CurrentSingleMapReference =>
             _currentSingleMapReference ??= SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(_mapChoice);
-
-        private SmallMapReferences.SingleMapReference _currentSingleMapReference;
 
         [JsonConstructor] private LargeMap()
         {
@@ -59,6 +59,11 @@ namespace Ultima5Redux.Maps
         {
             BuildMap(_mapChoice);
             BuildAStar();
+        }
+
+        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
+        {
+            // TBD
         }
 
         private void BuildAStar()
@@ -116,12 +121,7 @@ namespace Ultima5Redux.Maps
             return 1;
         }
 
-        internal override void ProcessTileEffectsForMapUnit(TurnResults turnResults, MapUnit mapUnit)
-        {
-            // TBD
-        }
-
-        protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             switch (mapUnit)
             {

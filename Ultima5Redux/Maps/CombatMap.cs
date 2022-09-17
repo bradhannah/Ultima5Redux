@@ -233,7 +233,9 @@ namespace Ultima5Redux.Maps
                 CombatPlayer combatPlayer = new(record, playerStartPositions[nPlayer]);
 
                 // make sure the tile that the player occupies is not walkable
-                GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
+                //GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
+                RecalculateWalkableTileForAllAstarsWithMapUnits(playerStartPositions[nPlayer],
+                    new List<MapUnit> { combatPlayer });
 
                 CombatMapUnits.CurrentMapUnits.AllMapUnits[nPlayer] = combatPlayer;
             }
@@ -243,7 +245,6 @@ namespace Ultima5Redux.Maps
         {
             _initiativeQueue = new InitiativeQueue(CombatMapUnits, _playerCharacterRecords, this);
             _initiativeQueue.InitializeInitiativeQueue();
-            //_initiativeQueue.CalculateNextInitiativeQueue();
             RefreshCurrentCombatPlayer();
         }
 
@@ -253,15 +254,14 @@ namespace Ultima5Redux.Maps
                 or CombatMapUnit.HitState.HeavilyWounded or CombatMapUnit.HitState.CriticallyWounded
                 or CombatMapUnit.HitState.Fleeing;
 
-        private static bool IsWalkingPassable(TileReference tileReference) => tileReference.IsWalking_Passable ||
-                                                                              tileReference.Index == GameReferences
-                                                                                  .SpriteTileReferences
-                                                                                  .GetTileReferenceByName("RegularDoor")
-                                                                                  .Index || tileReference.Index ==
-                                                                              GameReferences.SpriteTileReferences
-                                                                                  .GetTileReferenceByName(
-                                                                                      "RegularDoorView")
-                                                                                  .Index;
+        private static bool IsWalkingPassable(TileReference tileReference)
+        {
+            return tileReference.IsWalking_Passable ||
+                   tileReference.Index ==
+                   GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index ||
+                   tileReference.Index == GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
+                       .Index;
+        }
 
         private void ClearCurrentCombatItemQueue()
         {
@@ -285,11 +285,11 @@ namespace Ultima5Redux.Maps
         {
             SingleCombatMapReference.CombatMapSpriteType combatMapSpriteType =
                 singleCombatMapReference.GetAdjustedEnemySprite(nEnemyIndex, out int nEnemySprite);
-            Point2D enemyPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
+            Point2D mapUnitPosition = singleCombatMapReference.GetEnemyPosition(nEnemyIndex);
 
             // we want to make sure and not spawn an enemy on top of a player character - but like 
             // dungeon 58 - sometimes enemies spawn on NonAttackingUnits
-            if (GetCombatUnit(enemyPosition) is CombatPlayer) return null;
+            if (GetCombatUnit(mapUnitPosition) is CombatPlayer) return null;
 
             CombatMapUnit combatMapUnit = null;
             switch (combatMapSpriteType)
@@ -300,7 +300,7 @@ namespace Ultima5Redux.Maps
                 case SingleCombatMapReference.CombatMapSpriteType.Field:
                 case SingleCombatMapReference.CombatMapSpriteType.Thing:
                     Debug.WriteLine("It's a chest or maybe a dead body!");
-                    combatMapUnit = CombatMapUnits.CreateNonAttackUnitOnCombatMap(enemyPosition,
+                    combatMapUnit = CombatMapUnits.CreateNonAttackUnitOnCombatMap(mapUnitPosition,
                         nEnemySprite, out int nIndex);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.AutoSelected:
@@ -309,7 +309,7 @@ namespace Ultima5Redux.Maps
                         GameReferences.EnemyRefs.GetEnemyReference(nEnemySprite), out int _);
                     break;
                 case SingleCombatMapReference.CombatMapSpriteType.EncounterBased:
-                    Debug.Assert(!(enemyPosition.X == 0 && enemyPosition.Y == 0));
+                    Debug.Assert(!(mapUnitPosition.X == 0 && mapUnitPosition.Y == 0));
                     combatMapUnit = CombatMapUnits.CreateEnemyOnCombatMap(
                         singleCombatMapReference.GetEnemyPosition(nEnemyIndex),
                         enemyReference, out int _);
@@ -320,7 +320,9 @@ namespace Ultima5Redux.Maps
 
             // make sure the tile that the enemy occupies is not walkable
             // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
-            SetNotWalkableDueToCombatMapUnit(enemyPosition);
+            //SetNotWalkableDueToCombatMapUnit(mapUnitPosition);
+            if (combatMapUnit != null)
+                RecalculateWalkableTileForAllAstarsWithMapUnits(mapUnitPosition, new List<MapUnit> { combatMapUnit });
             return combatMapUnit;
         }
 
@@ -598,6 +600,9 @@ namespace Ultima5Redux.Maps
 
             AStar aStar = GetAStarByMapUnit(activeCombatUnit);
 
+            // List<MapUnit> mapUnits = AllVisibleCombatMapUnits.Cast<MapUnit>().ToList();
+            // RecalculateWalkableTileForAllAstarsWithMapUnits();
+
             List<Point2D> potentialTargetsPoints = new();
 
             foreach (CombatMapUnit combatMapUnit in GetActiveCombatMapUnitsByType(preferredAttackTarget))
@@ -742,12 +747,15 @@ namespace Ultima5Redux.Maps
                             deadEnemy.NPCState.IsDead = true;
                         }
 
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand);
-                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater);
+                        List<MapUnit> mapUnits = AllVisibleCombatMapUnits.Cast<MapUnit>().ToList();
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatLand,
+                            mapUnits);
+                        RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY, WalkableType.CombatWater,
+                            mapUnits);
                         RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                            WalkableType.CombatFlyThroughWalls);
+                            WalkableType.CombatFlyThroughWalls, mapUnits);
                         RecalculateWalkableTile(affectedCombatMapUnit.MapUnitPosition.XY,
-                            WalkableType.CombatLandAndWater);
+                            WalkableType.CombatLandAndWater, mapUnits);
                     }
 
                     break;
@@ -768,13 +776,13 @@ namespace Ultima5Redux.Maps
             BuildCombatItemQueue(combatItems);
         }
 
-        private void SetNotWalkableDueToCombatMapUnit(Point2D position)
-        {
-            GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(position, false);
-            GetAStarByWalkableType(WalkableType.CombatWater).SetWalkable(position, false);
-            GetAStarByWalkableType(WalkableType.CombatFlyThroughWalls).SetWalkable(position, false);
-            GetAStarByWalkableType(WalkableType.CombatLandAndWater).SetWalkable(position, false);
-        }
+        // private void SetNotWalkableDueToCombatMapUnit(Point2D position)
+        // {
+        //     GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(position, false);
+        //     GetAStarByWalkableType(WalkableType.CombatWater).SetWalkable(position, false);
+        //     GetAStarByWalkableType(WalkableType.CombatFlyThroughWalls).SetWalkable(position, false);
+        //     GetAStarByWalkableType(WalkableType.CombatLandAndWater).SetWalkable(position, false);
+        // }
 
         /// <summary>
         ///     Recalculates which tiles are visible based on position of players in map and the current map
@@ -996,6 +1004,7 @@ namespace Ultima5Redux.Maps
             return _initiativeQueue.GetTopNCombatMapUnits(nUnits);
         }
 
+
         /// <summary>
         ///     Gets the top visible map unit - excluding the Avatar
         /// </summary>
@@ -1011,6 +1020,7 @@ namespace Ultima5Redux.Maps
                 typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
                 typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
             };
+
             List<CombatMapUnit> combatMapUnits =
                 AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList();
 
@@ -1054,17 +1064,30 @@ namespace Ultima5Redux.Maps
             if (currentCombatUnit == null)
                 throw new Ultima5ReduxException(
                     "Tried to move active combat unit, but couldn't find them in initiative queue");
-            // reset the a star walking rules
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLand);
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatWater);
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatFlyThroughWalls);
-            RecalculateWalkableTile(currentCombatUnit.MapUnitPosition.XY, WalkableType.CombatLandAndWater);
 
+            // we MUST be certain at this point that we are actually allowed to move to this tile
             Point2D originalPosition = currentCombatUnit.MapUnitPosition.XY;
+
+            bool bIsMapUnitOccupyingNextTile = IsMapUnitOccupiedFromList(xy, 0, AllVisibleCombatMapUnits);
+
+            if (bIsMapUnitOccupyingNextTile)
+            {
+                MapUnit mapUnit = GetTopVisibleMapUnit(xy, false);
+                throw new Ultima5ReduxException(
+                    $"Tried to move {currentCombatUnit.FriendlyName} to {xy.GetFriendlyString()} but it was occupied by {mapUnit.FriendlyName}");
+            }
+
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
 
-            WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
-            SetWalkableTile(xy, false, walkableType);
+            // since we are leaving this tile, we will recalculate the "walkableness" of the tile
+            // for all the aStar maps
+            List<MapUnit> mapUnits = AllVisibleCombatMapUnits.Cast<MapUnit>().ToList();
+            RecalculateWalkableTileForAllAstarsWithMapUnits(currentCombatUnit.MapUnitPosition.XY, mapUnits);
+            RecalculateWalkableTileForAllAstarsWithMapUnits(originalPosition, mapUnits);
+
+            //WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
+
+            // SetWalkableTile(xy, false, walkableType);
             switch (currentCombatUnit)
             {
                 case Enemy enemy:
@@ -1218,9 +1241,16 @@ namespace Ultima5Redux.Maps
                         throw new Ultima5ReduxException("Combat player unexpectedly null");
 
                     CombatMapUnit.HitState targetedHitState = combatPlayer.Attack(turnResults, opponentCombatMapUnit,
-                        weapon,
-                        out NonAttackingUnit nonAttackingUnitDrop, false);
-                    if (nonAttackingUnitDrop != null) CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
+                        weapon, out NonAttackingUnit nonAttackingUnitDrop, false);
+                    if (nonAttackingUnitDrop != null)
+                    {
+                        // it's already created - we just add it to the mapunits list we track
+                        CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
+                        // A* is not automatically updated, so we update it
+                        //SetNotWalkableDueToCombatMapUnit(nonAttackingUnitDrop.MapUnitPosition.XY);
+                        RecalculateWalkableTileForAllAstarsWithMapUnits(nonAttackingUnitDrop.MapUnitPosition.XY,
+                            new List<MapUnit> { nonAttackingUnitDrop });
+                    }
 
                     // if the player attacks, but misses with a range weapon the we need see if they
                     // accidentally hit someone else
@@ -1357,14 +1387,11 @@ namespace Ultima5Redux.Maps
                 {
                     Point2D nextStep = enemy.FleeingPath.Pop().Position;
                     MoveActiveCombatMapUnit(turnResults, nextStep);
-                    //preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " fleeing!";
                     turnResults.PushOutputToConsole(enemy.EnemyReference.MixedCaseSingularName + " fleeing!");
-                    turnResults.PushTurnResult(new EnemyFocusedTurnResult(
-                        TurnResult.TurnResultType.Combat_EnemyIsFleeing,
-                        enemy));
+                    turnResults.PushTurnResult(
+                        new EnemyFocusedTurnResult(TurnResult.TurnResultType.Combat_EnemyIsFleeing, enemy));
                     AdvanceToNextCombatMapUnit();
                     return;
-                    //CombatTurnResult.EnemyMoved;
                 }
             }
 
@@ -1475,7 +1502,12 @@ namespace Ultima5Redux.Maps
             RefreshCurrentCombatPlayer();
         }
 
-        protected internal override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
+        protected override float GetAStarWeight(in Point2D xy)
+        {
+            return 1.0f;
+        }
+
+        protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {
             return mapUnit switch
             {
@@ -1483,11 +1515,6 @@ namespace Ultima5Redux.Maps
                 CombatPlayer _ => WalkableType.CombatLand,
                 _ => WalkableType.StandardWalking
             };
-        }
-
-        protected override float GetAStarWeight(in Point2D xy)
-        {
-            return 1.0f;
         }
 
         protected override bool IsTileWalkable(TileReference tileReference, WalkableType walkableType)

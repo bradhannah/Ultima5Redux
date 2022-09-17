@@ -6,12 +6,11 @@ namespace Ultima5Redux.External
 {
     public class Node
     {
+        public readonly Point2D Position;
         internal float Weight { get; }
         public float Cost { get; internal set; }
 
         public float DistanceToTarget { get; internal set; }
-        public Node Parent { get; internal set; }
-        public readonly Point2D Position;
 
         public float F
         {
@@ -22,6 +21,8 @@ namespace Ultima5Redux.External
                 return -1;
             }
         }
+
+        public Node Parent { get; internal set; }
         // Change this depending on what the desired size is for each element in the grid
 
         public bool Walkable { get; set; }
@@ -200,7 +201,7 @@ namespace Ultima5Redux.External
             return debugOut;
         }
 
-        public void SetWalkable(Point2D position, bool bWalkable)
+        protected void SetWalkable(Point2D position, bool bWalkable)
         {
             GetNode(position).Walkable = bWalkable;
         }
