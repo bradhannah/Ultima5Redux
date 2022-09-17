@@ -50,6 +50,13 @@ namespace Ultima5Redux.DayNightMoon
 
         [DataMember] public byte Month { get; set; }
 
+        /// <summary>
+        ///     Tick represents a number that increases every time the clock is incremented
+        ///     but it does not represent the time of day or number of turns necessarily
+        /// </summary>
+        [DataMember]
+        public int Tick { get; set; }
+
         [DataMember] public ushort Year { get; set; }
 
         [IgnoreDataMember] private byte _nHour;
@@ -138,6 +145,8 @@ namespace Ultima5Redux.DayNightMoon
         /// <exception cref="Ultima5ReduxException"></exception>
         public void AdvanceClock(int nMinutes)
         {
+            Tick++;
+
             // ensuring that you can't advance more than a day ensures that we can make some time saving assumptions
             if (nMinutes > 60 * 9) throw new Ultima5ReduxException("You can not advance more than 9 hours at a time");
 

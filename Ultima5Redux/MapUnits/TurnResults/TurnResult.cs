@@ -36,7 +36,7 @@
             Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee,
             ActionBlockedRanIntoCactus, NPCAttemptingToArrest, ActionUseDrankPotion, ActionUseReadScroll,
             ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping, ComeBackLater, NotTalkative,
-            NpcTalkInteraction, DontHurtMeAfraid
+            NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation
         }
 
         public bool IsSuccessfulMovement

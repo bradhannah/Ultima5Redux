@@ -1573,8 +1573,7 @@ namespace Ultima5Redux
             // we know that if the avatar is on a frigate, then he hasn't just changed direction
             // so, if sails are hoisted and they are heading in a specific direction, then we will ignore
             // any additional keystrokes
-            if (avatar.AreSailsHoisted &&
-                State.WindDirection != Point2D.Direction.None && bManualMovement)
+            if (avatar.AreSailsHoisted && State.WindDirection != Point2D.Direction.None && bManualMovement)
             {
                 turnResults.PushTurnResult(
                     new BasicResult(TurnResult.TurnResultType.ActionMoveFrigateSailsIgnoreMovement));
@@ -1639,7 +1638,7 @@ namespace Ultima5Redux
                 {
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.TravelStrings.BLOCKED));
-                    if (newTileReference.Index == 47)
+                    if (newTileReference.Index == (int)TileReference.SpriteIndex.Cactus)
                     {
                         turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                             DataOvlReference.WorldStrings.OUCH));
@@ -1674,6 +1673,14 @@ namespace Ultima5Redux
             Avatar.AvatarState currentAvatarState =
                 State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentAvatarState;
 
+            bool bIsOnHorseOrCarpet =
+                State.TheVirtualMap.IsAvatarRidingCarpet || State.TheVirtualMap.IsAvatarRidingHorse;
+            // bool bIsSailingWithWindBehindMe = State.TheVirtualMap.IsAvatarInFrigate && 
+            //                                   State.WindDirection == State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit()
+            //                                       .Direction;
+            int nTimeToPass = bIsOnHorseOrCarpet ? 1 : N_DEFAULT_ADVANCE_TIME;
+
+            // We are on a small map which means all movements use the time passing minutes
             // if we are on a big map then we may issue extra information about slow moving terrain
             if (!State.TheVirtualMap.IsLargeMap)
             {
@@ -1682,10 +1689,24 @@ namespace Ultima5Redux
                         originalPos, State.TheVirtualMap.CurrentPosition.XY,
                         State.TheVirtualMap.GetTileReferenceOnCurrentTile()));
 
+                if (bIsOnHorseOrCarpet && State.TheTimeOfDay.Tick % 2 == 0)
+                {
+                    AdvanceClockNoComputation(nTimeToPass);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.AdvanceClockNoComputation));
+                    return new List<VirtualMap.AggressiveMapUnitInfo>();
+                }
+
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            int nMinutesToAdvance = GameReferences.SpriteTileReferences.GetMinuteIncrement(newTileReference.Index);
+            // WE are DEFINITELY on a large map at this time
+
+            int nDefaultMinutesToAdvance =
+                GameReferences.SpriteTileReferences.GetMinuteIncrement(newTileReference.Index);
+            // if avatar is on a horse or carpet then we cut it in half, but let's make sure we don't 
+            // end up with zero minutes
+            int nMinutesToAdvance =
+                bIsOnHorseOrCarpet ? Math.Max(1, nDefaultMinutesToAdvance / 2) : nDefaultMinutesToAdvance;
 
             string slowMovingStr = GameReferences.SpriteTileReferences
                 .GetSlowMovementString(newTileReference.Index).TrimEnd();
@@ -1693,7 +1714,7 @@ namespace Ultima5Redux
 
             // if you are on the carpet or skiff and hit rough seas then we injure the players and report it back 
             if (currentAvatarState is Avatar.AvatarState.Carpet or Avatar.AvatarState.Skiff
-                && newTileReference.Index == 1) // rough seas
+                && newTileReference.Index == (int)TileReference.SpriteIndex.Water) // rough seas
             {
                 State.CharacterRecords.RoughSeasInjure();
                 turnResults.PushOutputToConsole(
@@ -1709,7 +1730,15 @@ namespace Ultima5Redux
                         State.TheVirtualMap.GetTileReferenceOnCurrentTile()));
             }
 
-            // if we are indoors then all walking takes 2 minutes
+            // if you are on a horse or carpet then only every other move actually results in the enemies and npcs moving
+            // around the map
+            if (bIsOnHorseOrCarpet && State.TheTimeOfDay.Tick % 2 == 0)
+            {
+                AdvanceClockNoComputation(nTimeToPass);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.AdvanceClockNoComputation));
+                return new List<VirtualMap.AggressiveMapUnitInfo>();
+            }
+
             return AdvanceTime(nMinutesToAdvance, turnResults);
         }
 

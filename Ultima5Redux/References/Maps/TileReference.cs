@@ -13,8 +13,9 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         public enum SpriteIndex
         {
-            TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149, PlowedField = 44,
-            WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368, StoneBrickWallSecret = 78, LockedDoor = 185
+            Water = 1, TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149,
+            PlowedField = 44, Cactus = 47, WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368,
+            StoneBrickWallSecret = 78, LockedDoor = 185
         }
 
         public const int N_TYPICAL_ANIMATION_FRAMES = 4;
