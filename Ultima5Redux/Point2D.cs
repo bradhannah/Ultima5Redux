@@ -119,6 +119,22 @@ namespace Ultima5Redux
             return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
         }
 
+        public static bool IsOppositeDirection(Direction direction1, Direction direction2)
+        {
+            switch (direction1)
+            {
+                case Direction.Down when direction2 == Direction.Up:
+                case Direction.Up when direction2 == Direction.Down:
+                case Direction.Left when direction2 == Direction.Right:
+                case Direction.Right when direction2 == Direction.Left:
+                    return true;
+                case Direction.None:
+                    return false;
+                default:
+                    return false;
+            }
+        }
+
         public static bool IsOutOfRangeStatic(int nX, int nY, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
         {
             return (nX < nMinX || nX > nMaxX || nY < nMinY || nY > nMaxY);
