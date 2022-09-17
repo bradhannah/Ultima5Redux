@@ -1675,9 +1675,6 @@ namespace Ultima5Redux
 
             bool bIsOnHorseOrCarpet =
                 State.TheVirtualMap.IsAvatarRidingCarpet || State.TheVirtualMap.IsAvatarRidingHorse;
-            // bool bIsSailingWithWindBehindMe = State.TheVirtualMap.IsAvatarInFrigate && 
-            //                                   State.WindDirection == State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit()
-            //                                       .Direction;
             int nTimeToPass = bIsOnHorseOrCarpet ? 1 : N_DEFAULT_ADVANCE_TIME;
 
             // We are on a small map which means all movements use the time passing minutes
@@ -1700,13 +1697,30 @@ namespace Ultima5Redux
             }
 
             // WE are DEFINITELY on a large map at this time
+            bool bIsSailingWithSailsHoisted = false;
+            if (State.TheVirtualMap.IsAvatarInFrigate)
+            {
+                if (State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().CurrentBoardedMapUnit is not Frigate
+                    avatarsFrigate)
+                    throw new Ultima5ReduxException("Tried get Avatar's frigate, but it was null");
+
+                // if the sails are hoisted and the wind direction is the same behind you
+                // then you will go twice as fast
+                if (avatarsFrigate.SailsHoisted) bIsSailingWithSailsHoisted = true;
+            }
+
+            bool bIsSailingWithWindBehindMe = bIsSailingWithSailsHoisted &&
+                                              !Point2D.IsOppositeDirection(State.WindDirection,
+                                                  State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Direction);
 
             int nDefaultMinutesToAdvance =
                 GameReferences.SpriteTileReferences.GetMinuteIncrement(newTileReference.Index);
             // if avatar is on a horse or carpet then we cut it in half, but let's make sure we don't 
             // end up with zero minutes
             int nMinutesToAdvance =
-                bIsOnHorseOrCarpet ? Math.Max(1, nDefaultMinutesToAdvance / 2) : nDefaultMinutesToAdvance;
+                bIsOnHorseOrCarpet || bIsSailingWithWindBehindMe
+                    ? Math.Max(1, nDefaultMinutesToAdvance / 2)
+                    : nDefaultMinutesToAdvance;
 
             string slowMovingStr = GameReferences.SpriteTileReferences
                 .GetSlowMovementString(newTileReference.Index).TrimEnd();
@@ -1732,7 +1746,7 @@ namespace Ultima5Redux
 
             // if you are on a horse or carpet then only every other move actually results in the enemies and npcs moving
             // around the map
-            if (bIsOnHorseOrCarpet && State.TheTimeOfDay.Tick % 2 == 0)
+            if ((bIsOnHorseOrCarpet || bIsSailingWithWindBehindMe) && State.TheTimeOfDay.Tick % 2 == 0)
             {
                 AdvanceClockNoComputation(nTimeToPass);
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.AdvanceClockNoComputation));
