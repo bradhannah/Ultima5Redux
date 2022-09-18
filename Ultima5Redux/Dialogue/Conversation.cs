@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Dialogue;
+using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.Dialogue
 {
@@ -229,7 +231,7 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Gold:
                         EnqueueToOutputBuffer(item);
-                        _gameState.PlayerInventory.SpendGold((ushort)item.ItemAdditionalData);
+                        //_gameState.PlayerInventory.SpendGold((ushort)item.ItemAdditionalData);
                         break;
                     case TalkScript.TalkCommand.JoinParty:
                         if (_gameState.CharacterRecords.IsFullParty())
@@ -621,6 +623,58 @@ namespace Ultima5Redux.Dialogue
                 .GetStringFromDataChunkList(DataOvlReference.DataChunkName.PHRASES_CONVERSATION, (int)index).Trim();
             convStr = convStr.Trim(trimChars);
             return convStr;
+        }
+
+        public TurnResults TheTurnResults { get; } = new();
+
+        public void ProcessScriptItem(TalkScript.ScriptItem scriptItem)
+        {
+            switch (scriptItem.Command)
+            {
+                case TalkScript.TalkCommand.KarmaPlusOne:
+                    _gameState.ChangeKarma(1, TheTurnResults);
+                    break;
+                case TalkScript.TalkCommand.KarmaMinusOne:
+                    _gameState.ChangeKarma(-1, TheTurnResults);
+                    break;
+                case TalkScript.TalkCommand.CallGuards:
+                    _gameState.TheVirtualMap.IsWantedManByThePoPo = true;
+                    break;
+                case TalkScript.TalkCommand.Gold:
+                    _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
+                        ProvisionReferences.SpecificProvisionType.Gold,
+                        scriptItem.ItemAdditionalData, TheTurnResults);
+                    break;
+                case TalkScript.TalkCommand.JoinParty:
+                    _gameState.CharacterRecords.AddMemberToParty(TheNonPlayerCharacterState.NPCRef);
+                    break;
+                case TalkScript.TalkCommand.Change:
+                    // add inventory item to inventory
+                    _ = "";
+                    break;
+                case TalkScript.TalkCommand.PlainString:
+                case TalkScript.TalkCommand.AvatarsName:
+                case TalkScript.TalkCommand.EndConversation:
+                case TalkScript.TalkCommand.Pause:
+                case TalkScript.TalkCommand.Or:
+                case TalkScript.TalkCommand.AskName:
+                case TalkScript.TalkCommand.IfElseKnowsName:
+                case TalkScript.TalkCommand.NewLine:
+                case TalkScript.TalkCommand.Rune:
+                case TalkScript.TalkCommand.KeyWait:
+                case TalkScript.TalkCommand.StartLabelDefinition:
+                case TalkScript.TalkCommand.StartNewSection:
+                case TalkScript.TalkCommand.Unknown_Enter:
+                case TalkScript.TalkCommand.GotoLabel:
+                case TalkScript.TalkCommand.DefineLabel:
+                case TalkScript.TalkCommand.DoNothingSection:
+                case TalkScript.TalkCommand.PromptUserForInput_NPCQuestion:
+                case TalkScript.TalkCommand.PromptUserForInput_UserInterest:
+                case TalkScript.TalkCommand.UserInputNotRecognized:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

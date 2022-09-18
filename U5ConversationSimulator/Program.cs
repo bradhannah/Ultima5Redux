@@ -55,10 +55,10 @@ namespace U5ConversationSimulator
                     break;
                 case TalkScript.TalkCommand.KarmaMinusOne:
                     //
-                    World.State.Karma -= 1;
+                    //World.State.ChangeKarma(-1, turnResults);
                     break;
                 case TalkScript.TalkCommand.KarmaPlusOne:
-                    World.State.Karma += 1;
+                    //World.State.ChangeKarma(1, turnResults);
                     break;
                 case TalkScript.TalkCommand.KeyWait:
                     Console.Write(@"...");

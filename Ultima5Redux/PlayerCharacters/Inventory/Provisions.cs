@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 namespace Ultima5Redux.PlayerCharacters.Inventory
@@ -12,49 +15,48 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
             get;
             internal set;
-        } =
-            new();
+        } = new();
 
         [IgnoreDataMember]
         public ushort Food
         {
             get => (ushort)Items[ProvisionReferences.SpecificProvisionType.Food].Quantity;
-            set => Items[ProvisionReferences.SpecificProvisionType.Food].Quantity = value;
+            internal set => Items[ProvisionReferences.SpecificProvisionType.Food].Quantity = value;
         }
 
         [IgnoreDataMember]
         public ushort Gems
         {
             get => (ushort)Items[ProvisionReferences.SpecificProvisionType.Gems].Quantity;
-            set => Items[ProvisionReferences.SpecificProvisionType.Gems].Quantity = value;
+            internal set => Items[ProvisionReferences.SpecificProvisionType.Gems].Quantity = value;
         }
 
         [IgnoreDataMember]
         public ushort Gold
         {
             get => (ushort)Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity;
-            set => Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity = value;
+            internal set => Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity = value;
         }
 
         [IgnoreDataMember]
         public ushort Keys
         {
             get => (ushort)Items[ProvisionReferences.SpecificProvisionType.Keys].Quantity;
-            set => Items[ProvisionReferences.SpecificProvisionType.Keys].Quantity = value;
+            internal set => Items[ProvisionReferences.SpecificProvisionType.Keys].Quantity = value;
         }
 
         [IgnoreDataMember]
         public ushort SkullKeys
         {
             get => (ushort)Items[ProvisionReferences.SpecificProvisionType.SkullKeys].Quantity;
-            set => Items[ProvisionReferences.SpecificProvisionType.SkullKeys].Quantity = value;
+            internal set => Items[ProvisionReferences.SpecificProvisionType.SkullKeys].Quantity = value;
         }
 
         [IgnoreDataMember]
         public ushort Torches
         {
             get => (ushort)Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity;
-            set => Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity = value;
+            internal set => Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity = value;
         }
 
         [JsonConstructor] private Provisions()
@@ -90,6 +92,72 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Items[ProvisionReferences.SpecificProvisionType.Keys].Quantity = importedGameState.Keys;
             Items[ProvisionReferences.SpecificProvisionType.Torches].Quantity = importedGameState.Torches;
             Items[ProvisionReferences.SpecificProvisionType.SkullKeys].Quantity = importedGameState.SkullKeys;
+        }
+
+        public void SetProvisionQuantity(ProvisionReferences.SpecificProvisionType specificProvisionType,
+            int nNewQuantity, TurnResults turnResults)
+        {
+            ushort nPreviousQuantity;
+            switch (specificProvisionType)
+            {
+                case ProvisionReferences.SpecificProvisionType.Torches:
+                    nPreviousQuantity = Torches;
+                    Torches = (ushort)nNewQuantity;
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Gems:
+                    nPreviousQuantity = Gems;
+                    Gems = (ushort)nNewQuantity;
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Keys:
+                    nPreviousQuantity = Keys;
+                    Keys = (ushort)nNewQuantity;
+                    break;
+                case ProvisionReferences.SpecificProvisionType.SkullKeys:
+                    nPreviousQuantity = SkullKeys;
+                    SkullKeys = (ushort)nNewQuantity;
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Food:
+                    nPreviousQuantity = Food;
+                    Food = (ushort)nNewQuantity;
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Gold:
+                    nPreviousQuantity = Gold;
+                    Gold = (ushort)nNewQuantity;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(specificProvisionType), specificProvisionType, null);
+            }
+
+            turnResults.PushTurnResult(new ProvisionQuantityChanged(nNewQuantity - nPreviousQuantity, nNewQuantity,
+                specificProvisionType));
+        }
+
+        public void AddOrRemoveProvisionQuantity(ProvisionReferences.SpecificProvisionType specificProvisionType,
+            int nAdjustBy, TurnResults turnResults)
+        {
+            switch (specificProvisionType)
+            {
+                case ProvisionReferences.SpecificProvisionType.Torches:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Torches, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Gems:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Gems, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Keys:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Keys, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.SkullKeys:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + SkullKeys, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Food:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Food, turnResults);
+                    break;
+                case ProvisionReferences.SpecificProvisionType.Gold:
+                    SetProvisionQuantity(specificProvisionType, nAdjustBy + Gold, turnResults);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(specificProvisionType), specificProvisionType, null);
+            }
         }
     }
 }

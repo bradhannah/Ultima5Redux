@@ -364,7 +364,16 @@ namespace Ultima5Redux.MapUnits
             {
                 // This is where we will do custom stuff for special NPS
                 // guard or daemon or stone gargoyle or fighter or bard or townesperson or rat or bat or shadowlord
-                if (npcState.NPCRef.NPCKeySprite is 368 or 472 or 440 or 328 or 324 or 336 or 400 or 404 or 508)
+                if ((TileReference.SpriteIndex)npcState.NPCRef.NPCKeySprite is
+                    TileReference.SpriteIndex.Guard_KeyIndex
+                    or TileReference.SpriteIndex.Daemon1_KeyIndex
+                    or TileReference.SpriteIndex.StoneGargoyle_KeyIndex
+                    or TileReference.SpriteIndex.Fighter_KeyIndex
+                    or TileReference.SpriteIndex.Bard_KeyIndex
+                    or TileReference.SpriteIndex.TownsPerson_KeyIndex
+                    or TileReference.SpriteIndex.Ray_KeyIndex
+                    or TileReference.SpriteIndex.Bat_KeyIndex
+                    or TileReference.SpriteIndex.ShadowLord_KeyIndex)
                 {
                     newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
                         mapUnitPosition, npcState);

@@ -368,10 +368,11 @@ namespace Ultima5Redux
             xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
                 State.TheVirtualMap.NumberOfRowTiles - 1);
 
-        private void MurderNpc(NonPlayerCharacter npc)
+        private void MurderNpc(NonPlayerCharacter npc, TurnResults turnResults)
         {
+            turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackMurder));
             npc.NPCState.IsDead = true;
-            State.Karma -= 10;
+            State.ChangeKarma(-10, turnResults);
             State.TheVirtualMap.IsWantedManByThePoPo = true;
         }
 
@@ -702,7 +703,7 @@ namespace Ultima5Redux
                     attackTargetPosition, SingleCombatMapReference.Territory.Britannia);
 
             bool bIsMurderable = TileReferences.IsHeadOfBed(tileReference.Index) ||
-                                 GameReferences.SpriteTileReferences.IsStocks(tileReference.Index) ||
+                                 TileReferences.IsStocks(tileReference.Index) ||
                                  TileReferences.IsManacles(tileReference.Index);
 
             // if there is a mapunit - BUT - no 
@@ -738,8 +739,7 @@ namespace Ultima5Redux
                             GameReferences.DataOvlRef.StringReferences.GetString(
                                 DataOvlReference.TravelStrings.MURDERED), false);
                         tryToAttackResult = TryToAttackResult.NpcMurder;
-                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackMurder));
-                        MurderNpc(npc);
+                        MurderNpc(npc, turnResults);
                         break;
                     }
 
@@ -1055,7 +1055,7 @@ namespace Ultima5Redux
                 turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.GetThingsStrings.CROPS_PICKED), false);
                 State.PlayerInventory.TheProvisions.Food++;
-                State.Karma--;
+                State.ChangeKarma(-1, turnResults);
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
@@ -1113,7 +1113,7 @@ namespace Ultima5Redux
                 if (bAte)
                 {
                     State.PlayerInventory.TheProvisions.Food++;
-                    State.Karma--;
+                    State.ChangeKarma(-1, turnResults);
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                         DataOvlReference.GetThingsStrings.MMM_DOT3), false);
                     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
@@ -1215,15 +1215,10 @@ namespace Ultima5Redux
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
             bool isDoorInDirection = tileReference.IsOpenable;
+            bool bIsStocks = TileReferences.IsStocks(tileReference.Index);
+            bool bIsManacles = TileReferences.IsManacles(tileReference.Index); // is it shackles/manacles
 
-            if (!isDoorInDirection)
-            {
-                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.OpeningThingsStrings
-                        .NO_LOCK), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyNoLock));
-            }
-            else
+            if (isDoorInDirection)
             {
                 bool bIsDoorMagical = TileReferences.IsDoorMagical(tileReference.Index);
                 bool bIsDoorLocked = TileReferences.IsDoorLocked(tileReference.Index);
@@ -1266,6 +1261,25 @@ namespace Ultima5Redux
                             .UNLOCKED), false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyUnlocked));
                 }
+                else if (bIsStocks)
+                {
+                    // the stocks 
+                    MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
+                    if (mapUnit is NonPlayerCharacter)
+                    {
+                        State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Keys]
+                            .Quantity--;
+
+                        turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                            DataOvlReference.OpeningThingsStrings
+                                .UNLOCKED), false);
+
+                        State.ChangeKarma(2, turnResults);
+                    }
+                }
+                else if (bIsManacles)
+                {
+                }
                 else
                 {
                     turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
@@ -1273,6 +1287,13 @@ namespace Ultima5Redux
                             .NO_LOCK), false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyNoLock));
                 }
+            }
+            else
+            {
+                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.OpeningThingsStrings
+                        .NO_LOCK), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyNoLock));
             }
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);

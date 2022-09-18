@@ -1403,7 +1403,7 @@ namespace Ultima5Redux.Maps
             bool bIsHeadOfBed = TileReferences.IsHeadOfBed(nSprite);
             // we need to check these before they get "corrected"
             // is it the stocks
-            bool bIsStocks = GameReferences.SpriteTileReferences.IsStocks(nSprite);
+            bool bIsStocks = TileReferences.IsStocks(nSprite);
             bool bIsManacles = TileReferences.IsManacles(nSprite); // is it shackles/manacles
 
             // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this

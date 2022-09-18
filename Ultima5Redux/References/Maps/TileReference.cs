@@ -21,7 +21,9 @@ namespace Ultima5Redux.References.Maps
             ChairBackRight = 147, MagicLockDoor = 151, MagicLockDoorWithView = 152, Grate = 134, LeftBed = 171,
             SimpleCross = 137, StoneHeadstone = 138, HorseRight = 272, HorseLeft = 273, LadderDown = 201,
             LadderUp = 200, Carpet2_MagicCarpet = 283, Manacles = 133, Mirror = 157, MirrorAvatar = 158,
-            MirrorBroken = 159, SmallMountains = 12
+            MirrorBroken = 159, SmallMountains = 12, Daemon1_KeyIndex = 472, StoneGargoyle_KeyIndex = 440,
+            Fighter_KeyIndex = 328, Bard_KeyIndex = 324, TownsPerson_KeyIndex = 336, Ray_KeyIndex = 400,
+            Bat_KeyIndex = 404, ShadowLord_KeyIndex = 508
         }
 
 

@@ -262,11 +262,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             TheProvisions.Keys = 0;
         }
 
-        public bool SpendGold(int nGold)
-        {
-            if (TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity < nGold) return false;
-            TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity -= nGold;
-            return true;
-        }
+        // public bool SpendGold(int nGold)
+        // {
+        //     if (TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity < nGold) return false;
+        //     TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Gold].Quantity -= nGold;
+        //     return true;
+        // }
     }
 }

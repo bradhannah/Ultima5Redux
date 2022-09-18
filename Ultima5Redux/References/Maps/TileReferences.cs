@@ -457,7 +457,7 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStocks(int nSprite)
+        public static bool IsStocks(int nSprite)
         {
             bool bIsStocks = nSprite == 132;
             //GetTileNumberByName("Stocks"); // is it the stocks

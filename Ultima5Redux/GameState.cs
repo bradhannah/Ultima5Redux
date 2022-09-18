@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.Maps;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
+using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
@@ -38,7 +40,15 @@ namespace Ultima5Redux
         ///     Users Karma
         /// </summary>
         [DataMember]
-        public ushort Karma { get; set; }
+        public ushort Karma { get; private set; }
+
+        public void ChangeKarma(int nAdjustBy, TurnResults turnResults)
+        {
+            turnResults.PushTurnResult(new KarmaChanged(nAdjustBy, Karma));
+            Karma += (ushort)Math.Max(0, nAdjustBy);
+        }
+
+       
 
         /// <summary>
         ///     Players current inventory

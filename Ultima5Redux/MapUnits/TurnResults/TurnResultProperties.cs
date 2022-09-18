@@ -84,4 +84,10 @@ namespace Ultima5Redux.MapUnits.TurnResults
     {
         public StackTrace TheStacktrace { get; }
     }
+
+    public interface IQuantityChanged
+    {
+        public int AdjustedBy { get; }
+        public int PreviousQuantity { get; }
+    }
 }
