@@ -232,7 +232,6 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Gold:
                         EnqueueToOutputBuffer(item);
-                        //_gameState.PlayerInventory.SpendGold((ushort)item.ItemAdditionalData);
                         break;
                     case TalkScript.TalkCommand.JoinParty:
                         if (_gameState.CharacterRecords.IsFullParty())
@@ -258,13 +257,17 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.KeyWait:
                         EnqueueToOutputBuffer(item);
+                        await AwaitResponse();
+                        string derp = GetResponse();
                         break;
-                    case TalkScript.TalkCommand.NewLine:
+                    case TalkScript.TalkCommand.NewLine: // Sutek is a great example
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
                             TextProcessItem(item)));
                         break;
                     case TalkScript.TalkCommand.Pause:
                         EnqueueToOutputBuffer(item);
+                        // await AwaitResponse();
+                        // string derp = GetResponse();
                         break;
                     case TalkScript.TalkCommand.PlainString:
                         // we put it through the processor to change the text around if we are wrapped in a rune tag
