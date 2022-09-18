@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Ultima5Redux.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Dialogue;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
@@ -649,7 +650,46 @@ namespace Ultima5Redux.Dialogue
                     break;
                 case TalkScript.TalkCommand.Change:
                     // add inventory item to inventory
-                    _ = "";
+                    switch (scriptItem.ItemAdditionalData)
+                    {
+                        case 65: // food
+                            _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
+                                ProvisionReferences.SpecificProvisionType.Food, 1, TheTurnResults);
+                            break;
+                        case 67: //keys
+                            _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
+                                ProvisionReferences.SpecificProvisionType.Keys, 1, TheTurnResults);
+                            break;
+                        case 75: // skull key (serpents hold/Kristi) "skul"
+                            _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
+                                ProvisionReferences.SpecificProvisionType.SkullKeys, 1, TheTurnResults);
+                            break;
+                        case 70: // grapple (empath abbey/Lord Michael) "grap"
+                            _gameState.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Grapple]
+                                .Quantity = 1;
+                            break;
+                        case 72: //sextant (Lighthouse of Greyhaven/David) "sext"
+                            _gameState.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Sextant]
+                                .Quantity = 1;
+                            break;
+                        case 73: // spyglasses (Minor Keep/Seggallion) "spy" (virtue)
+                            _gameState.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.Spyglass]
+                                .Quantity = 1;
+                            break;
+                        case 74: // badge (Minor Keep/Elistaria) "oppr", "impera" 
+                            _gameState.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.BlackBadge]
+                                .Quantity = 1;
+                            break;
+                        case 8: // jewelled sword (Minor Keep/Thrud) "jewe"
+                            _gameState.PlayerInventory.TheWeapons
+                                .Items[WeaponReference.SpecificWeaponType.JeweledSword].Quantity++;
+                            break;
+                        case 28: // jeweled shield (Minor Keep/Thrud) "jewe"
+                            _gameState.PlayerInventory.TheWeapons
+                                .Items[WeaponReference.SpecificWeaponType.JewelShield].Quantity++;
+                            break;
+                    }
+
                     break;
                 case TalkScript.TalkCommand.PlainString:
                 case TalkScript.TalkCommand.AvatarsName:

@@ -2822,16 +2822,7 @@ namespace Ultima5ReduxTesting
             convo.BeginConversation();
             convo.AddUserResponse("keys");
             convo.AddUserResponse("yes");
-            // convo.AddUserResponse("yes");
-            // convo.AddUserResponse("bye");
-            //
-            // Conversation convo2 = world.CreateConversationAndBegin(npcState,
-            //     OnUpdateOfEnqueuedScriptItemHandleDelwyn);
-            // convo2.BeginConversation();
-            // convo2.AddUserResponse("yes");
-            // convo2.AddUserResponse("yes");
-            // convo2.AddUserResponse("yes");
-            // convo2.AddUserResponse("bye");
+
         }
     }
 }
