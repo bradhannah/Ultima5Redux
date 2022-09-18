@@ -40,14 +40,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public SpecialItem(SpecificItemType itemType, SpecificItemTypeSprite specificItemTypeSprite, int quantity) :
             base(quantity, (int)specificItemTypeSprite,
-                InventoryReferences.InventoryReferenceType.Item)
-        {
+                InventoryReferences.InventoryReferenceType.Item) =>
             ItemType = itemType;
-        }
 
         public static SpecificItemType GetItemOffset(SpecificItemTypeSprite specificItemTypeSprite)
         {
-            SpecificItemType specificItemType =
+            var specificItemType =
                 (SpecificItemType)Enum.Parse(typeof(SpecificItemType), specificItemTypeSprite.ToString());
             return specificItemType;
         }

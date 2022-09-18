@@ -12,23 +12,33 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     /// </summary>
     public class ItemStack : NonAttackingUnit
     {
+        private readonly Stack<StackableItem> _stackableItems = new();
+        public override bool ExposeInnerItemsOnOpen => false;
+        public override bool ExposeInnerItemsOnSearch => true;
         public override string FriendlyName { get; }
-        public override string PluralName { get; }
-        public override string SingularName { get; }
-        public override string Name { get; }
+        public override bool HasInnerItemStack => false;
 
         public override bool IsActive => HasStackableItems;
 
-        private readonly Stack<StackableItem> _stackableItems = new();
+        public override bool IsLocked { get; set; } = false;
+        public override bool IsOpenable => false;
+        public override bool IsSearchable => false;
 
-        public void PushStackableItem(StackableItem item) => _stackableItems.Push(item);
-
-        //public enum StackableType { DeadBody, BloodSpatter, }
-
-        public ItemStack(MapUnitPosition mapUnitPosition)
+        public override TileReference KeyTileReference
         {
-            MapUnitPosition = mapUnitPosition;
+            get
+            {
+                if (!HasStackableItems) return GameReferences.SpriteTileReferences.GetTileReference(256);
+                return GameReferences.SpriteTileReferences.GetTileReference(_stackableItems.Peek().InvItem.SpriteNum);
+            }
+            set => throw new NotImplementedException("Cannot assign KeyTileReference in ItemStack");
         }
+
+        public override string Name { get; }
+        public override string PluralName { get; }
+        public override string SingularName { get; }
+
+        public bool HasStackableItems => _stackableItems.Count > 0;
 
         public string ThouFindStr
         {
@@ -44,6 +54,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
         }
 
+        //public enum StackableType { DeadBody, BloodSpatter, }
+
+        public ItemStack(MapUnitPosition mapUnitPosition) => MapUnitPosition = mapUnitPosition;
+
+        public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;
+
         public StackableItem PopStackableItem()
         {
             if (_stackableItems.Count == 0)
@@ -52,29 +68,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return _stackableItems.Pop();
         }
 
-        public bool HasStackableItems => _stackableItems.Count > 0;
-
-        public override TileReference KeyTileReference
+        public void PushStackableItem(StackableItem item)
         {
-            get
-            {
-                if (!HasStackableItems) return GameReferences.SpriteTileReferences.GetTileReference(256);
-                return GameReferences.SpriteTileReferences.GetTileReference(_stackableItems.Peek().InvItem.SpriteNum);
-            }
-            set => throw new NotImplementedException("Cannot assign KeyTileReference in ItemStack");
+            _stackableItems.Push(item);
         }
 
-        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
-        {
+        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition) =>
             throw new NotImplementedException();
-        }
-
-        public override bool IsLocked { get; set; } = false;
-        public override bool IsOpenable => false;
-        public override bool IsSearchable => false;
-        public override bool ExposeInnerItemsOnSearch => true;
-        public override bool ExposeInnerItemsOnOpen => false;
-        public override bool HasInnerItemStack => false;
-        public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;
     }
 }

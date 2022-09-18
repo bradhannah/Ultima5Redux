@@ -42,12 +42,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         public Moonstone(MoonPhaseReferences.MoonPhases phase) : base(0, MOONSTONE_SPRITE,
-            InventoryReferences.InventoryReferenceType.Item)
-        {
+            InventoryReferences.InventoryReferenceType.Item) =>
             Phase = phase;
-        }
 
-        // we will hold onto this enum for later when we assign custom sprites
-        //public enum ItemTypeEnum { NewMoon = 0, CrescentWaxing, FirstQuarter, GibbousWaxing, FullMoon, GibbousWaning, LastQuarter, CrescentWaning, NoMoon }
     }
 }

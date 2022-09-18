@@ -17,8 +17,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public Scrolls(ImportedGameState importedGameState)
         {
-            void addScrollLegacy(MagicReference.SpellWords spellWord) =>
+            void addScrollLegacy(MagicReference.SpellWords spellWord)
+            {
                 AddScroll(spellWord, importedGameState.GetScrollQuantity(spellWord));
+            }
 
             addScrollLegacy(MagicReference.SpellWords.Vas_Lor);
             addScrollLegacy(MagicReference.SpellWords.Rel_Hur);

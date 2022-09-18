@@ -59,13 +59,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <summary>
         ///     Create a reagent
         /// </summary>
-        /// <param name="specificReagentTypepe of reagent</param>
+        /// <param name="specificReagentTypepe of reagent
+        /// 
+        /// </param>
         /// <param name="quantity">how many the party has</param>
         public Reagent(SpecificReagentType specificReagentType, int quantity) : base(quantity, REAGENT_SPRITE,
-            InventoryReferences.InventoryReferenceType.Reagent)
-        {
+            InventoryReferences.InventoryReferenceType.Reagent) =>
             ReagentType = specificReagentType;
-        }
 
         /// <summary>
         ///     Get the correct price adjust for the specific location and
@@ -109,9 +109,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public bool IsReagentForSale(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return GameReferences.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType);
-        }
+        public bool IsReagentForSale(SmallMapReferences.SingleMapReference.Location location) =>
+            GameReferences.ReagentReferences.IsReagentSoldAtLocation(location, ReagentType);
     }
 }

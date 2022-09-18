@@ -23,15 +23,10 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         public HorseSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference,
             ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference,
             PlayerCharacterRecords playerCharacterRecords) : base(shoppeKeeperDialogueReference,
-            theShoppeKeeperReference, dataOvlReference)
-        {
+            theShoppeKeeperReference, dataOvlReference) =>
             _playerCharacterRecords = playerCharacterRecords;
-        }
 
-        public override string GetForSaleList()
-        {
-            throw new NotImplementedException();
-        }
+        public override string GetForSaleList() => throw new NotImplementedException();
 
         public override string GetHelloResponse(TimeOfDay tod = null)
         {
@@ -48,14 +43,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                    TheShoppeKeeperReference.ShoppeKeeperName + ".";
         }
 
-        public override string GetPissedOffNotEnoughMoney()
-        {
-            return (DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
-                    .N_N_QUOTE_THOU_COULDST_NOT_AFFORD_TO) + ShoppeKeeperDialogueReference.GetMerchantString(
-                    DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
-                        .FEED_IT_BANG_QUOTE_N_YELLS_SK_N), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName))
-                .Trim();
-        }
+        public override string GetPissedOffNotEnoughMoney() =>
+            (DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
+                .N_N_QUOTE_THOU_COULDST_NOT_AFFORD_TO) + ShoppeKeeperDialogueReference.GetMerchantString(
+                DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
+                    .FEED_IT_BANG_QUOTE_N_YELLS_SK_N), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName))
+            .Trim();
 
         public override string GetThanksAfterPurchaseResponse()
         {
@@ -65,26 +58,18 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                    TheShoppeKeeperReference.ShoppeKeeperName + ".";
         }
 
-        public override string GetThyInterest()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(103,
+        public override string GetThyInterest() =>
+            ShoppeKeeperDialogueReference.GetMerchantString(103,
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName).Trim();
-        }
 
-        public override string GetWhichWouldYouSee()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(104, GetHorsePrice()).Trim();
-        }
+        public override string GetWhichWouldYouSee() =>
+            ShoppeKeeperDialogueReference.GetMerchantString(104, GetHorsePrice()).Trim();
 
-        public int GetHorsePrice()
-        {
-            return Horse.GetPrice(TheShoppeKeeperReference.ShoppeKeeperLocation, _playerCharacterRecords);
-        }
+        public int GetHorsePrice() =>
+            Horse.GetPrice(TheShoppeKeeperReference.ShoppeKeeperLocation, _playerCharacterRecords);
 
-        public string GetStablesAreClosed()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
+        public string GetStablesAreClosed() =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
                 .THE_STABLES_ARE_CLOSED_DOT_N).Trim();
-        }
     }
 }

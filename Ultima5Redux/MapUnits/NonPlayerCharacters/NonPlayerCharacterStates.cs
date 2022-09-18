@@ -24,7 +24,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
             for (int locationIndex = 1; locationIndex < nLocations + 1; locationIndex++)
             {
-                SmallMapReferences.SingleMapReference.Location location =
+                var location =
                     (SmallMapReferences.SingleMapReference.Location)locationIndex;
                 _npcMap.Add(location, new List<NonPlayerCharacterState>(nNpcsPerLocation));
 
@@ -48,7 +48,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         }
 
         public NonPlayerCharacterState GetStateByLocationAndIndex(
-            SmallMapReferences.SingleMapReference.Location location, int nIndex) => _npcMap[location][nIndex];
+            SmallMapReferences.SingleMapReference.Location location, int nIndex) =>
+            _npcMap[location][nIndex];
 
         public NonPlayerCharacterState GetStateByNPCRef(NonPlayerCharacterReference npcRef) =>
             _npcMap[npcRef.MapLocation][npcRef.DialogIndex];

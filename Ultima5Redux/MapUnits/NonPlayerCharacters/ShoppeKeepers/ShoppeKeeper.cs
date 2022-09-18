@@ -91,7 +91,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
             foreach (byte b in dataOvlReference.GetDataChunk(chunkName).GetAsByteList())
             {
-                SmallMapReferences.SingleMapReference.Location location =
+                var location =
                     (SmallMapReferences.SingleMapReference.Location)b;
                 locations.Add(location);
             }
@@ -107,11 +107,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Get a random response when the shoppekeeper is happy as you leave
         /// </summary>
         /// <returns></returns>
-        public virtual string GetHappyShoppeKeeperGoodbyeResponse()
-        {
-            return "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP) +
-                   " says " + TheShoppeKeeperReference.ShoppeKeeperName;
-        }
+        public virtual string GetHappyShoppeKeeperGoodbyeResponse() =>
+            "\"" + ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(HAPPY_START, HAPPY_STOP) +
+            " says " + TheShoppeKeeperReference.ShoppeKeeperName;
 
         /// <summary>
         ///     Gets a standard hello response based on current time of day
@@ -129,60 +127,44 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Gets a common response after deciding not to buy
         /// </summary>
         /// <returns></returns>
-        public virtual string GetPissedOffNotBuyingResponse()
-        {
-            return "Stop wasting my time!";
-        }
+        public virtual string GetPissedOffNotBuyingResponse() => "Stop wasting my time!";
 
         /// <summary>
         ///     Gets a pissed off response when you don't have enough to buy the thing you tried to buy
         /// </summary>
         /// <returns></returns>
-        public virtual string GetPissedOffNotEnoughMoney()
-        {
-            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
-        }
+        public virtual string GetPissedOffNotEnoughMoney() =>
+            GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_NOT_ENOUGH_MONEY);
 
         /// <summary>
         ///     Get a random response when the shoppekeeper gets pissed off at you
         /// </summary>
         /// <returns></returns>
-        public virtual string GetPissedOffShoppeKeeperGoodbyeResponse()
-        {
-            return "\"" +
-                   ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP) +
-                   " says " + TheShoppeKeeperReference.ShoppeKeeperName;
-        }
+        public virtual string GetPissedOffShoppeKeeperGoodbyeResponse() =>
+            "\"" +
+            ShoppeKeeperDialogueReference.GetRandomMerchantStringFromRange(PISSED_OFF_START, PISSED_OFF_STOP) +
+            " says " + TheShoppeKeeperReference.ShoppeKeeperName;
 
         /// <summary>
         ///     Gets a common response after a purchase
         /// </summary>
         /// <returns></returns>
-        public virtual string GetThanksAfterPurchaseResponse()
-        {
-            return "Thank thee kindly!";
-        }
+        public virtual string GetThanksAfterPurchaseResponse() => "Thank thee kindly!";
 
-        public virtual string GetThyInterest()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
+        public virtual string GetThyInterest() =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperGeneralStrings
                 .N_THY_INTEREST_Q_QUOTE);
-        }
 
-        public string GetComeLaterResponse()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP1) +
-                   DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP2);
-        }
+        public string GetComeLaterResponse() =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP1) +
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ChitChatStrings.MERCH_SEE_ME_AT_SHOP2);
 
         /// <summary>
         ///     Gets a common response asking if you want to buy the thing
         /// </summary>
         /// <returns></returns>
-        public string GetDoYouWantToBuy()
-        {
-            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
-        }
+        public string GetDoYouWantToBuy() =>
+            GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_DO_YOU_WANT);
 
         public bool IsOnDuty(TimeOfDay tod)
         {
@@ -206,10 +188,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return str;
         }
 
-        protected string FlattenStr(string str)
-        {
-            return str.Trim().Replace("\n", " ");
-        }
+        protected string FlattenStr(string str) => str.Trim().Replace("\n", " ");
 
         protected string GetGenderedFormalPronoun(PlayerCharacterRecord.CharacterGender gender)
         {

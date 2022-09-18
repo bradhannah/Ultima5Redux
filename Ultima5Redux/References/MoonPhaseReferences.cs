@@ -21,9 +21,11 @@ namespace Ultima5Redux.References
             CrescentWaning, NoMoon
         }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum MoonsAndSun { Trammel = 4, Felucca = 8 + 12, Sun = 12 }
 
-        [JsonConverter(typeof(StringEnumConverter))] public enum TimeOfDayPhases { Daytime, Nighttime, Sunrise, Sunset }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TimeOfDayPhases { Daytime, Nighttime, Sunrise, Sunset }
 
         /// <summary>
         ///     Angle of the Felucca moon
@@ -54,10 +56,8 @@ namespace Ultima5Redux.References
         ///     Build references for moon phases and anything that they may affects
         /// </summary>
         /// <param name="dataOvlReference"></param>
-        public MoonPhaseReferences(DataOvlReference dataOvlReference)
-        {
-            _moonPhaseChunk = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.MOON_PHASES);
-        }
+        public MoonPhaseReferences(DataOvlReference dataOvlReference) => _moonPhaseChunk =
+            dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.MOON_PHASES);
 
         /// <summary>
         ///     Gives an x,y coordinate of a moon or sun position on a cartesian plan
@@ -110,10 +110,7 @@ namespace Ultima5Redux.References
         /// <param name="tod"></param>
         /// <returns>true if lights should be on</returns>
         // ReSharper disable once UnusedMember.Global
-        public bool AreAmbientLightsOn(TimeOfDay tod)
-        {
-            return GetTimeOfDayPhase(tod) != TimeOfDayPhases.Daytime;
-        }
+        public bool AreAmbientLightsOn(TimeOfDay tod) => GetTimeOfDayPhase(tod) != TimeOfDayPhases.Daytime;
 
         /// <summary>
         ///     Gets the location represented by the moonphase
@@ -150,10 +147,7 @@ namespace Ultima5Redux.References
         public MoonPhases GetMoonPhasesByTimeOfDay(TimeOfDay timeOfDay, MoonsAndSun moonsAndSun)
         {
             // the value stored is an offset and needs to be adjusted to a zero based index
-            int getAdjustedValue(int nValue)
-            {
-                return nValue - N_OFFSET_ADJUST;
-            }
+            int getAdjustedValue(int nValue) => nValue - N_OFFSET_ADJUST;
 
             switch (moonsAndSun)
             {

@@ -14,7 +14,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         }
 
         /// <summary>
-        ///     
         /// </summary>
         private readonly List<byte> _aiTypeList = new();
 
@@ -63,10 +62,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         /// <returns></returns>
         internal int GetScheduleIndex(TimeOfDay timeOfDay)
         {
-            int getIndex(int nOrigIndex)
-            {
-                return nOrigIndex == 3 ? 1 : nOrigIndex;
-            }
+            int getIndex(int nOrigIndex) => nOrigIndex == 3 ? 1 : nOrigIndex;
 
             int nHour = timeOfDay.Hour;
 
@@ -118,10 +114,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             return nEarliestIndex;
         }
 
-        private int GetFloor(int nIndex)
-        {
-            return Coords[nIndex].Z;
-        }
+        private int GetFloor(int nIndex) => Coords[nIndex].Z;
 
         /// <summary>
         ///     Gets the index of the latest time in the daily schedule
@@ -175,10 +168,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             throw new Ultima5ReduxException("GetRawScheduleIndex fell all the way through which doesn't make sense.");
         }
 
-        private Point2D GetXY(int nIndex)
-        {
-            return new Point2D(Coords[nIndex].X, Coords[nIndex].Y);
-        }
+        private Point2D GetXY(int nIndex) => new(Coords[nIndex].X, Coords[nIndex].Y);
 
         public AiType GetCharacterAiTypeByTime(TimeOfDay timeOfDay)
         {

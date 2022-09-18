@@ -14,17 +14,6 @@ namespace Ultima5Redux.References
         private const string RELATIVE_INSTALLED = @"Ultima5ReduxTestDependancies/DataFiles";
         private const string RELATIVE_TEST = @"../Ultima5ReduxTestDependancies/DataFiles";
 
-        private static string GetU5Directory()
-        {
-            if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
-            if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
-            if (Directory.Exists(GOLD_DIR)) return GOLD_DIR; //-V3039
-
-            throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
-                                            Directory.GetCurrentDirectory() + "\nDirs: " +
-                                            Directory.GetDirectories(Directory.GetCurrentDirectory()));
-        }
-
         public static CombatItemReferences CombatItemRefs { get; private set; }
 
         public static CombatMapReferences CombatMapRefs { get; private set; }
@@ -36,10 +25,14 @@ namespace Ultima5Redux.References
 
         public static EnemyReferences EnemyRefs { get; private set; }
 
+        public static GameReferences Instance { get; set; }
+
         /// <summary>
         ///     Detailed inventory information reference
         /// </summary>
         public static InventoryReferences InvRef { get; private set; }
+
+        public static bool IsInitialized { get; private set; }
 
         /// <summary>
         ///     A large map reference
@@ -92,10 +85,6 @@ namespace Ultima5Redux.References
 
         public static TileOverrideReferences TileOverrideRefs { get; private set; }
 
-        public static GameReferences Instance { get; set; }
-
-        public static bool IsInitialized { get; private set; }
-
         private GameReferences(string dataDirectory)
         {
             LookRef = new Look(dataDirectory);
@@ -120,6 +109,17 @@ namespace Ultima5Redux.References
             ShoppeKeeperRefs = new ShoppeKeeperReferences(DataOvlRef, NpcRefs);
             ReagentReferences = new ReagentReferences();
             ProvisionReferences = new ProvisionReferences();
+        }
+
+        private static string GetU5Directory()
+        {
+            if (Directory.Exists(RELATIVE_TEST)) return RELATIVE_TEST;
+            if (Directory.Exists(RELATIVE_INSTALLED)) return RELATIVE_INSTALLED;
+            if (Directory.Exists(GOLD_DIR)) return GOLD_DIR; //-V3039
+
+            throw new Ultima5ReduxException("Can't find a suitable Ultima Data Files directory.\n CWD: " +
+                                            Directory.GetCurrentDirectory() + "\nDirs: " +
+                                            Directory.GetDirectories(Directory.GetCurrentDirectory()));
         }
 
         public static void Initialize(string dataDirectory = "")

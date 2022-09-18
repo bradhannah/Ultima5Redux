@@ -19,7 +19,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         [DataMember] public int ItemSpriteExposed { get; set; }
         [IgnoreDataMember] public string FriendlyItemName => Utils.GetFriendlyString(ItemName);
 
-        [IgnoreDataMember] public string[] ItemNameHighLights =>
+        [IgnoreDataMember]
+        public string[] ItemNameHighLights =>
             ItemNameHighlight.Length == 0 ? Array.Empty<string>() : ItemNameHighlight.Split(',');
 
         /// <summary>
@@ -37,19 +38,14 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         ///     Gets a formatted description including the attribution of the quoted material
         /// </summary>
         /// <returns></returns>
-        public string GetRichTextDescription()
-        {
-            return "<i>\"" + ItemDescription + "</i>\"" + "\n\n" + "<align=right>- " + ItemDescriptionAttribution +
-                   "</align>";
-        }
+        public string GetRichTextDescription() =>
+            "<i>\"" + ItemDescription + "</i>\"" + "\n\n" + "<align=right>- " + ItemDescriptionAttribution +
+            "</align>";
 
         /// <summary>
         ///     Gets a formatted description WITHOUT any attribution
         /// </summary>
         /// <returns></returns>
-        public string GetRichTextDescriptionNoAttribution()
-        {
-            return ItemDescription;
-        }
+        public string GetRichTextDescriptionNoAttribution() => ItemDescription;
     }
 }

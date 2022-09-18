@@ -13,8 +13,7 @@ namespace Ultima5Redux.References
     {
         private readonly Dictionary<Type, SomeStrings> _strMap;
 
-        public U5StringRef(DataOvlReference dataRef)
-        {
+        public U5StringRef(DataOvlReference dataRef) =>
             // is it ugly? Yes. Is it magical? Also yes.
             _strMap = new Dictionary<Type, SomeStrings>
             {
@@ -205,9 +204,12 @@ namespace Ultima5Redux.References
                 {
                     typeof(DataOvlReference.Battle2Strings),
                     dataRef.GetDataChunk(DataOvlReference.DataChunkName.BATTLE2).GetChunkAsStringList()
-                },
+                }
             };
-        }
+
+        public static string ThouDostFind(string thingYouFound) =>
+            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                .N_THOU_DOST_FIND_N) + thingYouFound;
 
         public string GetDirectionString(Point2D.Direction direction)
         {
@@ -239,12 +241,6 @@ namespace Ultima5Redux.References
             Debug.Assert(_strMap.ContainsKey(strObj.GetType()));
 
             return _strMap[strObj.GetType()].StringList[(int)strObj];
-        }
-
-        public static string ThouDostFind(string thingYouFound)
-        {
-            return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
-                .N_THOU_DOST_FIND_N) + thingYouFound;
         }
     }
 }

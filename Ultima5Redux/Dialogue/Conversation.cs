@@ -65,14 +65,14 @@ namespace Ultima5Redux.Dialogue
         private bool _runeMode;
 
         /// <summary>
-        ///     The callback for the notification that tells the user something was added to the queue
-        /// </summary>
-        public EnqueuedScriptItem EnqueuedScriptItemCallback { get; set; }
-
-        /// <summary>
         ///     Has the conversation ended?
         /// </summary>
         public bool ConversationEnded { get; set; }
+
+        /// <summary>
+        ///     The callback for the notification that tells the user something was added to the queue
+        /// </summary>
+        public EnqueuedScriptItem EnqueuedScriptItemCallback { get; set; }
 
         public NonPlayerCharacterState TheNonPlayerCharacterState { get; }
 
@@ -176,12 +176,10 @@ namespace Ultima5Redux.Dialogue
                             _currentSkipInstruction = SkipInstruction.SkipAfterNext;
                             return;
                         }
-                        else
-                        {
-                            // we skip the next block because it is the line used when we actually know the Avatar
-                            _currentSkipInstruction = SkipInstruction.SkipNext;
-                            return;
-                        }
+
+                        // we skip the next block because it is the line used when we actually know the Avatar
+                        _currentSkipInstruction = SkipInstruction.SkipNext;
+                        return;
                     case TalkScript.TalkCommand.AvatarsName:
                         // we should already know if they know the avatars name....
                         Debug.Assert(TheNonPlayerCharacterState.HasMetAvatar);

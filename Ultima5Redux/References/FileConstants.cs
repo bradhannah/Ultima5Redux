@@ -28,6 +28,9 @@ namespace Ultima5Redux.References
         public const string KEEP_TLK = "KEEP.TLK";
         public const string LOOK2_DAT = "LOOK2.DAT";
 
+        public const string NEW_SAVE_FILE = "save.json";
+        public const string NEW_SAVE_SUMMARY_FILE = "summary.json";
+
         public const string SAVED_GAM = "SAVED.GAM";
         public const string SAVED_OOL = "SAVED.OOL";
 
@@ -42,8 +45,5 @@ namespace Ultima5Redux.References
         public static readonly string[] TalkFiles = { CASTLE_TLK, TOWNE_TLK, DWELLING_TLK, KEEP_TLK };
         public static readonly string[] NPCFiles = { CASTLE_NPC, TOWNE_NPC, DWELLING_NPC, KEEP_NPC };
         public static readonly string[] SmallMapFiles = { CASTLE_DAT, TOWNE_DAT, DWELLING_DAT, KEEP_DAT };
-
-        public const string NEW_SAVE_FILE = "save.json";
-        public const string NEW_SAVE_SUMMARY_FILE = "summary.json";
     }
 }

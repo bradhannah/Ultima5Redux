@@ -520,15 +520,11 @@ namespace Ultima5Redux.Maps
             return adjustedPosition;
         }
 
-        internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases = false)
-        {
-            return IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.GetAvatarMapUnit().CurrentAvatarState);
-        }
+        internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases = false) =>
+            IsTileFreeToTravel(xy, bNoStaircases, TheMapUnits.GetAvatarMapUnit().CurrentAvatarState);
 
-        internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState)
-        {
-            return IsTileFreeToTravelForAvatar(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
-        }
+        internal bool IsTileFreeToTravel(in Point2D xy, bool bNoStaircases, Avatar.AvatarState forcedAvatarState) =>
+            IsTileFreeToTravelForAvatar(CurrentPosition.XY, xy, bNoStaircases, forcedAvatarState);
 
         /// <summary>
         ///     Is the particular tile eligible to be moved onto
@@ -860,10 +856,8 @@ namespace Ultima5Redux.Maps
         private AggressiveMapUnitInfo GetAggressiveMapUnitInfo(Point2D attackFromPosition,
             Point2D attackToPosition, SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit)
         {
-            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map)
-            {
-                return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
-            }
+            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map) =>
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
 
             TileReference attackToTileReference = GetTileReference(attackToPosition);
             TileReference attackFromTileReference = GetTileReference(attackFromPosition);
@@ -1139,10 +1133,8 @@ namespace Ultima5Redux.Maps
                      xy.Y >= currentMap.VisibleOnMap[xy.X].Length || xy.Y < 0);
         }
 
-        private bool IsTileFreeForAvatarToTravelLocal(in Point2D.Direction direction, Avatar.AvatarState avatarState)
-        {
-            return IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
-        }
+        private bool IsTileFreeForAvatarToTravelLocal(in Point2D.Direction direction, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(CurrentPosition.XY.GetAdjustedPosition(direction), true, avatarState);
 
         /// <summary>
         ///     Loads a combat map as the current map
@@ -1236,10 +1228,8 @@ namespace Ultima5Redux.Maps
             return tileReferences.Any(tileReference => IsTileWithinFourDirections(position, tileReference));
         }
 
-        public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile)
-        {
-            return ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
-        }
+        public int ClosestTileReferenceAround(int nRadius, Func<int, bool> checkTile) =>
+            ClosestTileReferenceAround(CurrentPosition.XY, nRadius, checkTile);
 
         public int ClosestTileReferenceAround(Point2D midPosition, int nRadius, Func<int, bool> checkTile)
         {
@@ -1437,10 +1427,8 @@ namespace Ultima5Redux.Maps
         public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
             Point2D attackToPosition, SingleCombatMapReference.Territory territory)
         {
-            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map)
-            {
-                return GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
-            }
+            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map) =>
+                GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
 
             // note - attacking from a skiff OR carpet is NOT permitted unless touching a piece of land 
             // otherwise is twill say Attack-On foot!
@@ -1542,10 +1530,7 @@ namespace Ultima5Redux.Maps
         ///     Gets a map unit on the current tile (that ISN'T the Avatar)
         /// </summary>
         /// <returns>MapUnit or null if none exist</returns>
-        public MapUnit GetMapUnitOnCurrentTile()
-        {
-            return GetTopVisibleMapUnit(CurrentPosition.XY, true);
-        }
+        public MapUnit GetMapUnitOnCurrentTile() => GetTopVisibleMapUnit(CurrentPosition.XY, true);
 
 
         /// <summary>
@@ -1674,10 +1659,9 @@ namespace Ultima5Redux.Maps
         /// <param name="bIgnoreExposed"></param>
         /// <param name="bIgnoreMoongate"></param>
         /// <returns></returns>
-        public TileReference GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false)
-        {
-            return GetTileReference(new Point2D(x, y));
-        }
+        public TileReference
+            GetTileReference(int x, int y, bool bIgnoreExposed = false, bool bIgnoreMoongate = false) =>
+            GetTileReference(new Point2D(x, y));
 
         /// <summary>
         ///     Gets a tile reference from the given coordinate
@@ -1708,10 +1692,7 @@ namespace Ultima5Redux.Maps
         ///     Gets a tile reference from the tile the avatar currently resides on
         /// </summary>
         /// <returns></returns>
-        public TileReference GetTileReferenceOnCurrentTile()
-        {
-            return GetTileReference(CurrentPosition.XY);
-        }
+        public TileReference GetTileReferenceOnCurrentTile() => GetTileReference(CurrentPosition.XY);
 
         public TileStack GetTileStack(Point2D xy, bool bSkipMapUnit)
         {
@@ -1885,16 +1866,11 @@ namespace Ultima5Redux.Maps
             return nMostTile == -1 ? 5 : nMostTile;
         }
 
-        public bool IsAvatarSitting()
-        {
-            return TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
-        }
+        public bool IsAvatarSitting() => TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
 
-        public bool IsCombatMapUnitOccupiedTile(in Point2D xy)
-        {
-            return Map.IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
+        public bool IsCombatMapUnitOccupiedTile(in Point2D xy) =>
+            Map.IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
                 TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllCombatMapUnits);
-        }
 
         /// <summary>
         ///     Is there food on a table within 1 (4 way) tile
@@ -1904,12 +1880,10 @@ namespace Ultima5Redux.Maps
         /// <returns>true if food is within a tile</returns>
         public bool IsFoodNearby(in Point2D characterPos)
         {
-            bool isFoodTable(int nSprite)
-            {
-                return nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index ||
-                       nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index ||
-                       nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
-            }
+            bool isFoodTable(int nSprite) =>
+                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodTop").Index ||
+                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBottom").Index ||
+                nSprite == GameReferences.SpriteTileReferences.GetTileReferenceByName("TableFoodBoth").Index;
 
             // yuck, but if the food is up one tile or down one tile, then food is nearby
             bool bIsFoodNearby = isFoodTable(GetTileReference(characterPos.X, characterPos.Y - 1).Index) ||
@@ -1945,61 +1919,46 @@ namespace Ultima5Redux.Maps
         }
 
 
-        public bool IsLandNearby()
-        {
-            return IsLandNearby(CurrentPosition.XY, false, TheMapUnits.GetAvatarMapUnit().CurrentAvatarState);
-        }
+        public bool IsLandNearby() =>
+            IsLandNearby(CurrentPosition.XY, false, TheMapUnits.GetAvatarMapUnit().CurrentAvatarState);
 
-        public bool IsLandNearby(in Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState)
-        {
-            return IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState) ||
-                   IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState) ||
-                   IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState) ||
-                   IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
-        }
+        public bool IsLandNearby(in Point2D xy, bool bNoStairCases, Avatar.AvatarState avatarState) =>
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Down), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Up), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Left), bNoStairCases, avatarState) ||
+            IsTileFreeToTravel(xy.GetAdjustedPosition(Point2D.Direction.Right), bNoStairCases, avatarState);
 
-        public bool IsLandNearby(in Avatar.AvatarState avatarState)
-        {
-            return IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Down, avatarState) ||
-                   IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Up, avatarState) ||
-                   IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Left, avatarState) ||
-                   IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Right, avatarState);
-        }
+        public bool IsLandNearby(in Avatar.AvatarState avatarState) =>
+            IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Down, avatarState) ||
+            IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Up, avatarState) ||
+            IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Left, avatarState) ||
+            IsTileFreeForAvatarToTravelLocal(Point2D.Direction.Right, avatarState);
 
         /// <summary>
         ///     Gets a map unit if it's on the current tile
         /// </summary>
         /// <returns>true if there is a map unit of on the tile</returns>
-        public bool IsMapUnitOccupiedTile()
-        {
-            return IsMapUnitOccupiedTile(CurrentPosition.XY);
-        }
+        public bool IsMapUnitOccupiedTile() => IsMapUnitOccupiedTile(CurrentPosition.XY);
 
         /// <summary>
         ///     Is there an NPC on the tile specified?
         /// </summary>
         /// <param name="xy"></param>
         /// <returns></returns>
-        public bool IsMapUnitOccupiedTile(in Point2D xy)
-        {
-            return Map.IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
+        public bool IsMapUnitOccupiedTile(in Point2D xy) =>
+            Map.IsMapUnitOccupiedFromList(xy, _currentSingleMapReference.Floor,
                 TheMapUnits.GetMapUnitCollection(LargeMapOverUnder).AllActiveMapUnits);
-        }
 
-        public bool IsNPCInBed(NonPlayerCharacter npc)
-        {
-            return GetTileReference(npc.MapUnitPosition.XY).Index ==
-                   GameReferences.SpriteTileReferences.GetTileNumberByName("LeftBed");
-        }
+        public bool IsNPCInBed(NonPlayerCharacter npc) =>
+            GetTileReference(npc.MapUnitPosition.XY).Index ==
+            GameReferences.SpriteTileReferences.GetTileNumberByName("LeftBed");
 
         /// <summary>
         ///     Determines if a specific Dock is occupied by a Sea Faring Vessel
         /// </summary>
         /// <returns></returns>
-        public bool IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return GetSeaFaringVesselAtDock(location) != null;
-        }
+        public bool IsShipOccupyingDock(SmallMapReferences.SingleMapReference.Location location) =>
+            GetSeaFaringVesselAtDock(location) != null;
 
         /// <summary>
         ///     Are the stairs at the given position going down?
@@ -2036,19 +1995,13 @@ namespace Ultima5Redux.Maps
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsStairGoingUp()
-        {
-            return IsStairGoingUp(CurrentPosition.XY);
-        }
+        public bool IsStairGoingUp() => IsStairGoingUp(CurrentPosition.XY);
 
         /// <summary>
         ///     Are the stairs at the player characters current position going down?
         /// </summary>
         /// <returns></returns>
-        public bool IsStairsGoingDown()
-        {
-            return IsStairGoingDown(CurrentPosition.XY);
-        }
+        public bool IsStairsGoingDown() => IsStairGoingDown(CurrentPosition.XY);
 
         public bool IsTileWithinFourDirections(Point2D position, int nTileIndex)
         {
@@ -2064,10 +2017,8 @@ namespace Ultima5Redux.Maps
             return positions.Any(testTosition => GetTileReference(testTosition).Index == nTileIndex);
         }
 
-        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference)
-        {
-            return IsTileWithinFourDirections(position, tileReference.Index);
-        }
+        public bool IsTileWithinFourDirections(Point2D position, TileReference tileReference) =>
+            IsTileWithinFourDirections(position, tileReference.Index);
 
         public void LoadCombatMap(SingleCombatMapReference singleCombatMapReference,
             SingleCombatMapReference.EntryDirection entryDirection, PlayerCharacterRecords records,

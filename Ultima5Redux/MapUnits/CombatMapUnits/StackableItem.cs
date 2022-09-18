@@ -6,9 +6,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     {
         public InventoryItem InvItem { get; }
 
-        public StackableItem(InventoryItem item)
-        {
-            InvItem = item;
-        }
+        public StackableItem(InventoryItem item) => InvItem = item;
     }
 }

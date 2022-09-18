@@ -34,7 +34,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             { "Wis", "Knowledge" },
             { "Xen", "Creature" },
             { "Ylem", "Matter" },
-            { "Zu", "Sleep" },
+            { "Zu", "Sleep" }
         };
 
         [DataMember] public override Dictionary<MagicReference.SpellWords, Spell> Items { get; internal set; } = new();
@@ -68,14 +68,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             Items[spellWord] = new Spell(spellWord, nQuantity);
         }
 
-        public static string GetLiteralTranslation(string syllable)
-        {
-            return LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
-        }
+        public static string GetLiteralTranslation(string syllable) =>
+            LiteralTranslationDictionary[Utils.EnTextInfo.ToTitleCase(syllable)];
 
         public static string GetSpellWordByChar(string spellCharacter)
         {
-            var hey = LiteralTranslationDictionary.Where(sp => sp.Key.StartsWith(spellCharacter.ToUpper()));
+            IEnumerable<KeyValuePair<string, string>> hey =
+                LiteralTranslationDictionary.Where(sp => sp.Key.StartsWith(spellCharacter.ToUpper()));
             return hey.FirstOrDefault().Key;
         }
     }

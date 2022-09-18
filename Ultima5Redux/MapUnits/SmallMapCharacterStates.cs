@@ -34,10 +34,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public SmallMapCharacterState GetCharacterState(int nIndex)
-        {
-            return CharacterStates[nIndex];
-        }
+        public SmallMapCharacterState GetCharacterState(int nIndex) => CharacterStates[nIndex];
 
         public SmallMapCharacterState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {

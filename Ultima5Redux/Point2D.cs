@@ -31,10 +31,7 @@ namespace Ultima5Redux
             return point1.Equals(point2);
         }
 
-        public static bool operator !=(Point2DFloat point1, Point2DFloat point2)
-        {
-            return !(point1 == point2);
-        }
+        public static bool operator !=(Point2DFloat point1, Point2DFloat point2) => !(point1 == point2);
 
         public override bool Equals(object obj) => obj is Point2DFloat point2DFloat && Equals(point2DFloat);
 
@@ -46,20 +43,11 @@ namespace Ultima5Redux
             }
         }
 
-        public override string ToString()
-        {
-            return GetFriendlyString();
-        }
+        public override string ToString() => GetFriendlyString();
 
-        public Point2DFloat Copy()
-        {
-            return new Point2DFloat(X, Y);
-        }
+        public Point2DFloat Copy() => new(X, Y);
 
-        public double DistanceBetween(Point2DFloat xy)
-        {
-            return Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));
-        }
+        public double DistanceBetween(Point2DFloat xy) => Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));
 
         public bool Equals(Point2DFloat other)
         {
@@ -70,10 +58,7 @@ namespace Ultima5Redux
             return Math.Abs(Y - other.Y) < 0.0000001f;
         }
 
-        public string GetFriendlyString()
-        {
-            return "X=" + X + ",Y=" + Y;
-        }
+        public string GetFriendlyString() => "X=" + X + ",Y=" + Y;
 
         public bool WithinN(Point2DFloat xy, float nWithin)
         {
@@ -94,7 +79,7 @@ namespace Ultima5Redux
         [DataMember] public int X { get; set; }
         [DataMember] public int Y { get; set; }
 
-        public static Point2D Zero => new Point2D(0, 0);
+        public static Point2D Zero => new(0, 0);
 
         public Point2D()
         {
@@ -114,10 +99,8 @@ namespace Ultima5Redux
             return nNum;
         }
 
-        public static double DistanceBetween(int x1, int y1, int x2, int y2)
-        {
-            return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
-        }
+        public static double DistanceBetween(int x1, int y1, int x2, int y2) =>
+            Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
 
         public static bool IsOppositeDirection(Direction direction1, Direction direction2)
         {
@@ -135,25 +118,16 @@ namespace Ultima5Redux
             }
         }
 
-        public static bool IsOutOfRangeStatic(int nX, int nY, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
-        {
-            return (nX < nMinX || nX > nMaxX || nY < nMinY || nY > nMaxY);
-        }
+        public static bool IsOutOfRangeStatic(int nX, int nY, int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0) =>
+            nX < nMinX || nX > nMaxX || nY < nMinY || nY > nMaxY;
 
-        public static bool IsWithinNFourDirections(int x1, int y1, int x2, int y2)
-        {
-            return Math.Abs(DistanceBetween(x1, y1, x2, y2) - 1) < 0.01;
-        }
+        public static bool IsWithinNFourDirections(int x1, int y1, int x2, int y2) =>
+            Math.Abs(DistanceBetween(x1, y1, x2, y2) - 1) < 0.01;
 
-        public static bool operator ==(in Point2D point1, in Point2D point2)
-        {
-            return point1?.Equals(point2) ?? ReferenceEquals(point2, null);
-        }
+        public static bool operator ==(in Point2D point1, in Point2D point2) =>
+            point1?.Equals(point2) ?? ReferenceEquals(point2, null);
 
-        public static bool operator !=(in Point2D point1, in Point2D point2)
-        {
-            return !(point1 == point2);
-        }
+        public static bool operator !=(in Point2D point1, in Point2D point2) => !(point1 == point2);
 
         /// <summary>
         ///     Provides a list of intersecting points between two points
@@ -169,8 +143,8 @@ namespace Ultima5Redux
             int x = startPoint.X;
             int y = startPoint.Y;
             int n = 1 + dx + dy;
-            int nXInc = (endPoint.X > startPoint.X) ? 1 : -1;
-            int nYInc = (endPoint.Y > startPoint.Y) ? 1 : -1;
+            int nXInc = endPoint.X > startPoint.X ? 1 : -1;
+            int nYInc = endPoint.Y > startPoint.Y ? 1 : -1;
             int error = dx - dy;
             dx *= 2;
             dy *= 2;
@@ -196,10 +170,7 @@ namespace Ultima5Redux
             return intersectingPoints;
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is Point2D point2D && Equals(point2D);
-        }
+        public override bool Equals(object obj) => obj is Point2D point2D && Equals(point2D);
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()
@@ -224,15 +195,9 @@ namespace Ultima5Redux
             Y %= nMax;
         }
 
-        public Point2D Copy()
-        {
-            return new Point2D(X, Y);
-        }
+        public Point2D Copy() => new(X, Y);
 
-        public double DistanceBetween(Point2D xy)
-        {
-            return Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));
-        }
+        public double DistanceBetween(Point2D xy) => Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));
 
         [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
         public double DistanceBetweenWithWrapAround(Point2D xy, int nMax)
@@ -390,15 +355,10 @@ namespace Ultima5Redux
             return points;
         }
 
-        public string GetFriendlyString()
-        {
-            return "X=" + X + ",Y=" + Y;
-        }
+        public string GetFriendlyString() => "X=" + X + ",Y=" + Y;
 
-        public Point2D GetPoint2DOrNullOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
-        {
-            return IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
-        }
+        public Point2D GetPoint2DOrNullOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0) =>
+            IsOutOfRange(nMaxX, nMaxY, nMinX, nMinY) ? null : this;
 
         /// <summary>
         ///     Determines if the current point is out of the range provided
@@ -409,10 +369,8 @@ namespace Ultima5Redux
         /// <param name="nMinX">min X value</param>
         /// <param name="nMinY">min Y value</param>
         /// <returns></returns>
-        public bool IsOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0)
-        {
-            return (X < nMinX || X > nMaxX || Y < nMinY || Y > nMaxY);
-        }
+        public bool IsOutOfRange(int nMaxX, int nMaxY, int nMinX = 0, int nMinY = 0) =>
+            X < nMinX || X > nMaxX || Y < nMinY || Y > nMaxY;
 
         public bool IsWithinN(Point2D xy, int nWithin)
         {
@@ -422,15 +380,9 @@ namespace Ultima5Redux
         }
 
         // is the point given point in one of the four directions given?
-        public bool IsWithinNFourDirections(in Point2D xy)
-        {
-            return Math.Abs(DistanceBetween(xy) - 1) < 0.01;
-        }
+        public bool IsWithinNFourDirections(in Point2D xy) => Math.Abs(DistanceBetween(xy) - 1) < 0.01;
 
-        public bool IsWithinNFourDirections(int x, int y)
-        {
-            return Math.Abs(DistanceBetween(x, y, X, Y) - 1) < 0.01;
-        }
+        public bool IsWithinNFourDirections(int x, int y) => Math.Abs(DistanceBetween(x, y, X, Y) - 1) < 0.01;
 
         /// <summary>
         ///     Provides a list of intersecting points between two points

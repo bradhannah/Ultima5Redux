@@ -48,15 +48,10 @@ namespace Ultima5Redux.MapUnits
             Floor = floor;
         }
 
-        public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2)
-        {
-            return pos1?.Equals(pos2) ?? ReferenceEquals(pos2, null);
-        }
+        public static bool operator ==(MapUnitPosition pos1, MapUnitPosition pos2) =>
+            pos1?.Equals(pos2) ?? ReferenceEquals(pos2, null);
 
-        public static bool operator !=(MapUnitPosition pos1, MapUnitPosition pos2)
-        {
-            return !(pos1 == pos2);
-        }
+        public static bool operator !=(MapUnitPosition pos1, MapUnitPosition pos2) => !(pos1 == pos2);
 
         public override bool Equals(object obj)
         {
@@ -76,24 +71,19 @@ namespace Ultima5Redux.MapUnits
             return hashCode;
         }
 
-        public override string ToString()
-        {
-            return "X=" + X + ",Y=" + Y + ", Floor=" + Floor;
-        }
+        public override string ToString() => "X=" + X + ",Y=" + Y + ", Floor=" + Floor;
 
-        public string GetFriendlyFloorString(int nFloor) => nFloor switch
-        {
-            -1 => "Basement",
-            0 => "Main Floor",
-            1 => "First Floor",
-            2 => "Second Floor",
-            3 => "Third Floor",
-            _ => "Unknown Floor"
-        };
+        public string GetFriendlyFloorString(int nFloor) =>
+            nFloor switch
+            {
+                -1 => "Basement",
+                0 => "Main Floor",
+                1 => "First Floor",
+                2 => "Second Floor",
+                3 => "Third Floor",
+                _ => "Unknown Floor"
+            };
 
-        public bool IsSameAs(int x, int y, int nFloor)
-        {
-            return x == X && y == Y && _floor == nFloor;
-        }
+        public bool IsSameAs(int x, int y, int nFloor) => x == X && y == Y && _floor == nFloor;
     }
 }

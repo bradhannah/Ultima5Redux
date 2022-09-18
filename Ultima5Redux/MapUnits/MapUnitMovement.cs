@@ -42,10 +42,7 @@ namespace Ultima5Redux.MapUnits
         {
         }
 
-        public MapUnitMovement(int nDialogIndex)
-        {
-            _nDialogIndex = nDialogIndex;
-        }
+        public MapUnitMovement(int nDialogIndex) => _nDialogIndex = nDialogIndex;
 
         /// <summary>
         ///     Construct a MapUnitMovement from old save game
@@ -80,7 +77,7 @@ namespace Ultima5Redux.MapUnits
             for (int i = 0; i < MAX_COMMAND_LIST_ENTRIES; i++)
             {
                 byte nIterations = loadedData[nIndex];
-                MovementCommandDirection direction = (MovementCommandDirection)loadedData[nIndex + 1];
+                var direction = (MovementCommandDirection)loadedData[nIndex + 1];
 
                 // if we have hit 0xFF then there is nothing else in the list and we can just return
                 if (nIterations == 0xFF || nIterations == 0) return;
@@ -137,12 +134,10 @@ namespace Ultima5Redux.MapUnits
         ///     ToString override to simplify debug reading
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return _movementQueue.Count == 0
+        public override string ToString() =>
+            _movementQueue.Count == 0
                 ? "Empty"
                 : $"First: {_movementQueue.Peek().Direction} for {_movementQueue.Peek().Iterations} times";
-        }
 
         /// <summary>
         ///     Adds a new movement instruction to the end of the queue

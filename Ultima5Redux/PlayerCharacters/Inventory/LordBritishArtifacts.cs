@@ -19,8 +19,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public LordBritishArtifacts(ImportedGameState importedGameState)
         {
-            void addArtifactLegacy(LordBritishArtifact.ArtifactType artifact) => Items[artifact] =
-                new LordBritishArtifact(artifact, importedGameState.GetLordBritishArtifactQuantity(artifact));
+            void addArtifactLegacy(LordBritishArtifact.ArtifactType artifact)
+            {
+                Items[artifact] =
+                    new LordBritishArtifact(artifact, importedGameState.GetLordBritishArtifactQuantity(artifact));
+            }
 
             addArtifactLegacy(LordBritishArtifact.ArtifactType.Amulet);
             addArtifactLegacy(LordBritishArtifact.ArtifactType.Crown);

@@ -7,6 +7,18 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
     public class ProvisionReferences
     {
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum SpecificProvisionSpritesType
+        {
+            Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258
+        }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum SpecificProvisionType
+        {
+            Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
+        }
+
         private static readonly Dictionary<SpecificProvisionType, int> BundleQuantity =
             new()
             {
@@ -51,7 +63,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             foreach (byte b in GameReferences.DataOvlRef
                          .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_PROVISIONS).GetAsByteList())
             {
-                SmallMapReferences.SingleMapReference.Location potentialLocation =
+                var potentialLocation =
                     (SmallMapReferences.SingleMapReference.Location)b;
                 if (potentialLocation == location)
                     // they sell it, now we find it
@@ -66,21 +78,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         ///     Gets the bundle quantity for the current provision
         /// </summary>
         /// <returns></returns>
-        public int GetBundleQuantity(SpecificProvisionType specificProvisionType)
-        {
-            return BundleQuantity[specificProvisionType];
-        }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpecificProvisionSpritesType
-        {
-            Torches = 269, Gems = 264, Keys = 263, SkullKeys = 263, Food = 271, Gold = 258
-        }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum SpecificProvisionType
-        {
-            Torches = 0x208, Gems = 0x207, Keys = 0x206, SkullKeys = 0x20B, Food = 0x202, Gold = 0x204
-        }
+        public int GetBundleQuantity(SpecificProvisionType specificProvisionType) =>
+            BundleQuantity[specificProvisionType];
     }
 }

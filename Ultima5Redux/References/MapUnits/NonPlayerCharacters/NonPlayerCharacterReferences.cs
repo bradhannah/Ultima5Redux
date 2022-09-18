@@ -48,6 +48,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         private static readonly int StartingNPCDialogTownOffset =
             StartingNPCTypeTownOffset + SIZEOF_NPC_TYPE_BLOCK * NPCS_PER_TOWN;
 
+
         /// <summary>
         ///     How many NPC records per town?
         /// </summary>
@@ -119,7 +120,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 // start at the town offset, increment by an NPC record each time, for 32 loops
                 for (int offset = townOffset; count < NPCS_PER_TOWN; offset += ScheduleOffsetSize, count++)
                 {
-                    NonPlayerCharacterReference.NpcSchedule schedule =
+                    var schedule =
                         (NonPlayerCharacterReference.NpcSchedule)Utils.ReadStruct(npcData, offset,
                             typeof(NonPlayerCharacterReference.NpcSchedule));
                     schedules.Add(schedule);
@@ -174,17 +175,12 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             return npcRefs.Where(npcRef => npcRef.NpcType == specificNpcType).ToList();
         }
 
-        public NonPlayerCharacterReference GetNonPlayerCharacterByName(string name)
-        {
-            return _npcByNameDictionary[name];
-        }
+        public NonPlayerCharacterReference GetNonPlayerCharacterByName(string name) => _npcByNameDictionary[name];
 
         public List<NonPlayerCharacterReference> GetNonPlayerCharactersByLocation(
-            SmallMapReferences.SingleMapReference.Location location)
-        {
-            return _locationToNPCsDictionary.ContainsKey(location)
+            SmallMapReferences.SingleMapReference.Location location) =>
+            _locationToNPCsDictionary.ContainsKey(location)
                 ? _locationToNPCsDictionary[location]
                 : new List<NonPlayerCharacterReference>();
-        }
     }
 }

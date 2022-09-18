@@ -53,10 +53,7 @@ namespace Ultima5Redux.Maps
             return GameReferences.SpriteTileReferences.GetTileReference(nIndex);
         }
 
-        public bool HasOverrideTile(in Point2D xy)
-        {
-            return _overrideMap.ContainsKey(xy);
-        }
+        public bool HasOverrideTile(in Point2D xy) => _overrideMap.ContainsKey(xy);
 
         public void SetOverrideTile(in Point2D xy, int nIndex)
         {

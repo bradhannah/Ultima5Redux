@@ -139,10 +139,7 @@ namespace Ultima5Redux.MapUnits
             RefreshActiveDictionaryCache();
         }
 
-        internal IEnumerable<T> GetMapUnitByType<T>() where T : MapUnit
-        {
-            return AllMapUnits.OfType<T>();
-        }
+        internal IEnumerable<T> GetMapUnitByType<T>() where T : MapUnit => AllMapUnits.OfType<T>();
 
         private Dictionary<Point2D, List<MapUnit>> CreateMapUnitByPositionDictionary()
         {
@@ -164,10 +161,7 @@ namespace Ultima5Redux.MapUnits
             return mapUnitDictionary;
         }
 
-        private T[] GetMapUnitByTypeToArray<T>() where T : MapUnit
-        {
-            return AllMapUnits.OfType<T>().ToArray();
-        }
+        private T[] GetMapUnitByTypeToArray<T>() where T : MapUnit => AllMapUnits.OfType<T>().ToArray();
 
         private void ReplaceAll<T>(IEnumerable<T> newMapUnits) where T : MapUnit
         {
@@ -187,12 +181,12 @@ namespace Ultima5Redux.MapUnits
             AllMapUnits.Add(mapUnit);
         }
 
-        public void Clear() => AllMapUnits.Clear();
-
-        public bool ClearMapUnit(MapUnit mapUnit)
+        public void Clear()
         {
-            return AllMapUnits.Remove(mapUnit);
+            AllMapUnits.Clear();
         }
+
+        public bool ClearMapUnit(MapUnit mapUnit) => AllMapUnits.Remove(mapUnit);
 
         public void RefreshActiveDictionaryCache()
         {

@@ -36,11 +36,6 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         private readonly Dictionary<DataOvlReference.Equipment, InventoryReference> _invRefsByEquipment;
 
         /// <summary>
-        ///     All inventory references separated by item types
-        /// </summary>
-        public readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
-
-        /// <summary>
         ///     All keywords that will be highlighted specifically for reagents
         /// </summary>
         private readonly List<string> _reagentKeywordHighlightList;
@@ -49,6 +44,11 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         ///     All keywords that will be highlighted specifically for spells
         /// </summary>
         private readonly List<string> _spellKeywordHighlightList;
+
+        /// <summary>
+        ///     All inventory references separated by item types
+        /// </summary>
+        public readonly Dictionary<string, List<InventoryReference>> _invRefsDictionary;
 
         /// <summary>
         ///     Constructor builds reference tables from embedded resources
@@ -138,23 +138,19 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             return _invRefsByEquipment[equipment];
         }
 
-        public IEnumerable<InventoryReference> GetInventoryReferences(int nSpriteIndex)
-        {
-            return (from innerInvRefs in _invRefsDictionary.Values.ToList()
-                from invRef in innerInvRefs
-                where invRef.ItemSpriteExposed == nSpriteIndex
-                select invRef);
-        }
-
         /// <summary>
         ///     Return the full list of particular inventory references
         /// </summary>
         /// <param name="inventoryReferenceType"></param>
         /// <returns></returns>
-        public List<InventoryReference> GetInventoryReferenceList(InventoryReferenceType inventoryReferenceType)
-        {
-            return _invRefsDictionary[inventoryReferenceType.ToString()];
-        }
+        public List<InventoryReference> GetInventoryReferenceList(InventoryReferenceType inventoryReferenceType) =>
+            _invRefsDictionary[inventoryReferenceType.ToString()];
+
+        public IEnumerable<InventoryReference> GetInventoryReferences(int nSpriteIndex) =>
+            from innerInvRefs in _invRefsDictionary.Values.ToList()
+            from invRef in innerInvRefs
+            where invRef.ItemSpriteExposed == nSpriteIndex
+            select invRef;
 
         /// <summary>
         ///     Returns a string with all available keywords highlighted

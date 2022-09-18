@@ -7,6 +7,15 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public abstract class Armour : CombatItem
     {
+        [JsonConstructor] protected Armour()
+        {
+        }
+
+        protected Armour(CombatItemReference theCombatItemReference, int nQuantity) : base(theCombatItemReference,
+            nQuantity)
+        {
+        }
+
         public ArmourReference GetArmourRef()
         {
             if (TheCombatItemReference is ArmourReference armourRef)
@@ -15,15 +24,6 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
             }
 
             throw new Ultima5ReduxException("Tried to get armour reference with equipment " + SpecificEquipment);
-        }
-
-        [JsonConstructor] protected Armour()
-        {
-        }
-
-        protected Armour(CombatItemReference theCombatItemReference, int nQuantity) : base(theCombatItemReference,
-            nQuantity)
-        {
         }
     }
 }

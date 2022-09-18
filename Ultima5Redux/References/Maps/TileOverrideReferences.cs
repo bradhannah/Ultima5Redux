@@ -107,7 +107,8 @@ namespace Ultima5Redux.References.Maps
         }
 
         public List<TileOverrideReference> GetTileOverrides(SingleCombatMapReference singleCombatMapReference) =>
-            GetTileOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum, 0);
+            GetTileOverrides(GetOverrideTerritory(singleCombatMapReference),
+                singleCombatMapReference.CombatMapNum, 0);
 
         /// <summary>
         ///     Gets all tile overrides by a single map location (which includes a single floor)
@@ -115,15 +116,18 @@ namespace Ultima5Redux.References.Maps
         /// <param name="singleMapReference"></param>
         /// <returns>a list of TileOverride object, can be empty, but never null</returns>
         public List<TileOverrideReference> GetTileOverrides(SmallMapReferences.SingleMapReference singleMapReference) =>
-            GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
+            GetTileOverrides(GetOverrideTerritory(singleMapReference), singleMapReference.Id,
+                singleMapReference.Floor);
 
         public Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(
-            SmallMapReferences.SingleMapReference singleMapReference) => GetTileXYOverrides(
-            GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
+            SmallMapReferences.SingleMapReference singleMapReference) =>
+            GetTileXYOverrides(
+                GetOverrideTerritory(singleMapReference), singleMapReference.Id, singleMapReference.Floor);
 
         public Dictionary<Point2D, TileOverrideReference> GetTileXYOverrides(
             SingleCombatMapReference singleCombatMapReference) =>
-            GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference), singleCombatMapReference.CombatMapNum,
+            GetTileXYOverrides(GetOverrideTerritory(singleCombatMapReference),
+                singleCombatMapReference.CombatMapNum,
                 0);
     }
 }

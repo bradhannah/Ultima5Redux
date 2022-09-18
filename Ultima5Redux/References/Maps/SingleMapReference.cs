@@ -37,11 +37,6 @@ namespace Ultima5Redux.References.Maps
             [JsonConverter(typeof(StringEnumConverter))]
             public enum SmallMapMasterFiles { Castle, Towne, Dwelling, Keep, Dungeon, None }
 
-            public override int GetHashCode()
-            {
-                return Utils.Ran.Next(Id) + Utils.Ran.Next(Floor);
-            }
-
             /// <summary>
             ///     Total number of small map locations
             /// </summary>
@@ -315,6 +310,8 @@ namespace Ultima5Redux.References.Maps
                 throw new Ultima5ReduxException("Couldn't map NPC filename");
             }
 
+            public override int GetHashCode() => Utils.Ran.Next(Id) + Utils.Ran.Next(Floor);
+
             public override string ToString()
             {
                 string mapStr = MapLocation.ToString().Replace("_", " ") + " - ";
@@ -324,10 +321,8 @@ namespace Ultima5Redux.References.Maps
                 return mapStr;
             }
 
-            public byte[][] GetDefaultMap()
-            {
-                return LoadSmallMapFile(Path.Combine(_dataDirectory, GetFilenameFromLocation(MapLocation)), FileOffset);
-            }
+            public byte[][] GetDefaultMap() =>
+                LoadSmallMapFile(Path.Combine(_dataDirectory, GetFilenameFromLocation(MapLocation)), FileOffset);
         }
     }
 }

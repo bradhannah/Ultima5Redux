@@ -14,9 +14,9 @@ namespace Ultima5Redux.MapUnits
     {
         [DataMember] private int NPCIndex { get; set; }
         [DataMember] public bool Active { get; private set; }
-        [IgnoreDataMember] private int MapUnitAnimationStateIndex { get; }
 
         [DataMember] public MapUnitPosition TheMapUnitPosition { get; private set; } = new();
+        [IgnoreDataMember] private int MapUnitAnimationStateIndex { get; }
 
         /// <summary>
         ///     Build the character state based on existing conditions
@@ -37,10 +37,7 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Create a blank SmallMapCharacterState indicating no character
         /// </summary>
-        [JsonConstructor] public SmallMapCharacterState()
-        {
-            Active = false;
-        }
+        [JsonConstructor] public SmallMapCharacterState() => Active = false;
 
         /// <summary>
         ///     Build the character state from data retrieved from disk

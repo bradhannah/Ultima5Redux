@@ -289,7 +289,7 @@ namespace Ultima5Redux.MapUnits
         public bool Move(Point2D.Direction direction)
         {
             bool bChangeTile = UseFourDirections ||
-                               (direction is Point2D.Direction.Left or Point2D.Direction.Right);
+                               direction is Point2D.Direction.Left or Point2D.Direction.Right;
             // if there are only left and right sprites then we don't switch directions unless they actually
             // go left or right, otherwise we maintain direction - UNLESS we have forced extended sprites on
             // for the vehicle

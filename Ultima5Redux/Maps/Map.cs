@@ -158,10 +158,7 @@ namespace Ultima5Redux.Maps
             return _aStarDictionary[walkableType];
         }
 
-        public TileOverrideReference GetTileOverride(in Point2D xy)
-        {
-            return XYOverrides[xy];
-        }
+        public TileOverrideReference GetTileOverride(in Point2D xy) => XYOverrides[xy];
 
         public TileReference GetTileReference(in Point2D xy)
         {
@@ -173,13 +170,11 @@ namespace Ultima5Redux.Maps
 
         public bool IsAStarMap(WalkableType type) => _aStarDictionary.ContainsKey(type);
 
-        public bool IsXYOverride(in Point2D xy, TileOverrideReference.TileType tileType)
-        {
+        public bool IsXYOverride(in Point2D xy, TileOverrideReference.TileType tileType) =>
             // this is kind of hacky - but the map is only aware of the primary tile, so if the override is 
             // FLAT then we ignore it and find it later with VirtualMap
-            return XYOverrides != null && XYOverrides.ContainsKey(xy) &&
-                   XYOverrides[xy].TheTileType == tileType;
-        }
+            XYOverrides != null && XYOverrides.ContainsKey(xy) &&
+            XYOverrides[xy].TheTileType == tileType;
 
         /// <summary>
         ///     Prints the map in ASCII on the console
@@ -264,7 +259,7 @@ namespace Ultima5Redux.Maps
         {
             if (IsOpenDoor(xy)) return true;
             TileReference tileReference = GetTileReference(xy);
-            return (IsTileWalkable(tileReference, walkableType));
+            return IsTileWalkable(tileReference, walkableType);
         }
 
         protected void RecalculateWalkableTile(in Point2D xy, WalkableType walkableType,
@@ -300,7 +295,7 @@ namespace Ultima5Redux.Maps
 
         private bool SetVisibleTile(int x, int y)
         {
-            if (x < 0 || x > NumOfXTiles - 1 || (y < 0 || y > NumOfYTiles - 1))
+            if (x < 0 || x > NumOfXTiles - 1 || y < 0 || y > NumOfYTiles - 1)
             {
                 return false;
             }
@@ -432,10 +427,8 @@ namespace Ultima5Redux.Maps
                 RecalculateWalkableTile(xy, walkableType, mapUnits);
         }
 
-        protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
-        {
-            return xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
-        }
+        protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy) =>
+            xy.GetAdjustedPosition(direction, NumOfXTiles - 1, NumOfYTiles - 1);
 
         /// <summary>
         ///     Refreshes the map that tracks which tiles have been tested for visibility
@@ -511,10 +504,7 @@ namespace Ultima5Redux.Maps
             if (IsAStarMap(WalkableType.StandardWalking)) SetWalkableTile(xy, true, WalkableType.StandardWalking);
         }
 
-        public bool IsOpenDoor(in Point2D xy)
-        {
-            return _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
-        }
+        public bool IsOpenDoor(in Point2D xy) => _openDoors.ContainsKey(xy) && _openDoors[xy] > 0;
 
         public void CloseDoor(in Point2D xy)
         {

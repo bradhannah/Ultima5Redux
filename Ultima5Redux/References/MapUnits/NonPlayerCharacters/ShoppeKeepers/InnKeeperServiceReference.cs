@@ -9,8 +9,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location, InnKeeperServices>
             _innKeeperServices;
 
-        public InnKeeperServiceReference(DataOvlReference dataOvlReference)
-        {
+        public InnKeeperServiceReference(DataOvlReference dataOvlReference) =>
             _innKeeperServices = new Dictionary<SmallMapReferences.SingleMapReference.Location, InnKeeperServices>
             {
                 {
@@ -38,7 +37,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
                     new InnKeeperServices(5, 190, 6, 60, dataOvlReference)
                 }
             };
-        }
 
         public InnKeeperServices GetInnKeeperServicesByLocation(SmallMapReferences.SingleMapReference.Location location)
         {

@@ -77,10 +77,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             return word.Substring(0, nLength);
         }
 
-        public static int GetPriceBasedOnParty(int nPricePerPartyMember, int nPartyMembers)
-        {
-            return nPricePerPartyMember * nPartyMembers;
-        }
+        public static int GetPriceBasedOnParty(int nPricePerPartyMember, int nPartyMembers) =>
+            nPricePerPartyMember * nPartyMembers;
 
         public override string GetForSaleList()
         {
@@ -122,16 +120,12 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             // 72,"Wouldst thou sample our finely brewed Stout, or desirest thou some fresh Fruits? We also sell the finest Provisions!"
         }
 
-        public bool DoesBarKeeperKnowGossip(string word)
-        {
-            return _gossipWordToPlaceMap.ContainsKey(CleanGossipWordForLookup(word));
-        }
+        public bool DoesBarKeeperKnowGossip(string word) =>
+            _gossipWordToPlaceMap.ContainsKey(CleanGossipWordForLookup(word));
 
-        public string GetAnythingElseResponse()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+        public string GetAnythingElseResponse() =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
                 .DQ_ANYTHING_ELSE_N_FOR_THEE_Q_DQ);
-        }
 
         public int GetCostOfGossip(string word)
         {
@@ -166,11 +160,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                     .Replace("\"", ""));
         }
 
-        public string GetGossipQuestion(PlayerCharacterRecord.CharacterGender avatarGender)
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+        public string GetGossipQuestion(PlayerCharacterRecord.CharacterGender avatarGender) =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
                 .OF_WHAT_WOULDST_N_THOU_HEAD_MY_N_LORE_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) + "?";
-        }
 
         public string GetGossipResponse(string word, bool bHighlightDetails)
         {
@@ -190,19 +182,15 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        .N_N_FAIR_NUFF_Q_DQ);
         }
 
-        public string GetMustAttendToPayingCustomers(PlayerCharacterRecord.CharacterGender avatarGender)
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
-                       .SORRY_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) +
-                   ", I must attend to my PAYING customers!\" says " + TheShoppeKeeperReference.ShoppeKeeperName;
-        }
+        public string GetMustAttendToPayingCustomers(PlayerCharacterRecord.CharacterGender avatarGender) =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings
+                .SORRY_COMMA_SP) + GetGenderedFormalPronoun(avatarGender) +
+            ", I must attend to my PAYING customers!\" says " + TheShoppeKeeperReference.ShoppeKeeperName;
 
-        public string GetPissedOffNotEnoughMoneyRations()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
-                       .THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N).Replace("\n", " ") +
-                   TheShoppeKeeperReference.ShoppeKeeperName + ".";
-        }
+        public string GetPissedOffNotEnoughMoneyRations() =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperBarKeepStrings2
+                .THOU_HAST_N_HEITHER_GOLD_NOR_N_NEED_BANG_OUT_BANG_DQ_N).Replace("\n", " ") +
+            TheShoppeKeeperReference.ShoppeKeeperName + ".";
 
         public string GetRationOffer(PlayerCharacterRecords records)
         {

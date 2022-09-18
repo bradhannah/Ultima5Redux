@@ -14,8 +14,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public Potions(ImportedGameState importedGameState)
         {
-            void addPotionLegacy(Potion.PotionColor color) =>
+            void addPotionLegacy(Potion.PotionColor color)
+            {
                 AddPotion(color, importedGameState.GetPotionQuantity(color));
+            }
 
             addPotionLegacy(Potion.PotionColor.Blue);
             addPotionLegacy(Potion.PotionColor.Yellow);

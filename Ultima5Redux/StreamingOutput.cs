@@ -6,26 +6,13 @@ namespace Ultima5Redux
     {
         private static StreamingOutput _instance;
 
-        public static StreamingOutput Instance => _instance ??= new StreamingOutput();
+        private bool _bLastMessageEndedWithNewline;
 
         private Queue<StreamingOutputItem> OutputItems { get; } = new();
 
-        public void PushMessage(string message, bool bUseArrow = true, bool bForceNewline = true)
-            => PushOutputItem(new StreamingOutputItem(message, bUseArrow, bForceNewline));
-
-        public StreamingOutputItem PopOutputItem()
-        {
-            return OutputItems.Dequeue();
-        }
-
-        public void PushOutputItem(StreamingOutputItem item)
-        {
-            OutputItems.Enqueue(item);
-        }
+        public static StreamingOutput Instance => _instance ??= new StreamingOutput();
 
         public bool HasItems => OutputItems.Count > 0;
-
-        private bool _bLastMessageEndedWithNewline;
 
         public string GetFinalString(StreamingOutputItem item)
         {
@@ -40,6 +27,18 @@ namespace Ultima5Redux
 
             _bLastMessageEndedWithNewline = outputStr.EndsWith("\n");
             return outputStr;
+        }
+
+        public StreamingOutputItem PopOutputItem() => OutputItems.Dequeue();
+
+        public void PushMessage(string message, bool bUseArrow = true, bool bForceNewline = true)
+        {
+            PushOutputItem(new StreamingOutputItem(message, bUseArrow, bForceNewline));
+        }
+
+        public void PushOutputItem(StreamingOutputItem item)
+        {
+            OutputItems.Enqueue(item);
         }
     }
 }

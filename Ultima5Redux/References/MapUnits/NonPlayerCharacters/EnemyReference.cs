@@ -9,8 +9,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 {
     public class EnemyReference
     {
-        public const int PIRATE_SHIP_NUMBER = 8;
-
         private enum DefaultStats
         {
             // ReSharper disable once UnusedMember.Local
@@ -42,52 +40,13 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         internal const int N_FIRST_SPRITE = 320;
         internal const int N_FRAMES_PER_SPRITE = 4;
 
-        internal readonly int[] BeginningOfEras = { 0, 10000, 30000 };
-
         private const int N_RAW_BYTES = 2;
+        public const int PIRATE_SHIP_NUMBER = 8;
+
+        internal readonly int[] BeginningOfEras = { 0, 10000, 30000 };
         private readonly EnemyReferences.AdditionalEnemyFlags _additionalEnemyFlags;
 
         private readonly Dictionary<EnemyAbility, bool> _enemyAbilities = new();
-
-        public int GetEraWeightByTurn(int nTurn)
-        {
-            if (nTurn >= BeginningOfEras[2]) return _additionalEnemyFlags.Era3Weight;
-            if (nTurn >= BeginningOfEras[1]) return _additionalEnemyFlags.Era2Weight;
-            return _additionalEnemyFlags.Era1Weight;
-        }
-
-        public bool CanGoOnTile(TileReference tileReference)
-        {
-            if (!tileReference.IsMonsterSpawnable) return false;
-
-            switch (tileReference.CombatMapIndex)
-            {
-                case SingleCombatMapReference.BritanniaCombatMaps.None:
-                case SingleCombatMapReference.BritanniaCombatMaps.CampFire:
-                case SingleCombatMapReference.BritanniaCombatMaps.BigBridge:
-                case SingleCombatMapReference.BritanniaCombatMaps.Brick:
-                case SingleCombatMapReference.BritanniaCombatMaps.Basement:
-                case SingleCombatMapReference.BritanniaCombatMaps.Psychedelic:
-                    return false;
-                case SingleCombatMapReference.BritanniaCombatMaps.BoatOcean:
-                case SingleCombatMapReference.BritanniaCombatMaps.BoatNorth:
-                case SingleCombatMapReference.BritanniaCombatMaps.BoatSouth:
-                case SingleCombatMapReference.BritanniaCombatMaps.BoatBoat:
-                case SingleCombatMapReference.BritanniaCombatMaps.Bay:
-                case SingleCombatMapReference.BritanniaCombatMaps.BoatCalc:
-                    return IsWaterEnemy && tileReference.IsWaterEnemyPassable;
-                case SingleCombatMapReference.BritanniaCombatMaps.Desert:
-                    return IsSandEnemy;
-                case SingleCombatMapReference.BritanniaCombatMaps.Swamp:
-                case SingleCombatMapReference.BritanniaCombatMaps.Glade:
-                case SingleCombatMapReference.BritanniaCombatMaps.Treed:
-                case SingleCombatMapReference.BritanniaCombatMaps.CleanTree:
-                case SingleCombatMapReference.BritanniaCombatMaps.Mountains:
-                    return !IsWaterEnemy && !IsSandEnemy && tileReference.IsLandEnemyPassable;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
-        }
 
         public bool ActivelyAttacks => _additionalEnemyFlags.ActivelyAttacks;
 
@@ -101,17 +60,17 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public int Experience => _additionalEnemyFlags.Experience;
         public int FriendIndex { get; }
 
-        public bool IsNpc => KeyTileReference.IsNPC;
+        public bool HasLargeMapMissile => _additionalEnemyFlags.LargeMapMissile != CombatItemReference.MissileType.None;
 
-        public bool IsWaterEnemy => _additionalEnemyFlags.IsWaterEnemy;
+        public bool IsNpc => KeyTileReference.IsNPC;
         public bool IsSandEnemy => _additionalEnemyFlags.IsSandEnemy;
 
-        public bool HasLargeMapMissile => _additionalEnemyFlags.LargeMapMissile != CombatItemReference.MissileType.None;
+        public bool IsWaterEnemy => _additionalEnemyFlags.IsWaterEnemy;
+
+        public TileReference KeyTileReference { get; }
 
         public int LargeMapMissileRange => _additionalEnemyFlags.LargeMapMissileRange;
         public CombatItemReference.MissileType LargeMapMissileType => _additionalEnemyFlags.LargeMapMissile;
-
-        public TileReference KeyTileReference { get; }
         public string MixedCaseSingularName { get; }
 
         public DefaultEnemyStats TheDefaultEnemyStats { get; }
@@ -180,7 +139,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                         (DataOvlReference.EnemyIndividualNamesMixed)nMixedCaseIndex);
             }
 
-            int nKeySpriteIndex = N_FIRST_SPRITE + (nMonsterIndex * N_FRAMES_PER_SPRITE);
+            int nKeySpriteIndex = N_FIRST_SPRITE + nMonsterIndex * N_FRAMES_PER_SPRITE;
             if (nMonsterIndex == PIRATE_SHIP_NUMBER) // pirates!
             {
                 // force a pirate ship when referring to an enemy (otherwise it will be person in stocks)
@@ -200,15 +159,50 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 .GetByte(nMonsterIndex * TotalBytesPerRecord + (int)stat);
         }
 
-        public override string ToString()
+        public override string ToString() => AllCapsPluralName + "-" + MixedCaseSingularName;
+
+        public bool CanGoOnTile(TileReference tileReference)
         {
-            return AllCapsPluralName + "-" + MixedCaseSingularName;
+            if (!tileReference.IsMonsterSpawnable) return false;
+
+            switch (tileReference.CombatMapIndex)
+            {
+                case SingleCombatMapReference.BritanniaCombatMaps.None:
+                case SingleCombatMapReference.BritanniaCombatMaps.CampFire:
+                case SingleCombatMapReference.BritanniaCombatMaps.BigBridge:
+                case SingleCombatMapReference.BritanniaCombatMaps.Brick:
+                case SingleCombatMapReference.BritanniaCombatMaps.Basement:
+                case SingleCombatMapReference.BritanniaCombatMaps.Psychedelic:
+                    return false;
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatOcean:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatNorth:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatSouth:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatBoat:
+                case SingleCombatMapReference.BritanniaCombatMaps.Bay:
+                case SingleCombatMapReference.BritanniaCombatMaps.BoatCalc:
+                    return IsWaterEnemy && tileReference.IsWaterEnemyPassable;
+                case SingleCombatMapReference.BritanniaCombatMaps.Desert:
+                    return IsSandEnemy;
+                case SingleCombatMapReference.BritanniaCombatMaps.Swamp:
+                case SingleCombatMapReference.BritanniaCombatMaps.Glade:
+                case SingleCombatMapReference.BritanniaCombatMaps.Treed:
+                case SingleCombatMapReference.BritanniaCombatMaps.CleanTree:
+                case SingleCombatMapReference.BritanniaCombatMaps.Mountains:
+                    return !IsWaterEnemy && !IsSandEnemy && tileReference.IsLandEnemyPassable;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
         }
 
-        public bool IsEnemyAbility(EnemyAbility ability)
+        public int GetEraWeightByTurn(int nTurn)
         {
-            return (_enemyAbilities.ContainsKey(ability) && _enemyAbilities[ability]);
+            if (nTurn >= BeginningOfEras[2]) return _additionalEnemyFlags.Era3Weight;
+            if (nTurn >= BeginningOfEras[1]) return _additionalEnemyFlags.Era2Weight;
+            return _additionalEnemyFlags.Era1Weight;
         }
+
+        public bool IsEnemyAbility(EnemyAbility ability) =>
+            _enemyAbilities.ContainsKey(ability) && _enemyAbilities[ability];
 
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public class DefaultEnemyStats

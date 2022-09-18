@@ -54,10 +54,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 }
             };
 
-        public static int GetAdjustedPrice(int nIntelligence, int nPrice)
-        {
-            return (int)(nPrice - nPrice * 0.015 * nIntelligence);
-        }
+        public static int GetAdjustedPrice(int nIntelligence, int nPrice) =>
+            (int)(nPrice - nPrice * 0.015 * nIntelligence);
 
         public BarKeeperStock GetBarKeeperStock(SmallMapReferences.SingleMapReference.Location location)
         {

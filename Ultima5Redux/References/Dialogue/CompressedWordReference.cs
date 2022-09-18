@@ -65,25 +65,20 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         /// <param name="character"></param>
         /// <returns>true if it is acceptable</returns>
-        private bool IsAcceptableLettersOrDigits(char character)
-        {
-            return character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z' ||
-                   character >= '0' && character <= '9';
-        }
+        private bool IsAcceptableLettersOrDigits(char character) =>
+            (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z') ||
+            (character >= '0' && character <= '9');
 
         /// <summary>
         ///     Is it expected punctuation (not replacement characters though)
         /// </summary>
         /// <param name="character"></param>
         /// <returns>true if it is acceptable</returns>
-        private bool IsAcceptablePunctuation(char character)
-        {
-            return character == ' ' || character == '"' || character == '!' || character == ',' || character == '\'' ||
-                   character == '.' || character == '-' || character == '?' || character == '\n' || character == ';';
-        }
+        private bool IsAcceptablePunctuation(char character) =>
+            character == ' ' || character == '"' || character == '!' || character == ',' || character == '\'' ||
+            character == '.' || character == '-' || character == '?' || character == '\n' || character == ';';
 
-        private bool IsReplacementCharacter(char character)
-        {
+        private bool IsReplacementCharacter(char character) =>
             // % is gold
             // & is current piece of equipment
             // # current business (maybe with apostrophe s)
@@ -91,9 +86,8 @@ namespace Ultima5Redux.References.Dialogue
             // @ barkeeps food/drink etc
             // * location of thing
             // ^ quantity of thing (ie. reagent)
-            return character == '%' || character == '&' || character == '$' || character == '#' || character == '@' ||
-                   character == '*' || character == '^';
-        }
+            character == '%' || character == '&' || character == '$' || character == '#' || character == '@' ||
+            character == '*' || character == '^';
 
         /// <summary>
         ///     Get a compressed word with an index

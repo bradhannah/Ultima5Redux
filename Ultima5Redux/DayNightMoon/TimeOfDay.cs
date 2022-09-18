@@ -71,7 +71,7 @@ namespace Ultima5Redux.DayNightMoon
             get
             {
                 string suffix = Hour < 12 ? "AM" : "PM";
-                int nHour = (Hour % 12 == 0 ? 12 : Hour % 12);
+                int nHour = Hour % 12 == 0 ? 12 : Hour % 12;
                 return $"{nHour}:{Minute:D2} {suffix}";
             }
         }
@@ -79,9 +79,9 @@ namespace Ultima5Redux.DayNightMoon
         [IgnoreDataMember] public bool IsDayLight => Hour >= 5 && Hour < 8 + 12;
 
         [IgnoreDataMember]
-        public int MinutesSinceBeginning => Minute + (Hour * 60) + (Day * N_DAYS_IN_MONTH) +
-                                            (Month * N_DAYS_IN_MONTH * 24 * 60)
-                                            + (Year * N_MONTHS_PER_YEAR * N_DAYS_IN_MONTH * 24 * 60);
+        public int MinutesSinceBeginning => Minute + Hour * 60 + Day * N_DAYS_IN_MONTH +
+                                            Month * N_DAYS_IN_MONTH * 24 * 60
+                                            + Year * N_MONTHS_PER_YEAR * N_DAYS_IN_MONTH * 24 * 60;
 
         /// <summary>
         ///     Gets a string describing the current time of day
@@ -243,10 +243,8 @@ namespace Ultima5Redux.DayNightMoon
                    Minute == tod.Minute;
         }
 
-        public bool IsTimeChangeTrackerIdValid(Guid changeTrackerId)
-        {
-            return _timeHasChangedDictionary.ContainsKey(changeTrackerId);
-        }
+        public bool IsTimeChangeTrackerIdValid(Guid changeTrackerId) =>
+            _timeHasChangedDictionary.ContainsKey(changeTrackerId);
 
         /// <summary>
         ///     Registers a change tracker, returning the int handle to it that will need to be stored
@@ -255,7 +253,7 @@ namespace Ultima5Redux.DayNightMoon
         // ReSharper disable once UnusedMember.Global
         public Guid RegisterChangeTracker()
         {
-            Guid changeTrackerId = Guid.NewGuid();
+            var changeTrackerId = Guid.NewGuid();
             _timeHasChangedDictionary[changeTrackerId] = true;
             return changeTrackerId;
         }

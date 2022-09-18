@@ -8,9 +8,8 @@ namespace Ultima5Redux
 {
     public class SaveGameSummaries
     {
-        public IEnumerable<GameSummary> GameStateBases => _gameStates;
-
         private readonly List<GameSummary> _gameStates = new();
+        public IEnumerable<GameSummary> GameStateBases => _gameStates;
 
         /// <summary>
         /// </summary>
@@ -39,7 +38,7 @@ namespace Ultima5Redux
                     if (File.Exists(summaryFileAndPath))
                     {
                         string summaryJson = File.ReadAllText(summaryFileAndPath);
-                        GameSummary gameStateSummary = GameSummary.DeserializeGameSummary(summaryJson);
+                        var gameStateSummary = GameSummary.DeserializeGameSummary(summaryJson);
                         _gameStates.Add(gameStateSummary);
                     }
                 } catch (Exception e)

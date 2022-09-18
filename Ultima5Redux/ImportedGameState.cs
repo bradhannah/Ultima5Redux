@@ -79,6 +79,8 @@ namespace Ultima5Redux
                 ? Floor == 0xFF ? Map.Maps.Underworld : Map.Maps.Overworld
                 : Map.Maps.Small;
 
+        internal bool IsInitialSaveFile => TurnsSinceStart == 0;
+
         internal byte Karma => DataChunks.GetDataChunk(DataChunkName.KARMA).GetChunkAsByte();
 
         internal byte Keys => DataChunks.GetDataChunk(DataChunkName.KEYS_QUANTITY).GetChunkAsByte();
@@ -95,6 +97,8 @@ namespace Ultima5Redux
         internal bool[][] NPCIsDeadArray { get; private set; }
         internal bool[][] NPCIsMetArray { get; private set; }
 
+        internal MapUnitStates OverworldMapUnitStates { get; set; }
+
         internal byte SkullKeys => DataChunks.GetDataChunk(DataChunkName.SKULL_KEYS_QUANTITY).GetChunkAsByte();
         internal SmallMapCharacterStates SmallMapCharacterStates { get; private set; }
 
@@ -103,10 +107,6 @@ namespace Ultima5Redux
             GetDataChunk(DataChunkName.MOONSTONE_Z_COORDS));
 
         internal NonPlayerCharacterStates TheNonPlayerCharacterStates { get; private set; }
-
-        internal int TurnsSinceStart => DataChunks.GetDataChunk(DataChunkName.TURNS_SINCE_START).GetChunkAsByte();
-
-        internal bool IsInitialSaveFile => TurnsSinceStart == 0;
 
         internal TimeOfDay TheTimeOfDay => new(DataChunks.GetDataChunk(DataChunkName.CURRENT_YEAR),
             DataChunks.GetDataChunk(DataChunkName.CURRENT_MONTH), DataChunks.GetDataChunk(DataChunkName.CURRENT_DAY),
@@ -118,6 +118,10 @@ namespace Ultima5Redux
         ///     How many turns left until your torch is burnt out?
         /// </summary>
         internal byte TorchTurnsLeft => DataChunks.GetDataChunk(DataChunkName.TORCHES_TURNS).GetChunkAsByte();
+
+        internal int TurnsSinceStart => DataChunks.GetDataChunk(DataChunkName.TURNS_SINCE_START).GetChunkAsByte();
+
+        internal MapUnitStates UnderworldMapUnitStates { get; set; }
 
         /// <summary>
         ///     Saved X location of Avatar
@@ -147,14 +151,10 @@ namespace Ultima5Redux
         private DataChunk NonPlayerCharacterMovementOffsets =>
             DataChunks.GetDataChunk(DataChunkName.NPC_MOVEMENT_OFFSETS);
 
-        internal MapUnitStates OverworldMapUnitStates { get; set; }
-
         private DataChunk OverworldOverlayDataChunks =>
             _overworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
 
         private MapUnitStates SmallMapUnitStates { get; set; }
-
-        internal MapUnitStates UnderworldMapUnitStates { get; set; }
 
         private DataChunk UnderworldOverlayDataChunks =>
             _underworldOverlayDataChunks.GetDataChunk(OverlayChunkName.CHARACTER_ANIMATION_STATES);
@@ -214,15 +214,14 @@ namespace Ultima5Redux
         internal int GetLordBritishArtifactQuantity(LordBritishArtifact.ArtifactType artifact) =>
             GetByteAsIntFromGameStateByteArray((int)artifact);
 
-        internal int GetPotionQuantity(Potion.PotionColor color) =>
-            GetByteAsIntFromGameStateByteArray((int)color);
+        internal int GetPotionQuantity(Potion.PotionColor color) => GetByteAsIntFromGameStateByteArray((int)color);
 
         internal int GetReagentQuantity(Reagent.SpecificReagentType specificReagentType) =>
             GetByteAsIntFromGameStateByteArray((int)specificReagentType);
 
         internal int GetScrollQuantity(MagicReference.SpellWords spellWord)
         {
-            Scroll.ScrollSpells scrollSpell =
+            var scrollSpell =
                 (Scroll.ScrollSpells)Enum.Parse(typeof(Scroll.ScrollSpells), spellWord.ToString());
 
             int nIndex = 0x27A + (int)scrollSpell;
@@ -246,10 +245,7 @@ namespace Ultima5Redux
             return GameStateByteArray[nOffset];
         }
 
-        private DataChunk GetDataChunk(DataChunkName dataChunkName)
-        {
-            return DataChunks.GetDataChunk(dataChunkName);
-        }
+        private DataChunk GetDataChunk(DataChunkName dataChunkName) => DataChunks.GetDataChunk(dataChunkName);
 
         private void Initialize(bool bLoadFromDisk)
         {

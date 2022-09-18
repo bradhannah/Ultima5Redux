@@ -9,29 +9,20 @@ namespace Ultima5Redux.References.Maps
     public class TileReference
     {
         /// <summary>
-        /// This is not ideal but leaving unlabelled integers all over the code is a worse offense
+        ///     This is not ideal but leaving unlabelled integers all over the code is a worse offense
         /// </summary>
         public enum SpriteIndex
         {
             Water = 1, TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149,
             PlowedField = 44, Cactus = 47, WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368,
-            StoneBrickWallSecret = 78, 
-            RegularDoor = 184, LockedDoor = 185, RegularDoorView = 186, LockedDoorView = 187,
-            RightSconce = 176, LeftScone = 177, Brazier = 178, CampFire = 179, LampPost = 189,
-            CandleOnTable = 190, CookStove = 191, BlueFlame = 222,
-            ChairBackForward = 144, ChairBackLeft = 145, ChairBackBack = 146, ChairBackRight = 147,
-            MagicLockDoor = 151, MagicLockDoorWithView = 152,
-            Grate = 134, LeftBed = 171, SimpleCross =137, StoneHeadstone =138,
-            HorseRight = 272, HorseLeft = 273, 
-            LadderDown = 201, LadderUp = 200, 
-            Carpet2_MagicCarpet = 283, Manacles = 133,
-            Mirror = 157, MirrorAvatar = 158, MirrorBroken = 159, 
-            SmallMountains = 12
-
-
+            StoneBrickWallSecret = 78, RegularDoor = 184, LockedDoor = 185, RegularDoorView = 186, LockedDoorView = 187,
+            RightSconce = 176, LeftScone = 177, Brazier = 178, CampFire = 179, LampPost = 189, CandleOnTable = 190,
+            CookStove = 191, BlueFlame = 222, ChairBackForward = 144, ChairBackLeft = 145, ChairBackBack = 146,
+            ChairBackRight = 147, MagicLockDoor = 151, MagicLockDoorWithView = 152, Grate = 134, LeftBed = 171,
+            SimpleCross = 137, StoneHeadstone = 138, HorseRight = 272, HorseLeft = 273, LadderDown = 201,
+            LadderUp = 200, Carpet2_MagicCarpet = 283, Manacles = 133, Mirror = 157, MirrorAvatar = 158,
+            MirrorBroken = 159, SmallMountains = 12
         }
-
-        
 
 
         public const int N_TYPICAL_ANIMATION_FRAMES = 4;
@@ -114,10 +105,7 @@ namespace Ultima5Redux.References.Maps
             }
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         /// <summary>
         ///     Makes a best guess on the directionality of the sprite

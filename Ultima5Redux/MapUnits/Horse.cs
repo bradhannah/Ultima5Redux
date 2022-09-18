@@ -77,10 +77,8 @@ namespace Ultima5Redux.MapUnits
         public Horse(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,
             mapUnitMovement, location, direction, npcState,
-            GameReferences.SpriteTileReferences.GetTileReferenceByName("HorseLeft"), mapUnitPosition)
-        {
+            GameReferences.SpriteTileReferences.GetTileReferenceByName("HorseLeft"), mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
-        }
 
         private static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
         {
@@ -89,9 +87,7 @@ namespace Ultima5Redux.MapUnits
         }
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
-            PlayerCharacterRecords records)
-        {
-            return GetAdjustedPrice(records, Prices[location]);
-        }
+            PlayerCharacterRecords records) =>
+            GetAdjustedPrice(records, Prices[location]);
     }
 }

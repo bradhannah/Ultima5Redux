@@ -6,26 +6,37 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public sealed class BloodSpatter : NonAttackingUnit
     {
+        public override bool ExposeInnerItemsOnOpen => false;
+
+        public override bool ExposeInnerItemsOnSearch => true;
+
         //GUTS_BANG_N, A_BLOOD_PULP_BANG_N,
         public override string FriendlyName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.ThingsIFindStrings.GUTS_BANG_N).TrimEnd();
 
-        public override string PluralName => FriendlyName;
-        public override string SingularName => FriendlyName;
-        public override string Name => FriendlyName;
+        public override bool HasInnerItemStack => InnerItemStack is { HasStackableItems: true };
+
+        public override bool IsOpenable => false;
+        public override bool IsSearchable => true;
 
         public override TileReference KeyTileReference =>
             GameReferences.SpriteTileReferences.GetTileReferenceByName("Splat");
 
-        public override bool IsOpenable => false;
-        public override bool IsSearchable => true;
-        public override bool ExposeInnerItemsOnSearch => true;
-        public override bool ExposeInnerItemsOnOpen => false;
-        public override bool HasInnerItemStack => InnerItemStack is { HasStackableItems: true };
+        public override string Name => FriendlyName;
 
-        public override bool DoesTriggerTrap(PlayerCharacterRecord record) =>
-            IsTrapped && OddsAndLogic.DoesChestTrapTrigger(record, TrapComplexity.Simple) ||
-            OddsAndLogic.AGGRESSIVE_TRAPS;
+        public override string PluralName => FriendlyName;
+        public override string SingularName => FriendlyName;
+
+        public BloodSpatter(MapUnitPosition mapUnitPosition)
+        {
+            Trap = OddsAndLogic.GetNewBloodSpatterTrapType();
+            if (OddsAndLogic.GetIsTreasureBloodSpatter())
+            {
+                GenerateItemStack(mapUnitPosition);
+            }
+
+            MapUnitPosition = mapUnitPosition;
+        }
 
         private void GenerateItemStack(MapUnitPosition mapUnitPosition)
         {
@@ -48,15 +59,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             InnerItemStack.PushStackableItem(NonAttackingUnitFactory.CreateStackableItem(269));
         }
 
-        public BloodSpatter(MapUnitPosition mapUnitPosition)
-        {
-            Trap = OddsAndLogic.GetNewBloodSpatterTrapType();
-            if (OddsAndLogic.GetIsTreasureBloodSpatter())
-            {
-                GenerateItemStack(mapUnitPosition);
-            }
-
-            MapUnitPosition = mapUnitPosition;
-        }
+        public override bool DoesTriggerTrap(PlayerCharacterRecord record) =>
+            (IsTrapped && OddsAndLogic.DoesChestTrapTrigger(record, TrapComplexity.Simple)) ||
+            OddsAndLogic.AGGRESSIVE_TRAPS;
     }
 }

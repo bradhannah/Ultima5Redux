@@ -123,7 +123,7 @@ namespace Ultima5Redux.Maps
             foreach (char signChar in signTextArray)
             {
                 // do not translate lowercase because they are often used for drawing the actual signs
-                if (signChar >= 'A' && signChar <= 'Z' || signChar == ' ')
+                if ((signChar >= 'A' && signChar <= 'Z') || signChar == ' ')
                     scrubbedStr += signChar;
                 else if (replacementChars.ContainsKey(signChar))
                     scrubbedStr += replacementChars[signChar];

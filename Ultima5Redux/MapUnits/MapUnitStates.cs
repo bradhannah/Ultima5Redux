@@ -21,10 +21,7 @@ namespace Ultima5Redux.MapUnits
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private MapUnitStatesFiles MapUnitStatesType { get; set; }
 
-        public MapUnitStates(DataChunk mapUnitStatesDataChunk)
-        {
-            _mapUnitStatesDataChunk = mapUnitStatesDataChunk;
-        }
+        public MapUnitStates(DataChunk mapUnitStatesDataChunk) => _mapUnitStatesDataChunk = mapUnitStatesDataChunk;
 
         public MapUnitStates()
         {
@@ -37,10 +34,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public MapUnitState GetCharacterState(int nIndex)
-        {
-            return _mapUnitStates[nIndex];
-        }
+        public MapUnitState GetCharacterState(int nIndex) => _mapUnitStates[nIndex];
 
         public MapUnitState GetCharacterStateByPosition(Point2D xy, int nFloor)
         {

@@ -44,11 +44,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         {
         }
 
-        [OnDeserialized] private void PostDeserialized(StreamingContext context)
-        {
-            if (Quantity > 0) LearnSpell();
-        }
-
         public Spell(MagicReference.SpellWords spellWord, int quantity) : base(quantity, SPRITE_NUM,
             InventoryReferences.InventoryReferenceType.Spell)
         {
@@ -56,9 +51,18 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             if (Quantity > 0) LearnSpell();
         }
 
-        public bool IsCastableByPlayer(PlayerCharacterRecord record)
+        [OnDeserialized] private void PostDeserialized(StreamingContext context)
         {
-            return Quantity > 0 && record.Stats.CurrentMp >= MinCircle;
+            if (Quantity > 0) LearnSpell();
+        }
+
+        public SpellResult CastSpell(GameState state, SpellCastingDetails details)
+        {
+            if (Quantity <= 0)
+                throw new Ultima5ReduxException($"Tried to cast {LongName} but had quantity: {Quantity}");
+
+            Quantity--;
+            return SpellMagicReference.CastSpell(state, details);
         }
 
         public string GetLiteralTranslation()
@@ -73,15 +77,12 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             return sb.ToString().TrimEnd();
         }
 
-        public void LearnSpell() => _memorizedSpell = true;
+        public bool IsCastableByPlayer(PlayerCharacterRecord record) =>
+            Quantity > 0 && record.Stats.CurrentMp >= MinCircle;
 
-        public SpellResult CastSpell(GameState state, SpellCastingDetails details)
+        public void LearnSpell()
         {
-            if (Quantity <= 0)
-                throw new Ultima5ReduxException($"Tried to cast {LongName} but had quantity: {Quantity}");
-
-            Quantity--;
-            return SpellMagicReference.CastSpell(state, details);
+            _memorizedSpell = true;
         }
     }
 }

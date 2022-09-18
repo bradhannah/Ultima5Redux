@@ -2,7 +2,6 @@
 {
     internal static class GameStateReference
     {
-
         public static GameState PreviousState { get; private set; }
         public static GameState State { get; private set; }
 

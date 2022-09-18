@@ -231,24 +231,20 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// </summary>
         /// <param name="record">Character record</param>
         /// <returns>amount of total damage</returns>
-        public int GetCharacterTotalAttack(PlayerCharacterRecord record)
-        {
-            return GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
-                   GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
-                   GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
-        }
+        public int GetCharacterTotalAttack(PlayerCharacterRecord record) =>
+            GetAttack(record.Equipped.Amulet) + GetAttack(record.Equipped.Armour) +
+            GetAttack(record.Equipped.Helmet) + GetAttack(record.Equipped.Ring) +
+            GetAttack(record.Equipped.LeftHand) + GetAttack(record.Equipped.RightHand);
 
         /// <summary>
         ///     Gets the players total defense of all items equipped
         /// </summary>
         /// <param name="record">character record</param>
         /// <returns>the players total defense</returns>
-        public int GetCharacterTotalDefense(PlayerCharacterRecord record)
-        {
-            return GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
-                   GetDefense(record.Equipped.Helmet) + GetDefense(record.Equipped.LeftHand) +
-                   GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
-        }
+        public int GetCharacterTotalDefense(PlayerCharacterRecord record) =>
+            GetDefense(record.Equipped.Amulet) + GetDefense(record.Equipped.Armour) +
+            GetDefense(record.Equipped.Helmet) + GetDefense(record.Equipped.LeftHand) +
+            GetDefense(record.Equipped.RightHand) + GetDefense(record.Equipped.Ring);
 
         /// <summary>
         ///     Gets the Combat Item (inventory item) based on the equipped item

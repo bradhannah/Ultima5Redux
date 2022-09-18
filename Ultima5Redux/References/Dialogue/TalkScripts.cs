@@ -256,7 +256,7 @@ namespace Ultima5Redux.References.Dialogue
                 for (int i = 0; i < nEntries * sizeof(NpcTalkOffset); i += sizeof(NpcTalkOffset))
                 {
                     // add 2 because we know we are starting at an offset
-                    NpcTalkOffset talkOffset =
+                    var talkOffset =
                         (NpcTalkOffset)Utils.ReadStruct(talkByteList, 2 + i, typeof(NpcTalkOffset));
                     npcOffsets[talkOffset.npcIndex] = talkOffset;
 

@@ -177,7 +177,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
             const int nHitOffset = 128;
             int randomNum = _random.Next(255);
-            bool bWasHit = (enemyCombatMapUnit.Stats.Dexterity + nHitOffset) >= randomNum;
+            bool bWasHit = enemyCombatMapUnit.Stats.Dexterity + nHitOffset >= randomNum;
             debugStr =
                 $"Ran:{randomNum} Dex:{enemyCombatMapUnit.Stats.Dexterity} Dex+128:{enemyCombatMapUnit.Stats.Dexterity + 128} Hit:{bWasHit}";
             return bWasHit;
@@ -216,7 +216,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 {
                     turnResults.PushTurnResult(new AttackerTurnResult(
                         TurnResult.TurnResultType.Combat_EnemyMissedTarget,
-                        this, opposingCombatMapUnit, missileType, HitState.Missed, 
+                        this, opposingCombatMapUnit, missileType, HitState.Missed,
                         opposingCombatMapUnit.MapUnitPosition.XY));
                 }
                 else
@@ -335,15 +335,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         public HitState Attack(TurnResults.TurnResults turnResults, CombatMapUnit enemyCombatMapUnit, CombatItem weapon,
-            out NonAttackingUnit nonAttackingUnitDrop, bool bIsEnemy)
-        {
-            return Attack(turnResults, enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat,
+            out NonAttackingUnit nonAttackingUnitDrop, bool bIsEnemy) =>
+            Attack(turnResults, enemyCombatMapUnit, weapon.TheCombatItemReference.AttackStat,
                 weapon.TheCombatItemReference.Missile, out nonAttackingUnitDrop, bIsEnemy);
-        }
 
         public bool CanReachForMeleeAttack(CombatMapUnit opponentCombatMapUnit, int nItemRange) =>
-            (Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange &&
-             Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange);
+            Math.Abs(opponentCombatMapUnit.MapUnitPosition.X - MapUnitPosition.X) <= nItemRange &&
+            Math.Abs(opponentCombatMapUnit.MapUnitPosition.Y - MapUnitPosition.Y) <= nItemRange;
 
         //        /**
         // * Calculate damage for an attack.

@@ -79,10 +79,8 @@ namespace Ultima5Redux.References.Maps
         }
 
         public List<SingleCombatMapReference> GetListOfSingleCombatMapReferences(
-            SingleCombatMapReference.Territory territory)
-        {
-            return _singleCombatMapReferences[territory];
-        }
+            SingleCombatMapReference.Territory territory) =>
+            _singleCombatMapReferences[territory];
 
         public SingleCombatMapReference GetSingleCombatMapReference(SingleCombatMapReference.Territory territory,
             int nIndex)

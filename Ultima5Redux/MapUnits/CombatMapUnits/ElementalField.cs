@@ -7,26 +7,26 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public class ElementalField : NonAttackingUnit
     {
-        public ElementalField(FieldType theFieldType, MapUnitPosition mapUnitPosition)
-        {
-            TheFieldType = theFieldType;
-            MapUnitPosition = mapUnitPosition;
-        }
-
         public enum FieldType { Poison = 488, Sleep = 489, Fire = 490, Electric = 491 }
 
-        public override bool IsActive => true;
-
-        public FieldType TheFieldType { get; }
+        public override bool ExposeInnerItemsOnOpen => false;
+        public override bool ExposeInnerItemsOnSearch => false;
 
         public override string FriendlyName => TheFieldType + " field";
-        public override string PluralName => TheFieldType + " fields";
-        public override string SingularName => FriendlyName;
-        public override string Name => TheFieldType.ToString();
+
+        public override bool IsActive => true;
         public override bool IsOpenable => false;
         public override bool IsSearchable => false;
-        public override bool ExposeInnerItemsOnSearch => false;
-        public override bool ExposeInnerItemsOnOpen => false;
+
+        public override TileReference KeyTileReference
+        {
+            get => GameReferences.SpriteTileReferences.GetTileReference((int)TheFieldType);
+            set => throw new NotImplementedException("Can't set the key sprite in Elemental Field");
+        }
+
+        public override string Name => TheFieldType.ToString();
+        public override string PluralName => TheFieldType + " fields";
+        public override string SingularName => FriendlyName;
 
         public override TrapType Trap
         {
@@ -44,10 +44,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             set => throw new NotImplementedException("Can't set the trap type Elemental Field");
         }
 
-        public override TileReference KeyTileReference
+        public FieldType TheFieldType { get; }
+
+        public ElementalField(FieldType theFieldType, MapUnitPosition mapUnitPosition)
         {
-            get => GameReferences.SpriteTileReferences.GetTileReference((int)TheFieldType);
-            set => throw new NotImplementedException("Can't set the key sprite in Elemental Field");
+            TheFieldType = theFieldType;
+            MapUnitPosition = mapUnitPosition;
         }
 
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) => true;

@@ -9,8 +9,8 @@ namespace Ultima5Redux
 {
     [DataContract] public class GameSummary
     {
-
-        [DataMember] public string GameDescription
+        [DataMember]
+        public string GameDescription
         {
             get
             {
@@ -31,22 +31,22 @@ namespace Ultima5Redux
 
         [DataMember] public TimeOfDay TheTimeOfDay { get; protected internal set; }
 
+        public static GameSummary DeserializeGameSummary(string gameSummaryJson)
+        {
+            var gameStateSummary = JsonConvert.DeserializeObject<GameSummary>(gameSummaryJson);
+            return gameStateSummary;
+        }
+
         public string SerializeGameSummary()
         {
             JsonSerializerSettings jss = new()
             {
-                Formatting = Formatting.Indented,
+                Formatting = Formatting.Indented
                 // PreserveReferencesHandling = PreserveReferencesHandling.All,
                 // TypeNameHandling = TypeNameHandling.All
             };
             string stateJson = JsonConvert.SerializeObject(this, jss);
             return stateJson;
-        }
-
-        public static GameSummary DeserializeGameSummary(string gameSummaryJson)
-        {
-            GameSummary gameStateSummary = JsonConvert.DeserializeObject<GameSummary>(gameSummaryJson);
-            return gameStateSummary;
         }
 
         [DataContract] public class ExtraSaveData

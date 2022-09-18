@@ -19,9 +19,11 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             // Carpet = 170, Grapple = 12, Spyglass = 89, HMSCape = 260, PocketWatch = 232, BlackBadge = 281,
             // WoodenBox = 270, Sextant = 256
             void addLegacyItem(SpecialItem.SpecificItemType specialItem,
-                SpecialItem.SpecificItemTypeSprite specialItemSprite) =>
+                SpecialItem.SpecificItemTypeSprite specialItemSprite)
+            {
                 Items[specialItem] = new SpecialItem(specialItem, specialItemSprite,
                     importedGameState.GetSpecialItemQuantity(specialItem));
+            }
 
             addLegacyItem(SpecialItem.SpecificItemType.Carpet, SpecialItem.SpecificItemTypeSprite.Carpet);
             addLegacyItem(SpecialItem.SpecificItemType.Grapple, SpecialItem.SpecificItemTypeSprite.Grapple);

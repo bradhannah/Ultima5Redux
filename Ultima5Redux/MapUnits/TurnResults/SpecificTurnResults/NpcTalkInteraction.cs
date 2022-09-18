@@ -6,9 +6,6 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
     {
         public NonPlayerCharacter Npc { get; }
 
-        public NpcTalkInteraction(NonPlayerCharacter npc) : base(TurnResultType.NpcTalkInteraction)
-        {
-            Npc = npc;
-        }
+        public NpcTalkInteraction(NonPlayerCharacter npc) : base(TurnResultType.NpcTalkInteraction) => Npc = npc;
     }
 }

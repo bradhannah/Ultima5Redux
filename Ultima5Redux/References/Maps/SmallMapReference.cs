@@ -18,6 +18,9 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         private readonly DataOvlReference _dataRef;
 
+        private readonly Dictionary<SingleMapReference.Location, Dictionary<int, SingleMapReference>>
+            _mapReferenceDictionary = new();
+
         // a mapping of the master file -> a list of locations, which also provides an index value for the town (implied within list)
         private readonly Dictionary<SingleMapReference.SmallMapMasterFiles, List<SingleMapReference.Location>>
             _masterFileLocationDictionary = new(MASTER_FILES);
@@ -39,9 +42,6 @@ namespace Ultima5Redux.References.Maps
         ///     A list of all map references
         /// </summary>
         public List<SingleMapReference> MapReferenceList { get; } = new();
-
-        private readonly Dictionary<SingleMapReference.Location, Dictionary<int, SingleMapReference>>
-            _mapReferenceDictionary = new();
 
         /// <summary>
         ///     Construct all small map references
@@ -203,10 +203,7 @@ namespace Ultima5Redux.References.Maps
         ///     Gets the starting location of a small map
         /// </summary>
         /// <returns></returns>
-        public static Point2D GetStartingXYByLocation()
-        {
-            return new Point2D(32 / 2 - 1, 30);
-        }
+        public static Point2D GetStartingXYByLocation() => new(32 / 2 - 1, 30);
 
         /// <summary>
         ///     Gets the starting position of a small map
@@ -239,7 +236,7 @@ namespace Ultima5Redux.References.Maps
 
             // filthy way to convert our more commonly used _location enum to the less used LOCATION_STRINGS
             // they didn't even bother having them all match, and then decided to leave some out
-            DataOvlReference.LocationStrings newLocStrEnum =
+            var newLocStrEnum =
                 (DataOvlReference.LocationStrings)Enum.Parse(typeof(DataOvlReference.LocationStrings),
                     location.ToString());
 
@@ -327,10 +324,7 @@ namespace Ultima5Redux.References.Maps
             return "";
         }
 
-        public int GetNumberOfFloors(SingleMapReference.Location location)
-        {
-            return _nFloorsDictionary[location];
-        }
+        public int GetNumberOfFloors(SingleMapReference.Location location) => _nFloorsDictionary[location];
 
         /// <summary>
         ///     Get a map reference based on a location
@@ -346,9 +340,6 @@ namespace Ultima5Redux.References.Maps
             return _mapReferenceDictionary[location][floor];
         }
 
-        public bool HasBasement(SingleMapReference.Location location)
-        {
-            return _smallMapBasementDictionary[location];
-        }
+        public bool HasBasement(SingleMapReference.Location location) => _smallMapBasementDictionary[location];
     }
 }

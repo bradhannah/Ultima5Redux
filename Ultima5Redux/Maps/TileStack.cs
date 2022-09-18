@@ -11,12 +11,12 @@ namespace Ultima5Redux.Maps
         public TileReference MapUnitTileReference { get; private set; }
 
         public ReadOnlyDictionary<int, TileReference> TileReferencesDictionary => new(_tileReferencesDictionary);
-        public Point2D XY { get; private set; }
+        public Point2D XY { get; }
 
         public TileStack(in Point2D xy)
         {
             XY = xy;
-            _tileReferencesDictionary = new();
+            _tileReferencesDictionary = new Dictionary<int, TileReference>();
             MapUnitTileReference = null;
         }
 
@@ -25,7 +25,7 @@ namespace Ultima5Redux.Maps
             if (_tileReferencesDictionary.ContainsKey(tileReference.Index))
             {
                 throw new Ultima5ReduxException(
-                    $"Tried to push tile index: {tileReference.Index} onto {this.XY.X}, {this.XY.Y} but it already existed.");
+                    $"Tried to push tile index: {tileReference.Index} onto {XY.X}, {XY.Y} but it already existed.");
             }
 
             _tileReferencesDictionary.Add(tileReference.Index, tileReference);
@@ -34,14 +34,8 @@ namespace Ultima5Redux.Maps
             if (bMapUnit) MapUnitTileReference = tileReference;
         }
 
-        public IEnumerator<TileReference> GetEnumerator()
-        {
-            return _tileReferencesDictionary.Values.GetEnumerator();
-        }
+        public IEnumerator<TileReference> GetEnumerator() => _tileReferencesDictionary.Values.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

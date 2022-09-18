@@ -9,7 +9,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public sealed class Weapon : CombatItem
     {
-        [IgnoreDataMember] public override CharacterEquipped.EquippableSlot EquippableSlot =>
+        [IgnoreDataMember]
+        public override CharacterEquipped.EquippableSlot EquippableSlot =>
             TheCombatItemReference.IsShield
                 ? CharacterEquipped.EquippableSlot.RightHand
                 : CharacterEquipped.EquippableSlot.LeftHand;

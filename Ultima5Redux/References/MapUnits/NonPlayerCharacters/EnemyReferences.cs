@@ -26,26 +26,6 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             }
         }
 
-        public EnemyReference GetEnemyReference(TileReference tileReference)
-        {
-            int nIndex = (tileReference.Index - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
-            return AllEnemyReferences[nIndex];
-        }
-
-        public EnemyReference GetEnemyReference(int nSprite)
-        {
-            if (nSprite is >= 300 and <= 303) return AllEnemyReferences[EnemyReference.PIRATE_SHIP_NUMBER];
-            // hack to put LB in dungeon 111
-            if (nSprite == 316) return AllEnemyReferences[15];
-            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
-            return AllEnemyReferences[nIndex];
-        }
-
-        public EnemyReference GetFriendReference(EnemyReference enemyReference)
-        {
-            return AllEnemyReferences[enemyReference.FriendIndex];
-        }
-
         internal EnemyReference GetRandomEnemyReferenceByEraAndTile(int nTurn, TileReference tileReference)
         {
             List<EnemyReference> possibleEnemies =
@@ -64,15 +44,31 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             return enemiesThatCanGoOnTile[Utils.GetNumberFromAndTo(0, enemiesThatCanGoOnTile.Count - 1)];
         }
 
+        public EnemyReference GetEnemyReference(TileReference tileReference)
+        {
+            int nIndex = (tileReference.Index - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+            return AllEnemyReferences[nIndex];
+        }
+
+        public EnemyReference GetEnemyReference(int nSprite)
+        {
+            if (nSprite is >= 300 and <= 303) return AllEnemyReferences[EnemyReference.PIRATE_SHIP_NUMBER];
+            // hack to put LB in dungeon 111
+            if (nSprite == 316) return AllEnemyReferences[15];
+            int nIndex = (nSprite - EnemyReference.N_FIRST_SPRITE) / EnemyReference.N_FRAMES_PER_SPRITE;
+            return AllEnemyReferences[nIndex];
+        }
+
+        public EnemyReference GetFriendReference(EnemyReference enemyReference) =>
+            AllEnemyReferences[enemyReference.FriendIndex];
+
         private sealed class AdditionalEnemyFlagList
         {
             public readonly List<AdditionalEnemyFlags> AllAdditionalEnemyFlags;
 
-            public AdditionalEnemyFlagList()
-            {
+            public AdditionalEnemyFlagList() =>
                 AllAdditionalEnemyFlags =
                     JsonConvert.DeserializeObject<List<AdditionalEnemyFlags>>(Resources.AdditionalEnemyFlags);
-            }
         }
 
         [DataContract] public class AdditionalEnemyFlags
@@ -81,15 +77,15 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             [DataMember] public bool CanFlyOverWater { get; set; }
             [DataMember] public bool CanPassThroughWalls { get; set; }
             [DataMember] public bool DoNotMove { get; set; }
-            [DataMember] public int Experience { get; set; }
-            [DataMember] public bool IsWaterEnemy { get; set; }
-            [DataMember] public string Name { get; set; }
             [DataMember] public int Era1Weight { get; set; }
             [DataMember] public int Era2Weight { get; set; }
             [DataMember] public int Era3Weight { get; set; }
+            [DataMember] public int Experience { get; set; }
             [DataMember] public bool IsSandEnemy { get; set; }
+            [DataMember] public bool IsWaterEnemy { get; set; }
             [DataMember] public CombatItemReference.MissileType LargeMapMissile { get; set; }
             [DataMember] public int LargeMapMissileRange { get; set; }
+            [DataMember] public string Name { get; set; }
         }
     }
 }

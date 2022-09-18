@@ -1461,20 +1461,15 @@ namespace Ultima5Redux.References
         /// <param name="offset">which offset to begin reading at</param>
         /// <param name="length">the number of bytes to read</param>
         /// <returns></returns>
-        public DataChunk GetDataChunk(DataChunk.DataFormatType dataType, string description, int offset, int length)
-        {
-            return new DataChunk(dataType, description, _dataChunks.FileByteList, offset, length);
-        }
+        public DataChunk GetDataChunk(DataChunk.DataFormatType dataType, string description, int offset, int length) =>
+            new(dataType, description, _dataChunks.FileByteList, offset, length);
 
         /// <summary>
         ///     Retrieve a data chunk by the name alone
         /// </summary>
         /// <param name="dataChunkName">chunk name</param>
         /// <returns>the associated datachunk</returns>
-        public DataChunk GetDataChunk(DataChunkName dataChunkName)
-        {
-            return _dataChunks.GetDataChunk(dataChunkName);
-        }
+        public DataChunk GetDataChunk(DataChunkName dataChunkName) => _dataChunks.GetDataChunk(dataChunkName);
 
         // [0] = {string} "two"
         // [1] = {string} "three"
@@ -1521,9 +1516,7 @@ namespace Ultima5Redux.References
         /// <param name="chunkName">String list chunk name</param>
         /// <param name="strIndex">index of string</param>
         /// <returns>string at the index specified</returns>
-        public string GetStringFromDataChunkList(DataChunkName chunkName, int strIndex)
-        {
-            return GetDataChunk(chunkName).GetChunkAsStringList().StringList[strIndex];
-        }
+        public string GetStringFromDataChunkList(DataChunkName chunkName, int strIndex) =>
+            GetDataChunk(chunkName).GetChunkAsStringList().StringList[strIndex];
     }
 }

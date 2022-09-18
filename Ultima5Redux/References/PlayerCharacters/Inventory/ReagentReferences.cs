@@ -58,7 +58,7 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
                 .GetDataChunk(DataOvlReference.DataChunkName.SHOPPE_KEEPER_TOWNES_REAGENTS).GetAsByteList();
             foreach (byte b in reagentSkByteList)
             {
-                SmallMapReferences.SingleMapReference.Location location =
+                var location =
                     (SmallMapReferences.SingleMapReference.Location)b;
                 locations.Add(location);
             }

@@ -23,12 +23,12 @@ namespace Ultima5Redux.DayNightMoon
         [DataMember(Name = "MoongatePositions")]
         private readonly List<Point3D> _moongatePositions = new(TOTAL_MOONSTONES);
 
-        private readonly Dictionary<Point3D, bool> _moongatePositionsDictionary = new(TOTAL_MOONSTONES);
-
         /// <summary>
         ///     Are moonstones buried?
         /// </summary>
         [DataMember(Name = "MoonstoneBuried")] private readonly List<bool> _moonstonesBuried = new(TOTAL_MOONSTONES);
+
+        private readonly Dictionary<Point3D, bool> _moongatePositionsDictionary = new(TOTAL_MOONSTONES);
 
         [JsonConstructor] private Moongates()
         {
@@ -79,10 +79,7 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <param name="nMoongateIndex">0-7</param>
         /// <returns></returns>
-        public Point3D GetMoongatePosition(int nMoongateIndex)
-        {
-            return _moongatePositions[nMoongateIndex];
-        }
+        public Point3D GetMoongatePosition(int nMoongateIndex) => _moongatePositions[nMoongateIndex];
 
         public MoonPhaseReferences.MoonPhases GetMoonPhaseByPosition(Point2D position, Map.Maps map)
         {
@@ -122,15 +119,10 @@ namespace Ultima5Redux.DayNightMoon
         /// </summary>
         /// <param name="position"></param>
         /// <returns>true if one is buried</returns>
-        public bool IsMoonstoneBuried(Point3D position)
-        {
-            return _moongatePositionsDictionary.ContainsKey(position);
-        }
+        public bool IsMoonstoneBuried(Point3D position) => _moongatePositionsDictionary.ContainsKey(position);
 
-        public bool IsMoonstoneBuried(in Point2D position, Map.Maps map)
-        {
-            return IsMoonstoneBuried(new Point3D(position.X, position.Y, map == Map.Maps.Overworld ? 0 : 0xFF));
-        }
+        public bool IsMoonstoneBuried(in Point2D position, Map.Maps map) =>
+            IsMoonstoneBuried(new Point3D(position.X, position.Y, map == Map.Maps.Overworld ? 0 : 0xFF));
 
         /// <summary>
         ///     Sets the buried status of a Moonstone

@@ -26,67 +26,44 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
         }
 
-        public override string GetForSaleList()
-        {
-            throw new NotImplementedException();
-        }
+        public override string GetForSaleList() => throw new NotImplementedException();
 
-        public override string GetHappyShoppeKeeperGoodbyeResponse()
-        {
-            return AddSaysShoppeKeeper(ShoppeKeeperDialogueReference.GetMerchantString(
+        public override string GetHappyShoppeKeeperGoodbyeResponse() =>
+            AddSaysShoppeKeeper(ShoppeKeeperDialogueReference.GetMerchantString(
                 ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(113, 116),
                 shoppeName: TheShoppeKeeperReference.ShoppeName,
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName));
-        }
 
-        public override string GetHelloResponse(TimeOfDay tod = null)
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(
+        public override string GetHelloResponse(TimeOfDay tod = null) =>
+            ShoppeKeeperDialogueReference.GetMerchantString(
                 ShoppeKeeperDialogueReference.GetRandomMerchantStringIndexFromRange(105, 108),
                 shoppeName: TheShoppeKeeperReference.ShoppeName,
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName, tod: tod).TrimStart();
-        }
 
-        public override string GetPissedOffNotEnoughMoney()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(122).Trim();
-        }
+        public override string GetPissedOffNotEnoughMoney() =>
+            ShoppeKeeperDialogueReference.GetMerchantString(122).Trim();
 
-        public override string GetThanksAfterPurchaseResponse()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(123).TrimStart() + "\n\n" +
-                   ShoppeKeeperDialogueReference.GetMerchantString(124).Trim() + " Avatar?\"";
-        }
+        public override string GetThanksAfterPurchaseResponse() =>
+            ShoppeKeeperDialogueReference.GetMerchantString(123).TrimStart() + "\n\n" +
+            ShoppeKeeperDialogueReference.GetMerchantString(124).Trim() + " Avatar?\"";
 
-        public override string GetWhichWouldYouSee()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(119).Trim();
-        }
+        public override string GetWhichWouldYouSee() => ShoppeKeeperDialogueReference.GetMerchantString(119).Trim();
 
         /// <summary>
         ///     The dock is occupied, so it's gonna be 87000 gold for that Frigate
         /// </summary>
         /// <returns></returns>
-        public string GetDockIsOccupiedExpensiveShipResponse()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(125).Trim();
-        }
+        public string GetDockIsOccupiedExpensiveShipResponse() =>
+            ShoppeKeeperDialogueReference.GetMerchantString(125).Trim();
 
         public string GetFrigateOffer(SmallMapReferences.SingleMapReference.Location location,
-            PlayerCharacterRecords records)
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(117, Frigate.GetPrice(location, records));
-        }
+            PlayerCharacterRecords records) =>
+            ShoppeKeeperDialogueReference.GetMerchantString(117, Frigate.GetPrice(location, records));
 
         public string GetSkiffOffer(SmallMapReferences.SingleMapReference.Location location,
-            PlayerCharacterRecords records)
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(118, Skiff.GetPrice(location, records));
-        }
+            PlayerCharacterRecords records) =>
+            ShoppeKeeperDialogueReference.GetMerchantString(118, Skiff.GetPrice(location, records));
 
-        public string GetSkiffPlacedInFrigate()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(120).Trim();
-        }
+        public string GetSkiffPlacedInFrigate() => ShoppeKeeperDialogueReference.GetMerchantString(120).Trim();
     }
 }

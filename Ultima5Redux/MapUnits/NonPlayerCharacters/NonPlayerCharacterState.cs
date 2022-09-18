@@ -9,8 +9,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public class NonPlayerCharacterState
     {
-
-        [DataMember] public bool HasMetAvatar
+        [DataMember]
+        public bool HasMetAvatar
         {
             get
             {
@@ -38,7 +38,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
         [IgnoreDataMember] private bool _bHasMetAvatar;
 
-        [IgnoreDataMember] public NonPlayerCharacterReference NPCRef
+        [IgnoreDataMember]
+        public NonPlayerCharacterReference NPCRef
         {
             get => GameReferences.NpcRefs.GetNonPlayerCharactersByLocation(NPCLocation)[NPCRefIndex];
             private set
@@ -52,9 +53,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
         {
         }
 
-        public NonPlayerCharacterState(NonPlayerCharacterReference npcRef)
-        {
-            NPCRef = npcRef;
-        }
+        public NonPlayerCharacterState(NonPlayerCharacterReference npcRef) => NPCRef = npcRef;
     }
 }

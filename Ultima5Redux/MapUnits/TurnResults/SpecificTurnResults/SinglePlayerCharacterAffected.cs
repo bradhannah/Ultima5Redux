@@ -7,15 +7,10 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
         public PlayerCharacterRecord PlayerRecord { get; set; }
 
         public SinglePlayerCharacterAffected(TurnResultType theTurnResultType,
-            CharacterStats stats) : base(theTurnResultType)
-        {
+            CharacterStats stats) : base(theTurnResultType) =>
             CombatMapUnitStats = stats;
-        }
 
-        public override string GetDebugString()
-        {
-            return $@"PlayerRecord: {PlayerRecord?.Name}";
-        }
+        public override string GetDebugString() => $@"PlayerRecord: {PlayerRecord?.Name}";
 
         public CharacterStats CombatMapUnitStats { get; }
     }

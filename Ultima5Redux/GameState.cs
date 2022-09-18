@@ -218,10 +218,7 @@ namespace Ultima5Redux
         }
 
 
-        public static GameState Deserialize(string stateJson)
-        {
-            return JsonConvert.DeserializeObject<GameState>(stateJson);
-        }
+        public static GameState Deserialize(string stateJson) => JsonConvert.DeserializeObject<GameState>(stateJson);
 
         public static GameState DeserializeFromFile(string filePathAndName)
         {
@@ -230,7 +227,7 @@ namespace Ultima5Redux
             JsonReader js = new JsonTextReader(sr);
             JsonSerializer jser = new();
 
-            GameState state = jser.Deserialize<GameState>(js);
+            var state = jser.Deserialize<GameState>(js);
 
             Debug.Assert(state != null, nameof(state) + " != null");
 

@@ -107,21 +107,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Blacksmith asks what you would like to see (to buy)
         /// </summary>
         /// <returns></returns>
-        public override string GetWhichWouldYouSee()
-        {
-            return "Which would ye see?";
-        }
+        public override string GetWhichWouldYouSee() => "Which would ye see?";
 
         /// <summary>
         ///     The blacksmiths nasty response to attempting to sell ammo
         /// </summary>
         /// <returns></returns>
-        public string DontDealInAmmoOutput()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(
+        public string DontDealInAmmoOutput() =>
+            ShoppeKeeperDialogueReference.GetMerchantString(
                 DataOvlReference.StringReferences.GetString(DataOvlReference.ShoppeKeeperSellingStrings
                     .DONT_DEAL_AMMO_GROWL_NAME), shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
-        }
 
         /// <summary>
         ///     Blacksmiths response after buying an item
@@ -142,10 +137,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <param name="equipment">which equipment?</param>
         /// <param name="nGold">how much does he charge?</param>
         /// <returns></returns>
-        public string GetEquipmentBuyingOutput(DataOvlReference.Equipment equipment, int nGold)
-        {
-            return GetEquipmentBuyingOutput((int)equipment, nGold);
-        }
+        public string GetEquipmentBuyingOutput(DataOvlReference.Equipment equipment, int nGold) =>
+            GetEquipmentBuyingOutput((int)equipment, nGold);
 
         /// <summary>
         ///     Gets the response string when vendor is trying to sell a particular piece of equipment
@@ -164,10 +157,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Blacksmith statement when you ask to sell
         /// </summary>
         /// <returns></returns>
-        public string GetOfferToSellLeadupOutput()
-        {
-            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
-        }
+        public string GetOfferToSellLeadupOutput() =>
+            GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_WHATS_FOR_SALE);
 
         /// <summary>
         ///     Gets request of which item you would like to sell to the blacksmith
@@ -179,11 +170,9 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         ///     Gets the response of blacksmith offering to show you what they have
         /// </summary>
         /// <returns></returns>
-        public string GetYouCanBuy()
-        {
-            return GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM)
-                       .Trim() + " " +
-                   GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
-        }
+        public string GetYouCanBuy() =>
+            GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_POS_EXCLAIM)
+                .Trim() + " " +
+            GetRandomStringFromChoices(DataOvlReference.DataChunkName.SHOPPE_KEEPER_BLACKSMITH_WE_HAVE);
     }
 }

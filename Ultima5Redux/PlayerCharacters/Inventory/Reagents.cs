@@ -20,8 +20,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public Reagents(ImportedGameState importedGameState)
         {
-            void addReagentLegacy(Reagent.SpecificReagentType reagentType) =>
+            void addReagentLegacy(Reagent.SpecificReagentType reagentType)
+            {
                 AddReagent(reagentType, importedGameState.GetReagentQuantity(reagentType));
+            }
 
             foreach (Reagent.SpecificReagentType reagent in Enum.GetValues(typeof(Reagent.SpecificReagentType)))
             {

@@ -142,10 +142,8 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// <param name="nMin"></param>
         /// <param name="nMax"></param>
         /// <returns></returns>
-        internal string GetRandomMerchantStringFromRange(int nMin, int nMax)
-        {
-            return _merchantStrings[GetRandomMerchantStringIndexFromRange(nMin, nMax)];
-        }
+        internal string GetRandomMerchantStringFromRange(int nMin, int nMax) =>
+            _merchantStrings[GetRandomMerchantStringIndexFromRange(nMin, nMax)];
 
         internal int GetRandomMerchantStringIndexFromRange(int nMin, int nMax)
         {
@@ -189,10 +187,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters.ShoppeKeepers
         /// </summary>
         /// <param name="nDialogueIndex"></param>
         /// <returns></returns>
-        private string GetMerchantStringWithNoSubstitution(int nDialogueIndex)
-        {
-            return _merchantStrings[nDialogueIndex];
-        }
+        private string GetMerchantStringWithNoSubstitution(int nDialogueIndex) => _merchantStrings[nDialogueIndex];
 
         /// <summary>
         ///     Gets a shoppekeeper based on location and NPC type

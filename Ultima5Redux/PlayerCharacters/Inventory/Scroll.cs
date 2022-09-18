@@ -8,8 +8,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 {
     [DataContract] public class Scroll : InventoryItem
     {
-
-        [JsonConverter(typeof(StringEnumConverter))] public enum ScrollSpells
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum ScrollSpells
         {
             Vas_Lor = 0, Rel_Hur, In_Sanct, In_An, In_Quas_Wis, Kal_Xen_Corp, In_Mani_Corp, An_Tym
         }
@@ -26,7 +26,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         [IgnoreDataMember] public override string InventoryReferenceString => ScrollSpell.ToString();
         [IgnoreDataMember] public override bool IsSellable => false;
 
-        [IgnoreDataMember] public MagicReference ScrollMagicReference
+        [IgnoreDataMember]
+        public MagicReference ScrollMagicReference
         {
             get => GameReferences.MagicRefs.GetMagicReference(ScrollSpell);
             set => ScrollSpell = value.SpellEnum;

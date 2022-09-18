@@ -39,7 +39,8 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
                 { Point2D.Direction.Up, "SkiffUp" }
             };
 
-        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded => DirectionToTileName;
+        protected internal override Dictionary<Point2D.Direction, string> DirectionToTileNameBoarded =>
+            DirectionToTileName;
 
         [JsonConstructor] private Skiff()
         {
@@ -47,18 +48,13 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
 
         public Skiff(MapUnitMovement mapUnitMovement, SmallMapReferences.SingleMapReference.Location location,
             Point2D.Direction direction, NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null,
-            mapUnitMovement, location, direction, npcState, mapUnitPosition)
-        {
+            mapUnitMovement, location, direction, npcState, mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
-        }
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
-            PlayerCharacterRecords records)
-        {
-            return GetAdjustedPrice(records, Prices[location]);
-        }
+            PlayerCharacterRecords records) =>
+            GetAdjustedPrice(records, Prices[location]);
 
-        public override bool CanBeExited(VirtualMap virtualMap) =>
-            (virtualMap.IsLandNearby(Avatar.AvatarState.Regular));
+        public override bool CanBeExited(VirtualMap virtualMap) => virtualMap.IsLandNearby(Avatar.AvatarState.Regular);
     }
 }

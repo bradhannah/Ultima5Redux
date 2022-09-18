@@ -5,12 +5,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory.SpellSubTypes
 {
     public abstract class SpellSubType
     {
-        protected SpellSubType(MagicReference magicRef)
-        {
-            MagicRef = magicRef;
-        }
-
         public MagicReference MagicRef { get; }
+
+        protected SpellSubType(MagicReference magicRef) => MagicRef = magicRef;
 
         public abstract SpellResult CastSpell(GameState state, SpellCastingDetails details);
 

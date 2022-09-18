@@ -82,9 +82,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
         }
 
         public static int GetPrice(SmallMapReferences.SingleMapReference.Location location,
-            PlayerCharacterRecords records)
-        {
-            return GetAdjustedPrice(records, Prices[location]);
-        }
+            PlayerCharacterRecords records) =>
+            GetAdjustedPrice(records, Prices[location]);
     }
 }

@@ -299,10 +299,8 @@ namespace Ultima5Redux.Maps
             return CombatMapUnitIsPresent(combatMapUnit);
         }
 
-        private bool CombatPlayerIsActive(CombatPlayer player)
-        {
-            return ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
-        }
+        private bool CombatPlayerIsActive(CombatPlayer player) =>
+            ActivePlayerCharacterRecord == null || player.Record == ActivePlayerCharacterRecord;
 
         private int GetNumberOfTurnsInQueue()
         {
@@ -326,7 +324,7 @@ namespace Ultima5Redux.Maps
                 if (nTally >= nMin) return true;
             }
 
-            return (nTally >= nMin);
+            return nTally >= nMin;
         }
 
         /// <summary>

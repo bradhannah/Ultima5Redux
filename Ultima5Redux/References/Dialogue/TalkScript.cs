@@ -424,30 +424,21 @@ namespace Ultima5Redux.References.Dialogue
         /// </summary>
         /// <param name="talkConst">name, job etc.</param>
         /// <returns>The corresponding single ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(TalkConstants talkConst)
-        {
-            return _scriptLines[(int)talkConst];
-        }
+        protected internal ScriptLine GetScriptLine(TalkConstants talkConst) => _scriptLines[(int)talkConst];
 
         /// <summary>
         ///     Gets a script line based on its index in the overall Script
         /// </summary>
         /// <param name="index">index into Script</param>
         /// <returns>The requested ScriptLine</returns>
-        protected internal ScriptLine GetScriptLine(int index)
-        {
-            return _scriptLines[index];
-        }
+        protected internal ScriptLine GetScriptLine(int index) => _scriptLines[index];
 
         /// <summary>
         ///     Gets a scriptline based on the label index
         /// </summary>
         /// <param name="nLabel">0 based index of label</param>
         /// <returns>The corresponding script line</returns>
-        protected internal ScriptLine GetScriptLineLabel(int nLabel)
-        {
-            return _scriptLines[GetScriptLineLabelIndex(nLabel)];
-        }
+        protected internal ScriptLine GetScriptLineLabel(int nLabel) => _scriptLines[GetScriptLineLabelIndex(nLabel)];
 
         /// <summary>
         ///     Move to the next line in the script (for adding new content)
@@ -471,10 +462,7 @@ namespace Ultima5Redux.References.Dialogue
             /// <summary>
             ///     Default constructor
             /// </summary>
-            public ScriptTalkLabels()
-            {
-                Labels = new List<ScriptTalkLabel>();
-            }
+            public ScriptTalkLabels() => Labels = new List<ScriptTalkLabel>();
 
             /// <summary>
             ///     Add a single ScriptTalkLabel
@@ -561,10 +549,7 @@ namespace Ultima5Redux.References.Dialogue
                 QuestionAnswers.Add(sqa);
             }
 
-            public bool ContainsQuestions()
-            {
-                return DefaultAnswers.Count > 0;
-            }
+            public bool ContainsQuestions() => DefaultAnswers.Count > 0;
         }
 
         /// <summary>
@@ -580,10 +565,7 @@ namespace Ultima5Redux.References.Dialogue
             /// <summary>
             ///     Default constructor
             /// </summary>
-            public ScriptQuestionAnswers()
-            {
-                QuestionAnswers = new Dictionary<string, ScriptQuestionAnswer>();
-            }
+            public ScriptQuestionAnswers() => QuestionAnswers = new Dictionary<string, ScriptQuestionAnswer>();
 
             private string GetQuestionKey(string userSuppliedQuestion)
             {
@@ -610,10 +592,7 @@ namespace Ultima5Redux.References.Dialogue
                 }
             }
 
-            public bool AnswerIsAvailable(string question)
-            {
-                return GetQuestionKey(question) != string.Empty;
-            }
+            public bool AnswerIsAvailable(string question) => GetQuestionKey(question) != string.Empty;
 
             /// <summary>
             ///     Based on a user response, return the ScriptQuestionAnswer object
@@ -633,10 +612,7 @@ namespace Ultima5Redux.References.Dialogue
             ///     Get an array of all associated questions
             /// </summary>
             /// <returns></returns>
-            public string[] GetScriptQuestions()
-            {
-                return QuestionAnswers.Keys.ToArray();
-            }
+            public string[] GetScriptQuestions() => QuestionAnswers.Keys.ToArray();
 
             /// <summary>
             ///     Print the object to the console
@@ -750,23 +726,17 @@ namespace Ultima5Redux.References.Dialogue
                 _str = str;
             }
 
-            public static bool IsQuestion(string str)
-            {
+            public static bool IsQuestion(string str) =>
                 // if the string is:
                 // 1 to 6 characters
                 // AND doesn't contain spaces
-
-                return str.Trim().Length <= 6 && str.Trim().Length >= 1 && !str.Contains(" ");
-            }
+                str.Trim().Length <= 6 && str.Trim().Length >= 1 && !str.Contains(" ");
 
             /// <summary>
             ///     is this script item a question that the player asks an NPC?
             /// </summary>
             /// <returns></returns>
-            public bool IsQuestion()
-            {
-                return IsQuestion(Str);
-            }
+            public bool IsQuestion() => IsQuestion(Str);
         }
 
         /// <summary>
@@ -854,8 +824,10 @@ namespace Ultima5Redux.References.Dialogue
             /// </summary>
             /// <param name="command">the command to search for</param>
             /// <returns>true if it's present, false if it isn't</returns>
-            public bool ContainsCommand(TalkCommand command) =>
-                ScriptItems.Any(scriptItem => scriptItem.Command == command);
+            public bool ContainsCommand(TalkCommand command)
+            {
+                return ScriptItems.Any(scriptItem => scriptItem.Command == command);
+            }
 
             /// <summary>
             ///     Get a script item based on an index into the list

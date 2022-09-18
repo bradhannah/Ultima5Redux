@@ -16,8 +16,10 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
         public ShadowlordShards(ImportedGameState importedGameState)
         {
-            void addShardLegacy(ShadowlordShard.ShardType shard) =>
+            void addShardLegacy(ShadowlordShard.ShardType shard)
+            {
                 Items.Add(shard, new ShadowlordShard(shard, importedGameState.GetShadowlordShardQuantity(shard)));
+            }
 
             addShardLegacy(ShadowlordShard.ShardType.Falsehood);
             addShardLegacy(ShadowlordShard.ShardType.Hatred);

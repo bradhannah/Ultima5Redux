@@ -20,6 +20,17 @@ namespace Ultima5Redux.PlayerCharacters
         [DataMember] public int Level { get; set; }
         [DataMember] public int MaximumHp { get; set; }
 
+        [DataMember]
+        public PlayerCharacterRecord.CharacterStatus Status
+        {
+            get => _currentHp <= 0 ? PlayerCharacterRecord.CharacterStatus.Dead : _status;
+            set => _status = value;
+        }
+
+        [DataMember] public int Strength { get; set; }
+        [IgnoreDataMember] private int _currentHp;
+        [IgnoreDataMember] private PlayerCharacterRecord.CharacterStatus _status;
+
         public int GetMaximumMp(PlayerCharacterRecord.CharacterClass characterClass)
         {
             // this differs from Ultima IV, and is far more conservative
@@ -37,17 +48,6 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        [DataMember]
-        public PlayerCharacterRecord.CharacterStatus Status
-        {
-            get => _currentHp <= 0 ? PlayerCharacterRecord.CharacterStatus.Dead : _status;
-            set => _status = value;
-        }
-
-        [DataMember] public int Strength { get; set; }
-        [IgnoreDataMember] private int _currentHp;
-        [IgnoreDataMember] private PlayerCharacterRecord.CharacterStatus _status;
-
         public int Heal()
         {
             int nCurrentHp = CurrentHp;
@@ -64,6 +64,18 @@ namespace Ultima5Redux.PlayerCharacters
             return true;
         }
 
+        public int ProcessTurnAcid()
+        {
+            int nDamageAmount = Utils.GetNumberFromAndTo(OddsAndLogic.ACID_DAMAGE_MIN, OddsAndLogic.ACID_DAMAGE_MAX);
+            CurrentHp -= nDamageAmount;
+            return nDamageAmount;
+        }
+
+        public void ProcessTurnBomb()
+        {
+            CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
+        }
+
         public void ProcessTurnElectric()
         {
             CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
@@ -75,18 +87,6 @@ namespace Ultima5Redux.PlayerCharacters
 
             CurrentHp -= OddsAndLogic.POISON_DAMAGE_MIN;
             return OddsAndLogic.POISON_DAMAGE_MIN;
-        }
-
-        public void ProcessTurnBomb()
-        {
-            CurrentHp -= Utils.GetNumberFromAndTo(OddsAndLogic.BOMB_DAMAGE_MIN, OddsAndLogic.BOMB_DAMAGE_MAX);
-        }
-
-        public int ProcessTurnAcid()
-        {
-            int nDamageAmount = Utils.GetNumberFromAndTo(OddsAndLogic.ACID_DAMAGE_MIN, OddsAndLogic.ACID_DAMAGE_MAX);
-            CurrentHp -= nDamageAmount;
-            return nDamageAmount;
         }
 
         public bool Resurrect()

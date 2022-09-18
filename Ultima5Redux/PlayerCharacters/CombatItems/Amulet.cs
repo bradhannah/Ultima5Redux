@@ -6,7 +6,8 @@ namespace Ultima5Redux.PlayerCharacters.CombatItems
 {
     [DataContract] public sealed class Amulet : Armour
     {
-        [IgnoreDataMember] public override CharacterEquipped.EquippableSlot EquippableSlot =>
+        [IgnoreDataMember]
+        public override CharacterEquipped.EquippableSlot EquippableSlot =>
             CharacterEquipped.EquippableSlot.Amulet;
 
         [IgnoreDataMember] public override bool HideQuantity => false;

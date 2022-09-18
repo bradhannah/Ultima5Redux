@@ -251,14 +251,12 @@ namespace Ultima5Redux.Maps
                 or CombatMapUnit.HitState.HeavilyWounded or CombatMapUnit.HitState.CriticallyWounded
                 or CombatMapUnit.HitState.Fleeing;
 
-        private static bool IsWalkingPassable(TileReference tileReference)
-        {
-            return tileReference.IsWalking_Passable ||
-                   tileReference.Index ==
-                   GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index ||
-                   tileReference.Index == GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
-                       .Index;
-        }
+        private static bool IsWalkingPassable(TileReference tileReference) =>
+            tileReference.IsWalking_Passable ||
+            tileReference.Index ==
+            GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor").Index ||
+            tileReference.Index == GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
+                .Index;
 
         private void ClearCurrentCombatItemQueue()
         {
@@ -352,10 +350,8 @@ namespace Ultima5Redux.Maps
             return bestOpponent;
         }
 
-        private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy)
-        {
-            return GetClosestCombatMapUnitInRange<CombatPlayer>(enemy, enemy.EnemyReference.AttackRange);
-        }
+        private CombatPlayer GetClosestCombatPlayerInRange(Enemy enemy) =>
+            GetClosestCombatMapUnitInRange<CombatPlayer>(enemy, enemy.EnemyReference.AttackRange);
 
         private int GetCombatMapUnitIndex(CombatMapUnit combatMapUnit)
         {
@@ -413,7 +409,7 @@ namespace Ultima5Redux.Maps
 
             if (emptySpacePoints.Count == 0) return null;
             Point2D randomPoint = emptySpacePoints[Utils.GetNumberFromAndTo(0, emptySpacePoints.Count - 1)];
-            return (randomPoint);
+            return randomPoint;
         }
 
         /// <summary>
@@ -667,14 +663,15 @@ namespace Ultima5Redux.Maps
 
         private CombatPlayer MoveToClosestAttackableCombatPlayer(TurnResults turnResults,
             CombatMapUnit activeCombatUnit, out bool bMoved) =>
-            MoveToClosestAttackableCombatMapUnit(turnResults, activeCombatUnit, SpecificCombatMapUnit.CombatPlayer,
+            MoveToClosestAttackableCombatMapUnit(turnResults, activeCombatUnit,
+                    SpecificCombatMapUnit.CombatPlayer,
                     out bMoved) as
                 CombatPlayer;
 
         private Enemy MoveToClosestAttackableEnemy(TurnResults turnResults, CombatMapUnit activeMapUnit,
             out string outputStr, out bool bMoved)
         {
-            Enemy enemy =
+            var enemy =
                 MoveToClosestAttackableCombatMapUnit(turnResults, activeMapUnit, SpecificCombatMapUnit.Enemy,
                     out bMoved) as Enemy;
             outputStr = "";
@@ -807,8 +804,10 @@ namespace Ultima5Redux.Maps
             return combatMapUnit;
         }
 
-        public void BuildCombatItemQueue(List<CombatItem> combatItems) =>
+        public void BuildCombatItemQueue(List<CombatItem> combatItems)
+        {
             _currentCombatItemQueue = new Queue<CombatItem>(combatItems);
+        }
 
         public CombatItem DequeueCurrentCombatItem() => _currentCombatItemQueue.Dequeue();
 
@@ -864,14 +863,14 @@ namespace Ultima5Redux.Maps
             return combatUnit;
         }
 
-        public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem)
-        {
-            return GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer,
+        public Enemy GetClosestEnemyInRange(CombatPlayer attackingCombatPlayer, CombatItem combatItem) =>
+            GetClosestCombatMapUnitInRange<Enemy>(attackingCombatPlayer,
                 combatItem.TheCombatItemReference.Range);
-        }
 
-        public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record) =>
-            CombatMapUnits.CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
+        public CombatPlayer GetCombatPlayer(PlayerCharacterRecord record)
+        {
+            return CombatMapUnits.CurrentMapUnits.CombatPlayers.FirstOrDefault(player => player.Record == record);
+        }
 
         public string GetCombatPlayerOutputText()
         {
@@ -1286,7 +1285,7 @@ namespace Ultima5Redux.Maps
             // Everything after is ENEMY logic!
             // either move the ENEMY or have them attack someone
             Debug.Assert(activeCombatMapUnit is Enemy);
-            Enemy enemy = activeCombatMapUnit as Enemy;
+            var enemy = activeCombatMapUnit as Enemy;
 
             // if the enemy is charmed then the player get's to control them instead!
             if (enemy == null)
@@ -1383,7 +1382,7 @@ namespace Ultima5Redux.Maps
                                                 enemy.PreviousAttackTarget.IsCharmed);
             if (enemy.EnemyReference.AttackRange == 1)
                 bPreviousTargetInRange = bPreviousTargetPresent && !bPreviousTargetUnAttackable &&
-                                         (enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget));
+                                         enemy.CanReachForMeleeAttack(enemy.PreviousAttackTarget);
             else
                 bPreviousTargetInRange = bPreviousTargetPresent && !bPreviousTargetUnAttackable &&
                                          !IsRangedPathBlocked(enemy.MapUnitPosition.XY,
@@ -1410,7 +1409,7 @@ namespace Ultima5Redux.Maps
                         {
                             // it's a melee attack
                             targetedCombatMapUnit = bestCombatPlayer;
-                            AttackerTurnResult attackerTurnResult = new AttackerTurnResult(
+                            var attackerTurnResult = new AttackerTurnResult(
                                 TurnResult.TurnResultType.Combat_Result_Missed_EnemyMelee,
                                 activeCombatMapUnit, targetedCombatMapUnit, enemy.EnemyReference.TheMissileType,
                                 hitState);
@@ -1471,10 +1470,7 @@ namespace Ultima5Redux.Maps
             RefreshCurrentCombatPlayer();
         }
 
-        protected override float GetAStarWeight(in Point2D xy)
-        {
-            return 1.0f;
-        }
+        protected override float GetAStarWeight(in Point2D xy) => 1.0f;
 
         protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {

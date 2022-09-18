@@ -37,7 +37,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract bool IsSearchable { get; }
         public virtual bool HasInnerItemStack => InnerItemStack is { HasStackableItems: true };
 
-        public virtual ItemStack InnerItemStack { get; protected set; } 
+        public virtual ItemStack InnerItemStack { get; protected set; }
         public virtual bool IsLocked { get; set; }
 
         public virtual TrapType Trap { get; set; }
@@ -56,6 +56,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => false;
+
         public abstract bool DoesTriggerTrap(PlayerCharacterRecord record);
 
         public void TriggerTrap(TurnResults.TurnResults turnResults, CharacterStats stats,
@@ -101,9 +102,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             Trap = TrapType.NONE;
         }
 
-        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
-        {
-            return false;
-        }
+        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition) => false;
     }
 }

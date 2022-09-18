@@ -32,10 +32,7 @@ namespace Ultima5Redux.MapUnits.TurnResults
             return _turnResults.Any(t => t.TheTurnResultType == turnResultType);
         }
 
-        public T GetFirstTurnResult<T>() where T : TurnResult
-        {
-            return _turnResults.OfType<T>().FirstOrDefault();
-        }
+        public T GetFirstTurnResult<T>() where T : TurnResult => _turnResults.OfType<T>().FirstOrDefault();
 
         public TurnResult PopTurnResult() => _turnResults.Dequeue();
 

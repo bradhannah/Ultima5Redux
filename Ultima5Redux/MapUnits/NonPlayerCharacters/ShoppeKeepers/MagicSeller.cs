@@ -19,10 +19,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
 
         public MagicSeller(ShoppeKeeperDialogueReference shoppeKeeperDialogueReference, Inventory inventory,
             ShoppeKeeperReference theShoppeKeeperReference, DataOvlReference dataOvlReference) : base(
-            shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference)
-        {
+            shoppeKeeperDialogueReference, theShoppeKeeperReference, dataOvlReference) =>
             _inventory = inventory;
-        }
 
         public override string GetForSaleList()
         {
@@ -46,17 +44,13 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                 shoppeName: TheShoppeKeeperReference.ShoppeName, tod: tod);
         }
 
-        public override string GetPissedOffNotEnoughMoney()
-        {
-            return ShoppeKeeperDialogueReference.GetMerchantString(147,
+        public override string GetPissedOffNotEnoughMoney() =>
+            ShoppeKeeperDialogueReference.GetMerchantString(147,
                 shoppeKeeperName: TheShoppeKeeperReference.ShoppeKeeperName);
-        }
 
-        public override string GetThanksAfterPurchaseResponse()
-        {
-            return DataOvlReference.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N)
+        public override string GetThanksAfterPurchaseResponse() =>
+            DataOvlReference.StringReferences.GetString(DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N)
                 .TrimStart();
-        }
 
         public override string GetWhichWouldYouSee()
         {
@@ -83,10 +77,8 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
                        .GetString(DataOvlReference.ShoppeKeeperGeneral2Strings.IS_THIS_THY_NEED_Q_DQ).Trim();
         }
 
-        public List<Reagent> GetReagentsForSale()
-        {
-            return _inventory.SpellReagents.GetReagentsForSale(TheShoppeKeeperReference
+        public List<Reagent> GetReagentsForSale() =>
+            _inventory.SpellReagents.GetReagentsForSale(TheShoppeKeeperReference
                 .ShoppeKeeperLocation);
-        }
     }
 }

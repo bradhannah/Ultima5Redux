@@ -8,10 +8,8 @@ namespace Ultima5Redux.PlayerCharacters
 {
     [DataContract] public class CharacterEquipped
     {
-        [JsonConverter(typeof(StringEnumConverter))] public enum EquippableSlot
-        {
-            None, Helm, Amulet, LeftHand, RightHand, Ring, Armour
-        }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum EquippableSlot { None, Helm, Amulet, LeftHand, RightHand, Ring, Armour }
 
         [DataMember] public DataOvlReference.Equipment Amulet { get; set; }
         [DataMember] public DataOvlReference.Equipment Armour { get; set; }
@@ -82,10 +80,8 @@ namespace Ultima5Redux.PlayerCharacters
         public bool IsEquipped(EquippableSlot equippableSlot) =>
             GetEquippedEquipment(equippableSlot) != DataOvlReference.Equipment.Nothing;
 
-        public bool IsEquipped(DataOvlReference.Equipment equipment)
-        {
-            return Helmet == equipment || Armour == equipment || LeftHand == equipment || RightHand == equipment ||
-                   Ring == equipment || Amulet == equipment;
-        }
+        public bool IsEquipped(DataOvlReference.Equipment equipment) =>
+            Helmet == equipment || Armour == equipment || LeftHand == equipment || RightHand == equipment ||
+            Ring == equipment || Amulet == equipment;
     }
 }

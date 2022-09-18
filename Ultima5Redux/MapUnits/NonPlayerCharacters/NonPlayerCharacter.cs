@@ -113,9 +113,6 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                    " <b>Movement Attempts</b>: " + MovementAttempts + " " + Movement;
         }
 
-        public override TileReference GetNonBoardedTileReference()
-        {
-            return KeyTileReference;
-        }
+        public override TileReference GetNonBoardedTileReference() => KeyTileReference;
     }
 }

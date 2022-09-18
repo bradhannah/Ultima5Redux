@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Raw16ToBMP
 {
-    static class BitmapWriter
+    internal static class BitmapWriter
     {
         public static Dictionary<byte, Color> GetEgaPalette()
         {
@@ -55,7 +55,7 @@ namespace Raw16ToBMP
                 {
                     for (int x = 0; x < width; x += 2)
                     {
-                        Color pixel1 = egaPalette[(byte)(imageData[index] >> 4 & 0xF)];
+                        Color pixel1 = egaPalette[(byte)((imageData[index] >> 4) & 0xF)];
                         Color pixel2 = egaPalette[(byte)(imageData[index] & 0xF)];
 
                         bmp.SetPixel(x, y, pixel1);
@@ -115,7 +115,7 @@ namespace Raw16ToBMP
         //    }
     }
 
-    class Program
+    internal class Program
     {
         // private ICompressorAlgorithm _compressorAlgorithm;
 
@@ -125,7 +125,7 @@ namespace Raw16ToBMP
         //     set { _compressorAlgorithm = value; }
         // }
 
-        static void CreateMon0()
+        private static void CreateMon0()
         {
             const int nDefaultOffset = 0x00;
             //const int nPixelWidth = 12 * 2;
@@ -165,7 +165,7 @@ namespace Raw16ToBMP
         }
 
         // ReSharper disable once UnusedMember.Local
-        static void CreateScreen()
+        private static void CreateScreen()
         {
             const int IndexSize = 0x32;
             byte[] fileArray = File.ReadAllBytes("C:\\games\\ultima_5\\temp\\dec_res\\create.16.uncomp");
@@ -207,7 +207,7 @@ namespace Raw16ToBMP
             UltimaScreen();
             FireScreen();
 
-            PbvCompressorLzw lzw = new PbvCompressorLzw();
+            var lzw = new PbvCompressorLzw();
             lzw.Decompress("C:\\games\\ultima_5\\temp\\ultima.16",
                 "C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp2");
         }
@@ -243,7 +243,7 @@ namespace Raw16ToBMP
             const int nPixelWidth = 288;
             const int nBytesWidth = nPixelWidth / 2;
             const int nPixelHeight = 49;
-            const int nStartIndex = (320 / 2) * 61 + 0x1A;
+            const int nStartIndex = 320 / 2 * 61 + 0x1A;
             const int nOffsetPerFire = nBytesWidth * nPixelHeight + nDefaultOffset;
 
             Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
@@ -256,11 +256,11 @@ namespace Raw16ToBMP
 
             Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
                 "C:\\games\\ultima_5\\temp\\dec_res\\ultima_fire3.16.bmp",
-                nPixelWidth, nPixelHeight, nStartIndex + (nOffsetPerFire * 2) + nDefaultOffset);
+                nPixelWidth, nPixelHeight, nStartIndex + nOffsetPerFire * 2 + nDefaultOffset);
 
             Export("C:\\games\\ultima_5\\temp\\dec_res\\ultima.16.uncomp",
                 "C:\\games\\ultima_5\\temp\\dec_res\\ultima_fire4.16.bmp",
-                nPixelWidth, nPixelHeight, nStartIndex + (nOffsetPerFire * 3) + nDefaultOffset);
+                nPixelWidth, nPixelHeight, nStartIndex + nOffsetPerFire * 3 + nDefaultOffset);
         }
 
         public static void StartScreen()

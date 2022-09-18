@@ -77,10 +77,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public override bool IsMyEnemy(CombatMapUnit combatMapUnit) => combatMapUnit is Enemy;
 
-        public override string ToString()
-        {
-            return Record.Name;
-        }
+        public override string ToString() => Record.Name;
 
         public bool CanReachForAttack(CombatMapUnit opponentCombatMapUnit, CombatItem item) =>
             CanReachForMeleeAttack(opponentCombatMapUnit, item.TheCombatItemReference.Range);

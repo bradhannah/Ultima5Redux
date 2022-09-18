@@ -248,7 +248,7 @@ namespace Ultima5Redux
                 GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonUp"),
                 GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonLeft"),
                 GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonRight"),
-                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonDown"),
+                GameReferences.SpriteTileReferences.GetTileReferenceByName("CannonDown")
             };
             // small map
             // if a cannon is any of the four directions
@@ -334,13 +334,11 @@ namespace Ultima5Redux
 
                         return GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction);
                     }
-                    else
-                    {
-                        return
-                            GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction) +
-                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
-                                .ROWING);
-                    }
+
+                    return
+                        GameReferences.DataOvlRef.StringReferences.GetDirectionString(direction) +
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
+                            .ROWING);
 
                 case Avatar.AvatarState.Skiff:
                     return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings.ROW) +
@@ -366,11 +364,9 @@ namespace Ultima5Redux
             return GameReferences.SpriteTileReferences.IsMoonstoneBuriable(tileRef.Index);
         }
 
-        private bool IsLeavingMap(Point2D xyProposedPosition)
-        {
-            return (xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
-                State.TheVirtualMap.NumberOfRowTiles - 1));
-        }
+        private bool IsLeavingMap(Point2D xyProposedPosition) =>
+            xyProposedPosition.IsOutOfRange(State.TheVirtualMap.NumberOfColumnTiles - 1,
+                State.TheVirtualMap.NumberOfRowTiles - 1);
 
         private void MurderNpc(NonPlayerCharacter npc)
         {
@@ -478,8 +474,7 @@ namespace Ultima5Redux
                 State.TheVirtualMap.TheMapUnits.GetAvatarMapUnit().Direction,
                 out int _);
             BoardAndCleanFromWorld(carpet);
-            turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                .WearUseItemStrings
+            turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings
                 .CARPET_BANG), false);
         }
 
@@ -600,10 +595,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <returns>0-359 degrees</returns>
         // ReSharper disable once UnusedMember.Global
-        public float GetMoonAngle()
-        {
-            return MoonPhaseReferences.GetMoonAngle(State.TheTimeOfDay);
-        }
+        public float GetMoonAngle() => MoonPhaseReferences.GetMoonAngle(State.TheTimeOfDay);
 
         /// <summary>
         ///     Gets the teleport location of the moongate the avatar is presently on
@@ -804,12 +796,10 @@ namespace Ultima5Redux
 
             // at this point we are certain that the current tile is boardable AND the we know if the avatar has already
             // boarded something
-            string getOnFootResponse()
-            {
-                return GameReferences.DataOvlRef.StringReferences
+            string getOnFootResponse() =>
+                GameReferences.DataOvlRef.StringReferences
                     .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + "\n" + GameReferences.DataOvlRef
                     .StringReferences.GetString(DataOvlReference.KeypressCommandsStrings.ON_FOOT).Trim();
-            }
 
             string retStr = GameReferences.DataOvlRef.StringReferences
                 .GetString(DataOvlReference.KeypressCommandsStrings.BOARD).Trim() + " " + boardableMapUnit.BoardXitName;
@@ -969,8 +959,8 @@ namespace Ultima5Redux
                 GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                     .FIRE) + direction);
             // are we pointing the right direction to fire the cannons?
-            if (((direction is Point2D.Direction.Down or Point2D.Direction.Up) && bShipFacingUpDown)
-                || ((direction is Point2D.Direction.Left or Point2D.Direction.Right) && !bShipFacingUpDown))
+            if ((direction is Point2D.Direction.Down or Point2D.Direction.Up && bShipFacingUpDown)
+                || (direction is Point2D.Direction.Left or Point2D.Direction.Right && !bShipFacingUpDown))
             {
                 turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.SleepTransportStrings
@@ -1044,7 +1034,7 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            MagicCarpet magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
+            var magicCarpet = State.TheVirtualMap.TheMapUnits.GetSpecificMapUnitByLocation<MagicCarpet>(
                 State.TheVirtualMap.LargeMapOverUnder, xy, State.TheVirtualMap.CurrentSingleMapReference.Floor);
             if (magicCarpet != null)
             {
@@ -1348,7 +1338,7 @@ namespace Ultima5Redux
             if (TileReferences.IsLadderDown(tileReference.Index) ||
                 TileReferences.IsGrate(tileReference.Index))
             {
-                if (hasBasement && nCurrentFloor >= 0 || nCurrentFloor > 0)
+                if ((hasBasement && nCurrentFloor >= 0) || nCurrentFloor > 0)
                 {
                     State.TheVirtualMap.LoadSmallMap(
                         GameReferences.SmallMapRef.GetSingleMapByLocation(location, nCurrentFloor - 1),
@@ -1747,8 +1737,10 @@ namespace Ultima5Redux
             return AdvanceTime(nMinutesToAdvance, turnResults);
         }
 
-        public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults) =>
+        public void TryToMoveCombatMap(Point2D.Direction direction, TurnResults turnResults)
+        {
             TryToMoveCombatMap(State.TheVirtualMap.CurrentCombatMap.CurrentCombatPlayer, direction, turnResults);
+        }
 
         public void TryToMoveCombatMap(CombatPlayer combatPlayer, Point2D.Direction direction,
             TurnResults turnResults)
@@ -2236,11 +2228,9 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToUseShadowLordShard(ShadowlordShard shadowlordShard,
             TurnResults turnResults)
         {
-            string thouHolds(string shard)
-            {
-                return GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
+            string thouHolds(string shard) =>
+                GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ShadowlordStrings
                     .GEM_SHARD_THOU_HOLD_EVIL_SHARD) + "\n" + shard;
-            }
 
             switch (shadowlordShard.Shard)
             {

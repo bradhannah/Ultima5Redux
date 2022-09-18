@@ -30,9 +30,7 @@ namespace Ultima5Redux.MapUnits.SeaFaringVessels
             // by default the thing doesn't move on it's own
         }
 
-        protected static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice)
-        {
-            return (int)(nPrice - nPrice * 0.015 * records.AvatarRecord.Stats.Intelligence);
-        }
+        protected static int GetAdjustedPrice(PlayerCharacterRecords records, int nPrice) =>
+            (int)(nPrice - nPrice * 0.015 * records.AvatarRecord.Stats.Intelligence);
     }
 }

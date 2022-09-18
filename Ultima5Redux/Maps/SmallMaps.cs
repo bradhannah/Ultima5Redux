@@ -40,10 +40,8 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
-        {
-            return !DoStairsGoUp(location, nFloor, tilePos);
-        }
+        public bool DoStairsGoDown(SmallMapReferences.SingleMapReference.Location location, int nFloor,
+            Point2D tilePos) => !DoStairsGoUp(location, nFloor, tilePos);
 
         public bool DoStairsGoUp(SmallMapReferences.SingleMapReference.Location location, int nFloor, Point2D tilePos)
         {
@@ -68,9 +66,7 @@ namespace Ultima5Redux.Maps
             throw new Ultima5ReduxException("There is staircase with apparently no matching stair case");
         }
 
-        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference.Location location, int nFloor)
-        {
-            return _mapLocationDictionary[location][nFloor];
-        }
+        public SmallMap GetSmallMap(SmallMapReferences.SingleMapReference.Location location, int nFloor) =>
+            _mapLocationDictionary[location][nFloor];
     }
 }

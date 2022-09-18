@@ -63,10 +63,7 @@ namespace Ultima5Redux.Maps
                 shSign.ToArray(), 0x743a));
         }
 
-        public Sign GetSign(int nSign)
-        {
-            return _signList[nSign];
-        }
+        public Sign GetSign(int nSign) => _signList[nSign];
 
         public Sign GetSign(SmallMapReferences.SingleMapReference.Location location, int x, int y)
         {

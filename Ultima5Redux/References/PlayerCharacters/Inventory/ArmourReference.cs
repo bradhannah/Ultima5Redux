@@ -4,9 +4,9 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
 {
     public class ArmourReference : CombatItemReference
     {
-        public enum SpecificAmulet { AmuletOfTurning = 0x247, SpikedCollar = 0x248, Ankh = 0x249 }
-
         public enum ArmourType { Amulet, ChestArmour, Helm, Ring }
+
+        public enum SpecificAmulet { AmuletOfTurning = 0x247, SpikedCollar = 0x248, Ankh = 0x249 }
 
         public enum SpecificChestArmour
         {
@@ -21,10 +21,8 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
         public ArmourType TheArmourType { get; }
 
         public ArmourReference(DataOvlReference dataOvlReference, InventoryReference inventoryReference) : base(
-            dataOvlReference, inventoryReference)
-        {
+            dataOvlReference, inventoryReference) =>
             TheArmourType = GetArmourTypeByEquipment(inventoryReference.GetAsEquipment());
-        }
 
         internal static ArmourType GetArmourTypeByEquipment(DataOvlReference.Equipment equipment)
         {

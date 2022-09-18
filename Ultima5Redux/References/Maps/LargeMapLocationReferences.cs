@@ -8,7 +8,21 @@ namespace Ultima5Redux.References.Maps
 {
     public class LargeMapLocationReferences
     {
+        private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
         private const int N_TOTAL_LOCATIONS = 0x28;
+
+        private const int TILES_PER_CHUNK_X = 16; // number of tiles horizontal in each chunk
+        private const int TILES_PER_CHUNK_Y = 16; // number of tiles vertically in each chunk
+
+        private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
+        private const int TOTAL_CHUNKS_PER_X = 16; // total number of chunks horizontally
+        private const int TOTAL_CHUNKS_PER_Y = 16; // total number of chunks vertically
+
+        public const int
+            XTiles = TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
+
+        public const int
+            YTiles = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
 
         /// <summary>
         ///     Maps the xy based on the location
@@ -42,58 +56,6 @@ namespace Ultima5Redux.References.Maps
                     (SmallMapReferences.SingleMapReference.Location)nVector + 1;
                 LocationXY.Add(location, mapPoint);
                 LocationXYLocations.Add(mapPoint, location);
-            }
-        }
-
-        /// <summary>
-        ///     Gets the location at a particular xy
-        /// </summary>
-        /// <param name="mapXY"></param>
-        /// <returns></returns>
-        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY(Point2D mapXY)
-        {
-            return LocationXYLocations[mapXY];
-        }
-
-        /// <summary>
-        ///     Tells you if an xy is enterable (command key E)
-        /// </summary>
-        /// <param name="mapXY"></param>
-        /// <returns>true if it's enterable</returns>
-        public bool IsMapXYEnterable(Point2D mapXY)
-        {
-            return LocationXYLocations.ContainsKey(mapXY);
-        }
-
-        private const int TOTAL_CHUNKS = 0x100; // total number of expected chunks in large maps
-        private const long DAT_OVERLAY_BRIT_MAP = 0x3886; // address in data.ovl file for the Britannia map
-
-        public const int
-            XTiles = TILES_PER_CHUNK_X * TOTAL_CHUNKS_PER_X; // total number of tiles per column in the large map
-
-        public const int
-            YTiles = TILES_PER_CHUNK_Y * TOTAL_CHUNKS_PER_Y; // total number of tiles per row in the large map 
-
-        private const int TILES_PER_CHUNK_X = 16; // number of tiles horizontal in each chunk
-        private const int TILES_PER_CHUNK_Y = 16; // number of tiles vertically in each chunk
-        private const int TOTAL_CHUNKS_PER_X = 16; // total number of chunks horizontally
-        private const int TOTAL_CHUNKS_PER_Y = 16; // total number of chunks vertically
-
-        public byte[][] GetMap(Map.Maps map)
-        {
-            switch (map)
-            {
-                case Map.Maps.Overworld:
-                    return BuildGenericMap(
-                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
-                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
-                case Map.Maps.Underworld:
-                    return BuildGenericMap(
-                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "", true);
-                case Map.Maps.Small:
-                case Map.Maps.Combat:
-                default:
-                    throw new Ultima5ReduxException($"Tried to get a large map with: {map}");
             }
         }
 
@@ -160,5 +122,38 @@ namespace Ultima5Redux.References.Maps
 
             return theMap;
         }
+
+        /// <summary>
+        ///     Gets the location at a particular xy
+        /// </summary>
+        /// <param name="mapXY"></param>
+        /// <returns></returns>
+        public SmallMapReferences.SingleMapReference.Location GetLocationByMapXY(Point2D mapXY) =>
+            LocationXYLocations[mapXY];
+
+        public byte[][] GetMap(Map.Maps map)
+        {
+            switch (map)
+            {
+                case Map.Maps.Overworld:
+                    return BuildGenericMap(
+                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.BRIT_DAT),
+                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.DATA_OVL), false);
+                case Map.Maps.Underworld:
+                    return BuildGenericMap(
+                        Path.Combine(GameReferences.DataOvlRef.DataDirectory, FileConstants.UNDER_DAT), "", true);
+                case Map.Maps.Small:
+                case Map.Maps.Combat:
+                default:
+                    throw new Ultima5ReduxException($"Tried to get a large map with: {map}");
+            }
+        }
+
+        /// <summary>
+        ///     Tells you if an xy is enterable (command key E)
+        /// </summary>
+        /// <param name="mapXY"></param>
+        /// <returns>true if it's enterable</returns>
+        public bool IsMapXYEnterable(Point2D mapXY) => LocationXYLocations.ContainsKey(mapXY);
     }
 }

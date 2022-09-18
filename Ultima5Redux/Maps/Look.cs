@@ -15,14 +15,14 @@ namespace Ultima5Redux.Maps
         private const short TOTAL_LOOKS = 0x200;
 
         /// <summary>
-        ///     Raw file
-        /// </summary>
-        private readonly List<byte> _lookByteArray;
-
-        /// <summary>
         ///     List of all offsets into the lookByteArray
         /// </summary>
         private static readonly List<int> LookOffsets = new(TOTAL_LOOKS);
+
+        /// <summary>
+        ///     Raw file
+        /// </summary>
+        private readonly List<byte> _lookByteArray;
 
         /// <summary>
         ///     Loads the "Look" descriptions

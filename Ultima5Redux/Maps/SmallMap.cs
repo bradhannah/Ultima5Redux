@@ -95,7 +95,7 @@ namespace Ultima5Redux.Maps
             bool yInBounds = position.Y is >= 0 and < Y_TILES;
 
             // fill outside of the bounds with a default tile
-            return (xInBounds && yInBounds);
+            return xInBounds && yInBounds;
         }
 
         /// <summary>

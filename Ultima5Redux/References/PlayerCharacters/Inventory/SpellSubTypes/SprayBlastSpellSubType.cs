@@ -2,11 +2,16 @@
 {
     public class SprayBlastSpellSubType : SpellSubType
     {
+        private enum SprayType { Poison, Energy, Fire }
+
         public SprayBlastSpellSubType(MagicReference magicRef) : base(magicRef)
         {
         }
 
-        private enum SprayType { Poison, Energy, Fire }
+        private void CastSpray(SprayType sprayType)
+        {
+            // placeholder
+        }
 
         public override SpellResult CastSpell(GameState state, SpellCastingDetails details)
         {
@@ -26,11 +31,6 @@
             CastSpray(sprayType);
 
             return spellResult;
-        }
-
-        private void CastSpray(SprayType sprayType)
-        {
-            // placeholder
         }
     }
 }

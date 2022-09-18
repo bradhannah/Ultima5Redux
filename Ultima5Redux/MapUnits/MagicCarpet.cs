@@ -66,16 +66,14 @@ namespace Ultima5Redux.MapUnits
         public MagicCarpet(SmallMapReferences.SingleMapReference.Location location, Point2D.Direction direction,
             NonPlayerCharacterState npcState, MapUnitPosition mapUnitPosition) : base(null, new MapUnitMovement(0),
             location, direction, npcState,
-            GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition)
-        {
+            GameReferences.SpriteTileReferences.GetTileReferenceByName(REGULAR_CARPET_STR), mapUnitPosition) =>
             KeyTileReference = GetNonBoardedTileReference();
-        }
 
         internal override void CompleteNextMove(VirtualMap virtualMap, TimeOfDay timeOfDay, AStar aStar)
         {
             // by default the thing doesn't move on it's own
         }
 
-        public override bool CanBeExited(VirtualMap virtualMap) => (virtualMap.IsLandNearby());
+        public override bool CanBeExited(VirtualMap virtualMap) => virtualMap.IsLandNearby();
     }
 }

@@ -52,13 +52,13 @@ namespace Ultima5Redux
 
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> DeadBodyTrapsWeighted = new()
         {
-            { NonAttackingUnit.TrapType.POISON, WEIGHT_DEADBODY_TRAP_POISON + (AGGRESSIVE_TRAP_MODIFIER) },
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_DEADBODY_TRAP_POISON + AGGRESSIVE_TRAP_MODIFIER },
             { NonAttackingUnit.TrapType.NONE, WEIGHT_DEADBODY_TRAP_NONE }
         };
 
         private static readonly Dictionary<NonAttackingUnit.TrapType, int> BloodSpatterTrapsWeighted = new()
         {
-            { NonAttackingUnit.TrapType.POISON, WEIGHT_BLOODSPATTER_TRAP_POISON + (AGGRESSIVE_TRAP_MODIFIER) },
+            { NonAttackingUnit.TrapType.POISON, WEIGHT_BLOODSPATTER_TRAP_POISON + AGGRESSIVE_TRAP_MODIFIER },
             { NonAttackingUnit.TrapType.NONE, WEIGHT_BLOODSPATTER_TRAP_NONE }
         };
 
@@ -78,7 +78,7 @@ namespace Ultima5Redux
             {
                 { NonAttackingUnitFactory.DropSprites.Nothing, 10 },
                 { NonAttackingUnitFactory.DropSprites.Chest, 3 },
-                { NonAttackingUnitFactory.DropSprites.BloodSpatter, 3 },
+                { NonAttackingUnitFactory.DropSprites.BloodSpatter, 3 }
                 //{ NonAttackingUnitFactory.DropSprites.DeadBody, 3 }
             };
 
@@ -113,10 +113,10 @@ namespace Ultima5Redux
             return trapComplexity switch
             {
                 NonAttackingUnit.TrapComplexity.Simple => Utils.RandomOdds(Math.Max(
-                    ODDS_BASE_SIMPLE_TRAP_EXPLODE_ON_SEARCH - (record.Stats.Dexterity * ODDS_DEX_ADJUST_TRAP_EXPLODE),
+                    ODDS_BASE_SIMPLE_TRAP_EXPLODE_ON_SEARCH - record.Stats.Dexterity * ODDS_DEX_ADJUST_TRAP_EXPLODE,
                     0)),
                 NonAttackingUnit.TrapComplexity.Complex => Utils.RandomOdds(Math.Max(
-                    ODDS_BASE_COMPLEX_TRAP_EXPLODE_ON_SEARCH - (record.Stats.Dexterity * ODDS_DEX_ADJUST_TRAP_EXPLODE),
+                    ODDS_BASE_COMPLEX_TRAP_EXPLODE_ON_SEARCH - record.Stats.Dexterity * ODDS_DEX_ADJUST_TRAP_EXPLODE,
                     0)),
                 _ => throw new ArgumentOutOfRangeException(nameof(trapComplexity), trapComplexity, null)
             };
@@ -130,11 +130,9 @@ namespace Ultima5Redux
         /// <param name="mapUnitPosition"></param>
         /// <returns></returns>
         public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
-            NonAttackingUnitFactory.DropSprites dropType, MapUnitPosition mapUnitPosition)
-        {
+            NonAttackingUnitFactory.DropSprites dropType, MapUnitPosition mapUnitPosition) =>
             // todo: need to tailor what is in the drop based on the enemy reference
-            return NonAttackingUnitFactory.Create((int)dropType, mapUnitPosition);
-        }
+            NonAttackingUnitFactory.Create((int)dropType, mapUnitPosition);
 
         /// <summary>
         ///     After killing an enemy, do you get a drop?
@@ -151,7 +149,7 @@ namespace Ultima5Redux
             // todo: this is just a temporary method until I have some better drop logic based on the actual enemy
             NonAttackingUnitFactory.DropSprites dropSprite =
                 GenericDropAfterKillingEnemyList[Utils.Ran.Next() % GenericDropAfterKillingEnemyList.Count];
-            return (dropSprite);
+            return dropSprite;
         }
 
         /// <summary>
@@ -161,7 +159,7 @@ namespace Ultima5Redux
         public static bool GetIsNewChestLocked() => Utils.RandomOdds(ODDS_CHEST_LOCKED);
 
         /// <summary>
-        /// Is there treasure in the new dead blood spatter?
+        ///     Is there treasure in the new dead blood spatter?
         /// </summary>
         /// <returns></returns>
         public static bool GetIsTreasureBloodSpatter() => Utils.RandomOdds(ODDS_TREASURE_FROM_BLOOD_SPATTER);
@@ -176,7 +174,7 @@ namespace Ultima5Redux
         /// </summary>
         /// <returns></returns>
         public static NonAttackingUnit.TrapType GetNewBloodSpatterTrapType() =>
-            (BloodSpatterTrapsWeightedList[Utils.Ran.Next() % BloodSpatterTrapsWeightedList.Count]);
+            BloodSpatterTrapsWeightedList[Utils.Ran.Next() % BloodSpatterTrapsWeightedList.Count];
 
         /// <summary>
         /// </summary>
@@ -195,14 +193,14 @@ namespace Ultima5Redux
         /// </summary>
         /// <returns></returns>
         public static NonAttackingUnit.TrapType GetNewChestTrapType() =>
-            (ChestTrapsWeightedList[Utils.Ran.Next() % ChestTrapsWeightedList.Count]);
+            ChestTrapsWeightedList[Utils.Ran.Next() % ChestTrapsWeightedList.Count];
 
         /// <summary>
         ///     Gets the trap type for a new dead body - this includes the NONE type indicating no trap
         /// </summary>
         /// <returns></returns>
         public static NonAttackingUnit.TrapType GetNewDeadBodyTrapType() =>
-            (DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count]);
+            DeadBodyTrapsWeightedList[Utils.Ran.Next() % DeadBodyTrapsWeightedList.Count];
     }
 }
 

@@ -65,17 +65,13 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         public virtual int GetAdjustedBuyPrice(PlayerCharacterRecords records,
-            SmallMapReferences.SingleMapReference.Location location) => 0;
+            SmallMapReferences.SingleMapReference.Location location) =>
+            0;
 
         public virtual int GetAdjustedSellPrice(PlayerCharacterRecords records,
-            SmallMapReferences.SingleMapReference.Location location)
-        {
-            return 0;
-        }
+            SmallMapReferences.SingleMapReference.Location location) =>
+            0;
 
-        public virtual int GetQuantityForSale(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return 1;
-        }
+        public virtual int GetQuantityForSale(SmallMapReferences.SingleMapReference.Location location) => 1;
     }
 }

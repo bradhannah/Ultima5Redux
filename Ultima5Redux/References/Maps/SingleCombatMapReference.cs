@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Newtonsoft.Json;
 using Ultima5Redux.Data;
@@ -46,15 +45,15 @@ namespace Ultima5Redux.References.Maps
         public const int XTILES = 11;
         public const int YTILES = 11;
         private readonly CombatMapReferences.CombatMapData _combatMapData;
-        private readonly List<Point2D> _mapUnitPositions = new(NUM_MAP_UNITS);
-        private readonly List<byte> _mapUnitSprites = new(NUM_MAP_UNITS);
 
         private readonly Dictionary<int, bool> _enterDirectionDictionary = new();
 
+        private readonly Dictionary<EntryDirection, List<Point2D>> _entryDirectionAndPlayersDictionary = new();
+        private readonly List<Point2D> _mapUnitPositions = new(NUM_MAP_UNITS);
+        private readonly List<byte> _mapUnitSprites = new(NUM_MAP_UNITS);
+
         private readonly List<List<Point2D>> _playerPositionsByDirection =
             Utils.Init2DList<Point2D>(Enum.GetNames(typeof(EntryDirection)).Length, NUM_PLAYERS);
-
-        private readonly Dictionary<EntryDirection, List<Point2D>> _entryDirectionAndPlayersDictionary = new();
 
         private readonly TileReferences _tileReferences;
 
@@ -87,8 +86,6 @@ namespace Ultima5Redux.References.Maps
 
         public bool HasTriggers => true;
 
-        public TriggerTiles TheTriggerTiles { get; set; }
-
         /// <summary>
         ///     Generated
         /// </summary>
@@ -111,6 +108,8 @@ namespace Ultima5Redux.References.Maps
         public bool OtherStart => false;
 
         public bool SpecialEnemyComputation => false;
+
+        public TriggerTiles TheTriggerTiles { get; set; }
 
         /// <summary>
         ///     Create the reference based on territory and a map number
@@ -136,6 +135,12 @@ namespace Ultima5Redux.References.Maps
             InitializeMap(nCombatMapNum, dataChunks);
         }
 
+        private int GetRawEnemySprite(int nIndex)
+        {
+            Debug.Assert(nIndex is < NUM_MAP_UNITS and >= 0);
+            return _mapUnitSprites[nIndex];
+        }
+
         private void InitializeMap(int nCombatMapNum, DataChunks<CombatMapReferences.DataChunkName> dataChunks)
         {
             const int nBytesPerRow = 0x20;
@@ -150,13 +155,13 @@ namespace Ultima5Redux.References.Maps
                 // load the entire row
                 DataChunk rowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                     $"Raw row data for row: {nRow}", //-V3138
-                    nMapOffset + (nBytesPerRow * nRow), nBytesPerRow, 0x00, CombatMapReferences.DataChunkName.Unused);
+                    nMapOffset + nBytesPerRow * nRow, nBytesPerRow, 0x00, CombatMapReferences.DataChunkName.Unused);
                 fullRows.Add(rowChunk);
 
                 // load only the data for the maps
                 DataChunk justMapRowChunk = dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
                     $"Tiles for row {nRow}", //-V3138
-                    nMapOffset + (nBytesPerRow * nRow), XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
+                    nMapOffset + nBytesPerRow * nRow, XTILES, 0x00, CombatMapReferences.DataChunkName.Unused);
                 justMapRowsAndData.Add(justMapRowChunk);
             }
 
@@ -227,7 +232,7 @@ namespace Ultima5Redux.References.Maps
             // Set up all the trigger tiles
             const int nTriggerTiles = 8;
 
-            TheTriggerTiles = new();
+            TheTriggerTiles = new TriggerTiles();
 
             for (int nTrigger = 0; nTrigger < nTriggerTiles; nTrigger++)
             {
@@ -254,12 +259,6 @@ namespace Ultima5Redux.References.Maps
                 if (triggerPosition.X == 0 || triggerPosition.Y == 0) continue;
                 TheTriggerTiles.AddNewTrigger(triggerSprite, triggerPosition, triggerNewPosition1, triggerNewPosition2);
             }
-        }
-
-        private int GetRawEnemySprite(int nIndex)
-        {
-            Debug.Assert(nIndex is < NUM_MAP_UNITS and >= 0);
-            return _mapUnitSprites[nIndex];
         }
 
         public static string GetCsvHeader() =>
@@ -333,10 +332,7 @@ namespace Ultima5Redux.References.Maps
             return _playerPositionsByDirection[(int)entryDirection];
         }
 
-        public bool IsEnterable(EntryDirection entryDirection)
-        {
-            return _enterDirectionDictionary[(int)entryDirection];
-        }
+        public bool IsEnterable(EntryDirection entryDirection) => _enterDirectionDictionary[(int)entryDirection];
 
         public bool IsEntryDirectionValid(EntryDirection entryDirection)
         {
@@ -355,6 +351,5 @@ namespace Ultima5Redux.References.Maps
         }
 
         public bool IsValidDirection(EntryDirection entryDirection) => IsEntryDirectionValid(entryDirection);
-
     }
 }

@@ -16,6 +16,7 @@ namespace Ultima5Redux.MapUnits
 {
     [DataContract] public abstract class MapUnit : MapUnitDetails
     {
+        private const double D_TIME_BETWEEN_ANIMATION = 0.25f;
         private const float MAX_VISIBILITY = 5;
         [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;
         [DataMember(Name = "NpcRefIndex")] private int _npcRefIndex = -1;
@@ -69,11 +70,9 @@ namespace Ultima5Redux.MapUnits
         protected internal virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
-        private const double D_TIME_BETWEEN_ANIMATION = 0.25f;
-
         private DateTime _lastAnimationUpdate;
 
-        private int _nCurrentAnimationIndex = 0;
+        private int _nCurrentAnimationIndex;
 
         protected virtual bool OverrideAiType { get; } = false;
 
@@ -385,10 +384,7 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
-        public virtual bool CanBeExited(VirtualMap virtualMap)
-        {
-            return true;
-        }
+        public virtual bool CanBeExited(VirtualMap virtualMap) => true;
 
         // ReSharper disable once UnusedMember.Global
         public virtual string GetDebugDescription(TimeOfDay timeOfDay) =>
@@ -453,7 +449,7 @@ namespace Ultima5Redux.MapUnits
         public TileReference GetBoardedTileReference()
         {
             Dictionary<Point2D.Direction, string> tileNameDictionary =
-                (UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded);
+                UseFourDirections ? FourDirectionToTileNameBoarded : DirectionToTileNameBoarded;
             if (tileNameDictionary == null) return KeyTileReference;
             return GameReferences.SpriteTileReferences.GetTileReferenceByName(tileNameDictionary[Direction]);
         }
@@ -474,8 +470,8 @@ namespace Ultima5Redux.MapUnits
 
             Stack<Node> nodeStack = aStar.FindPath(mapUnit.MapUnitPosition.XY, targetXy);
 
-            MapUnitMovement.MovementCommandDirection prevDirection = MapUnitMovement.MovementCommandDirection.None;
-            MapUnitMovement.MovementCommandDirection newDirection = MapUnitMovement.MovementCommandDirection.None;
+            var prevDirection = MapUnitMovement.MovementCommandDirection.None;
+            var newDirection = MapUnitMovement.MovementCommandDirection.None;
             Point2D prevPosition = mapUnit.MapUnitPosition.XY;
 
             // temporary while I figure out why this happens
@@ -511,10 +507,7 @@ namespace Ultima5Redux.MapUnits
             return true;
         }
 
-        protected virtual bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
-        {
-            return false;
-        }
+        protected virtual bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition) => false;
 
         /// <summary>
         ///     calculates and stores new path for NPC

@@ -9,7 +9,7 @@ using Ultima5Redux.References.Maps;
 
 namespace U5ConversationSimulator
 {
-    class Program
+    internal class Program
     {
         private static World World;
 
@@ -103,11 +103,11 @@ namespace U5ConversationSimulator
             // List<NonPlayerCharacterReference> minocNpcRef =
             //     _world.NpcRefs.GetNonPlayerCharactersByLocation(SmallMapReferences.SingleMapReference.Location.Minoc);
 
-            SmallMapReferences.SingleMapReference.Location location =
+            var location =
                 SmallMapReferences.SingleMapReference.Location.Minoc;
             NonPlayerCharacterState npcState =
                 World.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 9);
-            Conversation convo = new Conversation(World.State, npcState); // delwyn
+            var convo = new Conversation(World.State, npcState); // delwyn
 
             //Conversation convo = new Conversation(world.NpcRef.NPCs[293], world.State, world.DataOvlRef); // eb
             //Conversation convo = new Conversation(world.NpcRef.NPCs[296], world.State, world.DataOvlRef); // Gwenno

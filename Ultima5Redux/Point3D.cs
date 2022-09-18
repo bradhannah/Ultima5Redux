@@ -21,20 +21,11 @@ namespace Ultima5Redux
             Z = z;
         }
 
-        public static bool operator ==(Point3D left, Point3D right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Point3D left, Point3D right) => Equals(left, right);
 
-        public static bool operator !=(Point3D left, Point3D right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Point3D left, Point3D right) => !Equals(left, right);
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Point3D);
-        }
+        public override bool Equals(object obj) => Equals(obj as Point3D);
 
         public override int GetHashCode()
         {

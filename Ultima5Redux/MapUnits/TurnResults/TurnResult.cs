@@ -63,16 +63,11 @@
 
         public TurnResultType TheTurnResultType { get; set; }
 
-        protected TurnResult(TurnResultType theTurnResultType)
-        {
-            TheTurnResultType = theTurnResultType;
-        }
+        protected TurnResult(TurnResultType theTurnResultType) => TheTurnResultType = theTurnResultType;
 
-        public virtual string GetDebugString()
-        {
-            return $@"IsSuccessfulMovement: {IsSuccessfulMovement}
+        public virtual string GetDebugString() =>
+            $@"IsSuccessfulMovement: {IsSuccessfulMovement}
 IsNewMapTurnResult: {IsNewMapTurnResult()}";
-        }
         // Combat_Category_Action_Who_Details
 
         public bool IsNewMapTurnResult()

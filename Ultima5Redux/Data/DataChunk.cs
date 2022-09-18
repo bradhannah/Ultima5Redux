@@ -113,10 +113,8 @@ namespace Ultima5Redux.Data
         /// <param name="dataLength">the length of the data in bytes</param>
         /// <param name="addToValue">the byte value to add (or subtract) from each byte read</param>
         public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset,
-            int dataLength, byte addToValue)
-        {
-            return AddDataChunk(dataFormat, description, offset, dataLength, addToValue, _unusedValue);
-        }
+            int dataLength, byte addToValue) =>
+            AddDataChunk(dataFormat, description, offset, dataLength, addToValue, _unusedValue);
 
         /// <summary>
         ///     Add a new generic data chunk (un-named)
@@ -126,10 +124,8 @@ namespace Ultima5Redux.Data
         /// <param name="offset">the offset to begin processing at</param>
         /// <param name="dataLength">the length of the data in bytes</param>
         public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset,
-            int dataLength)
-        {
-            return AddDataChunk(dataFormat, description, offset, dataLength, 0x00, _unusedValue);
-        }
+            int dataLength) =>
+            AddDataChunk(dataFormat, description, offset, dataLength, 0x00, _unusedValue);
 
         /// <summary>
         ///     Retrieve a DataChunk based on chunk name that has been assigned to it
@@ -137,10 +133,7 @@ namespace Ultima5Redux.Data
         /// </summary>
         /// <param name="dataChunkName">the enumeration that you will use to describe the data chunk</param>
         /// <returns>the datachunk</returns>
-        public DataChunk GetDataChunk(T dataChunkName)
-        {
-            return _chunkMap[dataChunkName];
-        }
+        public DataChunk GetDataChunk(T dataChunkName) => _chunkMap[dataChunkName];
 
         /// <summary>
         ///     Get a data chunk
@@ -304,10 +297,7 @@ namespace Ultima5Redux.Data
         ///     Returns the data in the form of each bit represented as a boolean value
         /// </summary>
         /// <returns>A list of the extracted boolean values</returns>
-        public List<bool> GetAsBitmapBoolList()
-        {
-            return GetAsBitmapBoolList(0, DataLength);
-        }
+        public List<bool> GetAsBitmapBoolList() => GetAsBitmapBoolList(0, DataLength);
 
         /// <summary>
         ///     Return the data as a byte list
@@ -327,10 +317,8 @@ namespace Ultima5Redux.Data
             return data;
         }
 
-        public List<string> GetAsStringListFromIndexes()
-        {
-            return GetAsStringListFromIndexes(GetChunkAsUint16List(), _fullRawData);
-        }
+        public List<string> GetAsStringListFromIndexes() =>
+            GetAsStringListFromIndexes(GetChunkAsUint16List(), _fullRawData);
 
         public byte GetByte(int nIndex)
         {
@@ -338,10 +326,7 @@ namespace Ultima5Redux.Data
             return RawData[nIndex];
         }
 
-        public byte GetChunkAsByte()
-        {
-            return RawData[0];
-        }
+        public byte GetChunkAsByte() => RawData[0];
 
         /// <summary>
         ///     Returns a string representation of the datachunk
@@ -365,10 +350,7 @@ namespace Ultima5Redux.Data
         ///     Returns a collection of strings
         /// </summary>
         /// <returns></returns>
-        public SomeStrings GetChunkAsStringList()
-        {
-            return new SomeStrings(RawData.ToList(), 0, DataLength);
-        }
+        public SomeStrings GetChunkAsStringList() => new(RawData.ToList(), 0, DataLength);
 
         /// <summary>
         ///     Returns the data as a single UINT16. It uses little endian convention.

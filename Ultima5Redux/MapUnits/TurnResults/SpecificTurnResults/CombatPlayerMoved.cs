@@ -15,14 +15,12 @@ namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
             MovedToTileReference = movedToTileReference;
         }
 
-        public override string GetDebugString()
-        {
-            return $@"CombatPlayer: {TheCombatPlayer.FriendlyName}
+        public override string GetDebugString() =>
+            $@"CombatPlayer: {TheCombatPlayer.FriendlyName}
 MovedFrom: {MovedFromPosition.GetFriendlyString()}
 MovedTo: {MoveToPosition.GetFriendlyString()}
 MovedToTileReference: {MovedToTileReference.Description} (<sprite={MovedToTileReference.Index}>)
 ";
-        }
 
         public CombatPlayer TheCombatPlayer { get; }
         public Point2D MovedFromPosition { get; }

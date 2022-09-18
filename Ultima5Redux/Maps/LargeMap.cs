@@ -116,10 +116,7 @@ namespace Ultima5Redux.Maps
             PrintMapSection(TheMap, 0, 0, 160, 80);
         }
 
-        protected override float GetAStarWeight(in Point2D xy)
-        {
-            return 1;
-        }
+        protected override float GetAStarWeight(in Point2D xy) => 1;
 
         protected override WalkableType GetWalkableTypeByMapUnit(MapUnit mapUnit)
         {

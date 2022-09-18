@@ -55,10 +55,8 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="spriteNum"></param>
         public Provision(ProvisionReferences.SpecificProvisionType specificProvisionType, int spriteNum) : base(0,
             spriteNum,
-            InventoryReferences.InventoryReferenceType.Item)
-        {
+            InventoryReferences.InventoryReferenceType.Item) =>
             ProvisionType = specificProvisionType;
-        }
 
         /// <summary>
         ///     Gets the cost of the provision based on the avatar's intelligence rating

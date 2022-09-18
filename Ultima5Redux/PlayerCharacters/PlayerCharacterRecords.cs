@@ -72,8 +72,10 @@ namespace Ultima5Redux.PlayerCharacters
             string retStr = "";
             const int MAX_INJURE_AMOUNT = 20;
 
-            void injurePlayer(PlayerCharacterRecord record) =>
+            void injurePlayer(PlayerCharacterRecord record)
+            {
                 record.Stats.CurrentHp -= Utils.Ran.Next() % (MAX_INJURE_AMOUNT + 1);
+            }
 
             switch (Utils.Ran.Next() % 4)
             {
@@ -178,8 +180,10 @@ namespace Ultima5Redux.PlayerCharacters
             return -1;
         }
 
-        public PlayerCharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc) =>
-            Records.FirstOrDefault(record => record.Name == npc.Name);
+        public PlayerCharacterRecord GetCharacterRecordByNPC(NonPlayerCharacterReference npc)
+        {
+            return Records.FirstOrDefault(record => record.Name == npc.Name);
+        }
 
         public int GetIndexOfPlayerCharacterRecord(PlayerCharacterRecord record)
         {
@@ -220,8 +224,10 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public bool IsEquipmentEquipped(DataOvlReference.Equipment equipment) =>
-            Records.Any(record => record.Equipped.IsEquipped(equipment));
+        public bool IsEquipmentEquipped(DataOvlReference.Equipment equipment)
+        {
+            return Records.Any(record => record.Equipped.IsEquipped(equipment));
+        }
 
         /// <summary>
         ///     Is my party full (at capacity)
@@ -229,7 +235,7 @@ namespace Ultima5Redux.PlayerCharacters
         /// <returns>true if party is full</returns>
         public bool IsFullParty()
         {
-            Debug.Assert((TotalPartyMembers() <= MAX_PARTY_MEMBERS), "You have more party members than you should.");
+            Debug.Assert(TotalPartyMembers() <= MAX_PARTY_MEMBERS, "You have more party members than you should.");
             return TotalPartyMembers() == MAX_PARTY_MEMBERS;
         }
 

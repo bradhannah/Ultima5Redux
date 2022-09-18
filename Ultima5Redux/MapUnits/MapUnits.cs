@@ -119,10 +119,7 @@ namespace Ultima5Redux.MapUnits
             CurrentMapType = initialMap;
         }
 
-        [JsonConstructor] private MapUnits()
-        {
-            _importedMovements = new MapUnitMovements();
-        }
+        [JsonConstructor] private MapUnits() => _importedMovements = new MapUnitMovements();
 
         [OnDeserialized] private void PostDeserialized(StreamingContext context)
         {
@@ -611,10 +608,8 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="location"></param>
         // ReSharper disable once UnusedMethodReturnValue.Global
-        public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return CreateFrigate(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _, 1);
-        }
+        public Frigate CreateFrigateAtDock(SmallMapReferences.SingleMapReference.Location location) =>
+            CreateFrigate(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _, 1);
 
         public Horse CreateHorse(MapUnitPosition mapUnitPosition, Map.Maps map, out int nIndex)
         {
@@ -667,10 +662,8 @@ namespace Ultima5Redux.MapUnits
         /// <param name="location"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMethodReturnValue.Global
-        public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location)
-        {
-            return CreateSkiff(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _);
-        }
+        public Skiff CreateSkiffAtDock(SmallMapReferences.SingleMapReference.Location location) =>
+            CreateSkiff(VirtualMap.GetLocationOfDock(location), Point2D.Direction.Right, out _);
 
         public Avatar GetAvatarMapUnit()
         {

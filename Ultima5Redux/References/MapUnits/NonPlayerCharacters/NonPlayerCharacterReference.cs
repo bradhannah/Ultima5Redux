@@ -8,7 +8,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
     /// <summary>
     ///     A single non player character (NPC)
     /// </summary>
-    public partial class NonPlayerCharacterReference
+    public class NonPlayerCharacterReference
     {
         /// <summary>
         ///     NPC Type, any other value is a specific character

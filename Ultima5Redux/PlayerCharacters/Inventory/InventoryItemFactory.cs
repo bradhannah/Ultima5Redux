@@ -27,6 +27,31 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             SandalwoodBox = 270, Shard = 436, Crown = 437, Sceptre = 438, Amulet = 439
         }
 
+        private static CombatItem CreateArmament(InventoryReference itemReference)
+        {
+            CombatItemReference combatItemReference =
+                GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(itemReference.GetAsEquipment());
+
+            switch (combatItemReference)
+            {
+                case WeaponReference weaponReference:
+                    return new Weapon(weaponReference, 1);
+                case ArmourReference armourReference:
+                    return armourReference.TheArmourType switch
+                    {
+                        ArmourReference.ArmourType.Amulet => new Amulet(combatItemReference, 1),
+                        ArmourReference.ArmourType.ChestArmour => new ChestArmour(combatItemReference, 1),
+                        ArmourReference.ArmourType.Helm => new Helm(combatItemReference, 1),
+                        ArmourReference.ArmourType.Ring => new Ring(combatItemReference, 1),
+                        _ => throw new Ultima5ReduxException(
+                            $"Tried to get inventory armour type and only got one - but was expecting more for {itemReference.ItemSpriteExposed}")
+                    };
+                default:
+                    throw new Ultima5ReduxException(
+                        $"Tried to get inventory ref and only got one - but was expecting more for {itemReference.ItemSpriteExposed}");
+            }
+        }
+
         private static InventoryItem CreateItem(InventoryReference itemReference)
         {
             if (itemReference.InvRefType != InventoryReferences.InventoryReferenceType.Item)
@@ -54,7 +79,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
 
                     // return new SpecialItem((SpecialItem.SpecificItemType)itemReference), 1);
 
-                    MagicReference.SpellWords spellWords =
+                    var spellWords =
                         GetEnumByInventoryName<MagicReference.SpellWords>(itemReference);
                     return new Scroll(spellWords, 1, GameReferences.MagicRefs.GetMagicReference(spellWords));
                 case (int)SpriteRefs.Shard:
@@ -96,34 +121,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
             }
         }
 
-        private static CombatItem CreateArmament(InventoryReference itemReference)
-        {
-            CombatItemReference combatItemReference =
-                GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(itemReference.GetAsEquipment());
-
-            switch (combatItemReference)
-            {
-                case WeaponReference weaponReference:
-                    return new Weapon(weaponReference, 1);
-                case ArmourReference armourReference:
-                    return armourReference.TheArmourType switch
-                    {
-                        ArmourReference.ArmourType.Amulet => new Amulet(combatItemReference, 1),
-                        ArmourReference.ArmourType.ChestArmour => new ChestArmour(combatItemReference, 1),
-                        ArmourReference.ArmourType.Helm => new Helm(combatItemReference, 1),
-                        ArmourReference.ArmourType.Ring => new Ring(combatItemReference, 1),
-                        _ => throw new Ultima5ReduxException(
-                            $"Tried to get inventory armour type and only got one - but was expecting more for {itemReference.ItemSpriteExposed}")
-                    };
-                default:
-                    throw new Ultima5ReduxException(
-                        $"Tried to get inventory ref and only got one - but was expecting more for {itemReference.ItemSpriteExposed}");
-            }
-        }
-
         private static T GetEnumByInventoryName<T>(InventoryReference inventoryReference) where T : Enum
         {
-            T enumResult = (T)Enum.Parse(typeof(T), inventoryReference.ItemName);
+            var enumResult = (T)Enum.Parse(typeof(T), inventoryReference.ItemName);
             return enumResult;
         }
 
@@ -138,7 +138,7 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
                 //CombatItemReference combatItemReference = GameReferences.CombatItemRefs.GetCombatItemReferenceFromEquipment(itemReference.GetAsEquipment());
 
                 case InventoryReferences.InventoryReferenceType.Spell:
-                    MagicReference.SpellWords spellWords =
+                    var spellWords =
                         GetEnumByInventoryName<MagicReference.SpellWords>(itemReference);
                     return new Spell(spellWords, 1);
                 case InventoryReferences.InventoryReferenceType.Item:

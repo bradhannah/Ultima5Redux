@@ -20,13 +20,6 @@ namespace Ultima5Redux
                 .ToArray());
         }
 
-        public static void SwapInts(ref int a, ref int b)
-        {
-            int t = a;
-            b = a;
-            a = t;
-        }
-
         /// <summary>
         ///     Divides a list of bytes into a two dimension byte array
         ///     Ideal for serialized byte arrays from map files, into a more readable x,y
@@ -205,7 +198,7 @@ namespace Ultima5Redux
             if (nMin == nMax) return nMin;
             Debug.Assert(nMin < nMax);
             int nDiff = nMax - nMin;
-            return (Ran.Next() % nDiff) + nMin;
+            return Ran.Next() % nDiff + nMin;
         }
 
         public static T[][] Init2DArray<T>(int numberOfRows, int numberOfCols)
@@ -234,15 +227,11 @@ namespace Ultima5Redux
             return theArray;
         }
 
-        public static bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols, bool bDefault = false)
-        {
-            return Init2DArray(numberOfRows, numberOfCols, bDefault);
-        }
+        public static bool[][] Init2DBoolArray(int numberOfRows, int numberOfCols, bool bDefault = false) =>
+            Init2DArray(numberOfRows, numberOfCols, bDefault);
 
-        public static byte[][] Init2DByteArray(int numberOfRows, int numberOfCols)
-        {
-            return Init2DArray<byte>(numberOfRows, numberOfCols);
-        }
+        public static byte[][] Init2DByteArray(int numberOfRows, int numberOfCols) =>
+            Init2DArray<byte>(numberOfRows, numberOfCols);
 
         public static List<List<T>> Init2DList<T>(int numberOfRows, int numberOfCols)
         {
@@ -276,27 +265,7 @@ namespace Ultima5Redux
             return theArray;
         }
 
-        public static int LittleEndianConversion(byte a, byte b)
-        {
-            return a | (b << 8);
-        }
-
-        /// <summary>
-        ///     Using the random number generator, provides 1 in howMany odds of returning true
-        /// </summary>
-        /// <param name="howMany">1 in howMany odds of returning true</param>
-        /// <returns>true if odds are beat</returns>
-        public static bool OneInXOdds(int howMany)
-        {
-            // if ran%howMany is zero then we beat the odds
-            int nextRan = Ran.Next();
-            return nextRan % howMany == 0;
-        }
-
-        public static bool RandomOdds(float fLikelihoodOfTrue)
-        {
-            return Ran.NextDouble() <= fLikelihoodOfTrue;
-        }
+        public static int LittleEndianConversion(byte a, byte b) => a | (b << 8);
 
         /// <summary>
         ///     Dirty little method to create a memory expensive weighted list for simple
@@ -318,6 +287,20 @@ namespace Ultima5Redux
 
             return thingList;
         }
+
+        /// <summary>
+        ///     Using the random number generator, provides 1 in howMany odds of returning true
+        /// </summary>
+        /// <param name="howMany">1 in howMany odds of returning true</param>
+        /// <returns>true if odds are beat</returns>
+        public static bool OneInXOdds(int howMany)
+        {
+            // if ran%howMany is zero then we beat the odds
+            int nextRan = Ran.Next();
+            return nextRan % howMany == 0;
+        }
+
+        public static bool RandomOdds(float fLikelihoodOfTrue) => Ran.NextDouble() <= fLikelihoodOfTrue;
 
         /// <summary>
         /// </summary>
@@ -362,6 +345,13 @@ namespace Ultima5Redux
                     t[j] = value;
                 }
             }
+        }
+
+        public static void SwapInts(ref int a, ref int b)
+        {
+            int t = a;
+            b = a;
+            a = t;
         }
 
         public static T[][] TransposeArray<T>(T[][] ts)

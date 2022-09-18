@@ -46,10 +46,7 @@ namespace Ultima5Redux.External
 
         private int GridRows => _grid[0].Count;
 
-        public AStar(List<List<Node>> grid)
-        {
-            _grid = grid;
-        }
+        public AStar(List<List<Node>> grid) => _grid = grid;
 
         private IEnumerable<Node> GetAdjacentNodes(Node n)
         {

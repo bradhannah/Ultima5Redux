@@ -16,12 +16,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         public string EquipMessage =>
             Artifact switch
             {
-                ArtifactType.Amulet => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                    .WearUseItemStrings.WEARING_AMULET),
-                ArtifactType.Crown => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                    .WearUseItemStrings.DON_THE_CROWN),
-                ArtifactType.Sceptre => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference
-                    .WearUseItemStrings.WIELD_SCEPTRE),
+                ArtifactType.Amulet => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WEARING_AMULET),
+                ArtifactType.Crown => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.DON_THE_CROWN),
+                ArtifactType.Sceptre => GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WearUseItemStrings.WIELD_SCEPTRE),
                 _ => throw new InvalidEnumArgumentException(((int)Artifact).ToString())
             };
 
@@ -37,14 +34,9 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         }
 
         public LordBritishArtifact(ArtifactType artifact, int quantity) : base(quantity, (int)artifact,
-            InventoryReferences.InventoryReferenceType.Item)
-        {
+            InventoryReferences.InventoryReferenceType.Item) =>
             Artifact = artifact;
-        }
 
-        public bool HasItem()
-        {
-            return Quantity != 0;
-        }
+        public bool HasItem() => Quantity != 0;
     }
 }

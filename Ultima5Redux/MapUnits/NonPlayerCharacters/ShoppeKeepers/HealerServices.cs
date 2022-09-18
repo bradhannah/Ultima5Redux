@@ -47,9 +47,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
             }
         }
 
-        public int GetServicePrice(SmallMapReferences.SingleMapReference.Location location, Healer.RemedyTypes remedy)
-        {
-            return _priceDictionary[location][remedy];
-        }
+        public int GetServicePrice(SmallMapReferences.SingleMapReference.Location location,
+            Healer.RemedyTypes remedy) => _priceDictionary[location][remedy];
     }
 }

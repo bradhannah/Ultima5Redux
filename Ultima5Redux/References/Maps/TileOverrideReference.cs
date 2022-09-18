@@ -8,9 +8,22 @@ namespace Ultima5Redux.References.Maps
     /// </summary>
     [DataContract] public class TileOverrideReference
     {
-        [DataMember] public int MapNumber { get; private set; }
+        public enum TileType { Flat = 1, Primary = 2 }
 
         [DataMember] public string Comment { get; set; }
+        [DataMember] public int MapNumber { get; private set; }
+
+        [DataMember] public string SpriteName { get; set; }
+
+        [DataMember] public int SpriteNum { get; set; }
+
+        [DataMember] public TileType TheTileType { get; set; }
+
+        [DataMember] public int X { get; set; }
+
+        [DataMember] public int Y { get; set; }
+
+        [DataMember] public int Z { get; set; }
         public bool IsOverworld => MapNumber == 0 && Z == 0;
 
         public bool IsSmallMap => MapNumber != 0;
@@ -18,20 +31,5 @@ namespace Ultima5Redux.References.Maps
         public bool IsUnderworld => MapNumber == 0 && Z == -1;
 
         public MapUnitPosition Position => new(X, Y, Z);
-
-        [DataMember] public string SpriteName { get; set; }
-
-        [DataMember] public int SpriteNum { get; set; }
-
-        [DataMember] public int X { get; set; }
-
-        [DataMember] public int Y { get; set; }
-
-        [DataMember] public int Z { get; set; }
-        
-        public enum TileType {Flat = 1, Primary = 2}
-        
-        [DataMember] public TileType TheTileType { get; set; }
-        
     }
 }
