@@ -35,9 +35,5 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             set => throw new NotImplementedException();
         }
 
-        protected override bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition)
-        {
-            return base.CanMoveToDumb(virtualMap, mapUnitPosition);
-        }
     }
 }

@@ -21,7 +21,7 @@ namespace Ultima5Redux.References.Maps
 
         private int _nTick = 0;
 
-        public int MillisecondsBetweenFrames = 350;
+        private const int MILLISECONDS_BETWEEN_FRAMES = 350;
 
         /// <summary>
         ///     Tile reference dictionary referenced by tile string value
@@ -90,7 +90,7 @@ namespace Ultima5Redux.References.Maps
             TileReference keyTileReference = GetTileReferenceOfKeyIndex(nSprite);
             if (keyTileReference.TotalAnimationFrames < 2) return keyTileReference;
             double dTotalMilli = DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
-            if (dTotalMilli - _dLastTime > MillisecondsBetweenFrames)
+            if (dTotalMilli - _dLastTime > MILLISECONDS_BETWEEN_FRAMES)
             {
                 _nTick = (_nTick + 1) % int.MaxValue;
                 _dLastTime = dTotalMilli;
@@ -249,19 +249,21 @@ namespace Ultima5Redux.References.Maps
             return GetTileReference(tileReference.Index - tileReference.AnimationIndex);
         }
 
+        private readonly Dictionary<TileReference.SpriteIndex, bool> _burningThings = new()
+        {
+            { TileReference.SpriteIndex.RightSconce, true },
+            { TileReference.SpriteIndex.LeftScone, true },
+            { TileReference.SpriteIndex.Brazier, true },
+            { TileReference.SpriteIndex.CampFire, true },
+            { TileReference.SpriteIndex.LampPost, true },
+            { TileReference.SpriteIndex.CandleOnTable, true },
+            { TileReference.SpriteIndex.CookStove, true },
+            { TileReference.SpriteIndex.BlueFlame, true }
+        };
+
         public bool IsBurningThing(int nSprite)
         {
-            // yucky but optimized for speed because it's called a lot
-            return nSprite is 176 or 177 or 178 or 179 or 189 or 190 or 191 or 222;
-            //178 176 177 179 189 190 191 222
-            // GetTileReferenceByName("Brazier").Index == nSprite ||
-            //    GetTileReferenceByName("LeftSconce").Index == nSprite ||
-            //    GetTileReferenceByName("RightSconce").Index == nSprite ||
-            //    GetTileReferenceByName("CampFire").Index == nSprite ||
-            //    GetTileReferenceByName("LampPost").Index == nSprite ||
-            //    GetTileReferenceByName("CandleOnTable").Index == nSprite ||
-            //    GetTileReferenceByName("CookStove").Index == nSprite ||
-            //    GetTileReferenceByName("BlueFlame").Index == nSprite;
+            return _burningThings.ContainsKey((TileReference.SpriteIndex)nSprite);
         }
 
         /// <summary>
@@ -269,15 +271,12 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsChair(int nSprite)
+        public static bool IsChair(int nSprite)
         {
             // optimization
             // 144 - 147
-            bool bIsChair = nSprite >= 144 && nSprite <= 147;
-            // nSprite == GetTileNumberByName("ChairBackForward") ||
-            // nSprite == GetTileNumberByName("ChairBackLeft") ||
-            // nSprite == GetTileNumberByName("ChairBackBack") ||
-            // nSprite == GetTileNumberByName("ChairBackRight");
+            bool bIsChair = nSprite is >= (int)TileReference.SpriteIndex.ChairBackForward and <=
+                (int)TileReference.SpriteIndex.ChairBackRight;
             return bIsChair;
         }
 
@@ -287,9 +286,13 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        public bool IsDoor(int nSprite)
+        public static bool IsDoor(int nSprite)
         {
-            return GetTileReference(nSprite).IsOpenable;
+            return (TileReference.SpriteIndex)nSprite is
+                TileReference.SpriteIndex.RegularDoor or
+                TileReference.SpriteIndex.LockedDoor or
+                TileReference.SpriteIndex.RegularDoorView or
+                TileReference.SpriteIndex.LockedDoorView;
         }
 
         /// <summary>
@@ -297,12 +300,11 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsDoorLocked(int nSprite)
+        public static bool IsDoorLocked(int nSprite)
         {
-            Debug.Assert(GetTileReference(nSprite).IsOpenable);
-            bool bIsDoorLocked = nSprite == GetTileNumberByName("LockedDoor") ||
-                                 nSprite == GetTileNumberByName("LockedDoorView");
-            return bIsDoorLocked;
+            return (TileReference.SpriteIndex)nSprite is
+                TileReference.SpriteIndex.LockedDoor or
+                TileReference.SpriteIndex.LockedDoorView;
         }
 
         /// <summary>
@@ -310,12 +312,11 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsDoorMagical(int nSprite)
+        public static bool IsDoorMagical(int nSprite)
         {
-            Debug.Assert(GetTileReference(nSprite).IsOpenable);
-            bool bIsDoorMagical = nSprite == GetTileNumberByName("MagicLockDoorWithView") ||
-                                  nSprite == GetTileNumberByName("MagicLockDoor");
-            return bIsDoorMagical;
+            return (TileReference.SpriteIndex)nSprite is
+                TileReference.SpriteIndex.MagicLockDoor or
+                TileReference.SpriteIndex.MagicLockDoorWithView;
         }
 
         /// <summary>
@@ -323,12 +324,12 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsDoorWithView(int nSprite)
+        public static bool IsDoorWithView(int nSprite)
         {
-            bool bIsDoorWithView = nSprite == GetTileNumberByName("RegularDoorView") ||
-                                   nSprite == GetTileNumberByName("LockedDoorView") ||
-                                   nSprite == GetTileNumberByName("MagicLockDoorWithView");
-            return bIsDoorWithView;
+            return (TileReference.SpriteIndex)nSprite is
+                TileReference.SpriteIndex.MagicLockDoorWithView or
+                TileReference.SpriteIndex.RegularDoorView or
+                TileReference.SpriteIndex.LockedDoorView;
         }
 
         public bool IsFrigate(int nSprite)
@@ -342,12 +343,7 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsGrate(int nSprite)
-        {
-            bool bIsGrate = nSprite == 134;
-            //GetTileNumberByName("Grate");
-            return bIsGrate;
-        }
+        public static bool IsGrate(int nSprite) => nSprite == (int)TileReference.SpriteIndex.Grate;
 
         /// <summary>
         ///     is the sprite the head of a bed
@@ -355,61 +351,38 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsHeadOfBed(int nSprite)
-        {
-            bool bIsHeadOfBed = nSprite == 171;
-            //GetTileNumberByName("LeftBed"); // is it the human sleeping side of the bed?
-            return bIsHeadOfBed;
-        }
+        public static bool IsHeadOfBed(int nSprite) => nSprite == (int)TileReference.SpriteIndex.LeftBed;
 
-        public bool IsHeadstone(int nSprite)
-        {
-            return nSprite is 137 or 138;
-        }
+        public static bool IsHeadstone(int nSprite) =>
+            nSprite is (int)TileReference.SpriteIndex.SimpleCross
+                or (int)TileReference.SpriteIndex.StoneHeadstone;
 
-        public bool IsHorse(int nSprite)
-        {
-            return GetTileReference(nSprite).Name.StartsWith("Horse");
-        }
+        public static bool IsUnmountedHorse(int nSprite) =>
+            nSprite is (int)TileReference.SpriteIndex.HorseLeft
+                or (int)TileReference.SpriteIndex.HorseRight;
 
         /// <summary>
         ///     is the sprite an up or a down ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadder(int nSprite)
-        {
-            bool bIsLadder = IsLadderDown(nSprite) || IsLadderUp(nSprite); // is it a ladder
-            return bIsLadder;
-        }
+        public bool IsLadder(int nSprite) => IsLadderDown(nSprite) || IsLadderUp(nSprite);
 
         /// <summary>
         ///     Is the sprite a down ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderDown(int nSprite)
-        {
-            return nSprite == 201;
-            //GetTileNumberByName("LadderDown");
-        }
+        public static bool IsLadderDown(int nSprite) => nSprite == (int)TileReference.SpriteIndex.LadderDown;
 
         /// <summary>
         ///     Is the sprite an up ladder?
         /// </summary>
         /// <param name="nSprite"></param>
         /// <returns></returns>
-        public bool IsLadderUp(int nSprite)
-        {
-            return nSprite == 200;
-            //GetTileNumberByName("LadderUp");
-        }
+        public static bool IsLadderUp(int nSprite) => nSprite == (int)TileReference.SpriteIndex.LadderUp;
 
-        public bool IsMagicCarpet(int nSprite)
-        {
-            return nSprite == 283;
-            //GetTileReference(nSprite).Name.StartsWith("Carpet2");
-        }
+        public static bool IsMagicCarpet(int nSprite) => nSprite == (int)TileReference.SpriteIndex.Carpet2_MagicCarpet;
 
         /// <summary>
         ///     is the sprite manacles (hand irons)
@@ -417,11 +390,7 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool IsManacles(int nSprite)
-        {
-            //bool bIsManacles = nSprite == GetTileNumberByName("Manacles"); // is it shackles/manacles
-            return nSprite == 133;
-        }
+        public static bool IsManacles(int nSprite) => nSprite == (int)TileReference.SpriteIndex.Manacles;
 
         /// <summary>
         ///     Is the spirit a mirror? broken, reflected or regular
@@ -429,14 +398,9 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        public bool IsMirror(int nSprite)
-        {
-            bool bIsMirror = nSprite is >= 157 and <= 159;
-            // nSprite == GetTileNumberByName("Mirror") ||
-            //              nSprite == GetTileNumberByName("MirrorAvatar") ||
-            //              nSprite == GetTileNumberByName("MirrorBroken");
-            return bIsMirror;
-        }
+        public static bool IsMirror(int nSprite) =>
+            (TileReference.SpriteIndex)nSprite is TileReference.SpriteIndex.Mirror
+            or TileReference.SpriteIndex.MirrorAvatar or TileReference.SpriteIndex.MirrorBroken;
 
         // a bit a rough cut right now, this will need to be refined as the monsters are assigned actual behaviours
         public bool IsMonster(int nSprite)
@@ -517,12 +481,9 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        public bool IsUnbrokenMirror(int nSprite)
-        {
-            bool bIsMirror = nSprite is 157 or 158;
-            //GetTileNumberByName("Mirror") || nSprite == GetTileNumberByName("MirrorAvatar");
-            return bIsMirror;
-        }
+        public static bool IsUnbrokenMirror(int nSprite) =>
+            (TileReference.SpriteIndex)nSprite is TileReference.SpriteIndex.Mirror
+            or TileReference.SpriteIndex.MirrorAvatar;
 
         /// <summary>
         ///     does the sprite require a grappling hook to Klimb?
@@ -530,10 +491,6 @@ namespace Ultima5Redux.References.Maps
         /// <param name="nSprite"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Global
-        public bool RequiresGrapplingHook(int nSprite)
-        {
-            return nSprite == 12;
-            //GetTileNumberByName("SmallMountains");
-        }
+        public static bool RequiresGrapplingHook(int nSprite) => nSprite == (int)TileReference.SpriteIndex.SmallMountains;
     }
 }

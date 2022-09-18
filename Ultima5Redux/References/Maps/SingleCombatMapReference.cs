@@ -220,7 +220,6 @@ namespace Ultima5Redux.References.Maps
                 else
                 {
                     _mapUnitSprites.Add(enemySprite);
-                    //duplicateMapUnitPositionDictionary.Add(mapUnitPosition, true);
                     _mapUnitPositions.Add(mapUnitPosition);
                 }
             }
@@ -357,17 +356,5 @@ namespace Ultima5Redux.References.Maps
 
         public bool IsValidDirection(EntryDirection entryDirection) => IsEntryDirectionValid(entryDirection);
 
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-        private readonly struct PointAndTileReference
-        {
-            public PointAndTileReference(Point2D point, TileReference tileReference)
-            {
-                Point = point;
-                TheTileReference = tileReference;
-            }
-
-            private Point2D Point { get; }
-            private TileReference TheTileReference { get; }
-        }
     }
 }

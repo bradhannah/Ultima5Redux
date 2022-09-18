@@ -169,8 +169,6 @@ namespace Ultima5Redux
         /// <summary> is there treasure in the new dead body? </summary>
         /// <returns></returns>
         /// <remarks>UNVERIFIED</remarks>
-        // public static bool GetIsPoisonFromSearchingBody() => Utils.RandomOdds(ODDS_POISON_FROM_SEARCHING_BODY);
-        //
         public static bool GetIsTreasureInDeadBody() => Utils.RandomOdds(ODDS_TREASURE_FROM_SEARCHING_BODY);
 
         /// <summary>

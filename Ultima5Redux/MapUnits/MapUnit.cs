@@ -69,9 +69,8 @@ namespace Ultima5Redux.MapUnits
         protected internal virtual Dictionary<Point2D.Direction, string> FourDirectionToTileNameBoarded =>
             DirectionToTileNameBoarded;
 
-        private double _dTimeBetweenAnimation = 0.25f;
+        private const double D_TIME_BETWEEN_ANIMATION = 0.25f;
 
-        // public double TimeOfLastUpdate { get; set; }
         private DateTime _lastAnimationUpdate;
 
         private int _nCurrentAnimationIndex = 0;
@@ -80,20 +79,6 @@ namespace Ultima5Redux.MapUnits
 
         protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType { get; } =
             NonPlayerCharacterSchedule.AiType.Fixed;
-
-        // public void NewFrameUpdate(double currentTime, double minAnimationTime,
-        //     double maxAnimationTime, bool bNonRandomTime = false)
-        // {
-        //     _dTimeBetweenAnimation =
-        //         bNonRandomTime ? minAnimationTime : GetRandomNumber(minAnimationTime, maxAnimationTime);
-        //
-        //     TimeOfLastUpdate = currentTime; //Time.time;
-        // }
-
-        // private static double GetRandomNumber(double minimum, double maximum)
-        // {
-        //     return Utils.Ran.NextDouble() * (maximum - minimum) + minimum;
-        // }
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
@@ -285,7 +270,7 @@ namespace Ultima5Redux.MapUnits
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
             }
 
-            if (GameReferences.SpriteTileReferences.IsLadderUp(currentTileRef.Index))
+            if (TileReferences.IsLadderUp(currentTileRef.Index))
                 return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Up;
             return ladderOrStairDirection == VirtualMap.LadderOrStairDirection.Down;
         }
@@ -299,10 +284,9 @@ namespace Ultima5Redux.MapUnits
         /// <param name="virtualMap"></param>
         /// <param name="fromPosition"></param>
         /// <param name="toPosition">the position they are trying to get to</param>
-        /// <param name="aStar"></param>
         /// <returns></returns>
         private Point2D GetBestNextPositionToMoveTowardsWalkablePointDumb(VirtualMap virtualMap, Point2D fromPosition,
-            Point2D toPosition, AStar aStar)
+            Point2D toPosition)
         {
             double fShortestPath = 999f;
             Point2D bestMovePoint = null;
@@ -383,8 +367,10 @@ namespace Ultima5Redux.MapUnits
                     virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
                     virtualMap.NumberOfRowTiles, virtualMap.NumberOfColumnTiles);
             foreach (Point2D point in possiblePositions)
+            {
                 if (virtualMap.IsTileFreeToTravel(point, true))
                     BuildPath(this, point, aStar, true);
+            }
         }
 
         private void UpdateAnimationIndex()
@@ -392,7 +378,7 @@ namespace Ultima5Redux.MapUnits
             if (KeyTileReference.TotalAnimationFrames <= 1) return;
 
             TimeSpan ts = DateTime.Now.Subtract(_lastAnimationUpdate);
-            if (ts.TotalSeconds > _dTimeBetweenAnimation)
+            if (ts.TotalSeconds > D_TIME_BETWEEN_ANIMATION)
             {
                 _lastAnimationUpdate = DateTime.Now;
                 _nCurrentAnimationIndex = Utils.Ran.Next() % KeyTileReference.TotalAnimationFrames;
@@ -568,7 +554,6 @@ namespace Ultima5Redux.MapUnits
             // basically if you are within a certain visible distance AND they are trying to arrest you,
             // then we will override the AI, otherwise they can stick to their normal schedules
             bool bWithinVisibilityRange =
-                //MapUnitPosition.XY.DistanceBetween(npcDestinationPosition.XY) < MAX_VISIBILITY;
                 virtualMap.TheMapUnits.CurrentAvatarPosition.XY.DistanceBetween(MapUnitPosition.XY) < MAX_VISIBILITY;
             NonPlayerCharacterSchedule.AiType aiType;
             if (virtualMap.IsWantedManByThePoPo && bWithinVisibilityRange)
@@ -792,8 +777,6 @@ namespace Ultima5Redux.MapUnits
 
             Map map = virtualMap.CurrentMap;
 
-            //Map.WalkableType walkableType = map.GetWalkableTypeByMapUnit(this);
-
             Point2D positionToMoveTo = null;
             if (map is not LargeMap) throw new Ultima5ReduxException("Cannot do aStar move towards Avatar on LargeMap");
 
@@ -835,21 +818,9 @@ namespace Ultima5Redux.MapUnits
 
             // move to the new point
             MapUnitPosition.XY = positionToMoveTo;
-            //map.SetWalkableTile(positionToMoveTo, false, walkableType);
             List<MapUnit> mapUnits = virtualMap.TheMapUnits.CurrentMapUnits.AllActiveMapUnits.ToList();
             map.RecalculateWalkableTileForAllAstarsWithMapUnits(positionToMoveTo, mapUnits);
             map.RecalculateWalkableTileForAllAstarsWithMapUnits(oldPosition, mapUnits);
-
-            // if (map.IsAStarMap(Map.WalkableType.StandardWalking))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.StandardWalking, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatLand))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatWater))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatWater, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatFlyThroughWalls))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatFlyThroughWalls, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatLandAndWater))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLandAndWater, mapUnits);
         }
 
         protected void ProcessNextMoveTowardsMapUnitDumb(VirtualMap virtualMap, Point2D fromPosition,
@@ -859,7 +830,7 @@ namespace Ultima5Redux.MapUnits
 
             // it IS a large map, so we do the less resource intense way of pathfinding
             positionToMoveTo =
-                GetBestNextPositionToMoveTowardsWalkablePointDumb(virtualMap, fromPosition, toPosition, aStar);
+                GetBestNextPositionToMoveTowardsWalkablePointDumb(virtualMap, fromPosition, toPosition);
 
             if (positionToMoveTo == null)
             {

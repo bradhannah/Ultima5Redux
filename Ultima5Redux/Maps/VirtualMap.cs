@@ -354,9 +354,6 @@ namespace Ultima5Redux.Maps
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
                     // let's do this!
-                    //const int nOddsOfNewMonster = 2;
-                    //const int nMaxEnemyDistance = 16;
-
                     TheMapUnits.ClearEnemiesIfFarAway();
 
                     if (TheMapUnits.TotalMapUnitsOnMap >= MapUnits.MapUnits.MAX_MAP_CHARACTERS) break;
@@ -707,8 +704,6 @@ namespace Ultima5Redux.Maps
             // check for moonstones
             // moonstone check
             if (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder))
-                //&&
-                //GameStateReference.State.TheTimeOfDay.IsDayLight)
             {
                 MoonPhaseReferences.MoonPhases moonPhase =
                     GameStateReference.State.TheMoongates.GetMoonPhaseByPosition(xy, LargeMapOverUnder);
@@ -716,8 +711,6 @@ namespace Ultima5Redux.Maps
                     GameStateReference.State.PlayerInventory.TheMoonstones.Items[moonPhase];
 
                 TheMapUnits.CreateMoonstoneNonAttackingUnit(xy, moonstone, _currentSingleMapReference);
-
-                //TheMapOverrides.EnqueueSearchItem(xy, invItem);
 
                 GameStateReference.State.TheMoongates.SetMoonstoneBuried((int)moonPhase, false);
 
@@ -885,7 +878,6 @@ namespace Ultima5Redux.Maps
             {
                 case 0:
                     break;
-                //return null;
                 case > 1:
                     // the only excuse you can have for having more than one is if the avatar is on top of a known map unit
                     if (mapUnits.Any(m => m is Avatar))
@@ -915,14 +907,13 @@ namespace Ultima5Redux.Maps
 
             // if the guard is next to you, then they will ask you to come queitly
             bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
-            if (bIsMadGuard && bNextToEachOther)
+            if (bIsMadGuard && bNextToEachOther && !TileReferences.IsHeadOfBed(
+                    GetTileReference(aggressorMapUnit.MapUnitPosition.XY).Index))
                 // if they are at the head of the bed then we don't try to arrest, this keeps guards who are "injured" 
                 // at the healers from trying to arrest
-                if (!GameReferences.SpriteTileReferences.IsHeadOfBed(
-                        GetTileReference(aggressorMapUnit.MapUnitPosition.XY).Index))
-                    // if avatar is being attacked..
-                    // we get to assume that the avatar is not necessarily next to the enemy
-                    mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+                // if avatar is being attacked..
+                // we get to assume that the avatar is not necessarily next to the enemy
+                mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
 
             if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;
 
@@ -1017,12 +1008,14 @@ namespace Ultima5Redux.Maps
             List<Point2D> freeSpacesAroundAvatar = new();
 
             for (int x = -1; x <= 1; x++)
-            for (int y = -1; y <= 1; y++)
             {
-                Point2D pointToCheck = new(Math.Max(CurrentPosition.X + x, 0),
-                    Math.Max(CurrentPosition.Y + y, 0));
-                if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
-                    freeSpacesAroundAvatar.Add(pointToCheck);
+                for (int y = -1; y <= 1; y++)
+                {
+                    Point2D pointToCheck = new(Math.Max(CurrentPosition.X + x, 0),
+                        Math.Max(CurrentPosition.Y + y, 0));
+                    if (!IsMapUnitOccupiedTile(pointToCheck) && GetTileReference(pointToCheck).IsWalking_Passable)
+                        freeSpacesAroundAvatar.Add(pointToCheck);
+                }
             }
 
             return freeSpacesAroundAvatar;
@@ -1039,24 +1032,26 @@ namespace Ultima5Redux.Maps
 
             // go through every single tile on the map looking for ladders and stairs
             for (int x = 0; x < SmallMap.X_TILES; x++)
-            for (int y = 0; y < SmallMap.Y_TILES; y++)
             {
-                TileReference tileReference = GetTileReference(x, y);
-                if (ladderOrStairDirection == LadderOrStairDirection.Down)
+                for (int y = 0; y < SmallMap.Y_TILES; y++)
                 {
-                    // if this is a ladder or staircase and it's in the right direction, then add it to the list
-                    if (GameReferences.SpriteTileReferences.IsLadderDown(tileReference.Index) ||
-                        IsStairGoingDown(new Point2D(x, y)))
-                        laddersAndStairs.Add(new Point2D(x, y));
-                }
-                else // otherwise we know you are going up
-                {
-                    if (GameReferences.SpriteTileReferences.IsLadderUp(tileReference.Index) ||
-                        (GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index) &&
-                         IsStairGoingUp(new Point2D(x, y))))
-                        laddersAndStairs.Add(new Point2D(x, y));
-                }
-            } // end y for
+                    TileReference tileReference = GetTileReference(x, y);
+                    if (ladderOrStairDirection == LadderOrStairDirection.Down)
+                    {
+                        // if this is a ladder or staircase and it's in the right direction, then add it to the list
+                        if (TileReferences.IsLadderDown(tileReference.Index) ||
+                            IsStairGoingDown(new Point2D(x, y)))
+                            laddersAndStairs.Add(new Point2D(x, y));
+                    }
+                    else // otherwise we know you are going up
+                    {
+                        if (TileReferences.IsLadderUp(tileReference.Index) ||
+                            (GameReferences.SpriteTileReferences.IsStaircase(tileReference.Index) &&
+                             IsStairGoingUp(new Point2D(x, y))))
+                            laddersAndStairs.Add(new Point2D(x, y));
+                    }
+                } // end y for
+            }
 
             // end x for
             return laddersAndStairs;
@@ -1256,36 +1251,38 @@ namespace Ultima5Redux.Maps
             Dictionary<Point2D, List<MapUnit>> cachedActive = TheMapUnits.CurrentMapUnits.CachedActiveDictionary;
 
             for (int nRow = midPosition.X - nRadius; nRow < midPosition.X + nRadius; nRow++)
-            for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
             {
-                Point2D adjustedPos;
-                if (bIsRepeatingMap)
+                for (int nCol = midPosition.Y - nRadius; nCol < midPosition.Y + nRadius; nCol++)
                 {
-                    adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, currentMap.NumOfXTiles),
-                        Point2D.AdjustToMax(nCol, currentMap.NumOfYTiles));
+                    Point2D adjustedPos;
+                    if (bIsRepeatingMap)
+                    {
+                        adjustedPos = new Point2D(Point2D.AdjustToMax(nRow, currentMap.NumOfXTiles),
+                            Point2D.AdjustToMax(nCol, currentMap.NumOfYTiles));
+                    }
+                    else
+                    {
+                        if (nRow < 0 || nRow >= currentMap.NumOfXTiles || nCol < 0 || nCol >= currentMap.NumOfYTiles)
+                            continue;
+
+                        adjustedPos = new Point2D(nRow, nCol);
+                    }
+
+                    int nTileIndex = GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
+                    bool bHasMapUnits = cachedActive.ContainsKey(adjustedPos);
+                    MapUnit mapUnit = bHasMapUnits ? GetTopVisibleMapUnit(adjustedPos, true) : null;
+
+                    //if (mapUnit != null) _ = "";
+                    bool bMapUnitMatches = mapUnit != null && checkTile(mapUnit.KeyTileReference.Index);
+
+                    if (!checkTile(nTileIndex) && !bMapUnitMatches) continue;
+                    double fDistance = Point2D.DistanceBetween(midPosition.X, midPosition.Y, nRow, nCol);
+                    if (nShortestRadius < fDistance) continue;
+
+                    // shortcut in case we hit it
+                    if (nRadius == 1) return 1;
+                    nShortestRadius = fDistance;
                 }
-                else
-                {
-                    if (nRow < 0 || nRow >= currentMap.NumOfXTiles || nCol < 0 || nCol >= currentMap.NumOfYTiles)
-                        continue;
-
-                    adjustedPos = new Point2D(nRow, nCol);
-                }
-
-                int nTileIndex = GetTileReference(adjustedPos.X, adjustedPos.Y).Index;
-                bool bHasMapUnits = cachedActive.ContainsKey(adjustedPos);
-                MapUnit mapUnit = bHasMapUnits ? GetTopVisibleMapUnit(adjustedPos, true) : null;
-
-                //if (mapUnit != null) _ = "";
-                bool bMapUnitMatches = mapUnit != null && checkTile(mapUnit.KeyTileReference.Index);
-
-                if (!checkTile(nTileIndex) && !bMapUnitMatches) continue;
-                double fDistance = Point2D.DistanceBetween(midPosition.X, midPosition.Y, nRow, nCol);
-                if (nShortestRadius < fDistance) continue;
-
-                // shortcut in case we hit it
-                if (nRadius == 1) return 1;
-                nShortestRadius = fDistance;
             }
 
             if (Math.Abs(nShortestRadius - 255) < 0.05f) return 255;
@@ -1387,7 +1384,7 @@ namespace Ultima5Redux.Maps
             bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
-            bool bIsMirror = GameReferences.SpriteTileReferences.IsUnbrokenMirror(nSprite);
+            bool bIsMirror = TileReferences.IsUnbrokenMirror(nSprite);
             bDrawCharacterOnTile = false;
 
             if (bIsMirror)
@@ -1399,18 +1396,18 @@ namespace Ultima5Redux.Maps
             }
 
             // is the sprite a Chair? if so, we need to figure out if someone is sitting on it
-            bool bIsChair = GameReferences.SpriteTileReferences.IsChair(nSprite);
+            bool bIsChair = TileReferences.IsChair(nSprite);
             // bh: i should clean this up so that it doesn't need to call all this - since it's being called in GetCorrectSprite
             bool bIsLadder = GameReferences.SpriteTileReferences.IsLadder(nSprite);
             // is it the human sleeping side of the bed?
-            bool bIsHeadOfBed = GameReferences.SpriteTileReferences.IsHeadOfBed(nSprite);
+            bool bIsHeadOfBed = TileReferences.IsHeadOfBed(nSprite);
             // we need to check these before they get "corrected"
             // is it the stocks
             bool bIsStocks = GameReferences.SpriteTileReferences.IsStocks(nSprite);
-            bool bIsManacles = GameReferences.SpriteTileReferences.IsManacles(nSprite); // is it shackles/manacles
+            bool bIsManacles = TileReferences.IsManacles(nSprite); // is it shackles/manacles
 
             // this is unfortunate since I would prefer the GetCorrectSprite took care of all of this
-            bool bIsFoodNearby = GameReferences.SpriteTileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
+            bool bIsFoodNearby = TileReferences.IsChair(nSprite) && IsFoodNearby(tilePosInMap);
 
             bool bIsStaircase = GameReferences.SpriteTileReferences.IsStaircase(nSprite); // is it a staircase
 
@@ -1426,9 +1423,6 @@ namespace Ultima5Redux.Maps
 
             bDrawCharacterOnTile = !bIsChair && !bIsLadder && !bIsHeadOfBed && !bIsStocks && !bIsManacles &&
                                    bIsMapUnitOccupiedTile;
-
-            // quick hack to reassign non animated avatar to animated version
-            //if (bDrawCharacterOnTile && nNewSpriteIndex == 284) nNewSpriteIndex = 332;
 
             return nNewSpriteIndex;
         }
@@ -1488,10 +1482,11 @@ namespace Ultima5Redux.Maps
             {
                 bool bAvatarOnWaterTile = attackFromTileReference.IsWaterTile;
 
-                if (bAvatarOnWaterTile)
-                    if (attackToTileReference.CombatMapIndex is SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
-                        // if no surrounding tiles are water tile then we skip the attack
-                        return null;
+                if (bAvatarOnWaterTile &&
+                    attackToTileReference.CombatMapIndex is
+                        SingleCombatMapReference.BritanniaCombatMaps
+                            .BoatCalc) // if no surrounding tiles are water tile then we skip the attack
+                    return null;
             }
 
             // there is someone to target
@@ -1739,9 +1734,7 @@ namespace Ultima5Redux.Maps
 
             // get the reference as per the original game data
             TileReference origTileReference = GetTileReference(xy);
-            // get ALL active map units on the tile
-            // IEnumerable mapUnits =
-            //     TheMapUnits.CurrentMapUnits.AllMapUnits.Where(m => m.MapUnitPosition.XY == xy);
+            // get topmost active map units on the tile
             MapUnit topMostMapUnit = bSkipMapUnit ? null : GetTopVisibleMapUnit(xy, false);
 
             bool bIsAvatarTile = !IsCombatMap && xy == CurrentPosition?.XY;
@@ -1765,7 +1758,7 @@ namespace Ultima5Redux.Maps
             // there are times we will not draw a calculated reference - such as when an NPC is on a door 
             // which indicates it is open, and therefor hidden
             bool bSkipCalculatedTileReference =
-                (GameReferences.SpriteTileReferences.IsDoor(calculatedTileReference.Index) && bIsMapUnitOccupiedTile)
+                (TileReferences.IsDoor(calculatedTileReference.Index) && bIsMapUnitOccupiedTile)
                 || calculatedTileReference.DontDraw;
 
             if (!bSkipCalculatedTileReference) tileStack.PushTileReference(calculatedTileReference);
@@ -1828,10 +1821,8 @@ namespace Ultima5Redux.Maps
                 {
                     if (!mapUnit.IsActive) continue;
                     // if it's a combat unit but they dead or gone then we skip
-                    if (mapUnit is CombatMapUnit { HasEscaped: true } combatMapUnit)
-                        //|| (combatMapUnit.Stats.CurrentHp <= 0 && !bIncludeDeadPlayers)))
-                        if (combatMapUnit is not NonAttackingUnit)
-                            continue;
+                    if (mapUnit is CombatMapUnit { HasEscaped: true } and not NonAttackingUnit)
+                        continue;
 
                     // if we find the first highest priority item, then we simply return it
                     if (mapUnit.GetType() == type) return mapUnit;
@@ -1859,20 +1850,22 @@ namespace Ultima5Redux.Maps
                 return CurrentMap.GetTileOverride(xy).SpriteNum;
 
             for (int i = -1; i <= 1; i++)
-            for (int j = -1; j <= 1; j++)
             {
-                // if it is out of bounds then we skips them altogether
-                if (xy.X + i < 0 || xy.X + i >= NumberOfRowTiles || xy.Y + j < 0 || xy.Y + j >= NumberOfColumnTiles)
-                    continue;
-                TileReference tileRef = GetTileReference(xy.X + i, xy.Y + j);
-                // only look at non-upright sprites AND if it's a guessable tile
-                if (tileRef.IsUpright || !tileRef.IsGuessableFloor) continue;
+                for (int j = -1; j <= 1; j++)
+                {
+                    // if it is out of bounds then we skips them altogether
+                    if (xy.X + i < 0 || xy.X + i >= NumberOfRowTiles || xy.Y + j < 0 || xy.Y + j >= NumberOfColumnTiles)
+                        continue;
+                    TileReference tileRef = GetTileReference(xy.X + i, xy.Y + j);
+                    // only look at non-upright sprites AND if it's a guessable tile
+                    if (tileRef.IsUpright || !tileRef.IsGuessableFloor) continue;
 
-                int nTile = tileRef.Index;
-                if (tileCountDictionary.ContainsKey(nTile))
-                    tileCountDictionary[nTile] += 1;
-                else
-                    tileCountDictionary.Add(nTile, 1);
+                    int nTile = tileRef.Index;
+                    if (tileCountDictionary.ContainsKey(nTile))
+                        tileCountDictionary[nTile] += 1;
+                    else
+                        tileCountDictionary.Add(nTile, 1);
+                }
             }
 
             int nMostTile = -1;
@@ -1894,7 +1887,7 @@ namespace Ultima5Redux.Maps
 
         public bool IsAvatarSitting()
         {
-            return GameReferences.SpriteTileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
+            return TileReferences.IsChair(GetTileReferenceOnCurrentTile().Index);
         }
 
         public bool IsCombatMapUnitOccupiedTile(in Point2D xy)
@@ -2147,7 +2140,6 @@ namespace Ultima5Redux.Maps
         /// <param name="map"></param>
         public void LoadLargeMap(Map.Maps map)
         {
-            //CurrentLargeMap = _largeMaps[map];
             LargeMapOverUnder = map;
             switch (map)
             {
@@ -2157,6 +2149,7 @@ namespace Ultima5Redux.Maps
                     break;
                 case Map.Maps.Combat:
                 case Map.Maps.Small:
+                case Map.Maps.Dungeon:
                     throw new Ultima5ReduxException("You can't load a small large map!");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(map), map, null);
@@ -2215,7 +2208,6 @@ namespace Ultima5Redux.Maps
                         .NOTHING_OF_NOTE_BANG_N));
 
             // delete the deadbody and add stuff
-            //TheMapUnits.ClearAndSetEmptyMapUnits(nonAttackingUnit);
             nonAttackingUnit.HasBeenSearched = bSearched;
             nonAttackingUnit.HasBeenOpened = bOpened;
             turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionSearchThingDisappears));
@@ -2238,8 +2230,6 @@ namespace Ultima5Redux.Maps
 
                     LargeMapOverUnder = PreCombatMap.CurrentSingleMapReference.MapType;
                     CurrentSingleMapReference = PreCombatMap.CurrentSingleMapReference;
-                    // this is reloading the entire map....
-                    // TheMapUnits.SetCurrentMapType(PreCombatMap.CurrentSingleMapReference, LargeMapOverUnder);
 
                     // this ensure the old small map is not reloaded entirely
                     // it is a dirty function, but any "cleared" units before the combat will stay cleared

@@ -355,11 +355,11 @@ namespace Ultima5Redux.MapUnits
             {
                 newUnit = new Skiff(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
             }
-            else if (GameReferences.SpriteTileReferences.IsMagicCarpet(tileReference.Index))
+            else if (TileReferences.IsMagicCarpet(tileReference.Index))
             {
                 newUnit = new MagicCarpet(location, tileReference.GetDirection(), npcState, mapUnitPosition);
             }
-            else if (GameReferences.SpriteTileReferences.IsHorse(tileReference.Index))
+            else if (TileReferences.IsUnmountedHorse(tileReference.Index))
             {
                 newUnit = new Horse(mapUnitMovement, location, tileReference.GetDirection(), npcState, mapUnitPosition);
             }
@@ -481,11 +481,6 @@ namespace Ultima5Redux.MapUnits
                 // always clear movements because they are not stored in the data for a LargeMap because
                 // the monsters will recalculate every turn based on where the Avatar is 
                 mapUnitMovement.ClearMovements();
-
-                // if you are initial load, then grab from disk, otherwise create an empty collection
-                // MapUnitStates currentMapUnitStates = bInitialLoad
-                //     ? _importedGameState.MapUnitStatesByInitialMap
-                //     : new MapUnitStates();
 
                 // we have retrieved the _currentMapUnitStates based on the map type,
                 // now just get the existing animation state which persists on disk for under, over and small maps
@@ -701,8 +696,7 @@ namespace Ultima5Redux.MapUnits
             foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllMapUnits)
             {
                 if (!mapUnit.IsActive) continue;
-                // sometimes characters are null because they don't exist - and that is OK
-                //Debug.Assert(mapUnit.IsActive);
+
                 if (mapUnit.MapUnitPosition.X == xy.X && mapUnit.MapUnitPosition.Y == xy.Y &&
                     mapUnit.MapUnitPosition.Floor == nFloor)
                 {
@@ -794,16 +788,6 @@ namespace Ultima5Redux.MapUnits
         public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
             bool bLoadFromDisk = false)
         {
-            // CurrentMapType = mapType;
-            //
-            // if (mapRef == null)
-            //     throw new Ultima5ReduxException("Passed a null map ref to SetCurrentMapType");
-            //
-            // CurrentLocation = mapRef.MapLocation;
-            //
-            // // I may need make an additional save of state before wiping these MapUnits out
-            // GameStateReference.State.CharacterRecords.ClearCombatStatuses();
-
             SetCurrentMapTypeNoLoad(mapRef, mapType, false);
 
             switch (mapType)

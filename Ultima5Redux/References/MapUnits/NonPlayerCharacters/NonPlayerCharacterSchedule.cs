@@ -14,7 +14,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         }
 
         /// <summary>
-        ///     TODO: Need to figure out what these AI types actually mean
+        ///     
         /// </summary>
         private readonly List<byte> _aiTypeList = new();
 

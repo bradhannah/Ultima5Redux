@@ -125,19 +125,17 @@ namespace Ultima5Redux.Maps
 
         public static bool IsMapUnitOccupiedFromList(in Point2D xy, int nFloor, IEnumerable<MapUnit> mapUnits)
         {
-            //int nFloor = singleMapReference.Floor;
-            //_currentSingleMapReference.Floor;
-
             foreach (MapUnit mapUnit in mapUnits)
                 // sometimes characters are null because they don't exist - and that is OK
-                if (mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor))
-                {
-                    // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
-                    // for example it looks for crown, sceptre and amulet
-                    if (GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(
-                            mapUnit.KeyTileReference.Index)) return false;
-                    return true;
-                }
+            {
+                if (!mapUnit.MapUnitPosition.IsSameAs(xy.X, xy.Y, nFloor)) continue;
+
+                // check to see if the particular SPECIAL map unit is in your inventory, if so, then we exclude it
+                // for example it looks for crown, sceptre and amulet
+                if (!GameStateReference.State.PlayerInventory.DoIHaveSpecialTileReferenceIndex(
+                        mapUnit.KeyTileReference.Index)) return true;
+                //return false;
+            }
 
             return false;
         }
@@ -227,10 +225,6 @@ namespace Ultima5Redux.Maps
                                    .GetTileReferenceByName("RegularDoor").Index ||
                                tileReference.Index == GameReferences.SpriteTileReferences
                                    .GetTileReferenceByName("RegularDoorView").Index;
-            //||
-            // tileReference.Index == GameReferences.SpriteTileReferences
-            //     .GetTileReferenceByName("LockedDoor").Index || tileReference.Index ==
-            // GameReferences.SpriteTileReferences.GetTileReferenceByName("LockedDoorView").Index;
             return bIsWalkable;
         }
 
@@ -306,7 +300,7 @@ namespace Ultima5Redux.Maps
 
         private bool SetVisibleTile(int x, int y)
         {
-            if ((x < 0 || x > NumOfXTiles - 1 || (y < 0 || y > NumOfYTiles - 1)))
+            if (x < 0 || x > NumOfXTiles - 1 || (y < 0 || y > NumOfYTiles - 1))
             {
                 return false;
             }
@@ -436,22 +430,6 @@ namespace Ultima5Redux.Maps
         {
             foreach (WalkableType walkableType in _allAStars.Where(IsAStarMap))
                 RecalculateWalkableTile(xy, walkableType, mapUnits);
-
-            // RecalculateWalkableTile(xy, WalkableType.CombatLand, mapUnits);
-            // RecalculateWalkableTile(xy, WalkableType.CombatWater, mapUnits);
-            // RecalculateWalkableTile(xy, WalkableType.CombatFlyThroughWalls, mapUnits);
-            // RecalculateWalkableTile(xy, WalkableType.CombatLandAndWater, mapUnits);
-
-            // if (map.IsAStarMap(Map.WalkableType.StandardWalking))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.StandardWalking, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatLand))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLand, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatWater))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatWater, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatFlyThroughWalls))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatFlyThroughWalls, mapUnits);
-            // if (map.IsAStarMap(Map.WalkableType.CombatLandAndWater))
-            //     map.RecalculateWalkableTile(oldPosition, Map.WalkableType.CombatLandAndWater, mapUnits);
         }
 
         protected virtual Point2D GetAdjustedPos(in Point2D.Direction direction, in Point2D xy)
@@ -524,7 +502,7 @@ namespace Ultima5Redux.Maps
         public void SetOpenDoor(in Point2D xy)
         {
             TileReference tileReference = GetTileReference(xy);
-            Debug.Assert(GameReferences.SpriteTileReferences.IsDoor(tileReference.Index),
+            Debug.Assert(TileReferences.IsDoor(tileReference.Index),
                 "you tried to set an open door on a tile that is not an open door");
 
             _openDoors.Add(xy, 10);
@@ -541,7 +519,7 @@ namespace Ultima5Redux.Maps
         public void CloseDoor(in Point2D xy)
         {
             TileReference tileReference = GetTileReference(xy);
-            Debug.Assert(GameReferences.SpriteTileReferences.IsDoor(tileReference.Index),
+            Debug.Assert(TileReferences.IsDoor(tileReference.Index),
                 "you tried to set an open door on a tile that is not an open door");
             Debug.Assert(_openDoors.ContainsKey(xy), "tried to close a door that wasn't open");
 

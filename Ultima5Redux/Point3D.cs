@@ -8,7 +8,7 @@ namespace Ultima5Redux
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     [DataContract]
-    public class Point3D
+    public sealed class Point3D
     {
         [DataMember] public int X { get; set; }
         [DataMember] public int Y { get; set; }

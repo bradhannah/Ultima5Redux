@@ -22,7 +22,6 @@ namespace Ultima5Redux.Maps
     public class CombatMap : Map
     {
         // when computing what should happen when a player hits - these states can be triggered 
-        private enum AdditionalHitStateAction { None, EnemyDivided }
 
         public enum SelectionAction { None, Magic, Attack }
 
@@ -41,7 +40,6 @@ namespace Ultima5Redux.Maps
 
         private IEnumerable<CombatMapUnit> AllCombatPlayersGeneric => AllCombatPlayers;
         private IEnumerable<CombatMapUnit> AllEnemiesGeneric => AllEnemies;
-        private IEnumerable<CombatMapUnit> AllNonAttackGeneric => AllNonAttackUnits;
 
         /// <summary>
         ///     Current combat map units for current combat map
@@ -233,7 +231,6 @@ namespace Ultima5Redux.Maps
                 CombatPlayer combatPlayer = new(record, playerStartPositions[nPlayer]);
 
                 // make sure the tile that the player occupies is not walkable
-                //GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(playerStartPositions[nPlayer], false);
                 RecalculateWalkableTileForAllAstarsWithMapUnits(playerStartPositions[nPlayer],
                     new List<MapUnit> { combatPlayer });
 
@@ -320,7 +317,6 @@ namespace Ultima5Redux.Maps
 
             // make sure the tile that the enemy occupies is not walkable
             // we do both land and water in case there are overlapping tiles (which there shouldn't be!?)
-            //SetNotWalkableDueToCombatMapUnit(mapUnitPosition);
             if (combatMapUnit != null)
                 RecalculateWalkableTileForAllAstarsWithMapUnits(mapUnitPosition, new List<MapUnit> { combatMapUnit });
             return combatMapUnit;
@@ -469,7 +465,6 @@ namespace Ultima5Redux.Maps
 
             Point2D newAttackPosition =
                 GetRandomSurroundingPointThatIsnt(attackPosition, attackingCombatMapUnit.MapUnitPosition.XY);
-            //attackPosition);
             Debug.Assert(newAttackPosition != null);
             if (newAttackPosition == attackingCombatMapUnit.MapUnitPosition.XY)
             {
@@ -500,7 +495,6 @@ namespace Ultima5Redux.Maps
 
             if (targetedCombatMapUnit == null)
             {
-                //missedPoint = newAttackPosition;
                 AdvanceToNextCombatMapUnit();
                 turnResults.PushTurnResult(new AttackerTurnResult(bIsAttackerEnemy
                         ? TurnResult.TurnResultType.Combat_Result_EnemyMissedRangedAttack
@@ -509,7 +503,6 @@ namespace Ultima5Redux.Maps
                 return;
             }
 
-            //outputStr += "\nBut they accidentally hit another!";
             turnResults.PushOutputToConsole("\nBut they accidentally hit another!", false, false);
             // we attack the thing we accidentally hit
             CombatMapUnit.HitState hitState = attackingCombatMapUnit.Attack(turnResults, targetedCombatMapUnit,
@@ -599,9 +592,6 @@ namespace Ultima5Redux.Maps
             CombatMapUnit preferredAttackVictim = null;
 
             AStar aStar = GetAStarByMapUnit(activeCombatUnit);
-
-            // List<MapUnit> mapUnits = AllVisibleCombatMapUnits.Cast<MapUnit>().ToList();
-            // RecalculateWalkableTileForAllAstarsWithMapUnits();
 
             List<Point2D> potentialTargetsPoints = new();
 
@@ -721,7 +711,7 @@ namespace Ultima5Redux.Maps
                 enemy.EnemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DivideOnHit) && Utils.OneInXOdds(2))
             {
                 // do they multiply?
-                Enemy newEnemy = DivideEnemy(enemy);
+                DivideEnemy(enemy);
 
                 turnResults.PushOutputToConsole("\n" + affectedCombatMapUnit.FriendlyName + GameReferences
                     .DataOvlRef
@@ -775,14 +765,6 @@ namespace Ultima5Redux.Maps
             List<CombatItem> combatItems = CurrentCombatPlayer.GetAttackWeapons();
             BuildCombatItemQueue(combatItems);
         }
-
-        // private void SetNotWalkableDueToCombatMapUnit(Point2D position)
-        // {
-        //     GetAStarByWalkableType(WalkableType.CombatLand).SetWalkable(position, false);
-        //     GetAStarByWalkableType(WalkableType.CombatWater).SetWalkable(position, false);
-        //     GetAStarByWalkableType(WalkableType.CombatFlyThroughWalls).SetWalkable(position, false);
-        //     GetAStarByWalkableType(WalkableType.CombatLandAndWater).SetWalkable(position, false);
-        // }
 
         /// <summary>
         ///     Recalculates which tiles are visible based on position of players in map and the current map
@@ -1032,10 +1014,8 @@ namespace Ultima5Redux.Maps
                 {
                     if (!combatMapUnit.IsActive) continue;
                     // if it's a combat unit but they dead or gone then we skip
-                    if (combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0)
-                    {
-                        if (combatMapUnit is not NonAttackingUnit) continue;
-                    }
+                    if ((combatMapUnit.HasEscaped || combatMapUnit.Stats.CurrentHp <= 0) &&
+                        combatMapUnit is not NonAttackingUnit) continue;
 
                     // if we find the first highest priority item, then we simply return it
                     if (combatMapUnit.GetType() == type) return combatMapUnit;
@@ -1085,9 +1065,6 @@ namespace Ultima5Redux.Maps
             RecalculateWalkableTileForAllAstarsWithMapUnits(currentCombatUnit.MapUnitPosition.XY, mapUnits);
             RecalculateWalkableTileForAllAstarsWithMapUnits(originalPosition, mapUnits);
 
-            //WalkableType walkableType = GetWalkableTypeByMapUnit(currentCombatUnit);
-
-            // SetWalkableTile(xy, false, walkableType);
             switch (currentCombatUnit)
             {
                 case Enemy enemy:
@@ -1247,7 +1224,6 @@ namespace Ultima5Redux.Maps
                         // it's already created - we just add it to the mapunits list we track
                         CombatMapUnits.AddCombatMapUnit(nonAttackingUnitDrop);
                         // A* is not automatically updated, so we update it
-                        //SetNotWalkableDueToCombatMapUnit(nonAttackingUnitDrop.MapUnitPosition.XY);
                         RecalculateWalkableTileForAllAstarsWithMapUnits(nonAttackingUnitDrop.MapUnitPosition.XY,
                             new List<MapUnit> { nonAttackingUnitDrop });
                     }
@@ -1266,10 +1242,11 @@ namespace Ultima5Redux.Maps
                         }
                         case CombatMapUnit.HitState.Missed:
                             // we missed but are not using a ranged weapon
-                            turnResults.PushTurnResult(new AttackerTurnResult(
-                                TurnResult.TurnResultType.Combat_Result_Missed_CombatPlayerMelee,
-                                combatPlayer, opponentCombatMapUnit, weapon.TheCombatItemReference.Missile,
-                                targetedHitState));
+                            // this is now added inside the CombatMapUnit.Attack function
+                            // turnResults.PushTurnResult(new AttackerTurnResult(
+                            //     TurnResult.TurnResultType.Combat_Result_Missed_CombatPlayerMelee,
+                            //     combatPlayer, opponentCombatMapUnit, weapon.TheCombatItemReference.Missile,
+                            //     targetedHitState));
                             break;
                         default:
                             // we know they attacked this particular opponent at this point, we definitely didn't miss
@@ -1465,9 +1442,6 @@ namespace Ultima5Redux.Maps
 
                 AdvanceToNextCombatMapUnit();
                 return;
-                // hitState == CombatMapUnit.HitState.Grazed
-                // ? CombatTurnResult.EnemyGrazed
-                // : CombatTurnResult.EnemyAttacks;
             }
 
             bool bMoved = false;
@@ -1479,20 +1453,15 @@ namespace Ultima5Redux.Maps
             if (bMoved)
             {
                 // we have exhausted all potential attacking possibilities, so instead we will just move 
-                //preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " moved.";
                 turnResults.PushOutputToConsole(enemy.EnemyReference.MixedCaseSingularName + " moved.");
-                // if (pursuedCombatMapUnit != null)
-                //     preAttackOutputStr += "\nThey really seem to have it in for " + pursuedCombatMapUnit.FriendlyName + "!";
             }
             else
             {
-                //preAttackOutputStr = enemy.EnemyReference.MixedCaseSingularName + " is unable to move or attack.";
                 turnResults.PushOutputToConsole(enemy.EnemyReference.MixedCaseSingularName +
                                                 " is unable to move or attack.");
             }
 
             AdvanceToNextCombatMapUnit();
-            //CombatTurnResult.EnemyMoved;
         }
 
         public void SetActivePlayerCharacter(PlayerCharacterRecord record)

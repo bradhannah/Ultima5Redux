@@ -15,8 +15,24 @@ namespace Ultima5Redux.References.Maps
         {
             Water = 1, TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149,
             PlowedField = 44, Cactus = 47, WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368,
-            StoneBrickWallSecret = 78, LockedDoor = 185
+            StoneBrickWallSecret = 78, 
+            RegularDoor = 184, LockedDoor = 185, RegularDoorView = 186, LockedDoorView = 187,
+            RightSconce = 176, LeftScone = 177, Brazier = 178, CampFire = 179, LampPost = 189,
+            CandleOnTable = 190, CookStove = 191, BlueFlame = 222,
+            ChairBackForward = 144, ChairBackLeft = 145, ChairBackBack = 146, ChairBackRight = 147,
+            MagicLockDoor = 151, MagicLockDoorWithView = 152,
+            Grate = 134, LeftBed = 171, SimpleCross =137, StoneHeadstone =138,
+            HorseRight = 272, HorseLeft = 273, 
+            LadderDown = 201, LadderUp = 200, 
+            Carpet2_MagicCarpet = 283, Manacles = 133,
+            Mirror = 157, MirrorAvatar = 158, MirrorBroken = 159, 
+            SmallMountains = 12
+
+
         }
+
+        
+
 
         public const int N_TYPICAL_ANIMATION_FRAMES = 4;
 
@@ -130,7 +146,6 @@ namespace Ultima5Redux.References.Maps
                 case 2:
                     // we will simply toggle between the two, perhaps we don't do random intervals either?
                     nNewTileIndex = AnimationIndex == 0 ? Index + 1 : Index;
-                    //KeyTileTileReferenceIndex != AnimationIndex ? 0 : 1;
                     bNonRandomTime = false;
                     break;
                 default:
@@ -152,7 +167,6 @@ namespace Ultima5Redux.References.Maps
             if (TotalAnimationFrames <= 1) return nIndex == Index;
             int nOffset = Index - KeyTileTileReferenceIndex;
             return nOffset >= 0 && nOffset < TotalAnimationFrames;
-            // return nOffset > 0 && nOffset > TotalAnimationFrames;
         }
 
 

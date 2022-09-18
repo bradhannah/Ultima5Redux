@@ -416,8 +416,8 @@ namespace Ultima5Redux
         private List<VirtualMap.AggressiveMapUnitInfo> ProcessOpenDoor(Point2D xy, ref bool bWasSuccessful,
             TurnResults turnResults, TileReference tileReference)
         {
-            bool bIsDoorMagical = GameReferences.SpriteTileReferences.IsDoorMagical(tileReference.Index);
-            bool bIsDoorLocked = GameReferences.SpriteTileReferences.IsDoorLocked(tileReference.Index);
+            bool bIsDoorMagical = TileReferences.IsDoorMagical(tileReference.Index);
+            bool bIsDoorLocked = TileReferences.IsDoorLocked(tileReference.Index);
 
             if (bIsDoorMagical || bIsDoorLocked)
             {
@@ -670,7 +670,7 @@ namespace Ultima5Redux
             TileReference tileReference = State.TheVirtualMap.GetTileReference(attackTargetPosition);
 
             // if you are attacking an unbroken mirror - then we break it and override the tile
-            if (GameReferences.SpriteTileReferences.IsUnbrokenMirror(tileReference.Index))
+            if (TileReferences.IsUnbrokenMirror(tileReference.Index))
             {
                 turnResults.PushOutputToConsole(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.TravelStrings.BROKEN),
@@ -709,9 +709,9 @@ namespace Ultima5Redux
                 State.TheVirtualMap.GetCombatMapReferenceForAvatarAttacking(avatar.MapUnitPosition.XY,
                     attackTargetPosition, SingleCombatMapReference.Territory.Britannia);
 
-            bool bIsMurderable = GameReferences.SpriteTileReferences.IsHeadOfBed(tileReference.Index) ||
+            bool bIsMurderable = TileReferences.IsHeadOfBed(tileReference.Index) ||
                                  GameReferences.SpriteTileReferences.IsStocks(tileReference.Index) ||
-                                 GameReferences.SpriteTileReferences.IsManacles(tileReference.Index);
+                                 TileReferences.IsManacles(tileReference.Index);
 
             // if there is a mapunit - BUT - no 
             ////// NOTE - this doesn't make sense for the Avatar to attack like this
@@ -719,10 +719,6 @@ namespace Ultima5Redux
             {
                 // we were not able to attack, likely on a carpet or skiff and on the water
                 // but may be other edge cases
-                // if (missileType != CombatItemReference.MissileType.None)
-                //     throw new Ultima5ReduxException(
-                //         "Single combat map reference was null, but missile type wasn't null when avatar attacks");
-
                 turnResults.PushOutputToConsole(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.KeypressCommandsStrings
                         .ON_FOOT), false);
@@ -755,7 +751,6 @@ namespace Ultima5Redux
                         break;
                     }
 
-                    //State.TheVirtualMap.TheMapUnits.ClearMapUnit(mapUnit);
                     npc.NPCState.IsDead = true;
 
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionAttackCombatMapNpc));
@@ -940,8 +935,6 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToFire(Point2D.Direction direction,
             TurnResults turnResults, out Point2D cannonBallDestination)
         {
-            // if (!CanFireInPlace(turnResults))
-            //     throw new Ultima5ReduxException("Tried to fire, but are not able to - use CheckIfCanFire first");
             bool bCanFire = CanFireInPlace(turnResults);
 
             if (!bCanFire)
@@ -1157,8 +1150,6 @@ namespace Ultima5Redux
                         State.TheVirtualMap.CurrentMap.RecalculateWalkableTileForAllAstarsWithMapUnits(
                             itemStack.MapUnitPosition.XY,
                             State.TheVirtualMap.AllVisibleActiveMapUnits.ToList());
-                        // State.TheVirtualMap.CurrentMap.GetAStarByMapUnit(itemStack)
-                        //     .SetWalkable(itemStack.MapUnitPosition.XY, true);
                     }
 
                     turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(invItem.FindDescription), false);
@@ -1244,8 +1235,8 @@ namespace Ultima5Redux
             }
             else
             {
-                bool bIsDoorMagical = GameReferences.SpriteTileReferences.IsDoorMagical(tileReference.Index);
-                bool bIsDoorLocked = GameReferences.SpriteTileReferences.IsDoorLocked(tileReference.Index);
+                bool bIsDoorMagical = TileReferences.IsDoorMagical(tileReference.Index);
+                bool bIsDoorLocked = TileReferences.IsDoorLocked(tileReference.Index);
 
                 if (bIsDoorMagical)
                 {
@@ -1255,7 +1246,7 @@ namespace Ultima5Redux
 
                     // for now we will also just open the door so we can get around - will address when we have spells
                     State.TheVirtualMap.SetOverridingTileReferece(
-                        GameReferences.SpriteTileReferences.IsDoorWithView(tileReference.Index)
+                        TileReferences.IsDoorWithView(tileReference.Index)
                             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
                             : GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
 
@@ -1275,7 +1266,7 @@ namespace Ultima5Redux
                     // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
 
                     State.TheVirtualMap.SetOverridingTileReferece(
-                        GameReferences.SpriteTileReferences.IsDoorWithView(tileReference.Index)
+                        TileReferences.IsDoorWithView(tileReference.Index)
                             ? GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
                             : GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
 
@@ -1335,7 +1326,7 @@ namespace Ultima5Redux
 
             // we can't klimb on the current tile, so we need to pick a direction
             if (!GameReferences.SpriteTileReferences.IsLadder(curTileRef.Index) &&
-                !GameReferences.SpriteTileReferences.IsGrate(curTileRef.Index))
+                !TileReferences.IsGrate(curTileRef.Index))
             {
                 klimbResult = KlimbResult.RequiresDirection;
                 turnResults.PushOutputToConsole(getKlimbOutput(), false);
@@ -1354,8 +1345,8 @@ namespace Ultima5Redux
             int nTopFloor = hasBasement ? nTotalFloors - 1 : nTotalFloors;
 
             TileReference tileReference = State.TheVirtualMap.GetTileReference(State.TheVirtualMap.CurrentPosition.XY);
-            if (GameReferences.SpriteTileReferences.IsLadderDown(tileReference.Index) ||
-                GameReferences.SpriteTileReferences.IsGrate(tileReference.Index))
+            if (TileReferences.IsLadderDown(tileReference.Index) ||
+                TileReferences.IsGrate(tileReference.Index))
             {
                 if (hasBasement && nCurrentFloor >= 0 || nCurrentFloor > 0)
                 {
@@ -1371,7 +1362,7 @@ namespace Ultima5Redux
                 }
             }
             // else if there is a ladder up and we are not yet on the top floor
-            else if (GameReferences.SpriteTileReferences.IsLadderUp(tileReference.Index) &&
+            else if (TileReferences.IsLadderUp(tileReference.Index) &&
                      nCurrentFloor + 1 < nTopFloor)
             {
                 State.TheVirtualMap.LoadSmallMap(
@@ -1897,7 +1888,7 @@ namespace Ultima5Redux
             bPushedAThing = true;
 
             // if you are pushing a chair then change the direction of chair when it's pushed
-            if (GameReferences.SpriteTileReferences.IsChair(adjustedTileReference.Index))
+            if (TileReferences.IsChair(adjustedTileReference.Index))
             {
                 adjustedTileReference = GetChairNewDirection(direction);
                 State.TheVirtualMap.SetOverridingTileReferece(adjustedTileReference, adjustedPos);
@@ -1959,7 +1950,6 @@ namespace Ultima5Redux
             {
                 bWasSuccessful = true;
                 turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(moonstone.FindDescription), false);
-                //turnResults.PushOutputToConsole(, false);
             }
             else if (bHasInnerNonAttackUnits)
             {

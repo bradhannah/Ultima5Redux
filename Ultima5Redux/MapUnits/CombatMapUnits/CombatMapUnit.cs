@@ -173,16 +173,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             return nDamage;
         }
 
-        // ReSharper disable once UnusedMember.Local
-        private int GetAttackDamage(CombatMapUnit enemyCombatMapUnit, CombatItem weapon)
-        {
-            const int BareHandAttack = 3;
-
-            int nMaxDamage = weapon?.TheCombatItemReference.AttackStat ?? BareHandAttack;
-
-            return GetAttackDamage(enemyCombatMapUnit, nMaxDamage);
-        }
-
         private bool IsHit(CombatMapUnit enemyCombatMapUnit, out string debugStr)
         {
             const int nHitOffset = 128;
@@ -222,18 +212,20 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 turnResults.PushOutputToConsole(missedOutput);
                 // bajh: I wonder if this is unimportant information since it has a more specific turn result later
                 // for ranged or melee
-                // if (bIsEnemyAttacking)
-                // {
-                //     turnResults.PushTurnResult(new CombatMapUnitMissed(
-                //         TurnResult.TurnResultType.Combat_EnemyMissedTarget,
-                //         this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
-                // }
-                // else
-                // {
-                //     turnResults.PushTurnResult(new CombatMapUnitMissed(
-                //         TurnResult.TurnResultType.Combat_CombatPlayerMissedTarget,
-                //         this, opposingCombatMapUnit, missileType, opposingCombatMapUnit.MapUnitPosition.XY));
-                // }
+                if (bIsEnemyAttacking)
+                {
+                    turnResults.PushTurnResult(new AttackerTurnResult(
+                        TurnResult.TurnResultType.Combat_EnemyMissedTarget,
+                        this, opposingCombatMapUnit, missileType, HitState.Missed, 
+                        opposingCombatMapUnit.MapUnitPosition.XY));
+                }
+                else
+                {
+                    turnResults.PushTurnResult(new AttackerTurnResult(
+                        TurnResult.TurnResultType.Combat_CombatPlayerMissedTarget,
+                        this, opposingCombatMapUnit, missileType, HitState.Missed,
+                        opposingCombatMapUnit.MapUnitPosition.XY));
+                }
 
                 return HitState.Missed;
             }

@@ -148,7 +148,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             if (EnemyReference.CanPassThroughWalls)
             {
                 // if tile is wall
-                bCanMove |= bCanMove |=
+                bCanMove |= 
                     tileReference.Name.IndexOf("wall", 0, StringComparison.CurrentCultureIgnoreCase) >= 0;
             }
 

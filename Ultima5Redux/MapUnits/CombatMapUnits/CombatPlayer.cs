@@ -23,7 +23,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string FriendlyName => Record.Name;
 
         public override bool IsActive => !HasEscaped;
-        //&& Stats.Status != PlayerCharacterRecord.CharacterStatus.Dead;
 
         public override bool IsAttackable => true;
 

@@ -67,7 +67,7 @@ namespace Ultima5Redux.Dialogue
         /// <summary>
         ///     The callback for the notification that tells the user something was added to the queue
         /// </summary>
-        public EnqueuedScriptItem EnqueuedScriptItemCallback;
+        public EnqueuedScriptItem EnqueuedScriptItemCallback { get; set; }
 
         /// <summary>
         ///     Has the conversation ended?

@@ -24,10 +24,6 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override int Dexterity => 0;
         public override int Experience => 0;
 
-        // public override string Name { get; }
-        // public override string PluralName { get; } 
-        // public override string SingularName { get; }
-        // public override string FriendlyName { get; }
         public override bool IsActive => (!HasBeenSearched && ExposeInnerItemsOnSearch) ||
                                          (!HasBeenOpened && ExposeInnerItemsOnOpen);
 
@@ -41,7 +37,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public abstract bool IsSearchable { get; }
         public virtual bool HasInnerItemStack => InnerItemStack is { HasStackableItems: true };
 
-        public virtual ItemStack InnerItemStack { get; protected set; } //= new();
+        public virtual ItemStack InnerItemStack { get; protected set; } 
         public virtual bool IsLocked { get; set; }
 
         public virtual TrapType Trap { get; set; }

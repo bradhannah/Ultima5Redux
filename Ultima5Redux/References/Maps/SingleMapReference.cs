@@ -40,7 +40,6 @@ namespace Ultima5Redux.References.Maps
             public override int GetHashCode()
             {
                 return Utils.Ran.Next(Id) + Utils.Ran.Next(Floor);
-                //return base.GetHashCode();
             }
 
             /// <summary>
@@ -79,7 +78,6 @@ namespace Ultima5Redux.References.Maps
             // ReSharper disable once UnusedMember.Global
             [IgnoreDataMember]
             public byte Id => (byte)MapLocation;
-            //(byte)(MapLocation - 1);
 
             [IgnoreDataMember]
             public Map.Maps MapType

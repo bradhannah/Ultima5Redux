@@ -36,7 +36,7 @@
             Combat_Result_EnemyKilled, Combat_Result_Missed_CombatPlayerMelee, Combat_Result_Missed_EnemyMelee,
             ActionBlockedRanIntoCactus, NPCAttemptingToArrest, ActionUseDrankPotion, ActionUseReadScroll,
             ActionShoppeKeeperInteraction, NoOneToTalkTo, CantTalkSleeping, ComeBackLater, NotTalkative,
-            NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation
+            NpcTalkInteraction, DontHurtMeAfraid, AdvanceClockNoComputation, Combat_CombatPlayerMissedTarget
         }
 
         public bool IsSuccessfulMovement
@@ -63,7 +63,7 @@
 
         public TurnResultType TheTurnResultType { get; set; }
 
-        public TurnResult(TurnResultType theTurnResultType)
+        protected TurnResult(TurnResultType theTurnResultType)
         {
             TheTurnResultType = theTurnResultType;
         }
