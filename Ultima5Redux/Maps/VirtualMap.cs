@@ -113,16 +113,17 @@ namespace Ultima5Redux.Maps
         {
             get
             {
-                SmallMapReferences.SingleMapReference currentMap = CurrentSingleMapReference;
-                if (currentMap == null)
-                    return null;
+                SmallMapReferences.SingleMapReference currentSingleMapReference = CurrentSingleMapReference;
+                if (currentSingleMapReference == null)
+                    throw new Ultima5ReduxException("Tried to get CurrentMap but it was false");
+                //return null;
 
-                switch (currentMap.MapLocation)
+                switch (currentSingleMapReference.MapLocation)
                 {
                     case SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine:
                         return CurrentCombatMap;
                     case SmallMapReferences.SingleMapReference.Location.Britannia_Underworld:
-                        return currentMap.Floor == 0 ? OverworldMap : UnderworldMap;
+                        return currentSingleMapReference.Floor == 0 ? OverworldMap : UnderworldMap;
                     default:
                         return CurrentSmallMap;
                 }
@@ -209,7 +210,7 @@ namespace Ultima5Redux.Maps
         {
             get
             {
-                if (CurrentMap is CombatMap combatMap) return combatMap?.CurrentCombatPlayer?.MapUnitPosition;
+                if (CurrentMap is CombatMap combatMap) return combatMap.CurrentCombatPlayer?.MapUnitPosition;
 
                 return TheMapUnits?.CurrentAvatarPosition;
             }
@@ -349,6 +350,10 @@ namespace Ultima5Redux.Maps
         /// </summary>
         internal void GenerateAndCleanupEnemies(int nTurn)
         {
+            if (CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException(
+                    "Tried to GenerateAndCleanupEnemies but CurrentSingleMapReference was null");
+                
             switch (CurrentSingleMapReference.MapType)
             {
                 case Map.Maps.Overworld:
@@ -380,6 +385,11 @@ namespace Ultima5Redux.Maps
         internal Dictionary<MapUnit, AggressiveMapUnitInfo> GetAggressiveMapUnitInfo(TurnResults turnResults)
         {
             Dictionary<MapUnit, AggressiveMapUnitInfo> aggressiveMapUnitInfos = new();
+
+            SmallMapReferences.SingleMapReference singleMapReference = CurrentSingleMapReference;
+            if (singleMapReference == null)
+                throw new Ultima5ReduxException(
+                    "Tried to GetAggressiveMapUnitInfo but CurrentSingleMapReference was null");
 
             foreach (MapUnit mapUnit in TheMapUnits.CurrentMapUnits.AllActiveMapUnits)
             {
@@ -888,7 +898,7 @@ namespace Ultima5Redux.Maps
                 default:
                     // a little lazy for now
                     targettedMapUnit = mapUnits[0];
-                    targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
+                    //targettedMapUniTileReference = targettedMapUnit.KeyTileReference;
                     break;
             }
 

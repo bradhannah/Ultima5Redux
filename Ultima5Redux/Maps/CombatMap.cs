@@ -1053,7 +1053,7 @@ namespace Ultima5Redux.Maps
             {
                 MapUnit mapUnit = GetTopVisibleMapUnit(xy, false);
                 throw new Ultima5ReduxException(
-                    $"Tried to move {currentCombatUnit.FriendlyName} to {xy.GetFriendlyString()} but it was occupied by {mapUnit.FriendlyName}");
+                    $"Tried to move {currentCombatUnit.FriendlyName} to {xy.GetFriendlyString()} but it was occupied by {mapUnit?.FriendlyName ?? "NO MAP UNIT"}");
             }
 
             currentCombatUnit.MapUnitPosition = new MapUnitPosition(xy.X, xy.Y, 0);
@@ -1124,6 +1124,8 @@ namespace Ultima5Redux.Maps
             targetedCombatMapUnit = null;
 
             CombatPlayer combatPlayer = GetCurrentCombatPlayer();
+            if (combatPlayer == null)
+                throw new Ultima5ReduxException("Tried to ProcessCombatPlayerTurn but CombatPlayer was null");
 
             activeCombatMapUnit = null;
 

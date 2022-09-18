@@ -154,8 +154,6 @@ namespace Ultima5Redux.PlayerCharacters.Inventory
         /// <param name="inventoryItem"></param>
         public void AddInventoryItemToInventory(InventoryItem inventoryItem)
         {
-            //void updateByEquipment(inv)
-
             switch (inventoryItem)
             {
                 case Armour armour:

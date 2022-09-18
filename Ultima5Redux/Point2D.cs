@@ -202,11 +202,11 @@ namespace Ultima5Redux
         [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
         public double DistanceBetweenWithWrapAround(Point2D xy, int nMax)
         {
-            float dX = Math.Abs(X - xy.X);
-            float dY = Math.Abs(Y - xy.Y);
+            double dX = Math.Abs(X - xy.X);
+            double dY = Math.Abs(Y - xy.Y);
 
-            if (dX > nMax / 2) dX = nMax - dX;
-            if (dY > nMax / 2) dY = nMax - dY;
+            if (dX > nMax / 2.0d) dX = nMax - dX;
+            if (dY > nMax / 2.0d) dY = nMax - dY;
 
             return Math.Sqrt(dX * dX + dY * dY);
         }

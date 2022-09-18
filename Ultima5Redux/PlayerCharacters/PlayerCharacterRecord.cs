@@ -197,7 +197,9 @@ namespace Ultima5Redux.PlayerCharacters
             // put the old one back in your inventory
             if (oldEquippedEquipment != DataOvlReference.Equipment.Nothing)
             {
-                CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment);
+                CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment) ??
+                                                   throw new ArgumentNullException(
+                                                       "inventory.GetItemFromEquipment(oldEquippedEquipment)");
                 oldEquippedCombatItem.Quantity--;
             }
 

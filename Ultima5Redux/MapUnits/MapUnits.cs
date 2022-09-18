@@ -651,6 +651,10 @@ namespace Ultima5Redux.MapUnits
             MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
             NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite, mapUnitPosition);
 
+            if (nonAttackingUnit == null)
+                throw new Ultima5ReduxException(
+                    $"Tried to create NonAttackingUnitFactory: {nSprite} but was given null");
+
             nIndex = AddCombatMapUnit(nonAttackingUnit);
 
             return nonAttackingUnit;
