@@ -45,9 +45,9 @@ namespace Ultima5Redux
         public void ChangeKarma(int nAdjustBy, TurnResults turnResults)
         {
             turnResults.PushTurnResult(new KarmaChanged(nAdjustBy, Karma));
-            Karma += (ushort)Math.Max(0, nAdjustBy);
+            Karma = (ushort)Math.Max(0, Karma + nAdjustBy);
+            if (Karma > 99) Karma = 99;
         }
-
        
 
         /// <summary>

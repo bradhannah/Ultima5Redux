@@ -642,8 +642,7 @@ namespace Ultima5Redux.Dialogue
                     break;
                 case TalkScript.TalkCommand.Gold:
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(
-                        ProvisionReferences.SpecificProvisionType.Gold,
-                        scriptItem.ItemAdditionalData, TheTurnResults);
+                        ProvisionReferences.SpecificProvisionType.Gold, -scriptItem.ItemAdditionalData, TheTurnResults);
                     break;
                 case TalkScript.TalkCommand.JoinParty:
                     _gameState.CharacterRecords.AddMemberToParty(TheNonPlayerCharacterState.NPCRef);

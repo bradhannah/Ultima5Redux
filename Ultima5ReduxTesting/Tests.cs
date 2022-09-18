@@ -2784,5 +2784,54 @@ namespace Ultima5ReduxTesting
 
             Assert.IsTrue(world.State.TheVirtualMap.IsAvatarRidingCarpet);
         }
+
+        private void OnUpdateOfEnqueuedScriptItemHandleJeremy(Conversation conversation)
+        {
+            TalkScript.ScriptItem item = conversation.DequeueFromOutputBuffer();
+            switch (item.Command)
+            {
+                case TalkScript.TalkCommand.PlainString:
+                    Debug.WriteLine(item.Str);
+                    break;
+                case TalkScript.TalkCommand.Gold:
+                    _ = "";
+                    break;
+                case TalkScript.TalkCommand.Change:
+                    _ = "";
+                    break;
+                case TalkScript.TalkCommand.KarmaPlusOne:
+                    break;
+                case TalkScript.TalkCommand.KarmaMinusOne:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        [Test] [TestCase(SaveFiles.Britain2)] public void Test_TalkToJeremyKeysAndGold(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles);
+
+            var location =
+                SmallMapReferences.SingleMapReference.Location.Yew;
+
+            NonPlayerCharacterState npcState =
+                world.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location, 8);
+
+            Conversation convo = world.CreateConversationAndBegin(npcState, OnUpdateOfEnqueuedScriptItemHandleJeremy);
+            convo.BeginConversation();
+            convo.AddUserResponse("keys");
+            convo.AddUserResponse("yes");
+            // convo.AddUserResponse("yes");
+            // convo.AddUserResponse("bye");
+            //
+            // Conversation convo2 = world.CreateConversationAndBegin(npcState,
+            //     OnUpdateOfEnqueuedScriptItemHandleDelwyn);
+            // convo2.BeginConversation();
+            // convo2.AddUserResponse("yes");
+            // convo2.AddUserResponse("yes");
+            // convo2.AddUserResponse("yes");
+            // convo2.AddUserResponse("bye");
+        }
     }
 }

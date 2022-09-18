@@ -755,7 +755,7 @@ namespace Ultima5Redux.References.Dialogue
             /// <summary>
             ///     a list of all associated ScriptItems, in a particular order
             /// </summary>
-            protected List<ScriptItem> ScriptItems = new();
+            protected readonly List<ScriptItem> ScriptItems = new();
 
             /// <summary>
             ///     Does this line represent the end of all Labels in the NPC talk script (end of script)
@@ -849,12 +849,9 @@ namespace Ultima5Redux.References.Dialogue
             ///     Does this line represent a new label definition
             /// </summary>
             /// <returns></returns>
-            public bool IsLabelDefinition()
-            {
-                if (GetScriptItem(0).Command == TalkCommand.StartLabelDefinition &&
-                    GetScriptItem(1).Command == TalkCommand.DefineLabel) return true;
-                return false;
-            }
+            public bool IsLabelDefinition() =>
+                GetScriptItem(0).Command == TalkCommand.StartLabelDefinition &&
+                GetScriptItem(1).Command == TalkCommand.DefineLabel;
 
             /// <summary>
             ///     Splits the ScriptLine into sections and returns a special class that signifies it has been split
@@ -873,87 +870,87 @@ namespace Ultima5Redux.References.Dialogue
                 {
                     ScriptItem item = GetScriptItem(i);
 
-                    // Code A2 appears to denote the beginning of a new section, so we split it
-                    if (item.Command == TalkCommand.StartNewSection)
+                    switch (item.Command)
                     {
-                        // It's a new section, so we simply advance the section counter and add an empty SplitScriptLine
-                        nSection++;
-                        lines.Add(new SplitScriptLine());
-                    }
-                    // if there is a IfElse branch for the Avatar's name the, a DoNothingSection or a goto label, then we add a new section, save the SplitScriptLine
-                    else if (item.Command == TalkCommand.IfElseKnowsName ||
-                             item.Command == TalkCommand.DoNothingSection || item.Command == TalkCommand.DefineLabel)
-                    {
-                        // advance to next section
-                        nSection++;
-                        // add a stump section
-                        lines.Add(new SplitScriptLine());
-                        // add the item as-is to the new section
-                        lines[nSection].AddScriptItem(item);
-                        // we need to tell the loop to force yet another split next time around
-                        // basically - these items need to part of a single item SplitScriptLine
-                        forceSplitNext = true;
-                    }
-                    else if (item.Command == TalkCommand.Change)
-                    {
-                        // advance to next section
-                        nSection++;
-                        // add a stump section
-                        lines.Add(new SplitScriptLine());
-
-                        // this is a bit dirty - but the next item is the item number that we are being given
-                        item.ItemAdditionalData = (int)GetScriptItem(i + 1).Command;
-                        // add the item as-is to the new section
-                        lines[nSection].AddScriptItem(item);
-
-                        i++;
-                        forceSplitNext = true;
-                    }
-                    else if (item.Command == TalkCommand.Gold)
-                    {
-                        // advance to next section
-                        nSection++;
-
-                        // the next three characters are a 3 digit string that describes how much gold we are giving the NPC
-                        item.ItemAdditionalData = int.Parse(GetScriptItem(i + 1).Str.Substring(0, 3));
-
-                        i++;
-                        forceSplitNext = true;
-                    }
-                    // if there is a default message then it is the definition of a new label
-                    else if (item.Command == TalkCommand.StartLabelDefinition)
-                    {
-                        // advance to next section
-                        nSection++;
-                        Debug.Assert(GetScriptItem(i + 1).Command ==
-                                     TalkCommand
-                                         .DefineLabel); // StartLabelDefinition must ALWYAYS be followed with a DefineLabel
-                        // add the StartLabelDefintion to the new section
-                        lines[nSection].AddScriptItem(item);
-
-                        // add the next item - which is a DefineLabel to the section 
-                        lines[nSection].AddScriptItem(GetScriptItem(i + 1));
-                        // skip by the DefineLabel section since we just added
-                        i++;
-                        // we need to tell the loop to force yet another split next time around
-                        // basically - these items need to part of a single item SplitScriptLine
-                        forceSplitNext = true;
-                    }
-                    else // it is any other kind of TalkCommand
-                    {
-                        // welp - I really can't recall why I did this, but I need it.
-                        if (first) nSection = 0;
-                        // if we are forcing a new section from a previous run, then we increment the section number
-                        if (forceSplitNext)
-                        {
-                            forceSplitNext = false;
+                        // Code A2 appears to denote the beginning of a new section, so we split it
+                        case TalkCommand.StartNewSection:
+                            // It's a new section, so we simply advance the section counter and add an empty SplitScriptLine
                             nSection++;
                             lines.Add(new SplitScriptLine());
-                        }
+                            break;
+                        // if there is a IfElse branch for the Avatar's name the, a DoNothingSection or a goto label, then we add a new section, save the SplitScriptLine
+                        case TalkCommand.IfElseKnowsName or TalkCommand.DoNothingSection or TalkCommand.DefineLabel:
+                            // advance to next section
+                            nSection++;
+                            // add a stump section
+                            lines.Add(new SplitScriptLine());
+                            // add the item as-is to the new section
+                            lines[nSection].AddScriptItem(item);
+                            // we need to tell the loop to force yet another split next time around
+                            // basically - these items need to part of a single item SplitScriptLine
+                            forceSplitNext = true;
+                            break;
+                        case TalkCommand.Change:
+                            // advance to next section
+                            nSection++;
+                            // add a stump section
+                            lines.Add(new SplitScriptLine());
 
-                        if (nSection < 0)
-                            throw new Ultima5ReduxException("Section number fell below zero in conversation.");
-                        lines[nSection].AddScriptItem(item);
+                            // this is a bit dirty - but the next item is the item number that we are being given
+                            item.ItemAdditionalData = (int)GetScriptItem(i + 1).Command;
+                            // add the item as-is to the new section
+                            lines[nSection].AddScriptItem(item);
+
+                            i++;
+                            forceSplitNext = true;
+                            break;
+                        case TalkCommand.Gold:
+                            // advance to next section
+                            nSection++;
+
+                            // the next three characters are a 3 digit string that describes how much gold we are giving the NPC
+                            item.ItemAdditionalData = int.Parse(GetScriptItem(i + 1).Str.Substring(0, 3));
+                            lines[nSection].AddScriptItem(item);
+
+                            i++;
+                            forceSplitNext = true;
+                            break;
+                        // if there is a default message then it is the definition of a new label
+                        case TalkCommand.StartLabelDefinition:
+                            // advance to next section
+                            nSection++;
+                            Debug.Assert(GetScriptItem(i + 1).Command ==
+                                         TalkCommand
+                                             .DefineLabel); // StartLabelDefinition must ALWYAYS be followed with a DefineLabel
+                            // add the StartLabelDefintion to the new section
+                            lines[nSection].AddScriptItem(item);
+
+                            // add the next item - which is a DefineLabel to the section 
+                            lines[nSection].AddScriptItem(GetScriptItem(i + 1));
+                            // skip by the DefineLabel section since we just added
+                            i++;
+                            // we need to tell the loop to force yet another split next time around
+                            // basically - these items need to part of a single item SplitScriptLine
+                            forceSplitNext = true;
+                            break;
+                        // it is any other kind of TalkCommand
+                        default:
+                        {
+                            // welp - I really can't recall why I did this, but I need it.
+                            if (first) nSection = 0;
+                            // if we are forcing a new section from a previous run, then we increment the section number
+                            if (forceSplitNext)
+                            {
+                                forceSplitNext = false;
+                                nSection++;
+                                lines.Add(new SplitScriptLine());
+                            }
+
+                            if (nSection < 0)
+                                throw new Ultima5ReduxException("Section number fell below zero in conversation.");
+                            lines[nSection].AddScriptItem(item);
+                            break;
+                        }
                     }
 
                     first = false;
