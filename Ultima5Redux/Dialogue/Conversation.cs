@@ -258,7 +258,7 @@ namespace Ultima5Redux.Dialogue
                     case TalkScript.TalkCommand.KeyWait:
                         EnqueueToOutputBuffer(item);
                         await AwaitResponse();
-                        string derp = GetResponse();
+                        GetResponse();
                         break;
                     case TalkScript.TalkCommand.NewLine: // Sutek is a great example
                         EnqueueToOutputBuffer(new TalkScript.ScriptItem(TalkScript.TalkCommand.PlainString,
@@ -266,8 +266,7 @@ namespace Ultima5Redux.Dialogue
                         break;
                     case TalkScript.TalkCommand.Pause:
                         EnqueueToOutputBuffer(item);
-                        // await AwaitResponse();
-                        // string derp = GetResponse();
+                        await Task.Delay(TimeSpan.FromSeconds(0.5f)).ConfigureAwait(false);
                         break;
                     case TalkScript.TalkCommand.PlainString:
                         // we put it through the processor to change the text around if we are wrapped in a rune tag
