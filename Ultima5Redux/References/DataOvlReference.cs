@@ -166,7 +166,8 @@ namespace Ultima5Redux.References
             BAR_KEEP_GOSSIP_WORDS, BAR_KEEP_GOSSIP_PEOPLE, BAR_KEEP_GOSSIP_PLACES, SHOPPE_KEEPER_BAR_KEEP,
             BAR_KEEP_GOSSIP_MAP, SHOPPE_KEEPER_BAR_KEEP_2, INN_DESCRIPTION_INDEXES, INN_BED_X_COORDS, INN_BED_Y_COORDS,
             YELLING, WORLD2, MONSTER_NAMES_MIXED, MONSTER_NAMES_UPPER, ENEMY_FLAGS, ENEMY_ATTACK_RANGE,
-            ENEMY_RANGE_THING, ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE, ADDITIONAL, BATTLE2
+            ENEMY_RANGE_THING, ENEMY_THING, ENEMY_STATS, ENEMY_FRIENDS, BATTLE, ADDITIONAL, BATTLE2, SEARCH_OBJECT_ID,
+            SEARCH_OBJECT_QUALITY, SEARCH_OBJECT_LOCATION, SEARCH_OBJECT_FLOOR, SEARCH_OBJECT_X, SEARCH_OBJECT_Y
         }
         // FURL!\n"
         // [3] = {string} "HOIST!\n"
@@ -1264,6 +1265,30 @@ namespace Ultima5Redux.References
                 DataChunkName.X_DOCKS);
             _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate (dock)", 0x4D8A, 0x4, 0x00,
                 DataChunkName.Y_DOCKS);
+
+            // this section contains information about hidden, non-regenerating objects (e.g. the magic axe in the dead tree in Jhelom); there are
+            // only 0x71 such objects; the last entry in each table is 0
+            // 0x3E88      0x72        object type (tile - 0x100)
+            // 0x3EFA      0x72        object quality (e.g. potion type, number of gems)
+            // 0x3F6C      0x72        location number (see "Party Location")
+            // 0x3FDE      0x72        level
+            // 0x4050      0x72        x coordinate
+            // 0x40C2      0x72        y coordinate
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "object type (tile - 0x100)", 0x3E88, 0x72,
+                0x100, DataChunkName.SEARCH_OBJECT_ID);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList,
+                "object quality (e.g. potion type, number of gems)", 0x3EFA, 0x72,
+                0x00, DataChunkName.SEARCH_OBJECT_QUALITY);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "location number (see \"Party Location\")",
+                0x3F6C, 0x72,
+                0x00, DataChunkName.SEARCH_OBJECT_LOCATION);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "level", 0x3FDE, 0x72,
+                0x00, DataChunkName.SEARCH_OBJECT_FLOOR);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "x coordinate", 0x4050, 0x72,
+                0x00, DataChunkName.SEARCH_OBJECT_X);
+            _dataChunks.AddDataChunk(DataChunk.DataFormatType.ByteList, "y coordinate", 0x40C2, 0x72,
+                0x00, DataChunkName.SEARCH_OBJECT_Y);
+
 
             // scan code translation table:
             // when the player presses a key that produces one of the scan codes in

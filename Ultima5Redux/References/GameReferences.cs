@@ -85,6 +85,8 @@ namespace Ultima5Redux.References
 
         public static TileOverrideReferences TileOverrideRefs { get; private set; }
 
+        public static SearchLocationReferences SearchLocationReferences { get; private set; }
+        
         private GameReferences(string dataDirectory)
         {
             LookRef = new Look(dataDirectory);
@@ -109,6 +111,7 @@ namespace Ultima5Redux.References
             ShoppeKeeperRefs = new ShoppeKeeperReferences(DataOvlRef, NpcRefs);
             ReagentReferences = new ReagentReferences();
             ProvisionReferences = new ProvisionReferences();
+            SearchLocationReferences = new SearchLocationReferences(DataOvlRef, SpriteTileReferences);
         }
 
         private static string GetU5Directory()

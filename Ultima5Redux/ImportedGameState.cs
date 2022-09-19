@@ -31,7 +31,7 @@ namespace Ultima5Redux
             CURRENT_HOUR, CURRENT_MINUTE, NPC_TYPES, NPC_MOVEMENT_LISTS, NPC_MOVEMENT_OFFSETS, NPC_SPRITE_INDEXES,
             PARTY_LOC, Z_COORD, X_COORD, Y_COORD, CHARACTER_ANIMATION_STATES, CHARACTER_STATES, MOONSTONE_X_COORDS,
             MOONSTONE_Y_COORDS, MOONSTONE_BURIED, MOONSTONE_Z_COORDS, ACTIVE_CHARACTER, GRAPPLE, SKULL_KEYS_QUANTITY,
-            KARMA, TURNS_SINCE_START
+            KARMA, TURNS_SINCE_START, SEARCH_OBJECT_STILL_THERE
         }
 
         private enum OverlayChunkName { Unused, CHARACTER_ANIMATION_STATES }
@@ -260,6 +260,12 @@ namespace Ultima5Redux
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Number of Turns Since Start", 0x2E5, 0x01, 0x00,
                 DataChunkName.TURNS_SINCE_START);
 
+            // Is non-regenerating search items still there?
+            DataChunks.AddDataChunk(DataChunk.DataFormatType.Bitmap, "Non-regenerating search items still there?",
+                0x2B6, 0xF,
+                0x00, DataChunkName.SEARCH_OBJECT_STILL_THERE);
+
+            
             // player location
             DataChunks.AddDataChunk(DataChunk.DataFormatType.Byte, "Current Party _location", 0x2ED, 0x01, 0x00,
                 DataChunkName.PARTY_LOC);

@@ -90,7 +90,7 @@ namespace Ultima5Redux.Data
         /// <param name="addToValue">the byte value to add (or subtract) from each byte read</param>
         /// <param name="dataChunkName">name of the data chunk for easy access</param>
         public DataChunk AddDataChunk(DataChunk.DataFormatType dataFormat, string description, int offset,
-            int dataLength, byte addToValue, T dataChunkName)
+            int dataLength, int addToValue, T dataChunkName)
         {
             // create the data chunk 
             DataChunk chunk = new(dataFormat, description, FileByteList, offset, dataLength, addToValue);
@@ -206,7 +206,7 @@ namespace Ultima5Redux.Data
         /// <summary>
         ///     The adjustment value for bytes and UINT16
         /// </summary>
-        private byte ValueModifier { get; }
+        private int ValueModifier { get; }
 
         /// <summary>
         ///     A brief description of the data chunk
@@ -226,7 +226,7 @@ namespace Ultima5Redux.Data
         ///     offsets)
         /// </param>
         public DataChunk(DataFormatType dataFormat, string description, List<byte> rawData, int offset, int dataLength,
-            byte addToValue = 0)
+            int addToValue = 0)
         {
             DataFormat = dataFormat;
             Description = description;
