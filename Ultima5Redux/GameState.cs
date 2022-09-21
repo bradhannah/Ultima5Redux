@@ -100,8 +100,6 @@ namespace Ultima5Redux
         public string AvatarsName =>
             CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
-        [DataMember] public SearchItems TheSearchItems { get; private set; }
-        
         [IgnoreDataMember]
         public string FriendlyLocationName
         {
@@ -166,13 +164,14 @@ namespace Ultima5Redux
 
             TheNonPlayerCharacterStates = ImportedGameState.TheNonPlayerCharacterStates;
 
-            TheSearchItems = ImportedGameState.TheSearchItems;
+            //TheSearchItems = ImportedGameState.TheSearchItems;
             
             // import the players inventory
             PlayerInventory = new Inventory(ImportedGameState);
 
             InitializeVirtualMap(smallMaps, overworldMap, underworldMap, bUseExtendedSprites,
-                ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor);
+                ImportedGameState.Location, ImportedGameState.X, ImportedGameState.Y, ImportedGameState.Floor,
+                ImportedGameState.TheSearchItems);
         }
 
         [OnDeserialized] private void PostDeserialized(StreamingContext context)
@@ -192,6 +191,8 @@ namespace Ultima5Redux
         /// <summary>
         ///     Initializes (one time) the virtual map component
         ///     Must be initialized pretty much after everything else has been loaded into memory
+        /// This is ONLY for loading from a legacy game state - all future JSON loads will
+        /// use deserialization and this method will not be called
         /// </summary>
         /// <param name="smallMaps"></param>
         /// <param name="overworldMap"></param>
@@ -201,9 +202,10 @@ namespace Ultima5Redux
         /// <param name="nInitialX"></param>
         /// <param name="nInitialY"></param>
         /// <param name="nInitialFloor"></param>
+        /// <param name="searchItems"></param>
         private void InitializeVirtualMap(SmallMaps smallMaps, LargeMap overworldMap, LargeMap underworldMap,
             bool bUseExtendedSprites, SmallMapReferences.SingleMapReference.Location location, int nInitialX,
-            int nInitialY, int nInitialFloor)
+            int nInitialY, int nInitialFloor, SearchItems searchItems)
         {
             SmallMapReferences.SingleMapReference mapRef =
                 location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld
@@ -211,7 +213,7 @@ namespace Ultima5Redux
                     : GameReferences.SmallMapRef.GetSingleMapByLocation(location, nInitialFloor);
 
             TheVirtualMap = new VirtualMap(smallMaps, overworldMap, underworldMap, _initialMap, mapRef,
-                bUseExtendedSprites, ImportedGameState);
+                bUseExtendedSprites, ImportedGameState, searchItems);
             // we have to set the initial xy, not the floor because that is part of the SingleMapReference
             // I should probably just add yet another thing to the constructor
             TheVirtualMap.CurrentPosition.XY = new Point2D(nInitialX, nInitialY);

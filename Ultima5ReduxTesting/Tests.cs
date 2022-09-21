@@ -2837,12 +2837,12 @@ namespace Ultima5ReduxTesting
             Assert.True(
                 world.State.TheVirtualMap.TheMapUnits.OverworldMapMapUnitCollection.Enemies.Count(m => m.IsActive) > 0);
 
-            bool bIsStuff = world.State.TheSearchItems.IsAvailableSearchItemByLocation(
+            bool bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 -1, new Point2D(233, 233));
             Assert.True(bIsStuff);
 
-            List<SearchItem> stuff = world.State.TheSearchItems.GetUnDiscoveredSearchItemsByLocation(
+            List<SearchItem> stuff = world.State.TheVirtualMap.TheSearchItems.GetUnDiscoveredSearchItemsByLocation(
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 -1, new Point2D(233, 233));
 
@@ -2850,15 +2850,21 @@ namespace Ultima5ReduxTesting
             Assert.True(stuff[0].TheSearchItemReference.CalcTileReference.Index == 267); // ItemArmour
             Assert.True(stuff[0].TheSearchItemReference.Quality == 15); // ItemWeapon
 
-            bIsStuff = world.State.TheSearchItems.IsAvailableSearchItemByLocation(
+            bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
                 -1, new Point2D(0, 0));
             Assert.False(bIsStuff);
 
-            bIsStuff = world.State.TheSearchItems.IsAvailableSearchItemByLocation(
+            bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
                 SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine,
                 0, new Point2D(0, 0));
             Assert.False(bIsStuff);
+
+            List<SearchItem> yewStuff = world.State.TheVirtualMap.TheSearchItems.GetUnDiscoveredSearchItemsByLocation(
+                SmallMapReferences.SingleMapReference.Location.Yew);
+
+            Assert.NotNull(yewStuff);
+            Assert.True(yewStuff.Count > 0);
         }
     }
 }

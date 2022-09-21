@@ -36,6 +36,19 @@ namespace Ultima5Redux.Maps
         {
         }
 
+        public void Initialize()
+        {
+            for (int i = 0; i < N_TOTAL_SEARCH_ITEMS; i++)
+            {
+                SearchItemReference searchItemReference =
+                    GameReferences.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
+
+                var item = new SearchItem(i, false, searchItemReference);
+
+                _searchItems.Add(item);
+            }
+        }
+
         public SearchItems(List<bool> searchItems)
         {
             if (searchItems.Count < N_TOTAL_SEARCH_ITEMS)
@@ -65,6 +78,30 @@ namespace Ultima5Redux.Maps
                 .GetListOfSearchItemReferences
                     (location, nFloor, position).Any(searchItemReference =>
                     !_searchItems[searchItemReference.Index].IsDiscovered);
+        }
+
+        public List<SearchItem> GetUnDiscoveredSearchItemsByLocation(
+            SmallMapReferences.SingleMapReference.Location location)
+        {
+            List<SearchItemReference> searchItemReferences =
+                GameReferences.SearchLocationReferences.GetListOfSearchItemReferences(location);
+
+            List<SearchItem> searchItems = new();
+
+            foreach (SearchItemReference searchItemReference in searchItemReferences)
+            {
+                SearchItem item = _searchItems[searchItemReference.Index];
+                if (item == null)
+                    throw new Ultima5ReduxException(
+                        $"Expected item at index {searchItemReference.Index} or type {searchItemReference.CalcTileReference.Description} but got null");
+
+                // if it's already discovered then we filter it out
+                if (item.IsDiscovered) continue;
+
+                searchItems.Add(item);
+            }
+
+            return searchItems;
         }
 
         public List<SearchItem> GetUnDiscoveredSearchItemsByLocation(

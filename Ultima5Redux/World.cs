@@ -1939,9 +1939,13 @@ namespace Ultima5Redux
             TurnResults turnResults)
         {
             bWasSuccessful = false;
+            // bool bHasDiscoverableItems = State.TheSearchItems.IsAvailableSearchItemByLocation(
+            //     State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+            //     State.TheVirtualMap.CurrentSingleMapReference.Floor,
+            //     State.TheVirtualMap.CurrentPosition.XY);
 
             // if there is something exposed already OR there is nothing found 
-            if (!State.TheVirtualMap.ContainsSearchableThings(xy))
+            if (!State.TheVirtualMap.ContainsSearchableMapUnits(xy)) //&& !bHasDiscoverableItems)
             {
                 turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings
@@ -1968,6 +1972,20 @@ namespace Ultima5Redux
             {
                 // do nothing, I think? The SearchNonAttackingMapUnit method takes care of the chatter
             }
+            // else if (bHasDiscoverableItems)
+            // {
+            //     List<SearchItem> things = State.TheSearchItems.GetUnDiscoveredSearchItemsByLocation(
+            //         State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+            //         State.TheVirtualMap.CurrentSingleMapReference.Floor,
+            //         State.TheVirtualMap.CurrentPosition.XY);
+            //
+            //     if (things == null || things.Count == 0)
+            //         throw new Ultima5ReduxException(
+            //             "Was expecting greater than 0 items when searching, but received zero or null");
+            //     
+            //     State.TheVirtualMap.TheMapUnits.CreateNonAttackUnitOnCombatMap()
+            //
+            // }
             else if (tileReference.HasSearchReplacement)
             {
                 // this occurs when you search something - and once searched it turns into something else

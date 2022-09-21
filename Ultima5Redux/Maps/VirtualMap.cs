@@ -227,6 +227,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
+        [IgnoreDataMember]
         private readonly List<Type> _visibilePriorityOrder = new()
         {
             typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
@@ -249,6 +250,8 @@ namespace Ultima5Redux.Maps
 
         public MapUnitPosition PreviousPosition { get; } = new();
 
+        [DataMember] public SearchItems TheSearchItems { get; private set; }
+
         /// <summary>
         ///     Construct the VirtualMap (requires initialization still)
         /// </summary>
@@ -259,14 +262,16 @@ namespace Ultima5Redux.Maps
         /// <param name="currentSmallMapReference"></param>
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="importedGameState"></param>
+        /// <param name="theSearchItems"></param>
         internal VirtualMap(SmallMaps smallMaps, LargeMap overworldMap, LargeMap underworldMap, Map.Maps initialMap,
             SmallMapReferences.SingleMapReference currentSmallMapReference, bool bUseExtendedSprites,
-            ImportedGameState importedGameState)
+            ImportedGameState importedGameState, SearchItems theSearchItems)
         {
             _smallMaps = smallMaps;
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
-
+            TheSearchItems = theSearchItems;
+            
             SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
                                                                          SmallMapReferences.SingleMapReference.Location
                                                                              .Britannia_Underworld;
@@ -298,6 +303,12 @@ namespace Ultima5Redux.Maps
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
             TheMapOverrides.TheMap = CurrentMap;
+            // this is so we don't break old save games
+            if (TheSearchItems == null)
+            {
+                TheSearchItems = new SearchItems();
+                TheSearchItems.Initialize();
+            }
         }
 
         internal void DamageShip(Point2D.Direction windDirection, TurnResults turnResults)
@@ -353,7 +364,7 @@ namespace Ultima5Redux.Maps
             if (CurrentSingleMapReference == null)
                 throw new Ultima5ReduxException(
                     "Tried to GenerateAndCleanupEnemies but CurrentSingleMapReference was null");
-                
+
             switch (CurrentSingleMapReference.MapType)
             {
                 case Map.Maps.Overworld:
@@ -1299,17 +1310,17 @@ namespace Ultima5Redux.Maps
             return ClosestTileReferenceAround(CurrentPosition.XY, nRadius, i => tileReference.Index == i);
         }
 
-        public bool ContainsSearchableThings(in Point2D xy)
+        public bool ContainsSearchableMapUnits(in Point2D xy)
         {
             // moonstone check
             List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
             TileReference tileReference = GetTileReference(xy);
 
-            bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter
-            ) || tileReference.HasSearchReplacement;
+            bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter) ||
+                                        tileReference.HasSearchReplacement;
+            bool bIsMoonstoneBuried = GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
 
-            return (IsLargeMap && GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder)) ||
-                   bIsSearchableMapUnit;
+            return (IsLargeMap && bIsMoonstoneBuried) || bIsSearchableMapUnit;
         }
 
         /// <summary>
@@ -2144,6 +2155,7 @@ namespace Ultima5Redux.Maps
             LargeMapOverUnder = (Map.Maps)(-1);
 
             TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, bLoadFromDisk);
+            
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
 

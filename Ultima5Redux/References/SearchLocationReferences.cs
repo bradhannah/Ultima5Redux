@@ -7,8 +7,7 @@ namespace Ultima5Redux.References
     public class SearchItemReference
     {
         public SearchItemReference(int index, int id, int quality,
-            SmallMapReferences.SingleMapReference.Location location,
-            int floor, Point2D position)
+            SmallMapReferences.SingleMapReference.Location location, int floor, Point2D position)
         {
             RawId = id;
             CalcId = id + 0x100;
@@ -56,7 +55,7 @@ namespace Ultima5Redux.References
 
             return _searchItemsList[nIndex];
         }
-        
+
         public List<SearchItemReference> GetListOfSearchItemReferences(
             SmallMapReferences.SingleMapReference.Location location,
             int nFloor, Point2D position)
@@ -64,6 +63,24 @@ namespace Ultima5Redux.References
             if (!IsSearchItemAtLocation(location, nFloor, position)) return new List<SearchItemReference>();
 
             return _searchItems[location][nFloor][position];
+        }
+
+        public List<SearchItemReference> GetListOfSearchItemReferences(
+            SmallMapReferences.SingleMapReference.Location location)
+        {
+            List<SearchItemReference> searchItemReferences = new();
+
+            if (!_searchItems.ContainsKey(location)) return searchItemReferences;
+
+            foreach (KeyValuePair<int, Dictionary<Point2D, List<SearchItemReference>>> floors in _searchItems[location])
+            {
+                foreach (KeyValuePair<Point2D, List<SearchItemReference>> searchItem in floors.Value)
+                {
+                    searchItemReferences.AddRange(searchItem.Value);
+                }
+            }
+
+            return searchItemReferences;
         }
 
         public SearchLocationReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)
