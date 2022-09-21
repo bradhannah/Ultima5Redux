@@ -100,6 +100,8 @@ namespace Ultima5Redux
         public string AvatarsName =>
             CharacterRecords.Records[PlayerCharacterRecords.AVATAR_RECORD].Name;
 
+        [DataMember] public SearchItems TheSearchItems { get; private set; }
+        
         [IgnoreDataMember]
         public string FriendlyLocationName
         {
@@ -164,6 +166,8 @@ namespace Ultima5Redux
 
             TheNonPlayerCharacterStates = ImportedGameState.TheNonPlayerCharacterStates;
 
+            TheSearchItems = ImportedGameState.TheSearchItems;
+            
             // import the players inventory
             PlayerInventory = new Inventory(ImportedGameState);
 

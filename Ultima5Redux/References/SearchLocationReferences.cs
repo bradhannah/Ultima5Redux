@@ -8,11 +8,11 @@ namespace Ultima5Redux.References
     {
         public SearchItemReference(int index, int id, int quality,
             SmallMapReferences.SingleMapReference.Location location,
-            int floor, Point2D position, TileReferences tileReferences)
+            int floor, Point2D position)
         {
             RawId = id;
             CalcId = id + 0x100;
-            CalcTileReference = tileReferences.GetTileReference(CalcId);
+            CalcTileReference = GameReferences.SpriteTileReferences.GetTileReference(CalcId);
             Position = position;
             Index = index;
             Location = location;
@@ -48,6 +48,15 @@ namespace Ultima5Redux.References
             _searchItems.ContainsKey(location) && _searchItems[location].ContainsKey(nFloor)
                                                && _searchItems[location][nFloor].ContainsKey(position);
 
+        public SearchItemReference GetSearchItemReferenceByIndex(int nIndex)
+        {
+            if (nIndex >= _searchItemsList.Count)
+                throw new Ultima5ReduxException(
+                    $"Tried to get search item index {nIndex}, but there are only {_searchItemsList.Count} in the list");
+
+            return _searchItemsList[nIndex];
+        }
+        
         public List<SearchItemReference> GetListOfSearchItemReferences(
             SmallMapReferences.SingleMapReference.Location location,
             int nFloor, Point2D position)
@@ -73,13 +82,15 @@ namespace Ultima5Redux.References
                 var location =
                     (SmallMapReferences.SingleMapReference.Location)locations.GetByte(i);
                 int floor = floors.GetByte(i);
+                // adjustment because basements and the underworld come in as 0xff
+                if (floor == 0xff) floor = -1;
                 int xPosition = xPositions.GetByte(i);
                 int yPosition = yPositions.GetByte(i);
 
                 var position = new Point2D(xPosition, yPosition);
 
                 SearchItemReference searchItemReference =
-                    new(i, id, quality, location, floor, position, tileReferences);
+                    new(i, id, quality, location, floor, position);
 
                 if (!_searchItems.ContainsKey(location))
                     _searchItems.Add(location, new Dictionary<int, Dictionary<Point2D, List<SearchItemReference>>>());

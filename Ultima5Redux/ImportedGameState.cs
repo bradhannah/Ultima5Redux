@@ -48,6 +48,8 @@ namespace Ultima5Redux
 
         internal PlayerCharacterRecords CharacterRecords { get; private set; }
 
+        internal SearchItems TheSearchItems { get; private set; }
+
         /// <summary>
         ///     Current floor
         /// </summary>
@@ -400,6 +402,9 @@ namespace Ultima5Redux
                 NonPlayerCharacterMovementOffsets);
 
             TheNonPlayerCharacterStates = new NonPlayerCharacterStates(this);
+
+            TheSearchItems =
+                new SearchItems(DataChunks.GetDataChunk(DataChunkName.SEARCH_OBJECT_STILL_THERE).GetAsBitmapBoolList());
         }
 
         public MapUnitStates GetMapUnitStatesByMap(Map.Maps map)
