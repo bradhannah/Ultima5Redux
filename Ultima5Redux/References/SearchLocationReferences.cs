@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.References.Maps;
 
@@ -36,6 +37,8 @@ namespace Ultima5Redux.References
 
     public class SearchLocationReferences
     {
+        public int TotalReferences => _searchItemsList.Count; 
+        
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location,
                 Dictionary<int, Dictionary<Point2D, List<SearchItemReference>>>>
             _searchItems = new();
@@ -83,6 +86,25 @@ namespace Ultima5Redux.References
             return searchItemReferences;
         }
 
+        public List<SearchItemReference> GetListOfSearchItemReferences(
+            SmallMapReferences.SingleMapReference.Location location, int nFloor)
+        {
+            List<SearchItemReference> searchItemReferences = new();
+
+            if (!_searchItems.ContainsKey(location)) return searchItemReferences;
+
+            foreach (KeyValuePair<int, Dictionary<Point2D, List<SearchItemReference>>> floors in _searchItems[location])
+            {
+                foreach (KeyValuePair<Point2D, List<SearchItemReference>> searchItem in floors.Value)
+                {
+                    searchItemReferences.AddRange(searchItem.Value.Where(searchItemReference =>
+                        searchItemReference.Floor == nFloor));
+                }
+            }
+
+            return searchItemReferences;
+        }
+
         public SearchLocationReferences(DataOvlReference dataOvlReference, TileReferences tileReferences)
         {
             DataChunk ids = dataOvlReference.GetDataChunk(DataOvlReference.DataChunkName.SEARCH_OBJECT_ID);
@@ -108,6 +130,9 @@ namespace Ultima5Redux.References
 
                 SearchItemReference searchItemReference =
                     new(i, id, quality, location, floor, position);
+
+                // there are zero positions which are not actually used
+                if ((position.X == 0 && position.Y == 0) || id == 0) continue;
 
                 if (!_searchItems.ContainsKey(location))
                     _searchItems.Add(location, new Dictionary<int, Dictionary<Point2D, List<SearchItemReference>>>());

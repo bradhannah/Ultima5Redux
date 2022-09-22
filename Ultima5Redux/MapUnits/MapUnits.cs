@@ -76,6 +76,7 @@ namespace Ultima5Redux.MapUnits
         /// <param name="importedGameState"></param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
         internal MapUnits(Map.Maps initialMap, bool bUseExtendedSprites, ImportedGameState importedGameState,
+            SearchItems searchItems,
             SmallMapReferences.SingleMapReference.Location currentSmallMap =
                 SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
         {
@@ -90,8 +91,8 @@ namespace Ultima5Redux.MapUnits
             _importedMovements = importedGameState.CharacterMovements;
 
             // we only load the large maps once and they always exist on disk
-            GenerateMapUnitsForLargeMap(Map.Maps.Overworld, true);
-            GenerateMapUnitsForLargeMap(Map.Maps.Underworld, true);
+            GenerateMapUnitsForLargeMap(Map.Maps.Overworld, true, searchItems);
+            GenerateMapUnitsForLargeMap(Map.Maps.Underworld, true, searchItems);
 
             // if the small map is the initial map, then load it 
             // otherwise we force the correct states to either the over or underworld
@@ -448,8 +449,9 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="map"></param>
         /// <param name="bInitialLoad"></param>
+        /// <param name="searchItems"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void GenerateMapUnitsForLargeMap(Map.Maps map, bool bInitialLoad)
+        private void GenerateMapUnitsForLargeMap(Map.Maps map, bool bInitialLoad, SearchItems searchItems)
         {
             MapUnitCollection mapUnitCollection;
             // the over and underworld animation states are already loaded and can stick around
@@ -458,15 +460,13 @@ namespace Ultima5Redux.MapUnits
             {
                 case Map.Maps.Overworld:
                     mapUnitCollection = OverworldMapMapUnitCollection;
-                    currentMapUnitStates = bInitialLoad
-                        ? _importedGameState.OverworldMapUnitStates
-                        : new MapUnitStates();
+                    currentMapUnitStates =
+                        bInitialLoad ? _importedGameState.OverworldMapUnitStates : new MapUnitStates();
                     break;
                 case Map.Maps.Underworld:
                     mapUnitCollection = UnderworldMapUnitCollection;
-                    currentMapUnitStates = bInitialLoad
-                        ? _importedGameState.UnderworldMapUnitStates
-                        : new MapUnitStates();
+                    currentMapUnitStates =
+                        bInitialLoad ? _importedGameState.UnderworldMapUnitStates : new MapUnitStates();
                     break;
                 case Map.Maps.Combat:
                 case Map.Maps.Small:
@@ -511,6 +511,18 @@ namespace Ultima5Redux.MapUnits
                     tileReference);
                 // add the new character to our list of characters currently on the map
                 mapUnitCollection.AddMapUnit(newUnit);
+            }
+
+            int nFloor = map == Map.Maps.Underworld ? -1 : 0;
+            Dictionary<Point2D, List<SearchItem>> searchItemsInMap = searchItems.GetUnDiscoveredSearchItemsByLocation(
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, nFloor);
+            foreach (KeyValuePair<Point2D, List<SearchItem>> kvp in searchItemsInMap)
+            {
+                // at this point we are cycling through the positions
+                MapUnitPosition mapUnitPosition = new(kvp.Key.X, kvp.Key.Y, nFloor);
+                var discoverableLoot = new DiscoverableLoot(mapUnitPosition, kvp.Value);
+                //discoverableLoot.MapUnitPosition.XY = kvp.Value;
+                mapUnitCollection.AddMapUnit(discoverableLoot);
             }
         }
 
@@ -800,12 +812,15 @@ namespace Ultima5Redux.MapUnits
             {
                 case Map.Maps.Small:
                     LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
+                    // will reload the search items fresh since we don't save every single small
+                    // map to the save file
                     break;
                 case Map.Maps.Combat:
                     return;
                 case Map.Maps.Overworld:
                 case Map.Maps.Underworld:
                     CombatMapMapUnitCollection.Clear();
+                    // search items should only be loaded once and then never again
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);

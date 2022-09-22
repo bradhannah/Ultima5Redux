@@ -30,7 +30,7 @@ namespace Ultima5Redux.Maps
     {
         [DataMember] private readonly List<SearchItem> _searchItems = new();
 
-        public const int N_TOTAL_SEARCH_ITEMS = 0x72;
+        public const int MAX_TOTAL_SEARCH_ITEMS = 0x72;
 
         public SearchItems()
         {
@@ -38,7 +38,7 @@ namespace Ultima5Redux.Maps
 
         public void Initialize()
         {
-            for (int i = 0; i < N_TOTAL_SEARCH_ITEMS; i++)
+            for (int i = 0; i < GameReferences.SearchLocationReferences.TotalReferences; i++)
             {
                 SearchItemReference searchItemReference =
                     GameReferences.SearchLocationReferences.GetSearchItemReferenceByIndex(i);
@@ -51,10 +51,10 @@ namespace Ultima5Redux.Maps
 
         public SearchItems(List<bool> searchItems)
         {
-            if (searchItems.Count < N_TOTAL_SEARCH_ITEMS)
+            if (searchItems.Count == 0) //< N_TOTAL_SEARCH_ITEMS)
                 throw new Ultima5ReduxException($"Too few search items in the list: {searchItems.Count}");
 
-            for (int i = 0; i < N_TOTAL_SEARCH_ITEMS; i++)
+            for (int i = 0; i < GameReferences.SearchLocationReferences.TotalReferences; i++)
             {
                 bool bIsDiscovered = searchItems[i];
                 SearchItemReference searchItemReference =
@@ -78,6 +78,32 @@ namespace Ultima5Redux.Maps
                 .GetListOfSearchItemReferences
                     (location, nFloor, position).Any(searchItemReference =>
                     !_searchItems[searchItemReference.Index].IsDiscovered);
+        }
+
+        public Dictionary<Point2D, List<SearchItem>> GetUnDiscoveredSearchItemsByLocation(
+            SmallMapReferences.SingleMapReference.Location location,
+            int nFloor)
+        {
+            List<SearchItemReference> searchItemReferences =
+                GameReferences.SearchLocationReferences.GetListOfSearchItemReferences(location, nFloor);
+
+            if (searchItemReferences == null || searchItemReferences.Count == 0)
+                return new Dictionary<Point2D, List<SearchItem>>();
+
+            Dictionary<Point2D, List<SearchItem>> searchItemsDictionary = new();
+            foreach (SearchItemReference searchItemReference in searchItemReferences)
+            {
+                // we now have all the search references for the exact floor and location
+                // we ignore items that are already discovered, keeps it cleaner
+                SearchItem searchItem = _searchItems[searchItemReference.Index];
+                if (searchItem.IsDiscovered) continue;
+                if (!searchItemsDictionary.ContainsKey(searchItemReference.Position))
+                    searchItemsDictionary.Add(searchItemReference.Position, new List<SearchItem>());
+
+                searchItemsDictionary[searchItemReference.Position].Add(searchItem);
+            }
+
+            return searchItemsDictionary;
         }
 
         public List<SearchItem> GetUnDiscoveredSearchItemsByLocation(

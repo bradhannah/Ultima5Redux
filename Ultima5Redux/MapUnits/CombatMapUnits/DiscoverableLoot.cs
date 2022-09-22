@@ -23,6 +23,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         private List<SearchItem> _listOfSearchItems;
 
-        public DiscoverableLoot(List<SearchItem> searchItems) => _listOfSearchItems = searchItems;
+        public DiscoverableLoot(MapUnitPosition mapUnitPosition, List<SearchItem> searchItems)
+        {
+            _listOfSearchItems = searchItems;
+            MapUnitPosition = mapUnitPosition;
+        } 
     }
 }

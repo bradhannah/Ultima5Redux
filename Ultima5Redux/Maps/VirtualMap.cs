@@ -227,8 +227,7 @@ namespace Ultima5Redux.Maps
             }
         }
 
-        [IgnoreDataMember]
-        private readonly List<Type> _visibilePriorityOrder = new()
+        [IgnoreDataMember] private readonly List<Type> _visibilePriorityOrder = new()
         {
             typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
             typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(MoonstoneNonAttackingUnit), typeof(ItemStack),
@@ -271,14 +270,15 @@ namespace Ultima5Redux.Maps
             _largeMaps.Add(Map.Maps.Overworld, overworldMap);
             _largeMaps.Add(Map.Maps.Underworld, underworldMap);
             TheSearchItems = theSearchItems;
-            
+
             SmallMapReferences.SingleMapReference.Location mapLocation = currentSmallMapReference?.MapLocation ??
                                                                          SmallMapReferences.SingleMapReference.Location
                                                                              .Britannia_Underworld;
 
             // load the characters for the very first time from disk
             // subsequent loads may not have all the data stored on disk and will need to recalculate
-            TheMapUnits = new MapUnits.MapUnits(initialMap, bUseExtendedSprites, importedGameState, mapLocation);
+            TheMapUnits = new MapUnits.MapUnits(initialMap, bUseExtendedSprites, importedGameState, TheSearchItems,
+                mapLocation);
 
             switch (initialMap)
             {
@@ -2155,7 +2155,7 @@ namespace Ultima5Redux.Maps
             LargeMapOverUnder = (Map.Maps)(-1);
 
             TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, bLoadFromDisk);
-            
+
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;
 
