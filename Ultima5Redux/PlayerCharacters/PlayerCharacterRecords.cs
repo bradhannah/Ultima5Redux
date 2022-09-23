@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.MapUnits.TurnResults;
+using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
@@ -131,11 +132,14 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public void DamageEachCharacter(int nMin, int nMax)
+        public void DamageEachCharacter(TurnResults turnResults, int nMin, int nMax)
         {
             foreach (PlayerCharacterRecord record in GetActiveCharacterRecords())
             {
-                record.Stats.CurrentHp -= Utils.GetNumberFromAndTo(nMin, nMax);
+                int nAdjust = -Utils.GetNumberFromAndTo(nMin, nMax);
+                record.Stats.CurrentHp += nAdjust;
+                turnResults.PushTurnResult(new CombatMapUnitTakesDamage(TurnResult.TurnResultType.DamageOverTimeBurning,
+                    record.Stats, nAdjust));
             }
         }
 
@@ -259,18 +263,18 @@ namespace Ultima5Redux.PlayerCharacters
             }
         }
 
-        public void RanIntoCactus()
+        public void RanIntoCactus(TurnResults turnResults)
         {
             // injure players!
-            DamageEachCharacter(1, 5);
+            DamageEachCharacter(turnResults, 1, 5);
         }
 
         /// <summary>
         ///     Injures all party members due to rough sea
         /// </summary>
-        public void RoughSeasInjure()
+        public void RoughSeasInjure(TurnResults turnResults)
         {
-            DamageEachCharacter(1, 9);
+            DamageEachCharacter(turnResults, 1, 9);
         }
 
         public void SendCharacterToInn(PlayerCharacterRecord record,
@@ -279,10 +283,10 @@ namespace Ultima5Redux.PlayerCharacters
             record.SendCharacterToInn(location);
         }
 
-        public void SteppedOnLava()
+        public void SteppedOnLava(TurnResults turnResults)
         {
             // injure players!
-            DamageEachCharacter(1, 5);
+            DamageEachCharacter(turnResults, 1, 5);
         }
 
         public bool SteppedOnSwamp()

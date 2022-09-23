@@ -241,8 +241,9 @@ namespace Ultima5Redux.Maps
             {
                 IEnumerable<Point2D> allPoints =
                     TheMapUnits.CurrentMapUnits.AllActiveMapUnits.Select(e => e.MapUnitPosition.XY);
+                // filter out NULL mapunits - this is when a MapUnit is Active but not visible, like DisocverableLoot
                 IEnumerable<MapUnit> visibleMapUnits =
-                    allPoints.Select(point => GetTopVisibleMapUnit(point, false));
+                    allPoints.Select(point => GetTopVisibleMapUnit(point, false)).Where(p => p != null);
                 return visibleMapUnits;
             }
         }
@@ -675,7 +676,7 @@ namespace Ultima5Redux.Maps
                             // frigate takes damage instead
                             DamageShip(Point2D.Direction.None, turnResults);
                         else
-                            records.DamageEachCharacter(1, 9);
+                            records.DamageEachCharacter(turnResults, 1, 9);
 
                         turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (melee)", false);
@@ -684,7 +685,7 @@ namespace Ultima5Redux.Maps
                         if (IsAvatarInFrigate)
                             DamageShip(Point2D.Direction.None, turnResults);
                         else
-                            records.DamageEachCharacter(1, 9);
+                            records.DamageEachCharacter(turnResults, 1, 9);
 
                         turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (cannonball)",
@@ -696,7 +697,7 @@ namespace Ultima5Redux.Maps
                         if (IsAvatarInFrigate)
                             DamageShip(Point2D.Direction.None, turnResults);
                         else
-                            records.DamageEachCharacter(1, 9);
+                            records.DamageEachCharacter(turnResults, 1, 9);
 
                         turnResults.PushOutputToConsole(
                             $"{mapUnit.FriendlyName} attacks {records.AvatarRecord.Name} and party (ranged)", false);
@@ -1316,7 +1317,7 @@ namespace Ultima5Redux.Maps
             List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
             TileReference tileReference = GetTileReference(xy);
 
-            bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter) ||
+            bool bIsSearchableMapUnit = mapUnits.Any(m => m is Chest or DeadBody or BloodSpatter or DiscoverableLoot) ||
                                         tileReference.HasSearchReplacement;
             bool bIsMoonstoneBuried = GameStateReference.State.TheMoongates.IsMoonstoneBuried(xy, LargeMapOverUnder);
 

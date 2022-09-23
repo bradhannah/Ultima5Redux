@@ -38,7 +38,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string PluralName { get; }
         public override string SingularName { get; }
 
-        public bool HasStackableItems => _stackableItems.Count > 0;
+        public bool HasStackableItems => TotalItems > 0;
+
+        public int TotalItems => _stackableItems.Count;
 
         public string ThouFindStr
         {

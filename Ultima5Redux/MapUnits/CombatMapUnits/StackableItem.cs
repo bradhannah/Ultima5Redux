@@ -2,7 +2,7 @@
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    public class StackableItem
+    public sealed class StackableItem
     {
         public InventoryItem InvItem { get; }
 

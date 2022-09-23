@@ -2866,5 +2866,56 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(yewStuff);
             Assert.True(yewStuff.Count > 0);
         }
+
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void test_SearchWhileOnLavaOverworld(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize(DataDirectory);
+
+            world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadLargeMap(Map.Maps.Underworld);
+
+            var avatarPost = new Point2D(232, 233);
+            var thingPos = new Point2D(233, 233);
+            world.State.TheVirtualMap.MoveAvatar(avatarPost);
+
+            Assert.True(
+                world.State.TheVirtualMap.TheMapUnits.OverworldMapMapUnitCollection.Enemies.Count(m => m.IsActive) > 0);
+
+            MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(thingPos, false);
+            Assert.IsNull(mapUnit);
+
+            bool bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                -1, thingPos);
+            Assert.True(bIsStuff);
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> things =
+                world.TryToSearch(thingPos, out bool bWasSuccessful, turnResults);
+
+            Assert.True(bWasSuccessful);
+
+            mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(thingPos, false);
+            Assert.IsNotNull(mapUnit);
+            //ItemStack itemStack = null;
+            Assert.True(mapUnit is ItemStack);
+            Assert.NotNull(mapUnit);
+            var itemStack = (ItemStack)mapUnit;
+            Assert.True(itemStack.HasStackableItems);
+
+            int nTotalItems = itemStack.TotalItems;
+            for (int i = 0; i < nTotalItems; i++)
+            {
+                List<VirtualMap.AggressiveMapUnitInfo> derp = world.TryToGetAThing(thingPos, out bool bGotAThing,
+                    out InventoryItem inventoryItem, turnResults, Point2D.Direction.Right);
+                Assert.True(bGotAThing);
+            }
+        }
     }
 }

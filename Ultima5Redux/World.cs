@@ -399,10 +399,9 @@ namespace Ultima5Redux
                 }
             }
             // if on lava
-            else if (currentTileReference.Index == 143)
+            else if (currentTileReference.Index == (int)TileReference.SpriteIndex.Lava)
             {
-                State.CharacterRecords.SteppedOnLava();
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.DamageOverTimeBurning));
+                State.CharacterRecords.SteppedOnLava(turnResults);
                 turnResults.PushOutputToConsole("Burning!", false);
             }
 
@@ -1646,7 +1645,7 @@ namespace Ultima5Redux
                             DataOvlReference.WorldStrings.OUCH));
                         turnResults.PushTurnResult(
                             new BasicResult(TurnResult.TurnResultType.ActionBlockedRanIntoCactus));
-                        State.CharacterRecords.RanIntoCactus();
+                        State.CharacterRecords.RanIntoCactus(turnResults);
                     }
                 }
 
@@ -1732,7 +1731,7 @@ namespace Ultima5Redux
             if (currentAvatarState is Avatar.AvatarState.Carpet or Avatar.AvatarState.Skiff
                 && newTileReference.Index == (int)TileReference.SpriteIndex.Water) // rough seas
             {
-                State.CharacterRecords.RoughSeasInjure();
+                State.CharacterRecords.RoughSeasInjure(turnResults);
                 turnResults.PushOutputToConsole(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.WorldStrings
                         .ROUGH_SEAS), false);
@@ -1971,6 +1970,7 @@ namespace Ultima5Redux
             else if (bHasInnerNonAttackUnits)
             {
                 // do nothing, I think? The SearchNonAttackingMapUnit method takes care of the chatter
+                bWasSuccessful = true;
             }
             // else if (bHasDiscoverableItems)
             // {
