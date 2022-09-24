@@ -843,6 +843,7 @@ namespace Ultima5ReduxTesting
 
             foreach (MapUnit mapUnit in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.AllMapUnits)
             {
+                if (mapUnit is DiscoverableLoot) continue;
                 _ = mapUnit.GetNonBoardedTileReference();
             }
 
@@ -1867,7 +1868,12 @@ namespace Ultima5ReduxTesting
                         if (bIsMapUnit)
                         {
                             MapUnit mapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(thingPosition, false);
-                            Assert.IsNotNull(mapUnit);
+                            // this is an exception for DiscoverableLoot since it is not technically visible, but does exist
+                            if (mapUnit != null || !world.State.TheVirtualMap.ContainsSearchableMapUnits(thingPosition))
+                            {
+                                Assert.IsNotNull(mapUnit);
+                            }
+
                             if (mapUnit is ItemStack itemStack)
                             {
                                 GameReferences.SpriteTileReferences.GetTileReference(itemStack.KeyTileReference.Index);
@@ -2916,6 +2922,48 @@ namespace Ultima5ReduxTesting
                     out InventoryItem inventoryItem, turnResults, Point2D.Direction.Right);
                 Assert.True(bGotAThing);
             }
+
+            GameReferences.SearchLocationReferences.PrintCsvOutput();
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet)] public void test_SearchLbBeforeAndAfterReload(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize(DataDirectory);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, 2));
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(11, 12));
+
+            var bookcasePosition = new Point2D(12, 12);
+
+            bool bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
+                SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
+                2, bookcasePosition);
+            Assert.True(bIsStuff);
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> things =
+                world.TryToSearch(bookcasePosition, out bool bWasSuccessful, turnResults);
+
+            Assert.True(bWasSuccessful);
+
+            world.ReLoadFromJson();
+
+            bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
+                SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
+                2, bookcasePosition);
+            Assert.True(bIsStuff);
+
+            turnResults = new TurnResults();
+            things = world.TryToSearch(bookcasePosition, out bWasSuccessful, turnResults);
+
+            Assert.True(bWasSuccessful);
+
         }
     }
 }

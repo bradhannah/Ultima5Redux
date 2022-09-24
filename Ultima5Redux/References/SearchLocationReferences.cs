@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Ultima5Redux.Data;
 using Ultima5Redux.References.Maps;
@@ -37,8 +38,8 @@ namespace Ultima5Redux.References
 
     public class SearchLocationReferences
     {
-        public int TotalReferences => _searchItemsList.Count; 
-        
+        public int TotalReferences => _searchItemsList.Count;
+
         private readonly Dictionary<SmallMapReferences.SingleMapReference.Location,
                 Dictionary<int, Dictionary<Point2D, List<SearchItemReference>>>>
             _searchItems = new();
@@ -58,6 +59,17 @@ namespace Ultima5Redux.References
 
             return _searchItemsList[nIndex];
         }
+
+        public void PrintCsvOutput()
+        {
+            Debug.WriteLine("Index,Location,Floor,X,Y,CalcId,TileName,Quality");
+            foreach (SearchItemReference searchItemReference in _searchItemsList)
+            {
+                Debug.WriteLine(
+                    $"{searchItemReference.Index},{searchItemReference.Location},{searchItemReference.Floor},{searchItemReference.Position.X},{searchItemReference.Position.Y},{searchItemReference.CalcId},{searchItemReference.CalcTileReference.Name},{searchItemReference.Quality}");
+            }
+        }
+
 
         public List<SearchItemReference> GetListOfSearchItemReferences(
             SmallMapReferences.SingleMapReference.Location location,

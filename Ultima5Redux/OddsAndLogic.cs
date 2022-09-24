@@ -4,6 +4,7 @@ using System.Linq;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.MapUnits.CombatMapUnits;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.References.Maps;
 using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux
@@ -73,16 +74,16 @@ namespace Ultima5Redux
         private static readonly List<NonAttackingUnit.TrapType> DeadBodyTrapsWeightedList =
             Utils.MakeWeightedList(DeadBodyTrapsWeighted).ToList();
 
-        private static readonly Dictionary<NonAttackingUnitFactory.DropSprites, int> GenericDropAfterKillingEnemy =
+        private static readonly Dictionary<TileReference.SpriteIndex, int> GenericDropAfterKillingEnemy =
             new()
             {
-                { NonAttackingUnitFactory.DropSprites.Nothing, 10 },
-                { NonAttackingUnitFactory.DropSprites.Chest, 3 },
-                { NonAttackingUnitFactory.DropSprites.BloodSpatter, 3 }
+                { TileReference.SpriteIndex.Nothing, 10 },
+                { TileReference.SpriteIndex.Chest, 3 },
+                { TileReference.SpriteIndex.BloodSpatter, 3 }
                 //{ NonAttackingUnitFactory.DropSprites.DeadBody, 3 }
             };
 
-        private static readonly List<NonAttackingUnitFactory.DropSprites> GenericDropAfterKillingEnemyList =
+        private static readonly List<TileReference.SpriteIndex> GenericDropAfterKillingEnemyList =
             Utils.MakeWeightedList(GenericDropAfterKillingEnemy).ToList();
 
         public const int ACID_DAMAGE_MAX = 10;
@@ -130,7 +131,7 @@ namespace Ultima5Redux
         /// <param name="mapUnitPosition"></param>
         /// <returns></returns>
         public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
-            NonAttackingUnitFactory.DropSprites dropType, MapUnitPosition mapUnitPosition) =>
+            TileReference.SpriteIndex dropType, MapUnitPosition mapUnitPosition) =>
             // todo: need to tailor what is in the drop based on the enemy reference
             NonAttackingUnitFactory.Create((int)dropType, mapUnitPosition);
 
@@ -139,15 +140,15 @@ namespace Ultima5Redux
         /// </summary>
         /// <param name="enemyReference"></param>
         /// <returns></returns>
-        public static NonAttackingUnitFactory.DropSprites GetIsDropAfterKillingEnemy(EnemyReference enemyReference)
+        public static TileReference.SpriteIndex GetIsDropAfterKillingEnemy(EnemyReference enemyReference)
         {
             if (enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.NoCorpse)
                 || enemyReference.IsWaterEnemy
                 || enemyReference.IsEnemyAbility(EnemyReference.EnemyAbility.DisappearsOnDeath))
-                return NonAttackingUnitFactory.DropSprites.Nothing;
+                return TileReference.SpriteIndex.Nothing;
 
             // todo: this is just a temporary method until I have some better drop logic based on the actual enemy
-            NonAttackingUnitFactory.DropSprites dropSprite =
+            TileReference.SpriteIndex dropSprite =
                 GenericDropAfterKillingEnemyList[Utils.Ran.Next() % GenericDropAfterKillingEnemyList.Count];
             return dropSprite;
         }

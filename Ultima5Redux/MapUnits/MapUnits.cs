@@ -74,6 +74,7 @@ namespace Ultima5Redux.MapUnits
         /// </param>
         /// <param name="bUseExtendedSprites"></param>
         /// <param name="importedGameState"></param>
+        /// <param name="searchItems"></param>
         /// <param name="currentSmallMap">The particular map (if small map) that you are loading</param>
         internal MapUnits(Map.Maps initialMap, bool bUseExtendedSprites, ImportedGameState importedGameState,
             SearchItems searchItems,
@@ -99,7 +100,7 @@ namespace Ultima5Redux.MapUnits
             switch (initialMap)
             {
                 case Map.Maps.Small:
-                    LoadSmallMap(currentSmallMap, true);
+                    LoadSmallMap(currentSmallMap, true, searchItems);
                     break;
                 case Map.Maps.Overworld:
                     break;
@@ -178,7 +179,8 @@ namespace Ultima5Redux.MapUnits
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
-        internal void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLegacyLoad)
+        internal void LoadSmallMap(SmallMapReferences.SingleMapReference.Location location, bool bInitialLegacyLoad,
+            SearchItems searchItems)
         {
             if (location is SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine
                 or SmallMapReferences.SingleMapReference.Location.Britannia_Underworld)
@@ -255,6 +257,35 @@ namespace Ultima5Redux.MapUnits
                 //if (mapUnit is EmptyMapUnit) continue;
 
                 SmallMapUnitCollection.Add(mapUnit);
+            }
+
+            //int nFloor = map == Map.Maps.Underworld ? -1 : 0;
+            //int nFloor = sin
+            int nFloors = GameReferences.SmallMapRef.GetNumberOfFloors(location);
+            bool bHasBasement = GameReferences.SmallMapRef.HasBasement(location);
+            int nTopFloor = bHasBasement ? nFloors - 2 : nFloors - 1;
+
+            for (int nFloor = bHasBasement ? -1 : 0; nFloor <= nTopFloor; nFloor++)
+            {
+                Dictionary<Point2D, List<SearchItem>> searchItemsInMap =
+                    searchItems.GetUnDiscoveredSearchItemsByLocation(
+                        location, nFloor);
+                foreach (KeyValuePair<Point2D, List<SearchItem>> kvp in searchItemsInMap)
+                    //foreach (K item in searchItemsList)
+                {
+                    MapUnitPosition mapUnitPosition = new(kvp.Key.X, kvp.Key.Y, nFloor);
+                    // at this point we are cycling through the positions
+                    // MapUnitPosition mapUnitPosition = new(item.TheSearchItemReference.Position.X,
+                    //     item.TheSearchItemReference.Position.Y, item.TheSearchItemReference.Floor);
+                    foreach (SearchItem searchItem in kvp.Value)
+                    {
+                        /// TEMPORARY FIX: you are only supposed to discover one discoverable loot at a time
+                        List<SearchItem> searchItemInList = new() { searchItem };
+                        var discoverableLoot = new DiscoverableLoot(mapUnitPosition, searchItemInList);
+                        //discoverableLoot.MapUnitPosition.XY = kvp.Value;
+                        SmallMapUnitCollection.AddMapUnit(discoverableLoot);
+                    }
+                }
             }
         }
 
@@ -801,17 +832,18 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         /// <param name="mapRef"></param>
         /// <param name="mapType"></param>
+        /// <param name="searchItems"></param>
         /// <param name="bLoadFromDisk"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetCurrentMapType(SmallMapReferences.SingleMapReference mapRef, Map.Maps mapType,
-            bool bLoadFromDisk = false)
+            SearchItems searchItems, bool bLoadFromDisk = false)
         {
             SetCurrentMapTypeNoLoad(mapRef, mapType, false);
 
             switch (mapType)
             {
                 case Map.Maps.Small:
-                    LoadSmallMap(mapRef.MapLocation, bLoadFromDisk);
+                    LoadSmallMap(mapRef.MapLocation, bLoadFromDisk, searchItems);
                     // will reload the search items fresh since we don't save every single small
                     // map to the save file
                     break;

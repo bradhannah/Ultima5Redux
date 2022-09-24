@@ -25,8 +25,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool IsInvisible => true;
         public override bool IsActive => HasInnerItemStack && InnerItemStack.HasStackableItems;
 
-        [DataMember]
-        private List<SearchItem> _listOfSearchItems;
+        [DataMember] private List<SearchItem> _listOfSearchItems;
 
         /// <summary>
         ///     This needs to give us a stack of all the goods!
@@ -34,13 +33,18 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         [DataMember]
         public override ItemStack InnerItemStack { get; protected set; }
 
+        public bool IsDeadBody => AlternateNonAttackingUnit is DeadBody;
+        public bool IsBloodSpatter => AlternateNonAttackingUnit is BloodSpatter;
+
+        public NonAttackingUnit AlternateNonAttackingUnit { get; private set; }
+
         public override TileReference KeyTileReference { get; set; } =
             GameReferences.SpriteTileReferences.GetTileReference(0);
 
         public DiscoverableLoot()
         {
         }
-        
+
         public DiscoverableLoot(MapUnitPosition mapUnitPosition, List<SearchItem> searchItems)
         {
             _listOfSearchItems = searchItems ??
@@ -61,10 +65,21 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             InnerItemStack = new ItemStack(MapUnitPosition);
             foreach (SearchItem item in _listOfSearchItems)
             {
-                StackableItem stackableItem = NonAttackingUnitFactory.CreateStackableItem(
-                    item.TheSearchItemReference.CalcTileReference.Index,
-                    item.TheSearchItemReference.Quality);
-                InnerItemStack.PushStackableItem(stackableItem);
+                // if it is a dead body or splat then handle special
+
+                if ((TileReference.SpriteIndex)item.TheSearchItemReference.CalcTileReference.Index is TileReference.SpriteIndex.DeadBody or TileReference.SpriteIndex.BloodSpatter)
+                {
+                    AlternateNonAttackingUnit =
+                        NonAttackingUnitFactory.Create(item.TheSearchItemReference.CalcTileReference.Index,
+                            MapUnitPosition);
+                }
+                else
+                {
+                    StackableItem stackableItem = NonAttackingUnitFactory.CreateStackableItem(
+                        item.TheSearchItemReference.CalcTileReference.Index,
+                        item.TheSearchItemReference.Quality);
+                    InnerItemStack.PushStackableItem(stackableItem);
+                }
             }
         }
     }

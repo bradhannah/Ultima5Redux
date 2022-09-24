@@ -10,7 +10,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public static class NonAttackingUnitFactory
     {
-        public enum DropSprites { Nothing = 0, Chest = 257, DeadBody = 286, BloodSpatter = 287 }
+        // public enum DropSprites { Nothing = 0, Chest = 257, DeadBody = 286, BloodSpatter = 287 }
 
         // 257 = Chest
         // 271 = ItemFood
@@ -20,16 +20,18 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
             switch (nSprite)
             {
-                case (int)DropSprites.Nothing: return null;
-                case >= 492 and <= 495:
+                case (int)TileReference.SpriteIndex.Nothing: return null;
+                case >= (int)TileReference.SpriteIndex.Whirlpool_KeyIndex
+                    and <= (int)TileReference.SpriteIndex.Whirlpool_KeyIndex + 4:
                     return new Whirlpool(mapUnitPosition);
-                case >= 488 and <= 491:
+                case (int)TileReference.SpriteIndex.PoisonField or (int)TileReference.SpriteIndex.MagicField
+                    or (int)TileReference.SpriteIndex.FireField or (int)TileReference.SpriteIndex.ElectricField:
                     return new ElementalField((ElementalField.FieldType)nSprite, mapUnitPosition);
-                case (int)DropSprites.DeadBody:
+                case (int)TileReference.SpriteIndex.DeadBody:
                     return new DeadBody(mapUnitPosition);
-                case (int)DropSprites.BloodSpatter:
+                case (int)TileReference.SpriteIndex.BloodSpatter:
                     return new BloodSpatter(mapUnitPosition);
-                case (int)DropSprites.Chest:
+                case (int)TileReference.SpriteIndex.Chest:
                     return new Chest(mapUnitPosition);
             }
 
@@ -82,23 +84,48 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             /// it's own array. I will need to do some sort of Equipment lookup for weapons, armour
             /// I think these represent all the tile types that should index into Equipment #
             InventoryItem invItem;
-            if ((TileReference.SpriteIndex)nSprite is TileReference.SpriteIndex.ItemPotion
-                or TileReference.SpriteIndex.ItemScroll or TileReference.SpriteIndex.ItemWeapon
-                or TileReference.SpriteIndex.ItemShield or TileReference.SpriteIndex.ItemHelm
-                or TileReference.SpriteIndex.ItemRing or TileReference.SpriteIndex.ItemArmour
-                or TileReference.SpriteIndex.ItemAnkh)
+            switch ((TileReference.SpriteIndex)nSprite)
             {
-                InventoryReference inventoryReference =
-                    GameReferences.InvRef.GetInventoryReference((DataOvlReference.Equipment)nQuality);
-                invItem = InventoryItemFactory.Create(inventoryReference);
-                // default to 1 for now, unless I find a circumstance that needs more
-                invItem.Quantity = 1;
-            }
-            else
-            {
-                // everything else uses the "quality" attribute as a quantity
-                invItem = InventoryItemFactory.Create(invRefs[nQuality]);
-                invItem.Quantity = nQuality;
+                case TileReference.SpriteIndex.ItemPotion
+                    or TileReference.SpriteIndex.ItemScroll or TileReference.SpriteIndex.ItemWeapon
+                    or TileReference.SpriteIndex.ItemShield or TileReference.SpriteIndex.ItemHelm
+                    or TileReference.SpriteIndex.ItemRing or TileReference.SpriteIndex.ItemArmour
+                    or TileReference.SpriteIndex.ItemAnkh:
+                {
+                    if ((TileReference.SpriteIndex)nSprite == TileReference.SpriteIndex.ItemScroll
+                        && nQuality == 255)
+                    {
+                        InventoryReference inventoryReference =
+                            GameReferences.InvRef.GetInventoryReference(InventoryReferences.InventoryReferenceType.Item,
+                                "HMSCape");
+                        invItem = InventoryItemFactory.Create(inventoryReference);
+                        // default to 1 for now, unless I find a circumstance that needs more
+                        invItem.Quantity = 1;
+                    }
+                    else
+                    {
+                        InventoryReference inventoryReference =
+                            GameReferences.InvRef.GetInventoryReference((DataOvlReference.Equipment)nQuality);
+                        invItem = InventoryItemFactory.Create(inventoryReference);
+                        // default to 1 for now, unless I find a circumstance that needs more
+                        invItem.Quantity = 1;
+                    }
+
+                    break;
+                }
+                case TileReference.SpriteIndex.ItemKey or
+                    TileReference.SpriteIndex.ItemGem or
+                    TileReference.SpriteIndex.ItemTorch or
+                    TileReference.SpriteIndex.ItemFood or
+                    TileReference.SpriteIndex.ItemMoney:
+                    invItem = InventoryItemFactory.Create(invRefs[0]);
+                    invItem.Quantity = 5;
+                    break;
+                default:
+                    // everything else uses the "quality" attribute as a quantity
+                    invItem = InventoryItemFactory.Create(invRefs[nQuality]);
+                    invItem.Quantity = nQuality;
+                    break;
             }
 
             StackableItem item = new(invItem);

@@ -344,6 +344,7 @@
         </EmbeddedResource>
         <Content Include="DataFiles\MerchantStrings.csv" />
         <Content Include="DataFiles\RawEnemyFlags.csv" />
+        <Content Include="DataFiles\SearchLocationsAndThings.csv" />
         <Content Include="DataFiles\ShoppeKeeperMap.csv" />
         <EmbeddedResource Include="DataFiles\ShoppeKeeperMap.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

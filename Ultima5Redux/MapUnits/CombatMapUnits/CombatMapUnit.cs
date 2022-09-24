@@ -306,7 +306,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 CombatStats.TotalKills++;
                 CombatStats.AdditionalExperience += opposingCombatMapUnit.Experience;
 
-                NonAttackingUnitFactory.DropSprites dropped =
+                TileReference.SpriteIndex dropped =
                     OddsAndLogic.GetIsDropAfterKillingEnemy(enemy.EnemyReference);
 
                 nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference,

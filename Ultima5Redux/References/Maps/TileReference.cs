@@ -13,7 +13,7 @@ namespace Ultima5Redux.References.Maps
         /// </summary>
         public enum SpriteIndex
         {
-            Water = 1, TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149,
+            Nothing = 0, Water = 1, TableFoodTop = 154, TableFoodBottom = 155, TableFoodBoth = 156, TableMiddle = 149,
             PlowedField = 44, Cactus = 47, WheatInField = 45, HitchingPost = 162, Guard_KeyIndex = 368,
             StoneBrickWallSecret = 78, RegularDoor = 184, LockedDoor = 185, RegularDoorView = 186, LockedDoorView = 187,
             RightSconce = 176, LeftScone = 177, Brazier = 178, CampFire = 179, LampPost = 189, CandleOnTable = 190,
@@ -24,7 +24,10 @@ namespace Ultima5Redux.References.Maps
             MirrorBroken = 159, SmallMountains = 12, Daemon1_KeyIndex = 472, StoneGargoyle_KeyIndex = 440,
             Fighter_KeyIndex = 328, Bard_KeyIndex = 324, TownsPerson_KeyIndex = 336, Ray_KeyIndex = 400,
             Bat_KeyIndex = 404, ShadowLord_KeyIndex = 508, ItemPotion = 259, ItemScroll = 260, ItemWeapon = 261,
-            ItemShield = 262, ItemHelm = 265, ItemRing = 266, ItemArmour = 267, ItemAnkh = 268, Lava = 143
+            ItemShield = 262, ItemHelm = 265, ItemRing = 266, ItemArmour = 267, ItemAnkh = 268, Lava = 143,
+            ItemKey = 263, DeadBody = 286, BloodSpatter = 287, Chest = 257, Whirlpool_KeyIndex = 492, PoisonField = 488,
+            MagicField = 489, FireField = 490, ElectricField = 491, ItemFood = 271, ItemGem = 264, ItemTorch = 269,
+            ItemMoney = 258
         }
 
 

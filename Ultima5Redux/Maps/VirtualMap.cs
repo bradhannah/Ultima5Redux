@@ -1201,7 +1201,7 @@ namespace Ultima5Redux.Maps
 
             TheMapOverrides = new MapOverrides(CurrentCombatMap);
 
-            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat);
+            TheMapUnits.SetCurrentMapType(CurrentSingleMapReference, Map.Maps.Combat, null);
             LargeMapOverUnder = Map.Maps.Combat;
 
             CurrentCombatMap.CreateParty(entryDirection, records);
@@ -2132,7 +2132,8 @@ namespace Ultima5Redux.Maps
             // bajh: maybe we store each map override indefinitely so we never lose anything 
             TheMapOverrides = new MapOverrides(CurrentLargeMap);
 
-            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map);
+            TheMapUnits.SetCurrentMapType(SmallMapReferences.SingleMapReference.GetLargeMapSingleInstance(map), map,
+                null);
 
             // you got out, and the guards have short memories
             IsWantedManByThePoPo = false;
@@ -2155,7 +2156,7 @@ namespace Ultima5Redux.Maps
 
             LargeMapOverUnder = (Map.Maps)(-1);
 
-            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, bLoadFromDisk);
+            TheMapUnits.SetCurrentMapType(singleMapReference, Map.Maps.Small, TheSearchItems, bLoadFromDisk);
 
             // change the floor that the Avatar is on, otherwise he will be on the last floor he started on
             TheMapUnits.GetAvatarMapUnit().MapUnitPosition.Floor = singleMapReference.Floor;

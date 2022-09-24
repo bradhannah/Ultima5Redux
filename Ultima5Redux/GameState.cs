@@ -185,7 +185,7 @@ namespace Ultima5Redux
             // that could only be grabbed after the whole state was loaded in
             if (TheVirtualMap.LargeMapOverUnder == Map.Maps.Small)
                 TheVirtualMap.TheMapUnits.LoadSmallMap(
-                    TheVirtualMap.CurrentSingleMapReference.MapLocation, false);
+                    TheVirtualMap.CurrentSingleMapReference.MapLocation, false, TheVirtualMap.TheSearchItems);
         }
 
         /// <summary>
