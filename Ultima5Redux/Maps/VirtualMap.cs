@@ -741,18 +741,28 @@ namespace Ultima5Redux.Maps
         internal bool SearchNonAttackingMapUnit(in Point2D xy, TurnResults turnResults,
             PlayerCharacterRecord record, PlayerCharacterRecords records)
         {
-            List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
-            foreach (MapUnit mapUnit in mapUnits)
-            {
-                if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
-                if (!nonAttackingUnit.IsSearchable) continue;
+            NonAttackingUnit nonAttackingMapUnit = GetNonAttackingMapUnitOnTileBySearchPriority(xy);
 
-                ProcessSearchNonAttackUnitTrap(turnResults, record, records, nonAttackingUnit);
+            if (nonAttackingMapUnit == null) return false;
 
-                // we only open the inner items up if it exposes on search like DeadBodies and Spatters
-                if (nonAttackingUnit.ExposeInnerItemsOnSearch)
-                    return ProcessSearchInnerItems(turnResults, nonAttackingUnit, true, false);
-            }
+            ProcessSearchNonAttackUnitTrap(turnResults, record, records, nonAttackingMapUnit);
+
+            // we only open the inner items up if it exposes on search like DeadBodies and Spatters
+            if (nonAttackingMapUnit.ExposeInnerItemsOnSearch)
+                return ProcessSearchInnerItems(turnResults, nonAttackingMapUnit, true, false);
+
+            //List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
+            // foreach (MapUnit mapUnit in mapUnits)
+            // {
+            //     if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
+            //     if (!nonAttackingUnit.IsSearchable) continue;
+            //
+            //     ProcessSearchNonAttackUnitTrap(turnResults, record, records, nonAttackingUnit);
+            //
+            //     // we only open the inner items up if it exposes on search like DeadBodies and Spatters
+            //     if (nonAttackingUnit.ExposeInnerItemsOnSearch)
+            //         return ProcessSearchInnerItems(turnResults, nonAttackingUnit, true, false);
+            // }
 
             return false;
         }
@@ -1570,6 +1580,37 @@ namespace Ultima5Redux.Maps
                 TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
 
             return mapUnits;
+        }
+
+        private readonly List<Type> _searchOrderPriority = new()
+        {
+            typeof(DiscoverableLoot), typeof(ItemStack), typeof(Chest), typeof(DeadBody), typeof(BloodSpatter)
+        };
+
+        public NonAttackingUnit GetNonAttackingMapUnitOnTileBySearchPriority(in Point2D xy)
+        {
+            if (CurrentSingleMapReference == null)
+                throw new Ultima5ReduxException("No single map is set in virtual map");
+
+            List<MapUnit> mapUnitsAtPosition = GetMapUnitsOnTile(xy);
+
+            // this is inefficient, but the lists are so small it is unlikely to matter
+            foreach (Type type in _searchOrderPriority)
+            {
+                foreach (MapUnit mapUnit in mapUnitsAtPosition.Where(mapUnit => mapUnit.GetType() == type))
+                {
+                    if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
+                    if (!nonAttackingUnit.IsSearchable) continue;
+
+                    return nonAttackingUnit;
+                }
+            }
+
+            return null;
+            // List<MapUnit> mapUnits =
+            //     TheMapUnits.GetMapUnitsByPosition(LargeMapOverUnder, xy, CurrentSingleMapReference.Floor);
+
+            //return mapUnits;
         }
 
         /// <summary>

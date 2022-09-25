@@ -986,6 +986,14 @@ namespace Ultima5Redux.Maps
         }
 
 
+        private readonly List<Type> _visibilePriorityOrder = new()
+        {
+            typeof(DiscoverableLoot), typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate),
+            typeof(NonPlayerCharacter),
+            typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
+            typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
+        };
+
         /// <summary>
         ///     Gets the top visible map unit - excluding the Avatar
         /// </summary>
@@ -995,18 +1003,11 @@ namespace Ultima5Redux.Maps
         // ReSharper disable once MemberCanBePrivate.Global
         public MapUnit GetTopVisibleMapUnit(Point2D xy, bool bExcludeAvatar)
         {
-            List<Type> visibilePriorityOrder = new()
-            {
-                typeof(Horse), typeof(MagicCarpet), typeof(Skiff), typeof(Frigate), typeof(NonPlayerCharacter),
-                typeof(Enemy), typeof(CombatPlayer), typeof(Avatar), typeof(ItemStack), typeof(StackableItem),
-                typeof(Chest), typeof(DeadBody), typeof(BloodSpatter), typeof(ElementalField), typeof(Whirlpool)
-            };
-
             List<CombatMapUnit> combatMapUnits =
                 AllVisibleCombatMapUnits.Where(m => m.MapUnitPosition.XY == xy).ToList();
 
             // this is inefficient, but the lists are so small it is unlikely to matter
-            foreach (Type type in visibilePriorityOrder)
+            foreach (Type type in _visibilePriorityOrder)
             {
                 if (bExcludeAvatar && type == typeof(Avatar)) continue;
                 foreach (CombatMapUnit combatMapUnit in combatMapUnits)

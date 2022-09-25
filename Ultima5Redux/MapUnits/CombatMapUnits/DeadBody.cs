@@ -6,6 +6,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
     public sealed class DeadBody : NonAttackingUnit
     {
+        public override bool IsActive => true;
+
         public override bool ExposeInnerItemsOnOpen => false;
 
         public override bool ExposeInnerItemsOnSearch => true;
