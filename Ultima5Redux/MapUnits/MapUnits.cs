@@ -826,6 +826,37 @@ namespace Ultima5Redux.MapUnits
             return true;
         }
 
+        public bool RePlaceNonAttackingUnit(NonAttackingUnit originalNonAttackingUnit,
+            NonAttackingUnit replacementNonAttackingUnit, MapUnitPosition mapUnitPosition,
+            Map.Maps map)
+        {
+            int nIndex = 0;
+            bool bFound = false;
+            foreach (MapUnit mapUnit in GetMapUnitCollection(map).AllMapUnits)
+            {
+                if (mapUnit == originalNonAttackingUnit)
+                {
+                    bFound = true;
+                    break;
+                }
+
+                nIndex++;
+            }
+
+            if (!bFound)
+                throw new Ultima5ReduxException(
+                    $"Tried to replace NonAttackingMapUnit but could find in the current MapUnit list (orgi: {originalNonAttackingUnit.FriendlyName}");
+
+            // int nIndex = FindNextFreeMapUnitIndex(CurrentMapType);
+            // if (nIndex == -1) return false;
+
+            replacementNonAttackingUnit.MapUnitPosition = mapUnitPosition;
+
+            // set position of frigate in the world
+            AddNewMapUnit(map, replacementNonAttackingUnit, nIndex);
+            return true;
+        }
+        
         /// <summary>
         ///     Sets the current map type
         ///     Called internally to the class only since it has the bLoadFromDisk option

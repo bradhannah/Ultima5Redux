@@ -2176,11 +2176,41 @@ namespace Ultima5Redux.Maps
             bool bHasInnerItems = nonAttackingUnit.HasInnerItemStack;
             ItemStack itemStack = nonAttackingUnit.InnerItemStack;
             if (bHasInnerItems)
+            {
                 turnResults.PushOutputToConsole(nonAttackingUnit.InnerItemStack.ThouFindStr);
+            }
             else
+            {
+                if (nonAttackingUnit is DiscoverableLoot discoverableLoot)
+                {
+                    TheMapUnits.PlaceNonAttackingUnit(discoverableLoot.AlternateNonAttackingUnit,
+                        discoverableLoot.AlternateNonAttackingUnit.MapUnitPosition, LargeMapOverUnder);
+
+                    bHasInnerItems = true;
+
+                    if (discoverableLoot.IsDeadBody)
+                    {
+                        turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
+                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                .A_ROTTING_BODY_BANG_N)));
+                    }
+                    else if (discoverableLoot.IsBloodSpatter)
+                    {
+                        turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
+                            GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
+                                .A_BLOOD_PULP_BANG_N)));
+                    }
+                    else
+                    {
+                        throw new Ultima5ReduxException(
+                            "Tried to ProcessSearchInnerItems but it had no inner items, nor was it a dead body or blood spatter");
+                    }
+                }
+
                 turnResults.PushOutputToConsole(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ThingsIFindStrings
                         .NOTHING_OF_NOTE_BANG_N));
+            }
 
             // delete the deadbody and add stuff
             nonAttackingUnit.HasBeenSearched = bSearched;
@@ -2189,7 +2219,8 @@ namespace Ultima5Redux.Maps
 
             if (bHasInnerItems)
                 // there were items inside the thing, so we place them 
-                TheMapUnits.PlaceNonAttackingUnit(itemStack, nonAttackingUnit.MapUnitPosition, LargeMapOverUnder);
+                TheMapUnits.RePlaceNonAttackingUnit(nonAttackingUnit, itemStack, nonAttackingUnit.MapUnitPosition,
+                    LargeMapOverUnder);
 
             return bHasInnerItems;
         }

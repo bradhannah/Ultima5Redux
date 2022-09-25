@@ -59,6 +59,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public abstract bool DoesTriggerTrap(PlayerCharacterRecord record);
 
+        public void ClearTrapAndInnerStack()
+        {
+            Trap = TrapType.NONE;
+            InnerItemStack = new ItemStack(MapUnitPosition);
+        }
+        
         public void TriggerTrap(TurnResults.TurnResults turnResults, CharacterStats stats,
             PlayerCharacterRecords records)
         {

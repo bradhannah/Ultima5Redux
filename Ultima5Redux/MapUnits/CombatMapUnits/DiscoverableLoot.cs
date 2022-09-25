@@ -23,7 +23,16 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override bool IsSearchable => true;
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;
         public override bool IsInvisible => true;
-        public override bool IsActive => HasInnerItemStack && InnerItemStack.HasStackableItems;
+
+        public override bool IsActive
+        {
+            get
+            {
+                if (HasInnerItemStack && InnerItemStack.HasStackableItems) return true;
+
+                return IsDeadBody || IsBloodSpatter;
+            }
+        }
 
         [DataMember] private List<SearchItem> _listOfSearchItems;
 
@@ -72,6 +81,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     AlternateNonAttackingUnit =
                         NonAttackingUnitFactory.Create(item.TheSearchItemReference.CalcTileReference.Index,
                             MapUnitPosition);
+                    if (AlternateNonAttackingUnit is DeadBody or BloodSpatter)
+                    {
+                        AlternateNonAttackingUnit.ClearTrapAndInnerStack();
+                    }
                 }
                 else
                 {

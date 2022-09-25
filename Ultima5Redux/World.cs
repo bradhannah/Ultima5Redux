@@ -1958,9 +1958,11 @@ namespace Ultima5Redux
             // we search the tile and expose any items that may be on it
             Moonstone moonstone = State.TheVirtualMap.SearchAndExposeMoonstone(xy);
             if (moonstone == null)
+            {
                 bHasInnerNonAttackUnits =
                     State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults, State.CharacterRecords.AvatarRecord,
                         State.CharacterRecords);
+            }
 
             if (moonstone != null)
             {

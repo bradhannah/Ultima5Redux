@@ -2965,5 +2965,44 @@ namespace Ultima5ReduxTesting
             Assert.True(bWasSuccessful);
 
         }
+
+        [Test] [TestCase(SaveFiles.fresh)] public void test_SearchLDeadBodiesInWestBritanny(SaveFiles saveFiles)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            GameReferences.Initialize(DataDirectory);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.West_Britanny, 0));
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(2, 2));
+
+            var deadBodyPosition = new Point2D(3, 2);
+
+            bool bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
+                SmallMapReferences.SingleMapReference.Location.West_Britanny,
+                0, deadBodyPosition);
+            Assert.True(bIsStuff);
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> things =
+                world.TryToSearch(deadBodyPosition, out bool bWasSuccessful, turnResults);
+
+            Assert.True(bWasSuccessful);
+
+            world.ReLoadFromJson();
+
+            // bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
+            //     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
+            //     2, deadBodyPosition);
+            // Assert.True(bIsStuff);
+            //
+            // turnResults = new TurnResults();
+            // things = world.TryToSearch(deadBodyPosition, out bWasSuccessful, turnResults);
+            //
+            // Assert.True(bWasSuccessful);
+        }
     }
 }
