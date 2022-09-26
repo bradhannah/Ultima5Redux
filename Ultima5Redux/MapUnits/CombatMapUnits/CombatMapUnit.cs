@@ -312,7 +312,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                 nonAttackingUnitDrop = OddsAndLogic.GenerateDropForDeadEnemy(enemy.EnemyReference,
                     /// TEMP force to generate chests
                     //NonAttackingUnitFactory.DropSprites.Chest,
-                    dropped, opposingCombatMapUnit.MapUnitPosition);
+                    dropped, opposingCombatMapUnit.MapLocation, opposingCombatMapUnit.MapUnitPosition);
 
                 if (nonAttackingUnitDrop != null) turnResults.PushTurnResult(new LootDropped(nonAttackingUnitDrop));
             }

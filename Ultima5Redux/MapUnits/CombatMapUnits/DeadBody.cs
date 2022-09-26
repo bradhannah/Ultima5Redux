@@ -1,11 +1,15 @@
-﻿using Ultima5Redux.PlayerCharacters;
+﻿using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
-    public sealed class DeadBody : NonAttackingUnit
+    [DataContract] public sealed class DeadBody : NonAttackingUnit
     {
+        public override bool NonAttackUnitTypeCanBeTrapped => true;
         public override bool IsActive => true;
 
         public override bool ExposeInnerItemsOnOpen => false;
@@ -29,7 +33,13 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
 
-        public DeadBody(MapUnitPosition mapUnitPosition)
+        [DataMember] public Guid TheGuid { get; set; } = Guid.NewGuid();
+
+        [JsonConstructor] public DeadBody()
+        {
+        }
+
+        public DeadBody(SmallMapReferences.SingleMapReference.Location location, MapUnitPosition mapUnitPosition)
         {
             Trap = OddsAndLogic.GetNewDeadBodyTrapType();
             if (OddsAndLogic.GetIsTreasureInDeadBody())
@@ -38,8 +48,14 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             }
 
             MapUnitPosition = mapUnitPosition;
+            MapLocation = location;
         }
 
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            GenerateItemStack(MapUnitPosition);
+        }
+        
         private void GenerateItemStack(MapUnitPosition mapUnitPosition)
         {
             InnerItemStack = new ItemStack(mapUnitPosition);

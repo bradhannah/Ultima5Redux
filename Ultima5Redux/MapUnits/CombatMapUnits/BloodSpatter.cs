@@ -1,9 +1,12 @@
-﻿using Ultima5Redux.PlayerCharacters;
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
+    [DataContract]
     public sealed class BloodSpatter : NonAttackingUnit
     {
         public override bool ExposeInnerItemsOnOpen => false;
@@ -26,6 +29,17 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
+        public override bool NonAttackUnitTypeCanBeTrapped => true;
+
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            GenerateItemStack(MapUnitPosition);
+        }
+
+
+        [JsonConstructor] public BloodSpatter()
+        {
+        }
 
         public BloodSpatter(MapUnitPosition mapUnitPosition)
         {

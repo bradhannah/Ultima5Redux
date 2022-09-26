@@ -1,11 +1,14 @@
-﻿using Ultima5Redux.PlayerCharacters;
+﻿using System.Runtime.Serialization;
+using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.MapUnits.CombatMapUnits
 {
+    [DataContract]
     public sealed class Chest : NonAttackingUnit
     {
+        public override bool NonAttackUnitTypeCanBeTrapped => true;
         public override bool ExposeInnerItemsOnOpen => true;
         public override bool ExposeInnerItemsOnSearch => false;
 
@@ -23,6 +26,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
 
+        [OnDeserialized] private void PostDeserialize(StreamingContext context)
+        {
+            GenerateItemStack(MapUnitPosition);
+        }
+        
         private Chest()
         {
         }

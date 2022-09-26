@@ -176,6 +176,32 @@ namespace Ultima5Redux.MapUnits
             };
         }
 
+        internal void ReloadNpcData(SmallMapReferences.SingleMapReference.Location location)
+        {
+            for (int i = 1; i < SmallMapUnitCollection.AllMapUnits.Count; i++)
+            {
+                MapUnit mapUnit = SmallMapUnitCollection.AllMapUnits[i];
+                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot) //NonPlayerCharacter npc)
+                {
+                    if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
+                        mapUnit.NPCRef == null) continue;
+                    if (mapUnit.NPCRef == null)
+                        throw new Ultima5ReduxException($"Expected NPCRef for MapUnit {mapUnit.GetType()}");
+                    if (mapUnit.NPCRef.DialogIndex != -1)
+                    {
+                        // get the specific NPC reference 
+                        NonPlayerCharacterState npcState =
+                            GameStateReference.State.TheNonPlayerCharacterStates.GetStateByLocationAndIndex(location,
+                                mapUnit.NPCRef.DialogIndex);
+
+                        mapUnit.NPCState = npcState;
+                        // No need to refresh the SmallMapCharacterState because it is saved to the save file 
+                        //new SmallMapCharacterState(npcState.NPCRef, i);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         ///     Resets the current map to a default state - typically no monsters and NPCs in there default positions
         /// </summary>
@@ -271,18 +297,14 @@ namespace Ultima5Redux.MapUnits
                     searchItems.GetUnDiscoveredSearchItemsByLocation(
                         location, nFloor);
                 foreach (KeyValuePair<Point2D, List<SearchItem>> kvp in searchItemsInMap)
-                    //foreach (K item in searchItemsList)
                 {
                     MapUnitPosition mapUnitPosition = new(kvp.Key.X, kvp.Key.Y, nFloor);
                     // at this point we are cycling through the positions
-                    // MapUnitPosition mapUnitPosition = new(item.TheSearchItemReference.Position.X,
-                    //     item.TheSearchItemReference.Position.Y, item.TheSearchItemReference.Floor);
                     foreach (SearchItem searchItem in kvp.Value)
                     {
                         /// TEMPORARY FIX: you are only supposed to discover one discoverable loot at a time
                         List<SearchItem> searchItemInList = new() { searchItem };
-                        var discoverableLoot = new DiscoverableLoot(mapUnitPosition, searchItemInList);
-                        //discoverableLoot.MapUnitPosition.XY = kvp.Value;
+                        var discoverableLoot = new DiscoverableLoot(location, mapUnitPosition, searchItemInList);
                         SmallMapUnitCollection.AddMapUnit(discoverableLoot);
                     }
                 }
@@ -412,7 +434,7 @@ namespace Ultima5Redux.MapUnits
                 }
                 else
                 {
-                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite, mapUnitPosition);
+                    newUnit = NonAttackingUnitFactory.Create(npcState.NPCRef.NPCKeySprite, location, mapUnitPosition);
                     newUnit.MapLocation = location;
                 }
             }
@@ -551,7 +573,9 @@ namespace Ultima5Redux.MapUnits
             {
                 // at this point we are cycling through the positions
                 MapUnitPosition mapUnitPosition = new(kvp.Key.X, kvp.Key.Y, nFloor);
-                var discoverableLoot = new DiscoverableLoot(mapUnitPosition, kvp.Value);
+                var discoverableLoot =
+                    new DiscoverableLoot(SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                        mapUnitPosition, kvp.Value);
                 //discoverableLoot.MapUnitPosition.XY = kvp.Value;
                 mapUnitCollection.AddMapUnit(discoverableLoot);
             }
@@ -701,7 +725,8 @@ namespace Ultima5Redux.MapUnits
             if (nIndex == -1) return null;
 
             MapUnitPosition mapUnitPosition = new(xy.X, xy.Y, 0);
-            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite, mapUnitPosition);
+            NonAttackingUnit nonAttackingUnit = NonAttackingUnitFactory.Create(nSprite,
+                SmallMapReferences.SingleMapReference.Location.Combat_resting_shrine, mapUnitPosition);
 
             if (nonAttackingUnit == null)
                 throw new Ultima5ReduxException(
@@ -856,7 +881,7 @@ namespace Ultima5Redux.MapUnits
             AddNewMapUnit(map, replacementNonAttackingUnit, nIndex);
             return true;
         }
-        
+
         /// <summary>
         ///     Sets the current map type
         ///     Called internally to the class only since it has the bLoadFromDisk option

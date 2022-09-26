@@ -11,7 +11,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     ///     Represents an invisible mapunit that includes inner items
     ///     This a secret that can be found by searching - such as the axe in Jhelom
     /// </summary>
-    public sealed class DiscoverableLoot : NonAttackingUnit
+    [DataContract] public sealed class DiscoverableLoot : NonAttackingUnit
     {
         public override string FriendlyName => "Loot";
         public override string PluralName => "Loot";
@@ -45,6 +45,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public bool IsDeadBody => AlternateNonAttackingUnit is DeadBody;
         public bool IsBloodSpatter => AlternateNonAttackingUnit is BloodSpatter;
 
+        /// <summary>
+        ///     This represents what this will become if searched - such as a dead body
+        /// </summary>
+        [IgnoreDataMember]
         public NonAttackingUnit AlternateNonAttackingUnit { get; private set; }
 
         public override TileReference KeyTileReference { get; set; } =
@@ -54,13 +58,15 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         {
         }
 
-        public DiscoverableLoot(MapUnitPosition mapUnitPosition, List<SearchItem> searchItems)
+        public DiscoverableLoot(SmallMapReferences.SingleMapReference.Location location,
+            MapUnitPosition mapUnitPosition, List<SearchItem> searchItems)
         {
             _listOfSearchItems = searchItems ??
                                  throw new Ultima5ReduxException(
                                      "Cannot create DiscoverableLoot with null searchItems");
 
             MapUnitPosition = mapUnitPosition;
+            MapLocation = location;
             Initialize();
         }
 
@@ -76,11 +82,12 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
             {
                 // if it is a dead body or splat then handle special
 
-                if ((TileReference.SpriteIndex)item.TheSearchItemReference.CalcTileReference.Index is TileReference.SpriteIndex.DeadBody or TileReference.SpriteIndex.BloodSpatter)
+                if ((TileReference.SpriteIndex)item.TheSearchItemReference.CalcTileReference.Index is
+                    TileReference.SpriteIndex.DeadBody or TileReference.SpriteIndex.BloodSpatter)
                 {
                     AlternateNonAttackingUnit =
                         NonAttackingUnitFactory.Create(item.TheSearchItemReference.CalcTileReference.Index,
-                            MapUnitPosition);
+                            MapLocation, MapUnitPosition);
                     if (AlternateNonAttackingUnit is DeadBody or BloodSpatter)
                     {
                         AlternateNonAttackingUnit.ClearTrapAndInnerStack();

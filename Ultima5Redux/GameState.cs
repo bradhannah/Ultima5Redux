@@ -184,8 +184,9 @@ namespace Ultima5Redux
             // bajh: had to move this to this out constructor due to a dependency on inside the load map
             // that could only be grabbed after the whole state was loaded in
             if (TheVirtualMap.LargeMapOverUnder == Map.Maps.Small)
-                TheVirtualMap.TheMapUnits.LoadSmallMap(
-                    TheVirtualMap.CurrentSingleMapReference.MapLocation, false, TheVirtualMap.TheSearchItems);
+                TheVirtualMap.TheMapUnits.ReloadNpcData(TheVirtualMap.CurrentSingleMapReference.MapLocation);
+            // TheVirtualMap.TheMapUnits.LoadSmallMap(
+            //     TheVirtualMap.CurrentSingleMapReference.MapLocation, false, TheVirtualMap.TheSearchItems);
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Ultima5Redux.Maps
     {
         [DataMember] public bool IsDiscovered { get; set; }
         [IgnoreDataMember] public SearchItemReference TheSearchItemReference { get; private set; }
-        [DataMember] public int SearchItemIndex { get; }
+        [DataMember] public int SearchItemIndex { get; private set; }
 
         public SearchItem(int nSearchItemIndex, bool bIsDiscovered, SearchItemReference theSearchItemReference)
         {

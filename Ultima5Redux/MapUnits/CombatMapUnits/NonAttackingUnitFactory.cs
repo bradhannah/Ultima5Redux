@@ -14,7 +14,8 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         // 257 = Chest
         // 271 = ItemFood
-        public static NonAttackingUnit Create(int nSprite, MapUnitPosition mapUnitPosition)
+        public static NonAttackingUnit Create(int nSprite, SmallMapReferences.SingleMapReference.Location location,
+            MapUnitPosition mapUnitPosition)
         {
             if (mapUnitPosition == null) throw new ArgumentNullException(nameof(mapUnitPosition));
 
@@ -28,7 +29,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
                     or (int)TileReference.SpriteIndex.FireField or (int)TileReference.SpriteIndex.ElectricField:
                     return new ElementalField((ElementalField.FieldType)nSprite, mapUnitPosition);
                 case (int)TileReference.SpriteIndex.DeadBody:
-                    return new DeadBody(mapUnitPosition);
+                    return new DeadBody(location, mapUnitPosition);
                 case (int)TileReference.SpriteIndex.BloodSpatter:
                     return new BloodSpatter(mapUnitPosition);
                 case (int)TileReference.SpriteIndex.Chest:

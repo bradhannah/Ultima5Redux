@@ -745,24 +745,17 @@ namespace Ultima5Redux.Maps
 
             if (nonAttackingMapUnit == null) return false;
 
-            ProcessSearchNonAttackUnitTrap(turnResults, record, records, nonAttackingMapUnit);
+            // we don't check everything for traps - only types specifically flagged with types
+            if (nonAttackingMapUnit.NonAttackUnitTypeCanBeTrapped)
+            {
+                ProcessSearchNonAttackUnitTrap(turnResults, record, records, nonAttackingMapUnit);
+            }
 
             // we only open the inner items up if it exposes on search like DeadBodies and Spatters
             if (nonAttackingMapUnit.ExposeInnerItemsOnSearch)
+            {
                 return ProcessSearchInnerItems(turnResults, nonAttackingMapUnit, true, false);
-
-            //List<MapUnit> mapUnits = GetMapUnitsOnTile(xy);
-            // foreach (MapUnit mapUnit in mapUnits)
-            // {
-            //     if (mapUnit is not NonAttackingUnit nonAttackingUnit) continue;
-            //     if (!nonAttackingUnit.IsSearchable) continue;
-            //
-            //     ProcessSearchNonAttackUnitTrap(turnResults, record, records, nonAttackingUnit);
-            //
-            //     // we only open the inner items up if it exposes on search like DeadBodies and Spatters
-            //     if (nonAttackingUnit.ExposeInnerItemsOnSearch)
-            //         return ProcessSearchInnerItems(turnResults, nonAttackingUnit, true, false);
-            // }
+            }
 
             return false;
         }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
@@ -10,9 +12,9 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
     /// <summary>
     ///     Represents a stack of items that can be picked up
     /// </summary>
-    public class ItemStack : NonAttackingUnit
+    [DataContract] public sealed class ItemStack : NonAttackingUnit
     {
-        private readonly Stack<StackableItem> _stackableItems = new();
+        [DataMember] private readonly Stack<StackableItem> _stackableItems = new();
         public override bool ExposeInnerItemsOnOpen => false;
         public override bool ExposeInnerItemsOnSearch => true;
         public override string FriendlyName { get; }
@@ -58,6 +60,11 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         //public enum StackableType { DeadBody, BloodSpatter, }
 
+        [JsonConstructor] public ItemStack()
+        {
+        }
+        
+        
         public ItemStack(MapUnitPosition mapUnitPosition) => MapUnitPosition = mapUnitPosition;
 
         public override bool DoesTriggerTrap(PlayerCharacterRecord record) => false;

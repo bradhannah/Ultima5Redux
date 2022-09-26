@@ -131,9 +131,10 @@ namespace Ultima5Redux
         /// <param name="mapUnitPosition"></param>
         /// <returns></returns>
         public static NonAttackingUnit GenerateDropForDeadEnemy(EnemyReference enemyReference,
-            TileReference.SpriteIndex dropType, MapUnitPosition mapUnitPosition) =>
+            TileReference.SpriteIndex dropType, SmallMapReferences.SingleMapReference.Location location,
+            MapUnitPosition mapUnitPosition) =>
             // todo: need to tailor what is in the drop based on the enemy reference
-            NonAttackingUnitFactory.Create((int)dropType, mapUnitPosition);
+            NonAttackingUnitFactory.Create((int)dropType, location, mapUnitPosition);
 
         /// <summary>
         ///     After killing an enemy, do you get a drop?

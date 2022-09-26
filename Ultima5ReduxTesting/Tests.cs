@@ -1787,7 +1787,8 @@ namespace Ultima5ReduxTesting
                 foreach (InventoryReference invRef in kvp.Value)
                 {
                     NonAttackingUnit nau =
-                        NonAttackingUnitFactory.Create(invRef.ItemSpriteExposed, new MapUnitPosition());
+                        NonAttackingUnitFactory.Create(invRef.ItemSpriteExposed,
+                            SmallMapReferences.SingleMapReference.Location.Britannia_Underworld, new MapUnitPosition());
                     InventoryItemFactory.Create(invRef);
                 }
             }
@@ -2519,8 +2520,10 @@ namespace Ultima5ReduxTesting
 
         [Test] [TestCase(SaveFiles.BucDen1)] public void test_BucdenKillInnkeeperStillDead(SaveFiles saveFiles)
         {
-            World world = CreateWorldFromNewSave(SaveFiles.BucDenEntrance, true, false);
+            World world = CreateWorldFromLegacy(SaveFiles.BucDen1, true, false);
+            //World world = CreateWorldFromNewSave(SaveFiles.BucDenEntrance, true, false);
             //CreateWorldFromLegacy(saveFiles);
+            world.ReLoadFromJson();
             _ = "";
 
             Assert.True(world.State.TheVirtualMap.CurrentSingleMapReference.MapLocation ==
@@ -2563,6 +2566,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 0));
+            
             world.State.TheVirtualMap.MoveAvatar(new(15, 15));
             bFoundInnkeeper = false;
 
@@ -2963,7 +2967,6 @@ namespace Ultima5ReduxTesting
             things = world.TryToSearch(bookcasePosition, out bWasSuccessful, turnResults);
 
             Assert.True(bWasSuccessful);
-
         }
 
         [Test] [TestCase(SaveFiles.fresh)] public void test_SearchLDeadBodiesInWestBritanny(SaveFiles saveFiles)
@@ -2992,17 +2995,23 @@ namespace Ultima5ReduxTesting
 
             Assert.True(bWasSuccessful);
 
+            MapUnit topVisibleMapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(deadBodyPosition, true);
+
             world.ReLoadFromJson();
 
-            // bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
-            //     SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle,
-            //     2, deadBodyPosition);
-            // Assert.True(bIsStuff);
-            //
-            // turnResults = new TurnResults();
-            // things = world.TryToSearch(deadBodyPosition, out bWasSuccessful, turnResults);
-            //
-            // Assert.True(bWasSuccessful);
+            MapUnit reloadedTopVisibleMapUnit = world.State.TheVirtualMap.GetTopVisibleMapUnit(deadBodyPosition, true);
+
+            Assert.AreEqual(topVisibleMapUnit.GetType(), reloadedTopVisibleMapUnit.GetType());
+
+            bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
+                SmallMapReferences.SingleMapReference.Location.West_Britanny,
+                0, deadBodyPosition);
+            Assert.True(bIsStuff);
+
+            turnResults = new TurnResults();
+            things = world.TryToSearch(deadBodyPosition, out bWasSuccessful, turnResults);
+
+            Assert.True(bWasSuccessful);
         }
     }
 }

@@ -63,20 +63,40 @@ namespace Ultima5Redux.MapUnits
             set => ReplaceAll(value);
         }
 
-        [IgnoreDataMember] //DataMember(Name = "NonAttackingUnits")]
-        private NonAttackingUnit[] SaveNonAttackingUnits
-        {
-            get => GetMapUnitByTypeToArray<NonAttackingUnit>();
-            set => ReplaceAll(value);
-        }
+        // [IgnoreDataMember] //DataMember(Name = "NonAttackingUnits")]
+        // private NonAttackingUnit[] SaveNonAttackingUnits
+        // {
+        //     get => GetMapUnitByTypeToArray<NonAttackingUnit>();
+        //     set => ReplaceAll(value);
+        // }
 
         [DataMember(Name = "DiscoverableLoot")]
-        private DiscoverableLoot[] DiscoverableLoot
+        private DiscoverableLoot[] SaveDiscoverableLoot
         {
             get => GetMapUnitByTypeToArray<DiscoverableLoot>();
             set => ReplaceAll(value);
         }
 
+        [DataMember(Name = "DeadBodies")]
+        private DeadBody[] SaveDeadBodies
+        {
+            get => GetMapUnitByTypeToArray<DeadBody>();
+            set => ReplaceAll(value);
+        }
+
+        [DataMember(Name = "BloodSpatters")]
+        private BloodSpatter[] SaveBloodSpatters
+        {
+            get => GetMapUnitByTypeToArray<BloodSpatter>();
+            set => ReplaceAll(value);
+        }
+
+        [DataMember(Name = "Chest")]
+        private Chest[] SaveChests
+        {
+            get => GetMapUnitByTypeToArray<Chest>();
+            set => ReplaceAll(value);
+        }
 
         [DataMember(Name = "NonPlayerCharacters")]
         private NonPlayerCharacter[] SaveNonPlayerCharacters
@@ -89,6 +109,13 @@ namespace Ultima5Redux.MapUnits
         private Skiff[] SaveSkiffs
         {
             get => GetMapUnitByTypeToArray<Skiff>();
+            set => ReplaceAll(value);
+        }
+
+        [DataMember(Name = "Itemtacks")]
+        private ItemStack[] SaveItemStacks
+        {
+            get => GetMapUnitByTypeToArray<ItemStack>();
             set => ReplaceAll(value);
         }
 

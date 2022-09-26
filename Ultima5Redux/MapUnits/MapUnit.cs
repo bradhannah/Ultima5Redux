@@ -19,7 +19,10 @@ namespace Ultima5Redux.MapUnits
         private const double D_TIME_BETWEEN_ANIMATION = 0.25f;
         private const float MAX_VISIBILITY = 5;
         [DataMember(Name = "KeyTileIndex")] private int _keyTileIndex = -1;
-        [DataMember(Name = "NpcRefIndex")] private int _npcRefIndex = -1;
+
+        [field: DataMember(Name = "NpcRefIndex")]
+        public int NpcRefIndex { get; } = -1;
+
         [DataMember(Name = "ScheduleIndex")] private int _scheduleIndex = -1;
 
         /// <summary>
@@ -45,7 +48,7 @@ namespace Ultima5Redux.MapUnits
 
         [DataMember] public bool ArrivedAtLocation { get; private set; }
 
-        [DataMember] public NonPlayerCharacterState NPCState { get; protected set; }
+        [DataMember] public NonPlayerCharacterState NPCState { get; protected internal set; }
 
         [IgnoreDataMember] private readonly MapUnitPosition _savedMapUnitPosition = new();
 
@@ -108,7 +111,7 @@ namespace Ultima5Redux.MapUnits
             Movement = mapUnitMovement;
             Direction = direction;
 
-            if (npcState != null) _npcRefIndex = npcState.NPCRef?.DialogIndex ?? -1;
+            if (npcState != null) NpcRefIndex = npcState.NPCRef?.DialogIndex ?? -1;
 
             Debug.Assert(Movement != null);
 
