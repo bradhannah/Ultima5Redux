@@ -178,15 +178,8 @@ namespace Ultima5Redux
         {
             // we do this because we need to load the NPC information from the main state - not a copy in  
             // the JSON. If we don't do this then it creates two sets of NPCs
-            // ALSO - I am super unhappy that I have to do this since there is technically duplicate 
-            // data in the save file - and the serialized Collection will essentially be ignored
-            // TODO: optimize so it just uses one of the save states
-            // bajh: had to move this to this out constructor due to a dependency on inside the load map
-            // that could only be grabbed after the whole state was loaded in
             if (TheVirtualMap.LargeMapOverUnder == Map.Maps.Small)
                 TheVirtualMap.TheMapUnits.ReloadNpcData(TheVirtualMap.CurrentSingleMapReference.MapLocation);
-            // TheVirtualMap.TheMapUnits.LoadSmallMap(
-            //     TheVirtualMap.CurrentSingleMapReference.MapLocation, false, TheVirtualMap.TheSearchItems);
         }
 
         /// <summary>

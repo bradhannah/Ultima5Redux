@@ -176,12 +176,18 @@ namespace Ultima5Redux.MapUnits
             };
         }
 
+        /// <summary>
+        ///     This is a lightweight LoadSmallMap. It is used specifically when re-populating the NPCStates after
+        ///     a deserialize.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <exception cref="Ultima5ReduxException"></exception>
         internal void ReloadNpcData(SmallMapReferences.SingleMapReference.Location location)
         {
             for (int i = 1; i < SmallMapUnitCollection.AllMapUnits.Count; i++)
             {
                 MapUnit mapUnit = SmallMapUnitCollection.AllMapUnits[i];
-                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot) //NonPlayerCharacter npc)
+                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot) 
                 {
                     if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
                         mapUnit.NPCRef == null) continue;
