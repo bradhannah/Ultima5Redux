@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
@@ -20,20 +19,19 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         public override string FriendlyName => GameReferences.DataOvlRef.StringReferences
             .GetString(DataOvlReference.ThingsIFindStrings.A_BLOOD_PULP_BANG_N).TrimEnd();
 
+        [DataMember]
         public override ItemStack InnerItemStack { get; protected set; }
 
         public override bool IsOpenable => false;
         public override bool IsSearchable => true;
 
         public override TileReference KeyTileReference =>
-            GameReferences.SpriteTileReferences.GetTileReferenceByName("DeadBody");
+            GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.DeadBody);
 
         public override string Name => FriendlyName;
 
         public override string PluralName => FriendlyName;
         public override string SingularName => FriendlyName;
-
-        [DataMember] public Guid TheGuid { get; set; } = Guid.NewGuid();
 
         [JsonConstructor] public DeadBody()
         {
@@ -53,7 +51,7 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            GenerateItemStack(MapUnitPosition);
+            //GenerateItemStack(MapUnitPosition);
         }
         
         private void GenerateItemStack(MapUnitPosition mapUnitPosition)
