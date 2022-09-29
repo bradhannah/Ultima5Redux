@@ -14,6 +14,7 @@ using Ultima5Redux.MapUnits.SeaFaringVessels;
 using Ultima5Redux.MapUnits.TurnResults;
 using Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
@@ -1927,6 +1928,21 @@ namespace Ultima5Redux
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 
+
+        private enum SpecialSearchLocation { None, GlassSwords }
+
+        private static SpecialSearchLocation GetSpecialSearchLocation(
+            SmallMapReferences.SingleMapReference.Location location,
+            int nFloor, Point2D position)
+        {
+            if (location == SmallMapReferences.SingleMapReference.Location.Britannia_Underworld && nFloor == 0
+                                                                             && position.X == 64 && position.Y == 80)
+                return SpecialSearchLocation.GlassSwords;
+
+            return SpecialSearchLocation.None;
+        }
+
+
         /// <summary>
         ///     Try to search an area and see if you find anything!
         /// </summary>
@@ -1938,13 +1954,40 @@ namespace Ultima5Redux
             TurnResults turnResults)
         {
             bWasSuccessful = false;
-            // bool bHasDiscoverableItems = State.TheSearchItems.IsAvailableSearchItemByLocation(
-            //     State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
-            //     State.TheVirtualMap.CurrentSingleMapReference.Floor,
-            //     State.TheVirtualMap.CurrentPosition.XY);
 
-            // if there is something exposed already OR there is nothing found 
-            if (!State.TheVirtualMap.ContainsSearchableMapUnits(xy)) //&& !bHasDiscoverableItems)
+            SpecialSearchLocation specialSearchLocation = GetSpecialSearchLocation(
+                State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+                State.TheVirtualMap.CurrentSingleMapReference.Floor, State.TheVirtualMap.CurrentPosition.XY);
+
+            if (specialSearchLocation == SpecialSearchLocation.GlassSwords)
+            {
+                Weapon glassSword =
+                    State.PlayerInventory.TheWeapons.GetWeaponFromEquipment(DataOvlReference.Equipment.GlassSword);
+
+                if (glassSword.Quantity <= 0)
+                {
+                    var newGlassSword =
+                        new Weapon(
+                            GameReferences.CombatItemRefs.GetWeaponReferenceFromEquipment(DataOvlReference.Equipment
+                                .GlassSword), 1);
+                    List<InventoryItem> invItems = new() { newGlassSword };
+                    DiscoverableLoot discoverableLoot = new(State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+                        State.TheVirtualMap.CurrentPosition, invItems);
+
+                    bool bFoundGlassSword = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
+                        State.CharacterRecords.AvatarRecord, State.CharacterRecords);
+                    if (!bFoundGlassSword)
+                        throw new Ultima5ReduxException("I just created a glass sword and then couldn't find it!?");
+                    bWasSuccessful = true;
+                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                }
+            }
+
+            // if there is something exposed already OR there is nothing found
+            // OR if special search location has fallen through to here, then we want to make sure
+            // we don't do any additional processing - such as glass swords
+            if (!State.TheVirtualMap.ContainsSearchableMapUnits(xy) ||
+                specialSearchLocation != SpecialSearchLocation.None)
             {
                 turnResults.PushOutputToConsole(U5StringRef.ThouDostFind(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.Vision2Strings
@@ -1974,20 +2017,6 @@ namespace Ultima5Redux
                 // do nothing, I think? The SearchNonAttackingMapUnit method takes care of the chatter
                 bWasSuccessful = true;
             }
-            // else if (bHasDiscoverableItems)
-            // {
-            //     List<SearchItem> things = State.TheSearchItems.GetUnDiscoveredSearchItemsByLocation(
-            //         State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
-            //         State.TheVirtualMap.CurrentSingleMapReference.Floor,
-            //         State.TheVirtualMap.CurrentPosition.XY);
-            //
-            //     if (things == null || things.Count == 0)
-            //         throw new Ultima5ReduxException(
-            //             "Was expecting greater than 0 items when searching, but received zero or null");
-            //     
-            //     State.TheVirtualMap.TheMapUnits.CreateNonAttackUnitOnCombatMap()
-            //
-            // }
             else if (tileReference.HasSearchReplacement)
             {
                 // this occurs when you search something - and once searched it turns into something else

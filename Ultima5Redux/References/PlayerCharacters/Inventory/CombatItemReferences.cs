@@ -112,6 +112,11 @@ namespace Ultima5Redux.References.PlayerCharacters.Inventory
             return AllArmour.FirstOrDefault(e => e.SpecificEquipment == equipment);
         }
 
+        public WeaponReference GetWeaponReferenceFromEquipment(DataOvlReference.Equipment equipment)
+        {
+            return WeaponReferences.FirstOrDefault(e => e.SpecificEquipment == equipment);
+        }
+
         public CombatItemReference GetCombatItemReferenceFromEquipment(DataOvlReference.Equipment equipment) =>
             _equipmentToCombatItemReference[equipment];
     }

@@ -585,6 +585,14 @@ namespace Ultima5Redux.MapUnits
                 //discoverableLoot.MapUnitPosition.XY = kvp.Value;
                 mapUnitCollection.AddMapUnit(discoverableLoot);
             }
+
+            int nTotalMapUnits = mapUnitCollection.AllMapUnits.Count;
+            for (int i = 0; i < MAX_MAP_CHARACTERS - nTotalMapUnits; i++)
+            {
+                var emptyMapUnit = new EmptyMapUnit();
+                // add the new character to our list of characters currently on the map
+                mapUnitCollection.AddMapUnit(emptyMapUnit);
+            }
         }
 
         /// <summary>

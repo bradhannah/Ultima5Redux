@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Ultima5Redux.Maps;
 using Ultima5Redux.PlayerCharacters;
+using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
 
@@ -35,7 +36,10 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         [DataMember] private List<SearchItem> _listOfSearchItems;
+        [DataMember] private List<InventoryItem> _inventoryItems;
+        [DataMember] private LootType _lootType;
 
+        private enum LootType { SearchItems, InventoryItems }
         /// <summary>
         ///     This needs to give us a stack of all the goods!
         /// </summary>
@@ -59,23 +63,49 @@ namespace Ultima5Redux.MapUnits.CombatMapUnits
         }
 
         public DiscoverableLoot(SmallMapReferences.SingleMapReference.Location location,
+            MapUnitPosition mapUnitPosition, List<InventoryItem> inventoryItems)
+        {
+            _lootType = LootType.InventoryItems;
+
+            _inventoryItems = inventoryItems;
+
+            MapUnitPosition = mapUnitPosition;
+            MapLocation = location;
+
+            InitializeInventoryItems();
+        }
+        
+        public DiscoverableLoot(SmallMapReferences.SingleMapReference.Location location,
             MapUnitPosition mapUnitPosition, List<SearchItem> searchItems)
         {
             _listOfSearchItems = searchItems ??
                                  throw new Ultima5ReduxException(
                                      "Cannot create DiscoverableLoot with null searchItems");
 
+            _lootType = LootType.SearchItems;
+            
             MapUnitPosition = mapUnitPosition;
             MapLocation = location;
-            Initialize();
+            InitializeSearchItems();
         }
 
         [OnDeserialized] private void PostDeserialize(StreamingContext context)
         {
-            Initialize();
+            InitializeSearchItems();
         }
 
-        private void Initialize()
+        private void InitializeInventoryItems()
+        {
+            InnerItemStack = new ItemStack(MapUnitPosition);
+
+            foreach (InventoryItem inventoryItem in _inventoryItems)
+            {
+                var stackableItem = new StackableItem(inventoryItem);
+                InnerItemStack.PushStackableItem(stackableItem);
+            }
+        }
+
+        private void InitializeSearchItems()
         {
             InnerItemStack = new ItemStack(MapUnitPosition);
             foreach (SearchItem item in _listOfSearchItems)

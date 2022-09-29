@@ -2566,7 +2566,7 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Buccaneers_Den, 0));
-            
+
             world.State.TheVirtualMap.MoveAvatar(new(15, 15));
             bFoundInnkeeper = false;
 
@@ -3012,6 +3012,62 @@ namespace Ultima5ReduxTesting
             things = world.TryToSearch(deadBodyPosition, out bWasSuccessful, turnResults);
 
             Assert.True(bWasSuccessful);
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet, false)] [TestCase(SaveFiles.b_carpet, true)]
+        public void test_SearchGlassSwordGetMultiple(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            GameReferences.Initialize(DataDirectory);
+
+            var glassSwordPosition = new Point2D(64, 80);
+            world.State.TheVirtualMap.MoveAvatar(new Point2D(63, 80));
+
+            foreach (PlayerCharacterRecord record in world.State.CharacterRecords.Records)
+            {
+                Assert.IsTrue(record.Equipped.LeftHand != DataOvlReference.Equipment.GlassSword &&
+                              record.Equipped.RightHand != DataOvlReference.Equipment.GlassSword);
+            }
+
+            Weapon glassSwordWeapon =
+                world.State.PlayerInventory.TheWeapons.GetWeaponFromEquipment(DataOvlReference.Equipment.GlassSword);
+            world.State.PlayerInventory.TheWeapons.GetWeaponFromEquipment(DataOvlReference.Equipment.GlassSword)
+                .Quantity = 0;
+            Assert.IsTrue(glassSwordWeapon.Quantity == 0);
+
+            bool bIsStuff = world.State.TheVirtualMap.TheSearchItems.IsAvailableSearchItemByLocation(
+                SmallMapReferences.SingleMapReference.Location.Britannia_Underworld,
+                0, glassSwordPosition);
+            Assert.True(bIsStuff);
+
+            var turnResults = new TurnResults();
+            List<VirtualMap.AggressiveMapUnitInfo> things =
+                world.TryToSearch(glassSwordPosition, out bool bWasSuccessful, turnResults);
+
+            Assert.IsTrue(bWasSuccessful);
+
+            world.TryToGetAThing(glassSwordPosition, out bWasSuccessful, out InventoryItem item, turnResults,
+                Point2D.Direction.Right);
+            Assert.IsTrue(bWasSuccessful);
+            Assert.IsNotNull(item);
+            if (item is not Weapon weapon)
+            {
+                Assert.IsTrue(false, "item returned is not weapon");
+                return;
+            }
+
+            Assert.IsNotNull(weapon);
+            Assert.IsTrue(weapon.SpecificEquipment == DataOvlReference.Equipment.GlassSword);
+
+            // we are searching with stuff in our inventory - it should come up empty
+            turnResults = new TurnResults();
+            things = world.TryToSearch(glassSwordPosition, out bWasSuccessful, turnResults);
+            Assert.IsFalse(bWasSuccessful);
         }
     }
 }
