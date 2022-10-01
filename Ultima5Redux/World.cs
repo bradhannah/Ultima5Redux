@@ -400,7 +400,9 @@ namespace Ultima5Redux
                 }
             }
             // if on lava
-            else if (currentTileReference.Index == (int)TileReference.SpriteIndex.Lava)
+            else if ((TileReference.SpriteIndex)currentTileReference.Index is
+                     TileReference.SpriteIndex.Lava or
+                     TileReference.SpriteIndex.Fireplace)
             {
                 State.CharacterRecords.SteppedOnLava(turnResults);
                 turnResults.PushOutputToConsole("Burning!", false);
@@ -851,6 +853,13 @@ namespace Ultima5Redux
                             .GetString(DataOvlReference.SleepTransportStrings.M_WARNING_NO_SKIFFS_N).TrimEnd();
                     BoardAndCleanFromWorld(boardableFrigate);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionBoardFrigate));
+                    if (State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.HMSCape].Quantity > 0)
+                    {
+                        retStr += "\n" + GameReferences.DataOvlRef.StringReferences
+                            .GetString(DataOvlReference.WearUseItemStrings.SHIP_RIGGED_DOUBLE_SPEED).TrimEnd();
+                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionUseHmsCapePlans));
+                    }
+                    
                     break;
                 }
             }
@@ -1719,10 +1728,18 @@ namespace Ultima5Redux
                 GameReferences.SpriteTileReferences.GetMinuteIncrement(newTileReference.Index);
             // if avatar is on a horse or carpet then we cut it in half, but let's make sure we don't 
             // end up with zero minutes
-            int nMinutesToAdvance =
-                bIsOnHorseOrCarpet || bIsSailingWithWindBehindMe
-                    ? Math.Max(1, nDefaultMinutesToAdvance / 2)
-                    : nDefaultMinutesToAdvance;
+            int nMinutesToAdvance;
+
+            // the HMS Cape makes you go twice as quick - which is quick!
+            bool bHasHmsCape = State.PlayerInventory.SpecializedItems.Items[SpecialItem.SpecificItemType.HMSCape]
+                .Quantity > 0;
+            if (bIsSailingWithWindBehindMe && bHasHmsCape)
+                nMinutesToAdvance = Math.Max(1, nDefaultMinutesToAdvance / 4);
+            else if (bHasHmsCape && bIsSailingWithSailsHoisted)
+                nMinutesToAdvance = Math.Max(1, nDefaultMinutesToAdvance / 2);
+            else if (bIsOnHorseOrCarpet || bIsSailingWithWindBehindMe)
+                nMinutesToAdvance = Math.Max(1, nDefaultMinutesToAdvance / 2);
+            else nMinutesToAdvance = nDefaultMinutesToAdvance;
 
             string slowMovingStr = GameReferences.SpriteTileReferences
                 .GetSlowMovementString(newTileReference.Index).TrimEnd();
