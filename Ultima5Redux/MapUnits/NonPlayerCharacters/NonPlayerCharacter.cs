@@ -44,6 +44,28 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
+        public bool IsMinstrel => NPCRef.NPCKeySprite == (int)TileReference.SpriteIndex.BardPlaying_KeyIndex;
+
+        public TileReference AlternateSittingTileReference => IsMinstrel
+            ? GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex.BardPlaying_KeyIndex)
+            : KeyTileReference;
+
+        public override TileReference KeyTileReference
+        {
+            get
+            {
+                // the typical minstrel walks around like a regular bard
+                if (IsMinstrel)
+                {
+                    return GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                        .Bard_KeyIndex);
+                }
+
+                return base.KeyTileReference;
+            }
+            set => base.KeyTileReference = value;
+        }
+
         [IgnoreDataMember] public override bool IsAttackable => true;
 
         [IgnoreDataMember]
@@ -78,7 +100,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
                 GameStateReference.State.CharacterRecords.GetCharacterIndexByNPC(NPCState.NPCRef);
 
             // is the NPC you are loading currently in the party?
-            IsInParty = record != null && record.PartyStatus == PlayerCharacterRecord.CharacterPartyStatus.InTheParty;
+            IsInParty = record is { PartyStatus: PlayerCharacterRecord.CharacterPartyStatus.InTheParty };
 
             // it's a large map so we follow different logic to determine the placement of the character
             if (bLargeMap)

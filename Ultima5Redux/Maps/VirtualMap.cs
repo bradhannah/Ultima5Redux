@@ -1396,7 +1396,7 @@ namespace Ultima5Redux.Maps
         }
 
         public int GetCalculatedSpriteIndexByTile(TileReference tileReference, in Point2D tilePosInMap,
-            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile)
+            bool bIsAvatarTile, bool bIsMapUnitOccupiedTile, MapUnit mapUnit, out bool bDrawCharacterOnTile)
         {
             int nSprite = tileReference.Index;
             bool bIsMirror = TileReferences.IsUnbrokenMirror(nSprite);
@@ -1431,8 +1431,20 @@ namespace Ultima5Redux.Maps
             if (bIsStaircase)
                 nNewSpriteIndex = GetStairsSprite(tilePosInMap);
             else
-                nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite, bIsMapUnitOccupiedTile,
-                    bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
+            {
+                // kinda hacky - but check if it's a minstrel because when they are on a chair, they play!
+                if (bIsMapUnitOccupiedTile && mapUnit is NonPlayerCharacter { IsMinstrel: true } npc
+                                           && nSprite == (int)TileReference.SpriteIndex.ChairBackBack && !bIsFoodNearby)
+                {
+                    nNewSpriteIndex = npc.AlternateSittingTileReference.Index;
+                }
+                else
+                {
+                    nNewSpriteIndex = GameReferences.SpriteTileReferences.GetCorrectSprite(nSprite,
+                        bIsMapUnitOccupiedTile,
+                        bIsAvatarTile, bIsFoodNearby, GameStateReference.State.TheTimeOfDay.IsDayLight);
+                }
+            }
 
             if (nNewSpriteIndex == -2) nNewSpriteIndex = GuessTile(tilePosInMap);
 
@@ -1788,7 +1800,7 @@ namespace Ultima5Redux.Maps
 
             // we always push the original tile reference 
             int nCalculatedIndex = GetCalculatedSpriteIndexByTile(origTileReference, xy, bIsAvatarTile,
-                bIsMapUnitOccupiedTile, out bool bDrawCharacterOnTile);
+                bIsMapUnitOccupiedTile, topMostMapUnit, out bool bDrawCharacterOnTile);
             TileReference calculatedTileReference =
                 GameReferences.SpriteTileReferences.GetAnimatedTileReference(nCalculatedIndex);
 
