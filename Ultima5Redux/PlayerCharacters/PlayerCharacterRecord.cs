@@ -197,10 +197,13 @@ namespace Ultima5Redux.PlayerCharacters
             // put the old one back in your inventory
             if (oldEquippedEquipment != DataOvlReference.Equipment.Nothing)
             {
-                CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment) ??
-                                                   throw new ArgumentNullException(
-                                                       "inventory.GetItemFromEquipment(oldEquippedEquipment)");
-                oldEquippedCombatItem.Quantity--;
+                // CombatItem oldEquippedCombatItem = inventory.GetItemFromEquipment(oldEquippedEquipment) ??
+                //                                    throw new ArgumentNullException(
+                //                                        "inventory.GetItemFromEquipment(oldEquippedEquipment)");
+                // oldEquippedCombatItem.Quantity++;
+                bool bWasUnequipped = UnequipEquipment(equippableSlot, inventory);
+                if (!bWasUnequipped)
+                    throw new Ultima5ReduxException($"Tried to unequip {equippableSlot} but was not successful");
             }
 
             // there should be at least one in your inventory to do this
@@ -215,8 +218,10 @@ namespace Ultima5Redux.PlayerCharacters
                 return EquipResult.TooHeavy;
 
             Equipped.SetEquippableSlot(equippableSlot, newEquipment);
+            // remove it from inventory, since it's now carried by player
+            newEquippedCombatItem.Quantity--;
 
-            if (!(newEquippedCombatItem is Weapon weapon)) return EquipResult.Success;
+            if (newEquippedCombatItem is not Weapon weapon) return EquipResult.Success;
 
             if (weapon.TheCombatItemReference.IsTwoHanded)
             {

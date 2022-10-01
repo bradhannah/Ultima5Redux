@@ -1957,7 +1957,7 @@ namespace Ultima5Redux
 
             SpecialSearchLocation specialSearchLocation = GetSpecialSearchLocation(
                 State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
-                State.TheVirtualMap.CurrentSingleMapReference.Floor, State.TheVirtualMap.CurrentPosition.XY);
+                State.TheVirtualMap.CurrentSingleMapReference.Floor, xy);
 
             if (specialSearchLocation == SpecialSearchLocation.GlassSwords)
             {
@@ -1966,20 +1966,7 @@ namespace Ultima5Redux
 
                 if (glassSword.Quantity <= 0)
                 {
-                    var newGlassSword =
-                        new Weapon(
-                            GameReferences.CombatItemRefs.GetWeaponReferenceFromEquipment(DataOvlReference.Equipment
-                                .GlassSword), 1);
-                    List<InventoryItem> invItems = new() { newGlassSword };
-                    DiscoverableLoot discoverableLoot = new(State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
-                        State.TheVirtualMap.CurrentPosition, invItems);
-
-                    bool bFoundGlassSword = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
-                        State.CharacterRecords.AvatarRecord, State.CharacterRecords);
-                    if (!bFoundGlassSword)
-                        throw new Ultima5ReduxException("I just created a glass sword and then couldn't find it!?");
-                    bWasSuccessful = true;
-                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+                    return SearchAndFindGlassSword(xy, out bWasSuccessful, turnResults);
                 }
             }
 
@@ -2036,6 +2023,31 @@ namespace Ultima5Redux
                         .NOTHING_OF_NOTE_DOT_N)), false);
             }
 
+            return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+        }
+
+        private List<VirtualMap.AggressiveMapUnitInfo> SearchAndFindGlassSword(Point2D xy, out bool bWasSuccessful,
+            TurnResults turnResults)
+        {
+            var newGlassSword =
+                new Weapon(
+                    GameReferences.CombatItemRefs.GetWeaponReferenceFromEquipment(DataOvlReference.Equipment
+                        .GlassSword), 1);
+            List<InventoryItem> invItems = new() { newGlassSword };
+            MapUnitPosition glassSwordMapUnitPosition = new();
+            glassSwordMapUnitPosition.Floor = State.TheVirtualMap.CurrentSingleMapReference.Floor;
+            glassSwordMapUnitPosition.XY = xy;
+            DiscoverableLoot discoverableLoot = new(State.TheVirtualMap.CurrentSingleMapReference.MapLocation,
+                glassSwordMapUnitPosition, invItems);
+
+            // I plant it, only so it can be then found immediately again
+            State.TheVirtualMap.TheMapUnits.CurrentMapUnits.AddMapUnit(discoverableLoot);
+
+            bool bFoundGlassSword = State.TheVirtualMap.SearchNonAttackingMapUnit(xy, turnResults,
+                State.CharacterRecords.AvatarRecord, State.CharacterRecords);
+            if (!bFoundGlassSword)
+                throw new Ultima5ReduxException("I just created a glass sword and then couldn't find it!?");
+            bWasSuccessful = true;
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
         }
 

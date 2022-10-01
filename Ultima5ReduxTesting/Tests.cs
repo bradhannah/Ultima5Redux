@@ -3068,6 +3068,69 @@ namespace Ultima5ReduxTesting
             turnResults = new TurnResults();
             things = world.TryToSearch(glassSwordPosition, out bWasSuccessful, turnResults);
             Assert.IsFalse(bWasSuccessful);
+
+            PlayerCharacterRecord avatar = world.State.CharacterRecords.AvatarRecord;
+            PlayerCharacterRecord.EquipResult equip =
+                avatar.EquipEquipment(world.State.PlayerInventory, DataOvlReference.Equipment.GlassSword);
+            Assert.IsTrue(equip == PlayerCharacterRecord.EquipResult.Success);
+
+            things = world.TryToSearch(glassSwordPosition, out bWasSuccessful, turnResults);
+            Assert.IsTrue(bWasSuccessful);
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet, false)] [TestCase(SaveFiles.b_carpet, true)]
+        public void test_EquipRing(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            GameReferences.Initialize(DataDirectory);
+            CombatItem ring =
+                world.State.PlayerInventory.GetItemFromEquipment(DataOvlReference.Equipment.RingProtection);
+            Assert.IsTrue(ring.Quantity == 11);
+
+            // ring of protection, avatar
+            PlayerCharacterRecord avatar = world.State.CharacterRecords.AvatarRecord;
+            PlayerCharacterRecord.EquipResult equipResult = avatar.EquipEquipment(
+                world.State.PlayerInventory, ring.SpecificEquipment);
+
+            Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
+            Assert.IsTrue(ring.Quantity == 10);
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet, false)] [TestCase(SaveFiles.b_carpet, true)]
+        public void test_EquipLotsOfStuff(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            GameReferences.Initialize(DataDirectory);
+            CombatItem ring =
+                world.State.PlayerInventory.GetItemFromEquipment(DataOvlReference.Equipment.RingProtection);
+            Assert.IsTrue(ring.Quantity == 11);
+
+            // ring of protection, avatar
+            PlayerCharacterRecord avatar = world.State.CharacterRecords.AvatarRecord;
+            PlayerCharacterRecord.EquipResult equipResult = avatar.EquipEquipment(
+                world.State.PlayerInventory, ring.SpecificEquipment);
+
+            Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
+            Assert.IsTrue(ring.Quantity == 10);
+
+            equipResult = avatar.EquipEquipment(world.State.PlayerInventory, DataOvlReference.Equipment.TwoHHammer);
+            Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.SuccessUnequipRight);
+            equipResult = avatar.EquipEquipment(world.State.PlayerInventory, DataOvlReference.Equipment.JeweledSword);
+            Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
+            equipResult = avatar.EquipEquipment(world.State.PlayerInventory, DataOvlReference.Equipment.JewelShield);
+            Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
+            equipResult = avatar.EquipEquipment(world.State.PlayerInventory, DataOvlReference.Equipment.IronHelm);
+            Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
         }
     }
 }
