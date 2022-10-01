@@ -42,7 +42,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
         public bool IsGuard => NpcType == SpecificNpcDialogType.Guard;
 
-        public bool IsShoppeKeeper => NpcType != SpecificNpcDialogType.None;
+        public bool IsShoppeKeeper => NpcType is not SpecificNpcDialogType.None and not SpecificNpcDialogType.Guard;
 
         /// <summary>
         ///     Which map is the NPC on?

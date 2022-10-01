@@ -3132,5 +3132,33 @@ namespace Ultima5ReduxTesting
             equipResult = avatar.EquipEquipment(world.State.PlayerInventory, DataOvlReference.Equipment.IronHelm);
             Assert.IsTrue(equipResult == PlayerCharacterRecord.EquipResult.Success);
         }
+
+        [Test] [TestCase(SaveFiles.b_carpet, false)] [TestCase(SaveFiles.b_carpet, true)]
+        public void test_TalkToGuard(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            GameReferences.Initialize(DataDirectory);
+            world.State.TheTimeOfDay.Hour = 12;
+            world.State.TheTimeOfDay.Minute = 2;
+
+            Point2D avatarPos = new(15, 23);
+            Point2D guardPos = new(15, 22);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Jhelom, 0));
+            world.State.TheVirtualMap.MoveAvatar(avatarPos);
+
+            TurnResults turnResults = new();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveStuff = world.TryToTalk(
+                MapUnitMovement.MovementCommandDirection.North, turnResults);
+
+            Assert.IsTrue(aggressiveStuff.Count > 0);
+        }
     }
 }
