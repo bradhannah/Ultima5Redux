@@ -3204,7 +3204,8 @@ namespace Ultima5ReduxTesting
             Assert.NotNull(world);
             Assert.NotNull(world.State);
 
-            world.TheGameOverrides.TheLockPickingOverrides = GameOverrides.LockPickingOverrides.AlwaysSucceed;
+            world.State.TheGameOverrides.DebugTheLockPickingOverrides =
+                GameOverrides.LockPickingOverrides.AlwaysSucceed;
 
             if (bReloadJson) world.ReLoadFromJson();
 
@@ -3230,6 +3231,11 @@ namespace Ultima5ReduxTesting
             world.AdvanceTime(2, turnResults);
             world.AdvanceTime(2, turnResults);
             world.AdvanceTime(2, turnResults);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Yew, 0));
+
         }
     }
 }

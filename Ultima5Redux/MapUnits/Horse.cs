@@ -67,7 +67,7 @@ namespace Ultima5Redux.MapUnits
 
         protected internal override bool OverrideAiType => true;
 
-        protected override NonPlayerCharacterSchedule.AiType OverridenAiType { get; set; } =
+        protected override NonPlayerCharacterSchedule.AiType OverridenAiType =>
             NonPlayerCharacterSchedule.AiType.HorseWander;
 
         [JsonConstructor] private Horse()

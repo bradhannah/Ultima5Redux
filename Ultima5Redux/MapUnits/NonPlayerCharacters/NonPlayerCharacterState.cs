@@ -7,8 +7,20 @@ using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
-    [DataContract] public class NonPlayerCharacterState
+    [DataContract] public sealed class NonPlayerCharacterState
     {
+        [DataMember] internal bool OverrideAiType { get; private set; }
+
+        [DataMember]
+        public NonPlayerCharacterSchedule.AiType OverridenAiType { get; private set; } =
+            NonPlayerCharacterSchedule.AiType.Fixed;
+
+        public void OverrideAi(NonPlayerCharacterSchedule.AiType aiType)
+        {
+            OverrideAiType = true;
+            OverridenAiType = aiType;
+        }        
+        
         [DataMember]
         public bool HasMetAvatar
         {

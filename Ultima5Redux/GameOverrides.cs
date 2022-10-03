@@ -6,6 +6,12 @@ namespace Ultima5Redux
     {
         public enum LockPickingOverrides { None, AlwaysSucceed, AlwaysFail }
 
-        [DataMember] public LockPickingOverrides TheLockPickingOverrides { get; set; }
+        /// <summary>
+        ///     Force lock picking overrides
+        /// </summary>
+        [DataMember]
+        public LockPickingOverrides DebugTheLockPickingOverrides { get; set; }
+
+        [DataMember] public bool PreferenceFreedPeopleDontDie { get; set; } = true;
     }
 }

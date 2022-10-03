@@ -77,16 +77,12 @@ namespace Ultima5Redux.MapUnits
 
         private int _nCurrentAnimationIndex;
 
-        protected internal virtual bool OverrideAiType { get; private set; }
+        [IgnoreDataMember] protected internal virtual bool OverrideAiType => NPCState?.OverrideAiType ?? false;
 
-        protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType { get; set; } =
-            NonPlayerCharacterSchedule.AiType.Fixed;
+        [IgnoreDataMember]
+        protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType =>
+            NPCState?.OverridenAiType ?? NonPlayerCharacterSchedule.AiType.Fixed;
 
-        public void OverrideAi(NonPlayerCharacterSchedule.AiType aiType)
-        {
-            OverrideAiType = true;
-            OverridenAiType = aiType;
-        }
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
@@ -543,7 +539,6 @@ namespace Ultima5Redux.MapUnits
         /// </summary>
         protected void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor, AStar aStar)
         {
-            
             // added some safety to save potential exceptions
             // if there is no NPC reference (currently only horses) then we just assign their intended position
             // as their current position 
@@ -701,7 +696,7 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
-                    case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoying:
+                    case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
                         // let's have them try to hang out with the avatar most of the time, but not everytime
                         // for a little randomness
                         if (Utils.OneInXOdds(3))
@@ -764,12 +759,12 @@ namespace Ultima5Redux.MapUnits
                         // we should only try to get closer, not build a whole path
                         BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                         break;
-                    case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoying:
+                    case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
                     default:
                         throw new Ultima5ReduxException(
-                            $"An unexpected movement AI was encountered: {aiType} for NPC: {NPCRef.Name}");
+                            $"An unexpected movement AI was encountered: {aiType} for NPC: {NPCRef?.Name}");
                 }
         }
 

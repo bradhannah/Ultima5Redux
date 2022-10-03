@@ -22,6 +22,8 @@ namespace Ultima5Redux
 {
     [DataContract] public class GameState
     {
+        public GameOverrides TheGameOverrides { get; set; } = new();
+        
         [DataMember(Name = "InitialMap")] private readonly Map.Maps _initialMap;
 
         /// <summary>

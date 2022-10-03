@@ -187,7 +187,7 @@ namespace Ultima5Redux.MapUnits
             for (int i = 1; i < SmallMapUnitCollection.AllMapUnits.Count; i++)
             {
                 MapUnit mapUnit = SmallMapUnitCollection.AllMapUnits[i];
-                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot) 
+                if (mapUnit is not EmptyMapUnit and not DiscoverableLoot)
                 {
                     if (mapUnit is DeadBody or BloodSpatter or Chest or Horse or MagicCarpet or ItemStack &&
                         mapUnit.NPCRef == null) continue;
@@ -402,6 +402,14 @@ namespace Ultima5Redux.MapUnits
             {
                 newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
                     mapUnitPosition, npcState);
+                // special condition where people who were previously freed are not dead, but also do not appear 
+                if (newUnit.OverrideAiType && !GameStateReference.State.TheGameOverrides.PreferenceFreedPeopleDontDie)
+                {
+                    NonPlayerCharacterSchedule.AiType aiType =
+                        newUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
+                    if (aiType == NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain)
+                        newUnit = new EmptyMapUnit();
+                }
             }
             else if (GameReferences.SpriteTileReferences.IsFrigate(tileReference.Index))
             {

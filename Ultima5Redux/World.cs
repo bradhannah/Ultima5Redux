@@ -44,8 +44,6 @@ namespace Ultima5Redux
             ShootAProjectile
         }
 
-        public GameOverrides TheGameOverrides { get; set; } = new();
-        
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         public const byte N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH = 100;
 
@@ -1254,7 +1252,7 @@ namespace Ultima5Redux
             }
 
             bool bBrokenKey = !OddsAndLogic.IsJimmySuccessful(record.Stats.Dexterity)
-                              && TheGameOverrides.TheLockPickingOverrides !=
+                              && State.TheGameOverrides.DebugTheLockPickingOverrides !=
                               GameOverrides.LockPickingOverrides.AlwaysSucceed;
 
             // we check to see if the lock pick (key) broke and the right conditions are met
@@ -1295,17 +1293,19 @@ namespace Ultima5Redux
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NpcFreedFromStocks));
                 turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N).Trim(), false);
-                mapUnit.OverrideAi(NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoying);
+                mapUnit.NPCState.OverrideAi(
+                    NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain);
 
                 State.ChangeKarma(2, turnResults);
             }
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             else if (bIsManacles)
             {
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NpcFreedFromManacles));
                 turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
                     DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N).Trim(), false);
 
-                mapUnit.OverrideAi(NonPlayerCharacterSchedule.AiType.BigWander);
+                mapUnit.NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.BigWander);
 
                 State.ChangeKarma(2, turnResults);
             }
