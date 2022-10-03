@@ -701,6 +701,19 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoying:
+                        // let's have them try to hang out with the avatar most of the time, but not everytime
+                        // for a little randomness
+                        if (Utils.OneInXOdds(3))
+                        {
+                            WanderWithinN(virtualMap, timeOfDay, 4);
+                        }
+                        else
+                        {
+                            BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                        }
+
+                        break;
                     default:
                         throw new Ultima5ReduxException(
                             $"An unexpected movement AI was encountered: {aiType} for NPC: {NPCRef.Name}");
@@ -750,6 +763,9 @@ namespace Ultima5Redux.MapUnits
                         // check to see how close we are - if we are too far, then just go to our scheduled location
                         // we should only try to get closer, not build a whole path
                         BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoying:
+                        WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
                     default:
                         throw new Ultima5ReduxException(

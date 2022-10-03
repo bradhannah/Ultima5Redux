@@ -2434,7 +2434,7 @@ namespace Ultima5ReduxTesting
                 world.TryToAttackNonCombatMap(new Point2D(10, 10),
                     out MapUnit mapUnit, out SingleCombatMapReference singleCombatMapReference,
                     out World.TryToAttackResult tryToAttackResult, turnResults);
-            Assert.True(tryToAttackResult == World.TryToAttackResult.NpcMurder);
+            Assert.IsFalse(tryToAttackResult == World.TryToAttackResult.NpcMurder);
             _ = "";
         }
 
@@ -3194,6 +3194,41 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.MoveAvatar(getAttackedPosition);
 
             var turnResults = new TurnResults();
+            world.AdvanceTime(2, turnResults);
+        }
+
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_FreeSomeoneYewStocksPassTurns(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            world.TheGameOverrides.TheLockPickingOverrides = GameOverrides.LockPickingOverrides.AlwaysSucceed;
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            GameReferences.Initialize(DataDirectory);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Yew, 0));
+
+            Point2D avatarPosition = new(20, 17);
+            world.State.TheVirtualMap.MoveAvatar(avatarPosition);
+
+            Point2D manInStocksPosition = new(20, 16);
+            var turnResults = new TurnResults();
+            List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos = world.TryToJimmyDoor(manInStocksPosition,
+                world.State.CharacterRecords.AvatarRecord, out bool bWasSuccessful,
+                turnResults);
+
+            Assert.IsTrue(bWasSuccessful);
+
+            world.AdvanceTime(2, turnResults);
+            world.AdvanceTime(2, turnResults);
+            world.AdvanceTime(2, turnResults);
+            world.AdvanceTime(2, turnResults);
             world.AdvanceTime(2, turnResults);
         }
     }

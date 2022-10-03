@@ -44,6 +44,8 @@ namespace Ultima5Redux
             ShootAProjectile
         }
 
+        public GameOverrides TheGameOverrides { get; set; } = new();
+        
         private const int N_DEFAULT_ADVANCE_TIME = 2;
         public const byte N_DEFAULT_NUMBER_OF_TURNS_FOR_TORCH = 100;
 
@@ -1225,10 +1227,6 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record,
             out bool bWasSuccessful, TurnResults turnResults)
         {
-            void decrementKey() => State.PlayerInventory.TheProvisions
-                .Items[ProvisionReferences.SpecificProvisionType.Keys]
-                .Quantity--;
-
             bWasSuccessful = false;
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
@@ -1255,13 +1253,16 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            bool bBrokenKey = !OddsAndLogic.IsJimmySuccessful(record.Stats.Dexterity);
+            bool bBrokenKey = !OddsAndLogic.IsJimmySuccessful(record.Stats.Dexterity)
+                              && TheGameOverrides.TheLockPickingOverrides !=
+                              GameOverrides.LockPickingOverrides.AlwaysSucceed;
 
             // we check to see if the lock pick (key) broke and the right conditions are met
             if (bIsDoorMagical || bBrokenKey)
             {
                 // we use up a key
-                decrementKey();
+                State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Keys]
+                    .Quantity--;
 
                 bWasSuccessful = false;
 
