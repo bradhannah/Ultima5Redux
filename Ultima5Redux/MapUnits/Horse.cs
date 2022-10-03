@@ -65,9 +65,9 @@ namespace Ultima5Redux.MapUnits
                 { Point2D.Direction.Up, "RidingHorseUp" }
             };
 
-        protected override bool OverrideAiType { get; } = true;
+        protected internal override bool OverrideAiType => true;
 
-        protected override NonPlayerCharacterSchedule.AiType OverridenAiType { get; } =
+        protected override NonPlayerCharacterSchedule.AiType OverridenAiType { get; set; } =
             NonPlayerCharacterSchedule.AiType.HorseWander;
 
         [JsonConstructor] private Horse()

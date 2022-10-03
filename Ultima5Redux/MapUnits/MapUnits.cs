@@ -392,16 +392,16 @@ namespace Ultima5Redux.MapUnits
         {
             MapUnit newUnit;
 
-            if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active &&
-                npcState.NPCRef.NormalNPC)
-            {
-                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
-                    mapUnitPosition, npcState);
-            }
-            else if (tileReference == null || tileReference.Index == 256)
+            if (tileReference == null || tileReference.Index == 256)
             {
                 Debug.WriteLine("An empty map unit was created with no tile reference");
                 newUnit = new EmptyMapUnit();
+            }
+            else if (smallMapCharacterState != null && npcState != null && smallMapCharacterState.Active &&
+                     npcState.NPCRef.NormalNPC)
+            {
+                newUnit = new NonPlayerCharacter(smallMapCharacterState, mapUnitMovement, bInitialLoad, location,
+                    mapUnitPosition, npcState);
             }
             else if (GameReferences.SpriteTileReferences.IsFrigate(tileReference.Index))
             {

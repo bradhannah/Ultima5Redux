@@ -101,6 +101,10 @@ namespace Ultima5Redux
 
         public const int POISON_DAMAGE_MIN = 1;
 
+        public const int ONE_IN_OF_BROKEN_KEY = 5;
+
+        public static bool IsJimmySuccessful(int nDexterity) => !Utils.OneInXOdds(ONE_IN_OF_BROKEN_KEY);
+
         /// <summary>
         ///     When the given user tries to open the chest - does it explode?
         /// </summary>

@@ -3160,5 +3160,41 @@ namespace Ultima5ReduxTesting
 
             Assert.IsTrue(aggressiveStuff.Count > 0);
         }
+
+        [Test] public void Test_SomeJimmiesFail()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                if (OddsAndLogic.IsJimmySuccessful(20)) continue;
+
+                Debug.WriteLine("Jimmy didn't work on iteration " + i);
+                return;
+            }
+
+            Assert.IsTrue(false);
+            throw new Ultima5ReduxException("Jimmy never fails...");
+        }
+
+        [Test] [TestCase(SaveFiles.b_carpet, false)] [TestCase(SaveFiles.b_carpet, true)]
+        public void test_LetDrudgeWorthAttackMe(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            GameReferences.Initialize(DataDirectory);
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle, -1));
+
+            Point2D getAttackedPosition = new(12, 11);
+            world.State.TheVirtualMap.MoveAvatar(getAttackedPosition);
+
+            var turnResults = new TurnResults();
+            world.AdvanceTime(2, turnResults);
+        }
     }
 }

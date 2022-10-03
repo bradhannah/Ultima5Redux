@@ -10,7 +10,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public enum AiType
         {
             Fixed = 0, Wander = 1, BigWander = 2, ChildRunAway = 3, MerchantThing = 4, ExtortOrAttackOrFollow = 6,
-            DrudgeWorthThing = 7, HorseWander = 8
+            DrudgeWorthThing = 7, HorseWander = 8, FollowAroundAndBeAnnoying = 9
         }
 
         /// <summary>

@@ -877,6 +877,7 @@ namespace Ultima5Redux.Maps
         /// <param name="attackToPosition">where are they attack to</param>
         /// <param name="territory"></param>
         /// <param name="aggressorMapUnit">who is the one attacking?</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <returns></returns>
         private AggressiveMapUnitInfo GetAggressiveMapUnitInfo(Point2D attackFromPosition,
             Point2D attackToPosition, SingleCombatMapReference.Territory territory, MapUnit aggressorMapUnit)
@@ -924,15 +925,37 @@ namespace Ultima5Redux.Maps
             bool bIsMadGuard = false;
             if (aggressorMapUnit is NonPlayerCharacter npc) bIsMadGuard = IsWantedManByThePoPo && npc.NPCRef.IsGuard;
 
-            // if the guard is next to you, then they will ask you to come queitly
+            // if the guard is next to you, then they will ask you to come quietly
             bool bNextToEachOther = attackFromPosition.IsWithinNFourDirections(attackToPosition);
             if (bIsMadGuard && bNextToEachOther && !TileReferences.IsHeadOfBed(
                     GetTileReference(aggressorMapUnit.MapUnitPosition.XY).Index))
+            {
                 // if they are at the head of the bed then we don't try to arrest, this keeps guards who are "injured" 
                 // at the healers from trying to arrest
                 // if avatar is being attacked..
                 // we get to assume that the avatar is not necessarily next to the enemy
                 mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+            }
+
+            if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter)
+            {
+                NonPlayerCharacterSchedule.AiType aiType =
+                    aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
+                switch (aiType)
+                {
+                    case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
+                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.GuardExtortion);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
+                        SingleCombatMapReference singleCombatMapReference = GetSingleCombatMapReference(
+                            attackFromTileReference.CombatMapIndex,
+                            SingleCombatMapReference.Territory.Britannia);
+
+                        mapUnitInfo.CombatMapReference = singleCombatMapReference;
+                        break;
+                }
+            }
 
             if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;
 
@@ -1464,9 +1487,6 @@ namespace Ultima5Redux.Maps
         public SingleCombatMapReference GetCombatMapReferenceForAvatarAttacking(Point2D attackFromPosition,
             Point2D attackToPosition, SingleCombatMapReference.Territory territory)
         {
-            SingleCombatMapReference getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map) =>
-                GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
-
             // note - attacking from a skiff OR carpet is NOT permitted unless touching a piece of land 
             // otherwise is twill say Attack-On foot!
             // note - cannot exit a skiff unless land is nearby
@@ -1522,33 +1542,38 @@ namespace Ultima5Redux.Maps
                 if (targettedMapUnit is Enemy waterCheckEnemy)
                 {
                     if (waterCheckEnemy.EnemyReference.IsWaterEnemy)
-                        return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay);
+                        return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.Bay, territory);
                     // if the enemy is on bay but is not a water creature then we cannot attack them
                     if (attackToTileReference.CombatMapIndex == SingleCombatMapReference.BritanniaCombatMaps.Bay)
                         return null;
                 }
 
-                return getSingleCombatMapReference(attackToTileReference.CombatMapIndex);
+                return GetSingleCombatMapReference(attackToTileReference.CombatMapIndex, territory);
             }
 
             // BoatCalc indicates it is a water tile and requires special consideration
             if (attackToTileReference.CombatMapIndex != SingleCombatMapReference.BritanniaCombatMaps.BoatCalc)
             {
                 if (attackToTileReference.IsWaterEnemyPassable)
-                    return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+                    return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean,
+                        territory);
 
                 // BoatSouth indicates the avatar is on the frigate, and the enemy on land
-                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth);
+                return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatSouth, territory);
             }
 
             // if attacking another frigate, then it's boat to boat
             if (GameReferences.SpriteTileReferences.IsFrigate(targettedMapUniTileReference.Index))
-                return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat);
+                return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatBoat, territory);
 
             // otherwise it's boat (ours) to ocean
-            return getSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean);
+            return GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps.BoatOcean, territory);
             // it is not boat calc, but there is an enemy, so refer to our default combat map
         }
+
+        private SingleCombatMapReference GetSingleCombatMapReference(SingleCombatMapReference.BritanniaCombatMaps map,
+            SingleCombatMapReference.Territory territory) =>
+            GameReferences.CombatMapRefs.GetSingleCombatMapReference(territory, (int)map);
 
         /// <summary>
         ///     Gets the Avatar's current position in 3D spaces
@@ -2122,9 +2147,11 @@ namespace Ultima5Redux.Maps
                         SingleCombatMapReference.EntryDirection.South, records, enemy.EnemyReference);
                     return;
                 case NonPlayerCharacter npc:
+                    EnemyReference enemyReference =
+                        GameReferences.EnemyRefs.GetEnemyReference(npc.KeyTileReference.Index);
                     LoadCombatMap(singleCombatMapReference, SingleCombatMapReference.EntryDirection.South, records,
-                        null, npc.NPCRef);
-                    break;
+                        enemyReference, npc.NPCRef);
+                    return;
             }
 
             throw new Ultima5ReduxException("You can only calculate combat map loading with Enemies and NPCs");

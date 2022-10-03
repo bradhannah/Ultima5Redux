@@ -302,6 +302,25 @@ namespace Ultima5Redux
                 point => point.DistanceBetween(furtherAwayFromPosition) > dCurrentDistanceBetween);
         }
 
+        /// <summary>
+        ///     This will get all the points that are closer to the given point - good for "dumbly" tracking
+        ///     another character - such as Drudgeworth in jail, since the A* breaks down when a locked door
+        ///     is in the way
+        /// </summary>
+        /// <param name="closerToPosition"></param>
+        /// <param name="nXExtent"></param>
+        /// <param name="nYExtent"></param>
+        /// <returns></returns>
+        public IEnumerable<Point2D> GetConstrainedFourDirectionSurroundingPointsCloserTo(
+            Point2D closerToPosition, int nXExtent, int nYExtent)
+        {
+            List<Point2D> fourPointList = GetConstrainedFourDirectionSurroundingPoints(nXExtent, nYExtent);
+            double dCurrentDistanceBetween = DistanceBetween(closerToPosition);
+
+            return fourPointList.Where(
+                point => point.DistanceBetween(closerToPosition) < dCurrentDistanceBetween);
+        }
+
         public List<Point2D> GetConstrainedFourDirectionSurroundingPointsWrapAround(int nXExtent, int nYExtent)
         {
             List<Point2D> points = new()

@@ -77,10 +77,16 @@ namespace Ultima5Redux.MapUnits
 
         private int _nCurrentAnimationIndex;
 
-        protected virtual bool OverrideAiType { get; } = false;
+        protected internal virtual bool OverrideAiType { get; private set; }
 
-        protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType { get; } =
+        protected virtual NonPlayerCharacterSchedule.AiType OverridenAiType { get; set; } =
             NonPlayerCharacterSchedule.AiType.Fixed;
+
+        public void OverrideAi(NonPlayerCharacterSchedule.AiType aiType)
+        {
+            OverrideAiType = true;
+            OverridenAiType = aiType;
+        }
 
         /// <summary>
         ///     empty constructor if there is nothing in the map character slot
@@ -142,6 +148,9 @@ namespace Ultima5Redux.MapUnits
                 // the horse doesn't wander in the overworld (yet?!)
                 if (virtualMap.IsLargeMap) return;
             }
+
+            /////
+            // WE are going to check for aggressive NPC types for extortion of just looking for a fight! 
 
             // if there is no next available movement then we gotta recalculate and see if they should move
             if (!Movement.IsNextCommandAvailable())
@@ -375,6 +384,19 @@ namespace Ultima5Redux.MapUnits
             }
         }
 
+        private void GetCloserToAvatar(VirtualMap virtualMap, AStar aStar)
+        {
+            IEnumerable<Point2D> possiblePositions = MapUnitPosition.XY
+                .GetConstrainedFourDirectionSurroundingPointsCloserTo(
+                    virtualMap.TheMapUnits.CurrentAvatarPosition.XY,
+                    virtualMap.NumberOfRowTiles, virtualMap.NumberOfColumnTiles);
+            foreach (Point2D point in possiblePositions)
+            {
+                if (virtualMap.IsTileFreeToTravel(point, true))
+                    BuildPath(this, point, aStar, true);
+            }
+        }
+
         private void UpdateAnimationIndex()
         {
             if (KeyTileReference.TotalAnimationFrames <= 1) return;
@@ -512,12 +534,16 @@ namespace Ultima5Redux.MapUnits
 
         protected virtual bool CanMoveToDumb(VirtualMap virtualMap, Point2D mapUnitPosition) => false;
 
+        public NonPlayerCharacterSchedule.AiType GetCurrentAiType(TimeOfDay tod) =>
+            OverrideAiType ? OverridenAiType : NPCRef.Schedule.GetCharacterAiTypeByTime(tod);
+
         /// <summary>
         ///     calculates and stores new path for NPC
         ///     Placed outside into the VirtualMap since it will need information from the active map, VMap and the MapUnit itself
         /// </summary>
         protected void CalculateNextPath(VirtualMap virtualMap, TimeOfDay timeOfDay, int nMapCurrentFloor, AStar aStar)
         {
+            
             // added some safety to save potential exceptions
             // if there is no NPC reference (currently only horses) then we just assign their intended position
             // as their current position 
@@ -557,7 +583,7 @@ namespace Ultima5Redux.MapUnits
                     ? NonPlayerCharacterSchedule.AiType.ChildRunAway
                     : NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow;
             else
-                aiType = OverrideAiType ? OverridenAiType : NPCRef.Schedule.GetCharacterAiTypeByTime(timeOfDay);
+                aiType = GetCurrentAiType(timeOfDay);
 
             // if the NPC is currently on a different floor different floor - but NOT for horses
             if (bDifferentFloor && aiType != NonPlayerCharacterSchedule.AiType.HorseWander)
@@ -651,7 +677,6 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // do nothing, they are where they are supposed to be 
                         break;
-                    case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                     case NonPlayerCharacterSchedule.AiType.Wander:
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(virtualMap, timeOfDay, 2);
@@ -665,6 +690,9 @@ namespace Ultima5Redux.MapUnits
                         break;
                     case NonPlayerCharacterSchedule.AiType.MerchantThing:
                         // don't think they move....?
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                        GetCloserToAvatar(virtualMap, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar
@@ -694,7 +722,6 @@ namespace Ultima5Redux.MapUnits
                         // move to the correct position
                         BuildPath(this, npcDestinationPosition.XY, aStar);
                         break;
-                    case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                     case NonPlayerCharacterSchedule.AiType.Wander:
                     case NonPlayerCharacterSchedule.AiType.BigWander:
                         // different wanders have different different radius'
@@ -714,6 +741,9 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         // if the avatar is close by then move away from him, otherwise return to original path, one move at a time
                         RunAwayFromAvatar(virtualMap, aStar, MapUnitPosition);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
+                        GetCloserToAvatar(virtualMap, aStar);
                         break;
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         // set location of Avatar as way point, but only set the first movement from the list if within N of Avatar

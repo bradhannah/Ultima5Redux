@@ -18,6 +18,7 @@ using Ultima5Redux.PlayerCharacters.CombatItems;
 using Ultima5Redux.PlayerCharacters.Inventory;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
+using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 using Ultima5Redux.References.PlayerCharacters.Inventory;
 
 // ProcessXXX methods will take a TurnResults and take care of all messages and command pushing
@@ -157,13 +158,17 @@ namespace Ultima5Redux
             switch (chairDirection)
             {
                 case Point2D.Direction.Up:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackForward");
+                    return GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                        .ChairBackForward);
                 case Point2D.Direction.Down:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackBack");
+                    return GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                        .ChairBackBack);
                 case Point2D.Direction.Left:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackRight");
+                    return GameReferences.SpriteTileReferences.GetTileReference(
+                        TileReference.SpriteIndex.ChairBackRight);
                 case Point2D.Direction.Right:
-                    return GameReferences.SpriteTileReferences.GetTileReferenceByName("ChairBackLeft");
+                    return GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                        .ChairBackLeft);
                 case Point2D.Direction.None:
                 default:
                     throw new Ultima5ReduxException("Asked for a chair direction that I don't recognize");
@@ -859,7 +864,7 @@ namespace Ultima5Redux
                             .GetString(DataOvlReference.WearUseItemStrings.SHIP_RIGGED_DOUBLE_SPEED).TrimEnd();
                         turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionUseHmsCapePlans));
                     }
-                    
+
                     break;
                 }
             }
@@ -1220,89 +1225,92 @@ namespace Ultima5Redux
         public List<VirtualMap.AggressiveMapUnitInfo> TryToJimmyDoor(Point2D xy, PlayerCharacterRecord record,
             out bool bWasSuccessful, TurnResults turnResults)
         {
+            void decrementKey() => State.PlayerInventory.TheProvisions
+                .Items[ProvisionReferences.SpecificProvisionType.Keys]
+                .Quantity--;
+
             bWasSuccessful = false;
             TileReference tileReference = State.TheVirtualMap.GetTileReference(xy);
 
-            bool isDoorInDirection = tileReference.IsOpenable;
+            //bool isDoorInDirection = tileReference.IsOpenable;
             bool bIsStocks = TileReferences.IsStocks(tileReference.Index);
             bool bIsManacles = TileReferences.IsManacles(tileReference.Index); // is it shackles/manacles
 
-            if (isDoorInDirection)
+            bool bIsDoorMagical = TileReferences.IsDoorMagical(tileReference.Index);
+            bool bIsDoorLocked = TileReferences.IsDoorLocked(tileReference.Index);
+
+            // the stocks 
+            MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
+            bool bIsNpc = mapUnit is NonPlayerCharacter;
+
+            if (!bIsDoorMagical &&
+                !bIsDoorLocked &&
+                !(bIsManacles && bIsNpc) &&
+                !(bIsStocks && bIsNpc))
             {
-                bool bIsDoorMagical = TileReferences.IsDoorMagical(tileReference.Index);
-                bool bIsDoorLocked = TileReferences.IsDoorLocked(tileReference.Index);
+                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.OpeningThingsStrings.NO_LOCK), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyNoLock));
+                bWasSuccessful = false;
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
 
-                if (bIsDoorMagical)
-                {
-                    // we use up a key
-                    State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Keys]
-                        .Quantity--;
+            bool bBrokenKey = !OddsAndLogic.IsJimmySuccessful(record.Stats.Dexterity);
 
-                    // for now we will also just open the door so we can get around - will address when we have spells
-                    State.TheVirtualMap.SetOverridingTileReferece(
-                        TileReferences.IsDoorWithView(tileReference.Index)
-                            ? GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
-                            : GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
+            // we check to see if the lock pick (key) broke and the right conditions are met
+            if (bIsDoorMagical || bBrokenKey)
+            {
+                // we use up a key
+                decrementKey();
 
-                    bWasSuccessful = true;
+                bWasSuccessful = false;
 
-                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.OpeningThingsStrings
-                            .KEY_BROKE), false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyKeyBroke));
-                }
-                else if (bIsDoorLocked)
-                {
-                    // we use up a key
-                    State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Keys]
-                        .Quantity--;
+                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.OpeningThingsStrings.KEY_BROKE), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyKeyBroke));
 
-                    // todo: bh: we will need to determine the likelihood of lock picking success, for now, we always succeed
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
 
-                    State.TheVirtualMap.SetOverridingTileReferece(
-                        TileReferences.IsDoorWithView(tileReference.Index)
-                            ? GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoorView")
-                            : GameReferences.SpriteTileReferences.GetTileReferenceByName("RegularDoor"), xy);
+            // we know we actually have something to unlock at this point, and have NOT broke a key
+            turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                DataOvlReference.OpeningThingsStrings
+                    .UNLOCKED), false);
+            bWasSuccessful = true;
 
-                    bWasSuccessful = true;
-                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.OpeningThingsStrings
-                            .UNLOCKED), false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyUnlocked));
-                }
-                else if (bIsStocks)
-                {
-                    // the stocks 
-                    MapUnit mapUnit = State.TheVirtualMap.GetTopVisibleMapUnit(xy, true);
-                    if (mapUnit is NonPlayerCharacter)
-                    {
-                        State.PlayerInventory.TheProvisions.Items[ProvisionReferences.SpecificProvisionType.Keys]
-                            .Quantity--;
+            if (bIsDoorLocked)
+            {
+                State.TheVirtualMap.SetOverridingTileReferece(
+                    TileReferences.IsDoorWithView(tileReference.Index)
+                        ? GameReferences.SpriteTileReferences.GetTileReference(TileReference.SpriteIndex
+                            .RegularDoorView)
+                        : GameReferences.SpriteTileReferences.GetTileReference(
+                            TileReference.SpriteIndex.RegularDoor), xy);
 
-                        turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                            DataOvlReference.OpeningThingsStrings
-                                .UNLOCKED), false);
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyUnlocked));
+            }
+            else if (bIsStocks)
+            {
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NpcFreedFromStocks));
+                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N).Trim(), false);
+                mapUnit.OverrideAi(NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoying);
 
-                        State.ChangeKarma(2, turnResults);
-                    }
-                }
-                else if (bIsManacles)
-                {
-                }
-                else
-                {
-                    turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                        DataOvlReference.OpeningThingsStrings
-                            .NO_LOCK), false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyNoLock));
-                }
+                State.ChangeKarma(2, turnResults);
+            }
+            else if (bIsManacles)
+            {
+                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NpcFreedFromManacles));
+                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
+                    DataOvlReference.OpeningThingsStrings.N_N_I_THANK_THEE_N).Trim(), false);
+
+                mapUnit.OverrideAi(NonPlayerCharacterSchedule.AiType.BigWander);
+
+                State.ChangeKarma(2, turnResults);
             }
             else
             {
-                turnResults.PushOutputToConsole(GameReferences.DataOvlRef.StringReferences.GetString(
-                    DataOvlReference.OpeningThingsStrings
-                        .NO_LOCK), false);
-                turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ActionJimmyNoLock));
+                throw new Ultima5ReduxException("Tried to Jimmy a door, but ended up with no matching conditions.");
             }
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
