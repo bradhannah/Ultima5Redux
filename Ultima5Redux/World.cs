@@ -2093,6 +2093,16 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
+            if (npc.OverrideAiType && npc.GetCurrentAiType(State.TheTimeOfDay) ==
+                NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain)
+            {
+                turnResults.PushOutputToConsole(
+                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                        .NO_RESPONSE), false,
+                    false);
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+            
             bool bIsNpc = npc.NPCRef != null;
             bool bIsShoppeKeeper = bIsNpc && npc.NPCRef.IsShoppeKeeper;
 
