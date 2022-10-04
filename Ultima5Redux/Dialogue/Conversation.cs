@@ -79,6 +79,8 @@ namespace Ultima5Redux.Dialogue
 
         public NonPlayerCharacterState TheNonPlayerCharacterState { get; }
 
+        public bool CallForGuardsAfterConversation { get; private set; }
+
         /// <summary>
         ///     Construction a conversation
         /// </summary>
@@ -642,6 +644,7 @@ namespace Ultima5Redux.Dialogue
                     break;
                 case TalkScript.TalkCommand.CallGuards:
                     _gameState.TheVirtualMap.IsWantedManByThePoPo = true;
+                    CallForGuardsAfterConversation = true;
                     break;
                 case TalkScript.TalkCommand.Gold:
                     _gameState.PlayerInventory.TheProvisions.AddOrRemoveProvisionQuantity(

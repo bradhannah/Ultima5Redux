@@ -9,8 +9,35 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
     {
         public enum AiType
         {
-            Fixed = 0, Wander = 1, BigWander = 2, ChildRunAway = 3, MerchantThing = 4, ExtortOrAttackOrFollow = 6,
-            DrudgeWorthThing = 7, HorseWander = 8, FollowAroundAndBeAnnoyingThenNeverSeeAgain = 9
+            // stay put
+            Fixed = 0,
+
+            // wander a small radius
+            Wander = 1,
+
+            // wander a wide radius
+            BigWander = 2,
+
+            // children are playful and run away from you
+            ChildRunAway = 3,
+
+            // special conversation for merchants
+            MerchantThing = 4,
+
+            // you better pay the guard or they will attack!
+            ExtortOrAttackOrFollow = 6,
+
+            // he's a jerk - he will attack at first opportunity, and get as close to you as possible
+            DrudgeWorthThing = 7,
+
+            // horses wander if they aren't tied up
+            HorseWander = 8,
+
+            // people who are freed walk close to you and are annoying - but won't talk
+            FollowAroundAndBeAnnoyingThenNeverSeeAgain = 9,
+
+            // they will wander in a small radius, but if they are next to you, then they will want to chat
+            SmallWanderWantsToChat = 10
         }
 
         /// <summary>

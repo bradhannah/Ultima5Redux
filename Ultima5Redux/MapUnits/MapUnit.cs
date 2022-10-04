@@ -696,6 +696,19 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
+                        // let's have them try to hang out with the avatar most of the time, but not everytime
+                        // for a little randomness
+                        if (Utils.OneInXOdds(3))
+                        {
+                            WanderWithinN(virtualMap, timeOfDay, 3);
+                        }
+                        else
+                        {
+                            BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
+                        }
+
+                        break;
                     case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
                         // let's have them try to hang out with the avatar most of the time, but not everytime
                         // for a little randomness
@@ -759,6 +772,7 @@ namespace Ultima5Redux.MapUnits
                         // we should only try to get closer, not build a whole path
                         BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
                     case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;

@@ -660,6 +660,15 @@ namespace Ultima5Redux.Maps
                     continue;
                 }
 
+                if (decidedAction == AggressiveMapUnitInfo.DecidedAction.WantsToChat)
+                {
+                    if (mapUnit is not NonPlayerCharacter npc)
+                        throw new Ultima5ReduxException(
+                            $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
+                    turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+                    continue;
+                }
+
                 // it's possible that the aggressor may not actually be attacking even if they can
                 if (decidedAction != AggressiveMapUnitInfo.DecidedAction.RangedAttack) continue;
 
@@ -945,6 +954,17 @@ namespace Ultima5Redux.Maps
                 {
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
                         mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.GuardExtortion);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
+                        if (IsWantedManByThePoPo)
+                        {
+                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+                        }
+                        else
+                        {
+                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.WantsToChat);
+                        }
+
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
                         mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.EnemyAttackCombatMap);
