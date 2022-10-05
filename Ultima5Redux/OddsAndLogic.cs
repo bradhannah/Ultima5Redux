@@ -102,6 +102,7 @@ namespace Ultima5Redux
         public const int POISON_DAMAGE_MIN = 1;
 
         public const int ONE_IN_OF_BROKEN_KEY = 5;
+        public const int TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU = 5;
 
         public static bool IsJimmySuccessful(int nDexterity) => !Utils.OneInXOdds(ONE_IN_OF_BROKEN_KEY);
 

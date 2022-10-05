@@ -666,6 +666,10 @@ namespace Ultima5Redux.Maps
                         throw new Ultima5ReduxException(
                             $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
                     turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+                    // if they want to chat, then we start a pissed off counter
+                    // it only really matters for guards though 
+                    if (npc.NPCRef.IsGuard && npc.NPCState.PissedOffCountDown <= 0)
+                        npc.NPCState.PissedOffCountDown = OddsAndLogic.TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU;
                     continue;
                 }
 
@@ -946,7 +950,7 @@ namespace Ultima5Redux.Maps
                 mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
             }
 
-            if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter)
+            if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter nextToEachOtherNpc)
             {
                 NonPlayerCharacterSchedule.AiType aiType =
                     aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
@@ -956,7 +960,9 @@ namespace Ultima5Redux.Maps
                         mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.GuardExtortion);
                         break;
                     case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
-                        if (IsWantedManByThePoPo)
+                        // if they wanted to chat and they are a guard they can get pissed off and arrest you
+                        if (IsWantedManByThePoPo || (nextToEachOtherNpc.NPCState.PissedOffCountDown == 0 &&
+                                                     nextToEachOtherNpc.NPCRef.IsGuard))
                         {
                             mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
                         }
@@ -975,6 +981,16 @@ namespace Ultima5Redux.Maps
                         mapUnitInfo.CombatMapReference = singleCombatMapReference;
                         break;
                 }
+            }
+            // if a guard wants to chat, they lose patience after a while and want to arrest you
+            // so we count down like a stern parent
+            else if (aggressorMapUnit is NonPlayerCharacter pissedOffNonPlayerCharacter
+                     && pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown > 0
+                     && pissedOffNonPlayerCharacter.NPCRef.IsGuard
+                     && pissedOffNonPlayerCharacter.NPCState.OverridenAiType ==
+                     NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat)
+            {
+                pissedOffNonPlayerCharacter.NPCState.PissedOffCountDown--;
             }
 
             if (aggressorMapUnit is not Enemy enemy) return mapUnitInfo;

@@ -9,6 +9,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
     [DataContract] public sealed class NonPlayerCharacterState
     {
+        [DataMember] internal int PissedOffCountDown { get; set; } = -1;
         [DataMember] internal bool OverrideAiType { get; private set; }
 
         [DataMember]
