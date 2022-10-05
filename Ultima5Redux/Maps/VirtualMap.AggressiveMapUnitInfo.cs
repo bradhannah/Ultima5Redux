@@ -11,7 +11,7 @@ namespace Ultima5Redux.Maps
             public enum DecidedAction
             {
                 Unset = -1, MoveUnit = 0, RangedAttack, MeleeOverworldAttack, Stay, EnemyAttackCombatMap,
-                AttemptToArrest, GuardExtortion, WantsToChat
+                AttemptToArrest, WantsToChat, Begging, HalfYourGoldExtortion, GenericGuardExtortion
             }
 
             private bool _bForceDecidedAction;

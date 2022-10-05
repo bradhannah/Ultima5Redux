@@ -650,27 +650,53 @@ namespace Ultima5Redux.Maps
                 // powers I will tweak later
 
                 AggressiveMapUnitInfo.DecidedAction decidedAction = aggressiveMapUnitInfo.GetDecidedAction();
-                if (decidedAction == AggressiveMapUnitInfo.DecidedAction.AttemptToArrest)
+                switch (decidedAction)
                 {
-                    if (mapUnit is not NonPlayerCharacter npc)
-                        throw new Ultima5ReduxException(
-                            $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
-                    turnResults.PushTurnResult(
-                        new AttemptToArrest(TurnResult.TurnResultType.NPCAttemptingToArrest, npc));
-                    continue;
-                }
-
-                if (decidedAction == AggressiveMapUnitInfo.DecidedAction.WantsToChat)
-                {
-                    if (mapUnit is not NonPlayerCharacter npc)
-                        throw new Ultima5ReduxException(
-                            $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
-                    turnResults.PushTurnResult(new NpcTalkInteraction(npc));
-                    // if they want to chat, then we start a pissed off counter
-                    // it only really matters for guards though 
-                    if (npc.NPCRef.IsGuard && npc.NPCState.PissedOffCountDown <= 0)
-                        npc.NPCState.PissedOffCountDown = OddsAndLogic.TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU;
-                    continue;
+                    case AggressiveMapUnitInfo.DecidedAction.AttemptToArrest:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(
+                            new AttemptToArrest(TurnResult.TurnResultType.NPCAttemptingToArrest, npc));
+                        continue;
+                    }
+                    case AggressiveMapUnitInfo.DecidedAction.WantsToChat:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried to arrest me. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+                        // if they want to chat, then we start a pissed off counter
+                        // it only really matters for guards though 
+                        if (npc.NPCRef.IsGuard && npc.NPCState.PissedOffCountDown <= 0)
+                            npc.NPCState.PissedOffCountDown = OddsAndLogic.TURNS_UNTIL_PISSED_OFF_GUARD_ARRESTS_YOU;
+                        continue;
+                    }
+                    case AggressiveMapUnitInfo.DecidedAction.Begging:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried beg. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+                        continue;
+                    }
+                    case AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried extort half my gold. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold));
+                        continue;
+                    }
+                    case AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion:
+                    {
+                        if (mapUnit is not NonPlayerCharacter npc)
+                            throw new Ultima5ReduxException(
+                                $"A non-npc tried generic extortion. They are a {mapUnit.GetType()}");
+                        turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic));
+                        continue;
+                    }
                 }
 
                 // it's possible that the aggressor may not actually be attacking even if they can
@@ -950,14 +976,22 @@ namespace Ultima5Redux.Maps
                 mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
             }
 
+            // IF NPC is next to Avatar then we check for any AI behaviours such as arrests or extortions
             if (bNextToEachOther && aggressorMapUnit is NonPlayerCharacter nextToEachOtherNpc)
             {
                 NonPlayerCharacterSchedule.AiType aiType =
                     aggressorMapUnit.GetCurrentAiType(GameStateReference.State.TheTimeOfDay);
                 switch (aiType)
                 {
+                    case NonPlayerCharacterSchedule.AiType.Begging:
+                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.Begging);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
+                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion);
+                        break;
+                    case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard: 
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
-                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.GuardExtortion);
+                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
                         break;
                     case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
                         // if they wanted to chat and they are a guard they can get pissed off and arrest you

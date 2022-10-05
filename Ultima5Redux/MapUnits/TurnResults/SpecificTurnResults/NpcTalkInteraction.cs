@@ -2,10 +2,10 @@ using Ultima5Redux.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.TurnResults.SpecificTurnResults
 {
-    public class NpcTalkInteraction : TurnResult
+    public sealed class NpcTalkInteraction : TurnResult, INonPlayerCharacterInteraction
     {
-        public NonPlayerCharacter Npc { get; }
+        public NonPlayerCharacter NPC { get; }
 
-        public NpcTalkInteraction(NonPlayerCharacter npc) : base(TurnResultType.NpcTalkInteraction) => Npc = npc;
+        public NpcTalkInteraction(NonPlayerCharacter npc) : base(TurnResultType.NpcTalkInteraction) => NPC = npc;
     }
 }

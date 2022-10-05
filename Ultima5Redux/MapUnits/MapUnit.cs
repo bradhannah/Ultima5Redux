@@ -683,7 +683,7 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.ChildRunAway:
                         RunAwayFromAvatar(virtualMap, aStar, MapUnitPosition);
                         break;
-                    case NonPlayerCharacterSchedule.AiType.MerchantThing:
+                    case NonPlayerCharacterSchedule.AiType.CustomAi:
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
@@ -696,6 +696,9 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.HorseWander:
                         WanderWithinN(virtualMap, timeOfDay, 4);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.Begging:
+                    case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
+                    case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
                     case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
                         // let's have them try to hang out with the avatar most of the time, but not everytime
                         // for a little randomness
@@ -738,7 +741,7 @@ namespace Ultima5Redux.MapUnits
                         }
 
                         break;
-                    case NonPlayerCharacterSchedule.AiType.MerchantThing:
+                    case NonPlayerCharacterSchedule.AiType.CustomAi:
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
                         BuildPath(this, npcDestinationPosition.XY, aStar);
@@ -772,6 +775,9 @@ namespace Ultima5Redux.MapUnits
                         // we should only try to get closer, not build a whole path
                         BuildPath(this, virtualMap.TheMapUnits.CurrentAvatarPosition.XY, aStar, true);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.Begging:
+                    case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
+                    case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
                     case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
                     case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
                         WanderWithinN(virtualMap, timeOfDay, 4);

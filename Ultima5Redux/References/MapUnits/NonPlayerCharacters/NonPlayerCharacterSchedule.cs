@@ -22,7 +22,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             ChildRunAway = 3,
 
             // special conversation for merchants
-            MerchantThing = 4,
+            CustomAi = 4,
 
             // you better pay the guard or they will attack!
             ExtortOrAttackOrFollow = 6,
@@ -31,14 +31,24 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             DrudgeWorthThing = 7,
 
             // horses wander if they aren't tied up
-            HorseWander = 8,
+            HorseWander = 100,
 
             // people who are freed walk close to you and are annoying - but won't talk
-            FollowAroundAndBeAnnoyingThenNeverSeeAgain = 9,
+            FollowAroundAndBeAnnoyingThenNeverSeeAgain = 101,
 
             // they will wander in a small radius, but if they are next to you, then they will want to chat
-            SmallWanderWantsToChat = 10
+            SmallWanderWantsToChat = 102,
+
+            // beggars wander, and when next to Avatar they want to talk
+            Begging = 103,
+
+            // They generally ask for 60gp tribute
+            GenericExtortingGuard = 104,
+
+            // These jerks want half your gold! Generally found in Minoc
+            HalfYourGoldExtortingGuard = 105
         }
+        
 
         /// <summary>
         /// </summary>
@@ -78,6 +88,23 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 for (int i = 0; i < 4; i++)
                 {
                     Times.Add(schedule.times[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     This will review the scheduled AI types and give them more specific AI types
+        ///     This simplifies later handling of their interactive behaviours
+        /// </summary>
+        /// <param name="nonPlayerCharacterReference"></param>
+        public void AdaptAiTypesByNpcRef(NonPlayerCharacterReference nonPlayerCharacterReference)
+        {
+            for (int nIndex = 0; nIndex < _aiTypeList.Count; nIndex++)
+            {
+                var aiType = (AiType)_aiTypeList[nIndex];
+
+                if (aiType == AiType.CustomAi)
+                {
                 }
             }
         }

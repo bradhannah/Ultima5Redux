@@ -123,14 +123,16 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public NonPlayerCharacterReference(SmallMapReferences.SingleMapReference.Location location,
             NpcSchedule schedule, byte npcType, byte dialogNumber, int dialogIndex, TalkScript talkScript)
         {
-            Schedule = new NonPlayerCharacterSchedule(schedule);
-
             MapLocation = location;
 
             CharacterType = npcType;
             DialogNumber = dialogNumber;
             Script = talkScript;
             DialogIndex = dialogIndex;
+
+            Schedule = new NonPlayerCharacterSchedule(schedule);
+            // this is converts ambiguous AI types like 4 (custom AI) to a more specific type (extorting guard)
+            Schedule.AdaptAiTypesByNpcRef(this);
         }
 
         /// <summary>
