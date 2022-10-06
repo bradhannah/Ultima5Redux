@@ -132,7 +132,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 
             Schedule = new NonPlayerCharacterSchedule(schedule);
             // this is converts ambiguous AI types like 4 (custom AI) to a more specific type (extorting guard)
-            Schedule.AdaptAiTypesByNpcRef(this);
+            Schedule.AdaptAiTypesByNpcRef(location, this);
         }
 
         /// <summary>

@@ -684,6 +684,7 @@ namespace Ultima5Redux.MapUnits
                         RunAwayFromAvatar(virtualMap, aStar, MapUnitPosition);
                         break;
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:                        
                         // don't think they move....?
                         break;
                     case NonPlayerCharacterSchedule.AiType.DrudgeWorthThing:
@@ -742,6 +743,7 @@ namespace Ultima5Redux.MapUnits
 
                         break;
                     case NonPlayerCharacterSchedule.AiType.CustomAi:
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:                        
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // move to the correct position
                         BuildPath(this, npcDestinationPosition.XY, aStar);

@@ -6,7 +6,6 @@ using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.PlayerCharacters;
 using Ultima5Redux.References;
 using Ultima5Redux.References.Maps;
-using Ultima5Redux.References.MapUnits.NonPlayerCharacters;
 
 namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 {
@@ -105,7 +104,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
 
             // there are many circumstances where we will assign a specific AI based on who they are
             // this is especially true for guards
-            AssignSpecialAi();
+            //AssignSpecialAi();
             
             // it's a large map so we follow different logic to determine the placement of the character
             if (bLargeMap)
@@ -127,16 +126,16 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters
             }
         }
 
-        private void AssignSpecialAi()
-        {
-            if (NPCState.NPCLocation == SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle
-                && NPCRef.DialogIndex == 27)
-            {
-                // this is Stillwelt, the mean guard
-                NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat);
-            }
-            //&& NPCState.NPCRefIndex == )
-        }
+        // private void AssignSpecialAi()
+        // {
+        //     if (NPCState.NPCLocation == SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle
+        //         && NPCRef.DialogIndex == 27)
+        //     {
+        //         // this is Stillwelt, the mean guard
+        //         NPCState.OverrideAi(NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat);
+        //     }
+        //     //&& NPCState.NPCRefIndex == )
+        // }
 
         // ReSharper disable once UnusedMember.Global
         public override string GetDebugDescription(TimeOfDay timeOfDay)

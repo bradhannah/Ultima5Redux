@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.MapUnits;
+using Ultima5Redux.References.Maps;
 
 namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
 {
@@ -46,9 +47,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             GenericExtortingGuard = 104,
 
             // These jerks want half your gold! Generally found in Minoc
-            HalfYourGoldExtortingGuard = 105
+            HalfYourGoldExtortingGuard = 105, MerchantBuyingSelling = 106
         }
-        
+
 
         /// <summary>
         /// </summary>
@@ -96,16 +97,56 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         ///     This will review the scheduled AI types and give them more specific AI types
         ///     This simplifies later handling of their interactive behaviours
         /// </summary>
+        /// <param name="location"></param>
         /// <param name="nonPlayerCharacterReference"></param>
-        public void AdaptAiTypesByNpcRef(NonPlayerCharacterReference nonPlayerCharacterReference)
+        public void AdaptAiTypesByNpcRef(SmallMapReferences.SingleMapReference.Location location,
+            NonPlayerCharacterReference nonPlayerCharacterReference)
         {
             for (int nIndex = 0; nIndex < _aiTypeList.Count; nIndex++)
             {
                 var aiType = (AiType)_aiTypeList[nIndex];
 
-                if (aiType == AiType.CustomAi)
+                // These are all FULL overrides, that override every AI behaviour in the schedule
+                const int STILLWELT_DIALOG_INDEX = 27;
+                if (location == SmallMapReferences.SingleMapReference.Location.Lord_Britishs_Castle
+                    && nonPlayerCharacterReference.DialogIndex == STILLWELT_DIALOG_INDEX)
                 {
+                    // this is Stillwelt, the mean guard
+                    _aiTypeList[nIndex] = (int)AiType.SmallWanderWantsToChat;
+                    continue;
                 }
+
+                if (aiType != AiType.CustomAi) continue;
+
+                // In the future, such as Blackthorne's castle, this is where we will
+                // will override AIs to have more specific 
+                if (nonPlayerCharacterReference.IsGuard &&
+                    location == SmallMapReferences.SingleMapReference.Location.Minoc)
+                {
+                    _aiTypeList[nIndex] = (int)AiType.HalfYourGoldExtortingGuard;
+                }
+                else if (nonPlayerCharacterReference.IsGuard)
+                {
+                    _aiTypeList[nIndex] = (int)AiType.GenericExtortingGuard;
+                }
+                else if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Beggar_KeyIndex)
+                {
+                    _aiTypeList[nIndex] = (int)AiType.Begging;
+                }
+                else if (nonPlayerCharacterReference.IsShoppeKeeper)
+                {
+                    _aiTypeList[nIndex] = (int)AiType.MerchantBuyingSelling;
+                }
+                else
+                {
+                    _ = "";
+                }
+                // Donn Piatt, Moonglow, DialogIndex==4 - a lord!?
+                // Delwyn, Minoc, DialogIndex == 9 - in jail
+                // gorn, DialogNumber==11 BT - in jail
+                // Johne, Capatin Johne, Ararat, DialogIndex = 1 - stuck on a boat
+                // Balinor, StoneGate, DialogIndex = 4 - jerky Deamon
+                
             }
         }
 
