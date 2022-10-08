@@ -987,11 +987,19 @@ namespace Ultima5Redux.Maps
                         mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.Begging);
                         break;
                     case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
-                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion);
-                        break;
                     case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard: 
                     case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
-                        mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
+                        // even if they are extortionists, if you did some super bad, they will try to arrest 
+                        if (IsWantedManByThePoPo)
+                        {
+                            mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.AttemptToArrest);
+                            break;
+                        }
+
+                        mapUnitInfo.ForceDecidedAction(
+                            aiType == NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard
+                                ? AggressiveMapUnitInfo.DecidedAction.HalfYourGoldExtortion
+                                : AggressiveMapUnitInfo.DecidedAction.GenericGuardExtortion);
                         break;
                     case NonPlayerCharacterSchedule.AiType.SmallWanderWantsToChat:
                         // if they wanted to chat and they are a guard they can get pissed off and arrest you
@@ -1002,6 +1010,7 @@ namespace Ultima5Redux.Maps
                         }
                         else
                         {
+                            // some times non guard NPCs are just keen to chat
                             mapUnitInfo.ForceDecidedAction(AggressiveMapUnitInfo.DecidedAction.WantsToChat);
                         }
 

@@ -2093,18 +2093,18 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            if (npc.OverrideAiType && npc.GetCurrentAiType(State.TheTimeOfDay) ==
-                NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain)
-            {
-                turnResults.PushOutputToConsole(
-                    GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
-                        .NO_RESPONSE), false,
-                    false);
-                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-            }
-            
-            bool bIsNpc = npc.NPCRef != null;
-            bool bIsShoppeKeeper = bIsNpc && npc.NPCRef.IsShoppeKeeper;
+            // if (npc.OverrideAiType && npc.GetCurrentAiType(State.TheTimeOfDay) ==
+            //     NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain)
+            // {
+            //     turnResults.PushOutputToConsole(
+            //         GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
+            //             .NO_RESPONSE), false,
+            //         false);
+            //     return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            // }
+
+            bool bHasNpcRef = npc.NPCRef != null;
+            bool bIsShoppeKeeper = bHasNpcRef && npc.NPCRef.IsShoppeKeeper;
 
             if (State.TheVirtualMap.IsNPCInBed(npc))
             {
@@ -2123,38 +2123,60 @@ namespace Ultima5Redux
                 return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
             }
 
-            if (bIsShoppeKeeper)
-            {
-                ShoppeKeeper shoppeKeeper = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
-                    State.TheVirtualMap.CurrentSmallMap.MapLocation, npc.NPCRef.NpcType,
-                    State.CharacterRecords, State.PlayerInventory);
-
-                if (npc.ArrivedAtLocation && shoppeKeeper.IsOnDuty(State.TheTimeOfDay))
-                {
-                    turnResults.PushTurnResult(new ShoppeKeeperInteraction(shoppeKeeper));
-                }
-                else
-                {
-                    turnResults.PushOutputToConsole(shoppeKeeper.GetComeLaterResponse(), false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ComeBackLater));
-                }
-            }
-            else if (bIsNpc)
-            {
-                if (npc.NPCRef.Script == null)
-                {
-                    turnResults.PushOutputToConsole("They are not talkative...", false);
-                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NotTalkative));
-                    return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
-                }
-
-                turnResults.PushTurnResult(new NpcTalkInteraction(npc));
-            }
-            else
+            if (!bHasNpcRef)
             {
                 turnResults.PushOutputToConsole(
                     GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings.NOBODY_HERE));
                 turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NoOneToTalkTo));
+                return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
+            }
+
+            ////// HERE is where I will need to put in the custom dialog options for custom AI types
+            switch (npc.GetCurrentAiType(State.TheTimeOfDay))
+            {
+                case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
+                    turnResults.PushOutputToConsole(
+                        GameReferences.DataOvlRef.StringReferences.GetString(DataOvlReference.ChitChatStrings
+                            .NO_RESPONSE), false,
+                        false);
+                    break;
+                case NonPlayerCharacterSchedule.AiType.ExtortOrAttackOrFollow:
+                case NonPlayerCharacterSchedule.AiType.GenericExtortingGuard:
+                    turnResults.PushOutputToConsole("...", false);
+                    turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.Generic));
+                    break;
+                case NonPlayerCharacterSchedule.AiType.HalfYourGoldExtortingGuard:
+                    turnResults.PushOutputToConsole("...", false);
+                    turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold));
+                    break;
+                case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:
+                    ShoppeKeeper shoppeKeeper = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
+                        State.TheVirtualMap.CurrentSmallMap.MapLocation, npc.NPCRef.NpcType,
+                        State.CharacterRecords, State.PlayerInventory);
+
+                    if (npc.ArrivedAtLocation && shoppeKeeper.IsOnDuty(State.TheTimeOfDay))
+                    {
+                        turnResults.PushTurnResult(new ShoppeKeeperInteraction(shoppeKeeper));
+                    }
+                    else
+                    {
+                        turnResults.PushOutputToConsole(shoppeKeeper.GetComeLaterResponse(), false);
+                        turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.ComeBackLater));
+                    }
+
+                    break;
+                default:
+                    if (npc.NPCRef.Script != null)
+                    {
+                        // just a plain old conversation
+                        turnResults.PushTurnResult(new NpcTalkInteraction(npc));
+                        break;
+                    }
+
+                    turnResults.PushOutputToConsole("They are not talkative...", false);
+                    turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NotTalkative));
+
+                    break;
             }
 
             return AdvanceTime(N_DEFAULT_ADVANCE_TIME, turnResults);
