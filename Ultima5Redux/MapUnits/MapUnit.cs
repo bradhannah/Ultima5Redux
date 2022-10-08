@@ -672,6 +672,8 @@ namespace Ultima5Redux.MapUnits
                     case NonPlayerCharacterSchedule.AiType.Fixed:
                         // do nothing, they are where they are supposed to be 
                         break;
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:                        
                     case NonPlayerCharacterSchedule.AiType.Wander:
                         // choose a tile within N tiles that is not blocked, and build a single path
                         WanderWithinN(virtualMap, timeOfDay, 2);
@@ -748,6 +750,8 @@ namespace Ultima5Redux.MapUnits
                         // move to the correct position
                         BuildPath(this, npcDestinationPosition.XY, aStar);
                         break;
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
+                    case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:                        
                     case NonPlayerCharacterSchedule.AiType.Wander:
                     case NonPlayerCharacterSchedule.AiType.BigWander:
                         // different wanders have different different radius'

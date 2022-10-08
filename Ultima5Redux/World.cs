@@ -2132,7 +2132,8 @@ namespace Ultima5Redux
             }
 
             ////// HERE is where I will need to put in the custom dialog options for custom AI types
-            switch (npc.GetCurrentAiType(State.TheTimeOfDay))
+            NonPlayerCharacterSchedule.AiType aiType = npc.GetCurrentAiType(State.TheTimeOfDay);
+            switch (aiType)
             {
                 case NonPlayerCharacterSchedule.AiType.FollowAroundAndBeAnnoyingThenNeverSeeAgain:
                     turnResults.PushOutputToConsole(
@@ -2149,6 +2150,8 @@ namespace Ultima5Redux
                     turnResults.PushOutputToConsole("...", false);
                     turnResults.PushTurnResult(new GuardExtortion(npc, GuardExtortion.ExtortionType.HalfGold));
                     break;
+                case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingCustom:
+                case NonPlayerCharacterSchedule.AiType.MerchantBuyingSellingWander:
                 case NonPlayerCharacterSchedule.AiType.MerchantBuyingSelling:
                     ShoppeKeeper shoppeKeeper = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                         State.TheVirtualMap.CurrentSmallMap.MapLocation, npc.NPCRef.NpcType,
@@ -2174,6 +2177,10 @@ namespace Ultima5Redux
                     }
 
                     turnResults.PushOutputToConsole("They are not talkative...", false);
+
+                    int nIndex = npc.NPCRef.Schedule.GetScheduleIndex(State.TheTimeOfDay);
+
+                    turnResults.PushOutputToConsole($"Because their aitype is {aiType} with AiIndex: {nIndex}", false);
                     turnResults.PushTurnResult(new BasicResult(TurnResult.TurnResultType.NotTalkative));
 
                     break;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Ultima5Redux.DayNightMoon;
 using Ultima5Redux.MapUnits;
 using Ultima5Redux.References.Maps;
@@ -47,13 +48,20 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             GenericExtortingGuard = 104,
 
             // These jerks want half your gold! Generally found in Minoc
-            HalfYourGoldExtortingGuard = 105, MerchantBuyingSelling = 106
+            HalfYourGoldExtortingGuard = 105,
+
+            // Merchant that doesn't move
+            MerchantBuyingSelling = 106,
+
+            // I THINK this is a merchant that sells, but also wanders a bit
+            MerchantBuyingSellingCustom = 107, MerchantBuyingSellingWander = 108
+
         }
 
 
         /// <summary>
         /// </summary>
-        private readonly List<byte> _aiTypeList = new();
+        public readonly List<byte> AiTypeList = new();
 
         /// <summary>
         ///     3D Coordinates including floor number
@@ -79,7 +87,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    _aiTypeList.Add(schedule.AI_types[i]);
+                    AiTypeList.Add(schedule.AI_types[i]);
                     Coords.Add(new Point3D(schedule.x_coordinates[i], schedule.y_coordinates[i],
                         schedule.z_coordinates[i]));
                     if (schedule.z_coordinates[i] != 0) Console.Write("");
@@ -102,9 +110,9 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         public void AdaptAiTypesByNpcRef(SmallMapReferences.SingleMapReference.Location location,
             NonPlayerCharacterReference nonPlayerCharacterReference)
         {
-            for (int nIndex = 0; nIndex < _aiTypeList.Count; nIndex++)
+            for (int nIndex = 0; nIndex < AiTypeList.Count; nIndex++)
             {
-                var aiType = (AiType)_aiTypeList[nIndex];
+                var aiType = (AiType)AiTypeList[nIndex];
 
                 // These are all FULL overrides, that override every AI behaviour in the schedule
                 const int STILLWELT_DIALOG_INDEX = 27;
@@ -112,8 +120,27 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                     && nonPlayerCharacterReference.DialogIndex == STILLWELT_DIALOG_INDEX)
                 {
                     // this is Stillwelt, the mean guard
-                    _aiTypeList[nIndex] = (int)AiType.SmallWanderWantsToChat;
+                    AiTypeList[nIndex] = (int)AiType.SmallWanderWantsToChat;
                     continue;
+                }
+
+                // Merchants always work on their 1 and 3 schedules, even though they are marked as 
+                // Fixed (0)
+                if (nonPlayerCharacterReference.IsShoppeKeeper && aiType == AiType.Fixed && nIndex is 1 or 3)
+                {
+                    AiTypeList[nIndex] = (int)AiType.MerchantBuyingSelling;
+                    continue;
+                }
+
+                if (nonPlayerCharacterReference.IsShoppeKeeper && aiType == AiType.Wander && nIndex is 1 or 3)
+                {
+                    AiTypeList[nIndex] = (int)AiType.MerchantBuyingSellingWander;
+                    continue;
+                }
+
+                if (nonPlayerCharacterReference.IsShoppeKeeper)
+                {
+                    Debug.Assert(aiType is AiType.Fixed or AiType.Wander or AiType.CustomAi);
                 }
 
                 if (aiType != AiType.CustomAi) continue;
@@ -123,19 +150,19 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
                 if (nonPlayerCharacterReference.IsGuard &&
                     location == SmallMapReferences.SingleMapReference.Location.Minoc)
                 {
-                    _aiTypeList[nIndex] = (int)AiType.HalfYourGoldExtortingGuard;
+                    AiTypeList[nIndex] = (int)AiType.HalfYourGoldExtortingGuard;
                 }
                 else if (nonPlayerCharacterReference.IsGuard)
                 {
-                    _aiTypeList[nIndex] = (int)AiType.GenericExtortingGuard;
+                    AiTypeList[nIndex] = (int)AiType.GenericExtortingGuard;
                 }
                 else if (nonPlayerCharacterReference.NPCKeySprite == (int)TileReference.SpriteIndex.Beggar_KeyIndex)
                 {
-                    _aiTypeList[nIndex] = (int)AiType.Begging;
+                    AiTypeList[nIndex] = (int)AiType.Begging;
                 }
                 else if (nonPlayerCharacterReference.IsShoppeKeeper)
                 {
-                    _aiTypeList[nIndex] = (int)AiType.MerchantBuyingSelling;
+                    AiTypeList[nIndex] = (int)AiType.MerchantBuyingSellingCustom;
                 }
                 else
                 {
@@ -269,7 +296,7 @@ namespace Ultima5Redux.References.MapUnits.NonPlayerCharacters
         {
             int nIndex = GetScheduleIndex(timeOfDay);
 
-            return (AiType)_aiTypeList[nIndex];
+            return (AiType)AiTypeList[nIndex];
         }
 
         /// <summary>

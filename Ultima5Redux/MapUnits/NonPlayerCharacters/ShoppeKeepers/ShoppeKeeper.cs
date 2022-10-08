@@ -170,7 +170,7 @@ namespace Ultima5Redux.MapUnits.NonPlayerCharacters.ShoppeKeepers
         {
             // shoppe keepers are open during their 1 and 3 index into their schedule (0 based)
             int nScheduleIndex = TheShoppeKeeperReference.NpcRef.Schedule.GetScheduleIndex(tod);
-            return nScheduleIndex == 1 || nScheduleIndex == 3;
+            return nScheduleIndex is 1 or 3;
         }
 
         /// <summary>

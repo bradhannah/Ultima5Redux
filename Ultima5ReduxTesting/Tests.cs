@@ -130,7 +130,8 @@ namespace Ultima5ReduxTesting
             Assert.True(true);
         }
 
-        [Test] [TestCase(SaveFiles.Britain)] public void test_LoadMinocBuyFrigateAndCheck(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain, false)]
+        public void test_LoadMinocBuyFrigateAndCheck(SaveFiles saveFiles)
         {
             World world = CreateWorldFromLegacy(saveFiles);
             _ = "";
@@ -710,9 +711,13 @@ namespace Ultima5ReduxTesting
             }
         }
 
-        [Test] [TestCase(SaveFiles.Britain2)] public void Test_BasicBlackSmithDialogue(SaveFiles saveFiles)
+        [Test] [TestCase(SaveFiles.Britain2, false)] [TestCase(SaveFiles.Britain2, true)]
+        public void Test_BasicBlackSmithDialogue(SaveFiles saveFiles, bool bReloadJson)
         {
             World world = CreateWorldFromLegacy(saveFiles);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
             BlackSmith blacksmith = GameReferences.ShoppeKeeperDialogueReference.GetShoppeKeeper(
                 SmallMapReferences.SingleMapReference.Location.Minoc,
                 NonPlayerCharacterReference.SpecificNpcDialogType.Blacksmith, null,
@@ -3235,7 +3240,87 @@ namespace Ultima5ReduxTesting
             world.State.TheVirtualMap.LoadSmallMap(
                 GameReferences.SmallMapRef.GetSingleMapByLocation(
                     SmallMapReferences.SingleMapReference.Location.Yew, 0));
+        }
 
+        /// <summary>
+        ///     Make sure that all Shoppe Keepers have real AI assignments
+        /// </summary>
+        /// <param name="saveFiles"></param>
+        /// <param name="bReloadJson"></param>
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_ShoppeKeeperAiMakesSense(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            // world.State.TheVirtualMap.LoadSmallMap(
+            //     GameReferences.SmallMapRef.GetSingleMapByLocation(
+            //         SmallMapReferences.SingleMapReference.Location.Trinsic, 0));
+            //
+            foreach (SmallMapReferences.SingleMapReference smr in GameReferences.SmallMapRef.MapReferenceList)
+            {
+                SmallMapReferences.SingleMapReference singleMap =
+                    GameReferences.SmallMapRef.GetSingleMapByLocation(smr.MapLocation, smr.Floor);
+                // we don't test dungeon maps here
+                if (singleMap.MapType == Map.Maps.Dungeon) continue;
+                world.State.TheVirtualMap.LoadSmallMap(singleMap);
+                foreach (NonPlayerCharacter npc in world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits
+                             .NonPlayerCharacters)
+                {
+                    // if (mapUnit is NonPlayerCharacter npc)
+                    // {
+                    if (!npc.NPCRef.IsShoppeKeeper) continue;
+                    bool bFoundNonZero = false;
+                    foreach (byte a in npc.NPCRef.Schedule.AiTypeList)
+                    {
+                        if (a > 0) bFoundNonZero = true;
+                    }
+
+                    Assert.IsTrue(bFoundNonZero, $"ShoppeKeeper didn't have a non zero AI: {npc.FriendlyName}");
+                    // }
+                }
+            }
+        }
+
+
+        [Test] [TestCase(SaveFiles.fresh, false)] [TestCase(SaveFiles.fresh, true)]
+        public void test_ShoppeKeeperYewFood(SaveFiles saveFiles, bool bReloadJson)
+        {
+            World world = CreateWorldFromLegacy(saveFiles, true, false);
+            Assert.NotNull(world);
+            Assert.NotNull(world.State);
+
+            if (bReloadJson) world.ReLoadFromJson();
+
+            world.State.TheVirtualMap.LoadSmallMap(
+                GameReferences.SmallMapRef.GetSingleMapByLocation(
+                    SmallMapReferences.SingleMapReference.Location.Yew, 0));
+
+            foreach (NonPlayerCharacter npc in
+                     world.State.TheVirtualMap.TheMapUnits.CurrentMapUnits.NonPlayerCharacters)
+            {
+                // if (mapUnit is NonPlayerCharacter npc)
+                // {
+                if (!npc.NPCRef.IsShoppeKeeper) continue;
+                bool bFoundNonZero = false;
+
+                world.State.TheVirtualMap.MoveAvatar(new Point2D(npc.MapUnitPosition.X - 1, npc.MapUnitPosition.Y));
+                TurnResults turnResults = new();
+
+                foreach (byte a in npc.NPCRef.Schedule.AiTypeList)
+                {
+                    if (a > 0) bFoundNonZero = true;
+                }
+
+                Assert.IsTrue(bFoundNonZero, $"ShoppeKeeper didn't have a non zero AI: {npc.FriendlyName}");
+
+                List<VirtualMap.AggressiveMapUnitInfo> aggressiveMapUnitInfos =
+                    world.TryToTalk(MapUnitMovement.MovementCommandDirection.East, turnResults);
+                // }
+            }
         }
     }
 }
